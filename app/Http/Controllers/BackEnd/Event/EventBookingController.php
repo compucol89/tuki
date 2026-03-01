@@ -139,7 +139,6 @@ class EventBookingController extends Controller
         'paymentStatus' => 'pending'
       ]);
     } else {
-      // dd($booking->event_id);
       $event = Event::where('id', $booking->event_id)->first();
       if ($event) {
         if ($event->event_type == 'online') {

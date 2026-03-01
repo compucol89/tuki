@@ -14,9 +14,9 @@ Route::get('login', function () {
   return view('frontend.organizer.login'); 
 })->name('login'); 
 
-// cron job for check iyzico payment 
-Route::get('/check-payment', 'CronJobController@checkIyzicoPendingPayment')->name('cron.check.payment');
-Route::get('/send-ticket', 'CronJobController@sendTicket')->name('cron.send.ticket');
+// cron job for check iyzico payment
+Route::get('/check-payment', 'CronJobController@checkIyzicoPendingPayment')->middleware('throttle:10,1')->name('cron.check.payment');
+Route::get('/send-ticket', 'CronJobController@sendTicket')->middleware('throttle:10,1')->name('cron.send.ticket');
 
 Route::get('midtrans/cancel', 'FrontEnd\HomeController@midtrans_cancel')->name('midtrans_cancel'); // banking er IPN
 Route::post('xendit/callback', 'FrontEnd\HomeController@xendit_callback')->name('xendit_cancel');
@@ -42,8 +42,7 @@ Route::middleware('change.lang')->prefix('/customer')->group(function () {
     Route::get('/login', 'FrontEnd\CustomerController@login')->name('customer.login');
     Route::get('/signup', 'FrontEnd\CustomerController@signup')->name('customer.signup');
     Route::post('/create', 'FrontEnd\CustomerController@create')->name('customer.create');
-    Route::post('/store', 'FrontEnd\CustomerController@authentication')->name('customer.authentication');
-    Route::post('/store', 'FrontEnd\CustomerController@authentication')->name('customer.authentication');
+    Route::post('/store', 'FrontEnd\CustomerController@authentication')->middleware('throttle:5,1')->name('customer.authentication');
 
     /*---socialite---*/
     ##==facebook
@@ -56,10 +55,13 @@ Route::middleware('change.lang')->prefix('/customer')->group(function () {
 
 
     Route::get('/forget-password', 'FrontEnd\CustomerController@forget_passord')->name('customer.forget.password');
-    Route::post('/send-forget-mail', 'FrontEnd\CustomerController@forget_mail')->name('customer.forget.mail');
+    Route::post('/send-forget-mail', 'FrontEnd\CustomerController@forget_mail')->middleware('throttle:5,1')->name('customer.forget.mail');
     Route::get('/reset-password', 'FrontEnd\CustomerController@reset_password')->name('customer.reset.password');
     Route::post('/update-forget-password', 'FrontEnd\CustomerController@update_password')->name('customer.update-forget-password');
   });
+});
+
+Route::middleware('auth:customer', 'change.lang')->prefix('/customer')->group(function () {
   Route::get('/logout', 'FrontEnd\CustomerController@logout')->name('customer.logout');
   Route::get('/change-password', 'FrontEnd\CustomerController@change_password')->name('customer.change.password');
   Route::post('/update-password', 'FrontEnd\CustomerController@updated_password')->name('customer.password.update');

@@ -80,11 +80,7 @@ class CustomerController extends Controller
 
     $in = $request->all();
     $in['password'] = Hash::make($request->password);
-    // first, generate a random string
-    $randStr = Str::random(20);
-
-    // second, generate a token
-    $token = md5($randStr . $request->fname . $request->email);
+    $token = Str::random(32);
 
     $in['verification_token'] = $token;
 

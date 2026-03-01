@@ -301,13 +301,13 @@ Route::prefix('/admin')->middleware('guest:admin')->group(function () {
   Route::get('/', 'BackEnd\AdminController@login')->name('admin.login');
 
   // admin login attempt route
-  Route::post('/auth', 'BackEnd\AdminController@authentication')->name('admin.auth');
+  Route::post('/auth', 'BackEnd\AdminController@authentication')->middleware('throttle:5,1')->name('admin.auth');
 
   // admin forget password route
   Route::get('/forget-password', 'BackEnd\AdminController@forgetPassword')->name('admin.forget_password');
 
   // send mail to admin for forget password route
-  Route::post('/mail-for-forget-password', 'BackEnd\AdminController@sendMail')->name('admin.mail_for_forget_password');
+  Route::post('/mail-for-forget-password', 'BackEnd\AdminController@sendMail')->middleware('throttle:5,1')->name('admin.mail_for_forget_password');
 });
 
 

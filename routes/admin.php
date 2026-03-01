@@ -9,8 +9,8 @@ use App\Http\Controllers\BackEnd\Event\CategoryController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('admin/pwa/', 'BackEnd\AdminController@pwa')->name('admin.pwa.new');
-Route::post('admin/check-qrcode/', 'BackEnd\AdminController@check_qrcode')->name('admin.check-qrcode');
+Route::get('admin/pwa/', 'BackEnd\AdminController@pwa')->middleware('auth:admin')->name('admin.pwa.new');
+Route::post('admin/check-qrcode/', 'BackEnd\AdminController@check_qrcode')->middleware('auth:admin')->name('admin.check-qrcode');
 
 Route::get('admin/get-state-city/{id}', 'BackEnd\Event\EventController@city_state')->name('get.city.state');
 

@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -99,7 +100,7 @@ class AdminController extends Controller
     }
 
     // create a new password and store it in db
-    $newPassword = uniqid();
+    $newPassword = Str::random(16);
 
     $admin = Admin::where('email', $request->email)->first();
 

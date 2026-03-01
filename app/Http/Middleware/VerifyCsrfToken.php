@@ -16,7 +16,6 @@ class VerifyCsrfToken extends Middleware
     '*/razorpay/notify',
     '*/mercadopago/notify',
     '*/paytm/notify',
-    'organizer/check-qrcode/',
     '*/iyzico/notify',
     '*/paytabs/notify/',
     '*/phonepe/notify',

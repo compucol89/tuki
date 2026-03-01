@@ -135,6 +135,23 @@ class PerfectMoneyController extends Controller
         $unit = $request['PAYMENT_UNITS'];
         $track = $request['PAYMENT_ID'];
         $id = Session::get('payment_id');
+
+        // Verificar V2_HASH para autenticar el callback de PerfectMoney
+        $alternatePassphrase = $perfectMoneyInfo['perfect_money_alternate_passphrase'] ?? '';
+        $expectedHash = strtoupper(md5(implode(':', [
+            $request['PAYEE_ACCOUNT'],
+            $request['PAYMENT_ID'],
+            $request['PAYMENT_AMOUNT'],
+            $request['PAYMENT_UNITS'],
+            $request['PAYMENT_BATCH_NUM'] ?? '',
+            $request['PAYER_ACCOUNT'] ?? '',
+            strtoupper(md5($alternatePassphrase)),
+            $request['TIMESTAMPGMT'] ?? '',
+        ])));
+        if (!$alternatePassphrase || !hash_equals($expectedHash, (string)$request['V2_HASH'])) {
+            return redirect()->route('event_booking.cancel', ['id' => $event_id]);
+        }
+
         if ($request->PAYEE_ACCOUNT == $perfectMoneyInfo['perfect_money_wallet_id'] && $unit == $currencyInfo->base_currency_text && $track == $id && $amo == round($final_amount, 2)) {
             //success payment and save data into database
             $booking = new BookingController();

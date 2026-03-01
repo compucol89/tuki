@@ -592,7 +592,8 @@ class OnlineGatewayController extends Controller
   {
     $rules = [
       'status' => 'required',
-      'perfect_money_wallet_id' => 'required'
+      'perfect_money_wallet_id' => 'required',
+      'perfect_money_alternate_passphrase' => 'required'
     ];
 
     $validator = Validator::make($request->all(), $rules);
@@ -602,7 +603,8 @@ class OnlineGatewayController extends Controller
     }
 
     $information = [
-      'perfect_money_wallet_id' => $request->perfect_money_wallet_id
+      'perfect_money_wallet_id' => $request->perfect_money_wallet_id,
+      'perfect_money_alternate_passphrase' => $request->perfect_money_alternate_passphrase
     ];
 
     $data = OnlineGateway::where('keyword', 'perfect_money')->first();

@@ -315,9 +315,15 @@
                   @if ($errors->has('perfect_money_wallet_id'))
                     <p class="mt-1 mb-0 text-danger">{{ $errors->first('perfect_money_wallet_id') }}</p>
                   @endif
-
                   <p class="text-warning mt-1 mb-0">{{ __('You will get wallet id form here') }} </p>
                   <a href="https://prnt.sc/bM3LqLXBduaq" target="_blank">https://prnt.sc/bM3LqLXBduaq</a>
+                </div>
+
+                <div class="form-group">
+                  <label>{{ __('Alternate Passphrase') }}</label>
+                  <input type="text" class="form-control" name="perfect_money_alternate_passphrase"
+                    value="{{ @$perfect_moneyInfo['perfect_money_alternate_passphrase'] }}">
+                  <p class="text-warning mt-1 mb-0">{{ __('Required for webhook signature verification (from your PerfectMoney account settings)') }}</p>
                 </div>
               </div>
             </div>

@@ -49,6 +49,11 @@
         margin-left: 30px;
     }
 
+    .event-spotify-embed {
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+
     .menu-right .ui-selectmenu-button.ui-button {
         margin-right: 25px;
     }
@@ -164,6 +169,11 @@
 
     .event-details-information {
         margin-top: 30px;
+        margin-inline: 0;
+    }
+
+    .event-spotify-embed {
+        width: 100%;
         margin-inline: 0;
     }
 }

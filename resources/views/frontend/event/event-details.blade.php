@@ -14,6 +14,34 @@
 
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
+  <style>
+    .event-spotify-embed {
+      margin: 0 30px 0 70px;
+      width: 100%;
+      max-width: calc(100% - 100px);
+      box-sizing: border-box;
+    }
+    .event-spotify-embed iframe {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 320px !important;
+      border: 0;
+      border-radius: 12px;
+    }
+    @media (max-width: 1199px) {
+      .event-spotify-embed {
+        margin-left: 30px;
+        margin-right: 30px;
+        max-width: calc(100% - 60px);
+      }
+    }
+    @media (max-width: 767px) {
+      .event-spotify-embed {
+        margin-inline: 0;
+        max-width: 100%;
+      }
+    }
+  </style>
 @endsection
 
 @push('scripts')
@@ -912,24 +940,25 @@ ttq.page();
                     <button class="theme-btn w-100 mt-20" type="submit">{{ __('Book Now') }}</button>
                   @endif
                 </div>
-              </form>
 
-              @php
-                $spotifyEmbedUrl = null;
-                if (!empty($content->spotify_url)) {
-                  preg_match('/spotify\.com\/(?:intl-[a-z-]+\/)?artist\/([a-zA-Z0-9]+)/', $content->spotify_url, $sm);
-                  if (!empty($sm[1])) $spotifyEmbedUrl = 'https://open.spotify.com/embed/artist/' . $sm[1] . '?utm_source=generator&theme=0';
-                }
-              @endphp
-              @if($spotifyEmbedUrl)
-                <div class="mt-4" style="width:100%;overflow:hidden;border-radius:12px;">
-                  <iframe src="{{ $spotifyEmbedUrl }}"
-                    width="100%" height="352" frameborder="0"
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                    style="display:block;width:100%;min-width:0;border-radius:12px;"></iframe>
-                </div>
-              @endif
+                @php
+                  $spotifyEmbedUrl = null;
+                  if (!empty($content->spotify_url)) {
+                    preg_match('/spotify\.com\/(?:intl-[a-z-]+\/)?artist\/([a-zA-Z0-9]+)/', $content->spotify_url, $sm);
+                    if (!empty($sm[1])) $spotifyEmbedUrl = 'https://open.spotify.com/embed/artist/' . $sm[1] . '?utm_source=generator&theme=0';
+                  }
+                @endphp
+                @if($spotifyEmbedUrl)
+                  <div class="event-spotify-embed mt-4">
+                    <iframe src="{{ $spotifyEmbedUrl }}"
+                      width="100%" height="320" frameborder="0" style="height:320px;width:100%;max-width:100%;"
+                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                      loading="lazy"
+                      allowfullscreen
+                      title="Spotify"></iframe>
+                  </div>
+                @endif
+              </form>
 
             </div>
           </div>

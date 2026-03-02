@@ -74,10 +74,10 @@
                               [{{ __($booking->paymentStatus) }}]
                             </h3>
                             <p><b>{{ __('Booking Date') . ' : ' }}</b>
-                              {{ \Carbon\Carbon::parse($booking->created_at)->translatedFormat('D, M d, Y h:i a') }}
+                              {{ \Carbon\Carbon::parse($booking->created_at)->translatedFormat('D d/m/Y H:i') }}
                             </p>
                             <p><b>{{ __('Event Start Date') . ' : ' }}</b>
-                              {{ \Carbon\Carbon::parse($booking->event_date)->translatedFormat('D, M d, Y h:i a') }}
+                              {{ \Carbon\Carbon::parse($booking->event_date)->translatedFormat('D d/m/Y H:i') }}
                             </p>
                           </div>
                         </div>

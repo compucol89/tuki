@@ -103,7 +103,7 @@
                 <strong>{{ __('Order ID') . ': ' }}</strong>{{ '#' . $orderInfo->order_number }}
               </p>
               <p>
-                <strong>{{ __('Order Date') . ': ' }}</strong>{{ date_format($orderInfo->created_at, 'M d, Y') }}
+                <strong>{{ __('Order Date') . ': ' }}</strong>{{ date_format($orderInfo->created_at, 'd/m/Y') }}
               </p>
               <p>
                 <strong>{{ __('Shipping Charge') . ': ' }}

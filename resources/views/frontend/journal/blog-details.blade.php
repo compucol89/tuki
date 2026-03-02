@@ -66,7 +66,7 @@
           <div class="blog-details-top">
             <ul class="blog-meta mb-5">
               <li>
-                <i class="fa fa-calendar-alt"></i> {{ date_format($details->created_at, 'M d, Y') }}
+                <i class="fa fa-calendar-alt"></i> {{ date_format($details->created_at, 'd/m/Y') }}
               </li>
               <li>
                 <i class="fa fa-tag"></i>
@@ -136,7 +136,7 @@
                             ? mb_substr(strip_tags($relatedBlog->content), 0, 100, 'UTF-8') . '...'
                             : strip_tags($relatedBlog->content) !!}</p>
                         <ul class="blog-footer">
-                          <li><i class="fas fa-calendar-alt"></i> {{ date_format($relatedBlog->created_at, 'M d, Y') }}
+                          <li><i class="fas fa-calendar-alt"></i> {{ date_format($relatedBlog->created_at, 'd/m/Y') }}
                           </li>
                         </ul>
                       </div>

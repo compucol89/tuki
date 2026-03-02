@@ -147,9 +147,9 @@
                                                                     @endif
                                                                 </td>
                                                                 <td>
-                                                                    {{ \Carbon\Carbon::parse($item->event_date)->translatedFormat('D, M d, Y h:i a') }}
+                                                                    {{ \Carbon\Carbon::parse($item->event_date)->translatedFormat('D d/m/Y H:i') }}
                                                                 </td>
-                                                                <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('D, M d, Y h:i a') }}
+                                                                <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('D d/m/Y H:i') }}
                                                                 </td>
                                                                 <td><a href="{{ route('customer.booking_details', $item->id) }}"
                                                                         class="btn">{{ __('Details') }}</a></td>

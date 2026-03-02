@@ -82,7 +82,7 @@
                             ? mb_substr(strip_tags($blog->content), 0, 100, 'UTF-8') . '...'
                             : strip_tags($blog->content) !!}</p>
                         <ul class="blog-footer">
-                          <li><i class="fas fa-calendar-alt"></i> {{ date_format($blog->created_at, 'M d, Y') }}</li>
+                          <li><i class="fas fa-calendar-alt"></i> {{ date_format($blog->created_at, 'd/m/Y') }}</li>
                         </ul>
                       </div>
                     </div>

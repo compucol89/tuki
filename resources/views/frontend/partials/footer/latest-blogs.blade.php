@@ -19,7 +19,7 @@
               <h6 class="blog-title">
                 <a href="{{ route('blog_details', ['slug' => $latestBlogInfo->slug]) }}">{{ strlen($latestBlogInfo->title) > 30 ? mb_substr($latestBlogInfo->title, 0, 30, 'UTF-8') . '...' : $latestBlogInfo->title }}</a>
               </h6>
-              <span class="mt-1">{{ date_format($latestBlogInfo->created_at, 'M d, Y') }}</span>
+              <span class="mt-1">{{ date_format($latestBlogInfo->created_at, 'd/m/Y') }}</span>
             </div>
           </div>
         @endforeach

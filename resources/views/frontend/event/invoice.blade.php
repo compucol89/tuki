@@ -292,7 +292,7 @@
                       {{ __('BOOKING DATE') }}
                     </p>
                     <p class="h4 fw-0 mb-2">
-                      {{ date_format($bookingInfo->created_at, 'M d, Y') }}
+                      {{ date_format($bookingInfo->created_at, 'd/m/Y') }}
                     </p>
                     </p>
                   </td>
@@ -494,7 +494,7 @@
                       {{ __('BOOKING DATE') }}
                     </p>
                     <p class="h4 fw-0 mb-2">
-                      {{ date_format($bookingInfo->created_at, 'M d, Y') }}
+                      {{ date_format($bookingInfo->created_at, 'd/m/Y') }}
                     </p>
                     </p>
                   </td>

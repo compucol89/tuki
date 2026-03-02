@@ -922,11 +922,12 @@ ttq.page();
                 }
               @endphp
               @if($spotifyEmbedUrl)
-                <div class="mt-4">
+                <div class="mt-4" style="width:100%;overflow:hidden;border-radius:12px;">
                   <iframe src="{{ $spotifyEmbedUrl }}"
                     width="100%" height="352" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy" style="border-radius:12px;"></iframe>
+                    loading="lazy"
+                    style="display:block;width:100%;min-width:0;border-radius:12px;"></iframe>
                 </div>
               @endif
 

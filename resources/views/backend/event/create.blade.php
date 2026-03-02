@@ -555,6 +555,34 @@
 
                 <div id="sliders"></div>
 
+                {{-- Multimedia del artista --}}
+                <div class="card mt-4">
+                  <div class="card-header">
+                    <h4 class="card-title">{{ __('Multimedia del Artista') }}</h4>
+                    <small class="text-muted">{{ __('Opcional. Se mostrará en la página del evento para que los compradores conozcan al artista.') }}</small>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace del artista en Spotify') }}</label>
+                          <input type="url" class="form-control" name="spotify_url"
+                            placeholder="Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi">
+                          <small class="text-muted">{{ __('Abrí Spotify, buscá al artista, hacé clic en los tres puntos → Compartir → Copiar enlace del artista.') }}</small>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label><i class="fab fa-youtube mr-1" style="color:#FF0000"></i> {{ __('Enlace del video en YouTube') }}</label>
+                          <input type="url" class="form-control" name="youtube_url"
+                            placeholder="Ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                          <small class="text-muted">{{ __('Pegá el enlace del video de YouTube tal como aparece en el navegador.') }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {{-- Píxeles de seguimiento --}}
                 <div class="card mt-4">
                   <div class="card-header">

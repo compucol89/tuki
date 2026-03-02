@@ -37,6 +37,8 @@ class Event extends Model
     'meta_pixel_id',
     'google_analytics_id',
     'tiktok_pixel_id',
+    'spotify_url',
+    'youtube_url',
   ];
   public function ticket()
   {

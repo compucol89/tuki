@@ -297,6 +297,24 @@ ttq.page();
                 <p>{{ @$content->refund_policy }}</p>
               @endif
 
+              @php
+                $youtubeEmbedUrl = null;
+                if (!empty($content->youtube_url)) {
+                  preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $content->youtube_url, $ym);
+                  if (!empty($ym[1])) $youtubeEmbedUrl = 'https://www.youtube.com/embed/' . $ym[1];
+                }
+              @endphp
+              @if($youtubeEmbedUrl)
+                <div class="mt-40 text-center">
+                  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;">
+                    <iframe src="{{ $youtubeEmbedUrl }}"
+                      style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen loading="lazy" title="{{ $content->title }}"></iframe>
+                  </div>
+                </div>
+              @endif
+
             </div>
           </div>
           <div class="col-lg-5">
@@ -895,6 +913,23 @@ ttq.page();
                   @endif
                 </div>
               </form>
+
+              @php
+                $spotifyEmbedUrl = null;
+                if (!empty($content->spotify_url)) {
+                  preg_match('/spotify\.com\/artist\/([a-zA-Z0-9]+)/', $content->spotify_url, $sm);
+                  if (!empty($sm[1])) $spotifyEmbedUrl = 'https://open.spotify.com/embed/artist/' . $sm[1] . '?utm_source=generator&theme=0';
+                }
+              @endphp
+              @if($spotifyEmbedUrl)
+                <div class="mt-4">
+                  <iframe src="{{ $spotifyEmbedUrl }}"
+                    width="100%" height="352" frameborder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy" style="border-radius:12px;"></iframe>
+                </div>
+              @endif
+
             </div>
           </div>
         </div>

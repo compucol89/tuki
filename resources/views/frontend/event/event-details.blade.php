@@ -308,7 +308,7 @@ ttq.page();
               <h3 class="inner-title mb-25">{{ __('Description') }}</h3>
 
               <div class="summernote-content">
-                {!! $content->description !!}
+                {!! clean($content->description) !!}
               </div>
 
               @if ($content->event_type != 'online')
@@ -664,7 +664,7 @@ ttq.page();
                           <p class="mb-0"><strong>{{ @$ticket_content->title }}</strong></p>
                           <div class="click-show">
                             <div class="show-content">
-                              {!! @$ticket_content->description !!}
+                              {!! clean(@$ticket_content->description ?? '') !!}
                             </div>
                             @if (strlen(@$ticket_content->description) > 50)
                               <div class="read-more-btn">
@@ -781,7 +781,7 @@ ttq.page();
                             </p>
                             <div class="click-show">
                               <div class="show-content">
-                                {!! @$ticket_content->description !!}
+                                {!! clean(@$ticket_content->description ?? '') !!}
                               </div>
                               @if (strlen(@$ticket_content->description) > 50)
                                 <div class="read-more-btn">
@@ -893,7 +893,7 @@ ttq.page();
                           <p class="mb-0"><strong>{{ @$ticket_content->title }}</strong></p>
                           <div class="click-show">
                             <div class="show-content">
-                              {!! @$ticket_content->description !!}
+                              {!! clean(@$ticket_content->description ?? '') !!}
                             </div>
                             @if (strlen(@$ticket_content->description) > 50)
                               <div class="read-more-btn">

@@ -227,8 +227,21 @@ class EventController extends Controller
         ->orderBy('events.id', 'desc')
         ->get();
 
+      // Pre-cargar tickets y organizadores de eventos relacionados en 2 queries (evita N+1)
+      $relatedIds = $related_events->pluck('id')->toArray();
+      $relatedTickets = Ticket::whereIn('event_id', $relatedIds)
+        ->select('event_id', 'price', 'event_type', 'early_bird_discount', 'early_bird_discount_type', 'early_bird_discount_amount', 'early_bird_discount_date', 'early_bird_discount_time')
+        ->get()
+        ->keyBy('event_id');
+      $relatedOrganizerIds = $related_events->whereNotNull('organizer_id')->pluck('organizer_id')->unique()->toArray();
+      $relatedOrganizers = Organizer::whereIn('id', $relatedOrganizerIds)
+        ->select('id', 'username')
+        ->get()
+        ->keyBy('id');
 
       $information['related_events'] = $related_events;
+      $information['relatedTickets'] = $relatedTickets;
+      $information['relatedOrganizers'] = $relatedOrganizers;
 
       // SEO / Open Graph
       $information['og_title'] = $content->title . ' | ' . config('app.name');

@@ -235,7 +235,7 @@ ttq.page();
             <div class="event-details-header mb-25">
               <ul>
                 <li><i class="far fa-calendar-alt"></i>
-                  {{ \Carbon\Carbon::parse($date)->timezone($websiteInfo->timezone)->translatedFormat('D, dS M Y') }}
+                  {{ \Carbon\Carbon::parse($date)->timezone($websiteInfo->timezone)->translatedFormat('D d/m/Y') }}
                 </li>
 
                 <li><i class="far fa-clock"></i>
@@ -264,7 +264,7 @@ ttq.page();
           <div class="event-details-images">
             @foreach ($images as $item)
               <a href="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"><img class="lazy"
-                  data-src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}" alt="Event Details"></a>
+                  data-src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}" alt="{{ $content->title }}"></a>
             @endforeach
           </div>
 
@@ -316,7 +316,7 @@ ttq.page();
                 <div class="our-location mb-50">
                   <iframe
                     src="//maps.google.com/maps?width=100%25&amp;height=385&amp;hl=en&amp;q={{ $map_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                    height="385" class="map-h" allowfullscreen="" loading="lazy"></iframe>
+                    height="385" class="map-h" allowfullscreen="" loading="lazy" title="{{ $content->title }} — {{ __('Map') }}"></iframe>
                 </div>
               @endif
 
@@ -433,7 +433,7 @@ ttq.page();
                       <a
                         href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}"><img
                           class="lazy" data-src="{{ asset('assets/admin/img/admins/' . $admin->image) }}"
-                          alt="Author"></a>
+                          alt="{{ $admin->username }}"></a>
                       <div class="content">
                         <h6><a
                             href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">{{ $admin->username }}</a>
@@ -447,9 +447,9 @@ ttq.page();
                         @if ($organizer->photo != null)
                           <img class="lazy"
                             data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}"
-                            alt="Author">
+                            alt="{{ $organizer->username }}">
                         @else
-                          <img class="lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="Author">
+                          <img class="lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ $organizer->username }}">
                         @endif
 
                       </a>
@@ -554,14 +554,14 @@ ttq.page();
 
                         </h6>
                         <div class="quantity-input">
-                          <button class="quantity-down" type="button" id="quantityDown">
+                          <button class="quantity-down" type="button">
                             -
                           </button>
                           <input class="quantity" type="number" readonly value="0"
                             data-price="{{ $calculate_price }}" data-max_buy_ticket="{{ $ticket->max_buy_ticket }}"
                             name="quantity" data-ticket_id="{{ $ticket->id }}" data-stock="{{ $stock }}"
                             data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
-                          <button class="quantity-up" type="button" id="quantityUP">
+                          <button class="quantity-up" type="button">
                             +
                           </button>
                         </div>
@@ -576,7 +576,7 @@ ttq.page();
                             <p>{{ __('Discount available') . ' ' }} :
                               ({{ __('till') . ' ' }} :
                               <span
-                                dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('Y/m/d h:i a') }}</span>)
+                                dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('d/m/Y H:i') }}</span>)
                             </p>
                           @endif
                         @endif
@@ -617,14 +617,14 @@ ttq.page();
                         {{ __('Free') }}
                       </h6>
                       <div class="quantity-input">
-                        <button class="quantity-down" type="button" id="quantityDown">
+                        <button class="quantity-down" type="button">
                           -
                         </button>
                         <input class="quantity" readonly type="number" value="0"
                           data-price="{{ $content->price }}" data-max_buy_ticket="{{ $max_buy_ticket }}"
                           name="quantity" data-ticket_id="{{ $ticket->id }}" data-stock="{{ $stock }}"
                           data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
-                        <button class="quantity-up" type="button" id="quantityUP">
+                        <button class="quantity-up" type="button">
                           +
                         </button>
                       </div>
@@ -715,7 +715,7 @@ ttq.page();
 
                             </h6>
                             <div class="quantity-input">
-                              <button class="quantity-down" type="button" id="quantityDown">
+                              <button class="quantity-down" type="button">
                                 -
                               </button>
                               <input class="quantity" readonly type="number" value="0"
@@ -723,7 +723,7 @@ ttq.page();
                                 data-max_buy_ticket="{{ $ticket->max_buy_ticket }}" name="quantity[]"
                                 data-ticket_id="{{ $ticket->id }}" data-stock="{{ $stock }}"
                                 data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
-                              <button class="quantity-up" type="button" id="quantityUP">
+                              <button class="quantity-up" type="button">
                                 +
                               </button>
                             </div>
@@ -737,7 +737,7 @@ ttq.page();
                                 <p>{{ __('Discount available') . ' ' }} :
                                   ({{ __('till') . ' ' }} :
                                   <span
-                                    dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('Y/m/d h:i a') }}</span>)
+                                    dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('d/m/Y H:i') }}</span>)
                                 </p>
                               @endif
                             @endif
@@ -831,7 +831,7 @@ ttq.page();
                               </h6>
 
                               <div class="quantity-input">
-                                <button class="quantity-down_variation" type="button" id="quantityDown">
+                                <button class="quantity-down_variation" type="button">
                                   -
                                 </button>
                                 <input type="hidden" name="v_name[]" value="{{ $item->name }}">
@@ -852,7 +852,7 @@ ttq.page();
                                   data-name="{{ $item->name }}" name="quantity[]"
                                   data-ticket_id="{{ $ticket->id }}" readonly data-stock="{{ $stock }}"
                                   data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
-                                <button class="quantity-up" type="button" id="quantityUP">
+                                <button class="quantity-up" type="button">
                                   +
                                 </button>
                               </div>
@@ -864,7 +864,7 @@ ttq.page();
                                   <p>{{ __('Discount available') . ' ' }} :
                                     ({{ __('till') . ' ' }} :
                                     <span
-                                      dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('Y/m/d h:i a') }}</span>)
+                                      dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('d/m/Y H:i') }}</span>)
                                   </p>
                                 @endif
                               @endif
@@ -907,14 +907,14 @@ ttq.page();
                               <span class="">{{ __('free') }}</span>
                             </h6>
                             <div class="quantity-input">
-                              <button class="quantity-down" type="button" id="quantityDown">
+                              <button class="quantity-down" type="button">
                                 -
                               </button>
                               <input class="quantity" data-max_buy_ticket="{{ $ticket->max_buy_ticket }}"
                                 type="number" value="0" data-price="{{ $ticket->price }}" name="quantity[]"
                                 data-ticket_id="{{ $ticket->id }}" readonly data-stock="{{ $stock }}"
                                 data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
-                              <button class="quantity-up" type="button" id="quantityUP">
+                              <button class="quantity-up" type="button">
                                 +
                               </button>
                             </div>
@@ -1017,17 +1017,15 @@ ttq.page();
                       @php
                         $start_time = strtotime($event->start_time);
                       @endphp
-                      {{ \Carbon\Carbon::parse($start_time)->timezone($websiteInfo->timezone)->translatedFormat('h:s A') }}
+                      {{ \Carbon\Carbon::parse($start_time)->timezone($websiteInfo->timezone)->translatedFormat('H:i') }}
                     </span>
                   </li>
                 </ul>
                 @if ($event->organizer_id != null)
-                  @php
-                    $organizer = App\Models\Organizer::where('id', $event->organizer_id)->first();
-                  @endphp
-                  @if ($organizer)
-                    <a href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}"
-                      class="organizer">{{ __('By') }}&nbsp;&nbsp;{{ $organizer->username }}</a>
+                  @php $rel_org = $relatedOrganizers[$event->organizer_id] ?? null; @endphp
+                  @if ($rel_org)
+                    <a href="{{ route('frontend.organizer.details', [$rel_org->id, str_replace(' ', '-', $rel_org->username)]) }}"
+                      class="organizer">{{ __('By') }}&nbsp;&nbsp;{{ $rel_org->username }}</a>
                   @endif
                 @else
                   @php
@@ -1054,15 +1052,7 @@ ttq.page();
                 @else
                   <p>{{ $desc }}</p>
                 @endif
-                @php
-                  $ticket = DB::table('tickets')
-                      ->where('event_id', $event->id)
-                      ->first();
-                  $event_count = DB::table('tickets')
-                      ->where('event_id', $event->id)
-                      ->get()
-                      ->count();
-                @endphp
+                @php $ticket = $relatedTickets[$event->id] ?? null; @endphp
 
                 <div class="price-remain">
                   <div class="location">

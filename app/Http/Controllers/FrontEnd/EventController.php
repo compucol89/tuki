@@ -229,7 +229,15 @@ class EventController extends Controller
 
 
       $information['related_events'] = $related_events;
-      return view('frontend.event.event-details', $information); //code...
+
+      // SEO / Open Graph
+      $information['og_title'] = $content->title . ' | ' . config('app.name');
+      $information['og_description'] = $content->meta_description ?: strip_tags(substr($content->description ?? '', 0, 160));
+      $information['og_image'] = asset('assets/event/' . $content->image);
+      $information['og_url'] = url()->current();
+      $information['canonical'] = url()->current();
+
+      return view('frontend.event.event-details', $information);
     } catch (\Exception $th) {
       return view('errors.404');
     }

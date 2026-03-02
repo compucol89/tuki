@@ -3,21 +3,57 @@
   {{ $content->title }}
 @endsection
 
-@php
-  $og_title = $content->title;
-  $og_description = strip_tags($content->description);
-  $og_image = asset('assets/admin/img/event/thumbnail/' . $content->thumbnail);
-@endphp
-
-@section('meta-keywords', "{{ $content->meta_keywords }}")
-@section('meta-description', "$content->meta_description")
-@section('og-title', "$og_title")
-@section('og-description', "$og_description")
-@section('og-image', "$og_image")
+@section('meta-keywords', $content->meta_keywords ?? '')
+@section('meta-description', $og_description ?? '')
+@section('og-title', $og_title ?? $content->title)
+@section('og-description', $og_description ?? '')
+@section('og-image', $og_image ?? asset('assets/admin/img/event/thumbnail/' . $content->thumbnail))
+@section('og-url', $og_url ?? url()->current())
+@section('og-type', 'event')
+@section('canonical', $canonical ?? url()->current())
 
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection
+
+@push('scripts')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "{{ addslashes($content->title) }}",
+  "description": "{{ addslashes(strip_tags(substr($content->description ?? '', 0, 300))) }}",
+  "startDate": "{{ \Carbon\Carbon::parse($content->start_date)->toIso8601String() }}",
+  "endDate": "{{ \Carbon\Carbon::parse($content->end_date)->toIso8601String() }}",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/{{ $content->event_type == 'online' ? 'OnlineEventAttendanceMode' : 'OfflineEventAttendanceMode' }}",
+  "location": {
+    "@type": "{{ $content->event_type == 'online' ? 'VirtualLocation' : 'Place' }}",
+    "name": "{{ addslashes($content->address ?? $content->city ?? '') }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "{{ addslashes($content->city ?? '') }}",
+      "addressCountry": "{{ addslashes($content->country ?? 'AR') }}"
+    }
+  },
+  "image": "{{ $og_image ?? asset('assets/admin/img/event/thumbnail/' . $content->thumbnail) }}",
+  "url": "{{ url()->current() }}",
+  "organizer": {
+    "@type": "Organization",
+    "name": "{{ addslashes($websiteInfo->website_title) }}"
+  }
+  @if(isset($content->price) && $content->price > 0)
+  ,"offers": {
+    "@type": "Offer",
+    "price": "{{ $content->price }}",
+    "priceCurrency": "ARS",
+    "availability": "https://schema.org/InStock",
+    "url": "{{ url()->current() }}"
+  }
+  @endif
+}
+</script>
+@endpush
 
 @section('hero-section')
   <!-- Page Banner Start -->

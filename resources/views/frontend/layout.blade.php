@@ -11,6 +11,14 @@
   <meta property="og:title" content="@yield('og-title')" />
   <meta property="og:description" content="@yield('og-description')" />
   <meta property="og:image" content="@yield('og-image')" />
+  <meta property="og:url" content="@yield('og-url', url()->current())" />
+  <meta property="og:type" content="@yield('og-type', 'website')" />
+  <meta property="og:site_name" content="{{ $websiteInfo->website_title }}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="@yield('og-title')" />
+  <meta name="twitter:description" content="@yield('og-description')" />
+  <meta name="twitter:image" content="@yield('og-image')" />
+  <link rel="canonical" href="@yield('canonical', url()->current())" />
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -74,6 +82,7 @@
   @endif
   {{-- Cookie alert dialog end --}}
 
+  @stack('scripts')
 </body>
 
 </html>

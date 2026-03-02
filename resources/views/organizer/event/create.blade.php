@@ -547,6 +547,37 @@
                 </div>
 
                 <div id="sliders"></div>
+
+                {{-- Píxeles de seguimiento --}}
+                <div class="card mt-4">
+                  <div class="card-header">
+                    <h4 class="card-title">{{ __('Píxeles de Seguimiento') }}</h4>
+                    <small class="text-muted">{{ __('Opcional. Agregá tus propios píxeles para medir conversiones de este evento.') }}</small>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label><i class="fab fa-facebook mr-1"></i> {{ __('Meta Pixel ID (Facebook)') }}</label>
+                          <input type="text" class="form-control" name="meta_pixel_id" placeholder="Ej: 1234567890123456">
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label><i class="fab fa-google mr-1"></i> {{ __('Google Analytics ID') }}</label>
+                          <input type="text" class="form-control" name="google_analytics_id" placeholder="Ej: G-XXXXXXXXXX">
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="form-group">
+                          <label><i class="fab fa-tiktok mr-1"></i> {{ __('TikTok Pixel ID') }}</label>
+                          <input type="text" class="form-control" name="tiktok_pixel_id" placeholder="Ej: CXXXXXXXXXXXXXXX">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </form>
             </div>
           </div>

@@ -33,7 +33,10 @@ class Event extends Model
     'ticket_image',
     'instructions',
     'meeting_url',
-    'ticket_logo'
+    'ticket_logo',
+    'meta_pixel_id',
+    'google_analytics_id',
+    'tiktok_pixel_id',
   ];
   public function ticket()
   {

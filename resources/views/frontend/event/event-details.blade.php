@@ -917,7 +917,7 @@ ttq.page();
               @php
                 $spotifyEmbedUrl = null;
                 if (!empty($content->spotify_url)) {
-                  preg_match('/spotify\.com\/artist\/([a-zA-Z0-9]+)/', $content->spotify_url, $sm);
+                  preg_match('/spotify\.com\/(?:intl-[a-z-]+\/)?artist\/([a-zA-Z0-9]+)/', $content->spotify_url, $sm);
                   if (!empty($sm[1])) $spotifyEmbedUrl = 'https://open.spotify.com/embed/artist/' . $sm[1] . '?utm_source=generator&theme=0';
                 }
               @endphp

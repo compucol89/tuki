@@ -138,7 +138,8 @@ class BookingController extends Controller
       }
     } else {
       try {
-        $event = json_decode($request->event, true);
+        $event = Session::get('event');
+        $event = $event ? (array) $event : [];
         $arrData = array(
           'event_id' => $event['id'],
           'price' => 0,

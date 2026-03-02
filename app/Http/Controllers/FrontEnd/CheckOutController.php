@@ -101,10 +101,8 @@ class CheckOutController extends Controller
 
         if ($price->early_bird_discount == 'enable') {
 
-          $start = Carbon::parse($price->early_bird_discount_date . $price->early_bird_discount_time);
-          $end = Carbon::parse($price->early_bird_discount_date . $price->early_bird_discount_time);
-          $today = Carbon::now();
-          if ($today <= ($end)) {
+          $deadline = Carbon::parse($price->early_bird_discount_date . ' ' . $price->early_bird_discount_time);
+          if (Carbon::now()->lte($deadline)) {
             if ($price->early_bird_discount_type == 'fixed') {
               $early_bird_dicount = $price->early_bird_discount_amount;
             } else {
@@ -158,10 +156,8 @@ class CheckOutController extends Controller
             //check early_bird discount
             if ($ticket->early_bird_discount == 'enable') {
 
-              $start = Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-              $end = Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-              $today = Carbon::now();
-              if ($today <= ($end)) {
+              $deadline = Carbon::parse($ticket->early_bird_discount_date . ' ' . $ticket->early_bird_discount_time);
+              if (Carbon::now()->lte($deadline)) {
                 if ($ticket->early_bird_discount_type == 'fixed') {
                   $early_bird_dicount = $ticket->early_bird_discount_amount;
                 } else {
@@ -186,10 +182,8 @@ class CheckOutController extends Controller
           //check early_bird discount
           if ($ticket->early_bird_discount == 'enable') {
 
-            $start = Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-            $end = Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-            $today = Carbon::now();
-            if ($today <= ($end)) {
+            $deadline = Carbon::parse($ticket->early_bird_discount_date . ' ' . $ticket->early_bird_discount_time);
+            if (Carbon::now()->lte($deadline)) {
               if ($ticket->early_bird_discount_type == 'fixed') {
                 $early_bird_dicount = $ticket->early_bird_discount_amount;
               } else {
@@ -317,8 +311,8 @@ class CheckOutController extends Controller
     $information['offline_gateways'] = Session::get('offline_gateways');
     $information['basicData'] = Basic::select('tax')->first();
     $stripe = OnlineGateway::where('keyword', 'stripe')->first();
-    $stripe_info = json_decode($stripe->information, true);
-    $information['stripe_key'] = $stripe_info['key'];
+    $stripe_info = $stripe ? json_decode($stripe->information, true) : [];
+    $information['stripe_key'] = $stripe_info['key'] ?? '';
 
     return view('frontend.check-out', $information);
   }

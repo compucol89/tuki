@@ -22,7 +22,7 @@
 }
 .user-sidebar .links li a.active,
 .user-sidebar .links li:hover > a{
-	color: #22b0af;
+	color: var(--secondary-color);
 }
 .order-details,
 .account-info{
@@ -119,7 +119,7 @@
     position: relative;
 }
 .progress-steps li.active .icon{
-	background: #22b0af;
+	background: var(--secondary-color);
 	color: #fff;
 }
 .progress-steps li:first-child:after{
@@ -156,14 +156,14 @@
 }
 .main-table .dataTables_wrapper td span.pending {
     padding: 5px 10px;
-    background: #22b0af;
+    background: var(--secondary-color);
     color: #fff;
     border-radius: 3px;
     line-height: 18px;
     font-size: 14px;
 }
 .main-table .dataTables_wrapper td a.btn{
-	border: 1px solid #22b0af;
+	border: 1px solid var(--secondary-color);
 	color: #123212;
 	background: transparent;
     font-size: 14px;
@@ -171,7 +171,7 @@
 	transition: all .3s;
 }
 .main-table .dataTables_wrapper td a.btn:hover{
-	background: #22b0af;
+	background: var(--secondary-color);
 	border-color: transparent;
 	color: #fff;
 }
@@ -194,14 +194,14 @@
 	box-shadow: none;
 }
 .paginate_button.active .page-link{
-	background-color: #22b0af !important;
+	background-color: var(--secondary-color) !important;
 	border-color: transparent;
 }
 .paginate_button .page-link:hover{
 	box-shadow: none;
 	border-radius: 0;
 	color: #fff;
-	background-color: #22b0af !important;
+	background-color: var(--secondary-color) !important;
 }
 table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before,
 table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before{
@@ -217,7 +217,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before{
 	float: right;
 }
 .order-info-area .prinit .btn{
-	background: #22b0af;
+	background: var(--secondary-color);
 	color: #fff;
 }
 .order-info-area .prinit .btn i{
@@ -249,8 +249,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before{
 	color: var(--danger);
 }
 .btn{
-	background: #22b0af;
-	color: #fff;
+	background: var(--accent-color);
+	color: var(--dark-color);
 	text-transform: capitalize;
 	outline: none;
 }
@@ -322,7 +322,7 @@ textarea.form_control{
 	left: 0;
 	width: 150px;
 	height: 40px;
-	background: #22b0af;
+	background: var(--secondary-color);
 	z-index: -1;
 	cursor: pointer;
 	text-align: center;
@@ -366,7 +366,7 @@ textarea.form_control{
   	opacity: 1;
 }
 .single_input:checked + .single_input_label:before {
-  	border-color: #22b0af;
+  	border-color: var(--secondary-color);
 }
 .single_input_label{
 	display: inline-flex;
@@ -422,7 +422,7 @@ textarea.form_control{
 	border-color: #ddd;
 }
 .sigle_input_check:after {
-	background: #22b0af;
+	background: var(--secondary-color);
 	color: #FFFFFF;
 	border-color: #ddd;
 }

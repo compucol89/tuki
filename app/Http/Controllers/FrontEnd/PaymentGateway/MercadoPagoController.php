@@ -101,6 +101,7 @@ class MercadoPagoController extends Controller
     $paymentToken = bin2hex(random_bytes(16));
 
     $curl = curl_init();
+    $isLocalhost = str_contains($completeURL, 'localhost') || str_contains($completeURL, '127.0.0.1');
     $preferenceData = [
       'items' => [
         [
@@ -121,8 +122,10 @@ class MercadoPagoController extends Controller
         'failure' => $cancelURL
       ],
       'external_reference' => $paymentToken,
-      'auto_return' => 'approved'
     ];
+    if (!$isLocalhost) {
+      $preferenceData['auto_return'] = 'approved';
+    }
 
     $httpHeader = ['Content-Type: application/json'];
 

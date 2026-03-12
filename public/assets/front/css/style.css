@@ -748,10 +748,7 @@ a.theme-btn:hover {
     margin-bottom: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
+    white-space: nowrap;
 }
 
 .event-description {

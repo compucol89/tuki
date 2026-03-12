@@ -108,8 +108,8 @@ class MercadoPagoController extends Controller
       'items' => [
         [
           'id' => uniqid(),
-          'title' => $eventTitle,
-          'description' => $quantity . ' entrada(s) - ' . $eventTitle,
+          'title' => $eventTitle . ' — ' . $quantity . ' entrada(s)',
+          'description' => $eventTitle . ' (' . $quantity . ' entrada(s))',
           'quantity' => 1,
           'currency_id' => $currencyInfo->base_currency_text,
           'unit_price' => $chargeTotal

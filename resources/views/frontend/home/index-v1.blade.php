@@ -12,16 +12,29 @@
 
 @section('hero-section')
   <!-- Hero Section Start -->
-  <section class="hero-section hero-collage-section overlay pt-60 pb-60" id="heroSection">
+  <section class="hero-section hero-collage-section pt-60 pb-60" id="heroSection">
 
-    {{-- Collage de fondo con thumbnails de eventos --}}
+    {{-- Collage de fondo: repite imágenes hasta llenar 12 celdas --}}
     <div class="hero-collage-bg" id="heroCollageBg">
-      @forelse($marqueeEvents->take(12) as $event)
-        <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}')"></div>
-      @empty
-        <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/front/images/hero-bg.jpg') }}')"></div>
-      @endforelse
+      @php
+        $thumbs = $marqueeEvents->pluck('thumbnail')->toArray();
+        $total  = count($thumbs);
+      @endphp
+      @if($total > 0)
+        @for($i = 0; $i < 12; $i++)
+          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
+        @endfor
+      @else
+        @for($i = 0; $i < 12; $i++)
+          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/front/images/hero-bg.jpg') }}')"></div>
+        @endfor
+      @endif
     </div>
+
+    {{-- Overlay oscuro --}}
+    <div class="hero-overlay"></div>
+    {{-- Textura noise --}}
+    <div class="hero-noise"></div>
 
     <div class="container hero-content-wrapper">
       <div class="hero-content">

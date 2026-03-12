@@ -93,8 +93,8 @@ class MercadoPagoController extends Controller
       'paymentStatus' => 'completed',
     );
 
-    $event = Event::find($eventId);
-    $eventTitle = $event ? $event->title : 'Event Booking';
+    $sessionEvent = Session::get('event');
+    $eventTitle = $sessionEvent ? $sessionEvent->title : 'Event Booking';
     $completeURL = route('event_booking.mercadopago.notify');
     $cancelURL = route('event_booking.cancel', ['id' => $eventId]);
     $chargeTotal = round((float)$total + $tax_amount, 2);

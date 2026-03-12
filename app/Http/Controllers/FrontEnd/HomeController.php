@@ -107,8 +107,11 @@ class HomeController extends Controller
       ->get();
     $queryResult['marqueeEvents'] = $marqueeEvents;
 
-    // Gallery images for hero slideshow
-    $queryResult['heroGalleryImages'] = EventImage::inRandomOrder()->limit(8)->pluck('image');
+    // Gallery images for hero slideshow (solo archivos que existen en disco)
+    $queryResult['heroGalleryImages'] = EventImage::inRandomOrder()->limit(20)->pluck('image')
+        ->filter(fn($img) => file_exists(public_path('assets/admin/img/event-gallery/' . $img)))
+        ->take(8)
+        ->values();
 
     return view('frontend.home.index-v1', $queryResult);
   }

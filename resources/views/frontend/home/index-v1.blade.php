@@ -12,23 +12,32 @@
 
 @section('hero-section')
   <!-- Hero Section Start -->
-  <section class="hero-section hero-collage-section pt-60 pb-60" id="heroSection">
+  <section class="hero-section hero-collage-section" id="heroSection">
 
-    {{-- Collage de fondo: repite imágenes hasta llenar 12 celdas --}}
+    {{-- Collage: 3 capas con profundidad distinta (Opción B) --}}
+    @php
+      $thumbs = $marqueeEvents->pluck('thumbnail')->toArray();
+      $total  = max(count($thumbs), 1);
+    @endphp
     <div class="hero-collage-bg" id="heroCollageBg">
-      @php
-        $thumbs = $marqueeEvents->pluck('thumbnail')->toArray();
-        $total  = count($thumbs);
-      @endphp
-      @if($total > 0)
-        @for($i = 0; $i < 12; $i++)
+      {{-- Capa trasera: speed 0.3 --}}
+      <div class="hero-layer" data-speed="0.3">
+        @for($i = 0; $i < 4; $i++)
           <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
         @endfor
-      @else
-        @for($i = 0; $i < 12; $i++)
-          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/front/images/hero-bg.jpg') }}')"></div>
+      </div>
+      {{-- Capa media: speed 0.7 --}}
+      <div class="hero-layer" data-speed="0.7">
+        @for($i = 4; $i < 8; $i++)
+          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
         @endfor
-      @endif
+      </div>
+      {{-- Capa delantera: speed 1.3 --}}
+      <div class="hero-layer" data-speed="1.3">
+        @for($i = 8; $i < 12; $i++)
+          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
+        @endfor
+      </div>
     </div>
 
     {{-- Overlay oscuro --}}
@@ -996,30 +1005,43 @@
 @push('scripts')
 <script>
 (function() {
-  var hero = document.getElementById('heroSection');
-  var bg   = document.getElementById('heroCollageBg');
-  if (!hero || !bg) return;
+  var hero   = document.getElementById('heroSection');
+  var layers = hero ? hero.querySelectorAll('.hero-layer') : [];
+  if (!hero || !layers.length) return;
 
-  var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
-  var strength = 18;
+  var maxStrength = 22;
+  var targets = [];
+  var currents = [];
+
+  layers.forEach(function(layer, i) {
+    var speed = parseFloat(layer.getAttribute('data-speed')) || 1;
+    targets[i]  = { x: 0, y: 0, speed: speed };
+    currents[i] = { x: 0, y: 0 };
+  });
 
   hero.addEventListener('mousemove', function(e) {
     var rect = hero.getBoundingClientRect();
     var x = (e.clientX - rect.left) / rect.width  - 0.5;
     var y = (e.clientY - rect.top)  / rect.height - 0.5;
-    targetX = -x * strength;
-    targetY = -y * strength;
+    layers.forEach(function(_, i) {
+      targets[i].x = -x * maxStrength * targets[i].speed;
+      targets[i].y = -y * maxStrength * targets[i].speed;
+    });
   });
 
   hero.addEventListener('mouseleave', function() {
-    targetX = 0;
-    targetY = 0;
+    layers.forEach(function(_, i) {
+      targets[i].x = 0;
+      targets[i].y = 0;
+    });
   });
 
   function animate() {
-    currentX += (targetX - currentX) * 0.06;
-    currentY += (targetY - currentY) * 0.06;
-    bg.style.transform = 'translate(' + currentX.toFixed(2) + 'px, ' + currentY.toFixed(2) + 'px)';
+    layers.forEach(function(layer, i) {
+      currents[i].x += (targets[i].x - currents[i].x) * 0.06;
+      currents[i].y += (targets[i].y - currents[i].y) * 0.06;
+      layer.style.transform = 'translate(' + currents[i].x.toFixed(2) + 'px, ' + currents[i].y.toFixed(2) + 'px)';
+    });
     requestAnimationFrame(animate);
   }
   animate();

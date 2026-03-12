@@ -498,7 +498,7 @@ a.theme-btn:hover {
 
 /* Hero Collage */
 .hero-collage-section {
-    min-height: 600px;
+    height: 600px;
     overflow: hidden;
     position: relative;
     background: none !important;
@@ -506,13 +506,20 @@ a.theme-btn:hover {
 
 .hero-collage-bg {
     position: absolute;
-    top: -40px; left: -40px; right: -40px; bottom: -40px;
+    top: -50px; left: -50px; right: -50px; bottom: -50px;
     z-index: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.hero-layer {
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
     gap: 3px;
     will-change: transform;
+    transition: transform 0.08s linear;
 }
 
 .hero-collage-cell {

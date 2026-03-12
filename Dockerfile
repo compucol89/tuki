@@ -1,15 +1,13 @@
-FROM php:8.2-cli
+FROM php:8.2-cli-alpine
 
-RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libxml2-dev libzip-dev zip unzip \
-    && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    bash git curl nodejs npm \
+    freetype-dev libpng-dev libjpeg-turbo-dev \
+    libzip-dev libxml2-dev oniguruma-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -17,7 +15,6 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 RUN npm install && npm run production
-
 RUN php artisan storage:link --force || true
 
 EXPOSE 8080

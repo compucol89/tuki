@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 @section('pageHeading')
-  {{ $content->title }}
+  {{ \Illuminate\Support\Str::limit($content->title, 50, '...') }}
 @endsection
 
 @section('meta-keywords', $content->meta_keywords ?? '')
@@ -193,26 +193,26 @@ ttq.page();
             @if ($content->date_type == 'single' && $content->countdown_status == 1)
               <div class="event-details-top">
                 @if ($startDateTime >= $now_time)
-                  <h2 class="title">{{ $content->title }} <span class="badge badge-info">{{ __('Upcoming') }}</span>
-                  </h2>
+                  <h1 class="title">{{ $content->title }} <span class="badge badge-info">{{ __('Upcoming') }}</span>
+                  </h1>
                 @elseif ($startDateTime <= $endDateTime && $endDateTime >= $now_time)
-                  <h2 class="title">
+                  <h1 class="title">
                     {{ $content->title }}
                     <span class="badge badge-success">{{ __('Running') }}</span>
-                  </h2>
+                  </h1>
                 @else
                   @php
                     $over = true;
                   @endphp
-                  <h2 class="title">
+                  <h1 class="title">
                     {{ $content->title }}
                     <span class="badge badge-danger">{{ __('Over') }}</span>
-                  </h2>
+                  </h1>
                 @endif
               </div>
             @elseif ($content->date_type == 'multiple')
               <div class="event-details-top">
-                <h2 class="title">{{ $content->title }}
+                <h1 class="title">{{ $content->title }}
                   @if ($startDateTime >= $now_time)
                     <span class="badge badge-info">{{ __('Upcoming') }}</span>
                   @elseif ($startDateTime <= $last_end_date && $last_end_date >= $now_time)
@@ -223,11 +223,11 @@ ttq.page();
                     @endphp
                     <span class="badge badge-danger">{{ __('Over') }}</span>
                   @endif
-                </h2>
+                </h1>
               </div>
             @else
               <div class="event-details-top">
-                <h2 class="title">{{ $content->title }}</h2>
+                <h1 class="title">{{ $content->title }}</h1>
               </div>
 
             @endif

@@ -15,19 +15,9 @@
   <section class="hero-section hero-collage-section" id="heroSection">
 
     {{-- Slideshow de fondo --}}
-    @php
-      $slidethumbs = $heroGalleryImages->values();
-      $slideCount  = max($slidethumbs->count(), 1);
-      $slideDur    = $slideCount * 5;
-    @endphp
     <div class="hero-slideshow" id="heroCollageBg">
-      @foreach($slidethumbs as $i => $thumb)
-        @php $delay = ($i === 0) ? 0 : (($i * 5) - $slideDur); @endphp
-        <div class="hero-slide" style="
-          background-image: url('{{ asset('assets/admin/img/event-gallery/' . $thumb) }}');
-          animation-duration: {{ $slideDur }}s;
-          animation-delay: {{ $delay }}s;
-        "></div>
+      @foreach($heroGalleryImages->values() as $i => $thumb)
+        <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/event-gallery/' . $thumb) }}');"></div>
       @endforeach
     </div>
 
@@ -996,6 +986,21 @@
 @push('scripts')
 <script>
 (function() {
+  // --- Crossfade slideshow ---
+  var slides = document.querySelectorAll('#heroCollageBg .hero-slide');
+  if (slides.length > 1) {
+    var current = 0;
+    slides[0].style.opacity = '1';
+    setInterval(function() {
+      slides[current].style.opacity = '0';
+      current = (current + 1) % slides.length;
+      slides[current].style.opacity = '1';
+    }, 5000);
+  } else if (slides.length === 1) {
+    slides[0].style.opacity = '1';
+  }
+
+  // --- Parallax ---
   var hero = document.getElementById('heroSection');
   var bg   = document.getElementById('heroCollageBg');
   if (!hero || !bg) return;

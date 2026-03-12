@@ -12,42 +12,43 @@
 
 @section('hero-section')
   <!-- Hero Section Start -->
-  @if ($heroSection)
-    <section class="hero-section overlay pt-105 pb-120 lazy"
-      data-bg="{{ asset('assets/admin/img/hero-section/' . $heroSection->background_image) }}">
-    @else
-      <section class="hero-section overlay pt-105 pb-120 lazy" data-bg="{{ asset('assets/front/images/hero-bg.jpg') }}">
-  @endif
-  <div class="container">
-    <div class="hero-content">
-      <h1>
-        {{ $heroSection ? $heroSection->first_title : __('Event Ticketing and Booking System') }}
-      </h1>
-      <p>
-        {{ $heroSection
-            ? $heroSection->second_title
-            : __('This is an affordable and powerful event ticketing platform
-                                                                                                                                                          for event organisers, promoters, and managers. Easily create, promote and sell tickets to your events of every
-                                                                                                                                                          type and size.') }}
-      </p>
-      <form id="event-search" class="event-search mt-35" name="event-search" action="{{ route('events') }}" method="get">
-        <div class="search-item">
-          <label for="borwseby"><i class="fas fa-list"></i></label>
-          <select name="category" id="borwseby">
-            <option value="">{{ __('All Category') }}</option>
-            @foreach ($categories as $category)
-              <option value="{{ $category->slug }}">{{ $category->name }}</option>
-            @endforeach
-          </select>
-        </div>
-        <div class="search-item">
-          <label for="search"><i class="fas fa-search"></i></label>
-          <input type="search" id="search" name="search-input" placeholder="{{ __('Search Anything') }}">
-        </div>
-        <button type="submit" class="theme-btn">{{ $heroSection ? $heroSection->first_button : __('Search') }}</button>
-      </form>
+  <section class="hero-section hero-collage-section overlay pt-60 pb-60" id="heroSection">
+
+    {{-- Collage de fondo con thumbnails de eventos --}}
+    <div class="hero-collage-bg" id="heroCollageBg">
+      @forelse($marqueeEvents->take(12) as $event)
+        <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}')"></div>
+      @empty
+        <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/front/images/hero-bg.jpg') }}')"></div>
+      @endforelse
     </div>
-  </div>
+
+    <div class="container hero-content-wrapper">
+      <div class="hero-content">
+        <h1>
+          {{ $heroSection ? $heroSection->first_title : __('Event Ticketing and Booking System') }}
+        </h1>
+        <p>
+          {{ $heroSection ? $heroSection->second_title : __('La plataforma de venta de entradas y gestión de eventos más completa.') }}
+        </p>
+        <form id="event-search" class="event-search mt-35" name="event-search" action="{{ route('events') }}" method="get">
+          <div class="search-item">
+            <label for="borwseby"><i class="fas fa-list"></i></label>
+            <select name="category" id="borwseby">
+              <option value="">{{ __('All Category') }}</option>
+              @foreach ($categories as $category)
+                <option value="{{ $category->slug }}">{{ $category->name }}</option>
+              @endforeach
+            </select>
+          </div>
+          <div class="search-item">
+            <label for="search"><i class="fas fa-search"></i></label>
+            <input type="search" id="search" name="search-input" placeholder="{{ __('Search Anything') }}">
+          </div>
+          <button type="submit" class="theme-btn">{{ $heroSection ? $heroSection->first_button : __('Search') }}</button>
+        </form>
+      </div>
+    </div>
   </section>
   <!-- Hero Section End -->
 
@@ -978,3 +979,37 @@
   @endif
   <!-- Client Logo End -->
 @endsection
+
+@push('scripts')
+<script>
+(function() {
+  var hero = document.getElementById('heroSection');
+  var bg   = document.getElementById('heroCollageBg');
+  if (!hero || !bg) return;
+
+  var targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+  var strength = 18;
+
+  hero.addEventListener('mousemove', function(e) {
+    var rect = hero.getBoundingClientRect();
+    var x = (e.clientX - rect.left) / rect.width  - 0.5;
+    var y = (e.clientY - rect.top)  / rect.height - 0.5;
+    targetX = -x * strength;
+    targetY = -y * strength;
+  });
+
+  hero.addEventListener('mouseleave', function() {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  function animate() {
+    currentX += (targetX - currentX) * 0.06;
+    currentY += (targetY - currentY) * 0.06;
+    bg.style.transform = 'translate(' + currentX.toFixed(2) + 'px, ' + currentY.toFixed(2) + 'px)';
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+@endpush

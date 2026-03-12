@@ -496,6 +496,60 @@ a.theme-btn:hover {
     justify-content: center;
 }
 
+/* Hero Collage */
+.hero-collage-section {
+    min-height: 600px;
+    overflow: hidden;
+    position: relative;
+    background: none !important;
+}
+
+.hero-collage-bg {
+    position: absolute;
+    inset: -40px;
+    z-index: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3px;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.hero-collage-cell {
+    background-size: cover;
+    background-position: center;
+}
+
+/* Overlay oscuro */
+.hero-collage-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 10, 21, 0.74);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Textura noise/grunge */
+.hero-collage-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    mix-blend-mode: overlay;
+}
+
+.hero-content-wrapper {
+    position: relative;
+    z-index: 3;
+}
+
 .hero-content {
     margin: 0 auto;
     max-width: 930px;

@@ -29,7 +29,7 @@ class UpdateRequest extends FormRequest
     $request = $this->request->all();
     $event_galleries = EventImage::where('event_id', $this->event_id)->get()->count();
     $ruleArray = [
-      'thumbnail' => $this->hasFile('thumbnail') ? [new ImageMimeTypeRule(), 'dimensions:width=320,height=230'] : '',
+      'thumbnail' => $this->hasFile('thumbnail') ? [new ImageMimeTypeRule()] : '',
       'gallery_images' => $event_galleries == 0 ? 'numeric|min:1' : '',
       'status' => 'required',
       'is_featured' => 'required',

@@ -286,9 +286,8 @@ ttq.page();
               </a>
             @endif
             <a href="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}"
-              class="{{ $checkWishList == true ? 'text-success' : '' }}" aria-label="{{ $checkWishList ? __('Remove from wishlist') : __('Add to wishlist') }}"><i class="fas fa-bookmark"></i></a>
-            <a href="javascript:void(0)" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Share event') }}">
-              <i class="fas fa-share-alt"></i></a>
+              class="{{ $checkWishList == true ? 'text-success' : '' }}"><i class="fas fa-bookmark"></i><span class="sr-only">{{ $checkWishList ? __('Remove from wishlist') : __('Add to wishlist') }}</span></a>
+            <a href="javascript:void(0)" data-toggle="modal" data-target=".share-event"><i class="fas fa-share-alt"></i><span class="sr-only">{{ __('Share event') }}</span></a>
           </div>
         </div>
         <div class="row">

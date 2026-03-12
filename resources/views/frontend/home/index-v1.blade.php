@@ -14,30 +14,15 @@
   <!-- Hero Section Start -->
   <section class="hero-section hero-collage-section" id="heroSection">
 
-    {{-- Collage: 3 capas con profundidad distinta (Opción B) --}}
+    {{-- Collage Opción A: capa única --}}
     @php
       $thumbs = $marqueeEvents->pluck('thumbnail')->toArray();
       $total  = max(count($thumbs), 1);
     @endphp
     <div class="hero-collage-bg" id="heroCollageBg">
-      {{-- Capa trasera: speed 0.3 --}}
-      <div class="hero-layer" data-speed="0.3">
-        @for($i = 0; $i < 4; $i++)
-          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
-        @endfor
-      </div>
-      {{-- Capa media: speed 0.7 --}}
-      <div class="hero-layer" data-speed="0.7">
-        @for($i = 4; $i < 8; $i++)
-          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
-        @endfor
-      </div>
-      {{-- Capa delantera: speed 1.3 --}}
-      <div class="hero-layer" data-speed="1.3">
-        @for($i = 8; $i < 12; $i++)
-          <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
-        @endfor
-      </div>
+      @for($i = 0; $i < 12; $i++)
+        <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
+      @endfor
     </div>
 
     {{-- Overlay oscuro --}}
@@ -1005,46 +990,26 @@
 @push('scripts')
 <script>
 (function() {
-  var hero   = document.getElementById('heroSection');
-  var layers = hero ? hero.querySelectorAll('.hero-layer') : [];
-  if (!hero || !layers.length) return;
+  var hero = document.getElementById('heroSection');
+  var bg   = document.getElementById('heroCollageBg');
+  if (!hero || !bg) return;
 
-  var maxStrength = 22;
-  var targets = [];
-  var currents = [];
-
-  layers.forEach(function(layer, i) {
-    var speed = parseFloat(layer.getAttribute('data-speed')) || 1;
-    targets[i]  = { x: 0, y: 0, speed: speed };
-    currents[i] = { x: 0, y: 0 };
-  });
+  var tx = 0, ty = 0, cx = 0, cy = 0;
 
   hero.addEventListener('mousemove', function(e) {
-    var rect = hero.getBoundingClientRect();
-    var x = (e.clientX - rect.left) / rect.width  - 0.5;
-    var y = (e.clientY - rect.top)  / rect.height - 0.5;
-    layers.forEach(function(_, i) {
-      targets[i].x = -x * maxStrength * targets[i].speed;
-      targets[i].y = -y * maxStrength * targets[i].speed;
-    });
+    var r = hero.getBoundingClientRect();
+    tx = -(e.clientX - r.left) / r.width  * 20 + 10;
+    ty = -(e.clientY - r.top)  / r.height * 20 + 10;
   });
 
-  hero.addEventListener('mouseleave', function() {
-    layers.forEach(function(_, i) {
-      targets[i].x = 0;
-      targets[i].y = 0;
-    });
-  });
+  hero.addEventListener('mouseleave', function() { tx = 0; ty = 0; });
 
-  function animate() {
-    layers.forEach(function(layer, i) {
-      currents[i].x += (targets[i].x - currents[i].x) * 0.06;
-      currents[i].y += (targets[i].y - currents[i].y) * 0.06;
-      layer.style.transform = 'translate(' + currents[i].x.toFixed(2) + 'px, ' + currents[i].y.toFixed(2) + 'px)';
-    });
-    requestAnimationFrame(animate);
-  }
-  animate();
+  (function loop() {
+    cx += (tx - cx) * 0.05;
+    cy += (ty - cy) * 0.05;
+    bg.style.transform = 'translate(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px)';
+    requestAnimationFrame(loop);
+  })();
 })();
 </script>
 @endpush

@@ -14,15 +14,20 @@
   <!-- Hero Section Start -->
   <section class="hero-section hero-collage-section" id="heroSection">
 
-    {{-- Collage Opción A: capa única --}}
+    {{-- Slideshow de fondo --}}
     @php
-      $thumbs = $marqueeEvents->pluck('thumbnail')->toArray();
-      $total  = max(count($thumbs), 1);
+      $slidethumbs = $marqueeEvents->pluck('thumbnail')->take(4)->values();
+      $slideCount  = max($slidethumbs->count(), 1);
+      $slideDur    = $slideCount * 5;
     @endphp
-    <div class="hero-collage-bg" id="heroCollageBg">
-      @for($i = 0; $i < 12; $i++)
-        <div class="hero-collage-cell" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumbs[$i % $total]) }}')"></div>
-      @endfor
+    <div class="hero-slideshow" id="heroCollageBg">
+      @foreach($slidethumbs as $i => $thumb)
+        <div class="hero-slide" style="
+          background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumb) }}');
+          animation-duration: {{ $slideDur }}s;
+          animation-delay: {{ $i * 5 }}s;
+        "></div>
+      @endforeach
     </div>
 
     {{-- Overlay oscuro --}}
@@ -998,15 +1003,15 @@
 
   hero.addEventListener('mousemove', function(e) {
     var r = hero.getBoundingClientRect();
-    tx = -(e.clientX - r.left) / r.width  * 20 + 10;
-    ty = -(e.clientY - r.top)  / r.height * 20 + 10;
+    tx = -(e.clientX - r.left) / r.width  * 14 + 7;
+    ty = -(e.clientY - r.top)  / r.height * 14 + 7;
   });
 
   hero.addEventListener('mouseleave', function() { tx = 0; ty = 0; });
 
   (function loop() {
-    cx += (tx - cx) * 0.05;
-    cy += (ty - cy) * 0.05;
+    cx += (tx - cx) * 0.04;
+    cy += (ty - cy) * 0.04;
     bg.style.transform = 'translate(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px)';
     requestAnimationFrame(loop);
   })();

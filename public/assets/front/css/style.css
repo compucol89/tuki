@@ -507,22 +507,33 @@ a.theme-btn:hover {
     -webkit-user-select: none;
 }
 
-.hero-collage-bg {
+.hero-slideshow {
     position: absolute;
-    top: -40px; left: -40px; right: -40px; bottom: -40px;
+    top: 0; left: 0; right: 0; bottom: 0;
     z-index: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    gap: 3px;
-    will-change: transform;
     pointer-events: none;
 }
 
-.hero-collage-cell {
+.hero-slide {
+    position: absolute;
+    top: -20px; left: -20px; right: -20px; bottom: -20px;
     background-size: cover;
     background-position: center;
+    opacity: 0;
+    transform: translateX(60px);
+    animation-name: heroSlide;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
     pointer-events: none;
+    will-change: opacity, transform;
+}
+
+@keyframes heroSlide {
+    0%    { opacity: 0; transform: translateX(60px); }
+    4%    { opacity: 1; transform: translateX(0);    }
+    22%   { opacity: 1; transform: translateX(0);    }
+    26%   { opacity: 0; transform: translateX(-50px);}
+    100%  { opacity: 0; transform: translateX(-50px);}
 }
 
 .hero-overlay {

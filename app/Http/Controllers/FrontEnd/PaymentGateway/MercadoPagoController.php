@@ -7,6 +7,7 @@ use App\Http\Controllers\FrontEnd\Event\BookingController;
 use App\Jobs\BookingInvoiceJob;
 use App\Models\BasicSettings\Basic;
 use App\Models\Earning;
+use App\Models\Event;
 use App\Models\PaymentGateway\OnlineGateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -92,7 +93,8 @@ class MercadoPagoController extends Controller
       'paymentStatus' => 'completed',
     );
 
-    $title = 'Event Booking';
+    $event = Event::find($eventId);
+    $eventTitle = $event ? $event->title : 'Event Booking';
     $completeURL = route('event_booking.mercadopago.notify');
     $cancelURL = route('event_booking.cancel', ['id' => $eventId]);
     $chargeTotal = round((float)$total + $tax_amount, 2);
@@ -106,8 +108,8 @@ class MercadoPagoController extends Controller
       'items' => [
         [
           'id' => uniqid(),
-          'title' => $title,
-          'description' => 'Event Booking via MercadoPago',
+          'title' => $eventTitle,
+          'description' => $quantity . ' entrada(s) - ' . $eventTitle,
           'quantity' => 1,
           'currency_id' => $currencyInfo->base_currency_text,
           'unit_price' => $chargeTotal

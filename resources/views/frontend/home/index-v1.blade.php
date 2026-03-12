@@ -16,14 +16,14 @@
 
     {{-- Slideshow de fondo --}}
     @php
-      $slidethumbs = $marqueeEvents->pluck('thumbnail')->take(4)->values();
+      $slidethumbs = $heroGalleryImages->values();
       $slideCount  = max($slidethumbs->count(), 1);
       $slideDur    = $slideCount * 5;
     @endphp
     <div class="hero-slideshow" id="heroCollageBg">
       @foreach($slidethumbs as $i => $thumb)
         <div class="hero-slide" style="
-          background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $thumb) }}');
+          background-image: url('{{ asset('assets/admin/img/event-gallery/' . $thumb) }}');
           animation-duration: {{ $slideDur }}s;
           animation-delay: {{ $i * 5 }}s;
         "></div>

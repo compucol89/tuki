@@ -12,6 +12,7 @@ use App\Models\Event;
 use App\Models\Event\Booking;
 use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
+use App\Models\Event\EventImage;
 use App\Models\Footer\FooterContent;
 use App\Models\Footer\QuickLink;
 use App\Models\HomePage\AboutUsSection;
@@ -105,6 +106,9 @@ class HomeController extends Controller
       ->limit(20)
       ->get();
     $queryResult['marqueeEvents'] = $marqueeEvents;
+
+    // Gallery images for hero slideshow
+    $queryResult['heroGalleryImages'] = EventImage::inRandomOrder()->limit(8)->pluck('image');
 
     return view('frontend.home.index-v1', $queryResult);
   }

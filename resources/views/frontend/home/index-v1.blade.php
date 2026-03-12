@@ -986,15 +986,25 @@
 @push('scripts')
 <script>
 (function() {
-  // --- Crossfade slideshow ---
+  // --- Crossfade slideshow (sin gap) ---
   var slides = document.querySelectorAll('#heroCollageBg .hero-slide');
   if (slides.length > 1) {
     var current = 0;
     slides[0].style.opacity = '1';
+    slides[0].style.zIndex  = '1';
     setInterval(function() {
-      slides[current].style.opacity = '0';
-      current = (current + 1) % slides.length;
-      slides[current].style.opacity = '1';
+      var next = (current + 1) % slides.length;
+      // El nuevo slide aparece encima mientras el actual se mantiene visible
+      slides[next].style.zIndex  = '2';
+      slides[next].style.opacity = '1';
+      // Cuando termina el fade (1s), ocultamos el anterior (ya no se ve)
+      var prev = current;
+      setTimeout(function() {
+        slides[prev].style.opacity = '0';
+        slides[prev].style.zIndex  = '1';
+        slides[next].style.zIndex  = '1';
+      }, 1000);
+      current = next;
     }, 5000);
   } else if (slides.length === 1) {
     slides[0].style.opacity = '1';

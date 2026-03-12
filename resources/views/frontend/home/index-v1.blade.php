@@ -987,28 +987,39 @@
 <script>
 (function() {
   // --- Crossfade slideshow (sin gap) ---
-  var slides = document.querySelectorAll('#heroCollageBg .hero-slide');
-  if (slides.length > 1) {
-    var current = 0;
-    slides[0].style.opacity = '1';
-    slides[0].style.zIndex  = '1';
-    setInterval(function() {
-      var next = (current + 1) % slides.length;
-      // El nuevo slide aparece encima mientras el actual se mantiene visible
-      slides[next].style.zIndex  = '2';
-      slides[next].style.opacity = '1';
-      // Cuando termina el fade (1s), ocultamos el anterior (ya no se ve)
-      var prev = current;
-      setTimeout(function() {
-        slides[prev].style.opacity = '0';
-        slides[prev].style.zIndex  = '1';
-        slides[next].style.zIndex  = '1';
-      }, 1000);
-      current = next;
-    }, 5000);
-  } else if (slides.length === 1) {
-    slides[0].style.opacity = '1';
-  }
+  var slides = Array.from(document.querySelectorAll('#heroCollageBg .hero-slide'));
+  var n = slides.length;
+  if (n === 0) return;
+
+  // Mostrar el primer slide SIN transición (evita el gris inicial al cargar)
+  slides[0].style.transition = 'none';
+  slides[0].style.opacity    = '1';
+  slides[0].style.zIndex     = '0';
+
+  if (n === 1) return; // nada más que hacer
+
+  var cur = 0;
+  setInterval(function() {
+    var nxt = (cur + 1) % n;
+
+    // Nuevo slide arriba, actual queda debajo
+    slides[cur].style.zIndex = '0';
+    slides[nxt].style.zIndex = '1';
+
+    // Fade-in del nuevo (con transición)
+    slides[nxt].style.transition = 'opacity 1.2s ease-in-out';
+    slides[nxt].style.opacity    = '1';
+
+    // Cuando termina el fade, ocultar el anterior SIN transición
+    // (ya está tapado, no se ve, no hace falta desvanecer)
+    var prev = cur;
+    setTimeout(function() {
+      slides[prev].style.transition = 'none';
+      slides[prev].style.opacity    = '0';
+    }, 1200);
+
+    cur = nxt;
+  }, 5000);
 
   // --- Parallax ---
   var hero = document.getElementById('heroSection');

@@ -14,7 +14,7 @@
           <div class="social-style-one mt-30">
             @if (count($socialMediaInfos) > 0)
               @foreach ($socialMediaInfos as $socialMediaInfo)
-                <a href="{{ $socialMediaInfo->url }}"><i class="{{ $socialMediaInfo->icon }}"></i></a>
+                <a href="{{ $socialMediaInfo->url }}" aria-label="{{ $socialMediaInfo->title ?? 'Social media' }}" target="_blank" rel="noopener"><i class="{{ $socialMediaInfo->icon }}"></i></a>
               @endforeach
             @endif
           </div>

@@ -22,10 +22,11 @@
     @endphp
     <div class="hero-slideshow" id="heroCollageBg">
       @foreach($slidethumbs as $i => $thumb)
+        @php $delay = ($i === 0) ? 0 : (($i * 5) - $slideDur); @endphp
         <div class="hero-slide" style="
           background-image: url('{{ asset('assets/admin/img/event-gallery/' . $thumb) }}');
           animation-duration: {{ $slideDur }}s;
-          animation-delay: {{ $i * 5 }}s;
+          animation-delay: {{ $delay }}s;
         "></div>
       @endforeach
     </div>

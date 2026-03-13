@@ -33,8 +33,10 @@
     padding-bottom: 15px;
     animation: sticky 1s;
     -webkit-animation: sticky 1s;
-    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06), 0 4px 20px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(23, 52, 68, 0.96);
 }
 
 .fixed-header .main-menu .navigation li a {

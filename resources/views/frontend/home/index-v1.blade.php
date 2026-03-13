@@ -175,11 +175,7 @@
                         @endif
                         <h5>
                           <a href="{{ route('event.details', [$event->slug, $event->id]) }}">
-                            @if (strlen($event->title) > 30)
-                              {{ mb_substr($event->title, 0, 30) . '...' }}
-                            @else
-                              {{ $event->title }}
-                            @endif
+                            {{ $event->title }}
                           </a>
                         </h5>
                         @php
@@ -500,11 +496,7 @@
                               class="organizer">{{ $admin->username }}</a>
                           @endif
                           <h5>
-                            @if (strlen($event->title) > 30)
-                              {{ mb_substr($event->title, 0, 30) . '...' }}
-                            @else
-                              {{ $event->title }}
-                            @endif
+                            {{ $event->title }}
                           </h5>
                           @php
                             $desc = strip_tags($event->description);
@@ -858,7 +850,7 @@
       @if ($howWork)
         <div class="work-process text-center">
           <div class="container">
-            <div class="work-process-inner pt-110 rpt-90 pb-80 rpb-60">
+            <div class="work-process-inner pt-50 rpt-90 pb-40 rpb-60">
 
               <div class="section-title mb-60">
                 <h2>{{ $howWork->title }}</h2>
@@ -899,7 +891,7 @@
   @if ($secInfo->testimonials_section_status == 1)
     <section class="testimonial-section pt-120 rpt-80">
       <div class="container">
-        <div class="row pb-75 rpb-55">
+        <div class="row pb-20 rpb-20">
           <div class="col-lg-4">
             <div class="testimonial-content pt-10 rmb-55">
               <div class="section-title mb-30">

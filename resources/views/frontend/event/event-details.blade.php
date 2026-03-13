@@ -1051,11 +1051,7 @@ ttq.page();
                 @endif
                 <h5>
                   <a href="{{ route('event.details', [$event->slug, $event->id]) }}">
-                    @if (strlen($event->title) > 30)
-                      {{ mb_substr($event->title, 0, 30) . '...' }}
-                    @else
-                      {{ $event->title }}
-                    @endif
+                    {{ $event->title }}
                   </a>
                 </h5>
                 @php

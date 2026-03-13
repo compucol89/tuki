@@ -144,11 +144,7 @@
                             @endif
                             <h5>
                               <a href="{{ route('event.details', [$event->information->slug, $event->id]) }}">
-                                @if (strlen($event->information->title) > 45)
-                                  {{ mb_substr($event->information->title, 0, 50) . '....' }}
-                                @else
-                                  {{ $event->information->title }}
-                                @endif
+                                {{ $event->information->title }}
                               </a>
                             </h5>
                             @php
@@ -379,11 +375,7 @@
                                   class="organizer">{{ $admin->username }}</a>
                               @endif
                               <h5>
-                                @if (strlen($event->information->title) > 45)
-                                  {{ mb_substr($event->information->title, 0, 50) . '....' }}
-                                @else
-                                  {{ $event->information->title }}
-                                @endif
+                                {{ $event->information->title }}
                               </h5>
                               @php
                                 $desc = strip_tags(@$event->information->description);

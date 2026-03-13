@@ -36,9 +36,6 @@
 <body>
   <div class="page-wrapper">
 
-    <!-- Preloader -->
-    <div class="preloader" style="background-image:url({{ asset('assets/admin/img/' . $websiteInfo->preloader) }})">
-    </div>
     <div class="request-loader">
       <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="loader">
     </div>
@@ -83,6 +80,7 @@
   {{-- Cookie alert dialog end --}}
 
   @stack('scripts')
+  <script>document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('loaded');});</script>
 </body>
 
 </html>

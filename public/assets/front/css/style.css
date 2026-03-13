@@ -4193,12 +4193,12 @@ html[dir*=rtl] .modal .close {
    ================================================ */
 
 /* A.1 — Reducir padding vertical de secciones */
-body.home-page .events-section    { padding-top: 40px;  padding-bottom: 60px; }
-body.home-page .category-section  { padding-top: 60px;  padding-bottom: 60px; }
-body.home-page .about-section     { padding-bottom: 60px; }
-body.home-page .feature-section   { padding-top: 60px;  padding-bottom: 60px; }
-body.home-page .testimonial-section { padding-top: 60px; padding-bottom: 60px; }
-body.home-page .client-logo-area  { padding-top: 60px;  padding-bottom: 60px; }
+body.home-page .events-section    { padding-top: 30px;  padding-bottom: 40px; }
+body.home-page .category-section  { padding-top: 40px;  padding-bottom: 40px; }
+body.home-page .about-section     { padding-bottom: 40px; }
+body.home-page .feature-section   { padding-top: 40px;  padding-bottom: 40px; }
+body.home-page .testimonial-section { padding-top: 40px; padding-bottom: 40px; }
+body.home-page .client-logo-area  { padding-top: 40px;  padding-bottom: 40px; }
 
 /* A.2 — Divisor sutil entre secciones */
 body.home-page section + section::before {

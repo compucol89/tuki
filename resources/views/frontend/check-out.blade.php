@@ -316,7 +316,7 @@
                   <option value="">{{ __('Select a payment method') }}</option>
                   @foreach ($online_gateways as $online_gateway)
                     <option value="{{ $online_gateway->keyword }}"
-                      {{ $online_gateway->keyword == old('gateway') ? 'selected' : '' }}>
+                      {{ (old('gateway', 'mercadopago') == $online_gateway->keyword) ? 'selected' : '' }}>
                       {{ __("$online_gateway->name") }}</option>
                   @endforeach
                   @foreach ($offline_gateways as $offline_gateway)

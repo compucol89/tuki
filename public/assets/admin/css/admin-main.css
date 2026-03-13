@@ -725,3 +725,78 @@ body[data-background-color="dark"] .card .payment-information .row:not(:last-chi
 span.tox-statusbar__branding {
   display: none;
 }
+/* D.1 — Dashboard stat cards modernizadas */
+.dashboard-items .card-stats {
+    background: #fff !important;
+    border-radius: 16px !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-top-width: 3px !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+    overflow: hidden;
+}
+
+.dashboard-items .card-stats:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10) !important;
+}
+
+/* Colores de acento por tipo */
+.dashboard-items .card-stats.card-info    { border-top-color: #00c2f4 !important; }
+.dashboard-items .card-stats.card-success { border-top-color: #10b981 !important; }
+.dashboard-items .card-stats.card-danger  { border-top-color: #f59e0b !important; }
+.dashboard-items .card-stats.card-secondary { border-top-color: #8b5cf6 !important; }
+
+/* Resetear fondo coloreado del template Atlantis */
+.dashboard-items .card-stats.card-info,
+.dashboard-items .card-stats.card-success,
+.dashboard-items .card-stats.card-danger,
+.dashboard-items .card-stats.card-secondary {
+    background-image: none !important;
+}
+
+.dashboard-items .card-stats .card-body {
+    padding: 24px 28px !important;
+}
+
+/* Icono */
+.dashboard-items .card-stats .icon-big {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px !important;
+}
+
+.dashboard-items .card-stats.card-info    .icon-big { background: rgba(0,194,244,0.1); color: #00c2f4 !important; }
+.dashboard-items .card-stats.card-success .icon-big { background: rgba(16,185,129,0.1); color: #10b981 !important; }
+.dashboard-items .card-stats.card-danger  .icon-big { background: rgba(245,158,11,0.1); color: #f59e0b !important; }
+.dashboard-items .card-stats.card-secondary .icon-big { background: rgba(139,92,246,0.1); color: #8b5cf6 !important; }
+
+/* Número */
+.dashboard-items .card-stats .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: #173444 !important;
+    line-height: 1 !important;
+    margin-bottom: 4px !important;
+}
+
+/* Label */
+.dashboard-items .card-stats .card-category {
+    font-size: 12px !important;
+    color: #8899a6 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 6px !important;
+    font-weight: 600 !important;
+}
+
+/* Quitar estilos de link en el wrapper <a> */
+.dashboard-items a:hover {
+    text-decoration: none !important;
+}

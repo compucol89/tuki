@@ -99,16 +99,19 @@
       <span class="ev-card__date-month">{{ strtoupper($ev_carbon->translatedFormat('M')) }}</span>
     </div>
 
-    {{-- Overlay hover: descripción + CTA --}}
-    @if($ev_desc)
+    {{-- Overlay hover: fecha enorme (izq) + hora enorme (der) --}}
     <div class="ev-card__overlay" aria-hidden="true">
-      <p class="ev-card__overlay-desc">{{ $ev_desc }}</p>
-      <span class="ev-card__overlay-cta">
-        {{ __('Ver detalles') }}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </span>
+      <div class="ev-card__overlay-date">
+        <span class="ev-card__overlay-day">{{ $ev_carbon->format('d') }}</span>
+        <span class="ev-card__overlay-month">{{ strtoupper($ev_carbon->translatedFormat('M')) }}</span>
+        <span class="ev-card__overlay-year">{{ $ev_carbon->format('Y') }}</span>
+      </div>
+      <div class="ev-card__overlay-divider"></div>
+      <div class="ev-card__overlay-time">
+        <span class="ev-card__overlay-hhmm">{{ $ev_time->format('H:i') }}</span>
+        <span class="ev-card__overlay-hs">hs</span>
+      </div>
     </div>
-    @endif
 
     {{-- Wishlist — top-right de la imagen --}}
     <a href="{{ $ev_wishlist_route }}"

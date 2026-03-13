@@ -52,8 +52,8 @@
     --dark-color: #173444;
     --light-color: #F7F7F7;
     --accent-color: #00c2f4;
-    --base-font: 'Roboto', sans-serif;
-    --heading-font: 'Raleway', sans-serif;
+    --base-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --heading-font: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
 body {

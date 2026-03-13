@@ -402,12 +402,10 @@ a.theme-btn:hover {
 /* Page fade-in (reemplaza preloader bloqueante) */
 body {
     opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.35s ease, transform 0.35s ease;
+    transition: opacity 0.35s ease;
 }
 body.loaded {
     opacity: 1;
-    transform: translateY(0);
 }
 
 /*** Scroll Top style ** */

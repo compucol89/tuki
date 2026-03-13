@@ -1052,13 +1052,17 @@
   var els = document.querySelectorAll(
     '.events-section, .category-section, .about-section, .feature-section, .testimonial-section, .client-logo-area, .work-process-area, .partner-area'
   );
-  els.forEach(function(el) { el.classList.add('reveal-on-scroll'); });
+  els.forEach(function(el, i) {
+    el.classList.add('reveal-on-scroll');
+    // Primera sección siempre visible (above the fold)
+    if (i === 0) el.classList.add('revealed');
+  });
   var io = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
       if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal-on-scroll').forEach(function(el) { io.observe(el); });
+  document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(function(el) { io.observe(el); });
 })();
 </script>
 @endpush

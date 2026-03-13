@@ -10,6 +10,12 @@
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
 
+@push('styles')
+@if(!empty($firstHeroImage))
+<link rel="preload" as="image" href="{{ asset('assets/admin/img/event-gallery/' . $firstHeroImage) }}">
+@endif
+@endpush
+
 @section('hero-section')
   <!-- Hero Section Start -->
   <section class="hero-section hero-collage-section" id="heroSection">
@@ -63,7 +69,7 @@
           @for ($copy = 0; $copy < 4; $copy++)
             @foreach ($marqueeEvents as $event)
               <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
-                <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}">
+                <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
               </a>
             @endforeach
           @endfor
@@ -1038,6 +1044,20 @@
     bg.style.transform = 'translate(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px)';
     requestAnimationFrame(loop);
   })();
+})();
+
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll(
+    '.events-section, .category-section, .about-section, .feature-section, .testimonial-section, .client-logo-area, .work-process-area, .partner-area'
+  );
+  els.forEach(function(el) { el.classList.add('reveal-on-scroll'); });
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal-on-scroll').forEach(function(el) { io.observe(el); });
 })();
 </script>
 @endpush

@@ -113,6 +113,22 @@ ttq.page();
 @endif
 @endpush
 
+@push('scripts')
+<script>
+(function() {
+  var form = document.querySelector('.sidebar-sticky form');
+  if (!form) return;
+  form.addEventListener('submit', function() {
+    var btn = form.querySelector('button[type="submit"]');
+    if (btn && !btn.classList.contains('btn-loading')) {
+      btn.classList.add('btn-loading');
+      btn.textContent = '{{ __("Procesando...") }}';
+    }
+  });
+})();
+</script>
+@endpush
+
 @section('hero-section')
   <!-- Page Banner Start -->
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"

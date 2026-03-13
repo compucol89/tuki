@@ -470,6 +470,16 @@ $("#imageUpload").on("change", function () {
     fileReader(this);
 });
 
+function animateQty(el) {
+    el.style.transition = 'none';
+    el.style.transform = 'scale(1.35)';
+    el.style.color = '#00c2f4';
+    void el.offsetWidth;
+    el.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), color 0.3s ease';
+    el.style.transform = 'scale(1)';
+    el.style.color = '';
+}
+
 $('.quantity-up').on('click', function () {
     let max_qty = parseInt($(this).prev().attr('data-max_buy_ticket'));
     let stock = Number($(this).prev().attr('data-stock'));
@@ -493,6 +503,7 @@ $('.quantity-up').on('click', function () {
     } else {
 
         $(this).prev().val(numProduct + 1);
+        animateQty($(this).prev()[0]);
         calcTotal();
     }
 });
@@ -500,7 +511,7 @@ $('.quantity-down').on('click', function () {
     var numProduct = Number($(this).next().val());
     let max_qty = $(this).next().attr('data-max_buy_ticket');
     let ticket_id = $(this).next().attr('data-ticket_id');
-    if (numProduct > 0) $(this).next().val(numProduct - 1);
+    if (numProduct > 0) { $(this).next().val(numProduct - 1); animateQty($(this).next()[0]); }
     calcTotal();
 
     $('.max_error_' + ticket_id + max_qty).text('');

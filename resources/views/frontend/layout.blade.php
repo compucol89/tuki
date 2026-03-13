@@ -31,6 +31,7 @@
   {{-- include styles --}}
   @includeIf('frontend.partials.styles')
   @yield('custom-style')
+  @stack('styles')
 </head>
 
 <body>

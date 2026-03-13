@@ -112,6 +112,7 @@ class HomeController extends Controller
         ->filter(fn($img) => file_exists(public_path('assets/admin/img/event-gallery/' . $img)))
         ->take(8)
         ->values();
+    $queryResult['firstHeroImage'] = $queryResult['heroGalleryImages']->first();
 
     return view('frontend.home.index-v1', $queryResult);
   }

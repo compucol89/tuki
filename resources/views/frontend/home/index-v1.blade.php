@@ -2,6 +2,7 @@
 @section('pageHeading')
   {{ __('Home') }}
 @endsection
+@section('body-class', 'home-page')
 
 @php
   $metaKeywords = !empty($seo->meta_keyword_home) ? $seo->meta_keyword_home : '';

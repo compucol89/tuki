@@ -34,7 +34,7 @@
   @stack('styles')
 </head>
 
-<body>
+<body class="@yield('body-class')">
   <div class="page-wrapper">
 
     <div class="request-loader">

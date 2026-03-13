@@ -4186,3 +4186,39 @@ html[dir*=rtl] .modal .close {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
+
+
+/* ================================================
+   HOME PAGE — Ritmo visual y espaciado (Parte A)
+   ================================================ */
+
+/* A.1 — Reducir padding vertical de secciones */
+body.home-page .events-section    { padding-top: 40px;  padding-bottom: 60px; }
+body.home-page .category-section  { padding-top: 60px;  padding-bottom: 60px; }
+body.home-page .about-section     { padding-bottom: 60px; }
+body.home-page .feature-section   { padding-top: 60px;  padding-bottom: 60px; }
+body.home-page .testimonial-section { padding-top: 60px; padding-bottom: 60px; }
+body.home-page .client-logo-area  { padding-top: 60px;  padding-bottom: 60px; }
+
+/* A.2 — Divisor sutil entre secciones */
+body.home-page section + section::before {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: var(--primary-color);
+    margin: 0 auto 40px;
+    opacity: 0.25;
+    border-radius: 1px;
+}
+/* Excepción: hero y marquee no necesitan divisor */
+body.home-page .hero-collage-section + section::before,
+body.home-page .events-marquee + section::before {
+    display: none;
+}
+
+/* A.3 — Fondo alternado sutil entre secciones */
+body.home-page .category-section,
+body.home-page .testimonial-section {
+    background-color: rgba(0, 194, 244, 0.025);
+}

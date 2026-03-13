@@ -60,17 +60,13 @@
     <div class="events-marquee mt-4">
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
-          @foreach ($marqueeEvents as $event)
-            <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
-              <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}">
-            </a>
-          @endforeach
-          {{-- Duplicate for seamless loop --}}
-          @foreach ($marqueeEvents as $event)
-            <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
-              <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}">
-            </a>
-          @endforeach
+          @for ($copy = 0; $copy < 4; $copy++)
+            @foreach ($marqueeEvents as $event)
+              <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
+                <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}">
+              </a>
+            @endforeach
+          @endfor
         </div>
       </div>
     </div>

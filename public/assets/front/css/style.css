@@ -498,7 +498,7 @@ a.theme-btn:hover {
 
 /* Hero Collage */
 .hero-collage-section {
-    height: 600px !important;
+    height: 400px !important;
     min-height: unset !important;
     overflow: hidden;
     position: relative;

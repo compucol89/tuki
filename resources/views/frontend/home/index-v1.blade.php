@@ -57,7 +57,7 @@
 
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
-    <div class="events-marquee mt-1">
+    <div class="events-marquee mt-4">
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
           @foreach ($marqueeEvents as $event)

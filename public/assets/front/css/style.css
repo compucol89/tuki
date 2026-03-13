@@ -1791,8 +1791,16 @@ body.loaded {
 .testimonial-item {
     position: relative;
     margin-bottom: 30px;
-    padding: 40px 40px 18px;
-    box-shadow: 0px 10px 70px rgba(0, 0, 0, 0.07);
+    padding: 30px 30px 18px 30px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    border-left: 3px solid var(--primary-color);
+    border-radius: 0 12px 12px 0;
+    background: #fff;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.testimonial-item:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+    transform: translateY(-3px);
 }
 
 .testimonial-item:after {

@@ -4329,3 +4329,416 @@ body.home-page .testimonial-section {
     margin-top: auto;
     padding-top: 10px;
 }
+
+/* ================================================
+   EVENT CARD v2 — Tukipass
+   ================================================ */
+
+.ev-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(23, 52, 68, 0.06);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  height: 100%;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.ev-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(23, 52, 68, 0.10),
+              0 8px 20px rgba(23, 52, 68, 0.06);
+}
+
+.ev-card:active {
+  transform: translateY(-4px);
+}
+
+/* Imagen */
+.ev-card__img {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #e8ecef 0%, #d1d8de 100%);
+}
+
+.ev-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  display: block;
+}
+
+.ev-card:hover .ev-card__img img {
+  transform: scale(1.08);
+}
+
+/* Gradient fade inferior */
+.ev-card__gradient {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.22), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Badge fecha — top-left */
+.ev-card__date {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 2;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 8px 12px;
+  text-align: center;
+  min-width: 50px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+  line-height: 1;
+}
+
+.ev-card__date-day {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--dark-color, #173444);
+  line-height: 1;
+}
+
+.ev-card__date-month {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--primary-color, #00c2f4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 3px;
+}
+
+/* Badge precio — top-right */
+.ev-card__price {
+  position: absolute;
+  top: 12px; right: 12px;
+  z-index: 2;
+  background: var(--dark-color, #173444);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  letter-spacing: -0.2px;
+}
+
+.ev-card__price--free {
+  background: #10b981;
+}
+
+/* Body */
+.ev-card__body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ev-card__title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark-color, #173444);
+  margin: 0 0 8px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: calc(1.4em * 2);
+}
+
+.ev-card__meta {
+  font-size: 12px;
+  color: #7a8b99;
+  margin: 0;
+  margin-top: auto;
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  line-height: 1.3;
+}
+
+.ev-card__meta svg {
+  flex-shrink: 0;
+  color: var(--primary-color, #00c2f4);
+}
+
+.ev-card__location {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 120px;
+}
+
+.ev-card__dot {
+  color: #c0c8cf;
+}
+
+/* Wishlist button */
+.ev-card__wishlist {
+  position: absolute;
+  top: 0; right: 0;
+  z-index: 3;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  transition: color 0.2s ease;
+  pointer-events: auto;
+}
+
+.ev-card__wishlist:hover,
+.ev-card__wishlist--active {
+  color: var(--primary-color, #00c2f4);
+}
+
+/* Columna contenedora de ev-card */
+.ev-card-col {
+  display: flex;
+  position: relative;
+  margin-bottom: 28px;
+}
+
+/* Card featured — 2 columnas (home) */
+.ev-card-col--featured .ev-card__img {
+  aspect-ratio: 2 / 1;
+}
+
+.ev-card-col--featured .ev-card__title {
+  font-size: 18px;
+}
+
+.ev-card-col--featured .ev-card__date-day {
+  font-size: 26px;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .ev-card__img {
+    aspect-ratio: 16 / 9;
+  }
+  .ev-card__body {
+    padding: 12px 14px 14px;
+  }
+  .ev-card__title {
+    font-size: 14px;
+  }
+  .ev-card__date {
+    top: 10px; left: 10px;
+    padding: 6px 10px;
+    border-radius: 10px;
+  }
+  .ev-card__date-day {
+    font-size: 18px;
+  }
+  .ev-card__price {
+    top: 10px; right: 10px;
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+  .ev-card-col--featured .ev-card__img {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ================================================
+   PARTE 2 — Mobile responsive
+   ================================================ */
+
+@media (max-width: 767px) {
+  /* Cards en 1 columna */
+  .ev-card-col,
+  .event-page-section .col-sm-6,
+  .event-page-section .col-xl-4 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  /* Hero */
+  .hero-collage-section {
+    min-height: 280px !important;
+  }
+
+  .hero-content h1 {
+    font-size: 26px !important;
+    line-height: 1.25;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Form búsqueda hero — vertical */
+  .event-search {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .event-search .search-item,
+  .event-search button {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+
+  /* Secciones */
+  section,
+  .section-padding {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+
+  /* Títulos de sección */
+  .section-title h2,
+  section > .container > h2 {
+    font-size: 22px !important;
+    line-height: 1.3;
+  }
+
+  /* Ocultar marquee en mobile */
+  .events-marquee {
+    display: none !important;
+  }
+
+  /* Categorías — scroll horizontal */
+  .category-area .row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+
+  .category-area .row::-webkit-scrollbar { display: none; }
+
+  .category-area .row > [class*="col"] {
+    flex: 0 0 130px !important;
+    max-width: 130px !important;
+    scroll-snap-align: start;
+  }
+
+  /* Footer apilado */
+  .footer-area .row > [class*="col"] {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* Filtros de precio */
+  .price-filter-bar {
+    gap: 6px;
+  }
+
+  .price-filter-btn {
+    font-size: 13px;
+    padding: 5px 14px;
+  }
+}
+
+/* Tablet: 2 columnas de cards */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ev-card-col {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+}
+
+/* Detalle de evento mobile */
+@media (max-width: 767px) {
+  .sidebar-sticky {
+    position: static !important;
+  }
+
+  .event-details-area {
+    padding-bottom: 80px;
+  }
+
+  .breadcrumb-area {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+  }
+
+  .breadcrumb-area h2 {
+    font-size: 20px !important;
+  }
+}
+
+/* ================================================
+   PARTE 3 — Tipografía
+   ================================================ */
+
+h1, h2, h3, h4, h5, h6,
+.section-title h2,
+.hero-content h1,
+.ev-card__title,
+.ev-card__date-day,
+.ev-card__price {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+h1, .hero-content h1 {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+h2, .section-title h2 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+/* ================================================
+   PARTE 4 — Espaciado home
+   ================================================ */
+
+.section-title {
+  margin-bottom: 40px;
+}
+
+.section-title p {
+  max-width: 560px;
+  margin: 0 auto;
+  color: #7a8b99;
+}

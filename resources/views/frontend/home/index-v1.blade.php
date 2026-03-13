@@ -830,7 +830,7 @@
   <!-- Feature Section Start -->
   <section class="feature-section pt-110 rpt-90 bg-lighter">
     @if ($secInfo->features_section_status == 1)
-      <div class="container pb-90 rpb-70">
+      <div class="container pb-40 rpb-30">
         <div class="section-title text-center mb-55">
           <h2>{{ $featureEventSection ? $featureEventSection->title : '' }}</h2>
           <p>{{ $featureEventSection ? $featureEventSection->text : '' }}</p>

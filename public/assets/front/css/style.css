@@ -5697,3 +5697,8 @@ h2, .section-title h2 {
 .ev-card__meta {
   margin-top: 0 !important;
 }
+
+/* Ronda 3.10 — min-height 2 líneas para alinear meta entre cards */
+.ev-card__title {
+  min-height: calc(18px * 1.2 * 2) !important; /* 43px = 2 líneas exactas */
+}

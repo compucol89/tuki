@@ -214,6 +214,18 @@
         </div>
         <div class="col-lg-9">
           <div class="event-page-content">
+            <div class="price-filter-bar mb-25">
+              @php
+                $currentPricing = request()->input('pricing', '');
+                $baseParams = request()->except('pricing');
+              @endphp
+              <a href="{{ route('events', array_merge($baseParams, ['pricing' => ''])) }}"
+                class="price-filter-btn {{ $currentPricing === '' ? 'active' : '' }}">{{ __('Todos') }}</a>
+              <a href="{{ route('events', array_merge($baseParams, ['pricing' => 'free'])) }}"
+                class="price-filter-btn {{ $currentPricing === 'free' ? 'active' : '' }}">{{ __('Gratis') }}</a>
+              <a href="{{ route('events', array_merge($baseParams, ['pricing' => 'paid'])) }}"
+                class="price-filter-btn {{ $currentPricing === 'paid' ? 'active' : '' }}">{{ __('De pago') }}</a>
+            </div>
             <div class="row">
               @if (count($information['events']) > 0)
                 @foreach ($information['events'] as $event)
@@ -561,6 +573,9 @@
 
     <input type="hidden" id="dates-id" name="dates"
       value="{{ !empty(request()->input('dates')) ? request()->input('dates') : '' }}">
+
+    <input type="hidden" name="pricing"
+      value="{{ !empty(request()->input('pricing')) ? request()->input('pricing') : '' }}">
 
     <button type="submit" id="submitBtn"></button>
   </form>

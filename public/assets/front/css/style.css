@@ -4235,3 +4235,35 @@ body.home-page .category-section,
 body.home-page .testimonial-section {
     background-color: rgba(0, 194, 244, 0.025);
 }
+
+/* C.2 — Filtros de precio en /events */
+.price-filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.price-filter-btn {
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading-color);
+    border: 1.5px solid #e0e0e0;
+    background: #fff;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.price-filter-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.price-filter-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}

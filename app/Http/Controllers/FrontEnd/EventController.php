@@ -83,6 +83,25 @@ class EventController extends Controller
     if ($request->filled('search-input')) {
       $keyword = $request['search-input'];
     }
+
+    $pricing = null;
+    $pricingEventIds = [];
+    if ($request->filled('pricing')) {
+      $pricing = $request['pricing'];
+      if ($pricing === 'free') {
+        $tickets = Ticket::where('pricing_type', 'free')->get();
+      } elseif ($pricing === 'paid') {
+        $tickets = Ticket::where('pricing_type', '!=', 'free')->get();
+      }
+      if (isset($tickets)) {
+        foreach ($tickets as $ticket) {
+          if (!in_array($ticket->event_id, $pricingEventIds)) {
+            array_push($pricingEventIds, $ticket->event_id);
+          }
+        }
+      }
+    }
+
     $eventIds2 = [];
     if ($request->filled('dates')) {
 
@@ -125,6 +144,9 @@ class EventController extends Controller
       })
       ->when(($date1 && $date2), function ($query) use ($eventIds2) {
         return $query->whereIn('events.id', $eventIds2);
+      })
+      ->when($pricing, function ($query) use ($pricingEventIds) {
+        return $query->whereIn('events.id', $pricingEventIds);
       })
       ->when($keyword, function ($query, $keyword) {
         return $query->where('event_contents.title', 'like', '%' . $keyword . '%');

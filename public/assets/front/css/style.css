@@ -4101,7 +4101,7 @@ html[dir*=rtl] .modal .close {
 /* Events Marquee Slider */
 .events-marquee {
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.03);
+    background: transparent;
     padding: 20px 0;
     position: relative;
 }

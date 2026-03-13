@@ -5176,3 +5176,305 @@ h2, .section-title h2 {
 .ev-card-col--featured .ev-card__title {
   font-size: 16px !important;  /* igual que las demás, sin diferencia */
 }
+
+/* ================================================
+   Ronda 3.4 — Card v3: tipografía, precio en body,
+   meta izq, overlay hover, altura uniforme
+   ================================================ */
+
+/* Fix 1 — Título Barlow Condensed */
+.ev-card__title {
+  font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  color: var(--dark-color, #173444) !important;
+  margin: 0 0 8px !important;
+  line-height: 1.15 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.ev-card-col--featured .ev-card__title {
+  font-size: 26px !important;
+}
+
+@media (max-width: 767px) {
+  .ev-card__title {
+    font-size: 20px !important;
+  }
+}
+
+/* Fix 3 — Meta alineada a la izquierda */
+.ev-card__meta {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  margin: 10px 0 0 !important;
+  text-align: left !important;
+}
+
+.ev-card__meta-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  color: #5a6b7a !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+}
+
+.ev-card__meta-row svg {
+  flex-shrink: 0 !important;
+  color: var(--primary-color, #00c2f4) !important;
+  opacity: 0.7 !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Fix 4 — Organizador */
+.ev-card__organizer {
+  font-size: 12px !important;
+  color: #8a9baa !important;
+  margin: 0 0 4px !important;
+  line-height: 1 !important;
+  text-align: left !important;
+}
+
+.ev-card__organizer strong,
+.ev-card__organizer a strong {
+  color: var(--primary-color, #00c2f4) !important;
+  font-weight: 600 !important;
+}
+
+.ev-card__organizer a {
+  text-decoration: none !important;
+}
+
+/* Fix 5 — Altura uniforme */
+.ev-card-col {
+  display: flex !important;
+  margin-bottom: 28px !important;
+}
+
+.ev-card {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08) !important;
+  cursor: pointer !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.ev-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14) !important;
+}
+
+.ev-card__img {
+  position: relative !important;
+  aspect-ratio: 3 / 2 !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+.ev-card__img img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.ev-card__body {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 18px 20px 20px !important;
+  text-align: left !important;
+}
+
+/* Fix 2 — Footer: precio + botón */
+.ev-card__footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: auto !important;
+  padding-top: 14px !important;
+  border-top: 1px solid rgba(0,0,0,0.06) !important;
+}
+
+/* Precio — ahora en body, no absoluto */
+.ev-card__price {
+  position: static !important;
+  background: var(--dark-color, #173444) !important;
+  color: #fff !important;
+  padding: 5px 14px !important;
+  border-radius: 24px !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.2px !important;
+  top: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+  box-shadow: none !important;
+}
+
+.ev-card__price--free {
+  background: #10b981 !important;
+}
+
+/* Botón comprar entradas */
+.ev-card__btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--primary-color, #00c2f4) !important;
+  transition: gap 0.3s ease !important;
+}
+
+.ev-card:hover .ev-card__btn {
+  gap: 9px !important;
+}
+
+.ev-card__btn-arrow {
+  transition: transform 0.3s ease !important;
+}
+
+.ev-card:hover .ev-card__btn-arrow {
+  transform: translateX(4px) !important;
+}
+
+/* Fix 6 — Overlay hover: descripción + CTA */
+.ev-card__overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 5 !important;
+  background: rgba(23, 52, 68, 0.88) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  padding: 24px !important;
+  opacity: 0 !important;
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  pointer-events: none !important;
+  isolation: auto !important;
+}
+
+.ev-card__overlay::after {
+  display: none !important;
+}
+
+.ev-card:hover .ev-card__overlay {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.ev-card__overlay-desc {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 4 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  color: rgba(255,255,255,0.9) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin: 0 0 20px !important;
+  text-align: left !important;
+}
+
+.ev-card__overlay-cta {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  padding: 10px 22px !important;
+  background: var(--primary-color, #00c2f4) !important;
+  border-radius: 24px !important;
+  transition: background 0.2s ease, gap 0.3s ease !important;
+}
+
+.ev-card:hover .ev-card__overlay-cta:hover {
+  background: #00a8d6 !important;
+  gap: 12px !important;
+}
+
+/* Ocultar los elementos de overlay viejos (date/time/divider) */
+.ev-card__overlay-date,
+.ev-card__overlay-time,
+.ev-card__overlay-divider,
+.ev-card__overlay-day,
+.ev-card__overlay-month,
+.ev-card__overlay-year,
+.ev-card__overlay-hhmm,
+.ev-card__overlay-hs {
+  display: none !important;
+}
+
+/* Wishlist — limpia, sin conflicto con precio */
+.ev-card__wishlist {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  z-index: 30 !important;
+  width: 34px !important;
+  height: 34px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255,255,255,0.2) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  border-radius: 50% !important;
+  color: rgba(255,255,255,0.9) !important;
+  font-size: 14px !important;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.ev-card__wishlist:hover,
+.ev-card__wishlist--active {
+  background: rgba(255,255,255,0.95) !important;
+  color: var(--primary-color, #00c2f4) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Ocultar wishlist y fecha durante hover (más limpio) */
+.ev-card__date,
+.ev-card__wishlist {
+  transition: opacity 0.2s ease !important;
+}
+
+.ev-card:hover .ev-card__date {
+  opacity: 0 !important;
+}
+
+/* Featured: misma proporción */
+.ev-card-col--featured .ev-card__img {
+  aspect-ratio: 3 / 2 !important;
+}
+
+/* Mobile: sin overlay */
+@media (max-width: 1023px) {
+  .ev-card__overlay {
+    display: none !important;
+  }
+  .ev-card:hover .ev-card__date,
+  .ev-card:hover .ev-card__wishlist {
+    opacity: 1 !important;
+  }
+}

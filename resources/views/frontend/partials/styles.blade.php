@@ -4,7 +4,7 @@
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <!-- Google Fonts -->
 <link
-  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
   rel="stylesheet">
 <!-- FlatIcon Font -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}">

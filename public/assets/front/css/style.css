@@ -5091,3 +5091,88 @@ h2, .section-title h2 {
     opacity: 1;
   }
 }
+
+/* ================================================
+   Ronda 3.3 — Fix overlay layout + wishlist + featured
+   ================================================ */
+
+/* Fix ::after noise: z-index relativo al overlay */
+.ev-card__overlay {
+  isolation: isolate;  /* nuevo stacking context para los hijos */
+}
+
+.ev-card__overlay::after {
+  z-index: -1;  /* queda DETRÁS del contenido flex */
+}
+
+/* Overlay: columnas mitad/mitad con tamaños relativos */
+.ev-card__overlay-date,
+.ev-card__overlay-time {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  position: relative;   /* crea contexto propio, encima del ::after */
+  z-index: 1;
+}
+
+.ev-card__overlay-divider {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sombra en el texto para legibilidad contra cualquier fondo */
+.ev-card__overlay-day,
+.ev-card__overlay-hhmm {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.ev-card__overlay-month,
+.ev-card__overlay-year,
+.ev-card__overlay-hs {
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Fondo overlay un poco más opaco para garantizar contraste */
+.ev-card__overlay {
+  background: rgba(13, 30, 43, 0.58) !important;
+}
+
+/* Wishlist: dentro de ev-card__img, siempre encima de todo */
+.ev-card__wishlist {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 30;         /* por encima del overlay (z-index 5) */
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+.ev-card__wishlist:hover,
+.ev-card__wishlist--active {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+/* Featured: misma proporción que las demás (3/2), solo título más grande */
+.ev-card-col--featured .ev-card__img {
+  aspect-ratio: 3 / 2 !important;
+}
+
+.ev-card-col--featured .ev-card__title {
+  font-size: 16px !important;  /* igual que las demás, sin diferencia */
+}

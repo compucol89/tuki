@@ -119,6 +119,14 @@
         <span class="ev-card__overlay-hs">hs</span>
       </div>
     </div>
+
+    {{-- Wishlist dentro de la imagen para posicionamiento correcto --}}
+    <a href="{{ $ev_wishlist_route }}"
+       class="ev-card__wishlist{{ $ev_wishlisted ? ' ev-card__wishlist--active' : '' }}"
+       aria-label="{{ $ev_wishlisted ? __('Remove from wishlist') : __('Add to wishlist') }}"
+       onclick="event.stopPropagation()">
+      <i class="{{ $ev_wishlisted ? 'fas' : 'far' }} fa-bookmark"></i>
+    </a>
   </div>
 
   {{-- ── BODY ── --}}
@@ -157,11 +165,3 @@
 
   </div>{{-- /.ev-card__body --}}
 </div>{{-- /.ev-card --}}
-
-{{-- Wishlist — fuera del ev-card para no anidar interactivos --}}
-<a href="{{ $ev_wishlist_route }}"
-   class="ev-card__wishlist{{ $ev_wishlisted ? ' ev-card__wishlist--active' : '' }}"
-   aria-label="{{ $ev_wishlisted ? __('Remove from wishlist') : __('Add to wishlist') }}"
-   onclick="event.stopPropagation()">
-  <i class="{{ $ev_wishlisted ? 'fas' : 'far' }} fa-bookmark"></i>
-</a>

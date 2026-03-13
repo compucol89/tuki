@@ -5646,3 +5646,54 @@ h2, .section-title h2 {
     font-size: 17px !important;
   }
 }
+
+/* Ronda 3.7b — probar título en 600 vs 800 */
+.ev-card__title {
+  font-weight: 600 !important;
+}
+
+/* Ronda 3.7c — 600 sin mayúsculas */
+.ev-card__title {
+  font-weight: 600 !important;
+  text-transform: none !important;
+}
+
+/* Ronda 3.7d — text-shadow sutil en el título */
+.ev-card__title {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Ronda 3.7e — título: sin sombra, azul en hover */
+.ev-card__title {
+  text-shadow: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.ev-card:hover .ev-card__title {
+  color: var(--primary-color, #00c2f4) !important;
+}
+
+/* Ronda 3.7f — reducir espacio título → meta */
+.ev-card__title {
+  margin-bottom: 4px !important;
+}
+
+.ev-card__meta {
+  margin-top: 4px !important;
+}
+
+/* Ronda 3.8 — título altura mínima fija (3 líneas) para alinear meta en todas las cards */
+.ev-card__title {
+  min-height: calc(1.2em * 3) !important;
+}
+
+/* Ronda 3.9 — título 2 líneas máx + meta pegada */
+.ev-card__title {
+  -webkit-line-clamp: 2 !important;
+  min-height: 0 !important;
+  margin-bottom: 6px !important;
+}
+
+.ev-card__meta {
+  margin-top: 0 !important;
+}

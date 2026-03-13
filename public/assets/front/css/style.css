@@ -5618,3 +5618,31 @@ h2, .section-title h2 {
 .ev-card__meta-row span {
   text-align: left !important;
 }
+
+/* ================================================
+   Ronda 3.7 — Título Inter 800 uppercase (reemplaza Barlow Condensed)
+   ================================================ */
+.ev-card__title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: -0.3px !important;
+  color: var(--dark-color, #173444) !important;
+  margin: 0 0 8px !important;
+  line-height: 1.2 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.ev-card-col--featured .ev-card__title {
+  font-size: 18px !important;
+}
+
+@media (max-width: 767px) {
+  .ev-card__title {
+    font-size: 17px !important;
+  }
+}

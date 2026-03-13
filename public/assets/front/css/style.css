@@ -1677,6 +1677,21 @@ body.loaded {
     right: -42.5px;
 }
 
+.work-process-inner .row {
+    position: relative;
+}
+.work-process-inner .row::before {
+    content: '';
+    position: absolute;
+    top: 60px;
+    left: 18%;
+    right: 18%;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary-color), rgba(0, 194, 244, 0.15));
+    z-index: 0;
+    pointer-events: none;
+}
+
 .work-process-item .icon {
     height: 120px;
     width: 120px;
@@ -1684,7 +1699,14 @@ body.loaded {
     position: relative;
     margin-bottom: 20px;
     display: inline-block;
-    background: rgba(34, 176, 175, 0.1);
+    background: rgba(0, 194, 244, 0.08);
+    z-index: 1;
+    border: 2px solid rgba(0, 194, 244, 0.15);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+.work-process-item:hover .icon {
+    background: rgba(0, 194, 244, 0.15);
+    border-color: rgba(0, 194, 244, 0.4);
 }
 
 .work-process-item .icon i:before {

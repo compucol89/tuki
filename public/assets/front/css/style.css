@@ -4742,3 +4742,221 @@ h2, .section-title h2 {
   margin: 0 auto;
   color: #7a8b99;
 }
+
+/* ================================================
+   Ronda 3.1 — Correcciones ev-card
+   ================================================ */
+
+/* PARTE 1 — Simetría: todas las cards misma altura */
+.ev-card-col {
+  display: flex;
+  position: relative;
+}
+
+.ev-card {
+  width: 100%;
+  height: 100%;
+}
+
+/* PARTE 2 — Cuerpo completo */
+
+/* Organizador */
+.ev-card__organizer {
+  font-size: 12px;
+  color: #8a9baa;
+  margin: 0 0 6px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ev-card__organizer a {
+  text-decoration: none;
+}
+
+.ev-card__organizer strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Meta: 2 filas independientes, sin truncado */
+.ev-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 8px 0 0;
+}
+
+.ev-card__meta-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: #6b7c8a;
+  line-height: 1.4;
+}
+
+.ev-card__meta-row svg {
+  flex-shrink: 0;
+  color: var(--primary-color);
+  opacity: 0.65;
+  margin-top: 1px;
+}
+
+.ev-card__meta-row span {
+  word-break: break-word;
+}
+
+/* CTA Botón */
+.ev-card__action {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.ev-card__btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-color);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: color 0.25s ease;
+}
+
+.ev-card__btn-arrow {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.ev-card:hover .ev-card__btn {
+  color: var(--dark-color);
+}
+
+.ev-card:hover .ev-card__btn-arrow {
+  transform: translateX(4px);
+}
+
+/* PARTE 3 — Hover overlay */
+.ev-card__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: rgba(23, 52, 68, 0.90);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 22px;
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.ev-card:hover .ev-card__overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Ocultar badges cuando aparece el overlay */
+.ev-card__date,
+.ev-card__price {
+  transition: opacity 0.25s ease;
+}
+
+.ev-card:hover .ev-card__date,
+.ev-card:hover .ev-card__price {
+  opacity: 0;
+}
+
+.ev-card__overlay-desc {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ev-card__overlay-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ev-card__overlay-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+}
+
+.ev-card__overlay-row svg {
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.ev-card__overlay-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 20px;
+  background: var(--primary-color);
+  border-radius: 20px;
+  transition: background 0.2s ease, transform 0.2s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.ev-card__overlay-cta:hover {
+  background: #00a8d6;
+  transform: scale(1.03);
+}
+
+/* Overlay oculto en tablet/mobile (sin hover) */
+@media (max-width: 1023px) {
+  .ev-card__overlay {
+    display: none !important;
+  }
+
+  .ev-card:hover .ev-card__date,
+  .ev-card:hover .ev-card__price {
+    opacity: 1;
+  }
+}
+
+/* Mobile: card 100% ancho */
+@media (max-width: 767px) {
+  .ev-card-col {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 16px !important;
+  }
+
+  .ev-card__img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .ev-card__body {
+    padding: 12px 14px 14px;
+  }
+
+  .ev-card__title {
+    font-size: 14px;
+  }
+
+  .ev-card__action {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+}

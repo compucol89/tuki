@@ -106,24 +106,18 @@
       <span class="ev-card__price">{{ symbolPrice($ev_display_price) }}</span>
     @endif
 
-    {{-- Overlay hover — se muestra en desktop al hacer hover --}}
+    {{-- Overlay hover: fecha enorme + hora enorme --}}
     <div class="ev-card__overlay" aria-hidden="true">
-      @if($ev_desc)
-        <p class="ev-card__overlay-desc">{{ $ev_desc }}</p>
-      @endif
-      <div class="ev-card__overlay-details">
-        @if(!empty($event->duration))
-          <div class="ev-card__overlay-row">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            {{ __('Duración') }}: {{ $event->duration }}
-          </div>
-        @endif
-        <div class="ev-card__overlay-row">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9.5h20"/></svg>
-          {{ $ev_carbon->translatedFormat('D d/m') }} · {{ $ev_time->format('H:i') }}hs
-        </div>
+      <div class="ev-card__overlay-date">
+        <span class="ev-card__overlay-day">{{ $ev_carbon->format('d') }}</span>
+        <span class="ev-card__overlay-month">{{ strtoupper($ev_carbon->translatedFormat('M')) }}</span>
+        <span class="ev-card__overlay-year">{{ $ev_carbon->format('Y') }}</span>
       </div>
-      <span class="ev-card__overlay-cta">{{ __('Ver detalles') }} →</span>
+      <div class="ev-card__overlay-divider"></div>
+      <div class="ev-card__overlay-time">
+        <span class="ev-card__overlay-hhmm">{{ $ev_time->format('H:i') }}</span>
+        <span class="ev-card__overlay-hs">hs</span>
+      </div>
     </div>
   </div>
 

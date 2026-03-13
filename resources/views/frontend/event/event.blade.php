@@ -288,11 +288,7 @@
                         @endif
                         <h5>
                           <a href="{{ route('event.details', [$event->slug, $event->id]) }}">
-                            @if (strlen($event->title) > 70)
-                              {{ mb_substr($event->title, 0, 70) . '...' }}
-                            @else
-                              {{ $event->title }}
-                            @endif
+                            {{ $event->title }}
                           </a>
                         </h5>
                         @php

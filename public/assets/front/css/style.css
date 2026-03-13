@@ -5586,3 +5586,35 @@ h2, .section-title h2 {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* ================================================
+   Ronda 3.6 — título 3 líneas, meta alineada izq, precio "Desde"
+   ================================================ */
+
+/* Título: 3 líneas (no cortar tan pronto) */
+.ev-card__title {
+  -webkit-line-clamp: 3 !important;
+}
+
+/* Meta: forzar izquierda en todos los niveles */
+.ev-card__body,
+.ev-card__meta,
+.ev-card__meta-row,
+.ev-card__organizer {
+  text-align: left !important;
+}
+
+.ev-card__meta {
+  align-items: flex-start !important;
+  width: 100% !important;
+}
+
+.ev-card__meta-row {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.ev-card__meta-row span {
+  text-align: left !important;
+}

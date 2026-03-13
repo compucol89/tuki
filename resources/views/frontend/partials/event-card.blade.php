@@ -26,6 +26,10 @@
 
   $ev_is_free = !$ev_ticket || $ev_ticket->pricing_type == 'free' || ($ev_ticket->price == null && $ev_ticket->f_price == null);
 
+  // "Desde" — cuando hay más de un tipo de ticket de pago
+  $ev_ticket_count = App\Models\Event\Ticket::where('event_id', $event->id)->count();
+  $ev_show_desde = !$ev_is_free && $ev_ticket_count > 1;
+
   if (!$ev_is_free && $ev_ticket) {
     if ($ev_ticket->pricing_type == 'variation') {
       $ev_vars = json_decode($ev_ticket->variations, true);
@@ -152,7 +156,7 @@
       @if($ev_is_free)
         <span class="ev-card__price ev-card__price--free">{{ __('Gratis') }}</span>
       @elseif(isset($ev_display_price))
-        <span class="ev-card__price">{{ symbolPrice($ev_display_price) }}</span>
+        <span class="ev-card__price">{{ isset($ev_show_desde) && $ev_show_desde ? __('Desde') . ' ' : '' }}{{ symbolPrice($ev_display_price) }}</span>
       @else
         <span></span>
       @endif

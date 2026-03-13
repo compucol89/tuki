@@ -4,7 +4,7 @@
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <!-- Google Fonts -->
 <link
-  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
   rel="stylesheet">
 <!-- FlatIcon Font -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}">
@@ -50,7 +50,7 @@
     --heading-color: #173444;
     --primary-color: #{{ $basicInfo->primary_color }};
     --light-color: #F7F7F7;
-    --base-font: 'Roboto', sans-serif;
+    --base-font: 'Inter', sans-serif;
     --heading-font: 'Plus Jakarta Sans', sans-serif;
   }
 

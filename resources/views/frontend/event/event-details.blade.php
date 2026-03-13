@@ -1263,3 +1263,21 @@ ttq.page();
 @section('modals')
   @includeIf('frontend.partials.modals')
 @endsection
+
+@push('scripts')
+<script>
+(function () {
+  var shareBtn = document.querySelector('[data-target=".share-event"]');
+  if (!shareBtn || !navigator.share) return;
+  shareBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    navigator.share({
+      title: {{ json_encode($content->title) }},
+      text: {{ json_encode(\Illuminate\Support\Str::limit(strip_tags($content->description ?? ''), 120)) }},
+      url: window.location.href
+    }).catch(function () {});
+  });
+})();
+</script>
+@endpush

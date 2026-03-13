@@ -85,7 +85,9 @@
 <div class="ev-card"
      data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}"
      role="button"
-     tabindex="0">
+     tabindex="0"
+     onclick="if(!event.target.closest('a,button')){window.location.href=this.dataset.eventUrl}"
+     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href=this.dataset.eventUrl}">
 
   {{-- ── IMAGEN ── --}}
   <div class="ev-card__img">

@@ -4267,3 +4267,65 @@ body.home-page .testimonial-section {
     border-color: var(--primary-color);
     color: #fff;
 }
+
+/* === Tarjetas de evento: altura uniforme y simetría === */
+
+/* Columnas de la grilla como flex para forzar misma altura */
+.event-page-section .col-sm-6,
+.event-page-section .col-xl-4 {
+    display: flex;
+    margin-bottom: 30px;
+}
+
+/* La card ocupa todo el ancho y se comporta como columna flex */
+.event-card-hover {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+}
+
+/* Imagen: altura fija, recorta sin deformar */
+.event-card-hover .event-image {
+    height: 210px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.event-card-hover .event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Contenido crece para rellenar el espacio restante */
+.event-card-hover .event-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título: 3 líneas con espacio reservado aunque el título sea corto */
+.event-card-hover .event-content h5 {
+    white-space: normal !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 3 !important;
+    overflow: hidden !important;
+    text-overflow: unset !important;
+    line-height: 1.45;
+    min-height: calc(1.45em * 3);
+    margin-bottom: 8px !important;
+}
+
+/* Descripción: ya está clampeada a 2 líneas, mantener */
+.event-card-hover .event-description {
+    flex-shrink: 0;
+}
+
+/* Precio/ubicación siempre al fondo de la card */
+.event-card-hover .price-remain {
+    margin-top: auto;
+    padding-top: 10px;
+}

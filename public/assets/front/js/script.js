@@ -684,13 +684,13 @@ $('body').on('submit', '#vendorContactForm', function (e) {
     })
 
         // Event card - whole card clickable (except organizer link and wishlist)
-        $(document).on('click', '.event-card-hover', function (e) {
+        $(document).on('click', '.event-card-hover, .ev-card', function (e) {
             var url = $(this).data('event-url');
             if (url && !$(e.target).closest('a, button').length) {
                 window.location.href = url;
             }
         });
-        $(document).on('keydown', '.event-card-hover', function (e) {
+        $(document).on('keydown', '.event-card-hover, .ev-card', function (e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 var url = $(this).data('event-url');

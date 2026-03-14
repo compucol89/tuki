@@ -6907,12 +6907,26 @@ h2, .section-title h2 {
   background: transparent;
   box-shadow: none;
 }
-.ed-countdown-wrap { background:#f8fafc; border-radius:10px; padding:14px; margin-bottom:14px; text-align:center; border:1px solid #e5e7eb; }
-.ed-countdown-label { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 8px; }
+.ed-countdown-wrap { background:#1e2532; border-radius:12px; padding:14px 12px 12px; margin-bottom:16px; text-align:center; }
+.ed-countdown-label { font-size:10px; font-weight:700; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 10px; }
+.ed-countdown-wrap .syotimer__body { display:flex; gap:6px; justify-content:center; }
+.ed-countdown-wrap .syotimer-cell { flex:1; background:rgba(255,255,255,0.08); border-radius:8px; padding:8px 4px 6px; border:1px solid rgba(255,255,255,0.1); }
+.ed-countdown-wrap .syotimer-cell__value { font-size:22px; font-weight:800; color:#F97316; line-height:1.1; border:none !important; margin:0 !important; }
+.ed-countdown-wrap .syotimer-cell__unit { font-size:9px; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.04em; margin-top:4px; }
 .ed-section-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; margin:16px 0 10px; padding-top:16px; border-top:1px solid #f3f4f6; }
 .ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:12px; }
 .ed-status-pill--running { background:#dcfce7; color:#166534; }
 .ed-status-pill--over { background:#fee2e2; color:#991b1b; }
 .ed-field-label { font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; display:block; }
+/* Ticket rows inside ed-ticket-card */
+.ed-ticket-card__body .event-details-information > p.mb-0 { font-size:13px; font-weight:700; color:#1e2532; margin:14px 0 2px !important; }
+.ed-ticket-card__body .price-count { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid #f3f4f6; margin:0 !important; margin-top:0 !important; background:transparent; box-shadow:none; }
+.ed-ticket-card__body .price-count h6 { font-size:15px; font-weight:700; color:#1e2532; margin:0; line-height:1; }
+.ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:4px; }
+.ed-ticket-card__body .quantity-input { display:flex; align-items:center; gap:2px; flex-shrink:0; }
+.ed-ticket-card__body .quantity-input button { width:32px !important; height:32px !important; background:#f3f4f6 !important; border:1px solid #e5e7eb !important; border-radius:8px !important; font-size:18px; font-weight:700; cursor:pointer; color:#374151; line-height:1; transition:background 0.15s,color 0.15s; }
+.ed-ticket-card__body .quantity-input button:hover { background:#1e2532 !important; color:#fff !important; border-color:#1e2532 !important; }
+.ed-ticket-card__body .quantity-input input.quantity { width:44px !important; height:32px !important; text-align:center; font-weight:700; font-size:15px; color:#1e2532; border:1px solid #e5e7eb !important; border-radius:6px; background:#fff; }
+.ed-ticket-card__body .click-show { font-size:12px; color:#6b7280; margin-bottom:0; }
 .ed-cal-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600; background:#f3f4f6; color:#374151; text-decoration:none; transition:background 0.2s,color 0.2s; border:1px solid #e5e7eb; }
 .ed-cal-btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }

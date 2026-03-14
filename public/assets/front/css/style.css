@@ -6932,9 +6932,11 @@ h2, .section-title h2 {
 }
 .ed-countdown-wrap .syotimer-cell__value {
   font-size:26px !important; font-weight:900 !important; color:#F97316 !important;
-  line-height:1 !important; border:none !important; margin:0 0 5px !important;
+  line-height:1.1 !important; border:none !important; margin:0 0 4px !important;
   display:block !important; font-variant-numeric:tabular-nums;
+  border-radius:0 !important; aspect-ratio:auto !important; position:static !important;
 }
+.ed-countdown-wrap .syotimer-cell__value::after { display:none !important; }
 .ed-countdown-wrap .syotimer-cell__unit {
   font-size:9px !important; color:rgba(255,255,255,0.45) !important;
   text-transform:uppercase !important; letter-spacing:0.06em !important; display:block !important;

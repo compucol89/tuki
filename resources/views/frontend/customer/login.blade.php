@@ -18,10 +18,6 @@
     <div class="auth-split__visual-overlay"></div>
     <div class="auth-split__visual-content">
 
-      <a href="{{ route('index') }}" class="auth-split__logo">
-        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Logo">
-      </a>
-
       <div class="auth-split__tagline">
         <h2>Tu próximo evento,<br>a un clic.</h2>
         <p>Comprá entradas, gestioná tus reservas y no te pierdas nada.</p>
@@ -62,16 +58,18 @@
         $event_setting = App\Models\BasicSettings\Basic::select('event_guest_checkout_status')->first();
       @endphp
       @if ($event_setting->event_guest_checkout_status == 1 && request()->input('redirectPath') == 'event_checkout')
-        <a href="{{ route('check-out', ['type' => 'guest']) }}" class="auth-guest-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Continuar como invitado
+        <a href="{{ route('check-out', ['type' => 'guest']) }}" class="auth-guest-btn auth-guest-btn--cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Comprar como invitado — sin registrarme
         </a>
+        <p class="auth-guest-hint">Rápido, seguro y sin crear cuenta</p>
       @endif
       @if (!onlyDigitalItemsInCart() && request()->input('redirected') == 'checkout')
-        <a href="{{ route('shop.checkout', ['type' => 'guest']) }}" class="auth-guest-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Continuar como invitado
+        <a href="{{ route('shop.checkout', ['type' => 'guest']) }}" class="auth-guest-btn auth-guest-btn--cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Comprar como invitado — sin registrarme
         </a>
+        <p class="auth-guest-hint">Rápido, seguro y sin crear cuenta</p>
       @endif
 
       {{-- Alertas --}}

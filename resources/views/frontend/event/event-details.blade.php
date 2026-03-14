@@ -232,7 +232,9 @@ ttq.page();
           @if ($content->event_type == 'venue')
             <span class="ed-hero__meta-item">
               <i class="fas fa-map-marker-alt"></i>
-              @if ($content->city != null){{ $content->city }}@endif@if ($content->state), {{ $content->state }}@endif@if ($content->country), {{ $content->country }}@endif
+              @if ($content->city != null){{ $content->city }}@endif
+              @if ($content->state), {{ $content->state }}@endif
+              @if ($content->country), {{ $content->country }}@endif
             </span>
           @else
             <span class="ed-hero__meta-item">
@@ -340,7 +342,7 @@ ttq.page();
         <div class="col-lg-4">
           <div class="sidebar-sticky">
 
-            {{-- Ticket form card --}}
+            {{-- CARD 1: Ticket form --}}
             <div class="ed-ticket-card">
               <div class="ed-ticket-card__head">
                 <p class="ed-ticket-card__head-title">{{ __('Entradas') }}</p>
@@ -365,16 +367,14 @@ ttq.page();
                         $dates = eventDates($content->id);
                         $exp_dates = eventExpDates($content->id);
                       @endphp
-
-                      <div class="form-group">
-                        <label for="">{{ __('Select Date') }}</label>
+                      <div class="form-group mb-3">
+                        <label class="ed-field-label">{{ __('Select Date') }}</label>
                         <select name="event_date" id="" class="form-control">
                           @if (count($dates) > 0)
                             @foreach ($dates as $date)
                               <option value="{{ FullDateTime($date->start_date_time) }}">
                                 {{ FullDateTime($date->start_date_time) }}
-                                ({{ timeZoneOffset($websiteInfo->timezone) }}
-                                {{ __('GMT') }})
+                                ({{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }})
                               </option>
                             @endforeach
                           @endif
@@ -382,8 +382,7 @@ ttq.page();
                             @foreach ($exp_dates as $exp_date)
                               <option disabled value="">
                                 {{ FullDateTime($exp_date->start_date_time) }}
-                                ({{ timeZoneOffset($websiteInfo->timezone) }}
-                                {{ __('GMT') }})
+                                ({{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }})
                               </option>
                             @endforeach
                           @endif
@@ -397,104 +396,41 @@ ttq.page();
                         value="{{ FullDateTime($content->start_date . $content->start_time) }}">
                     @endif
 
-                    {{-- Count down start --}}
+                    {{-- Countdown --}}
                     @if ($content->date_type == 'single' && $content->countdown_status == 1)
-                      <div class="event-details-top">
-                        @if ($startDateTime >= $now_time)
-                          <b>{{ __('Event Starts In') }}</b>
-                          <hr>
-                          @php
-                            $dt = Carbon\Carbon::parse($startDateTime);
-                            $year = $dt->year;
-                            $month = $dt->month;
-                            $day = $dt->day;
-                            $end_time = Carbon\Carbon::parse($startDateTime);
-                            $hour = $end_time->hour;
-                            $minute = $end_time->minute;
-                            $now = str_replace('+00:00', '.000' . timeZoneOffset($websiteInfo->timezone) . '00:00', gmdate('c'));
-                          @endphp
-                          <div class="count-down mb-3" dir="ltr">
+                      @if ($startDateTime >= $now_time)
+                        @php
+                          $dt = Carbon\Carbon::parse($startDateTime);
+                          $year = $dt->year;
+                          $month = $dt->month;
+                          $day = $dt->day;
+                          $end_time = Carbon\Carbon::parse($startDateTime);
+                          $hour = $end_time->hour;
+                          $minute = $end_time->minute;
+                          $now = str_replace('+00:00', '.000' . timeZoneOffset($websiteInfo->timezone) . '00:00', gmdate('c'));
+                        @endphp
+                        <div class="ed-countdown-wrap">
+                          <p class="ed-countdown-label">{{ __('El evento comienza en') }}</p>
+                          <div class="count-down" dir="ltr">
                             <div class="event-countdown" data-now="{{ $now }}" data-year="{{ $year }}"
                               data-month="{{ $month }}" data-day="{{ $day }}"
                               data-hour="{{ $hour }}" data-minute="{{ $minute }}"
                               data-timezone="{{ timeZoneOffset($websiteInfo->timezone) }}">
                             </div>
                           </div>
-                        @elseif ($startDateTime <= $endDateTime && $endDateTime >= $now_time)
-                          <p>{{ __('The Event is Running') }}</p>
-                        @else
-                          <p>{{ __('The Event is Over') }}</p>
-                        @endif
-                      </div>
-                    @endif
-                    {{-- Countdown end --}}
-
-                    <b>{{ __('Organised By') }}</b>
-                    <hr>
-                    @if ($organizer == '')
-                      @php
-                        $admin = App\Models\Admin::first();
-                      @endphp
-                      <div class="author">
-                        <a
-                          href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}"><img
-                            class="lazy" data-src="{{ asset('assets/admin/img/admins/' . $admin->image) }}"
-                            alt="{{ $admin->username }}"></a>
-                        <div class="content">
-                          <h6><a
-                              href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">{{ $admin->username }}</a>
-                          </h6>
                         </div>
-                      </div>
-                    @else
-                      <div class="author">
-                        <a
-                          href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">
-                          @if ($organizer->photo != null)
-                            <img class="lazy"
-                              data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}"
-                              alt="{{ $organizer->username }}">
-                          @else
-                            <img class="lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ $organizer->username }}">
-                          @endif
-
-                        </a>
-
-                        <div class="content">
-                          <h6><a
-                              href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">{{ $organizer->username }}</a>
-                          </h6>
-                          <a
-                            href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">{{ __('View  Profile') }}</a>
+                      @elseif ($startDateTime <= $endDateTime && $endDateTime >= $now_time)
+                        <div class="ed-status-pill ed-status-pill--running">
+                          <i class="fas fa-circle" style="font-size:8px;"></i> {{ __('El evento está en curso') }}
                         </div>
-                      </div>
+                      @else
+                        <div class="ed-status-pill ed-status-pill--over">
+                          <i class="fas fa-times-circle"></i> {{ __('El evento finalizó') }}
+                        </div>
+                      @endif
                     @endif
-                    @if ($content->address != null)
-                      <b><i class="fas fa-map-marker-alt"></i> {{ $content->address }}</b>
-                      <hr>
-                    @endif
 
-                    {{-- Add to calendar --}}
-                    @php
-                      $start_date = str_replace('-', '', $content->start_date);
-                      $start_time = str_replace(':', '', $content->start_time);
-                      $end_date = str_replace('-', '', $content->end_date);
-                      $end_time = str_replace(':', '', $content->end_time);
-                    @endphp
-                    <div class="dropdown show pt-4 pb-4">
-                      <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-calendar-alt"></i> {{ __('Add to Calendar') }}
-                      </a>
-
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a target="_blank" class="dropdown-item"
-                          href="//calendar.google.com/calendar/u/0/r/eventedit?text={{ $content->title }}&dates={{ $start_date }}T{{ $start_time }}/{{ $end_date }}T{{ $end_time }}&ctz={{ $websiteInfo->timezone }}&details=For+details,+click+here:+{{ route('event.details', [$content->eventSlug, $content->id]) }}&location={{ $content->event_type == 'online' ? 'Online' : $content->address }}&sf=true">{{ __('Google Calendar') }}</a>
-                        <a target="_blank" class="dropdown-item"
-                          href="//calendar.yahoo.com/?v=60&view=d&type=20&TITLE={{ $content->title }}&ST={{ $start_date }}T{{ $start_time }}&ET={{ $end_date }}T{{ $end_time }}&DUR=9959&DESC=For%20details%2C%20click%20here%3A%20{{ route('event.details', [$content->eventSlug, $content->id]) }}&in_loc={{ $content->event_type == 'online' ? 'Online' : $content->address }}">{{ __('Yahoo') }}</a>
-                      </div>
-                    </div>
-
+                    <p class="ed-section-label">{{ __('Seleccioná tus entradas') }}</p>
 
                     @if ($content->event_type == 'online' && $content->pricing_type == 'normal')
 
@@ -517,8 +453,6 @@ ttq.page();
                       @endphp
                       @if ($ticket)
 
-                        <b>{{ __('Select Tickets') }}</b>
-                        <hr>
                         <div class="price-count">
                           <h6 dir="ltr">
 
@@ -595,8 +529,6 @@ ttq.page();
 
                       @endif
                     @elseif($content->event_type == 'online' && $content->pricing_type == 'free')
-                      <b>{{ __('Select Tickets') }}</b>
-                      <hr>
                       @php
                         $ticket = App\Models\Event\Ticket::where('event_id', $content->id)->first();
                         $event_count = App\Models\Event\Ticket::where('event_id', $content->id)
@@ -646,8 +578,6 @@ ttq.page();
                             ->get();
                       @endphp
                       @if (count($tickets) > 0)
-                        <b>{{ __('Select Tickets') }}</b>
-                        <hr>
                         @foreach ($tickets as $ticket)
                           @if ($ticket->pricing_type == 'normal')
                             @php
@@ -687,34 +617,22 @@ ttq.page();
                                   @endphp
 
                                   @if ($ticket->early_bird_discount_type == 'fixed' && !$discount_date->isPast())
-                                    @php
-                                      $calculate_price = $ticket->price - $ticket->early_bird_discount_amount;
-                                    @endphp
+                                    @php $calculate_price = $ticket->price - $ticket->early_bird_discount_amount; @endphp
                                     {{ symbolPrice($calculate_price) }}
-                                    <del>
-
-                                      {{ symbolPrice($ticket->price) }}
-                                    </del>
+                                    <del>{{ symbolPrice($ticket->price) }}</del>
                                   @elseif ($ticket->early_bird_discount_type == 'percentage' && !$discount_date->isPast())
                                     @php
                                       $c_price = ($ticket->price * $ticket->early_bird_discount_amount) / 100;
                                       $calculate_price = $ticket->price - $c_price;
                                     @endphp
                                     {{ symbolPrice($calculate_price) }}
-
-                                    <del>
-                                      {{ symbolPrice($ticket->price) }}
-                                    </del>
+                                    <del>{{ symbolPrice($ticket->price) }}</del>
                                   @else
-                                    @php
-                                      $calculate_price = $ticket->price;
-                                    @endphp
+                                    @php $calculate_price = $ticket->price; @endphp
                                     {{ symbolPrice($calculate_price) }}
                                   @endif
                                 @else
-                                  @php
-                                    $calculate_price = $ticket->price;
-                                  @endphp
+                                  @php $calculate_price = $ticket->price; @endphp
                                   {{ symbolPrice($calculate_price) }}
                                 @endif
 
@@ -932,6 +850,7 @@ ttq.page();
                         @endforeach
                       @endif
                     @endif
+
                     @if ($tickets_count > 0)
                       <div class="ed-total-row">
                         <span class="ed-total-label">{{ __('Total Price') }}</span>
@@ -974,6 +893,79 @@ ttq.page();
             </div>
             {{-- /Ticket form card --}}
 
+            {{-- CARD 2: Event info --}}
+            <div class="ed-info-card">
+
+              {{-- Organizer --}}
+              <div class="ed-info-row">
+                <div class="ed-info-icon"><i class="fas fa-user"></i></div>
+                <div class="ed-info-text">
+                  <strong>{{ __('Organised By') }}</strong>
+                  @if ($organizer == '')
+                    @php $admin = App\Models\Admin::first(); @endphp
+                    <div class="ed-organizer">
+                      <img class="lazy" data-src="{{ asset('assets/admin/img/admins/' . $admin->image) }}" alt="{{ $admin->username }}">
+                      <div>
+                        <p class="ed-organizer__name mb-0">{{ $admin->username }}</p>
+                        <a class="ed-organizer__link" href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">{{ __('View Profile') }}</a>
+                      </div>
+                    </div>
+                  @else
+                    <div class="ed-organizer">
+                      @if ($organizer->photo != null)
+                        <img class="lazy" data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}" alt="{{ $organizer->username }}">
+                      @else
+                        <img class="lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ $organizer->username }}">
+                      @endif
+                      <div>
+                        <p class="ed-organizer__name mb-0">{{ $organizer->username }}</p>
+                        <a class="ed-organizer__link" href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">{{ __('View Profile') }}</a>
+                      </div>
+                    </div>
+                  @endif
+                </div>
+              </div>
+
+              {{-- Address --}}
+              @if ($content->address != null)
+                <div class="ed-info-row">
+                  <div class="ed-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                  <div class="ed-info-text">
+                    <strong>{{ __('Ubicación') }}</strong>
+                    <span>{{ $content->address }}</span>
+                  </div>
+                </div>
+              @endif
+
+              {{-- Add to Calendar --}}
+              @php
+                $start_date = str_replace('-', '', $content->start_date);
+                $start_time_cal = str_replace(':', '', $content->start_time);
+                $end_date = str_replace('-', '', $content->end_date);
+                $end_time_cal = str_replace(':', '', $content->end_time);
+              @endphp
+              <div class="ed-info-row" style="border-bottom:none;padding-bottom:0;">
+                <div class="ed-info-icon"><i class="fas fa-calendar-plus"></i></div>
+                <div class="ed-info-text">
+                  <strong>{{ __('Add to Calendar') }}</strong>
+                  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                    <a target="_blank"
+                      href="//calendar.google.com/calendar/u/0/r/eventedit?text={{ $content->title }}&dates={{ $start_date }}T{{ $start_time_cal }}/{{ $end_date }}T{{ $end_time_cal }}&ctz={{ $websiteInfo->timezone }}&details=For+details,+click+here:+{{ route('event.details', [$content->eventSlug, $content->id]) }}&location={{ $content->event_type == 'online' ? 'Online' : $content->address }}&sf=true"
+                      class="ed-cal-btn">
+                      <i class="fab fa-google"></i> Google
+                    </a>
+                    <a target="_blank"
+                      href="//calendar.yahoo.com/?v=60&view=d&type=20&TITLE={{ $content->title }}&ST={{ $start_date }}T{{ $start_time_cal }}&ET={{ $end_date }}T{{ $end_time_cal }}&DUR=9959&DESC=For%20details%2C%20click%20here%3A%20{{ route('event.details', [$content->eventSlug, $content->id]) }}&in_loc={{ $content->event_type == 'online' ? 'Online' : $content->address }}"
+                      class="ed-cal-btn">
+                      Yahoo
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            {{-- /Event info card --}}
+
           </div>
         </div>
         {{-- /Right column --}}
@@ -986,273 +978,6 @@ ttq.page();
         </div>
       @endif
 
-      @if (count($related_events) > 0)
-        <hr>
-        <div class="releted-event-header mt-50">
-          <h3>{{ __('Related Events') }}</h3>
-          <div class="slick-next-prev mb-10">
-            <button class="prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="next"><i class="fas fa-chevron-right"></i></button>
-          </div>
-        </div>
-        <div class="related-event-wrap">
-          @foreach ($related_events as $event)
-            <div class="event-item event-card-hover" data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}" role="button" tabindex="0">
-              <div class="event-image">
-                <a href="{{ route('event.details', [$event->slug, $event->id]) }}">
-                  <img class="lazy" data-src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}"
-                    alt="{{ $event->title }}">
-                </a>
-              </div>
-              <div class="event-content">
-                <ul class="time-info">
-                  <li>
-                    <i class="far fa-calendar-alt"></i>
-                    <span>
-                      @php
-                        $date = strtotime($event->start_date);
-                      @endphp
-                      {{ \Carbon\Carbon::parse($date)->timezone($websiteInfo->timezone)->translatedFormat('d M') }}
-                    </span>
-                  </li>
-                  @php
-                    if ($event->date_type == 'multiple') {
-                        $event_date = eventLatestDates($event->id);
-                        $date = strtotime(@$event_date->start_date);
-                    } else {
-                        $date = strtotime($event->start_date);
-                    }
-                  @endphp
-                  <li>
-                    <i class="far fa-hourglass"></i>
-                    <span
-                      title="Event Duration">{{ $event->date_type == 'multiple' ? @$event_date->duration : $event->duration }}</span>
-                  </li>
-                  <li>
-                    <i class="far fa-clock"></i>
-                    <span>
-                      @php
-                        $start_time = strtotime($event->start_time);
-                      @endphp
-                      {{ \Carbon\Carbon::parse($start_time)->timezone($websiteInfo->timezone)->translatedFormat('H:i') }}
-                    </span>
-                  </li>
-                </ul>
-                @if ($event->organizer_id != null)
-                  @php $rel_org = $relatedOrganizers[$event->organizer_id] ?? null; @endphp
-                  @if ($rel_org)
-                    <a href="{{ route('frontend.organizer.details', [$rel_org->id, str_replace(' ', '-', $rel_org->username)]) }}"
-                      class="organizer">{{ __('By') }}&nbsp;&nbsp;{{ $rel_org->username }}</a>
-                  @endif
-                @else
-                  @php
-                    $admin = App\Models\Admin::first();
-                  @endphp
-                  <a href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}"
-                    class="organizer">{{ $admin->username }}</a>
-                @endif
-                <h5>
-                  <a href="{{ route('event.details', [$event->slug, $event->id]) }}">
-                    {{ $event->title }}
-                  </a>
-                </h5>
-                @php
-                  $desc = strip_tags($event->description);
-                @endphp
-
-                @if (strlen($desc) > 45)
-                  <p>{{ mb_substr($desc, 0, 50) . '....' }}</p>
-                @else
-                  <p>{{ $desc }}</p>
-                @endif
-                @php $ticket = $relatedTickets[$event->id] ?? null; @endphp
-
-                <div class="price-remain">
-                  <div class="location">
-                    @if ($event->event_type == 'venue')
-                      <i class="fas fa-map-marker-alt"></i>
-                      <span>
-                        @if ($event->city != null)
-                          {{ $event->city }}
-                        @endif
-                        @if ($event->country)
-                          , {{ $event->country }}
-                        @endif
-                      </span>
-                    @else
-                      <i class="fas fa-map-marker-alt"></i>
-                      <span>{{ __('Online') }}</span>
-                    @endif
-                  </div>
-                  <span>
-                    @if ($ticket)
-                      @if ($ticket->event_type == 'online')
-                        @if ($ticket->price != null)
-                          <span class="price" dir="ltr">
-                            @if ($ticket->early_bird_discount == 'enable')
-                              @php
-                                $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-                              @endphp
-                              @if ($ticket->early_bird_discount_type == 'fixed' && !$discount_date->isPast())
-                                @php
-                                  $calculate_price = $ticket->price - $ticket->early_bird_discount_amount;
-                                @endphp
-                                {{ symbolPrice($calculate_price) }}
-                                <span>
-                                  <del>
-                                    {{ symbolPrice($ticket->price) }}
-                                  </del>
-                                </span>
-                              @elseif ($ticket->early_bird_discount_type == 'percentage' && !$discount_date->isPast())
-                                @php
-                                  $p_price = ($ticket->price * $ticket->early_bird_discount_amount) / 100;
-                                  $calculate_price = $ticket->price - $p_price;
-                                @endphp
-                                {{ symbolPrice($calculate_price) }}
-
-                                <span>
-                                  <del>
-                                    {{ symbolPrice($ticket->price) }}
-                                  </del>
-                                </span>
-                              @else
-                                @php
-                                  $calculate_price = $ticket->price;
-                                @endphp
-                                {{ symbolPrice($calculate_price) }}
-                              @endif
-                            @else
-                              @php
-                                $calculate_price = $ticket->price;
-                              @endphp
-                              {{ symbolPrice($calculate_price) }}
-                            @endif
-                          </span>
-                        @else
-                          <span class="price">{{ __('Free') }}</span>
-                        @endif
-                      @endif
-                      @if ($ticket->event_type == 'venue')
-                        @if ($ticket->pricing_type == 'variation')
-                          <span class="price" dir="ltr">
-                            @php
-                              $variation = json_decode($ticket->variations, true);
-                              $price = $variation[0]['price'];
-                            @endphp
-                            <span class="price">
-
-                              @if ($ticket->early_bird_discount == 'enable')
-                                @php
-                                  $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-                                @endphp
-                                @if ($ticket->early_bird_discount_type == 'fixed' && !$discount_date->isPast())
-                                  @php
-                                    $calculate_price = $price - $ticket->early_bird_discount_amount;
-                                  @endphp
-                                  {{ symbolPrice($calculate_price) }}
-                                  <span><del>
-                                      {{ symbolPrice($price) }}
-                                    </del></span>
-                                @elseif ($ticket->early_bird_discount_type == 'percentage' && !$discount_date->isPast())
-                                  @php
-                                    $p_price = ($price * $ticket->early_bird_discount_amount) / 100;
-                                    $calculate_price = $p_price - $price;
-                                  @endphp
-
-                                  {{ symbolPrice($calculate_price) }}
-
-                                  <span>
-                                    <del>
-                                      {{ symbolPrice($price) }}
-                                    </del>
-                                  </span>
-                                @else
-                                  @php
-                                    $calculate_price = $price;
-                                  @endphp
-                                  {{ symbolPrice($calculate_price) }}
-                                @endif
-                              @else
-                                @php
-                                  $calculate_price = $price;
-                                @endphp
-                                {{ symbolPrice($calculate_price) }}
-                              @endif
-                              <strong>{{ $event_count > 1 ? '*' : '' }}</strong>
-                            </span>
-                          </span>
-                        @elseif($ticket->pricing_type == 'normal')
-                          <span class="price" dir="ltr">
-
-                            @if ($ticket->early_bird_discount == 'enable')
-                              @php
-                                $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
-                              @endphp
-                              @if ($ticket->early_bird_discount_type == 'fixed' && !$discount_date->isPast())
-                                @php
-                                  $calculate_price = $ticket->price - $ticket->early_bird_discount_amount;
-                                @endphp
-
-                                {{ symbolPrice($calculate_price) }}
-                                <span>
-                                  <del>
-                                    {{ symbolPrice($ticket->price) }}
-                                  </del>
-                                </span>
-                              @elseif ($ticket->early_bird_discount_type == 'percentage' && !$discount_date->isPast())
-                                @php
-                                  $p_price = ($ticket->price * $ticket->early_bird_discount_amount) / 100;
-                                  $calculate_price = $ticket->price - $p_price;
-                                @endphp
-                                {{ symbolPrice($calculate_price) }}
-
-                                <span>
-                                  <del>
-                                    {{ symbolPrice($ticket->price) }}
-                                  </del>
-                                </span>
-                              @else
-                                @php
-                                  $calculate_price = $ticket->price;
-                                @endphp
-                                {{ symbolPrice($calculate_price) }}
-                              @endif
-                            @else
-                              @php
-                                $calculate_price = $ticket->price;
-                              @endphp
-                              {{ symbolPrice($calculate_price) }}
-                            @endif
-                            <strong>{{ $event_count > 1 ? '*' : '' }}</strong>
-                          </span>
-                        @else
-                          <span class="price">{{ __('Free') }}</span>
-                        @endif
-                      @endif
-                    @endif
-                  </span>
-                </div>
-              </div>
-              @if (Auth::guard('customer')->check())
-                @php
-                  $customer_id = Auth::guard('customer')->user()->id;
-                  $event_id = $event->id;
-                  $checkWishList = checkWishList($event_id, $customer_id);
-                @endphp
-              @else
-                @php
-                  $checkWishList = false;
-                @endphp
-              @endif
-              <a href="{{ $checkWishList == false ? route('addto.wishlist', $event->id) : route('remove.wishlist', $event->id) }}"
-                class="wishlist-btn {{ $checkWishList == true ? 'bg-success' : '' }}">
-                <i class="far fa-bookmark"></i>
-              </a>
-            </div>
-          @endforeach
-        </div>
-
-      @endif
     </div>
   </section>
   <!-- Event Details V2 End -->

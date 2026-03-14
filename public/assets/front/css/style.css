@@ -6900,3 +6900,13 @@ h2, .section-title h2 {
   .ed-ticket-card__head { padding:16px 18px; }
   .ed-ticket-card__body { padding:16px 18px; }
 }
+/* ED SIDEBAR EXTRAS */
+.ed-countdown-wrap { background:#f8fafc; border-radius:10px; padding:14px; margin-bottom:14px; text-align:center; border:1px solid #e5e7eb; }
+.ed-countdown-label { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 8px; }
+.ed-section-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; margin:16px 0 10px; padding-top:16px; border-top:1px solid #f3f4f6; }
+.ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:12px; }
+.ed-status-pill--running { background:#dcfce7; color:#166534; }
+.ed-status-pill--over { background:#fee2e2; color:#991b1b; }
+.ed-field-label { font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; display:block; }
+.ed-cal-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600; background:#f3f4f6; color:#374151; text-decoration:none; transition:background 0.2s,color 0.2s; border:1px solid #e5e7eb; }
+.ed-cal-btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }

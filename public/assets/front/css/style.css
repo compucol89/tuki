@@ -5317,25 +5317,25 @@ h2, .section-title h2 {
   border-top: 1px solid rgba(0,0,0,0.06) !important;
 }
 
-/* Precio — ahora en body, no absoluto */
-.ev-card__price {
-  position: static !important;
+/* Precio — sobre la imagen, top-left */
+.ev-card__price-img {
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  z-index: 4 !important;
   background: var(--dark-color, #173444) !important;
   color: #fff !important;
-  padding: 5px 14px !important;
+  padding: 5px 13px !important;
   border-radius: 24px !important;
   font-family: 'Plus Jakarta Sans', sans-serif !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 700 !important;
   line-height: 1 !important;
   letter-spacing: -0.2px !important;
-  top: auto !important;
-  right: auto !important;
-  z-index: auto !important;
-  box-shadow: none !important;
+  pointer-events: none !important;
 }
 
-.ev-card__price--free {
+.ev-card__price-img--free {
   background: #10b981 !important;
 }
 
@@ -5714,39 +5714,39 @@ h2, .section-title h2 {
    Event Badges — Social Proof
    ================================ */
 
+/* Misma forma que .ev-card__price-img, con color propio */
 .ev-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 9px 4px 6px;
-  border-radius: 20px;
-  font-family: 'Inter', sans-serif;
+  gap: 6px;
+  padding: 5px 13px 5px 9px;
+  border-radius: 24px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1;
-  pointer-events: none;
+  letter-spacing: -0.1px;
+  -webkit-font-smoothing: antialiased;
+  color: #fff;
   flex-shrink: 0;
 }
 
 .ev-badge__icon {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
-  display: flex;
-  align-items: center;
 }
 
 .ev-badge__label {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.1px;
-  text-transform: uppercase;
-  -webkit-font-smoothing: antialiased;
+  font-size: 13px;
+  font-weight: 700;
 }
 
-/* Variantes de color — fondo muy suave, texto saturado */
-.ev-badge--furor      { background: rgba(239,68,68,0.10);  color: #c0392b; }
-.ev-badge--agota      { background: rgba(234,179,8,0.12);  color: #92640a; }
-.ev-badge--trending   { background: rgba(34,197,94,0.10);  color: #15803d; }
-.ev-badge--nuevo      { background: rgba(59,130,246,0.10); color: #1d4ed8; }
-.ev-badge--ultimas    { background: rgba(249,115,22,0.10); color: #c2410c; }
-.ev-badge--destacado  { background: rgba(168,85,247,0.10); color: #7e22ce; }
-.ev-badge--imperdible { background: rgba(239,68,68,0.10);  color: #be123c; }
+/* Colores sólidos por tipo — misma "solidez" que el precio */
+.ev-badge--furor      { background: #ef4444; }
+.ev-badge--agota      { background: #d97706; }
+.ev-badge--trending   { background: #059669; }
+.ev-badge--nuevo      { background: #2563eb; }
+.ev-badge--ultimas    { background: #ea580c; }
+.ev-badge--destacado  { background: #7c3aed; }
+.ev-badge--imperdible { background: #e11d48; }
 

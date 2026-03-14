@@ -102,6 +102,15 @@
 
     <div class="ev-card__gradient"></div>
 
+    {{-- Precio — top-left de la imagen --}}
+    @if($ev_is_free)
+      <span class="ev-card__price-img ev-card__price-img--free">{{ __('Gratis') }}</span>
+    @elseif(isset($ev_display_price))
+      <span class="ev-card__price-img">
+        {{ isset($ev_show_desde) && $ev_show_desde ? __('Desde') . ' ' : '' }}{{ symbolPrice($ev_display_price) }}
+      </span>
+    @endif
+
     {{-- Overlay hover: fecha enorme (izq) + hora enorme (der) --}}
     <div class="ev-card__overlay" aria-hidden="true">
       <div class="ev-card__overlay-date">
@@ -151,21 +160,15 @@
       </div>
     </div>
 
-    {{-- Footer: precio + badge + botón --}}
+    {{-- Footer: badge (reemplaza precio) + botón --}}
     <div class="ev-card__footer">
-      @if($ev_is_free)
-        <span class="ev-card__price ev-card__price--free">{{ __('Gratis') }}</span>
-      @elseif(isset($ev_display_price))
-        <span class="ev-card__price">{{ isset($ev_show_desde) && $ev_show_desde ? __('Desde') . ' ' : '' }}{{ symbolPrice($ev_display_price) }}</span>
-      @else
-        <span></span>
-      @endif
-
       @if($ev_badge)
-        <span class="ev-badge {{ $ev_badge['class'] }}" aria-label="{{ $ev_badge['label'] }}">
+        <span class="ev-badge {{ $ev_badge['class'] }}">
           <span class="ev-badge__icon" aria-hidden="true">{{ $ev_badge['icon'] }}</span>
           <span class="ev-badge__label">{{ $ev_badge['label'] }}</span>
         </span>
+      @else
+        <span></span>
       @endif
 
       <span class="ev-card__btn">

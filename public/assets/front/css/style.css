@@ -4257,6 +4257,30 @@ html[dir*=rtl] .modal .close {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Badge — bottom-left, siempre visible */
+.emq-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(30, 37, 50, 0.75);
+    backdrop-filter: blur(4px);
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    pointer-events: none;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1;
+}
+
 /* Overlay al hover — mismo estilo que ev-card */
 .emq-overlay {
     position: absolute;
@@ -4310,12 +4334,6 @@ html[dir*=rtl] .modal .close {
     font-weight: 500;
     color: rgba(255,255,255,0.5);
     -webkit-font-smoothing: antialiased;
-}
-
-.emq-overlay__divider {
-    width: 1px;
-    height: 28px;
-    background: rgba(255,255,255,0.2);
 }
 
 .emq-overlay__time {

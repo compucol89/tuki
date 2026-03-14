@@ -67,23 +67,37 @@
     <div class="events-marquee">
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
+          @php $mq_badges = []; @endphp
           @for ($copy = 0; $copy < 4; $copy++)
             @foreach ($marqueeEvents as $event)
               @php
                 $mq_carbon = \Carbon\Carbon::parse($event->start_date)->locale('es');
                 $mq_time   = $event->start_time ? \Carbon\Carbon::parse($event->start_time)->format('H:i') : null;
                 $mq_free   = ($event->pricing_type === 'free' || !$event->min_price);
+                // Badge: calcular solo una vez por evento
+                if (!isset($mq_badges[$event->id])) {
+                  $mq_badges[$event->id] = \App\Services\EventBadgeService::getBadge($event);
+                }
+                $mq_badge = $mq_badges[$event->id];
               @endphp
               <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
                 <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
 
-                {{-- Fecha visible siempre — top-left --}}
+                {{-- Fecha — top-left --}}
                 <div class="emq-date">
                   <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>
                   <span class="emq-date__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
                 </div>
 
-                {{-- Overlay al hover — igual que ev-card --}}
+                {{-- Badge — bottom-left --}}
+                @if($mq_badge)
+                  <span class="emq-badge">
+                    <span>{{ $mq_badge['icon'] }}</span>
+                    <span>{{ $mq_badge['label'] }}</span>
+                  </span>
+                @endif
+
+                {{-- Overlay al hover --}}
                 <div class="emq-overlay" aria-hidden="true">
                   <div class="emq-overlay__date">
                     <span class="emq-overlay__day">{{ $mq_carbon->format('d') }}</span>
@@ -91,7 +105,6 @@
                     <span class="emq-overlay__year">{{ $mq_carbon->format('Y') }}</span>
                   </div>
                   @if($mq_time)
-                    <div class="emq-overlay__divider"></div>
                     <div class="emq-overlay__time">
                       <span class="emq-overlay__hhmm">{{ $mq_time }}</span>
                       <span class="emq-overlay__hs">hs</span>

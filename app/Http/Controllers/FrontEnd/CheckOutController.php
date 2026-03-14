@@ -302,11 +302,17 @@ class CheckOutController extends Controller
   }
   public function checkout()
   {
+    $event = Session::get('event');
+
+    if (!$event) {
+      return redirect()->route('home')->with('error', 'Tu sesión expiró. Por favor seleccioná los tickets nuevamente.');
+    }
+
     $information['selTickets'] = Session::get('selTickets');
     $information['total'] = Session::get('total');
     $information['quantity'] = Session::get('quantity');
     $information['total_early_bird_dicount'] = Session::get('total_early_bird_dicount');
-    $information['event'] = Session::get('event');
+    $information['event'] = $event;
     $information['online_gateways'] = Session::get('online_gateways');
     $information['offline_gateways'] = Session::get('offline_gateways');
     $information['basicData'] = Basic::select('tax')->first();

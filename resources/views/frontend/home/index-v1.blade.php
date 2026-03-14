@@ -65,49 +65,50 @@
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
     <div class="events-marquee">
-
-      {{-- Fila 1 — izquierda --}}
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
           @for ($copy = 0; $copy < 4; $copy++)
             @foreach ($marqueeEvents as $event)
+              @php
+                $mq_carbon = \Carbon\Carbon::parse($event->start_date)->locale('es');
+                $mq_time   = $event->start_time ? \Carbon\Carbon::parse($event->start_time)->format('H:i') : null;
+                $mq_free   = ($event->pricing_type === 'free' || !$event->min_price);
+              @endphp
               <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
                 <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
-                <div class="events-marquee-info">
-                  <span class="events-marquee-title">{{ Str::limit($event->title, 28) }}</span>
-                  @if($event->pricing_type === 'free' || !$event->min_price)
-                    <span class="events-marquee-price events-marquee-price--free">Gratis</span>
-                  @else
-                    <span class="events-marquee-price">{{ symbolPrice($event->min_price) }}</span>
+
+                {{-- Fecha visible siempre — top-left --}}
+                <div class="emq-date">
+                  <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>
+                  <span class="emq-date__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
+                </div>
+
+                {{-- Overlay al hover — igual que ev-card --}}
+                <div class="emq-overlay" aria-hidden="true">
+                  <div class="emq-overlay__date">
+                    <span class="emq-overlay__day">{{ $mq_carbon->format('d') }}</span>
+                    <span class="emq-overlay__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
+                    <span class="emq-overlay__year">{{ $mq_carbon->format('Y') }}</span>
+                  </div>
+                  @if($mq_time)
+                    <div class="emq-overlay__divider"></div>
+                    <div class="emq-overlay__time">
+                      <span class="emq-overlay__hhmm">{{ $mq_time }}</span>
+                      <span class="emq-overlay__hs">hs</span>
+                    </div>
+                  @endif
+                  @if($mq_free)
+                    <span class="emq-overlay__price emq-overlay__price--free">Gratis</span>
+                  @elseif($event->min_price)
+                    <span class="emq-overlay__price">{{ symbolPrice($event->min_price) }}</span>
                   @endif
                 </div>
+
               </a>
             @endforeach
           @endfor
         </div>
       </div>
-
-      {{-- Fila 2 — derecha --}}
-      <div class="events-marquee-track">
-        <div class="events-marquee-inner events-marquee-inner--reverse">
-          @for ($copy = 0; $copy < 4; $copy++)
-            @foreach ($marqueeEvents->reverse() as $event)
-              <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
-                <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
-                <div class="events-marquee-info">
-                  <span class="events-marquee-title">{{ Str::limit($event->title, 28) }}</span>
-                  @if($event->pricing_type === 'free' || !$event->min_price)
-                    <span class="events-marquee-price events-marquee-price--free">Gratis</span>
-                  @else
-                    <span class="events-marquee-price">{{ symbolPrice($event->min_price) }}</span>
-                  @endif
-                </div>
-              </a>
-            @endforeach
-          @endfor
-        </div>
-      </div>
-
     </div>
   @endif
   <!-- Event Images Marquee End -->

@@ -102,7 +102,7 @@ class HomeController extends Controller
       ->where('events.status', 1)
       ->where('events.end_date_time', '>=', $this->now_date_time)
       ->whereNotNull('events.thumbnail')
-      ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title', 't.min_price', 't.pricing_type')
+      ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title', 'events.start_date', 'events.start_time', 't.min_price', 't.pricing_type')
       ->orderBy('events.created_at', 'desc')
       ->limit(20)
       ->get();

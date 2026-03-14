@@ -6920,23 +6920,24 @@ h2, .section-title h2 {
 }
 .ed-countdown-wrap .syotimer__body { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
 .ed-countdown-wrap .syotimer-cell {
-  background:linear-gradient(160deg, #1e2532 0%, #2a3347 100%);
-  border-radius:10px; padding:12px 6px 8px; text-align:center;
-  border:1px solid rgba(249,115,22,0.18);
-  position:relative; overflow:hidden;
+  background:linear-gradient(160deg, #1e2532 0%, #2a3347 100%) !important;
+  border-radius:10px !important; padding:12px 6px 8px !important; text-align:center !important;
+  border:1px solid rgba(249,115,22,0.18) !important;
+  position:relative !important; overflow:hidden !important;
+  height:auto !important; width:auto !important;
 }
 .ed-countdown-wrap .syotimer-cell::after {
   content:''; position:absolute; bottom:0; left:0; right:0;
   height:2px; background:#F97316;
 }
 .ed-countdown-wrap .syotimer-cell__value {
-  font-size:26px; font-weight:900; color:#F97316;
-  line-height:1; border:none !important; margin:0 0 5px !important;
-  display:block; font-variant-numeric:tabular-nums;
+  font-size:26px !important; font-weight:900 !important; color:#F97316 !important;
+  line-height:1 !important; border:none !important; margin:0 0 5px !important;
+  display:block !important; font-variant-numeric:tabular-nums;
 }
 .ed-countdown-wrap .syotimer-cell__unit {
-  font-size:9px; color:rgba(255,255,255,0.45);
-  text-transform:uppercase; letter-spacing:0.06em; display:block;
+  font-size:9px !important; color:rgba(255,255,255,0.45) !important;
+  text-transform:uppercase !important; letter-spacing:0.06em !important; display:block !important;
 }
 .ed-section-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; margin:16px 0 10px; padding-top:16px; border-top:1px solid #f3f4f6; }
 .ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:12px; }

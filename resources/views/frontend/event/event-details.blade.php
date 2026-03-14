@@ -349,11 +349,13 @@ ttq.page();
                 <p class="ed-ticket-card__head-price">
                   @php
                     $min_ticket_price = DB::table('tickets')->where('event_id', $content->id)->min('price');
+                    $max_ticket_price = DB::table('tickets')->where('event_id', $content->id)->max('price');
+                    $has_price_range = is_numeric($min_ticket_price) && is_numeric($max_ticket_price) && $min_ticket_price != $max_ticket_price;
                   @endphp
-                  @if ($content->pricing_type == 'free' || (is_numeric($min_ticket_price) && $min_ticket_price == 0))
+                  @if ($content->pricing_type == 'free' || (is_numeric($min_ticket_price) && $min_ticket_price == 0 && !$has_price_range))
                     Gratis
-                  @elseif(is_numeric($min_ticket_price) && $min_ticket_price > 0)
-                    <span style="font-size:13px;font-weight:400;opacity:0.6;">desde</span> {{ symbolPrice($min_ticket_price) }}
+                  @elseif(is_numeric($min_ticket_price) && $min_ticket_price >= 0)
+                    @if($has_price_range)<span style="font-size:13px;font-weight:400;opacity:0.65;margin-right:2px;">desde</span>@endif{{ symbolPrice($min_ticket_price) }}
                   @else
                     {{ symbolPrice($content->price ?? 0) }}
                   @endif

@@ -5727,7 +5727,15 @@ h2, .section-title h2 {
   flex-shrink: 0;
 }
 
-.ev-badge__icon { font-size: 14px; line-height: 1; }
+.ev-badge__icon {
+  font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  position: relative;
+  top: -0.5px;
+}
 
 .ev-badge--furor      { color: #ef4444; }
 .ev-badge--agota      { color: #d97706; }

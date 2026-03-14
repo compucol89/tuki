@@ -5714,80 +5714,49 @@ h2, .section-title h2 {
    ================================ */
 
 .ev-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px 4px 7px;
-  border-radius: 20px;
+  gap: 7px;
+  padding: 5px 11px 5px 9px;
+  border-radius: 6px;
+  background: rgba(15, 15, 20, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
   font-family: 'Inter', sans-serif;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
   line-height: 1;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  margin-bottom: 6px;
-  animation: badge-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: none;
+  animation: badge-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.ev-badge__icon {
-  font-size: 13px;
-  line-height: 1;
+/* Punto de color a la izquierda */
+.ev-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: currentColor;
 }
 
 @keyframes badge-in {
-  from { opacity: 0; transform: translateY(6px) scale(0.9); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Furor */
-.ev-badge--furor {
-  background: #fef2f2;
-  color: #991b1b;
-  border: 1px solid rgba(239,68,68,0.15);
-}
-
-/* Últimas entradas */
-.ev-badge--agota {
-  background: #fefce8;
-  color: #854d0e;
-  border: 1px solid rgba(234,179,8,0.15);
-}
-
-/* Trending */
-.ev-badge--trending {
-  background: #f0fdf4;
-  color: #166534;
-  border: 1px solid rgba(34,197,94,0.15);
-}
-
-/* Nuevo */
-.ev-badge--nuevo {
-  background: #eff6ff;
-  color: #1e40af;
-  border: 1px solid rgba(59,130,246,0.15);
-}
-
-/* Últimas horas */
-.ev-badge--ultimas {
-  background: #fff7ed;
-  color: #9a3412;
-  border: 1px solid rgba(249,115,22,0.15);
-}
-
-/* Destacado (manual) */
-.ev-badge--destacado {
-  background: #fdf4ff;
-  color: #7e22ce;
-  border: 1px solid rgba(168,85,247,0.15);
-}
-
-/* Imperdible (manual) */
-.ev-badge--imperdible {
-  background: linear-gradient(135deg, #fef2f2, #fff1f2);
-  color: #be123c;
-  border: 1px solid rgba(239,68,68,0.2);
-  font-size: 13px;
-  padding: 6px 14px 6px 10px;
-}
+/* Color del punto según tipo */
+.ev-badge--furor      { color: #f87171; }
+.ev-badge--agota      { color: #fbbf24; }
+.ev-badge--trending   { color: #34d399; }
+.ev-badge--nuevo      { color: #60a5fa; }
+.ev-badge--ultimas    { color: #fb923c; }
+.ev-badge--destacado  { color: #c084fc; }
+.ev-badge--imperdible { color: #f43f5e; }
 

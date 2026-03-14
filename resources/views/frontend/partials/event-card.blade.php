@@ -102,6 +102,14 @@
 
     <div class="ev-card__gradient"></div>
 
+    {{-- Badge social proof — top-left --}}
+    @if($ev_badge)
+      <span class="ev-badge {{ $ev_badge['class'] }}">
+        <span class="ev-badge__dot"></span>
+        {{ $ev_badge['label'] }}
+      </span>
+    @endif
+
     {{-- Overlay hover: fecha enorme (izq) + hora enorme (der) --}}
     <div class="ev-card__overlay" aria-hidden="true">
       <div class="ev-card__overlay-date">
@@ -128,14 +136,6 @@
 
   {{-- ── BODY ── --}}
   <div class="ev-card__body">
-
-    {{-- Badge social proof --}}
-    @if($ev_badge)
-      <span class="ev-badge {{ $ev_badge['class'] }}">
-        <span class="ev-badge__icon">{{ $ev_badge['icon'] }}</span>
-        {{ $ev_badge['label'] }}
-      </span>
-    @endif
 
     {{-- Organizador --}}
     @if($ev_organizer_name)

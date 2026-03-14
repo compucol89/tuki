@@ -182,6 +182,9 @@ class EventController extends Controller
       Session::forget('online_gateways');
       Session::forget('offline_gateways');
 
+      \App\Models\Event::where('id', $id)->increment('views_count');
+      \App\Models\Event::where('id', $id)->increment('views_last_24h');
+
       $tickets_count = Ticket::where('event_id', $id)->get()->count();
       $information['tickets_count'] = $tickets_count;
       if ($tickets_count < 1) {

@@ -6858,6 +6858,35 @@ h2, .section-title h2 {
   .ed-ticket-card__body { padding:16px 18px; }
 }
 /* ED SIDEBAR EXTRAS — SaaS UI */
+
+/* Reset heredados del body para el sidebar */
+.ed-ticket-card,
+.ed-info-card {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ticket card head typography */
+.ed-ticket-card__head-title {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: #9ca3af !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  margin: 0 0 4px !important;
+}
+.ed-ticket-card__head-price {
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  color: #111827 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+.ed-ticket-card__head-price span { font-size: 14px !important; font-weight: 500 !important; letter-spacing: 0 !important; opacity: 0.6 !important; }
+
 .ed-ticket-card__body .event-details-information { padding:0; margin:0; background:transparent; box-shadow:none; }
 
 /* Countdown */
@@ -6882,7 +6911,7 @@ h2, .section-title h2 {
 .ed-countdown-wrap .syotimer-cell__unit { font-size:9px !important; font-weight:600 !important; color:#9ca3af !important; text-transform:uppercase !important; letter-spacing:0.06em !important; display:block !important; }
 
 /* Section label */
-.ed-section-label { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 10px; padding-top:0; border-top:none; }
+.ed-section-label { font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.1em; margin:0 0 12px; padding-top:0; border-top:none; }
 
 /* Status pills */
 .ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:16px; }
@@ -6893,16 +6922,24 @@ h2, .section-title h2 {
 .ed-field-label { font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; display:block; }
 
 /* Ticket rows */
-.ed-ticket-card__body .event-details-information > p.mb-0 { font-size:13px; font-weight:600; color:#374151; margin:16px 0 0 !important; }
+.ed-ticket-card__body .event-details-information > p.mb-0 {
+  font-size: 13px !important; font-weight: 600 !important; color: #374151 !important;
+  letter-spacing: -0.01em; margin: 14px 0 0 !important; line-height: 1.3;
+}
 .ed-ticket-card__body .price-count {
   display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:10px 0; border-bottom:1px solid #f3f4f6;
+  gap:12px; padding:8px 0; border-bottom:1px solid #f3f4f6;
   margin:0 !important; background:transparent; box-shadow:none;
 }
 .ed-ticket-card__body .price-count:last-of-type { border-bottom:none; }
-.ed-ticket-card__body .price-count h6 { font-size:16px; font-weight:700; color:#1e2532; margin:0; line-height:1; }
-.ed-ticket-card__body .price-count h6 del { font-size:13px; color:#9ca3af; font-weight:400; margin-left:4px; }
-.ed-ticket-card__body .click-show { font-size:12px; color:#6b7280; margin:2px 0 0; }
+.ed-ticket-card__body .price-count h6 {
+  font-size: 15px !important; font-weight: 700 !important; color: #111827 !important;
+  margin: 0 !important; line-height: 1 !important; letter-spacing: -0.02em;
+}
+.ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:5px; letter-spacing:0; }
+/* "gratis" como pill */
+.ed-ticket-card__body .price-count h6:only-child { color:#059669 !important; font-size:13px !important; font-weight:600 !important; letter-spacing:0; }
+.ed-ticket-card__body .click-show { font-size:11px; color:#9ca3af; margin:2px 0 0; line-height:1.4; }
 
 /* Quantity control — connected pill */
 .ed-ticket-card__body .quantity-input { display:flex; align-items:stretch; border:1.5px solid #e5e7eb; border-radius:8px; overflow:hidden; flex-shrink:0; background:#fff; }
@@ -6916,12 +6953,12 @@ h2, .section-title h2 {
 .ed-info-row:last-child { border-bottom:none; }
 .ed-info-icon { width:34px; height:34px; border-radius:8px; background:#fff7ed; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#F97316; font-size:13px; }
 .ed-info-text { flex:1; }
-.ed-info-text strong { display:block; font-size:12px; font-weight:700; color:#374151; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em; }
-.ed-info-text span { font-size:13px; color:#6b7280; }
-.ed-organizer { display:flex; align-items:center; gap:10px; margin-top:6px; }
+.ed-info-text strong { display:block; font-size:10px; font-weight:700; color:#9ca3af; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.1em; }
+.ed-info-text span { font-size:13px; color:#374151; line-height:1.5; }
+.ed-organizer { display:flex; align-items:center; gap:10px; }
 .ed-organizer img { width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb; }
-.ed-organizer__name { font-size:14px; font-weight:700; color:#1e2532; margin:0; }
-.ed-organizer__link { font-size:12px; color:#F97316; text-decoration:none; }
+.ed-organizer__name { font-size:14px; font-weight:600; color:#111827; margin:0; letter-spacing:-0.01em; }
+.ed-organizer__link { font-size:12px; color:#F97316; text-decoration:none; font-weight:500; }
 .ed-organizer__link:hover { color:#ea580c; }
 
 /* Calendar buttons */

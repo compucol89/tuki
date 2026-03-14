@@ -152,7 +152,7 @@
     <div class="our-location">
       @if (!empty($contact_info->latitude) && !empty($contact_info->longitude))
         <iframe width="100%" height="600" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-          src="//maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{ $contact_info->latitude }},%20{{ $contact_info->longitude }}+({{ $websiteInfo->website_title }})&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+          src="//maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q={{ $contact_info->latitude }},%20{{ $contact_info->longitude }}+({{ $websiteInfo->website_title }})&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
       @endif
     </div>
   </div>

@@ -140,11 +140,7 @@ ttq.page();
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
             <li class="breadcrumb-item active">
-              @if (!empty($pageHeading))
-                {{ $pageHeading->event_details_page_title ?? __('Event Details') }}
-              @else
-                {{ __('Event Details') }}
-              @endif
+              {{ __($pageHeading->event_details_page_title ?? 'Event Details') }}
             </li>
           </ol>
         </nav>

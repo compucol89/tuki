@@ -592,6 +592,7 @@ $('.event-countdown').each(function () {
         hour: $this.data('hour'),
         minute: $this.data('minute'),
         timeZone: $this.data('timezone'),
+        lang: 'spa',
         afterDeadline: function (timerBlock) {
             timerBlock.bodyBlock.html('');
         }

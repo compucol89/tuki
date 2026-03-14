@@ -7,7 +7,7 @@
       </button>
 
       <iframe
-        src="//maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q={{ $map_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+        src="//maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q={{ $map_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
         height="380" style="border:0; width: 100%;max-height:600px" allowfullscreen="" loading="lazy"></iframe>
 
 

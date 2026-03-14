@@ -98,10 +98,11 @@ class HomeController extends Controller
         $join->on('events.id', '=', 'event_contents.event_id')
           ->where('event_contents.language_id', '=', $language->id);
       })
+      ->leftJoin(DB::raw('(SELECT event_id, MIN(CAST(price AS DECIMAL(10,2))) as min_price, MIN(pricing_type) as pricing_type FROM tickets GROUP BY event_id) as t'), 't.event_id', '=', 'events.id')
       ->where('events.status', 1)
       ->where('events.end_date_time', '>=', $this->now_date_time)
       ->whereNotNull('events.thumbnail')
-      ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title')
+      ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title', 't.min_price', 't.pricing_type')
       ->orderBy('events.created_at', 'desc')
       ->limit(20)
       ->get();

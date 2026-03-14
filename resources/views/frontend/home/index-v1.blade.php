@@ -64,18 +64,50 @@
 
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
-    <div class="events-marquee mt-4">
+    <div class="events-marquee">
+
+      {{-- Fila 1 — izquierda --}}
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
           @for ($copy = 0; $copy < 4; $copy++)
             @foreach ($marqueeEvents as $event)
               <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
                 <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
+                <div class="events-marquee-info">
+                  <span class="events-marquee-title">{{ Str::limit($event->title, 28) }}</span>
+                  @if($event->pricing_type === 'free' || !$event->min_price)
+                    <span class="events-marquee-price events-marquee-price--free">Gratis</span>
+                  @else
+                    <span class="events-marquee-price">{{ symbolPrice($event->min_price) }}</span>
+                  @endif
+                </div>
               </a>
             @endforeach
           @endfor
         </div>
       </div>
+
+      {{-- Fila 2 — derecha --}}
+      <div class="events-marquee-track">
+        <div class="events-marquee-inner events-marquee-inner--reverse">
+          @for ($copy = 0; $copy < 4; $copy++)
+            @foreach ($marqueeEvents->reverse() as $event)
+              <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
+                <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
+                <div class="events-marquee-info">
+                  <span class="events-marquee-title">{{ Str::limit($event->title, 28) }}</span>
+                  @if($event->pricing_type === 'free' || !$event->min_price)
+                    <span class="events-marquee-price events-marquee-price--free">Gratis</span>
+                  @else
+                    <span class="events-marquee-price">{{ symbolPrice($event->min_price) }}</span>
+                  @endif
+                </div>
+              </a>
+            @endforeach
+          @endfor
+        </div>
+      </div>
+
     </div>
   @endif
   <!-- Event Images Marquee End -->

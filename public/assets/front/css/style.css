@@ -6907,12 +6907,37 @@ h2, .section-title h2 {
   background: transparent;
   box-shadow: none;
 }
-.ed-countdown-wrap { background:#1e2532; border-radius:12px; padding:14px 12px 12px; margin-bottom:16px; text-align:center; }
-.ed-countdown-label { font-size:10px; font-weight:700; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 10px; }
-.ed-countdown-wrap .syotimer__body { display:flex; gap:6px; justify-content:center; }
-.ed-countdown-wrap .syotimer-cell { flex:1; background:rgba(255,255,255,0.08); border-radius:8px; padding:8px 4px 6px; border:1px solid rgba(255,255,255,0.1); }
-.ed-countdown-wrap .syotimer-cell__value { font-size:22px; font-weight:800; color:#F97316; line-height:1.1; border:none !important; margin:0 !important; }
-.ed-countdown-wrap .syotimer-cell__unit { font-size:9px; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:0.04em; margin-top:4px; }
+.ed-countdown-wrap { margin-bottom:18px; }
+.ed-countdown-label {
+  font-size:10px; font-weight:700; color:#F97316;
+  text-transform:uppercase; letter-spacing:0.15em;
+  margin:0 0 10px; display:flex; align-items:center; gap:8px;
+}
+.ed-countdown-label::before,
+.ed-countdown-label::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(249,115,22,0.5), transparent);
+}
+.ed-countdown-wrap .syotimer__body { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.ed-countdown-wrap .syotimer-cell {
+  background:linear-gradient(160deg, #1e2532 0%, #2a3347 100%);
+  border-radius:10px; padding:12px 6px 8px; text-align:center;
+  border:1px solid rgba(249,115,22,0.18);
+  position:relative; overflow:hidden;
+}
+.ed-countdown-wrap .syotimer-cell::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:2px; background:#F97316;
+}
+.ed-countdown-wrap .syotimer-cell__value {
+  font-size:26px; font-weight:900; color:#F97316;
+  line-height:1; border:none !important; margin:0 0 5px !important;
+  display:block; font-variant-numeric:tabular-nums;
+}
+.ed-countdown-wrap .syotimer-cell__unit {
+  font-size:9px; color:rgba(255,255,255,0.45);
+  text-transform:uppercase; letter-spacing:0.06em; display:block;
+}
 .ed-section-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; margin:16px 0 10px; padding-top:16px; border-top:1px solid #f3f4f6; }
 .ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:12px; }
 .ed-status-pill--running { background:#dcfce7; color:#166534; }

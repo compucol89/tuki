@@ -347,15 +347,15 @@ ttq.page();
               <div class="ed-ticket-card__head">
                 <p class="ed-ticket-card__head-title">{{ __('Entradas') }}</p>
                 <p class="ed-ticket-card__head-price">
-                  @if ($content->pricing_type == 'free')
-                    {{ __('Gratis') }}
+                  @php
+                    $min_ticket_price = DB::table('tickets')->where('event_id', $content->id)->min('price');
+                  @endphp
+                  @if ($content->pricing_type == 'free' || (is_numeric($min_ticket_price) && $min_ticket_price == 0))
+                    Gratis
+                  @elseif(is_numeric($min_ticket_price) && $min_ticket_price > 0)
+                    <span style="font-size:13px;font-weight:400;opacity:0.6;">desde</span> {{ symbolPrice($min_ticket_price) }}
                   @else
-                    @php $min_ticket_price = DB::table('tickets')->where('event_id', $content->id)->min('price'); @endphp
-                    @if($min_ticket_price)
-                      <span style="font-size:13px;font-weight:400;opacity:0.6;">desde</span> {{ symbolPrice($min_ticket_price) }}
-                    @else
-                      {{ symbolPrice($content->price ?? 0) }}
-                    @endif
+                    {{ symbolPrice($content->price ?? 0) }}
                   @endif
                 </p>
               </div>

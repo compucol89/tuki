@@ -63,10 +63,10 @@
       <input type="hidden" name="total"    value="{{ $total }}">
       <input type="hidden" name="quantity" value="{{ $quantity }}">
       <input type="hidden" name="country"  value="{{ old('country', $authUser?->country ?? 'Argentina') }}">
-      <input type="hidden" name="state"    value="{{ old('state',   $authUser?->state ?? '') }}">
-      <input type="hidden" name="city"     value="{{ old('city',    $authUser?->city ?? '') }}">
-      <input type="hidden" name="zip_code" value="{{ old('zip_code',$authUser?->zip_code ?? '') }}">
-      <input type="hidden" name="address"  value="{{ old('address', $authUser?->address ?? '') }}">
+      <input type="hidden" name="state"    value="{{ old('state',   $authUser?->state ?? 'N/A') }}">
+      <input type="hidden" name="city"     value="{{ old('city',    $authUser?->city ?? 'N/A') }}">
+      <input type="hidden" name="zip_code" value="{{ old('zip_code',$authUser?->zip_code ?? '0000') }}">
+      <input type="hidden" name="address"  value="{{ old('address', $authUser?->address ?? 'N/A') }}">
 
       @if ($selTickets != '')
         @php Session::put('selTickets', $selTickets); @endphp

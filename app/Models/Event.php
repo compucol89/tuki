@@ -39,6 +39,7 @@ class Event extends Model
     'tiktok_pixel_id',
     'spotify_url',
     'youtube_url',
+    'manual_badge',
   ];
   public function ticket()
   {

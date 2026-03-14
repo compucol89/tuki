@@ -352,6 +352,25 @@
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
+                      <label for="manual_badge">{{ __('Badge especial') }}</label>
+                      <select name="manual_badge" id="manual_badge" class="form-control">
+                        <option value="" {{ ($event->manual_badge ?? '') == '' ? 'selected' : '' }}>
+                          {{ __('Automático') }}
+                        </option>
+                        <option value="destacado" {{ ($event->manual_badge ?? '') == 'destacado' ? 'selected' : '' }}>
+                          ⭐ {{ __('Destacado') }}
+                        </option>
+                        <option value="imperdible" {{ ($event->manual_badge ?? '') == 'imperdible' ? 'selected' : '' }}>
+                          🎪 {{ __('Imperdible') }}
+                        </option>
+                      </select>
+                      <small class="form-text text-muted">
+                        {{ __('Automático: el sistema asigna badge por visitas/ventas/stock. Destacado e Imperdible tienen prioridad máxima.') }}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
                       <label for="">{{ __('Organizer') }}</label>
                       <select name="organizer_id" class="form-control js-example-basic-single">
                         <option value="" selected>{{ __('Select Organizer') }}</option>

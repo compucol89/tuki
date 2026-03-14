@@ -4,6 +4,9 @@
   Contexto: $websiteInfo y $currentLanguageInfo disponibles en la vista padre
 --}}
 @php
+  $ev_badge = \App\Services\EventBadgeService::getBadge($event);
+@endphp
+@php
   // Fecha
   if ($event->date_type == 'multiple') {
     $ev_date_obj = eventLatestDates($event->id);
@@ -126,6 +129,14 @@
        onclick="event.stopPropagation()">
       <i class="{{ $ev_wishlisted ? 'fas' : 'far' }} fa-bookmark"></i>
     </a>
+
+    {{-- Badge social proof — bottom-left de la imagen --}}
+    @if($ev_badge)
+      <span class="ev-badge {{ $ev_badge['class'] }}">
+        <span class="ev-badge__icon">{{ $ev_badge['icon'] }}</span>
+        {{ $ev_badge['label'] }}
+      </span>
+    @endif
   </div>
 
   {{-- ── BODY ── --}}

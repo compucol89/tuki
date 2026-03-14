@@ -1697,14 +1697,14 @@ body.loaded {
     position: relative;
     margin-bottom: 20px;
     display: inline-block;
-    background: rgba(0, 194, 244, 0.08);
+    background: rgba(249, 115, 22, 0.08);
     z-index: 1;
-    border: 2px solid rgba(0, 194, 244, 0.15);
+    border: 2px solid rgba(249, 115, 22, 0.15);
     transition: background 0.3s ease, border-color 0.3s ease;
 }
 .work-process-item:hover .icon {
-    background: rgba(0, 194, 244, 0.15);
-    border-color: rgba(0, 194, 244, 0.4);
+    background: rgba(249, 115, 22, 0.15);
+    border-color: rgba(249, 115, 22, 0.4);
 }
 
 .work-process-item .icon i:before {
@@ -1791,7 +1791,7 @@ body.loaded {
     margin-bottom: 30px;
     padding: 30px 30px 18px 30px;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-    border-left: 2px solid rgba(0, 194, 244, 0.35);
+    border-left: 2px solid rgba(249, 115, 22, 0.35);
     border-radius: 0 12px 12px 0;
     background: #fff;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -4412,7 +4412,7 @@ body.home-page .events-marquee + section::before {
 /* A.3 — Fondo alternado sutil entre secciones */
 body.home-page .category-section,
 body.home-page .testimonial-section {
-    background-color: rgba(0, 194, 244, 0.025);
+    background-color: rgba(249, 115, 22, 0.025);
 }
 
 /* C.2 — Filtros de precio en /events */
@@ -4520,7 +4520,7 @@ body.home-page .testimonial-section {
   border-radius: 16px;
   overflow: hidden;
   background: #fff;
-  border: 1px solid rgba(23, 52, 68, 0.06);
+  border: 1px solid rgba(30, 37, 50, 0.06);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   height: 100%;
@@ -4531,8 +4531,8 @@ body.home-page .testimonial-section {
 
 .ev-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(23, 52, 68, 0.10),
-              0 8px 20px rgba(23, 52, 68, 0.06);
+  box-shadow: 0 20px 60px rgba(30, 37, 50, 0.10),
+              0 8px 20px rgba(30, 37, 50, 0.06);
 }
 
 .ev-card:active {
@@ -5540,7 +5540,7 @@ h2, .section-title h2 {
   position: absolute !important;
   inset: 0 !important;
   z-index: 5 !important;
-  background: rgba(23, 52, 68, 0.88) !important;
+  background: rgba(30, 37, 50, 0.88) !important;
   backdrop-filter: blur(2px) !important;
   -webkit-backdrop-filter: blur(2px) !important;
   display: flex !important;

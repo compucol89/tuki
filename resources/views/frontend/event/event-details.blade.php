@@ -670,7 +670,7 @@ ttq.page();
                             }
 
                           @endphp
-                          <p class="mb-0"><strong>{{ @$ticket_content->title }}</strong></p>
+                          <p class="mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
                           <div class="click-show">
                             <div class="show-content">
                               {!! clean(@$ticket_content->description ?? '') !!}
@@ -785,8 +785,8 @@ ttq.page();
                                   $ticket_content = App\Models\Event\TicketContent::where([['ticket_id', $ticket->id]])->first();
                               }
                             @endphp
-                            <p class="mb-0"><strong>{{ @$ticket_content->title }} -
-                                {{ @$varition_names[$key]['name'] }}</strong>
+                            <p class="mb-0"><strong>{{ __(@$ticket_content->title ?: '') }} -
+                                {{ __(@$varition_names[$key]['name'] ?: '') }}</strong>
                             </p>
                             <div class="click-show">
                               <div class="show-content">
@@ -899,7 +899,7 @@ ttq.page();
                             }
                             $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
                           @endphp
-                          <p class="mb-0"><strong>{{ @$ticket_content->title }}</strong></p>
+                          <p class="mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
                           <div class="click-show">
                             <div class="show-content">
                               {!! clean(@$ticket_content->description ?? '') !!}
@@ -946,7 +946,10 @@ ttq.page();
                       </span>
                       <input type="hidden" name="total" id="total">
                     </div>
-                    <button class="theme-btn w-100 mt-20" type="submit">{{ __('Book Now') }}</button>
+                    <button class="theme-btn w-100 mt-20" type="submit">
+                      {{ __('Comprar Entradas') }}
+                      <svg style="display:inline-block;vertical-align:middle;margin-left:8px;transition:transform 0.25s ease" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
                   @endif
                 </div>
 

@@ -266,23 +266,26 @@ input[type=radio] {
 .theme-btn,
 a.theme-btn {
     z-index: 1;
-    color: var(--dark-color);
+    color: #fff;
     cursor: pointer;
     font-size: 15px;
-    transition: 0.5s;
     font-weight: 700;
     text-align: center;
     padding: 15px 33px;
-    border-radius: 5px;
+    border-radius: 8px;
     display: inline-block;
-    background: var(--accent-color);
-    border: 1px solid var(--accent-color);
+    background: #F97316;
+    border: 1px solid #F97316;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.1px;
+    -webkit-font-smoothing: antialiased;
 }
 
 .theme-btn:hover,
 a.theme-btn:hover {
-    background: transparent;
-    color: var(--accent-color);
+    background: #ea580c;
+    border-color: #ea580c;
+    color: #fff;
 }
 
 /* Learn More Btn */
@@ -570,7 +573,8 @@ body.loaded {
     transform: scale(0.96);
 }
 .event-details-area .theme-btn:hover {
-    box-shadow: 0 6px 24px rgba(0, 194, 244, 0.30);
+    box-shadow: 0 6px 24px rgba(249, 115, 22, 0.40);
+    transform: translateY(-1px);
 }
 .theme-btn.btn-loading {
     pointer-events: none;
@@ -4850,7 +4854,7 @@ h2, .section-title h2 {
   position: absolute;
   inset: 0;
   z-index: 5;
-  background: rgba(23, 52, 68, 0.90);
+  background: rgba(30, 37, 50, 0.90);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
   display: flex;
@@ -5323,7 +5327,7 @@ h2, .section-title h2 {
   top: 12px !important;
   left: 12px !important;
   z-index: 4 !important;
-  background: var(--dark-color, #1e2532) !important;
+  background: #ea580c !important;
   color: #fff !important;
   padding: 5px 13px !important;
   border-radius: 24px !important;

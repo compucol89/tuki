@@ -473,7 +473,7 @@ $("#imageUpload").on("change", function () {
 function animateQty(el) {
     el.style.transition = 'none';
     el.style.transform = 'scale(1.35)';
-    el.style.color = '#00c2f4';
+    el.style.color = '#F97316';
     void el.offsetWidth;
     el.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1), color 0.3s ease';
     el.style.transform = 'scale(1)';

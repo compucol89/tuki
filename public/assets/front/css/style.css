@@ -6696,3 +6696,207 @@ h2, .section-title h2 {
   .co-summary { padding: 20px; }
 }
 
+/* EVENT DETAILS V2 */
+.ed-hero {
+  position: relative;
+  min-height: 460px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.ed-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(30,37,50,0.35) 0%, rgba(30,37,50,0.80) 100%);
+  z-index: 1;
+}
+.ed-hero__inner {
+  position: relative;
+  z-index: 2;
+  padding: 28px 0 40px;
+}
+.ed-hero__actions {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  z-index: 3;
+}
+.ed-hero__btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.ed-hero__btn:hover { background: rgba(249,115,22,0.7); color:#fff; text-decoration:none; }
+.ed-hero__category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #F97316;
+  background: rgba(249,115,22,0.18);
+  border: 1px solid rgba(249,115,22,0.35);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  text-decoration: none;
+}
+.ed-hero__title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  letter-spacing: -0.3px;
+}
+.ed-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  align-items: center;
+}
+.ed-hero__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+}
+.ed-body { padding-top: 48px; padding-bottom: 80px; background: #f8f9fb; }
+.ed-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 12px rgba(30,37,50,0.06);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.ed-card__head {
+  padding: 20px 28px 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.ed-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e2532;
+  margin: 0;
+}
+.ed-card__body { padding: 24px 28px; }
+.ed-ticket-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 24px rgba(30,37,50,0.08);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.ed-ticket-card__head {
+  background: linear-gradient(135deg, #1e2532 0%, #2d3748 100%);
+  padding: 20px 24px;
+}
+.ed-ticket-card__head-title { font-size:13px; color:rgba(255,255,255,0.6); margin:0 0 4px; }
+.ed-ticket-card__head-price { font-size:28px; font-weight:800; color:#fff; margin:0; }
+.ed-ticket-card__head-price del { font-size:18px; color:rgba(255,255,255,0.45); margin-left:8px; font-weight:400; }
+.ed-ticket-card__body { padding: 20px 24px; }
+.ed-info-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 12px rgba(30,37,50,0.06);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.ed-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.ed-info-row:last-child { border-bottom: none; }
+.ed-info-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fff7ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #F97316;
+}
+.ed-info-text { flex: 1; }
+.ed-info-text strong { display:block; font-size:13px; font-weight:700; color:#1e2532; }
+.ed-info-text span { font-size:13px; color:#6b7280; }
+.ed-organizer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 0;
+}
+.ed-organizer img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+.ed-organizer__name { font-size:14px; font-weight:700; color:#1e2532; }
+.ed-organizer__link { font-size:12px; color:#F97316; text-decoration:none; }
+.ed-organizer__link:hover { color:#ea580c; }
+.ed-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 12px;
+  border-top: 1px solid #f3f4f6;
+  margin-top: 8px;
+}
+.ed-total-label { font-size:14px; font-weight:600; color:#6b7280; }
+.ed-total-value { font-size:24px; font-weight:800; color:#1e2532; }
+.ed-buy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 54px;
+  background: #F97316;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.ed-buy-btn:hover { background:#ea580c; transform:translateY(-1px); }
+.ed-trust { font-size:12px; color:#9ca3af; text-align:center; margin-top:10px; display:flex; align-items:center; justify-content:center; gap:5px; }
+@media (max-width: 991px) {
+  .ed-hero__title { font-size:26px; }
+  .ed-hero { min-height:360px; }
+  .ed-card__body { padding:20px; }
+  .ed-card__head { padding:16px 20px 12px; }
+}
+@media (max-width: 575px) {
+  .ed-hero { min-height:280px; }
+  .ed-hero__title { font-size:20px; }
+  .ed-hero__meta { gap:10px; }
+  .ed-ticket-card__head { padding:16px 18px; }
+  .ed-ticket-card__body { padding:16px 18px; }
+}

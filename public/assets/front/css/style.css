@@ -49,7 +49,7 @@
 :root {
     scroll-behavior: auto;
     --base-color: #454545;
-    --heading-color: #030A15;
+    --heading-color: #1e2532;
     --primary-color: #F97316;
     --secondary-color: #ea580c;
     --dark-color: #1e2532;
@@ -532,7 +532,7 @@ body.loaded {
 .hero-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(3, 10, 21, 0.78);
+    background: rgba(30, 37, 50, 0.78);
     z-index: 1;
     pointer-events: none;
 }
@@ -671,7 +671,7 @@ body.loaded {
 }
 
 #borwseby-button {
-    border-right: 1px solid rgba(3, 10, 21, 0.15);
+    border-right: 1px solid rgba(30, 37, 50, 0.15);
 }
 
 .ui-icon:after {
@@ -1218,7 +1218,7 @@ body.loaded {
 
 .event-details-information b {
     display: block;
-    color: #030A15;
+    color: #1e2532;
     font-weight: 500;
     margin-bottom: 5px;
 }
@@ -1316,7 +1316,7 @@ body.loaded {
     flex: none;
     font-size: 22px;
     background: transparent;
-    border: 1px solid rgba(3, 10, 21, 0.1);
+    border: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .quantity-input button:first-child {
@@ -1332,7 +1332,7 @@ body.loaded {
     border-width: 1px 0 1px 0;
     color: var(--heading-color);
     font-family: var(--heading-font);
-    border-color: rgba(3, 10, 21, 0.1);
+    border-color: rgba(30, 37, 50, 0.1);
 }
 
 .event-details-information .h4 {
@@ -1447,7 +1447,7 @@ body.loaded {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(3, 10, 21, 0.1);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .product-title,
@@ -1533,7 +1533,7 @@ body.loaded {
     padding: 30px;
     display: flex;
     align-items: end;
-    background: linear-gradient(180deg, rgba(3, 10, 21, 0.4) 0%, #030A15 100%);
+    background: linear-gradient(180deg, rgba(30, 37, 50, 0.4) 0%, #1e2532 100%);
 }
 
 .category-content h5 {
@@ -1625,7 +1625,7 @@ body.loaded {
     background: white;
     margin-bottom: 30px;
     padding: 28px 30px 25px;
-    border: 1px solid rgba(3, 10, 21, 0.15);
+    border: 1px solid rgba(30, 37, 50, 0.15);
     transition: border-color 0.3s ease;
 }
 
@@ -1927,7 +1927,7 @@ body.loaded {
 
 .product-gallery,
 .product-thumb-item {
-    border: 1px solid rgba(3, 10, 21, 0.1) !important;
+    border: 1px solid rgba(30, 37, 50, 0.1) !important;
 }
 
 .product-thumb .slick-arrow,
@@ -1992,7 +1992,7 @@ body.loaded {
 }
 
 .product-information-tab {
-    border-bottom: 1px solid rgba(3, 10, 21, 0.1);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .product-information-tab a {
@@ -2059,7 +2059,7 @@ body.loaded {
 
 #products-dropdown-select-button {
     padding: 15px 20px;
-    border: 1px solid rgba(3, 10, 21, 0.1);
+    border: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 
@@ -2080,7 +2080,7 @@ body.loaded {
     margin: 0 15px 30px;
     justify-content: center;
     width: calc(20% - 30px);
-    border: 1px solid rgba(3, 10, 21, 0.1);
+    border: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 /****************************************************** */
@@ -2111,7 +2111,7 @@ body.loaded {
     padding-top: 12px;
     align-items: center;
     justify-content: space-between;
-    border-top: 1px solid rgba(3, 10, 21, 0.1);
+    border-top: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .blog-footer .dot {
@@ -2119,7 +2119,7 @@ body.loaded {
     width: 6px;
     display: block;
     border-radius: 50%;
-    background: rgba(3, 10, 21, 0.2);
+    background: rgba(30, 37, 50, 0.2);
 }
 
 .blog-footer li i {
@@ -2190,7 +2190,7 @@ blockquote {
 }
 
 .widget:not(:last-child) {
-    border-bottom: 1px solid rgba(3, 10, 21, 0.1);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .widget-title {
@@ -2273,7 +2273,7 @@ blockquote {
     font-weight: 700;
     padding: 0 0 12px;
     background: transparent;
-    border-bottom: 1px solid rgba(3, 10, 21, 0.1);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .by-date {
@@ -2313,7 +2313,7 @@ blockquote {
     padding: 0;
     cursor: pointer;
     border-radius: 0;
-    background: rgba(3, 10, 21, 0.1);
+    background: rgba(30, 37, 50, 0.1);
 }
 
 .price-slider-range .ui-widget-header {
@@ -2352,7 +2352,7 @@ blockquote {
 /******************** 16. FAQ Page ******************** */
 /****************************************************** */
 .accordion .card:not(:last-child) {
-    border-bottom: 1px solid rgba(3, 10, 21, 0.1);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .accordion .card-header {
@@ -2362,13 +2362,13 @@ blockquote {
     color: var(--primary-color);
     background: var(--light-color);
     justify-content: space-between;
-    border-bottom: 1px solid rgba(3, 10, 21, 0.1);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .accordion .card {
     border-radius: 0;
     margin-bottom: 15px;
-    border: 1px solid rgba(3, 10, 21, 0.1);
+    border: 1px solid rgba(30, 37, 50, 0.1);
 }
 
 .accordion .card-body p {
@@ -2401,7 +2401,7 @@ blockquote {
 
 .accordion .collapsed .toggle_btn:after,
 .accordion .collapsed .toggle_btn:before {
-    background: rgba(3, 10, 21, 0.5);
+    background: rgba(30, 37, 50, 0.5);
 }
 
 .accordion .collapsed .toggle_btn:after {

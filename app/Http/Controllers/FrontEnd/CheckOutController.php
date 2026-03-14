@@ -60,7 +60,7 @@ class CheckOutController extends Controller
 
 
     if ($select == false) {
-      return back()->with(['alert-type' => 'error', 'message' => 'Please Select at least one ticket']);
+      return back()->with(['alert-type' => 'error', 'message' => 'Por favor seleccioná al menos una entrada']);
     }
     $information = [];
     $information['selTickets'] = '';

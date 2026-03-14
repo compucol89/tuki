@@ -135,9 +135,7 @@ ttq.page();
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
       <div class="banner-inner">
-        <h2 class="page-title">
-          {{ strlen($content->title) > 30 ? mb_substr($content->title, 0, 30, 'UTF-8') . '...' : $content->title }}
-        </h2>
+        <h2 class="page-title">{{ $content->title }}</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
@@ -330,7 +328,7 @@ ttq.page();
                 <h3 class="inner-title mb-30">{{ __('Map') }}</h3>
                 <div class="our-location mb-50">
                   <iframe
-                    src="//maps.google.com/maps?width=100%25&amp;height=385&amp;hl=en&amp;q={{ $map_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                    src="//maps.google.com/maps?width=100%25&amp;height=385&amp;hl=es&amp;q={{ $map_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
                     height="385" class="map-h" allowfullscreen="" loading="lazy" title="{{ $content->title }} — {{ __('Map') }}"></iframe>
                 </div>
               @endif

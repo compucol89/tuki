@@ -5714,39 +5714,26 @@ h2, .section-title h2 {
    Event Badges — Social Proof
    ================================ */
 
-/* Misma forma que .ev-card__price-img, con color propio */
+/* Badge — solo ícono + texto, sin fondo */
 .ev-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 13px 5px 9px;
-  border-radius: 24px;
+  gap: 5px;
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: -0.1px;
   -webkit-font-smoothing: antialiased;
-  color: #fff;
   flex-shrink: 0;
 }
 
-.ev-badge__icon {
-  font-size: 13px;
-  line-height: 1;
-}
+.ev-badge__icon { font-size: 14px; line-height: 1; }
 
-.ev-badge__label {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-/* Colores sólidos por tipo — misma "solidez" que el precio */
-.ev-badge--furor      { background: #ef4444; }
-.ev-badge--agota      { background: #d97706; }
-.ev-badge--trending   { background: #059669; }
-.ev-badge--nuevo      { background: #2563eb; }
-.ev-badge--ultimas    { background: #ea580c; }
-.ev-badge--destacado  { background: #7c3aed; }
-.ev-badge--imperdible { background: #e11d48; }
+.ev-badge--furor      { color: #ef4444; }
+.ev-badge--agota      { color: #d97706; }
+.ev-badge--trending   { color: #059669; }
+.ev-badge--nuevo      { color: #2563eb; }
+.ev-badge--ultimas    { color: #ea580c; }
+.ev-badge--destacado  { color: #7c3aed; }
+.ev-badge--imperdible { color: #e11d48; }
 

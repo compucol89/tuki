@@ -6032,6 +6032,10 @@ h2, .section-title h2 {
   max-width: 400px;
 }
 
+.auth-split__form-inner--wide {
+  max-width: 520px;
+}
+
 .auth-split__logo-mobile {
   display: none;
   margin-bottom: 36px;

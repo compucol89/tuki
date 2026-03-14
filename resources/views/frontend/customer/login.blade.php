@@ -19,7 +19,7 @@
     <div class="auth-split__visual-content">
 
       <a href="{{ route('index') }}" class="auth-split__logo">
-        <img src="{{ asset('assets/admin/img/' . $basicInfo->logo) }}" alt="Logo">
+        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Logo">
       </a>
 
       <div class="auth-split__tagline">
@@ -51,7 +51,7 @@
 
       {{-- Logo mobile --}}
       <a href="{{ route('index') }}" class="auth-split__logo-mobile">
-        <img src="{{ asset('assets/admin/img/' . $basicInfo->logo) }}" alt="Logo">
+        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Logo">
       </a>
 
       <h1 class="auth-split__title">Bienvenido de vuelta</h1>

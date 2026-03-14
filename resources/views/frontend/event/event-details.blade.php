@@ -901,72 +901,69 @@ ttq.page();
             {{-- /Ticket form card --}}
 
             {{-- CARD 2: Event info --}}
-            <div class="ed-info-card">
+            <div class="ei-card">
 
               {{-- Organizer --}}
-              <div class="ed-info-row">
-                <div class="ed-info-icon"><i class="fas fa-user"></i></div>
-                <div class="ed-info-text">
-                  <strong>{{ __('Organised By') }}</strong>
-                  @if ($organizer == '')
-                    @php $admin = App\Models\Admin::first(); @endphp
-                    <div class="ed-organizer">
-                      <img class="lazy" data-src="{{ asset('assets/admin/img/admins/' . $admin->image) }}" alt="{{ $admin->username }}">
-                      <div>
-                        <p class="ed-organizer__name mb-0">{{ $admin->username }}</p>
-                        <a class="ed-organizer__link" href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">{{ __('View Profile') }}</a>
-                      </div>
-                    </div>
-                  @else
-                    <div class="ed-organizer">
-                      @if ($organizer->photo != null)
-                        <img class="lazy" data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}" alt="{{ $organizer->username }}">
-                      @else
-                        <img class="lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ $organizer->username }}">
-                      @endif
-                      <div>
-                        <p class="ed-organizer__name mb-0">{{ $organizer->username }}</p>
-                        <a class="ed-organizer__link" href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">{{ __('View Profile') }}</a>
-                      </div>
-                    </div>
-                  @endif
+              @if ($organizer == '')
+                @php $admin = App\Models\Admin::first(); @endphp
+                <div class="ei-org">
+                  <img class="ei-org__avatar lazy"
+                    src="{{ asset('assets/front/images/user.png') }}"
+                    data-src="{{ asset('assets/admin/img/admins/' . $admin->image) }}"
+                    alt="{{ $admin->username }}">
+                  <div class="ei-org__info">
+                    <span class="ei-label">Organizado por</span>
+                    <p class="ei-org__name">{{ $admin->username }}</p>
+                    <a class="ei-org__link" href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">Ver perfil <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+                  </div>
                 </div>
-              </div>
+              @else
+                <div class="ei-org">
+                  <img class="ei-org__avatar lazy"
+                    src="{{ asset('assets/front/images/user.png') }}"
+                    @if ($organizer->photo != null)
+                      data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}"
+                    @endif
+                    alt="{{ $organizer->username }}">
+                  <div class="ei-org__info">
+                    <span class="ei-label">Organizado por</span>
+                    <p class="ei-org__name">{{ $organizer->username }}</p>
+                    <a class="ei-org__link" href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">Ver perfil <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
+                  </div>
+                </div>
+              @endif
 
               {{-- Address --}}
               @if ($content->address != null)
-                <div class="ed-info-row">
-                  <div class="ed-info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                  <div class="ed-info-text">
-                    <strong>{{ __('Ubicación') }}</strong>
-                    <span>{{ $content->address }}</span>
+                <div class="ei-meta">
+                  <i class="fas fa-map-marker-alt ei-meta__icon"></i>
+                  <div>
+                    <span class="ei-label">Ubicación</span>
+                    <p class="ei-meta__text">{{ $content->address }}</p>
                   </div>
                 </div>
               @endif
 
               {{-- Add to Calendar --}}
               @php
-                $start_date = str_replace('-', '', $content->start_date);
+                $start_date    = str_replace('-', '', $content->start_date);
                 $start_time_cal = str_replace(':', '', $content->start_time);
-                $end_date = str_replace('-', '', $content->end_date);
-                $end_time_cal = str_replace(':', '', $content->end_time);
+                $end_date      = str_replace('-', '', $content->end_date);
+                $end_time_cal  = str_replace(':', '', $content->end_time);
               @endphp
-              <div class="ed-info-row" style="border-bottom:none;padding-bottom:0;">
-                <div class="ed-info-icon"><i class="fas fa-calendar-plus"></i></div>
-                <div class="ed-info-text">
-                  <strong>{{ __('Add to Calendar') }}</strong>
-                  <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                    <a target="_blank"
-                      href="//calendar.google.com/calendar/u/0/r/eventedit?text={{ $content->title }}&dates={{ $start_date }}T{{ $start_time_cal }}/{{ $end_date }}T{{ $end_time_cal }}&ctz={{ $websiteInfo->timezone }}&details=For+details,+click+here:+{{ route('event.details', [$content->eventSlug, $content->id]) }}&location={{ $content->event_type == 'online' ? 'Online' : $content->address }}&sf=true"
-                      class="ed-cal-btn">
-                      <i class="fab fa-google"></i> Google
-                    </a>
-                    <a target="_blank"
-                      href="//calendar.yahoo.com/?v=60&view=d&type=20&TITLE={{ $content->title }}&ST={{ $start_date }}T{{ $start_time_cal }}&ET={{ $end_date }}T{{ $end_time_cal }}&DUR=9959&DESC=For%20details%2C%20click%20here%3A%20{{ route('event.details', [$content->eventSlug, $content->id]) }}&in_loc={{ $content->event_type == 'online' ? 'Online' : $content->address }}"
-                      class="ed-cal-btn">
-                      Yahoo
-                    </a>
-                  </div>
+              <div class="ei-cal">
+                <span class="ei-label"><i class="fas fa-calendar-plus" style="margin-right:5px;"></i>Añadir al calendario</span>
+                <div class="ei-cal__btns">
+                  <a target="_blank" class="ei-cal__btn ei-cal__btn--google"
+                    href="//calendar.google.com/calendar/u/0/r/eventedit?text={{ $content->title }}&dates={{ $start_date }}T{{ $start_time_cal }}/{{ $end_date }}T{{ $end_time_cal }}&ctz={{ $websiteInfo->timezone }}&details=For+details,+click+here:+{{ route('event.details', [$content->eventSlug, $content->id]) }}&location={{ $content->event_type == 'online' ? 'Online' : $content->address }}&sf=true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                    Google
+                  </a>
+                  <a target="_blank" class="ei-cal__btn"
+                    href="//calendar.yahoo.com/?v=60&view=d&type=20&TITLE={{ $content->title }}&ST={{ $start_date }}T{{ $start_time_cal }}&ET={{ $end_date }}T{{ $end_time_cal }}&DUR=9959&DESC=For%20details%2C%20click%20here%3A%20{{ route('event.details', [$content->eventSlug, $content->id]) }}&in_loc={{ $content->event_type == 'online' ? 'Online' : $content->address }}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+                    Yahoo
+                  </a>
                 </div>
               </div>
 

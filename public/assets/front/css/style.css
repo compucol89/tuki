@@ -6961,6 +6961,62 @@ h2, .section-title h2 {
 .ed-organizer__link { font-size:12px; color:#F97316; text-decoration:none; font-weight:500; }
 .ed-organizer__link:hover { color:#ea580c; }
 
-/* Calendar buttons */
+/* Calendar buttons (legacy) */
 .ed-cal-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; background:#f3f4f6; color:#374151; text-decoration:none; transition:background 0.15s,color 0.15s; border:1px solid #e5e7eb; }
 .ed-cal-btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }
+
+/* ─── EVENT INFO CARD (ei-*) ─── */
+.ei-card {
+  background:#fff; border-radius:16px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
+  overflow:hidden; margin-bottom:16px;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.ei-label {
+  display:block; font-size:10px; font-weight:700;
+  color:#9ca3af; text-transform:uppercase; letter-spacing:0.1em;
+  margin-bottom:4px;
+}
+/* Organizer row */
+.ei-org {
+  display:flex; align-items:center; gap:14px;
+  padding:18px 20px; border-bottom:1px solid #f3f4f6;
+}
+.ei-org__avatar {
+  width:46px; height:46px; border-radius:50%;
+  object-fit:cover; border:2px solid #e5e7eb; flex-shrink:0;
+  background:#f3f4f6;
+}
+.ei-org__info { min-width:0; }
+.ei-org__name {
+  font-size:15px; font-weight:700; color:#111827;
+  margin:0 0 3px; letter-spacing:-0.02em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.ei-org__link {
+  font-size:12px; color:#F97316; font-weight:500;
+  text-decoration:none; transition:color 0.15s;
+}
+.ei-org__link:hover { color:#ea580c; }
+/* Address row */
+.ei-meta {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:14px 20px; border-bottom:1px solid #f3f4f6;
+}
+.ei-meta__icon { color:#F97316; font-size:13px; margin-top:3px; flex-shrink:0; }
+.ei-meta__text { font-size:13px; color:#374151; margin:0; line-height:1.5; }
+/* Calendar row */
+.ei-cal { padding:16px 20px; }
+.ei-cal .ei-label { margin-bottom:10px; }
+.ei-cal__btns { display:flex; gap:8px; flex-wrap:wrap; }
+.ei-cal__btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600;
+  background:#f8fafc; color:#374151; border:1px solid #e5e7eb;
+  text-decoration:none; transition:all 0.15s; white-space:nowrap;
+}
+.ei-cal__btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }
+.ei-cal__btn--google { background:#fff; }

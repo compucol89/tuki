@@ -6901,6 +6901,12 @@ h2, .section-title h2 {
   .ed-ticket-card__body { padding:16px 18px; }
 }
 /* ED SIDEBAR EXTRAS */
+.ed-ticket-card__body .event-details-information {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  box-shadow: none;
+}
 .ed-countdown-wrap { background:#f8fafc; border-radius:10px; padding:14px; margin-bottom:14px; text-align:center; border:1px solid #e5e7eb; }
 .ed-countdown-label { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.07em; margin:0 0 8px; }
 .ed-section-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; margin:16px 0 10px; padding-top:16px; border-top:1px solid #f3f4f6; }

@@ -6801,64 +6801,21 @@ h2, .section-title h2 {
   background: #fff;
   border-radius: 16px;
   border: 1px solid #e5e7eb;
-  box-shadow: 0 4px 24px rgba(30,37,50,0.08);
-  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.05);
+  margin-bottom: 16px;
   overflow: hidden;
 }
 .ed-ticket-card__head {
-  background: linear-gradient(135deg, #1e2532 0%, #2d3748 100%);
-  padding: 20px 24px;
+  background: #fafafa;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 18px 24px 16px;
+  border-top: 3px solid #F97316;
 }
-.ed-ticket-card__head-title { font-size:13px; color:rgba(255,255,255,0.6); margin:0 0 4px; }
-.ed-ticket-card__head-price { font-size:28px; font-weight:800; color:#fff; margin:0; }
-.ed-ticket-card__head-price del { font-size:18px; color:rgba(255,255,255,0.45); margin-left:8px; font-weight:400; }
+.ed-ticket-card__head-title { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 6px; }
+.ed-ticket-card__head-price { font-size:30px; font-weight:800; color:#1e2532; margin:0; letter-spacing:-0.02em; }
+.ed-ticket-card__head-price del { font-size:18px; color:#9ca3af; margin-left:8px; font-weight:400; }
 .ed-ticket-card__body { padding: 20px 24px; }
-.ed-info-card {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 12px rgba(30,37,50,0.06);
-  padding: 20px 24px;
-  margin-bottom: 20px;
-}
-.ed-info-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid #f3f4f6;
-}
-.ed-info-row:last-child { border-bottom: none; }
-.ed-info-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: #fff7ed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #F97316;
-}
-.ed-info-text { flex: 1; }
-.ed-info-text strong { display:block; font-size:13px; font-weight:700; color:#1e2532; }
-.ed-info-text span { font-size:13px; color:#6b7280; }
-.ed-organizer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0 0;
-}
-.ed-organizer img {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #e5e7eb;
-}
-.ed-organizer__name { font-size:14px; font-weight:700; color:#1e2532; }
-.ed-organizer__link { font-size:12px; color:#F97316; text-decoration:none; }
-.ed-organizer__link:hover { color:#ea580c; }
+/* ed-info-card and ed-organizer defined in ED SIDEBAR EXTRAS below */
 .ed-total-row {
   display: flex;
   justify-content: space-between;
@@ -6900,61 +6857,73 @@ h2, .section-title h2 {
   .ed-ticket-card__head { padding:16px 18px; }
   .ed-ticket-card__body { padding:16px 18px; }
 }
-/* ED SIDEBAR EXTRAS */
-.ed-ticket-card__body .event-details-information {
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  box-shadow: none;
-}
-.ed-countdown-wrap { margin-bottom:18px; }
-.ed-countdown-label {
-  font-size:10px; font-weight:700; color:#F97316;
-  text-transform:uppercase; letter-spacing:0.15em;
-  margin:0 0 10px; display:flex; align-items:center; gap:8px;
-}
-.ed-countdown-label::before,
-.ed-countdown-label::after {
-  content:''; flex:1; height:1px;
-  background:linear-gradient(90deg, transparent, rgba(249,115,22,0.5), transparent);
-}
-.ed-countdown-wrap .syotimer__body { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+/* ED SIDEBAR EXTRAS — SaaS UI */
+.ed-ticket-card__body .event-details-information { padding:0; margin:0; background:transparent; box-shadow:none; }
+
+/* Countdown */
+.ed-countdown-wrap { margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid #f3f4f6; }
+.ed-countdown-label { font-size:10px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.12em; margin:0 0 12px; text-align:center; }
+.ed-countdown-label::before, .ed-countdown-label::after { display:none; }
+.ed-countdown-wrap .syotimer__body { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
 .ed-countdown-wrap .syotimer-cell {
-  background:linear-gradient(160deg, #1e2532 0%, #2a3347 100%) !important;
-  border-radius:10px !important; padding:12px 6px 8px !important; text-align:center !important;
-  border:1px solid rgba(249,115,22,0.18) !important;
-  position:relative !important; overflow:hidden !important;
-  height:auto !important; width:auto !important;
+  background:#fff !important; border:1px solid #e5e7eb !important;
+  border-radius:10px !important; padding:12px 4px 10px !important;
+  text-align:center !important; height:auto !important; width:auto !important;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05) !important; position:relative !important;
 }
-.ed-countdown-wrap .syotimer-cell::after {
-  content:''; position:absolute; bottom:0; left:0; right:0;
-  height:2px; background:#F97316;
-}
+.ed-countdown-wrap .syotimer-cell::after { display:none !important; }
 .ed-countdown-wrap .syotimer-cell__value {
-  font-size:26px !important; font-weight:900 !important; color:#F97316 !important;
-  line-height:1.1 !important; border:none !important; margin:0 0 4px !important;
-  display:block !important; font-variant-numeric:tabular-nums;
+  font-size:24px !important; font-weight:800 !important; color:#1e2532 !important;
+  line-height:1 !important; border:none !important; margin:0 0 4px !important;
+  display:block !important; font-variant-numeric:tabular-nums; letter-spacing:-0.02em;
   border-radius:0 !important; aspect-ratio:auto !important; position:static !important;
 }
 .ed-countdown-wrap .syotimer-cell__value::after { display:none !important; }
-.ed-countdown-wrap .syotimer-cell__unit {
-  font-size:9px !important; color:rgba(255,255,255,0.45) !important;
-  text-transform:uppercase !important; letter-spacing:0.06em !important; display:block !important;
-}
-.ed-section-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.07em; margin:16px 0 10px; padding-top:16px; border-top:1px solid #f3f4f6; }
-.ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600; margin-bottom:12px; }
+.ed-countdown-wrap .syotimer-cell__unit { font-size:9px !important; font-weight:600 !important; color:#9ca3af !important; text-transform:uppercase !important; letter-spacing:0.06em !important; display:block !important; }
+
+/* Section label */
+.ed-section-label { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.08em; margin:0 0 10px; padding-top:0; border-top:none; }
+
+/* Status pills */
+.ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:16px; }
 .ed-status-pill--running { background:#dcfce7; color:#166534; }
 .ed-status-pill--over { background:#fee2e2; color:#991b1b; }
+
+/* Field label */
 .ed-field-label { font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; display:block; }
-/* Ticket rows inside ed-ticket-card */
-.ed-ticket-card__body .event-details-information > p.mb-0 { font-size:13px; font-weight:700; color:#1e2532; margin:14px 0 2px !important; }
-.ed-ticket-card__body .price-count { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px solid #f3f4f6; margin:0 !important; margin-top:0 !important; background:transparent; box-shadow:none; }
-.ed-ticket-card__body .price-count h6 { font-size:15px; font-weight:700; color:#1e2532; margin:0; line-height:1; }
-.ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:4px; }
-.ed-ticket-card__body .quantity-input { display:flex; align-items:center; gap:2px; flex-shrink:0; }
-.ed-ticket-card__body .quantity-input button { width:32px !important; height:32px !important; background:#f3f4f6 !important; border:1px solid #e5e7eb !important; border-radius:8px !important; font-size:18px; font-weight:700; cursor:pointer; color:#374151; line-height:1; transition:background 0.15s,color 0.15s; }
-.ed-ticket-card__body .quantity-input button:hover { background:#1e2532 !important; color:#fff !important; border-color:#1e2532 !important; }
-.ed-ticket-card__body .quantity-input input.quantity { width:44px !important; height:32px !important; text-align:center; font-weight:700; font-size:15px; color:#1e2532; border:1px solid #e5e7eb !important; border-radius:6px; background:#fff; }
-.ed-ticket-card__body .click-show { font-size:12px; color:#6b7280; margin-bottom:0; }
-.ed-cal-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 14px; border-radius:8px; font-size:13px; font-weight:600; background:#f3f4f6; color:#374151; text-decoration:none; transition:background 0.2s,color 0.2s; border:1px solid #e5e7eb; }
+
+/* Ticket rows */
+.ed-ticket-card__body .event-details-information > p.mb-0 { font-size:13px; font-weight:600; color:#374151; margin:16px 0 0 !important; }
+.ed-ticket-card__body .price-count {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:10px 0; border-bottom:1px solid #f3f4f6;
+  margin:0 !important; background:transparent; box-shadow:none;
+}
+.ed-ticket-card__body .price-count:last-of-type { border-bottom:none; }
+.ed-ticket-card__body .price-count h6 { font-size:16px; font-weight:700; color:#1e2532; margin:0; line-height:1; }
+.ed-ticket-card__body .price-count h6 del { font-size:13px; color:#9ca3af; font-weight:400; margin-left:4px; }
+.ed-ticket-card__body .click-show { font-size:12px; color:#6b7280; margin:2px 0 0; }
+
+/* Quantity control — connected pill */
+.ed-ticket-card__body .quantity-input { display:flex; align-items:stretch; border:1.5px solid #e5e7eb; border-radius:8px; overflow:hidden; flex-shrink:0; background:#fff; }
+.ed-ticket-card__body .quantity-input button { width:34px !important; height:34px !important; background:#fff !important; border:none !important; border-radius:0 !important; font-size:18px; font-weight:600; cursor:pointer; color:#374151; line-height:1; transition:background 0.15s,color 0.15s; display:flex; align-items:center; justify-content:center; }
+.ed-ticket-card__body .quantity-input button:hover { background:#f3f4f6 !important; color:#1e2532 !important; }
+.ed-ticket-card__body .quantity-input input.quantity { width:38px !important; height:34px !important; text-align:center; font-weight:700; font-size:14px; color:#1e2532; border:none !important; border-left:1.5px solid #e5e7eb !important; border-right:1.5px solid #e5e7eb !important; background:#fff; border-radius:0 !important; }
+
+/* Info card */
+.ed-info-card { background:#fff; border-radius:16px; border:1px solid #e5e7eb; box-shadow:0 1px 3px rgba(0,0,0,0.06); padding:0; margin-bottom:16px; overflow:hidden; }
+.ed-info-row { display:flex; align-items:flex-start; gap:12px; padding:14px 20px; border-bottom:1px solid #f3f4f6; }
+.ed-info-row:last-child { border-bottom:none; }
+.ed-info-icon { width:34px; height:34px; border-radius:8px; background:#fff7ed; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#F97316; font-size:13px; }
+.ed-info-text { flex:1; }
+.ed-info-text strong { display:block; font-size:12px; font-weight:700; color:#374151; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.05em; }
+.ed-info-text span { font-size:13px; color:#6b7280; }
+.ed-organizer { display:flex; align-items:center; gap:10px; margin-top:6px; }
+.ed-organizer img { width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb; }
+.ed-organizer__name { font-size:14px; font-weight:700; color:#1e2532; margin:0; }
+.ed-organizer__link { font-size:12px; color:#F97316; text-decoration:none; }
+.ed-organizer__link:hover { color:#ea580c; }
+
+/* Calendar buttons */
+.ed-cal-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600; background:#f3f4f6; color:#374151; text-decoration:none; transition:background 0.15s,color 0.15s; border:1px solid #e5e7eb; }
 .ed-cal-btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }

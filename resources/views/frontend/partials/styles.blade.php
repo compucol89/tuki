@@ -47,7 +47,7 @@
   :root {
     scroll-behavior: auto;
     --base-color: #454545;
-    --heading-color: #173444;
+    --heading-color: #1e2532;
     --primary-color: #{{ $basicInfo->primary_color }};
     --light-color: #F7F7F7;
     --base-font: 'Inter', sans-serif;

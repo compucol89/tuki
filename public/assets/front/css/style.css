@@ -50,11 +50,11 @@
     scroll-behavior: auto;
     --base-color: #454545;
     --heading-color: #030A15;
-    --primary-color: #00c2f4;
-    --secondary-color: #22b0af;
-    --dark-color: #173444;
+    --primary-color: #F97316;
+    --secondary-color: #ea580c;
+    --dark-color: #1e2532;
     --light-color: #F7F7F7;
-    --accent-color: #00c2f4;
+    --accent-color: #F97316;
     --base-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --heading-font: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
@@ -4419,7 +4419,7 @@ body.home-page .testimonial-section {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 22px;
   font-weight: 800;
-  color: var(--dark-color, #173444);
+  color: var(--dark-color, #1e2532);
   line-height: 1;
 }
 
@@ -4428,7 +4428,7 @@ body.home-page .testimonial-section {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 10px;
   font-weight: 700;
-  color: var(--primary-color, #00c2f4);
+  color: var(--primary-color, #F97316);
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 3px;
@@ -4439,7 +4439,7 @@ body.home-page .testimonial-section {
   position: absolute;
   top: 12px; right: 12px;
   z-index: 2;
-  background: var(--dark-color, #173444);
+  background: var(--dark-color, #1e2532);
   color: #fff;
   padding: 6px 14px;
   border-radius: 20px;
@@ -4467,7 +4467,7 @@ body.home-page .testimonial-section {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--dark-color, #173444);
+  color: var(--dark-color, #1e2532);
   margin: 0 0 8px;
   line-height: 1.4;
   display: -webkit-box;
@@ -4492,7 +4492,7 @@ body.home-page .testimonial-section {
 
 .ev-card__meta svg {
   flex-shrink: 0;
-  color: var(--primary-color, #00c2f4);
+  color: var(--primary-color, #F97316);
 }
 
 .ev-card__location {
@@ -4524,7 +4524,7 @@ body.home-page .testimonial-section {
 
 .ev-card__wishlist:hover,
 .ev-card__wishlist--active {
-  color: var(--primary-color, #00c2f4);
+  color: var(--primary-color, #F97316);
 }
 
 /* Columna contenedora de ev-card */
@@ -5029,7 +5029,7 @@ h2, .section-title h2 {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 18px;
   font-weight: 700;
-  color: var(--primary-color, #00c2f4);
+  color: var(--primary-color, #F97316);
   text-transform: uppercase;
   letter-spacing: 2px;
   line-height: 1;
@@ -5195,7 +5195,7 @@ h2, .section-title h2 {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.3px !important;
-  color: var(--dark-color, #173444) !important;
+  color: var(--dark-color, #1e2532) !important;
   margin: 0 0 8px !important;
   line-height: 1.15 !important;
   display: -webkit-box !important;
@@ -5235,7 +5235,7 @@ h2, .section-title h2 {
 
 .ev-card__meta-row svg {
   flex-shrink: 0 !important;
-  color: var(--primary-color, #00c2f4) !important;
+  color: var(--primary-color, #F97316) !important;
   opacity: 0.7 !important;
   width: 14px !important;
   height: 14px !important;
@@ -5252,7 +5252,7 @@ h2, .section-title h2 {
 
 .ev-card__organizer strong,
 .ev-card__organizer a strong {
-  color: var(--primary-color, #00c2f4) !important;
+  color: var(--primary-color, #F97316) !important;
   font-weight: 600 !important;
 }
 
@@ -5323,7 +5323,7 @@ h2, .section-title h2 {
   top: 12px !important;
   left: 12px !important;
   z-index: 4 !important;
-  background: var(--dark-color, #173444) !important;
+  background: var(--dark-color, #1e2532) !important;
   color: #fff !important;
   padding: 5px 13px !important;
   border-radius: 24px !important;
@@ -5346,7 +5346,7 @@ h2, .section-title h2 {
   gap: 5px !important;
   font-size: 13px !important;
   font-weight: 600 !important;
-  color: var(--primary-color, #00c2f4) !important;
+  color: var(--primary-color, #F97316) !important;
   transition: gap 0.3s ease !important;
 }
 
@@ -5410,7 +5410,7 @@ h2, .section-title h2 {
   font-size: 14px !important;
   font-weight: 600 !important;
   padding: 10px 22px !important;
-  background: var(--primary-color, #00c2f4) !important;
+  background: var(--primary-color, #F97316) !important;
   border-radius: 24px !important;
   transition: background 0.2s ease, gap 0.3s ease !important;
 }
@@ -5456,7 +5456,7 @@ h2, .section-title h2 {
 .ev-card__wishlist:hover,
 .ev-card__wishlist--active {
   background: rgba(255,255,255,0.95) !important;
-  color: var(--primary-color, #00c2f4) !important;
+  color: var(--primary-color, #F97316) !important;
   transform: scale(1.1) !important;
 }
 
@@ -5538,7 +5538,7 @@ h2, .section-title h2 {
   font-family: 'Plus Jakarta Sans', sans-serif !important;
   font-size: 18px !important;
   font-weight: 700 !important;
-  color: var(--primary-color, #00c2f4) !important;
+  color: var(--primary-color, #F97316) !important;
   text-transform: uppercase !important;
   letter-spacing: 2px !important;
   line-height: 1 !important;
@@ -5635,7 +5635,7 @@ h2, .section-title h2 {
   font-weight: 800 !important;
   text-transform: uppercase !important;
   letter-spacing: -0.3px !important;
-  color: var(--dark-color, #173444) !important;
+  color: var(--dark-color, #1e2532) !important;
   margin: 0 0 8px !important;
   line-height: 1.2 !important;
   display: -webkit-box !important;
@@ -5677,7 +5677,7 @@ h2, .section-title h2 {
 }
 
 .ev-card:hover .ev-card__title {
-  color: var(--primary-color, #00c2f4) !important;
+  color: var(--primary-color, #F97316) !important;
 }
 
 /* Ronda 3.7f — reducir espacio título → meta */

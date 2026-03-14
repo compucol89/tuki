@@ -352,9 +352,9 @@
 
 .menu-right .menu-btn:hover,
 .menu-right .menu-btn:focus {
-    background: #00aad8;
-    border-color: #00aad8;
-    box-shadow: 0 4px 14px rgba(0, 194, 244, 0.35);
+    background: #ea580c;
+    border-color: #ea580c;
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
     transform: translateY(-1px);
     color: white;
 }
@@ -386,7 +386,7 @@
 .menu-right .dropdown:last-child .menu-btn:focus {
     background: var(--primary-color) !important;
     color: white !important;
-    box-shadow: 0 4px 14px rgba(0, 194, 244, 0.30);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.30);
     transform: translateY(-1px);
 }
 
@@ -400,7 +400,7 @@
 }
 
 .menu-right .dropdown-menu .dropdown-item:hover {
-    background: rgba(0, 194, 244, 0.08) !important;
+    background: rgba(249, 115, 22, 0.08) !important;
     color: var(--primary-color) !important;
     padding-left: 22px;
 }

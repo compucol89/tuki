@@ -102,12 +102,6 @@
 
     <div class="ev-card__gradient"></div>
 
-    {{-- Badge fecha — top-left --}}
-    <div class="ev-card__date">
-      <span class="ev-card__date-day">{{ $ev_carbon->format('d') }}</span>
-      <span class="ev-card__date-month">{{ strtoupper($ev_carbon->translatedFormat('M')) }}</span>
-    </div>
-
     {{-- Overlay hover: fecha enorme (izq) + hora enorme (der) --}}
     <div class="ev-card__overlay" aria-hidden="true">
       <div class="ev-card__overlay-date">
@@ -130,17 +124,18 @@
       <i class="{{ $ev_wishlisted ? 'fas' : 'far' }} fa-bookmark"></i>
     </a>
 
-    {{-- Badge social proof — bottom-left de la imagen --}}
+  </div>
+
+  {{-- ── BODY ── --}}
+  <div class="ev-card__body">
+
+    {{-- Badge social proof --}}
     @if($ev_badge)
       <span class="ev-badge {{ $ev_badge['class'] }}">
         <span class="ev-badge__icon">{{ $ev_badge['icon'] }}</span>
         {{ $ev_badge['label'] }}
       </span>
     @endif
-  </div>
-
-  {{-- ── BODY ── --}}
-  <div class="ev-card__body">
 
     {{-- Organizador --}}
     @if($ev_organizer_name)

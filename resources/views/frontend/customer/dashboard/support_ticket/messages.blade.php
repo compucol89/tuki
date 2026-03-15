@@ -1,209 +1,158 @@
 @extends('frontend.layout')
-@section('pageHeading')
-  @if (!empty($pageHeading))
-    {{ $pageHeading->support_ticket_details_page_title ?? __('Ticket Details') }}
-  @else
-    {{ __('Ticket Details') }}
-  @endif
-@endsection
+@section('pageHeading', 'Ticket #' . $ticket->id)
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection
 @section('hero-section')
-  <!-- Page Banner Start -->
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
-    <div class="banner-inner">
-      <h2 class="page-title">
-        @if (!empty($pageHeading))
-          {{ $pageHeading->support_ticket_details_page_title ?? __('Ticket Details') }}
-        @else
-          {{ __('Ticket Details') }}
-        @endif
-      </h2>
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">
-              @if (!empty($pageHeading))
-                {{ $pageHeading->customer_dashboard_page_title ?? __('Dashboard') }}
-              @else
-                {{ __('Dashboard') }}
-              @endif
-            </a></li>
-          <li class="breadcrumb-item active">
-            @if (!empty($pageHeading))
-              {{ $pageHeading->support_ticket_details_page_title ?? __('Ticket Details') }}
-            @else
-              {{ __('Ticket Details') }}
-            @endif
-          </li>
-        </ol>
-      </nav>
-    </div>
-    </div>
-  </section>
-  <!-- Page Banner End -->
-@endsection
-@section('content')
-  <!--====== Start Dashboard Section ======-->
-  <section class="user-dashbord">
     <div class="container">
-      <div class="row">
-        @includeIf('frontend.customer.partials.sidebar')
-        <div class="col-lg-9">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="user-profile-details">
-                <div class="account-info">
-                  <div class="title">
-                    <h4>
-                      @if (!empty($pageHeading))
-                        {{ $pageHeading->support_ticket_details_page_title ?? __('Ticket Details') }}
-                      @else
-                        {{ __('Ticket Details') }}
-                      @endif - #{{ $ticket->id }}
-                    </h4>
-                  </div>
-                  <div class="main-info">
-                    <div class="subject mb-1">
-                      <h5>{{ $ticket->subject }}</h5>
-                      <div class=" d-flex align-items-center">
-                        @if ($ticket->status == 1)
-                          <h6 class="badge badge-warning">{{ __('Pending') }}</h6>
-                        @elseif($ticket->status == 2)
-                          <h6 class="badge badge-primary">{{ __('Open') }}</h6>
-                        @else
-                          <h6 class="badge badge-success">{{ __('Closed') }}</h6>
-                        @endif
-                        <h6><span class="badge badge-light">{{ date('d-M-Y H:s a') }}</span></h6>
-                      </div>
-                    </div>
-                    <div class="description">
-                      <p>{{ $ticket->description }}</p>
-                    </div>
-                    @if ($ticket->attachment != null)
-                      <a href="{{ asset('assets/admin/img/support-ticket/' . $ticket->attachment) }}"
-                        download="support.zip" class="btn btn-primary"><i class="fas fa-download"></i>
-                        {{ __('Download') }}</a>
-                    @endif
-                    <hr>
-                    @if ($ticket->status == 2)
-                      <div class="message-section">
-                        <h5>{{ __('Reply') }}</h5>
-                        <div class="message-lists">
-                          <div class="messages">
-                            @if (count($ticket->messages) > 0)
-                              @foreach ($ticket->messages as $reply)
-                                @if ($reply->type == 2)
-                                  @php
-                                    $admin = App\Models\Admin::where('id', $reply->user_id)->first();
-                                  @endphp
-                                  <div class="single-message">
-                                    <div class="user-details">
-                                      <div class="user-img">
-                                        <img class="mh-60"
-                                          src="{{ $admin->image ? asset('assets/admin/img/admins/' . $admin->image) : asset('assets/admin/img/propics/blank_user.jpg') }}"
-                                          alt="">
-                                      </div>
-                                      <div class="user-infos">
-                                        <h6 class="name">{{ $admin->username }}</h6>
-                                        <span class="type"><i class="fas fa-user"></i>
-                                          {{ $admin->id == 1 ? 'Super Admin' : $admin->role->name }}</span>
-                                        <span
-                                          class="badge badge-secondary">{{ date_format($reply->created_at, 'd-m-Y h:i a') }}</span>
-                                        @if ($reply->file != null)
-                                          <a href="{{ asset('assets/admin/img/support-ticket/' . $reply->file) }}"
-                                            download="support.zip" class="reply-download-btn"><i
-                                              class="fas fa-download"></i>
-                                            {{ __('Download') }}</a>
-                                        @endif
-                                      </div>
-                                    </div>
-                                    <div class="message">
-                                      <div class="summernote-content">
-                                        <p>{!! $reply->reply !!}</p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                @else
-                                  @php
-                                    $user = App\Models\Customer::where('id', $ticket->user_id)->first();
-                                  @endphp
-                                  <div class="single-message">
-                                    <div class="user-details">
-                                      <div class="user-img">
-                                        @if ($user->photo != null)
-                                          <img class="mh-60"
-                                            src="{{ asset('assets/admin/img/customer-profile/' . $user->photo) }}"
-                                            alt="">
-                                        @else
-                                          <img class="mh-60" src="{{ asset('assets/front/images/profile.jpg') }}"
-                                            alt="">
-                                        @endif
-                                      </div>
-                                      <div class="user-infos">
-                                        <h6 class="name">{{ $user->fname }} {{ $user->lname }}</h6>
-                                        <span class="type"><i class="fas fa-user"></i>Customer</span>
-                                        <span
-                                          class="badge badge-secondary">{{ date_format($reply->created_at, 'd-m-Y h:i a') }}</span>
-                                        @if ($reply->file != null)
-                                          <a href="{{ asset('assets/admin/img/support-ticket/' . $reply->file) }}"
-                                            download="support.zip" class="reply-download-btn"><i
-                                              class="fas fa-download"></i>
-                                            {{ __('Download') }}</a>
-                                        @endif
-
-                                      </div>
-                                    </div>
-                                    <div class="message">
-                                      <div class="summernote-content">
-                                        <p>{!! $reply->reply !!}</p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                @endif
-                              @endforeach
-                            @else
-                              <h4>{{ __('No Message Found') }}</h4>
-                            @endif
-                          </div>
-                          <hr>
-                          <div class="reply-section">
-                            <h5>{{ __('Reply') }}</h5>
-                            <form action="{{ route('customer-reply', $ticket->id) }}" method="POST"
-                              enctype="multipart/form-data">
-                              @csrf
-                              <div class="form-group">
-                                <label for="">{{ __('Reply') }} *</label>
-                                <textarea name="reply" class="form-control" placeholder="{{ __('Enter Reply') }}"></textarea>
-                                @error('reply')
-                                  <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                              </div>
-                              <div class="form-group">
-                                <input type="file" name="file" class="form-control" accept=".zip">
-                                <p class="text-warning">{{ __('Max upload size 5 MB') }}</p>
-                                @error('file')
-                                  <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                              </div>
-                              <div class="form-group">
-                                <button type="submit" class="btn btn-success"><i class="fas fa-retweet"></i>
-                                  {{ __('Reply') }}</button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    @endif
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="banner-inner">
+        <h2 class="page-title">Ticket #{{ $ticket->id }}</h2>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.support_tickert') }}">Soporte</a></li>
+            <li class="breadcrumb-item active">#{{ $ticket->id }}</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </section>
-  <!--====== End Dashboard Section ======-->
+@endsection
+
+@section('content')
+@php
+  $stMap = [
+    1 => ['label' => 'Pendiente', 'class' => 'st-badge--pending'],
+    2 => ['label' => 'Abierto',   'class' => 'st-badge--open'],
+    3 => ['label' => 'Cerrado',   'class' => 'st-badge--closed'],
+  ];
+  $st = $stMap[$ticket->status] ?? ['label' => '—', 'class' => 'st-badge--pending'];
+@endphp
+
+<section class="cd-page py-60">
+  <div class="container">
+    <div class="row g-4">
+
+      @includeIf('frontend.customer.partials.sidebar')
+
+      <div class="col-lg-9">
+
+        {{-- Header del ticket --}}
+        <div class="cd-card mb-4">
+          <div class="cd-card__head">
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span class="cd-bk-header__id">#{{ $ticket->id }}</span>
+                <span class="st-badge {{ $st['class'] }}">{{ $st['label'] }}</span>
+              </div>
+              <p class="st-subject">{{ $ticket->subject }}</p>
+            </div>
+            <a href="{{ route('customer.support_tickert') }}" class="cd-bk-back-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              Mis tickets
+            </a>
+          </div>
+
+          {{-- Descripción original --}}
+          <div class="st-desc-block">
+            <p class="st-desc-text">{{ $ticket->description }}</p>
+            @if ($ticket->attachment)
+              <a href="{{ asset('assets/admin/img/support-ticket/' . $ticket->attachment) }}"
+                 download class="st-dl-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar adjunto
+              </a>
+            @endif
+          </div>
+        </div>
+
+        {{-- Mensajes --}}
+        @if ($ticket->status == 2)
+          <div class="cd-card mb-4">
+            <div class="cd-card__head">
+              <h3 class="cd-card__title">Conversación</h3>
+              <span class="cd-count-pill">{{ count($ticket->messages) }} {{ count($ticket->messages) == 1 ? 'mensaje' : 'mensajes' }}</span>
+            </div>
+
+            <div class="st-messages">
+              @if (count($ticket->messages) > 0)
+                @foreach ($ticket->messages as $reply)
+                  @php
+                    $isAdmin = $reply->type == 2;
+                    if ($isAdmin) {
+                      $sender = App\Models\Admin::find($reply->user_id);
+                      $senderName = $sender ? $sender->username : 'Soporte';
+                      $senderRole = $sender ? ($sender->id == 1 ? 'Super Admin' : $sender->role->name) : 'Admin';
+                      $senderPhoto = $sender && $sender->image
+                        ? asset('assets/admin/img/admins/' . $sender->image)
+                        : asset('assets/admin/img/propics/blank_user.jpg');
+                    } else {
+                      $sender = App\Models\Customer::find($ticket->user_id);
+                      $senderName = $sender ? $sender->fname . ' ' . $sender->lname : 'Cliente';
+                      $senderRole = 'Cliente';
+                      $senderPhoto = $sender && $sender->photo
+                        ? asset('assets/admin/img/customer-profile/' . $sender->photo)
+                        : asset('assets/front/images/profile.jpg');
+                    }
+                  @endphp
+                  <div class="st-msg {{ $isAdmin ? 'st-msg--admin' : 'st-msg--customer' }}">
+                    <img class="st-msg__avatar" src="{{ $senderPhoto }}" alt="{{ $senderName }}">
+                    <div class="st-msg__body">
+                      <div class="st-msg__meta">
+                        <span class="st-msg__name">{{ $senderName }}</span>
+                        <span class="st-msg__role">{{ $senderRole }}</span>
+                        <span class="st-msg__date">{{ date_format($reply->created_at, 'd/m/Y H:i') }}</span>
+                        @if ($reply->file)
+                          <a href="{{ asset('assets/admin/img/support-ticket/' . $reply->file) }}" download class="st-dl-btn st-dl-btn--sm">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Adjunto
+                          </a>
+                        @endif
+                      </div>
+                      <div class="st-msg__text summernote-content">{!! $reply->reply !!}</div>
+                    </div>
+                  </div>
+                @endforeach
+              @else
+                <div class="st-no-msgs">Aún no hay respuestas. Te responderemos a la brevedad.</div>
+              @endif
+            </div>
+
+            {{-- Formulario de respuesta --}}
+            <div class="st-reply-wrap">
+              <h4 class="st-reply-title">Tu respuesta</h4>
+              <form action="{{ route('customer-reply', $ticket->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="ep-field mb-3">
+                  <textarea name="reply" rows="4"
+                            class="ep-field__input ep-field__textarea @error('reply') is-invalid @enderror"
+                            placeholder="Escribí tu respuesta acá..."></textarea>
+                  @error('reply')<p class="ep-field__error">{{ $message }}</p>@enderror
+                </div>
+                <div class="ep-field mb-4">
+                  <div class="st-file-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+                    <span class="st-file-label">Adjuntar archivo .zip (máx. 5 MB)</span>
+                    <input type="file" name="file" accept=".zip" class="st-file-input">
+                  </div>
+                  @error('file')<p class="ep-field__error mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div class="ep-actions">
+                  <button type="submit" class="ep-btn-save">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    Enviar respuesta
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        @endif
+
+      </div>
+    </div>
+  </div>
+</section>
 @endsection

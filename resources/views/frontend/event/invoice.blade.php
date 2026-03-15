@@ -16,9 +16,10 @@
   <title>{{ __('Booking INVOICE') }} | {{ config('app.name') }}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: "DejaVu Sans", sans-serif; font-size: 12px; color: #333; background: #f4f4f4; }
+    html, body { height: auto !important; margin: 0 !important; padding: 0 !important; }
+    body { font-family: "DejaVu Sans", sans-serif; font-size: 12px; color: #333; background: #fff; }
 
-    .ticket-wrapper { width: 720px; margin: 20px auto; }
+    .ticket-wrapper { width: 100%; }
 
     /* ── HEADER ── */
     .ticket-header {
@@ -235,9 +236,10 @@
             <td class="detail-cell">
               <span class="detail-label">{{ __('PAYMENT STATUS') }}</span>
               <span class="status-badge">
-                @if ($bookingInfo->paymentStatus == 'completed') {{ __('Completed') }}
-                @elseif ($bookingInfo->paymentStatus == 'pending') {{ __('Pending') }}
-                @else {{ __('Rejected') }} @endif
+                @if ($bookingInfo->paymentStatus == 'free') Reserva confirmada · Gratis
+                @elseif ($bookingInfo->paymentStatus == 'completed' || $bookingInfo->paymentStatus == 'paid') Pago confirmado
+                @elseif ($bookingInfo->paymentStatus == 'pending') Pendiente de confirmación
+                @else {{ ucfirst($bookingInfo->paymentStatus) }} @endif
               </span>
             </td>
           </tr>
@@ -370,9 +372,10 @@
             <td class="detail-cell">
               <span class="detail-label">{{ __('PAYMENT STATUS') }}</span>
               <span class="status-badge">
-                @if ($bookingInfo->paymentStatus == 'completed') {{ __('Completed') }}
-                @elseif ($bookingInfo->paymentStatus == 'pending') {{ __('Pending') }}
-                @else {{ __('Rejected') }} @endif
+                @if ($bookingInfo->paymentStatus == 'free') Reserva confirmada · Gratis
+                @elseif ($bookingInfo->paymentStatus == 'completed' || $bookingInfo->paymentStatus == 'paid') Pago confirmado
+                @elseif ($bookingInfo->paymentStatus == 'pending') Pendiente de confirmación
+                @else {{ ucfirst($bookingInfo->paymentStatus) }} @endif
               </span>
             </td>
           </tr>

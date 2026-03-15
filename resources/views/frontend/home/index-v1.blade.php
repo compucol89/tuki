@@ -1,15 +1,20 @@
 ﻿@extends('frontend.layout')
-@section('pageHeading')
-  {{ __('Home') }}
-@endsection
+@section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
 @section('body-class', 'home-page')
 
 @php
-  $metaKeywords = !empty($seo->meta_keyword_home) ? $seo->meta_keyword_home : '';
-  $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : '';
+  $metaKeywords    = !empty($seo->meta_keyword_home)    ? $seo->meta_keyword_home    : 'eventos, entradas, tickets, conciertos, shows, teatro, deportes, Argentina, Tukipass';
+  $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'Tukipass — Comprá entradas y tickets para los mejores eventos en Argentina. Conciertos, teatro, deportes y más. Fácil, rápido y seguro.';
+  $ogImage = !empty($firstHeroImage)
+    ? asset('assets/admin/img/event-gallery/' . $firstHeroImage)
+    : asset('assets/admin/img/' . $basicInfo->breadcrumb);
 @endphp
-@section('meta-keywords', "{{ $metaKeywords }}")
-@section('meta-description', "$metaDescription")
+@section('meta-keywords',    $metaKeywords)
+@section('meta-description', $metaDescription)
+@section('og-title',       'Tukipass — Entradas y Tickets Online para Eventos en Argentina')
+@section('og-description', $metaDescription)
+@section('og-image',       $ogImage)
+@section('og-type',        'website')
 
 @push('styles')
 @if(!empty($firstHeroImage))
@@ -41,22 +46,6 @@
         <p>
           {{ $heroSection ? $heroSection->second_title : __('La plataforma de venta de entradas y gestión de eventos más completa.') }}
         </p>
-        <form id="event-search" class="event-search mt-35" name="event-search" action="{{ route('events') }}" method="get">
-          <div class="search-item">
-            <label for="borwseby"><i class="fas fa-list"></i></label>
-            <select name="category" id="borwseby">
-              <option value="">{{ __('All Category') }}</option>
-              @foreach ($categories as $category)
-                <option value="{{ $category->slug }}">{{ $category->name }}</option>
-              @endforeach
-            </select>
-          </div>
-          <div class="search-item">
-            <label for="search"><i class="fas fa-search"></i></label>
-            <input type="search" id="search" name="search-input" placeholder="{{ __('Search Anything') }}">
-          </div>
-          <button type="submit" class="theme-btn">{{ $heroSection ? $heroSection->first_button : __('Search') }}</button>
-        </form>
       </div>
     </div>
   </section>
@@ -64,24 +53,46 @@
 
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
+    @php
+      // Construir lista plana: thumbnail + galería de cada evento, mezclados
+      $mq_flat = collect();
+      $mq_badges_map = [];
+      foreach ($marqueeEvents as $ev) {
+        $mq_badges_map[$ev->id] = \App\Services\EventBadgeService::getBadge($ev);
+        $mq_carbon = \Carbon\Carbon::parse($ev->start_date)->locale('es');
+        $mq_time   = $ev->start_time ? \Carbon\Carbon::parse($ev->start_time)->format('H:i') : null;
+        $mq_free   = ($ev->pricing_type === 'free' || !$ev->min_price);
+        $mq_meta   = [
+          'event'   => $ev,
+          'carbon'  => $mq_carbon,
+          'time'    => $mq_time,
+          'free'    => $mq_free,
+          'badge'   => $mq_badges_map[$ev->id],
+          'url'     => route('event.details', [$ev->slug, $ev->id]),
+        ];
+        // Thumbnail
+        $mq_flat->push(array_merge($mq_meta, [
+          'src' => asset('assets/admin/img/event/thumbnail/' . $ev->thumbnail),
+        ]));
+        // Galería
+        if (isset($marqueeGallery[$ev->id])) {
+          foreach ($marqueeGallery[$ev->id] as $gi) {
+            $mq_flat->push(array_merge($mq_meta, [
+              'src' => asset('assets/admin/img/event-gallery/' . $gi->image),
+            ]));
+          }
+        }
+      }
+      $mq_flat = $mq_flat->shuffle()->values();
+    @endphp
     <div class="events-marquee">
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
-          @php $mq_badges = []; @endphp
-          @for ($copy = 0; $copy < 4; $copy++)
-            @foreach ($marqueeEvents as $event)
-              @php
-                $mq_carbon = \Carbon\Carbon::parse($event->start_date)->locale('es');
-                $mq_time   = $event->start_time ? \Carbon\Carbon::parse($event->start_time)->format('H:i') : null;
-                $mq_free   = ($event->pricing_type === 'free' || !$event->min_price);
-                // Badge: calcular solo una vez por evento
-                if (!isset($mq_badges[$event->id])) {
-                  $mq_badges[$event->id] = \App\Services\EventBadgeService::getBadge($event);
-                }
-                $mq_badge = $mq_badges[$event->id];
-              @endphp
-              <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="events-marquee-item">
-                <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}" alt="{{ $event->title }}" loading="lazy">
+          @for ($copy = 0; $copy < 3; $copy++)
+            @foreach ($mq_flat as $mqi)
+              @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
+              <a href="{{ $mqi['url'] }}" class="events-marquee-item">
+                <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" loading="lazy">
 
                 {{-- Fecha — top-left --}}
                 <div class="emq-date">
@@ -89,32 +100,17 @@
                   <span class="emq-date__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
                 </div>
 
-                {{-- Badge — bottom-left --}}
-                @if($mq_badge)
+                {{-- Badge — top-right --}}
+                @if($mqi['badge'])
                   <span class="emq-badge">
-                    <span>{{ $mq_badge['icon'] }}</span>
-                    <span>{{ $mq_badge['label'] }}</span>
+                    <span>{{ $mqi['badge']['icon'] }}</span>
+                    <span>{{ $mqi['badge']['label'] }}</span>
                   </span>
                 @endif
 
-                {{-- Overlay al hover --}}
-                <div class="emq-overlay" aria-hidden="true">
-                  <div class="emq-overlay__date">
-                    <span class="emq-overlay__day">{{ $mq_carbon->format('d') }}</span>
-                    <span class="emq-overlay__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
-                    <span class="emq-overlay__year">{{ $mq_carbon->format('Y') }}</span>
-                  </div>
-                  @if($mq_time)
-                    <div class="emq-overlay__time">
-                      <span class="emq-overlay__hhmm">{{ $mq_time }}</span>
-                      <span class="emq-overlay__hs">hs</span>
-                    </div>
-                  @endif
-                  @if($mq_free)
-                    <span class="emq-overlay__price emq-overlay__price--free">Gratis</span>
-                  @elseif($event->min_price)
-                    <span class="emq-overlay__price">{{ symbolPrice($event->min_price) }}</span>
-                  @endif
+                {{-- Gradiente inferior + título siempre visible --}}
+                <div class="emq-bottom">
+                  <span class="emq-bottom__title">{{ $ev->title }}</span>
                 </div>
 
               </a>
@@ -128,26 +124,91 @@
 @endsection
 @section('content')
 
+  {{-- ── BUSCADOR HOME — Modern SaaS UI ── --}}
+  <section class="hs-search-wrap">
+    <div class="container">
+
+      <form action="{{ route('events') }}" method="GET" class="hs-search-form" id="hsSearchForm">
+
+        {{-- Keyword --}}
+        <div class="hs-sf__field hs-sf__field--grow">
+          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" name="search-input" class="hs-sf__input" placeholder="¿Qué evento buscás?" autocomplete="off">
+        </div>
+
+        <div class="hs-sf__divider"></div>
+
+        {{-- Categoría --}}
+        <div class="hs-sf__field hs-sf__field--select">
+          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <select name="category" class="hs-sf__select">
+            <option value="">Todas las categorías</option>
+            @foreach ($categories as $cat)
+              <option value="{{ $cat->slug }}">{{ $cat->name }}</option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="hs-sf__divider"></div>
+
+        {{-- Tipo --}}
+        <div class="hs-sf__field hs-sf__field--select hs-sf__field--type">
+          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <select name="event" class="hs-sf__select">
+            <option value="">Presencial u Online</option>
+            <option value="venue">Presencial</option>
+            <option value="online">Online</option>
+          </select>
+        </div>
+
+        {{-- CTA --}}
+        <button type="submit" class="hs-sf__btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Buscar eventos
+        </button>
+
+      </form>
+
+      {{-- Quick filters --}}
+      <div class="hs-search-chips">
+        <span class="hs-search-chips__label">Popular:</span>
+        <a href="{{ route('events') }}" class="hs-chip hs-chip--active">Todos</a>
+        @foreach ($categories->take(6) as $cat)
+          <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip">{{ $cat->name }}</a>
+        @endforeach
+        <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">🎫 Gratis</a>
+      </div>
+
+    </div>
+  </section>
+
   <!-- Events Section Start -->
   @if ($secInfo->featured_section_status == 1)
-    <section class="events-section pt-20 rpt-30 pb-90 rpb-70 bg-lighter">
+    <section class="events-section bg-lighter">
       <div class="container">
 
         @if ($eventCategories->isEmpty())
           <p class="text-center">{{ __('No Events Found') }}</p>
         @else
-          <nav>
-            <div class="nav nav-tabs events-tabs mb-40" id="nav-tab" role="tablist">
-              <button class="nav-link active" id="nav-all-tab" data-toggle="tab" data-target="#nav-all" type="button"
-                role="tab" aria-controls="nav-all" aria-selected="true">{{ __('All') }}</button>
-              @foreach ($eventCategories as $item)
-                <button class="nav-link" id="nav-{{ $item->id }}-tab" data-toggle="tab"
-                  data-target="#nav-{{ $item->id }}" type="button" role="tab"
-                  aria-controls="nav-{{ $item->id }}" aria-selected="false">{{ $item->name }}</button>
-              @endforeach
-            </div>
-          </nav>
-
+          @php
+            // ── Pre-cargar wishlist: UNA query para todos los eventos ──
+            $ev_wishlist_map = [];
+            if (Auth::guard('customer')->check()) {
+              $ev_wishlist_map = array_flip(
+                DB::table('wishlists')
+                  ->where('customer_id', Auth::guard('customer')->user()->id)
+                  ->pluck('event_id')
+                  ->toArray()
+              );
+            }
+            // ── Subquery de tickets reutilizable ──
+            $ticketSub = DB::raw("(SELECT event_id,
+              COUNT(*) as ticket_count,
+              MIN(CASE WHEN pricing_type != 'free' AND price > 0 THEN CAST(price AS DECIMAL(10,2)) END) as min_price,
+              MAX(CASE WHEN pricing_type = 'free' THEN 1 ELSE 0 END) as has_free,
+              MAX(CASE WHEN pricing_type != 'free' AND price > 0 THEN 1 ELSE 0 END) as has_paid
+              FROM tickets GROUP BY event_id) as tk");
+          @endphp
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
               <div class="row">
@@ -155,6 +216,8 @@
                   $now_time = \Carbon\Carbon::now();
                   $eventsall = DB::table('event_contents')
                       ->join('events', 'events.id', '=', 'event_contents.event_id')
+                      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+                      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
                       ->where([
                           ['event_contents.language_id', '=', $currentLanguageInfo->id],
                           ['events.status', 1],
@@ -162,6 +225,9 @@
                           ['events.is_featured', '=', 'yes'],
                       ])
                       ->orderBy('events.created_at', 'desc')
+                      ->select('event_contents.*', 'events.*',
+                               'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+                               'organizers.id as org_id', 'organizers.username as org_username')
                       ->get();
                 @endphp
                 @foreach ($eventsall as $evLoop => $event)
@@ -176,6 +242,8 @@
                 $now_time = \Carbon\Carbon::now();
                 $events = DB::table('event_contents')
                     ->join('events', 'events.id', '=', 'event_contents.event_id')
+                    ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+                    ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
                     ->where([
                         ['event_contents.event_category_id', '=', $item->id],
                         ['event_contents.language_id', '=', $currentLanguageInfo->id],
@@ -184,6 +252,9 @@
                         ['events.is_featured', '=', 'yes'],
                     ])
                     ->orderBy('events.created_at', 'desc')
+                    ->select('event_contents.*', 'events.*',
+                             'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+                             'organizers.id as org_id', 'organizers.username as org_username')
                     ->get();
               @endphp
               <div class="tab-pane fade" id="nav-{{ $item->id }}" role="tabpanel"
@@ -212,17 +283,17 @@
 
   <!-- Category Section Start -->
   @if ($secInfo->categories_section_status == 1)
-    <section class="category-section pt-110 rpt-90 pb-80 rpb-60">
+    <section class="category-section">
       <div class="container">
         <div class="section-title mb-60">
           <h2>{{ $secTitleInfo ? $secTitleInfo->category_section_title : __('Categories') }}</h2>
         </div>
         <div class="category-wrap text-white">
-          @if (count($eventCategories) > 0)
+          @if ($eventCategories->isNotEmpty())
             @foreach ($eventCategories as $item)
               <a href="{{ route('events', ['category' => $item->slug]) }}" class="category-item">
                 <img class="lazy" data-src="{{ asset('assets/admin/img/event-category/' . $item->image) }}"
-                  alt="Category">
+                  alt="{{ $item->name }}">
                 <div class="category-content">
                   <h5>{{ $item->name }}</h5>
                 </div>
@@ -241,7 +312,7 @@
 
   <!-- About Section Start -->
   @if ($secInfo->about_section_status == 1)
-    <section class="about-section pb-120 rpb-95">
+    <section class="about-section">
       <div class="container">
         @if (is_null($aboutUsSection))
           <h2 class="text-center">{{ __('No data found for about section') }}</h2>
@@ -275,13 +346,13 @@
 
 
   <!-- Feature Section Start -->
-  <section class="feature-section pt-110 rpt-90 bg-lighter">
+  <section class="feature-section bg-lighter">
     @if ($secInfo->features_section_status == 1)
       <div class="container pb-40 rpb-30">
         <div class="section-title text-center mb-55">
           <h2>{{ $featureEventSection ? $featureEventSection->title : '' }}</h2>
           <p>{{ $featureEventSection ? $featureEventSection->text : '' }}</p>
-          @if (count($featureEventItems) < 1)
+          @if ($featureEventItems->isEmpty())
             <h2>{{ __('No data found for features section') }}</h2>
           @endif
         </div>
@@ -305,7 +376,7 @@
       @if ($howWork)
         <div class="work-process text-center">
           <div class="container">
-            <div class="work-process-inner pt-50 rpt-90 pb-40 rpb-60">
+            <div class="work-process-inner">
 
               <div class="section-title mb-60">
                 <h2>{{ $howWork->title }}</h2>
@@ -344,7 +415,7 @@
 
   <!-- Testimonial Section Start -->
   @if ($secInfo->testimonials_section_status == 1)
-    <section class="testimonial-section pt-120 rpt-80">
+    <section class="testimonial-section">
       <div class="container">
         <div class="row pb-20 rpb-20">
           <div class="col-lg-4">
@@ -371,7 +442,7 @@
           </div>
           <div class="col-lg-8">
             <div class="testimonial-wrap">
-              @if (count($testimonials) > 0)
+              @if ($testimonials->isNotEmpty())
                 <div class="row">
                   @foreach ($testimonials as $item)
                     <div class="col-md-6">
@@ -409,14 +480,14 @@
 
   <!-- Client Logo Start -->
   @if ($secInfo->partner_section_status == 1)
-    <section class="client-logo-area text-center pt-95 rpt-80 pb-90 rpb-70">
+    <section class="client-logo-area text-center">
       <div class="container">
         <div class="section-title mb-55">
           <h2>{{ $partnerInfo ? $partnerInfo->title : __('Our Partner') }}</h2>
           <p>{{ $partnerInfo ? $partnerInfo->text : '' }}</p>
         </div>
         <div class="client-logo-wrap">
-          @if (count($partners) > 0)
+          @if ($partners->isNotEmpty())
             @foreach ($partners as $item)
               <div class="client-logo-item">
                 <a href="{{ $item->url }}" target="_blank"><img class="lazy"
@@ -436,68 +507,78 @@
 @push('scripts')
 <script>
 (function() {
-  // --- Crossfade slideshow (sin gap) ---
+  // --- Crossfade slideshow ---
   var slides = Array.from(document.querySelectorAll('#heroCollageBg .hero-slide'));
   var n = slides.length;
   if (n === 0) return;
 
-  // Mostrar el primer slide SIN transición (evita el gris inicial al cargar)
-  slides[0].style.transition = 'none';
-  slides[0].style.opacity    = '1';
-  slides[0].style.zIndex     = '0';
+  slides[0].style.opacity = '1';
+  slides[0].style.zIndex  = '0';
 
-  if (n === 1) return; // nada más que hacer
+  if (n === 1) return;
 
   var cur = 0;
-  setInterval(function() {
-    var nxt = (cur + 1) % n;
+  var sliderId = null;
 
-    // Nuevo slide arriba, actual queda debajo
-    slides[cur].style.zIndex = '0';
-    slides[nxt].style.zIndex = '1';
-
-    // Fade-in del nuevo (con transición)
+  function nextSlide() {
+    var nxt  = (cur + 1) % n;
+    var prev = cur;
+    slides[prev].style.zIndex = '0';
+    slides[nxt].style.zIndex  = '1';
     slides[nxt].style.transition = 'opacity 1.2s ease-in-out';
     slides[nxt].style.opacity    = '1';
-
-    // Cuando termina el fade, ocultar el anterior SIN transición
-    // (ya está tapado, no se ve, no hace falta desvanecer)
-    var prev = cur;
     setTimeout(function() {
       slides[prev].style.transition = 'none';
       slides[prev].style.opacity    = '0';
     }, 1200);
-
     cur = nxt;
-  }, 5000);
+  }
 
-  // --- Parallax ---
+  sliderId = setInterval(nextSlide, 5000);
+
+  // --- Parallax — se detiene cuando el hero no es visible ---
   var hero = document.getElementById('heroSection');
   var bg   = document.getElementById('heroCollageBg');
   if (!hero || !bg) return;
 
   var tx = 0, ty = 0, cx = 0, cy = 0;
+  var rafId = null;
+  var heroRect = hero.getBoundingClientRect(); // caché — se actualiza solo en resize
+
+  window.addEventListener('resize', function() { heroRect = hero.getBoundingClientRect(); }, { passive: true });
 
   hero.addEventListener('mousemove', function(e) {
-    var r = hero.getBoundingClientRect();
-    tx = -(e.clientX - r.left) / r.width  * 14 + 7;
-    ty = -(e.clientY - r.top)  / r.height * 14 + 7;
-  });
+    tx = -(e.clientX - heroRect.left) / heroRect.width  * 14 + 7;
+    ty = -(e.clientY - heroRect.top)  / heroRect.height * 14 + 7;
+  }, { passive: true });
 
-  hero.addEventListener('mouseleave', function() { tx = 0; ty = 0; });
+  hero.addEventListener('mouseleave', function() { tx = 0; ty = 0; }, { passive: true });
 
-  (function loop() {
+  function parallaxLoop() {
     cx += (tx - cx) * 0.04;
     cy += (ty - cy) * 0.04;
     bg.style.transform = 'translate(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px)';
-    requestAnimationFrame(loop);
-  })();
+    rafId = requestAnimationFrame(parallaxLoop);
+  }
+
+  // Solo corre el RAF cuando el hero es visible en pantalla
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      if (!rafId) rafId = requestAnimationFrame(parallaxLoop);
+    } else {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      cx = 0; cy = 0; tx = 0; ty = 0;
+      bg.style.transform = 'translate(0px,0px)';
+    }
+  }, { threshold: 0 });
+
+  observer.observe(hero);
 })();
 
 // Scroll reveal
 (function() {
   var els = document.querySelectorAll(
-    '.events-section, .category-section, .about-section, .feature-section, .testimonial-section, .client-logo-area, .work-process-area, .partner-area'
+    '.events-section, .category-section, .about-section, .feature-section, .testimonial-section, .client-logo-area, .work-process'
   );
   els.forEach(function(el, i) {
     el.classList.add('reveal-on-scroll');

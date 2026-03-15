@@ -1,113 +1,94 @@
 @extends('frontend.layout')
-@section('pageHeading')
-  @if (!empty($pageHeading))
-    {{ $pageHeading->customer_support_ticket_page_title ?? __('My Tickets') }}
-  @else
-    {{ __('My Tickets') }}
-  @endif
-@endsection
+@section('pageHeading', 'Mis tickets de soporte')
 @section('hero-section')
-  <!-- Page Banner Start -->
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
-    <div class="banner-inner">
-      <h2 class="page-title">
-        @if (!empty($pageHeading))
-          {{ $pageHeading->customer_support_ticket_page_title ?? __('My Tickets') }}
-        @else
-          {{ __('My Tickets') }}
-        @endif
-      </h2>
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">
-              @if (!empty($pageHeading))
-                {{ $pageHeading->customer_dashboard_page_title ?? __('Dashboard') }}
-              @else
-                {{ __('Dashboard') }}
-              @endif
-            </a></li>
-          <li class="breadcrumb-item active">
-            @if (!empty($pageHeading))
-              {{ $pageHeading->customer_support_ticket_page_title ?? __('My Tickets') }}
-            @else
-              {{ __('My Tickets') }}
-            @endif
-          </li>
-        </ol>
-      </nav>
-    </div>
-    </div>
-  </section>
-  <!-- Page Banner End -->
-@endsection
-@section('content')
-  <!--====== Start Dashboard Section ======-->
-  <section class="user-dashbord">
     <div class="container">
-      <div class="row">
-        @includeIf('frontend.customer.partials.sidebar')
-        <div class="col-lg-9">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="user-profile-details">
-                <div class="account-info">
-                  <div class="title">
-                    <h4>{{ __('My Tickets') }}</h4>
-                    <p class="text-right"><a href="{{ route('customer.support_tickert.create') }}"
-                        class="btn btn-success btn-sm"><i class="fas fa-plus"></i> {{ __('Submit Ticket') }}</a></p>
-                  </div>
-                  <div class="main-info">
-                    @if (count($collection) > 0)
-                      <div class="main-table">
-                        <div class="table-responsiv">
-                          <table id="example"
-                            class="dataTables_wrapper dt-responsive table-striped dt-bootstrap4 w-100">
-                            <thead>
-                              <tr>
-                                <th>{{ __('Ticket ID') }}</th>
-                                <th>{{ __('Subject') }}</th>
-                                <th>{{ __('Status') }}</th>
-                                <th>{{ __('Message') }}</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              @foreach ($collection as $item)
-                                <tr>
-                                  <td>{{ $item->id }}</td>
-                                  <td>{{ $item->subject }}</td>
-                                  @if ($item->status == 1)
-                                    <td><span class="badge badge-warning">{{ __('Pending') }}</span></td>
-                                  @elseif($item->status == 2)
-                                    <td><span class="badge badge-primary">{{ __('Open') }}</span></td>
-                                  @else
-                                    <td><span class="badge badge-success">{{ __('Closed') }}</span></td>
-                                  @endif
-                                  <td>
-                                    @php
-                                      $status = App\Models\SupportTicketStatus::where('id', 1)->first();
-                                    @endphp
-
-                                    <a href="{{ $status->support_ticket_status == 'active' ? route('customer.support_ticket.message', $item->id) : '' }}"
-                                      class="btn btn-primary mb-1"><i class="fas fa-envelope"></i></a>
-                                  </td>
-                                </tr>
-                              @endforeach
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    @else
-                      <p class="text-center">{{ __('No Tickets are Found') }}..!</p>
-                    @endif
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="banner-inner">
+        <h2 class="page-title">Mis tickets de soporte</h2>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Soporte</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </section>
-  <!--====== End Dashboard Section ======-->
+@endsection
+
+@section('content')
+<section class="cd-page py-60">
+  <div class="container">
+    <div class="row g-4">
+
+      @includeIf('frontend.customer.partials.sidebar')
+
+      <div class="col-lg-9">
+        <div class="cd-card">
+
+          <div class="cd-card__head">
+            <h3 class="cd-card__title">Mis tickets</h3>
+            <a href="{{ route('customer.support_tickert.create') }}" class="st-new-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Nuevo ticket
+            </a>
+          </div>
+
+          @if (count($collection) > 0)
+            <div class="cd-table-wrap">
+              <table class="cd-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Asunto</th>
+                    <th>Estado</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($collection as $item)
+                    @php
+                      $stMap = [
+                        1 => ['label' => 'Pendiente', 'class' => 'st-badge--pending'],
+                        2 => ['label' => 'Abierto',   'class' => 'st-badge--open'],
+                        3 => ['label' => 'Cerrado',   'class' => 'st-badge--closed'],
+                      ];
+                      $st = $stMap[$item->status] ?? ['label' => ucfirst($item->status), 'class' => 'st-badge--pending'];
+                      $status = App\Models\SupportTicketStatus::where('id', 1)->first();
+                    @endphp
+                    <tr>
+                      <td class="cd-table__muted">#{{ $item->id }}</td>
+                      <td><span class="cd-table__link" style="cursor:default">{{ $item->subject }}</span></td>
+                      <td><span class="st-badge {{ $st['class'] }}">{{ $st['label'] }}</span></td>
+                      <td>
+                        <a href="{{ $status->support_ticket_status == 'active' ? route('customer.support_ticket.message', $item->id) : '#' }}"
+                           class="st-view-btn" title="Ver mensajes">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                          Ver
+                        </a>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          @else
+            <div class="st-empty">
+              <div class="st-empty__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <p class="st-empty__text">No tenés tickets abiertos</p>
+              <a href="{{ route('customer.support_tickert.create') }}" class="st-new-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Abrir ticket
+              </a>
+            </div>
+          @endif
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 @endsection

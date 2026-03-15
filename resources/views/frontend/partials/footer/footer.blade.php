@@ -1,5 +1,5 @@
 <footer class="footer-section bg-lighter pt-100"
-  style="background:#{{ $footerInfo ? $footerInfo->footer_background_color : '' }}">
+  @if(!empty($footerInfo->footer_background_color)) style="background:#{{ $footerInfo->footer_background_color }}" @endif>
   <div class="container">
     <div class="row justify-content-between">
       <div class="col-lg-5 col-sm-6">
@@ -12,7 +12,7 @@
           </div>
           <p>{!! $footerInfo ? $footerInfo->about_company : '' !!}</p>
           <div class="social-style-one mt-30">
-            @if (count($socialMediaInfos) > 0)
+            @if ($socialMediaInfos->isNotEmpty())
               @foreach ($socialMediaInfos as $socialMediaInfo)
                 <a href="{{ $socialMediaInfo->url }}" target="_blank" rel="noopener"><i class="{{ $socialMediaInfo->icon }}"></i><span class="sr-only">{{ $socialMediaInfo->title ?? 'Social media' }}</span></a>
               @endforeach

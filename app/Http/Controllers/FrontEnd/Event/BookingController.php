@@ -45,6 +45,21 @@ class BookingController extends Controller
 {
   public function index(Request $request, $id)
   {
+    $request->validate([
+      'fname' => 'required|string|max:255',
+      'lname' => 'required|string|max:255',
+      'email' => 'required|email|max:255',
+      'phone' => 'required|string|max:50',
+      'dni'   => 'required|string|max:20',
+    ], [
+      'fname.required' => 'El nombre es obligatorio.',
+      'lname.required' => 'El apellido es obligatorio.',
+      'email.required' => 'El email es obligatorio.',
+      'email.email'    => 'Ingresá un email válido.',
+      'phone.required' => 'El teléfono es obligatorio.',
+      'dni.required'   => 'El DNI es obligatorio.',
+    ]);
+
     $basic = Basic::select('event_guest_checkout_status')->first();
     if ($basic->event_guest_checkout_status == 0 && $request->type != 'guest') {
       // check whether user is logged in or not
@@ -398,6 +413,10 @@ class BookingController extends Controller
 
     $language = $this->getLanguage();
     $eventContent = EventContent::where('event_id', $bookingInfo->event_id)->where('language_id', $language->id)->first();
+    if (!$eventContent) {
+      $defLang = Language::where('is_default', 1)->first();
+      $eventContent = EventContent::where('event_id', $bookingInfo->event_id)->where('language_id', $defLang->id)->first();
+    }
     $event = Event::where('id', $bookingInfo->event_id)->first();
     $eventTitle = $eventContent ? $eventContent->title : '';
 
@@ -405,7 +424,11 @@ class BookingController extends Controller
 
     $mailBody = str_replace('{customer_name}', $customerName, $mailBody);
     $mailBody = str_replace('{order_id}', $orderId, $mailBody);
-    $mailBody = str_replace('{title}', '<a href="' . route('event.details', [$eventContent->slug, $eventContent->event_id]) . '">' . $eventTitle . '</a>', $mailBody);
+    if ($eventContent) {
+      $mailBody = str_replace('{title}', '<a href="' . route('event.details', [$eventContent->slug, $eventContent->event_id]) . '">' . $eventTitle . '</a>', $mailBody);
+    } else {
+      $mailBody = str_replace('{title}', $eventTitle, $mailBody);
+    }
     $mailBody = str_replace('{website_title}', $websiteTitle, $mailBody);
     if($event->event_type == 'online'){
       $mailBody = str_replace('{meeting_url}', $event->meeting_url, $mailBody);
@@ -483,10 +506,13 @@ class BookingController extends Controller
       //generate qr code end
 
       // get course title
-      $language =  Language::where('is_default', 1)->first();
+      $language = Language::where('is_default', 1)->first();
       $event = Event::find($bookingInfo->event_id);
 
       $eventInfo = EventContent::where('event_id', $bookingInfo->event_id)->where('language_id', $language->id)->first();
+      if (!$eventInfo) {
+        $eventInfo = EventContent::where('event_id', $bookingInfo->event_id)->first();
+      }
 
       $width = "50%";
       $float = "right";

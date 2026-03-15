@@ -280,7 +280,7 @@ Route::middleware('change.lang')->group(function () {
 
   Route::get('/faq', 'FrontEnd\FaqController@faqs')->name('faqs');
 
-  Route::get('/contact', 'FrontEnd\ContactController@contact')->name('contact');
+  Route::get('/contacto', 'FrontEnd\ContactController@contact')->name('contact');
   Route::get('/about-us', 'FrontEnd\HomeController@about')->name('about');
 });
 

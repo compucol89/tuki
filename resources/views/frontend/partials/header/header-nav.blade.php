@@ -10,7 +10,7 @@
                 src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Logo"></a></div>
         </div>
 
-        <div class="nav-outer clearfix ml-lg-auto">
+        <div class="nav-outer ml-lg-auto">
           <!-- Main Menu -->
           <nav class="main-menu navbar-expand-xl">
             <div class="navbar-header">
@@ -77,22 +77,22 @@
                     </div>
                   </div>
                 @endif
-                @if (!Auth::guard('organizer')->check())
-                  <div class="dropdown">
-                    <button type="button" class="menu-btn dropdown-toggle"
-                      data-toggle="dropdown">{{ __('Organizer') }}</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                      <a class="dropdown-item" href="{{ route('organizer.login') }}">{{ __('Login') }}</a>
-                      <a class="dropdown-item" href="{{ route('organizer.signup') }}">{{ __('Signup') }}</a>
-                    </div>
-                  </div>
-                @else
+                @if (Auth::guard('organizer')->check())
                   <div class="dropdown">
                     <button type="button" class="menu-btn dropdown-toggle mr-1"
                       data-toggle="dropdown">{{ Auth::guard('organizer')->user()->username }}</button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <a class="dropdown-item" href="{{ route('organizer.dashboard') }}">{{ __('Dashboard') }}</a>
                       <a class="dropdown-item" href="{{ route('organizer.logout') }}">{{ __('Logout') }}</a>
+                    </div>
+                  </div>
+                @elseif (!Auth::guard('customer')->check())
+                  <div class="dropdown">
+                    <button type="button" class="menu-btn dropdown-toggle"
+                      data-toggle="dropdown">{{ __('Organizer') }}</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                      <a class="dropdown-item" href="{{ route('organizer.login') }}">{{ __('Login') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.signup') }}">{{ __('Signup') }}</a>
                     </div>
                   </div>
                 @endif

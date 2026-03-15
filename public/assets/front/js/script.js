@@ -35,30 +35,16 @@
 
     $(document).ready(function () {
 
-        // 01. Header Style and Scroll to Top
-        function headerStyle() {
-            if ($('.main-header').length) {
-                var windowpos = $(window).scrollTop();
-                var siteHeader = $('.main-header');
-                var scrollLink = $('.scroll-top');
-                if (windowpos >= 250) {
-                    siteHeader.addClass('fixed-header');
-                    scrollLink.fadeIn(300);
-                } else {
-                    siteHeader.removeClass('fixed-header');
-                    scrollLink.fadeOut(300);
-                }
-            }
-        }
-        headerStyle();
 
 
         // 02. Dropdown menu
         var mobileWidth = 992;
         var navcollapse = $('.navigation li.dropdown');
+        var viewportW   = window.innerWidth;
+        window.addEventListener('resize', function () { viewportW = window.innerWidth; }, { passive: true });
 
         navcollapse.hover(function () {
-            if ($(window).innerWidth() >= mobileWidth) {
+            if (viewportW >= mobileWidth) {
                 $(this).children('ul').stop(true, false, true).slideToggle(300);
                 $(this).children('.megamenu').stop(true, false, true).slideToggle(300);
             }
@@ -110,16 +96,6 @@
                     this.form.submit();
                 }
             });
-        }
-
-        // Borwse by Select
-        if ($('#borwseby').length) {
-            $("#borwseby").selectmenu();
-        }
-
-        // Borwse by Select
-        if ($('#rateBy').length) {
-            $("#rateBy").selectmenu();
         }
 
         // Widget Select
@@ -323,27 +299,47 @@
        When document is scroll, do
        ========================================================================== */
 
-    $(window).on('scroll', function () {
+    // Header scroll — RAF throttled, sin layout shift
+    (function () {
+        var headerEl = document.querySelector('.main-header');
+        if (!headerEl) return;
+        var $scrollBtn = $('.scroll-top');
+        var ticking    = false;
+        var wasFixed   = false;
 
-        // Header Style and Scroll to Top
-        function headerStyle() {
-            if ($('.main-header').length) {
-                var windowpos = $(window).scrollTop();
-                var siteHeader = $('.main-header');
-                var scrollLink = $('.scroll-top');
-                if (windowpos >= 100) {
-                    siteHeader.addClass('fixed-header');
-                    scrollLink.fadeIn(300);
-                } else {
-                    siteHeader.removeClass('fixed-header');
-                    scrollLink.fadeOut(300);
-                }
+        // Medir la altura natural ANTES de cualquier cambio de clase
+        var naturalH = headerEl.offsetHeight;
+
+        function applyHeader(shouldFix) {
+            if (shouldFix === wasFixed) return;
+            if (shouldFix) {
+                // Reservar el espacio ANTES de sacar el header del flujo
+                headerEl.style.paddingBottom = naturalH + 'px';
+                headerEl.classList.remove('header-instant');
+                headerEl.classList.add('fixed-header');
+                $scrollBtn.fadeIn(300);
+            } else {
+                // Quitar fixed-header y liberar espacio en el mismo frame — sin flash
+                headerEl.classList.add('header-instant');
+                headerEl.classList.remove('fixed-header');
+                headerEl.style.paddingBottom = '';
+                $scrollBtn.fadeOut(300);
             }
+            wasFixed = shouldFix;
         }
 
-        headerStyle();
+        // Estado inicial al cargar
+        applyHeader(window.pageYOffset >= 100);
 
-    });
+        window.addEventListener('scroll', function () {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                applyHeader(window.pageYOffset >= 100);
+                ticking = false;
+            });
+        }, { passive: true });
+    }());
 
     /* ==========================================================================
        When document is loaded, do
@@ -568,18 +564,6 @@ $(".read-more-btn").on("click", function () {
     $(this).parent().toggleClass('show');
 })
 
-var bgImage = $(".bg-img")
-bgImage.each(function () {
-    var el = $(this),
-        src = el.attr("data-bg-image");
-
-    el.css({
-        "background-image": "url(" + src + ")",
-        "background-size": "cover",
-        "background-position": "center",
-        "display": "block"
-    });
-});
 
 $('.event-countdown').each(function () {
     let $this = $(this);
@@ -604,14 +588,13 @@ $('.showLoader').on('click', function () {
 });
 
 
-var countEl = $(".event-countdown");
-var childCount = countEl.find(".syotimer-cell");
-childCount.each(function () {
-    var child = $(this).find(".syotimer-cell__value");
-    setInterval(() => {
-        var value = Number(child.html());
-        child.attr("style", '--value: ' + value + '');
-    }, 0);
+$(".event-countdown").find(".syotimer-cell").each(function () {
+    var cell = $(this).find(".syotimer-cell__value")[0];
+    if (!cell) return;
+    cell.style.setProperty('--value', cell.textContent.trim());
+    new MutationObserver(function () {
+        cell.style.setProperty('--value', cell.textContent.trim());
+    }).observe(cell, { childList: true, characterData: true, subtree: true });
 });
 
 $(document).on('click', '.review-value li a', function () {
@@ -684,20 +667,6 @@ $('body').on('submit', '#vendorContactForm', function (e) {
         }
     })
 
-        // Event card - whole card clickable (except organizer link and wishlist)
-        $(document).on('click', '.event-card-hover, .ev-card', function (e) {
-            var url = $(this).data('event-url');
-            if (url && !$(e.target).closest('a, button').length) {
-                window.location.href = url;
-            }
-        });
-        $(document).on('keydown', '.event-card-hover, .ev-card', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                var url = $(this).data('event-url');
-                if (url) window.location.href = url;
-            }
-        });
 
 })
 

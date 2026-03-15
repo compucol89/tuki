@@ -108,6 +108,11 @@ class HomeController extends Controller
       ->get();
     $queryResult['marqueeEvents'] = $marqueeEvents;
 
+    // Gallery images para el marquee (agrupadas por event_id)
+    $marqueeEventIds = $marqueeEvents->pluck('id')->toArray();
+    $queryResult['marqueeGallery'] = \App\Models\Event\EventImage::whereIn('event_id', $marqueeEventIds)
+        ->get()->groupBy('event_id');
+
     // Gallery images for hero slideshow (solo archivos que existen en disco)
     $queryResult['heroGalleryImages'] = EventImage::inRandomOrder()->limit(20)->pluck('image')
         ->filter(fn($img) => file_exists(public_path('assets/admin/img/event-gallery/' . $img)))

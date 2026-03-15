@@ -11,6 +11,7 @@ use App\Models\Event\EventContent;
 use App\Models\Event\EventDates;
 use App\Models\Event\EventImage;
 use App\Models\Event\Ticket;
+use App\Models\HomePage\HeroSection;
 use App\Models\Event\Wishlist;
 use App\Models\Organizer;
 use Carbon\Carbon;
@@ -34,6 +35,10 @@ class EventController extends Controller
     $information['categories'] = $categories;
     $countries = Country::get();
     $information['countries'] = $countries;
+    $information['heroSection'] = HeroSection::where('language_id', $language->id)->first();
+    $information['heroGalleryImages'] = EventImage::inRandomOrder()->limit(20)->pluck('image')
+      ->filter(fn($img) => file_exists(public_path('assets/admin/img/event-gallery/' . $img)))
+      ->take(8)->values();
 
 
     //for filter
@@ -163,7 +168,11 @@ class EventController extends Controller
     $information['min'] = $min;
     $information['events'] = $events;
 
-    return view('frontend.event.event', compact('information'));
+    return view('frontend.event.event', compact('information') + [
+      'heroGalleryImages' => $information['heroGalleryImages'],
+      'heroSection'       => $information['heroSection'],
+      'categories'        => $information['categories'],
+    ]);
   }
 
   //details

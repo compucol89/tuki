@@ -97,7 +97,7 @@
                 <div class="col-sm-6">
                   <div class="co-field">
                     <label for="fname">Nombre *</label>
-                    <input type="text" name="fname" id="fname"
+                    <input type="text" name="fname" id="fname" required
                            class="form-control @error('fname') is-invalid @enderror"
                            value="{{ old('fname', $authUser?->fname ?? '') }}"
                            placeholder="Tu nombre" autocomplete="given-name">
@@ -107,7 +107,7 @@
                 <div class="col-sm-6">
                   <div class="co-field">
                     <label for="lname">Apellido *</label>
-                    <input type="text" name="lname" id="lname"
+                    <input type="text" name="lname" id="lname" required
                            class="form-control @error('lname') is-invalid @enderror"
                            value="{{ old('lname', $authUser?->lname ?? '') }}"
                            placeholder="Tu apellido" autocomplete="family-name">
@@ -117,7 +117,7 @@
                 <div class="col-sm-6">
                   <div class="co-field">
                     <label for="email">Email *</label>
-                    <input type="email" name="email" id="email"
+                    <input type="email" name="email" id="email" required
                            class="form-control @error('email') is-invalid @enderror"
                            value="{{ old('email', $authUser?->email ?? '') }}"
                            placeholder="tu@email.com" autocomplete="email">
@@ -127,7 +127,7 @@
                 <div class="col-sm-6">
                   <div class="co-field">
                     <label for="phone">Teléfono / WhatsApp *</label>
-                    <input type="text" name="phone" id="phone"
+                    <input type="text" name="phone" id="phone" required
                            class="form-control @error('phone') is-invalid @enderror"
                            value="{{ old('phone', $authUser?->phone ?? '') }}"
                            placeholder="+54 11 XXXX-XXXX" autocomplete="tel">
@@ -136,11 +136,12 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="co-field">
-                    <label for="dni">DNI <span class="co-field__optional">(opcional)</span></label>
-                    <input type="text" name="dni" id="dni"
-                           class="form-control"
+                    <label for="dni">DNI *</label>
+                    <input type="text" name="dni" id="dni" required
+                           class="form-control @error('dni') is-invalid @enderror"
                            value="{{ old('dni') }}"
                            placeholder="Número de documento" inputmode="numeric">
+                    @error('dni')<p class="co-field__error">{{ $message }}</p>@enderror
                   </div>
                 </div>
               </div>
@@ -202,11 +203,7 @@
                     </div>
                     <div class="pgw-card__logo pgw-card__logo--{{ $og->keyword }}">
                       @if ($og->keyword == 'mercadopago')
-                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
-                          <rect width="56" height="36" rx="5" fill="#009EE3"/>
-                          <text x="28" y="14" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="white" text-anchor="middle">Mercado</text>
-                          <text x="28" y="24" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="white" text-anchor="middle">Pago</text>
-                        </svg>
+                        <img src="{{ asset('assets/front/images/mercadopago_logo.svg') }}" alt="Mercado Pago" style="width:130px;height:auto;display:block;">
                       @elseif ($og->keyword == 'stripe')
                         <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
                           <rect width="56" height="36" rx="5" fill="#635BFF"/>
@@ -467,11 +464,7 @@
                 <text x="28" y="23" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle" letter-spacing="1">AMEX</text>
               </svg>
               {{-- Mercado Pago --}}
-              <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30">
-                <rect width="56" height="36" rx="5" fill="#009EE3"/>
-                <text x="28" y="15" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="white" text-anchor="middle">Mercado</text>
-                <text x="28" y="25" font-family="Arial,sans-serif" font-size="7" font-weight="700" fill="white" text-anchor="middle">Pago</text>
-              </svg>
+              <img src="{{ asset('assets/front/images/mercadopago_logo.svg') }}" alt="Mercado Pago" style="height:30px;width:auto;display:block;">
               {{-- Cabal (tarjeta argentina) --}}
               <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30">
                 <rect width="56" height="36" rx="5" fill="#005B9E"/>

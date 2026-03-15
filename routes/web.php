@@ -178,7 +178,7 @@ Route::post('/store-subscriber', 'Controller@storeSubscriber')->name('store_subs
 
 Route::middleware('change.lang')->group(function () {
   Route::get('/', 'FrontEnd\HomeController@index')->name('index');
-  Route::get('events', 'FrontEnd\EventController@index')->name('events');
+  Route::get('eventos', 'FrontEnd\EventController@index')->name('events');
   Route::get('event/{slug}/{id}', 'FrontEnd\EventController@details')->name('event.details');
   Route::get('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
   Route::get('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');

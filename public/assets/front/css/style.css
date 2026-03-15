@@ -6900,6 +6900,121 @@ h2, .section-title h2 {
   .ed-ticket-card__head { padding:16px 18px; }
   .ed-ticket-card__body { padding:16px 18px; }
 }
+/* ─── EVENT LISTING PAGE ─── */
+.ev-listing { background: #f9fafb; min-height: 70vh; }
+
+/* Sidebar filtros */
+.ev-filters { display: flex; flex-direction: column; gap: 12px; position: sticky; top: 20px; }
+
+.ev-filter-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.ev-filter-label {
+  font-size: 10px; font-weight: 700; color: #9ca3af;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 0 0 10px;
+}
+
+/* Search / location wrap */
+.ev-search-wrap {
+  display: flex; align-items: center; gap: 8px;
+  background: #f9fafb; border: 1px solid #e5e7eb;
+  border-radius: 8px; padding: 0 12px;
+  margin-bottom: 10px;
+}
+.ev-search-wrap svg { flex-shrink: 0; color: #9ca3af; }
+.ev-search-wrap input {
+  flex: 1; border: none; background: transparent;
+  font-size: 13px; color: #374151; height: 38px;
+  outline: none; padding: 0;
+}
+.ev-search-wrap input::placeholder { color: #9ca3af; }
+
+/* Apply button */
+.ev-filter-apply-btn {
+  width: 100%; height: 36px; border: none;
+  background: #1e2532; color: #fff;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.ev-filter-apply-btn:hover { background: #F97316; }
+
+/* Select */
+.ev-select {
+  width: 100%; height: 38px; border: 1px solid #e5e7eb;
+  border-radius: 8px; padding: 0 10px;
+  font-size: 13px; color: #374151; background: #f9fafb;
+  outline: none; cursor: pointer;
+}
+.ev-select:focus { border-color: #F97316; }
+
+/* Tipo pills */
+.ev-type-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.ev-type-pill {
+  padding: 5px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  border: 1.5px solid #e5e7eb; color: #6b7280;
+  background: #fff; text-decoration: none;
+  transition: all 0.15s;
+}
+.ev-type-pill:hover { border-color: #F97316; color: #F97316; text-decoration: none; }
+.ev-type-pill.active { background: #1e2532; border-color: #1e2532; color: #fff; }
+
+/* Precio slider row */
+.ev-price-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+.ev-price-input {
+  flex: 1; height: 36px; border: 1px solid #e5e7eb;
+  border-radius: 8px; padding: 0 10px; font-size: 13px;
+  color: #374151; background: #f9fafb; outline: none;
+}
+
+/* Top bar */
+.ev-topbar {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.ev-pricing-pills { display: flex; gap: 6px; }
+.ev-pricing-pill {
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  border: 1.5px solid #e5e7eb; color: #6b7280;
+  background: #fff; text-decoration: none;
+  transition: all 0.15s;
+}
+.ev-pricing-pill:hover { border-color: #F97316; color: #F97316; text-decoration: none; }
+.ev-pricing-pill.active { background: #1e2532; border-color: #1e2532; color: #fff; }
+.ev-count { font-size: 13px; color: #9ca3af; font-weight: 500; }
+
+/* Empty state */
+.ev-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; padding: 60px 20px;
+  background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 16px; text-align: center;
+}
+.ev-empty p { font-size: 16px; color: #6b7280; font-weight: 500; margin: 0; }
+.ev-empty-link { font-size: 13px; color: #F97316; font-weight: 600; }
+
+/* Paginación */
+.ev-pagination .pagination { justify-content: center; gap: 4px; }
+.ev-pagination .page-item .page-link {
+  border-radius: 8px !important; border: 1px solid #e5e7eb;
+  color: #374151; font-weight: 600; font-size: 13px;
+  padding: 6px 12px; transition: all 0.15s;
+}
+.ev-pagination .page-item.active .page-link { background: #1e2532; border-color: #1e2532; color: #fff; }
+.ev-pagination .page-item .page-link:hover { border-color: #F97316; color: #F97316; }
+
+@media (max-width: 991px) {
+  .ev-filters { position: static; }
+}
+
 /* ED SIDEBAR EXTRAS — SaaS UI */
 
 /* Reset heredados del body para el sidebar */

@@ -58,9 +58,18 @@
         $event_setting = App\Models\BasicSettings\Basic::select('event_guest_checkout_status')->first();
       @endphp
       @if ($event_setting->event_guest_checkout_status == 1 && request()->input('redirectPath') == 'event_checkout')
-        <a href="{{ route('check-out', ['type' => 'guest']) }}" class="auth-guest-btn auth-guest-btn--cta">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-          Comprar como invitado — sin registrarme
+        @php
+          $guestEvent = Session::get('event');
+          $isFreeEvent = $guestEvent && ($guestEvent->pricing_type == 'free' || Session::get('sub_total') == 0);
+        @endphp
+        <a href="{{ route('check-out', ['type' => 'guest']) }}" class="auth-guest-btn auth-guest-btn--cta auth-guest-btn--green">
+          @if($isFreeEvent)
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Reservar entrada como invitado — sin registrarme
+          @else
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            Comprar como invitado — sin registrarme
+          @endif
         </a>
         <p class="auth-guest-hint">Rápido, seguro y sin crear cuenta</p>
       @endif

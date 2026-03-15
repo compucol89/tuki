@@ -56,7 +56,7 @@ class BookingController extends Controller
     // payment
     if ($request->total != 0 || Session::get('sub_total') != 0) {
       if (!$request->exists('gateway')) {
-        Session::flash('error', 'Please select a payment method.');
+        Session::flash('error', 'Por favor seleccioná un método de pago.');
 
         return redirect()->back();
       } else if ($request['gateway'] == 'paypal') {
@@ -139,9 +139,10 @@ class BookingController extends Controller
     } else {
       try {
         $event = Session::get('event');
+        $event_id = is_object($event) ? ($event->id ?? null) : ($event['id'] ?? null);
         $event = $event ? (array) $event : [];
         $arrData = array(
-          'event_id' => $event['id'],
+          'event_id' => $event_id,
           'price' => 0,
           'tax' => 0,
           'commission' => 0,
@@ -173,7 +174,7 @@ class BookingController extends Controller
 
         if ($ticket->how_ticket_will_be_send == 'instant') {
           // generate an invoice in pdf format
-          $invoice = $bookingInfo->generateInvoice($bookingInfo, $bookingInfo->event_id);
+          $invoice = $this->generateInvoice($bookingInfo, $bookingInfo->event_id);
 
           //unlink qr code 
           if (
@@ -197,7 +198,7 @@ class BookingController extends Controller
           $bookingInfo->save();
 
           // send a mail to the customer with the invoice
-          $bookingInfo->sendMail($bookingInfo);
+          $this->sendMail($bookingInfo);
         } else {
           BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
         }
@@ -207,9 +208,10 @@ class BookingController extends Controller
         $request->session()->forget('arrData');
         $request->session()->forget('discount');
 
-        return redirect()->route('event_booking.complete', ['id' => $event['id'], 'booking_id' => $bookingInfo->id, 'via' => 'offline']);
+        return redirect()->route('event_booking.complete', ['id' => $event_id, 'booking_id' => $bookingInfo->id, 'via' => 'offline']);
       } catch (\Throwable $th) {
-        return view('errors.404');   
+        Log::error('Free event booking failed: ' . $th->getMessage() . ' | ' . $th->getFile() . ':' . $th->getLine());
+        return redirect()->back()->with('error', 'Hubo un problema al procesar tu reserva. Por favor intentá de nuevo.');
       }
     }
   }
@@ -290,9 +292,11 @@ class BookingController extends Controller
         }
         $variations = json_encode($c_variations, true);
       } else {
-        $ticket = $event->ticket()->first();
-        $ticket->ticket_available = $ticket->ticket_available - (int)$info['quantity'];
-        $ticket->save();
+        $ticket = $event ? $event->ticket()->first() : null;
+        if ($ticket && $ticket->ticket_available_type == 'limited') {
+          $ticket->ticket_available = max(0, $ticket->ticket_available - (int)$info['quantity']);
+          $ticket->save();
+        }
       }
 
       $basic  = Basic::where('uniqid', 12345)->select('tax', 'commission')->first();

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Preview Ticket — Tukipass</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; font-size: 12px; color: #333; background: #e8edf2; padding: 40px; }
+
+    .ticket-wrapper {
+      width: 720px;
+      margin: 20px auto;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    .ticket-header {
+      background: linear-gradient(135deg, #00c2f4 0%, #0096c7 100%);
+      color: #fff;
+      padding: 28px 30px 22px;
+      position: relative;
+    }
+    .ticket-header::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0;
+      width: 180px; height: 100%;
+      background: rgba(255,255,255,0.05);
+      clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .app-name { font-size: 13px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; opacity: 0.85; }
+    .ticket-type-badge {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .event-title { font-size: 20px; margin-top: 10px; font-weight: bold; letter-spacing: 0.3px; }
+    .event-meta { font-size: 11px; margin-top: 5px; opacity: 0.88; }
+    .event-meta span { margin-right: 16px; }
+    .event-meta svg { vertical-align: middle; margin-right: 4px; }
+
+    /* ── PERFORATED DIVIDER ── */
+    .perforated {
+      background: #fff;
+      position: relative;
+      height: 0;
+      border-top: 2px dashed #dde3ea;
+      margin: 0 20px;
+    }
+    .perforated::before, .perforated::after {
+      content: '';
+      position: absolute;
+      width: 20px; height: 20px;
+      background: #e8edf2;
+      border-radius: 50%;
+      top: -11px;
+    }
+    .perforated::before { left: -30px; }
+    .perforated::after  { right: -30px; }
+
+    /* ── BODY ── */
+    .ticket-body {
+      background: #fff;
+      padding: 22px 30px 26px;
+    }
+
+    /* ── MAIN INFO TABLE ── */
+    .info-row { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .info-row td { vertical-align: top; padding: 0; }
+    .info-col { width: 62%; padding-right: 24px; }
+    .qr-col { width: 38%; text-align: center; }
+
+    /* QR Frame */
+    .qr-frame {
+      display: inline-block;
+      padding: 10px;
+      border: 2px solid #e0f6fd;
+      border-radius: 8px;
+      background: #f7fdff;
+    }
+    .qr-frame img { width: 130px; height: 130px; display: block; }
+    .qr-placeholder {
+      width: 130px; height: 130px;
+      border: 2px dashed #b0dff0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: #90c5d8; border-radius: 4px;
+      flex-direction: column; gap: 4px;
+    }
+    .qr-label { font-size: 10px; color: #999; margin-top: 8px; font-weight: bold; letter-spacing: 0.5px; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 9px;
+      font-weight: bold;
+      color: #00c2f4;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #e0f6fd;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 3px; height: 12px;
+      background: #00c2f4;
+      border-radius: 2px;
+    }
+
+    /* ── DETAILS ── */
+    .detail-grid { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+    .detail-grid td { padding: 6px 0; vertical-align: top; }
+    .detail-label { font-size: 9px; color: #999; text-transform: uppercase; letter-spacing: 0.8px; display: block; margin-bottom: 3px; }
+    .detail-value { font-size: 12px; color: #1a1a2e; font-weight: bold; }
+    .detail-cell { width: 50%; padding-right: 12px; }
+
+    /* ── BILLING TABLE ── */
+    .billing-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+    .billing-table td { padding: 5px 0; font-size: 11px; }
+    .billing-table .label { color: #666; }
+    .billing-table .value { text-align: right; font-weight: bold; color: #333; }
+    .billing-table .discount-row td { color: #e05d44; }
+    .billing-table .discount-row .value { color: #e05d44; }
+    .total-row td {
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff !important;
+      background: #00c2f4;
+      padding: 9px 12px;
+      border-radius: 6px;
+    }
+    .total-row td:first-child { border-radius: 6px 0 0 6px; }
+    .total-row td:last-child  { border-radius: 0 6px 6px 0; text-align: right; }
+
+    /* ── STATUS BADGE ── */
+    .status-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: bold;
+      background: #e6f9f0;
+      color: #1a8a4a;
+      border: 1px solid #b2ecd1;
+    }
+
+    /* ── FOOTER ── */
+    .ticket-footer {
+      background: #f7f9fb;
+      border-top: 2px dashed #dde3ea;
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .booking-id-badge {
+      background: linear-gradient(135deg, #00c2f4, #0096c7);
+      color: #fff;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .footer-right { font-size: 10px; color: #aaa; text-align: right; line-height: 1.6; }
+    .footer-right strong { color: #00c2f4; }
+  </style>
+</head>
+<body>
+
+<div class="ticket-wrapper">
+
+  <!-- HEADER -->
+  <div class="ticket-header">
+    <div class="header-top">
+      <div class="app-name">Tukipass</div>
+      <div class="ticket-type-badge">VIP · Campo Preferencial</div>
+    </div>
+    <div class="event-title">Festival de Rock Córdoba 2025</div>
+    <div class="event-meta">
+      <span>📅 sábado 15 de noviembre de 2025</span>
+      <span>📍 Córdoba, Córdoba, Argentina</span>
+    </div>
+  </div>
+
+  <!-- PERFORATED DIVIDER -->
+  <div style="background:#fff; position:relative; overflow:visible;">
+    <div class="perforated"></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="ticket-body">
+
+    <!-- INFO + QR -->
+    <table class="info-row">
+      <tr>
+        <td class="info-col">
+          <div class="section-title">Datos de la Reserva</div>
+          <table class="detail-grid">
+            <tr>
+              <td class="detail-cell">
+                <span class="detail-label">Fecha de compra</span>
+                <span class="detail-value">03/03/2025</span>
+              </td>
+              <td class="detail-cell">
+                <span class="detail-label">Booking ID</span>
+                <span class="detail-value">#TK-00842</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="detail-cell">
+                <span class="detail-label">Nombre</span>
+                <span class="detail-value">Martín García</span>
+              </td>
+              <td class="detail-cell">
+                <span class="detail-label">Email</span>
+                <span class="detail-value" style="font-size:11px">martin@gmail.com</span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <span class="detail-label">Dirección</span>
+                <span class="detail-value">Av. Colón 1234, Córdoba</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="qr-col">
+          <div class="qr-frame">
+            <div class="qr-placeholder">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#90c5d8" stroke-width="1.5">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/>
+                <rect x="18" y="14" width="3" height="3"/><rect x="14" y="18" width="7" height="3"/>
+              </svg>
+              QR Ticket
+            </div>
+          </div>
+          <div class="qr-label">Ticket 1 / 2</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- BILLING -->
+    <div class="section-title">Información de Pago</div>
+    <table class="billing-table">
+      <tr>
+        <td class="label">Subtotal</td>
+        <td class="value">ARS 5.000,00</td>
+      </tr>
+      <tr>
+        <td class="label">Impuesto (10%)</td>
+        <td class="value">ARS 500,00</td>
+      </tr>
+      <tr class="discount-row">
+        <td class="label">Early Bird</td>
+        <td class="value">− ARS 250,00</td>
+      </tr>
+      <tr><td colspan="2" style="padding:6px 0;"></td></tr>
+      <tr class="total-row">
+        <td>Total Pagado</td>
+        <td>ARS 5.250,00</td>
+      </tr>
+    </table>
+
+    <table class="detail-grid" style="margin-top:14px">
+      <tr>
+        <td class="detail-cell">
+          <span class="detail-label">Método de pago</span>
+          <span class="detail-value">Mercado Pago</span>
+        </td>
+        <td class="detail-cell">
+          <span class="detail-label">Estado del pago</span>
+          <span class="status-badge">✓ Completado</span>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="ticket-footer">
+    <div class="booking-id-badge">#TK-00842</div>
+    <div class="footer-right">
+      <strong>Tukipass</strong><br>
+      ¡Gracias por tu compra! Presentá este ticket en el evento.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

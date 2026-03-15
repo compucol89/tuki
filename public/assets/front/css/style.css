@@ -6900,6 +6900,131 @@ h2, .section-title h2 {
   .ed-ticket-card__head { padding:16px 18px; }
   .ed-ticket-card__body { padding:16px 18px; }
 }
+/* ─── CUSTOMER DASHBOARD ─── */
+.cd-page { background: #f9fafb; min-height: 70vh; }
+
+/* Sidebar */
+.cd-sidebar {
+  background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 16px; overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  position: sticky; top: 20px;
+}
+.cd-sidebar__profile {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 18px; border-bottom: 1px solid #f3f4f6;
+}
+.cd-sidebar__avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  overflow: hidden; flex-shrink: 0;
+  background: #1e2532; display: flex; align-items: center; justify-content: center;
+}
+.cd-sidebar__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.cd-sidebar__avatar-initials { font-size: 18px; font-weight: 700; color: #fff; line-height: 1; }
+.cd-sidebar__name { font-size: 14px; font-weight: 700; color: #111827; margin: 0; line-height: 1.3; letter-spacing: -0.01em; }
+.cd-sidebar__email { font-size: 11px; color: #9ca3af; margin: 2px 0 0; }
+
+/* Nav */
+.cd-sidebar__nav { padding: 8px; }
+.cd-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; color: #4b5563;
+  text-decoration: none; transition: all 0.15s;
+}
+.cd-nav-item:hover { background: #f9fafb; color: #111827; text-decoration: none; }
+.cd-nav-item.active { background: #1e2532; color: #fff; }
+.cd-nav-item.active svg { stroke: #fff; }
+.cd-nav-item--logout { color: #ef4444; margin-top: 2px; }
+.cd-nav-item--logout:hover { background: #fef2f2; color: #dc2626; }
+.cd-nav-divider { height: 1px; background: #f3f4f6; margin: 6px 0; }
+
+/* Welcome bar */
+.cd-welcome {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 14px; padding: 20px 24px;
+}
+.cd-welcome__title { font-size: 20px; font-weight: 800; color: #111827; margin: 0; letter-spacing: -0.03em; }
+.cd-welcome__sub { font-size: 13px; color: #6b7280; margin: 4px 0 0; }
+.cd-welcome__cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; background: #1e2532; color: #fff;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  text-decoration: none; white-space: nowrap; transition: background 0.15s;
+}
+.cd-welcome__cta:hover { background: #F97316; color: #fff; text-decoration: none; }
+
+/* Stat cards */
+.cd-stat {
+  display: flex; align-items: center; gap: 14px;
+  background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 14px; padding: 18px 20px;
+}
+.cd-stat__icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.cd-stat__icon--blue { background: #eff6ff; color: #3b82f6; }
+.cd-stat__icon--green { background: #f0fdf4; color: #16a34a; }
+.cd-stat__icon--orange { background: #fff7ed; color: #F97316; }
+.cd-stat__icon svg { stroke: currentColor; }
+.cd-stat__num { font-size: 26px; font-weight: 800; color: #111827; margin: 0; letter-spacing: -0.03em; line-height: 1; }
+.cd-stat__label { font-size: 11px; color: #9ca3af; font-weight: 600; margin: 3px 0 0; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Cards */
+.cd-card {
+  background: #fff; border: 1px solid #e5e7eb;
+  border-radius: 14px; overflow: hidden;
+}
+.cd-card__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid #f3f4f6;
+}
+.cd-card__title { font-size: 15px; font-weight: 700; color: #111827; margin: 0; letter-spacing: -0.02em; }
+.cd-card__action { font-size: 12px; font-weight: 600; color: #F97316; text-decoration: none; }
+.cd-card__action:hover { color: #ea580c; }
+
+/* Profile grid */
+.cd-profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.cd-profile-item {
+  padding: 14px 22px; border-bottom: 1px solid #f9fafb;
+  border-right: 1px solid #f9fafb;
+}
+.cd-profile-item:nth-child(even) { border-right: none; }
+.cd-profile-item__label { display: block; font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+.cd-profile-item__val { font-size: 13px; color: #374151; font-weight: 500; }
+
+/* Table */
+.cd-table-wrap { overflow-x: auto; }
+.cd-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cd-table th { padding: 11px 16px; text-align: left; font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid #f3f4f6; }
+.cd-table td { padding: 13px 16px; border-bottom: 1px solid #f9fafb; color: #374151; vertical-align: middle; }
+.cd-table tr:last-child td { border-bottom: none; }
+.cd-table tr:hover td { background: #fafafa; }
+.cd-table__link { color: #111827; font-weight: 600; text-decoration: none; }
+.cd-table__link:hover { color: #F97316; }
+.cd-table__date { color: #6b7280; }
+.cd-table__organizer { font-weight: 500; }
+.cd-table__btn { display: inline-flex; padding: 5px 12px; border-radius: 6px; background: #f3f4f6; color: #374151; font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.15s; }
+.cd-table__btn:hover { background: #1e2532; color: #fff; }
+.cd-badge--admin { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #f0fdf4; color: #16a34a; }
+
+/* Empty */
+.cd-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 20px; text-align: center; }
+.cd-empty p { font-size: 14px; color: #6b7280; margin: 0; }
+.cd-empty__link { font-size: 13px; color: #F97316; font-weight: 600; text-decoration: none; }
+
+@media (max-width: 991px) {
+  .cd-sidebar { position: static; margin-bottom: 20px; }
+  .cd-profile-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 575px) {
+  .cd-welcome { flex-direction: column; align-items: flex-start; }
+  .cd-welcome__cta { width: 100%; justify-content: center; }
+}
+
 /* ─── EVENT LISTING PAGE ─── */
 .ev-listing { background: #f9fafb; min-height: 70vh; }
 

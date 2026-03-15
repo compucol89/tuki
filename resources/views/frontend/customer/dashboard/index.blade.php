@@ -23,7 +23,7 @@
   $totalBookings = \App\Models\Event\Booking::where('customer_id', $u->id)->count();
   $upcomingBookings = \App\Models\Event\Booking::where('customer_id', $u->id)
     ->where('event_date', '>=', now())->count();
-  $wishlistCount = \App\Models\WishList::where('customer_id', $u->id)->count();
+  $wishlistCount = \App\Models\Event\Wishlist::where('customer_id', $u->id)->count();
 @endphp
 
 <section class="cd-page py-60">

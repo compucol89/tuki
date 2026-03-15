@@ -260,7 +260,7 @@ class CustomerController extends Controller
         }
       }
     } else {
-      return redirect()->back()->with('alert', 'Oops, Username or password does not match!');
+      return redirect()->back()->with('alert', 'Usuario o contraseña incorrectos.');
     }
   }
   //forget_passord

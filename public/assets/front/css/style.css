@@ -7016,6 +7016,19 @@ h2, .section-title h2 {
 .cd-empty p { font-size: 14px; color: #6b7280; margin: 0; }
 .cd-empty__link { font-size: 13px; color: #F97316; font-weight: 600; text-decoration: none; }
 
+/* Mis entradas extras */
+.cd-count-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; background:#f3f4f6; color:#6b7280; }
+.cd-booking-id { font-size:12px; font-weight:600; color:#9ca3af; font-family:monospace; }
+.cd-status { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.cd-status--free    { background:#f0fdf4; color:#16a34a; }
+.cd-status--paid    { background:#eff6ff; color:#2563eb; }
+.cd-status--pending { background:#fff7ed; color:#ea580c; }
+.cd-pagination-wrap { padding:16px 20px; border-top:1px solid #f3f4f6; }
+.cd-pagination-wrap .pagination { margin:0; justify-content:center; gap:4px; }
+.cd-pagination-wrap .page-item .page-link { border-radius:8px !important; border:1px solid #e5e7eb; color:#374151; font-weight:600; font-size:13px; padding:6px 12px; transition:all 0.15s; }
+.cd-pagination-wrap .page-item.active .page-link { background:#1e2532; border-color:#1e2532; color:#fff; }
+.cd-pagination-wrap .page-item .page-link:hover { border-color:#F97316; color:#F97316; }
+
 @media (max-width: 991px) {
   .cd-sidebar { position: static; margin-bottom: 20px; }
   .cd-profile-grid { grid-template-columns: 1fr; }

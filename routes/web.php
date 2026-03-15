@@ -75,7 +75,7 @@ Route::prefix('/customer')->middleware('auth:customer', 'Deactive:customer', 'ch
   Route::post('/update-profile', 'FrontEnd\CustomerController@update_profile')->name('customer.profile.update');
 
   Route::get('/wishlist', 'FrontEnd\CustomerController@wishlist')->name('customer.wishlist');
-  Route::get('/my-bookings', 'FrontEnd\Event\CustomerBookingController@my_booking')->name('customer.booking.my_booking');
+  Route::get('/mis-entradas', 'FrontEnd\Event\CustomerBookingController@my_booking')->name('customer.booking.my_booking');
   Route::get('/booking/details/{id}', 'FrontEnd\Event\CustomerBookingController@details')->name('customer.booking_details');
 
   Route::get('/support-ticket', 'FrontEnd\SupportTicketController@index')->name('customer.support_tickert');

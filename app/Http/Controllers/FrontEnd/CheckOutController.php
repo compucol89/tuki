@@ -305,7 +305,7 @@ class CheckOutController extends Controller
     $event = Session::get('event');
 
     if (!$event) {
-      return redirect()->route('home')->with('error', 'Tu sesión expiró. Por favor seleccioná los tickets nuevamente.');
+      return redirect()->route('index')->with('error', 'Tu sesión expiró. Por favor seleccioná los tickets nuevamente.');
     }
 
     $information['selTickets'] = Session::get('selTickets');

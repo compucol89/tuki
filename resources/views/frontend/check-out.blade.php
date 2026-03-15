@@ -55,6 +55,12 @@
       <h2 class="co-page-title">Finalizar compra</h2>
     </div>
 
+    {{-- Countdown timer --}}
+    <div class="co-timer" id="co-timer">
+      <svg class="co-timer__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span class="co-timer__text">Tenés <strong id="co-timer-display">10:00</strong> para completar tu compra</span>
+    </div>
+
     <form class="form" action="{{ route('ticket.booking', [$event->id, 'type' => 'guest']) }}"
           method="POST" enctype="multipart/form-data" id="payment-form">
       @csrf
@@ -525,5 +531,32 @@
       body.style.display = body.style.display === 'none' ? 'block' : 'none';
       this.classList.toggle('co-coupon__toggle--open');
     });
+
+    // Checkout countdown — 10 minutes
+    (function() {
+      var TOTAL = 10 * 60;
+      var remaining = TOTAL;
+      var display  = document.getElementById('co-timer-display');
+      var banner   = document.getElementById('co-timer');
+      if (!display || !banner) return;
+
+      function tick() {
+        remaining--;
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+        display.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+
+        if (remaining <= 120) {
+          banner.classList.add('co-timer--urgent');
+        }
+        if (remaining <= 0) {
+          clearInterval(interval);
+          banner.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span class="co-timer__text">Tu tiempo expiró. Serás redirigido...</span>';
+          setTimeout(function() { window.location.href = document.referrer || '/'; }, 3000);
+        }
+      }
+
+      var interval = setInterval(tick, 1000);
+    })();
   </script>
 @endsection

@@ -491,15 +491,15 @@ $('.quantity-up').on('click', function () {
     $('.max_error_' + ticket_id + max_qty).text('');
 
     if (max_qty != 'unlimited' && (numProduct + p_qty) >= max_qty) {
-        $('.max_error_' + ticket_id + max_qty).text(`You can't purchase more tickets.`);
+        $('.max_error_' + ticket_id + max_qty).text(`No podés comprar más entradas.`);
     } else if (purchase == 'true') {
-        $('.max_error_' + ticket_id + max_qty).text(`You already purchase this ticket.`);
+        $('.max_error_' + ticket_id + max_qty).text(`Ya compraste esta entrada.`);
     } else if (stock < (numProduct)) {
-        $('.max_error_' + ticket_id + max_qty).text(`You can't purchase more tickets.`);
+        $('.max_error_' + ticket_id + max_qty).text(`No podés comprar más entradas.`);
     } else if (stock != 'unlimited' && stock < numProduct + 1) {
-        $('.max_error_' + ticket_id + max_qty).text('Stock Out');
+        $('.max_error_' + ticket_id + max_qty).text('Sin stock');
     } else if (max_qty != 'unlimited' && (numProduct >= max_qty && max_qty != '')) {
-        $('.max_error_' + ticket_id + max_qty).text('One can buy maximum ' + max_qty + ' Tickets');
+        $('.max_error_' + ticket_id + max_qty).text('Podés comprar máximo ' + max_qty + ' entradas');
     } else {
 
         $(this).prev().val(numProduct + 1);

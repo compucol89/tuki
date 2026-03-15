@@ -6279,6 +6279,35 @@ h2, .section-title h2 {
 
 .checkout-v2 { padding-top: 40px; padding-bottom: 80px; }
 
+/* Checkout countdown timer */
+.co-timer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-bottom: 28px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #92400e;
+  transition: background 0.4s, border-color 0.4s, color 0.4s;
+}
+.co-timer__icon { flex-shrink: 0; color: #f97316; }
+.co-timer__text strong { font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.co-timer--urgent {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+  animation: co-timer-pulse 1s ease-in-out infinite;
+}
+.co-timer--urgent .co-timer__icon { color: #ef4444; }
+@keyframes co-timer-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+  50%       { box-shadow: 0 0 0 4px rgba(239,68,68,0.15); }
+}
+
 /* Page header */
 .co-page-header {
   display: flex;
@@ -6868,14 +6897,69 @@ h2, .section-title h2 {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ticket card head typography */
+/* Ticket card head — top row (pill + label) */
+.ed-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
 .ed-ticket-card__head-title {
   font-size: 10px !important;
   font-weight: 600 !important;
   color: #9ca3af !important;
   text-transform: uppercase !important;
   letter-spacing: 0.1em !important;
-  margin: 0 0 4px !important;
+  margin: 0 !important;
+}
+
+/* Status pill */
+.ed-head-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.ed-head-pill--open  { background: #dcfce7; color: #166534; }
+.ed-head-pill--over  { background: #fee2e2; color: #991b1b; }
+.ed-head-pill__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.ed-head-pill--open .ed-head-pill__dot {
+  animation: ed-blink 1.4s ease-in-out infinite;
+}
+@keyframes ed-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* Stock indicator */
+.ed-head-stock {
+  margin: 6px 0 0 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1 !important;
+}
+.ed-head-stock__dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  flex-shrink: 0;
+}
+.ed-head-stock__dot--low {
+  background: #f97316;
+  animation: ed-blink 1s ease-in-out infinite;
 }
 .ed-ticket-card__head-price {
   font-size: 32px !important;
@@ -6921,24 +7005,31 @@ h2, .section-title h2 {
 /* Field label */
 .ed-field-label { font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; display:block; }
 
-/* Ticket rows */
+/* Ticket rows — mini-card design */
 .ed-ticket-card__body .event-details-information > p.mb-0 {
-  font-size: 13px !important; font-weight: 600 !important; color: #374151 !important;
-  letter-spacing: -0.01em; margin: 14px 0 0 !important; line-height: 1.3;
+  font-size: 12px !important; font-weight: 600 !important; color: #6b7280 !important;
+  letter-spacing: 0.04em; text-transform: uppercase !important;
+  margin: 16px 0 0 !important; line-height: 1.3;
+  background: #f8fafc !important; border: 1px solid #e5e7eb !important;
+  border-bottom: none !important; border-radius: 10px 10px 0 0 !important;
+  padding: 10px 14px 8px !important;
 }
 .ed-ticket-card__body .price-count {
-  display:flex; align-items:center; justify-content:space-between;
-  gap:12px; padding:8px 0; border-bottom:1px solid #f3f4f6;
-  margin:0 !important; background:transparent; box-shadow:none;
+  display: flex !important; align-items: center !important;
+  justify-content: space-between !important; flex-wrap: nowrap !important;
+  gap: 12px; padding: 10px 14px !important;
+  margin: 0 !important; box-shadow: none !important;
+  background: #f8fafc !important; border: 1px solid #e5e7eb !important;
+  border-top: none !important; border-radius: 0 0 10px 10px !important;
 }
-.ed-ticket-card__body .price-count:last-of-type { border-bottom:none; }
 .ed-ticket-card__body .price-count h6 {
-  font-size: 15px !important; font-weight: 700 !important; color: #111827 !important;
-  margin: 0 !important; line-height: 1 !important; letter-spacing: -0.02em;
+  flex: 1 !important;
+  font-size: 16px !important; font-weight: 800 !important; color: #111827 !important;
+  margin: 0 !important; line-height: 34px !important; letter-spacing: -0.03em;
 }
 .ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:5px; letter-spacing:0; }
-/* "gratis" como pill */
-.ed-ticket-card__body .price-count h6:only-child { color:#059669 !important; font-size:13px !important; font-weight:600 !important; letter-spacing:0; }
+/* "gratis" */
+.ed-ticket-card__body .price-count h6 span { font-size:16px !important; font-weight:800 !important; letter-spacing:-0.03em; color:#059669 !important; }
 .ed-ticket-card__body .click-show { font-size:11px; color:#9ca3af; margin:2px 0 0; line-height:1.4; }
 
 /* Quantity control — connected pill */

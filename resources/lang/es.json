@@ -393,5 +393,15 @@
   "Remove from wishlist": "Quitar de favoritos",
   "Add to wishlist": "Añadir a favoritos",
   "Share event": "Compartir evento",
-  "Procesando...": "Procesando..."
+  "Procesando...": "Procesando...",
+  "Free Ticket (limited)": "Entrada gratuita (limitada)",
+  "Free Ticket": "Entrada gratuita",
+  "Normal Ticket": "Entrada normal",
+  "All Tickets - Economy": "Todas las entradas - Económica",
+  "All Tickets - Business": "Todas las entradas - Ejecutiva",
+  "All Tickets - First": "Todas las entradas - Primera",
+  "Economy": "Económica",
+  "Business": "Ejecutiva",
+  "First": "Primera",
+  "All Tickets": "Todas las entradas"
 }

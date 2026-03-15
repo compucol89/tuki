@@ -344,22 +344,49 @@ ttq.page();
 
             {{-- CARD 1: Ticket form --}}
             <div class="ed-ticket-card">
+              @php
+                $min_ticket_price = DB::table('tickets')->where('event_id', $content->id)->min('price');
+                $max_ticket_price = DB::table('tickets')->where('event_id', $content->id)->max('price');
+                $has_price_range = is_numeric($min_ticket_price) && is_numeric($max_ticket_price) && $min_ticket_price != $max_ticket_price;
+                $tickets_stock    = DB::table('tickets')->where('event_id', $content->id)->get(['ticket_available_type', 'ticket_available']);
+                $has_unlimited    = $tickets_stock->contains('ticket_available_type', 'unlimited');
+                $total_stock      = $has_unlimited ? null : (int) $tickets_stock->sum('ticket_available');
+              @endphp
               <div class="ed-ticket-card__head">
-                <p class="ed-ticket-card__head-title">{{ __('Entradas') }}</p>
+                {{-- Status pill --}}
+                <div class="ed-head-top">
+                  <span class="ed-head-pill {{ $over ? 'ed-head-pill--over' : 'ed-head-pill--open' }}">
+                    <span class="ed-head-pill__dot"></span>
+                    {{ $over ? __('Venta cerrada') : __('Venta abierta') }}
+                  </span>
+                  <span class="ed-ticket-card__head-title">{{ __('Entradas') }}</span>
+                </div>
+                {{-- Price --}}
                 <p class="ed-ticket-card__head-price">
-                  @php
-                    $min_ticket_price = DB::table('tickets')->where('event_id', $content->id)->min('price');
-                    $max_ticket_price = DB::table('tickets')->where('event_id', $content->id)->max('price');
-                    $has_price_range = is_numeric($min_ticket_price) && is_numeric($max_ticket_price) && $min_ticket_price != $max_ticket_price;
-                  @endphp
-                  @if ($content->pricing_type == 'free' || (is_numeric($min_ticket_price) && $min_ticket_price == 0))
+                  @if ($content->pricing_type == 'free' || !is_numeric($min_ticket_price))
                     Gratis
-                  @elseif(is_numeric($min_ticket_price) && $min_ticket_price > 0)
-                    @if($has_price_range)<span style="font-size:13px;font-weight:400;opacity:0.65;margin-right:2px;">desde</span>@endif{{ symbolPrice($min_ticket_price) }}
+                  @elseif($min_ticket_price == 0 && $max_ticket_price > 0)
+                    Gratis<span style="font-size:16px;font-weight:400;opacity:0.45;margin:0 6px;">—</span>{{ symbolPrice($max_ticket_price) }}
+                  @elseif($min_ticket_price == 0)
+                    Gratis
+                  @elseif($has_price_range)
+                    {{ symbolPrice($min_ticket_price) }}<span style="font-size:16px;font-weight:400;opacity:0.45;margin:0 6px;">—</span>{{ symbolPrice($max_ticket_price) }}
                   @else
-                    {{ symbolPrice($content->price ?? 0) }}
+                    {{ symbolPrice($min_ticket_price) }}
                   @endif
                 </p>
+                {{-- Stock indicator --}}
+                @if (!$over)
+                  <p class="ed-head-stock">
+                    @if ($has_unlimited)
+                      <span class="ed-head-stock__dot"></span>Disponible
+                    @elseif($total_stock !== null && $total_stock <= 10)
+                      <span class="ed-head-stock__dot ed-head-stock__dot--low"></span>¡Últimas {{ $total_stock }} {{ $total_stock == 1 ? 'entrada' : 'entradas' }}!
+                    @elseif($total_stock !== null)
+                      <span class="ed-head-stock__dot"></span>{{ $total_stock }} entradas disponibles
+                    @endif
+                  </p>
+                @endif
               </div>
               <div class="ed-ticket-card__body">
                 <form action="{{ route('check-out2') }}" method="post"

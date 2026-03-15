@@ -7029,6 +7029,55 @@ h2, .section-title h2 {
 .cd-pagination-wrap .page-item.active .page-link { background:#1e2532; border-color:#1e2532; color:#fff; }
 .cd-pagination-wrap .page-item .page-link:hover { border-color:#F97316; color:#F97316; }
 
+/* Wishlist grid */
+.wl-grid { display: flex; flex-direction: column; gap: 0; }
+.wl-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 22px; border-bottom: 1px solid #f3f4f6;
+  transition: background 0.15s;
+}
+.wl-item:last-child { border-bottom: none; }
+.wl-item:hover { background: #fafafa; }
+.wl-item__img {
+  position: relative; flex-shrink: 0;
+  width: 90px; height: 64px; border-radius: 10px; overflow: hidden;
+  background: #f3f4f6;
+}
+.wl-item__img img { width: 100%; height: 100%; object-fit: cover; }
+.wl-item__type {
+  position: absolute; bottom: 5px; left: 5px;
+  font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.wl-item__type--online { background: #eff6ff; color: #2563eb; }
+.wl-item__type--venue  { background: #fff7ed; color: #ea580c; }
+.wl-item__body { flex: 1; min-width: 0; }
+.wl-item__title {
+  font-size: 14px; font-weight: 700; color: #111827;
+  margin: 0 0 5px; letter-spacing: -0.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.wl-item__date {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; color: #6b7280; margin: 0 0 10px;
+}
+.wl-item__actions { display: flex; align-items: center; gap: 8px; }
+.wl-item__btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: 7px;
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  transition: all 0.15s;
+}
+.wl-item__btn--primary { background: #1e2532; color: #fff; }
+.wl-item__btn--primary:hover { background: #F97316; color: #fff; text-decoration: none; }
+.wl-item__btn--remove { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; }
+.wl-item__btn--remove:hover { background: #ef4444; color: #fff; border-color: #ef4444; text-decoration: none; }
+
+@media (max-width: 575px) {
+  .wl-item { flex-wrap: wrap; }
+  .wl-item__img { width: 100%; height: 140px; }
+}
+
 @media (max-width: 991px) {
   .cd-sidebar { position: static; margin-bottom: 20px; }
   .cd-profile-grid { grid-template-columns: 1fr; }

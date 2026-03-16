@@ -7,7 +7,7 @@ use App\Http\Controllers\FrontEnd\Shop\OrderController;
 use App\Models\BasicSettings\Basic;
 use App\Models\ShopManagement\ShippingCharge;
 use Illuminate\Http\Request;
-use Config\Iyzipay;
+use App\Services\IyzipayOptionsFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
@@ -103,7 +103,7 @@ class IyzipayController extends Controller
         ````````````Payment gateway info start`````````
         ---------------------------------------------*/
         $notifyURL = route('shop.iyzico.notify');
-        $options = Iyzipay::options();
+        $options = IyzipayOptionsFactory::make();
         $conversion_id = uniqid(9999, 999999);
         # create request class
         $request = new \Iyzipay\Request\CreatePayWithIyzicoInitializeRequest();

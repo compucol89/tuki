@@ -8,6 +8,8 @@ use App\Models\Event\Ticket;
 use App\Models\Organizer;
 use App\Models\PaymentGateway\OnlineGateway;
 use App\Models\Transaction;
+use App\Services\OrganizerBalanceService;
+use App\Services\TransactionService;
 use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('convertUtf8')) {
@@ -225,70 +227,21 @@ if (!function_exists('get_href')) {
 if (!function_exists('storeTranscation')) {
   function storeTranscation($booking)
   {
-    $organizer = Organizer::where('id', $booking->organizer_id)->first();
-    if ($organizer != NULL) {
-      $pre_balance = $organizer->amount;
-      $after_balance = $organizer->amount + ($booking->price - $booking->commission);
-    } else {
-      $pre_balance = NULL;
-      $after_balance = NULL;
-    }
-    //store data to transcation table 
-    $transcation = Transaction::create([
-      'transcation_id' => time(),
-      'booking_id' => $booking->id,
-      'transcation_type' => $booking->transcation_type,
-      'customer_id' => $booking->customer_id,
-      'organizer_id' => $booking->organizer_id,
-      'payment_status' => $booking->paymentStatus,
-      'payment_method' => $booking->paymentMethod,
-      'grand_total' => $booking->price,
-      'tax' => $booking->tax,
-      'commission' => $booking->commission,
-      'pre_balance' => $pre_balance == null ? 0 : $pre_balance,
-      'after_balance' => $after_balance,
-      'gateway_type' => $booking->gatewayType,
-      'currency_symbol' => $booking->currencySymbol,
-      'currency_symbol_position' => $booking->currencySymbolPosition,
-    ]);
+    return app(TransactionService::class)->storeBookingTransaction($booking);
   }
 }
 
 if (!function_exists('storeProductTranscation')) {
   function storeProductTranscation($orderInfo)
   {
-    //store data to transcation table 
-    $transcation = Transaction::create([
-      'transcation_id' => time(),
-      'booking_id' => $orderInfo->id,
-      'transcation_type' => 2,
-      'customer_id' => Auth::guard('customer')->check() == true ? Auth::guard('customer')->user()->id : null,
-      'organizer_id' => null,
-      'payment_status' => $orderInfo->payment_status,
-      'payment_method' => $orderInfo->method,
-      'grand_total' => $orderInfo->total,
-      'tax' => $orderInfo->tax,
-      'commission' => null,
-      'pre_balance' => null,
-      'after_balance' => null,
-      'gateway_type' => $orderInfo->gateway_type,
-      'currency_symbol' => $orderInfo->currency_symbol,
-      'currency_symbol_position' => $orderInfo->currency_symbol_position,
-    ]);
+    return app(TransactionService::class)->storeProductTransaction($orderInfo);
   }
 }
 
 if (!function_exists('storeOrganizer')) {
   function storeOrganizer($data)
   {
-    $organizer = Organizer::where('id', $data['organizer_id'])->first();
-    if ($organizer) {
-      $organizer->amount = $organizer->amount + ($data['price'] - ($data['commission']));
-      $organizer->save();
-      return;
-    } else {
-      return;
-    }
+    app(OrganizerBalanceService::class)->credit($data);
   }
 }
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\FrontEnd\Shop\OrderController;
 use App\Models\Earning;
 use App\Models\ShopManagement\ProductOrder;
 use App\Models\Transaction;
-use Config\Iyzipay;
+use App\Services\IyzipayOptionsFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,7 +38,7 @@ class IyzicoProductOrderPendingPayment implements ShouldQueue
         $productOrder = ProductOrder::where('id', $this->order_id)->first();
         $conversion_id = $productOrder->conversation_id;
 
-        $options = Iyzipay::options();
+        $options = IyzipayOptionsFactory::make();
 
         $request = new \Iyzipay\Request\ReportingPaymentDetailRequest();
         $request->setPaymentConversationId($conversion_id);

@@ -2,10 +2,15 @@
 /vendor
 /public/hot
 /public/storage
+/public/assets/admin/file/invoices/
+/public/assets/admin/qrcodes/
+/public/assets/admin/img/customer-profile/
 /storage/*.key
 .env
 .env.backup
 .phpunit.result.cache
+/eventos.sql
+/docs/generated/
 docker-compose.override.yml
 Homestead.json
 Homestead.yaml

@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\Http\Controllers\FrontEnd\Event\BookingController;
 use App\Models\Earning;
 use App\Models\Event\Booking;
-use Config\Iyzipay;
+use App\Services\IyzipayOptionsFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,7 +38,7 @@ class IyzicoEventPendingPayment implements ShouldQueue
         $eventBooking = Booking::where('id', $this->booking_id)->first();
         $conversion_id = $eventBooking->conversation_id;
 
-        $options = Iyzipay::options();
+        $options = IyzipayOptionsFactory::make();
 
         $request = new \Iyzipay\Request\ReportingPaymentDetailRequest();
         $request->setPaymentConversationId($conversion_id);

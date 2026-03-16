@@ -7,7 +7,7 @@ use App\Http\Controllers\FrontEnd\Event\BookingController;
 use App\Models\BasicSettings\Basic;
 use App\Models\Earning;
 use App\Models\Event\Booking;
-use Config\Iyzipay;
+use App\Services\IyzipayOptionsFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use GuzzleHttp\Client;
@@ -90,7 +90,7 @@ class IyzipayController extends Controller
         $notifyURL = route('event_booking.iyzico.notify');
         //booking information end
 
-        $options = Iyzipay::options();
+        $options = IyzipayOptionsFactory::make();
         $conversion_id = uniqid(9999, 999999);
         # create request class
         $request = new \Iyzipay\Request\CreatePayWithIyzicoInitializeRequest();

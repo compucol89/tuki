@@ -51,11 +51,12 @@ class EventBookingController extends Controller
     }
 
 
-    $bookings = Booking::when($bookingId, function ($query) use ($bookingId) {
-      return $query->where('booking_id', 'like', '%' . $bookingId . '%');
-    })->when($paymentStatus, function ($query, $paymentStatus) {
-      return $query->where('paymentStatus', '=', $paymentStatus);
-    })
+    $bookings = Booking::with(['organizer', 'customerInfo'])
+      ->when($bookingId, function ($query) use ($bookingId) {
+        return $query->where('booking_id', 'like', '%' . $bookingId . '%');
+      })->when($paymentStatus, function ($query, $paymentStatus) {
+        return $query->where('paymentStatus', '=', $paymentStatus);
+      })
       ->when($eventIds, function ($query) use ($eventIds) {
         return $query->whereIn('event_id', $eventIds);
       })

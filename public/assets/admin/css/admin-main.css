@@ -652,19 +652,8 @@ select.bg-danger {
 .dis-none {
   display: none;
 }
-.min-230 {
-  min-width: 230px;
-}
-.ws-normal {
-  white-space: normal;
-}
-
 .card-earning{
   background-color: #003e68!important;
-}
-
-.close.drop_zone_close{
-  top: 2px !important;
 }
 
 body {
@@ -699,29 +688,9 @@ body[data-background-color="dark"] .card .payment-information .row:not(:last-chi
   width: 60px;
   height: 60px;
 }
-.mh70{
-  max-height: 70px;
-}
-.h80{
-  height: 80px;
-}
 .mh60{
   max-height: 60px;
 }
-.p-50{
-  padding: 50px 0
-}
-.receipt{
-  width: 100%;
-    min-height: 400px
-}
-.h-180{
-  height: 180px
-}
-.font-16{
-  font-size: 16px;
-}
-
 span.tox-statusbar__branding {
   display: none;
 }
@@ -735,6 +704,7 @@ span.tox-statusbar__branding {
     border-top-width: 3px !important;
     transition: transform 0.25s ease, box-shadow 0.25s ease !important;
     overflow: hidden;
+    contain: layout style;
 }
 
 .dashboard-items .card-stats:hover {

@@ -203,12 +203,12 @@
                           <td>
                             <div class="dropdown">
                               <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                id="dropdownMenuButton-{{ $event->id }}" data-toggle="dropdown" aria-haspopup="true"
                                 aria-expanded="false">
                                 {{ __('Select') }}
                               </button>
 
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ $event->id }}">
                                 <a href="{{ route('admin.event_management.edit_event', ['id' => $event->id]) }}"
                                   class="dropdown-item">
                                   {{ __('Edit') }}

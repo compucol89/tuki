@@ -205,16 +205,47 @@ body { background: var(--sk-bg) !important; }
 ══════════════════════════════════════════════════════════════════════ */
 .card {
   background: var(--sk-surface) !important;
-  border: 1px solid var(--sk-border) !important;
   border-radius: var(--sk-radius-lg) !important;
   box-shadow: var(--sk-shadow) !important;
 }
+/* Borde solo cuando Bootstrap NO pone uno propio (border-primary, border-success, etc.) */
+.card:not([class*="border-"]) {
+  border: 1px solid var(--sk-border) !important;
+}
 
-.card-header {
+/* Header neutro (sin clase bg-*) */
+.card-header:not([class*="bg-"]) {
   background: var(--sk-surface) !important;
   border-bottom: 1px solid var(--sk-border) !important;
+}
+.card-header {
   padding: 14px 20px !important;
 }
+
+/* ── Colored card headers → reemplazar colores Bootstrap por nuestra paleta ── */
+/* bg-primary: slate oscuro (coherente con sidebar) */
+.card-header.bg-primary,
+.card.border-primary > .card-header.bg-primary {
+  background: #1e293b !important;
+  border-bottom: none !important;
+  color: #fff !important;
+}
+/* Otros colores semánticos → versiones oscuras de nuestra paleta */
+.card-header.bg-success { background: #064e3b !important; color: #fff !important; border-bottom: none !important; }
+.card-header.bg-danger  { background: #7f1d1d !important; color: #fff !important; border-bottom: none !important; }
+.card-header.bg-warning { background: #78350f !important; color: #fff !important; border-bottom: none !important; }
+.card-header.bg-info    { background: #1e3a5f !important; color: #fff !important; border-bottom: none !important; }
+
+/* Borde de cards border-primary → brand orange en lugar de Bootstrap blue */
+.card.border-primary { border-color: var(--sk-brand) !important; border-width: 1px !important; }
+.card.border-success { border-color: #10b981 !important; border-width: 1px !important; }
+.card.border-danger  { border-color: #ef4444 !important; border-width: 1px !important; }
+.card.border-warning { border-color: #f59e0b !important; border-width: 1px !important; }
+.card.border-info    { border-color: #6366f1 !important; border-width: 1px !important; }
+
+/* Título en headers con color → siempre blanco */
+.card-header[class*="bg-"] .card-title,
+.card-header[class*="bg-"] { color: #fff !important; }
 
 .card-title {
   font-size: 14.5px !important;
@@ -224,32 +255,109 @@ body { background: var(--sk-bg) !important; }
 
 .card-body { padding: 20px !important; }
 
+/* card-footer: solo cuando no lleva clase bg- */
 .card-action,
-.card-footer {
+.card-footer:not([class*="bg-"]) {
   background: #f9fafb !important;
   border-top: 1px solid var(--sk-border) !important;
   padding: 14px 20px !important;
 }
 
-/* KPI stat cards del dashboard */
+/* ══════════════════════════════════════════════════════════════════════
+   KPI STAT CARDS — Modern SaaS (white + left accent border)
+   Sin arcoíris: fondo blanco, número es el héroe, acento en borde izq.
+══════════════════════════════════════════════════════════════════════ */
 .card.card-stats {
+  background: #fff !important;
   border: none !important;
+  border-radius: var(--sk-radius-lg) !important;
+  border-left: 4px solid var(--sk-border) !important; /* default, se sobreescribe abajo */
+  box-shadow: 0 1px 4px rgba(0,0,0,.07) !important;
   transition: transform var(--sk-t), box-shadow var(--sk-t) !important;
+  text-decoration: none !important;
 }
 .card.card-stats:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sk-shadow-md) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,.10) !important;
 }
-.card.card-stats.card-info    { background: linear-gradient(135deg,#3b82f6,#1d4ed8) !important; }
-.card.card-stats.card-success { background: linear-gradient(135deg,#10b981,#059669) !important; }
-.card.card-stats.card-earning { background: linear-gradient(135deg,#f97316,#dc2626) !important; }
-.card.card-stats.card-danger  { background: linear-gradient(135deg,#ef4444,#b91c1c) !important; }
-.card.card-stats.card-warning { background: linear-gradient(135deg,#f59e0b,#d97706) !important; }
-.card.card-stats .card-body *  { color: rgba(255,255,255,.88) !important; }
-.card.card-stats h2,
-.card.card-stats h3,
-.card.card-stats .card-stats .stat-number { color: #fff !important; font-weight: 800 !important; }
-.card.card-stats .icon-big i  { color: rgba(255,255,255,.25) !important; font-size: 46px !important; }
+
+/* Acento izquierdo por tipo — paleta reducida y coherente */
+.card.card-stats.card-info      { border-left-color: #6366f1 !important; } /* indigo  — ingresos/blog */
+.card.card-stats.card-earning   { border-left-color: #10b981 !important; } /* green   — profit */
+.card.card-stats.card-success   { border-left-color: #f97316 !important; } /* orange  — eventos */
+.card.card-stats.card-danger    { border-left-color: #ef4444 !important; } /* red     — categorías/prod */
+.card.card-stats.card-primary   { border-left-color: #3b82f6 !important; } /* blue    — bookings */
+.card.card-stats.card-warning   { border-left-color: #f59e0b !important; } /* amber   — organizers */
+.card.card-stats.card-secondary { border-left-color: #94a3b8 !important; } /* slate   — transacciones */
+.card.card-stats.card-round     { border-radius: var(--sk-radius-lg) !important; }
+
+/* Icono: círculo de fondo suave con color que hace juego */
+.card.card-stats .icon-big {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 14px !important;
+  background: #f1f5f9 !important;
+}
+.card.card-stats.card-info    .icon-big { background: #eef2ff !important; }
+.card.card-stats.card-earning .icon-big { background: #d1fae5 !important; }
+.card.card-stats.card-success .icon-big { background: #fff7ed !important; }
+.card.card-stats.card-danger  .icon-big { background: #fff1f2 !important; }
+.card.card-stats.card-primary .icon-big { background: #eff6ff !important; }
+.card.card-stats.card-warning .icon-big { background: #fffbeb !important; }
+
+.card.card-stats .icon-big i {
+  font-size: 22px !important;
+  color: #94a3b8 !important;
+}
+.card.card-stats.card-info    .icon-big i { color: #6366f1 !important; }
+.card.card-stats.card-earning .icon-big i { color: #10b981 !important; }
+.card.card-stats.card-success .icon-big i { color: #f97316 !important; }
+.card.card-stats.card-danger  .icon-big i { color: #ef4444 !important; }
+.card.card-stats.card-primary .icon-big i { color: #3b82f6 !important; }
+.card.card-stats.card-warning .icon-big i { color: #f59e0b !important; }
+
+/* Números y labels — texto oscuro sobre blanco */
+.card.card-stats .card-title {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.1 !important;
+  margin: 4px 0 0 !important;
+}
+.card.card-stats .card-category {
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+  color: #94a3b8 !important;
+  margin: 0 !important;
+}
+.card.card-stats .col-stats { padding-left: 8px !important; }
+.card.card-stats .card-body {
+  padding: 18px 18px 16px !important;
+}
+
+/* Welcome header del dashboard */
+.dashboard-items ~ * h2,
+.mt-2.mb-4 h2 {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--sk-text) !important;
+  border-bottom: 1px solid var(--sk-border) !important;
+  padding-bottom: 12px !important;
+}
+
+/* Links que envuelven los cards — sin underline ni color raro */
+.dashboard-items a {
+  text-decoration: none !important;
+  display: block !important;
+}
+.dashboard-items .card.card-stats:hover .card-title {
+  color: #0f172a !important;
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    FORMS — sólo dentro de .card-body / .page-inner para no romper navbar
@@ -257,8 +365,9 @@ body { background: var(--sk-bg) !important; }
 .card-body .form-group,
 .page-inner .form-group { margin-bottom: 18px !important; }
 
-.card-body label,
-.page-inner label {
+/* Labels: solo cuando no tienen clase de color Bootstrap explícita */
+.card-body label:not([class*="text-"]),
+.page-inner label:not([class*="text-"]) {
   font-size: 13px !important;
   font-weight: 600 !important;
   color: var(--sk-text) !important;
@@ -410,17 +519,29 @@ body { background: var(--sk-bg) !important; }
 .btn-secondary:hover, .btn-default:hover {
   background: #e5e7eb !important;
 }
-.btn-sm { padding: 5px 12px !important; font-size: 12px !important; border-radius: 6px !important; }
-.btn-lg { padding: 11px 26px !important; font-size: 15px !important; border-radius: 9px !important; }
+.btn-sm  { padding: 5px 12px !important; font-size: 12px !important; border-radius: 6px !important; }
+.btn-xs  { padding: 3px 9px !important; font-size: 11.5px !important; border-radius: 5px !important; }
+.btn-lg  { padding: 11px 26px !important; font-size: 15px !important; border-radius: 9px !important; }
+
+/* Botones de acción en tablas (edit / delete) */
+.btn.btn-xs .btn-label i,
+.btn.btn-sm .btn-label i { font-size: 11px !important; }
+.btn .btn-label { margin-right: 0 !important; }
+/* Solo icono (sin texto) */
+.btn.btn-xs.editBtn,
+.btn.btn-xs.deleteBtn { width: 30px; height: 28px; padding: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; }
 
 /* ══════════════════════════════════════════════════════════════════════
    TABLES
 ══════════════════════════════════════════════════════════════════════ */
 .table { font-size: 13.5px !important; color: var(--sk-text) !important; }
-.table thead th {
+/* th sin bg-* Bootstrap: ponemos fondo gris suave */
+.table thead th:not([class*="bg-"]) {
   background: #f9fafb !important;
-  border-bottom: 2px solid var(--sk-border) !important;
   color: var(--sk-muted) !important;
+}
+.table thead th {
+  border-bottom: 2px solid var(--sk-border) !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
@@ -432,7 +553,8 @@ body { background: var(--sk-bg) !important; }
   padding: 10px 14px !important;
   vertical-align: middle !important;
 }
-.table-hover tbody tr:hover td { background: #fff7ed !important; }
+/* Hover: solo filas sin bg-* propio */
+.table-hover tbody tr:not([class*="bg-"]):hover td { background: #fff7ed !important; }
 
 /* DataTables */
 .dataTables_wrapper .dataTables_filter input,
@@ -518,7 +640,90 @@ body { background: var(--sk-bg) !important; }
    MISC
 ══════════════════════════════════════════════════════════════════════ */
 hr { border-color: var(--sk-border) !important; }
-.text-warning { color: var(--sk-brand) !important; }
+
+/* ── LIST GROUP (menu-builder y otros) ──────────────────────────────── */
+.list-group { border-radius: var(--sk-radius) !important; overflow: hidden; }
+.list-group-item {
+  border-color: var(--sk-border) !important;
+  padding: 10px 16px !important;
+  font-size: 13.5px !important;
+  color: var(--sk-text) !important;
+  background: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  transition: background var(--sk-t) !important;
+}
+.list-group-item:first-child { border-radius: var(--sk-radius) var(--sk-radius) 0 0 !important; }
+.list-group-item:last-child  { border-radius: 0 0 var(--sk-radius) var(--sk-radius) !important; }
+.list-group-item:hover { background: #fafafa !important; }
+/* Botón "Add To Menus" dentro del list-group-item */
+.list-group-item .btn.float-right {
+  float: none !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+/* Badge "Custom Page" dentro del list-group-item */
+.list-group-item .badge { flex-shrink: 0 !important; }
+/* Nombre del ítem */
+.list-group-item > span:first-child,
+.list-group-item > *:not(.btn):not(.badge) { flex: 1 1 auto !important; }
+
+/* ── SORTABLE MENU EDITOR (columna Website Menus) ──────────────────── */
+#myMenuEditor,
+.sortableLists { padding: 0 !important; list-style: none !important; margin: 0 !important; }
+
+/* Items de primer nivel */
+.sortableLists > li {
+  background: #fff !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius) !important;
+  margin-bottom: 6px !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  transition: box-shadow var(--sk-t), border-color var(--sk-t) !important;
+}
+.sortableLists > li:hover { box-shadow: var(--sk-shadow-md) !important; border-color: var(--sk-brand) !important; }
+
+/* Row interna del ítem (el plugin genera una fila) */
+.sortableLists .sl-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 9px 12px !important;
+  gap: 8px !important;
+}
+/* Icono de arrastre */
+.sortableLists .moveBtn,
+.sortableLists [class*="handle"],
+.sortableLists .fa-ellipsis-v {
+  color: #cbd5e1 !important;
+  cursor: grab !important;
+  font-size: 14px !important;
+}
+/* Nombre del ítem */
+.sortableLists .sl-item-name {
+  flex: 1 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--sk-text) !important;
+}
+/* Botones edit/delete dentro del ítem */
+.sortableLists .btn-item-edit,
+.sortableLists .btn-item-delete,
+.sortableLists [class*="editBtn"],
+.sortableLists [class*="deleteBtn"] {
+  font-size: 12px !important;
+  padding: 3px 8px !important;
+  border-radius: 5px !important;
+}
+/* Sub-ítems (nivel 2) */
+.sortableLists .sl-sub-items {
+  margin-left: 20px !important;
+  border-left: 2px solid var(--sk-border) !important;
+  padding-left: 8px !important;
+}
+
 .input-group-text {
   border: 1px solid #d1d5db !important;
   background: #f9fafb !important;
@@ -526,8 +731,469 @@ hr { border-color: var(--sk-border) !important; }
   border-radius: var(--sk-radius) !important;
 }
 
+/* ══════════════════════════════════════════════════════════════════════
+   CARD HEADER — layout con botones de acción (patrón global admin)
+══════════════════════════════════════════════════════════════════════ */
+/* El card-header suele tener un row con title + lang selector + botones */
+.card-header .row { align-items: center !important; }
+/* Botón primario de acción flotante */
+.card-header .btn { margin-top: 0 !important; }
+/* Card-footer vacío: ocultar para no dejar espacio muerto */
+.card-footer:empty { display: none !important; }
+/* Separación entre botones en el header */
+.card-header .btn + .btn { margin-left: 6px !important; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   TABLAS — mejoras específicas para páginas de gestión
+══════════════════════════════════════════════════════════════════════ */
+/* Checkbox en tabla */
+.table input[type="checkbox"] {
+  width: 15px !important;
+  height: 15px !important;
+  cursor: pointer !important;
+  accent-color: var(--sk-brand) !important;
+}
+
+/* Imágenes en tabla (clase Atlantis mh60) */
+.mh60 {
+  max-height: 48px !important;
+  width: auto !important;
+  border-radius: 6px !important;
+  object-fit: cover !important;
+  border: 1px solid var(--sk-border) !important;
+}
+
+/* Columna de acciones — no wrap, alineada */
+.table td:last-child {
+  white-space: nowrap !important;
+}
+
+/* Badges dentro de h2.d-inline-block (patrón feo del blade original) */
+h2.d-inline-block {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+  margin: 0 !important;
+  display: inline !important;
+}
+
+/* Empty state cuando no hay datos */
+.card-body h3.text-center {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: var(--sk-muted) !important;
+  padding: 40px 0 !important;
+  margin: 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MODALES — mejoras globales (aplican a todas las páginas)
+══════════════════════════════════════════════════════════════════════ */
+.modal-body {
+  padding: 22px 24px !important;
+}
+.modal-body .form-group:last-child { margin-bottom: 0 !important; }
+
+/* Mensajes de error inline (p.text-danger.em) */
+p.text-danger.em, .em.text-danger {
+  font-size: 12px !important;
+  color: #ef4444 !important;
+  margin-top: 4px !important;
+  font-weight: 500 !important;
+}
+
+/* Hint / helper text (p.text-warning small) */
+p.text-warning small, .text-warning small {
+  font-size: 11.5px !important;
+  color: var(--sk-brand) !important;
+  font-weight: 400 !important;
+}
+
+/* Modal close button */
+.modal-header .close {
+  font-size: 18px !important;
+  color: var(--sk-muted) !important;
+  opacity: 1 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  line-height: 1 !important;
+}
+.modal-header .close:hover { color: var(--sk-text) !important; }
+
+/* Modal footer alineación */
+.modal-footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+}
+.modal-footer .btn { margin: 0 !important; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   LANGUAGE SELECTOR (backend.partials.languages)
+══════════════════════════════════════════════════════════════════════ */
+.card-header select.form-control {
+  height: 34px !important;
+  padding: 4px 10px !important;
+  font-size: 12.5px !important;
+  border-radius: var(--sk-radius) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY — base global
+══════════════════════════════════════════════════════════════════════ */
+/* ── Font smoothing global — todo el admin ─────────────────────────── */
+*,
+*::before,
+*::after {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+body, .page-inner {
+  font-size: 13.5px !important;
+  color: var(--sk-text) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6,
+.page-title, .card-title, .modal-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Labels y texto de interfaz */
+label, .btn, .badge, .nav-link,
+.dropdown-item, .page-link,
+.card-category, .breadcrumbs a {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SELECTS DE STATUS EN TABLA (bg-primary / bg-success / bg-warning / bg-danger)
+   Reemplaza colores sólidos garish por pills semánticas sutiles
+══════════════════════════════════════════════════════════════════════ */
+select.form-control.bg-primary,
+select.form-control.bg-info {
+  background: #eff6ff !important;
+  color: #1d4ed8 !important;
+  border: 1.5px solid #bfdbfe !important;
+  font-weight: 600 !important;
+}
+select.form-control.bg-success {
+  background: #f0fdf4 !important;
+  color: #15803d !important;
+  border: 1.5px solid #bbf7d0 !important;
+  font-weight: 600 !important;
+}
+select.form-control.bg-warning {
+  background: #fffbeb !important;
+  color: #92400e !important;
+  border: 1.5px solid #fde68a !important;
+  font-weight: 600 !important;
+}
+select.form-control.bg-danger {
+  background: #fff1f2 !important;
+  color: #be123c !important;
+  border: 1.5px solid #fecdd3 !important;
+  font-weight: 600 !important;
+}
+/* form-control-sm */
+.form-control-sm,
+select.form-control-sm {
+  height: auto !important;
+  padding: 5px 10px !important;
+  font-size: 12.5px !important;
+  border-radius: 6px !important;
+  min-width: 100px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DROPDOWNS — menú contextual por fila (acciones)
+══════════════════════════════════════════════════════════════════════ */
+.dropdown-menu {
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.10) !important;
+  padding: 5px !important;
+  min-width: 160px !important;
+  background: #fff !important;
+}
+.dropdown-item {
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--sk-text) !important;
+  transition: background var(--sk-t), color var(--sk-t) !important;
+}
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: #f9fafb !important;
+  color: var(--sk-brand) !important;
+}
+/* Separador */
+.dropdown-divider {
+  border-color: var(--sk-border) !important;
+  margin: 4px 0 !important;
+}
+/* Botón delete dentro del dropdown */
+.dropdown-menu .deleteBtn,
+.dropdown-menu form button.btn {
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #ef4444 !important;
+  cursor: pointer !important;
+  transition: background var(--sk-t) !important;
+}
+.dropdown-menu .deleteBtn:hover,
+.dropdown-menu form button.btn:hover {
+  background: #fff1f2 !important;
+  color: #dc2626 !important;
+}
+/* Toggle button de acción por fila */
+.table .btn-secondary.dropdown-toggle {
+  background: #f8fafc !important;
+  border: 1px solid var(--sk-border) !important;
+  color: var(--sk-text) !important;
+  font-size: 12px !important;
+  padding: 4px 10px !important;
+  border-radius: 6px !important;
+}
+.table .btn-secondary.dropdown-toggle:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+/* Botón "Add Event" en card header → naranja */
+.card-header .dropdown > .btn-secondary.dropdown-toggle {
+  background: var(--sk-brand) !important;
+  border-color: var(--sk-brand) !important;
+  color: #fff !important;
+}
+.card-header .dropdown > .btn-secondary.dropdown-toggle:hover {
+  background: var(--sk-brand-dk) !important;
+  border-color: var(--sk-brand-dk) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   BARRA DE BÚSQUEDA en card-body (float-right pattern)
+══════════════════════════════════════════════════════════════════════ */
+.card-body > .row > .col-lg-12 > .float-right,
+.card-body .float-right:has(input[name="title"]),
+.card-body .float-right:has(.form-group) {
+  float: none !important;
+  margin-bottom: 14px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+.card-body .float-right .form-group {
+  margin-bottom: 0 !important;
+  min-width: 240px !important;
+}
+.card-body .float-right input[type="text"].form-control {
+  padding-left: 36px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 12px center !important;
+  background-size: 14px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   LINKS EN TABLA
+══════════════════════════════════════════════════════════════════════ */
+/* Links generales en tabla (organizer, etc.) */
+.table tbody td a:not(.btn) {
+  color: #1e2532 !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  transition: color var(--sk-t) !important;
+}
+.table tbody td a:not(.btn):hover {
+  color: var(--sk-brand) !important;
+  text-decoration: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   PAGINACIÓN LARAVEL
+══════════════════════════════════════════════════════════════════════ */
+.pagination {
+  display: flex !important;
+  gap: 4px !important;
+  flex-wrap: wrap !important;
+  padding: 0 !important;
+  margin: 8px 0 0 !important;
+  justify-content: center !important;
+}
+.page-item .page-link {
+  border: 1px solid var(--sk-border) !important;
+  border-radius: 7px !important;
+  color: var(--sk-text) !important;
+  padding: 6px 13px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  background: #fff !important;
+  transition: all var(--sk-t) !important;
+  line-height: 1.4 !important;
+}
+.page-item .page-link:hover {
+  background: #f9fafb !important;
+  border-color: var(--sk-brand) !important;
+  color: var(--sk-brand) !important;
+}
+.page-item.active .page-link {
+  background: var(--sk-brand) !important;
+  border-color: var(--sk-brand) !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(249,115,22,.3) !important;
+}
+.page-item.disabled .page-link {
+  color: #d1d5db !important;
+  background: #fafafa !important;
+  border-color: var(--sk-border) !important;
+  cursor: not-allowed !important;
+}
+/* Card-footer con paginación */
+.card-footer .d-inline-block { margin-top: 0 !important; }
+.card-footer:has(.pagination) {
+  display: block !important;
+  padding: 14px 20px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   TABLE STRIPED — filas alternadas sutiles
+══════════════════════════════════════════════════════════════════════ */
+.table-striped tbody tr:nth-of-type(odd) td {
+  background: #fafafa !important;
+}
+.table-striped tbody tr:nth-of-type(even) td {
+  background: #fff !important;
+}
+
 /* Scrollbar global */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   UPLOADED-IMG / UPLOADED-IMG2 — preview de imágenes en forms
+══════════════════════════════════════════════════════════════════════ */
+.uploaded-img,
+.uploaded-img2 {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  border-radius: calc(var(--sk-radius) - 2px) !important;
+  object-fit: cover !important;
+}
+/* thumb-preview grande para ticket image (ratio aprox. 255x390) */
+.thumb-preview:has(.uploaded-img2) {
+  max-width: 140px !important;
+  aspect-ratio: 255 / 390 !important;
+  height: auto !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SUMMERNOTE — editor de texto enriquecido
+══════════════════════════════════════════════════════════════════════ */
+.note-editor.note-frame {
+  border: 1px solid #d1d5db !important;
+  border-radius: var(--sk-radius) !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+}
+.note-editor.note-frame:focus-within {
+  border-color: var(--sk-brand) !important;
+  box-shadow: 0 0 0 3px rgba(249,115,22,.12) !important;
+}
+.note-toolbar {
+  background: #f9fafb !important;
+  border-bottom: 1px solid var(--sk-border) !important;
+  padding: 6px 8px !important;
+}
+.note-toolbar .btn-group > .btn,
+.note-toolbar .btn {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 5px !important;
+  color: var(--sk-muted) !important;
+  font-size: 12px !important;
+  padding: 4px 7px !important;
+}
+.note-toolbar .btn:hover,
+.note-toolbar .btn.active {
+  background: var(--sk-border) !important;
+  color: var(--sk-text) !important;
+  border-color: var(--sk-border) !important;
+}
+.note-editable {
+  background: #fff !important;
+  color: var(--sk-text) !important;
+  font-size: 13.5px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  padding: 14px 16px !important;
+  min-height: 200px !important;
+}
+.note-statusbar {
+  background: #f9fafb !important;
+  border-top: 1px solid var(--sk-border) !important;
+}
+.note-placeholder {
+  color: #9ca3af !important;
+  font-style: normal !important;
+  padding: 14px 16px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   CARD-FOOTER CON SUBMIT CENTRADO — ticket-settings y similares
+══════════════════════════════════════════════════════════════════════ */
+.card-footer .text-center .btn,
+.card-footer .col-12.text-center .btn {
+  min-width: 160px !important;
+  padding: 10px 28px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: .01em !important;
+  border-radius: 8px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SECCIONES DE FORMULARIO — separación visual entre bloques
+   (ticket image, ticket logo, instructions)
+══════════════════════════════════════════════════════════════════════ */
+.card-body .col-lg-8 .col-md-12 + .col-md-12 {
+  margin-top: 8px !important;
+}
+/* Separador visual entre secciones de upload */
+.card-body .col-md-12:has(.thumb-preview) {
+  padding: 18px 20px !important;
+  background: #fafafa !important;
+  border: 1px solid var(--sk-border) !important;
+  border-radius: var(--sk-radius) !important;
+  margin-bottom: 18px !important;
+}
+/* Label de sección de upload */
+.card-body .col-md-12:has(.thumb-preview) > .form-group > label {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--sk-text) !important;
+  margin-bottom: 10px !important;
+  display: block !important;
+}
+/* Hint de tamaño de imagen */
+.card-body p.text-warning:not(.em) {
+  font-size: 11.5px !important;
+  color: var(--sk-muted) !important;
+  font-weight: 400 !important;
+  margin-top: 6px !important;
+}

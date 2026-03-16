@@ -35,4 +35,4 @@
 <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-main.css') }}">
 
 {{-- admin skin: Modern SaaS UI override --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/admin-skin.css') }}"><?php /* v2 */ ?>
+<link rel="stylesheet" href="{{ asset('assets/admin/css/admin-skin.css') }}"><?php /* v10 */ ?>

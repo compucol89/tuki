@@ -1,3 +1,8 @@
+@php
+  $previousLocale = app()->getLocale();
+  app()->setLocale('admin');
+@endphp
+
 <div class="sidebar sidebar-style-2"
   data-background-color="{{ $settings->admin_theme_version == 'light' ? 'white' : 'dark2' }}">
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -1209,3 +1214,7 @@
     </div>
   </div>
 </div>
+
+@php
+  app()->setLocale($previousLocale);
+@endphp

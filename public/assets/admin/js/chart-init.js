@@ -1,5 +1,13 @@
 'use strict';
 
+/* ─────────────────────────────────────────────────────────────────────
+   Brand palette — coherente con admin-skin.css
+   chart1: orange  #f97316  — ingresos eventos
+   chart2: indigo  #6366f1  — bookings eventos
+   chart3: emerald #10b981  — ingresos productos
+   chart4: blue    #3b82f6  — pedidos productos
+───────────────────────────────────────────────────────────────────── */
+
 const chartOne = document.getElementById('incomeChart').getContext('2d');
 const myIncomeChart = new Chart(chartOne, {
   type: 'line',
@@ -8,16 +16,16 @@ const myIncomeChart = new Chart(chartOne, {
     datasets: [{
       label: 'Monthly Income',
       data: incomeArr,
-      borderColor: '#1d7af3',
-      pointBorderColor: '#FFF',
-      pointBackgroundColor: '#1d7af3',
+      borderColor: '#f97316',
+      pointBorderColor: '#fff',
+      pointBackgroundColor: '#f97316',
       pointBorderWidth: 2,
-      pointHoverRadius: 4,
+      pointHoverRadius: 5,
       pointHoverBorderWidth: 1,
       pointRadius: 4,
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(249,115,22,.08)',
       fill: true,
-      borderWidth: 2
+      borderWidth: 2.5
     }]
   },
   options: {
@@ -25,27 +33,16 @@ const myIncomeChart = new Chart(chartOne, {
     maintainAspectRatio: false,
     legend: {
       position: 'bottom',
-      labels: {
-        padding: 10,
-        fontColor: '#1d7af3'
-      }
+      labels: { padding: 10, fontColor: '#6b7280', fontSize: 12 }
     },
     tooltips: {
-      bodySpacing: 4,
-      mode: 'nearest',
-      intersect: 0,
-      position: 'nearest',
-      xPadding: 10,
-      yPadding: 10,
-      caretPadding: 10
+      bodySpacing: 4, mode: 'nearest', intersect: 0,
+      position: 'nearest', xPadding: 10, yPadding: 10, caretPadding: 10
     },
-    layout: {
-      padding: {
-        left: 15,
-        right: 15,
-        top: 15,
-        bottom: 15
-      }
+    layout: { padding: { left: 15, right: 15, top: 15, bottom: 15 } },
+    scales: {
+      xAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { fontColor: '#9ca3af', fontSize: 11 } }],
+      yAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { fontColor: '#9ca3af', fontSize: 11 } }]
     }
   }
 });
@@ -58,16 +55,16 @@ const myEventBookingChart = new Chart(chartTwo, {
     datasets: [{
       label: 'Monthly Event Bookings',
       data: totalBookings,
-      borderColor: '#6861CE ',
-      pointBorderColor: '#FFF',
-      pointBackgroundColor: '#6861CE ',
+      borderColor: '#6366f1',
+      pointBorderColor: '#fff',
+      pointBackgroundColor: '#6366f1',
       pointBorderWidth: 2,
-      pointHoverRadius: 4,
+      pointHoverRadius: 5,
       pointHoverBorderWidth: 1,
       pointRadius: 4,
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(99,102,241,.08)',
       fill: true,
-      borderWidth: 2
+      borderWidth: 2.5
     }]
   },
   options: {
@@ -75,39 +72,19 @@ const myEventBookingChart = new Chart(chartTwo, {
     maintainAspectRatio: false,
     legend: {
       position: 'bottom',
-      labels: {
-        padding: 10,
-        fontColor: '#6861CE'
-      }
+      labels: { padding: 10, fontColor: '#6b7280', fontSize: 12 }
     },
     tooltips: {
-      bodySpacing: 4,
-      mode: 'nearest',
-      intersect: 0,
-      position: 'nearest',
-      xPadding: 10,
-      yPadding: 10,
-      caretPadding: 10
+      bodySpacing: 4, mode: 'nearest', intersect: 0,
+      position: 'nearest', xPadding: 10, yPadding: 10, caretPadding: 10
     },
-    layout: {
-      padding: {
-        left: 15,
-        right: 15,
-        top: 15,
-        bottom: 15
-      }
-    },
+    layout: { padding: { left: 15, right: 15, top: 15, bottom: 15 } },
     scales: {
-      yAxes: [{
-        ticks: {
-          stepSize: 1
-        }
-      }]
+      xAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { fontColor: '#9ca3af', fontSize: 11 } }],
+      yAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { stepSize: 1, fontColor: '#9ca3af', fontSize: 11 } }]
     }
   }
 });
-
-
 
 const chartThree = document.getElementById('ProductOrderChart').getContext('2d');
 const ProductOrderChart = new Chart(chartThree, {
@@ -117,16 +94,16 @@ const ProductOrderChart = new Chart(chartThree, {
     datasets: [{
       label: 'Monthly Income',
       data: productIncome,
-      borderColor: '#01a100',
-      pointBorderColor: '#FFF',
-      pointBackgroundColor: '#01a100',
+      borderColor: '#10b981',
+      pointBorderColor: '#fff',
+      pointBackgroundColor: '#10b981',
       pointBorderWidth: 2,
-      pointHoverRadius: 4,
+      pointHoverRadius: 5,
       pointHoverBorderWidth: 1,
       pointRadius: 4,
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(16,185,129,.08)',
       fill: true,
-      borderWidth: 2
+      borderWidth: 2.5
     }]
   },
   options: {
@@ -134,27 +111,16 @@ const ProductOrderChart = new Chart(chartThree, {
     maintainAspectRatio: false,
     legend: {
       position: 'bottom',
-      labels: {
-        padding: 10,
-        fontColor: '#01a100'
-      }
+      labels: { padding: 10, fontColor: '#6b7280', fontSize: 12 }
     },
     tooltips: {
-      bodySpacing: 4,
-      mode: 'nearest',
-      intersect: 0,
-      position: 'nearest',
-      xPadding: 10,
-      yPadding: 10,
-      caretPadding: 10
+      bodySpacing: 4, mode: 'nearest', intersect: 0,
+      position: 'nearest', xPadding: 10, yPadding: 10, caretPadding: 10
     },
-    layout: {
-      padding: {
-        left: 15,
-        right: 15,
-        top: 15,
-        bottom: 15
-      }
+    layout: { padding: { left: 15, right: 15, top: 15, bottom: 15 } },
+    scales: {
+      xAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { fontColor: '#9ca3af', fontSize: 11 } }],
+      yAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { fontColor: '#9ca3af', fontSize: 11 } }]
     }
   }
 });
@@ -167,16 +133,16 @@ const TotalProductOrderChart = new Chart(chartFour, {
     datasets: [{
       label: 'Monthly Product Order',
       data: totalOders,
-      borderColor: '#fcbd00',
-      pointBorderColor: '#FFF',
-      pointBackgroundColor: '#fcbd00',
+      borderColor: '#3b82f6',
+      pointBorderColor: '#fff',
+      pointBackgroundColor: '#3b82f6',
       pointBorderWidth: 2,
-      pointHoverRadius: 4,
+      pointHoverRadius: 5,
       pointHoverBorderWidth: 1,
       pointRadius: 4,
-      backgroundColor: 'transparent',
+      backgroundColor: 'rgba(59,130,246,.08)',
       fill: true,
-      borderWidth: 2
+      borderWidth: 2.5
     }]
   },
   options: {
@@ -184,34 +150,16 @@ const TotalProductOrderChart = new Chart(chartFour, {
     maintainAspectRatio: false,
     legend: {
       position: 'bottom',
-      labels: {
-        padding: 10,
-        fontColor: '#fcbd00'
-      }
+      labels: { padding: 10, fontColor: '#6b7280', fontSize: 12 }
     },
     tooltips: {
-      bodySpacing: 4,
-      mode: 'nearest',
-      intersect: 0,
-      position: 'nearest',
-      xPadding: 10,
-      yPadding: 10,
-      caretPadding: 10
+      bodySpacing: 4, mode: 'nearest', intersect: 0,
+      position: 'nearest', xPadding: 10, yPadding: 10, caretPadding: 10
     },
-    layout: {
-      padding: {
-        left: 15,
-        right: 15,
-        top: 15,
-        bottom: 15
-      }
-    },
+    layout: { padding: { left: 15, right: 15, top: 15, bottom: 15 } },
     scales: {
-      yAxes: [{
-        ticks: {
-          stepSize: 1
-        }
-      }]
+      xAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { fontColor: '#9ca3af', fontSize: 11 } }],
+      yAxes: [{ gridLines: { color: 'rgba(0,0,0,.04)' }, ticks: { stepSize: 1, fontColor: '#9ca3af', fontSize: 11 } }]
     }
   }
 });

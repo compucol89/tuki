@@ -167,6 +167,7 @@
                             <th><a href="javascrit:void(0)" class="btn btn-success addDateRow"><i
                                   class="fas fa-plus-circle"></i></a></th>
                           </tr>
+                        </thead>
                         <tbody>
                           <tr>
                             <td>
@@ -199,7 +200,6 @@
                             </td>
                           </tr>
                         </tbody>
-                        </thead>
                       </table>
                     </div>
                   </div>
@@ -424,11 +424,7 @@
                             <div class="col-lg-6">
                               <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
                                 @php
-                                  $categories = DB::table('event_categories')
-                                      ->where('language_id', $language->id)
-                                      ->where('status', 1)
-                                      ->orderBy('serial_number', 'asc')
-                                      ->get();
+                                  $categories = $categoriesByLang->get($language->id, collect());
                                 @endphp
 
                                 <label for="">{{ __('Category') . '*' }}</label>
@@ -637,7 +633,7 @@
     $languages = App\Models\Language::get();
   @endphp
   <script>
-    let languages = "{{ $languages }}";
+    let languages = @json($languages);
   </script>
   <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
   <script src="{{ asset('assets/admin/js/admin_dropzone.js') }}"></script>

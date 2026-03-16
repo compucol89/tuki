@@ -14,6 +14,7 @@ use App\Models\Event;
 use App\Models\Event\EventImage;
 use App\Models\Event\EventContent;
 use App\Models\Event\EventDates;
+use App\Models\Event\EventCategory;
 use App\Models\Event\Ticket;
 use App\Models\Organizer;
 use App\Models\State;
@@ -44,7 +45,8 @@ class EventController extends Controller
       $title = request()->input('title');
     }
 
-    $events = Event::join('event_contents', 'event_contents.event_id', '=', 'events.id')
+    $events = Event::with('organizer')
+      ->join('event_contents', 'event_contents.event_id', '=', 'events.id')
       ->join('event_categories', 'event_categories.id', '=', 'event_contents.event_category_id')
       ->where('event_contents.language_id', '=', $language->id)
       ->when($title, function ($query) use ($title) {
@@ -77,6 +79,10 @@ class EventController extends Controller
     $information['organizers'] = $organizers;
 
     $information['getCurrencyInfo']  = $this->getCurrencyInfo();
+    $information['categoriesByLang'] = EventCategory::where('status', 1)
+      ->orderBy('serial_number', 'asc')
+      ->get()
+      ->groupBy('language_id');
 
     return view('backend.event.create', $information);
   }

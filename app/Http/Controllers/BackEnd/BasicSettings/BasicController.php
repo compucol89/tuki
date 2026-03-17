@@ -977,7 +977,10 @@ class BasicController extends Controller
     }
 
     if ($request->hasFile('logo')) {
-      $logoName = UploadFile::update(public_path('assets/admin/img/'), $request->file('logo'), $data->logo);
+      $logoExt = $request->file('logo')->getClientOriginalExtension();
+      $logoName = 'logo.' . $logoExt;
+      @unlink(public_path('assets/admin/img/' . $data->logo));
+      $request->file('logo')->move(public_path('assets/admin/img/'), $logoName);
     } else {
       $logoName = $data->logo;
     }
@@ -988,7 +991,10 @@ class BasicController extends Controller
     }
 
     if ($request->hasFile('favicon')) {
-      $iconName = UploadFile::update(public_path('assets/admin/img/'), $request->file('favicon'), $data->favicon);
+      $iconExt = $request->file('favicon')->getClientOriginalExtension();
+      $iconName = 'favicon.' . $iconExt;
+      @unlink(public_path('assets/admin/img/' . $data->favicon));
+      $request->file('favicon')->move(public_path('assets/admin/img/'), $iconName);
     } else {
       $iconName = $data->favicon;
     }

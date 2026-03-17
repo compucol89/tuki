@@ -1,1 +1,225 @@
 /* admin-skin.css — custom overrides over Atlantis */
+
+/* =============================================
+   TIPOGRAFÍA — Inter en todo el admin
+   ============================================= */
+body,
+.card,
+.form-control,
+label,
+.btn,
+.nav-item,
+.sidebar-wrapper,
+.main-header,
+.page-title,
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* =============================================
+   EV-SECTION-CARD — tarjeta de sección
+   ============================================= */
+.ev-section-card {
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  margin-bottom: 24px !important;
+  overflow: hidden;
+}
+
+.ev-section-card .card-body {
+  padding: 28px 32px !important;
+}
+
+/* =============================================
+   EV-SECTION-HEADER — cabecera de sección
+   ============================================= */
+.ev-section-header {
+  background: #f8f9fc !important;
+  border-bottom: 1px solid #eaecf0 !important;
+  padding: 16px 32px !important;
+}
+
+.ev-section-header .card-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  letter-spacing: 0.01em !important;
+  margin: 0 !important;
+  text-transform: none !important;
+}
+
+.ev-section-header .card-title i {
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+/* =============================================
+   EV-LABEL-SECTION — etiqueta de subsección
+   ============================================= */
+.ev-label-section {
+  display: block;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #9ca3af !important;
+  margin-bottom: 10px !important;
+}
+
+/* =============================================
+   EV-SUBSECTION-TITLE — título interno
+   ============================================= */
+.ev-subsection-title {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #4b5563 !important;
+  margin-bottom: 14px !important;
+}
+
+/* =============================================
+   EV-DIVIDER — separador visual
+   ============================================= */
+.ev-divider {
+  border: none;
+  border-top: 1px solid #f0f1f5;
+  margin: 24px 0 !important;
+}
+
+/* =============================================
+   EV-THUMBNAIL-PREVIEW — vista previa miniatura
+   ============================================= */
+.ev-thumbnail-preview {
+  width: 120px !important;
+  height: 88px !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+  border: 2px solid #e5e7eb !important;
+  display: block;
+}
+
+/* =============================================
+   EV-ACCORDION-BTN — acordeón de idiomas
+   ============================================= */
+.ev-accordion-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  cursor: pointer;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.ev-accordion-btn:hover,
+.ev-accordion-btn:focus {
+  color: #4361ee !important;
+  text-decoration: none !important;
+  background: transparent !important;
+}
+
+.ev-accordion-btn i.fa-chevron-down {
+  transition: transform 0.25s ease;
+}
+
+.ev-accordion-btn.collapsed i.fa-chevron-down {
+  transform: rotate(-90deg);
+}
+
+/* =============================================
+   MEJORAS GLOBALES — inputs y labels
+   ============================================= */
+.form-control {
+  border-radius: 7px !important;
+  border-color: #d1d5db !important;
+  font-size: 13px !important;
+  color: #374151 !important;
+  transition: border-color 0.18s, box-shadow 0.18s !important;
+}
+
+.form-control:focus {
+  border-color: #4361ee !important;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12) !important;
+}
+
+.form-group > label:first-child {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #6b7280 !important;
+  margin-bottom: 6px !important;
+  letter-spacing: 0.01em;
+}
+
+/* =============================================
+   BOTONES — refinamiento
+   ============================================= */
+.btn {
+  border-radius: 7px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em;
+  transition: all 0.18s ease !important;
+}
+
+.btn-primary {
+  background: #4361ee !important;
+  border-color: #4361ee !important;
+}
+
+.btn-primary:hover {
+  background: #3451d1 !important;
+  border-color: #3451d1 !important;
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3) !important;
+}
+
+.btn-lg {
+  padding: 10px 28px !important;
+  font-size: 14px !important;
+}
+
+/* =============================================
+   SELECT2 — alineación con el resto
+   ============================================= */
+.select2-container--default .select2-selection--single {
+  border-radius: 7px !important;
+  border-color: #d1d5db !important;
+  height: 38px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 38px !important;
+  font-size: 13px !important;
+  color: #374151 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 36px !important;
+}
+
+/* =============================================
+   SELECTGROUP — radio group pills
+   ============================================= */
+.selectgroup-button {
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* =============================================
+   PAGE HEADER — título de página
+   ============================================= */
+.page-header {
+  margin-bottom: 28px !important;
+}
+
+.page-header .page-title {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+}

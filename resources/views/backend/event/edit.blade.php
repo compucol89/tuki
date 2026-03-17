@@ -1,6 +1,7 @@
 @extends('backend.layout')
 
 @section('content')
+<div class="event-edit-page">
   {{-- Page Header --}}
   <div class="page-header">
     <h4 class="page-title">{{ __('Edit Event') }}</h4>
@@ -707,6 +708,7 @@
     </div>{{-- /row --}}
   </form>
 
+</div>{{-- /event-edit-page --}}
 @endsection
 
 @section('script')

@@ -1,1 +1,249 @@
-/* admin-skin.css — custom overrides over Atlantis */
+/* admin-skin.css — Tukipass Admin · Event Edit Page styles */
+
+/* ============================================================
+   SCOPE: .event-edit-page — solo formulario editar/crear evento
+   ============================================================ */
+
+/* ----- Cards ----- */
+.event-edit-page .card {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+
+.event-edit-page .card-header {
+  background: #fff;
+  border-bottom: 1px solid #f1f3f5;
+  padding: 16px 22px 14px;
+}
+
+.event-edit-page .card-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 2px;
+  letter-spacing: 0.01em;
+}
+
+.event-edit-page .card-category {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 400;
+}
+
+.event-edit-page .card-body {
+  padding: 22px;
+  background: #fff;
+}
+
+/* ----- Labels ----- */
+.event-edit-page label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* ----- Form controls ----- */
+.event-edit-page .form-control {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 13.5px;
+  color: #1f2937;
+  background: #f9fafb;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  height: auto;
+}
+
+.event-edit-page .form-control:focus {
+  border-color: #4f8ef7;
+  box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.13);
+  background: #fff;
+  outline: none;
+  color: #111827;
+}
+
+.event-edit-page .form-control::placeholder {
+  color: #c0c6d0;
+  font-weight: 400;
+}
+
+.event-edit-page select.form-control {
+  appearance: auto;
+}
+
+/* ----- Form group spacing ----- */
+.event-edit-page .form-group {
+  margin-bottom: 20px;
+}
+
+/* ----- Select2 ----- */
+.event-edit-page .select2-container--default .select2-selection--single {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  height: 40px;
+  background: #f9fafb;
+}
+
+.event-edit-page .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 38px;
+  font-size: 13.5px;
+  color: #1f2937;
+  padding-left: 13px;
+}
+
+.event-edit-page .select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 38px;
+}
+
+/* ----- Selectgroup (toggle pills) ----- */
+.event-edit-page .selectgroup-button {
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 1.5px solid #e5e7eb;
+  color: #6b7280;
+  background: #f9fafb;
+  transition: all 0.15s ease;
+  letter-spacing: 0.02em;
+}
+
+.event-edit-page .selectgroup-input:checked + .selectgroup-button {
+  background: #4f8ef7;
+  border-color: #4f8ef7;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(79, 142, 247, 0.35);
+}
+
+/* ----- Buttons ----- */
+.event-edit-page .btn {
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  transition: all 0.18s ease;
+}
+
+.event-edit-page .btn-primary {
+  background: linear-gradient(135deg, #4f8ef7 0%, #3b74d4 100%);
+  border: none;
+  box-shadow: 0 2px 10px rgba(79, 142, 247, 0.3);
+}
+
+.event-edit-page .btn-primary:hover,
+.event-edit-page .btn-primary:focus {
+  background: linear-gradient(135deg, #3b7ef0 0%, #2f62c2 100%);
+  box-shadow: 0 4px 16px rgba(79, 142, 247, 0.45);
+  transform: translateY(-1px);
+}
+
+.event-edit-page .btn-block {
+  padding: 12px;
+  font-size: 14px;
+}
+
+.event-edit-page .btn-success {
+  border-radius: 8px;
+}
+
+.event-edit-page .btn-secondary {
+  border-radius: 8px;
+}
+
+/* ----- Action bar (top buttons row) ----- */
+.event-edit-page .d-flex.justify-content-between {
+  margin-bottom: 20px;
+}
+
+/* ----- Thumbnail preview ----- */
+.event-edit-page .thumb-preview .uploaded-img {
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+  max-height: 130px;
+  object-fit: cover;
+}
+
+/* ----- Dropzone ----- */
+.event-edit-page .dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 10px;
+  background: #f9fafb;
+  min-height: 100px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.event-edit-page .dropzone:hover {
+  border-color: #4f8ef7;
+  background: #f0f5ff;
+}
+
+/* ----- Language accordion ----- */
+.event-edit-page .version {
+  border: 1px solid #f1f3f5;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.event-edit-page .version-header {
+  background: #f8fafc;
+}
+
+.event-edit-page .version-header .btn-link {
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 12px 16px;
+  width: 100%;
+  text-align: left;
+  letter-spacing: 0.01em;
+}
+
+.event-edit-page .version-header .btn-link:hover {
+  color: #4f8ef7;
+  text-decoration: none;
+}
+
+.event-edit-page .version-body {
+  padding: 6px 4px 4px;
+}
+
+/* ----- Small text / hints ----- */
+.event-edit-page small.text-muted,
+.event-edit-page .form-text {
+  font-size: 11.5px;
+  color: #9ca3af !important;
+  margin-top: 5px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.event-edit-page .text-warning {
+  font-size: 11.5px;
+}
+
+/* ----- Tables (multiple dates) ----- */
+.event-edit-page .table-sm .form-control-sm {
+  border-radius: 6px;
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1.5px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+/* ----- Alert ----- */
+.event-edit-page .alert-danger {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+  margin-bottom: 20px;
+}

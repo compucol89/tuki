@@ -58,7 +58,9 @@ class ContentController extends Controller
     $data = FooterContent::where('language_id', $language->id)->first();
 
     if ($request->hasFile('footer_logo')) {
-      $filename = time() . '.' . $request->file('footer_logo')->getClientOriginalExtension();
+      $ext = $request->file('footer_logo')->getClientOriginalExtension();
+      $filename = 'logo_footer.' . $ext;
+      @unlink(public_path('assets/admin/img/footer_logo/' . ($data->footer_logo ?? '')));
       $request->file('footer_logo')->move(public_path('assets/admin/img/footer_logo/'), $filename);
       $logo = $filename;
     } else {

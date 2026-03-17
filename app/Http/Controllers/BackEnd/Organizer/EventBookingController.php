@@ -267,7 +267,7 @@ class EventBookingController extends Controller
 
     if (!empty($fromDate) && !empty($toDate)) {
       $bookings = Booking::join('event_contents', 'event_contents.event_id', 'bookings.event_id')
-        ->join('customers', 'customers.id', 'bookings.customer_id')
+        ->leftJoin('customers', 'customers.id', 'bookings.customer_id')
         ->join('events', 'events.id', 'bookings.event_id')
         ->where('event_contents.language_id', $language->id)
         ->where('events.organizer_id', Auth::guard('organizer')->user()->id)
@@ -280,7 +280,7 @@ class EventBookingController extends Controller
         })->when($paymentStatus, function ($query, $paymentStatus) {
           return $query->where('bookings.paymentStatus', '=', $paymentStatus);
         })
-        ->select('event_contents.title', 'customers.fname as customerfname', 'customers.lname as customerlname', 'event_contents.slug', 'bookings.*')
+        ->selectRaw('event_contents.title, COALESCE(customers.fname, "Invitado") as customerfname, COALESCE(customers.lname, "") as customerlname, event_contents.slug, bookings.*')
         ->orderByDesc('id');
 
       Session::put('booking_report', $bookings->get());

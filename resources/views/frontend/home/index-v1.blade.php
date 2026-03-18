@@ -206,7 +206,7 @@
               COUNT(*) as ticket_count,
               MIN(CASE WHEN pricing_type != 'free' AND price > 0 THEN CAST(price AS DECIMAL(10,2)) END) as min_price,
               MAX(CASE WHEN pricing_type = 'free' THEN 1 ELSE 0 END) as has_free,
-              MAX(CASE WHEN pricing_type != 'free' AND price > 0 THEN 1 ELSE 0 END) as has_paid
+              MAX(CASE WHEN pricing_type = 'variation' OR (pricing_type != 'free' AND price > 0) THEN 1 ELSE 0 END) as has_paid
               FROM tickets GROUP BY event_id) as tk");
           @endphp
           <div class="tab-content" id="nav-tabContent">

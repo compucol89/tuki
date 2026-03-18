@@ -382,6 +382,23 @@ ttq.page();
               @php
                 $min_ticket_price = DB::table('tickets')->where('event_id', $content->id)->min('price');
                 $max_ticket_price = DB::table('tickets')->where('event_id', $content->id)->max('price');
+                // Para tickets de tipo variation, price es null — extraer min/max del JSON
+                if (!is_numeric($min_ticket_price)) {
+                    $varTickets = DB::table('tickets')->where('event_id', $content->id)->where('pricing_type', 'variation')->pluck('variations');
+                    $varPrices = [];
+                    foreach ($varTickets as $vJson) {
+                        $vars = json_decode($vJson, true);
+                        if (is_array($vars)) {
+                            foreach ($vars as $v) {
+                                if (isset($v['price']) && is_numeric($v['price'])) $varPrices[] = (float) $v['price'];
+                            }
+                        }
+                    }
+                    if (!empty($varPrices)) {
+                        $min_ticket_price = min($varPrices);
+                        $max_ticket_price = max($varPrices);
+                    }
+                }
                 $has_price_range = is_numeric($min_ticket_price) && is_numeric($max_ticket_price) && $min_ticket_price != $max_ticket_price;
                 $tickets_stock    = DB::table('tickets')->where('event_id', $content->id)->get(['ticket_available_type', 'ticket_available']);
                 $has_unlimited    = $tickets_stock->contains('ticket_available_type', 'unlimited');

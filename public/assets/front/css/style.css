@@ -6533,7 +6533,7 @@ body.home-page .testimonial-section {
   border-radius: 10px; font-size: 13px; font-weight: 600;
 }
 .ps-status-block--paid    { background: #f0fdf4; color: #15803d; }
-.ps-status-block--free    { background: #eff6ff; color: #1d4ed8; }
+.ps-status-block--free    { background: #f0fdf4; color: #15803d; }
 .ps-status-block--pending { background: #fefce8; color: #a16207; }
 
 /* Actions */
@@ -6546,9 +6546,9 @@ body.home-page .testimonial-section {
   transition: background .18s, color .18s; text-align: center;
 }
 .ps-btn--primary {
-  background: #111827; color: #fff !important;
+  background: #f97316; color: #fff !important;
 }
-.ps-btn--primary:hover { background: #1f2937; }
+.ps-btn--primary:hover { background: #ea6c0a; }
 .ps-btn--secondary {
   background: #f9fafb; color: #374151 !important;
   border: 1px solid #e5e7eb;

@@ -8,110 +8,103 @@
   @endif
 @endsection
 
-
 @php
-  $metaKeywords = !empty($seo->meta_keyword_blog) ? $seo->meta_keyword_blog : '';
+  $metaKeywords    = !empty($seo->meta_keyword_blog) ? $seo->meta_keyword_blog : '';
   $metaDescription = !empty($seo->meta_description_blog) ? $seo->meta_description_blog : '';
+  $pageTitle       = !empty($pageHeading) ? ($pageHeading->blog_page_title ?? __('Blog')) : __('Blog');
+  $activeCategory  = request()->input('category', '');
+  $searchTitle     = request()->input('title', '');
 @endphp
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
 
-@section('hero-section')
-  <!-- Page Banner Start -->
-  <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"
-    data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
-    <div class="container">
-      <div class="banner-inner">
-        <h2 class="page-title">
-          @if (!empty($pageHeading))
-            {{ $pageHeading->blog_page_title ?? __('Blog') }}
-          @else
-            {{ __('Blog') }}
-          @endif
-        </h2>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
-            <li class="breadcrumb-item active">
-              @if (!empty($pageHeading))
-                {{ $pageHeading->blog_page_title ?? __('Blog') }}
-              @else
-                {{ __('Blog') }}
-              @endif
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-  </section>
-  <!-- Page Banner End -->
-@endsection
-
 @section('content')
 
-
-  <!--====== BLOG STANDARD PART START ======-->
-  <section class="blog-page-section py-120 rpy-100">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <div class="blog-standard">
-            <div class="row">
-              @if (count($blogs) == 0)
-                <div class="col">
-                  <h3 class="mt-40 text-center">{{ __('No Blog Found') . '!' }}</h3>
-                </div>
-              @else
-                @foreach ($blogs as $blog)
-                  <div class="col-md-6">
-                    <div class="blog-item">
-                      <div class="blog-image">
-                        <a href="{{ route('blog_details', ['slug' => $blog->slug]) }}">
-                          <img data-src="{{ asset('assets/admin/img/blogs/' . $blog->image) }}" class="lazy" alt="image">
-                        </a>
-                      </div>
-                      <div class="blog-content">
-                        <a class="category"
-                          href="{{ route('blogs', ['category' => $blog->categorySlug]) }}">{{ $blog->categoryName }}</a>
-                        <a class="d-block" href="{{ route('blog_details', ['slug' => $blog->slug]) }}">
-                          <h4 class="title">
-                            {{ strlen($blog->title) > 30 ? mb_substr($blog->title, 0, 30, 'UTF-8') . '...' : $blog->title }}
-                          </h4>
-                        </a>
-                        <p>{!! strlen(strip_tags($blog->content)) > 100
-                            ? mb_substr(strip_tags($blog->content), 0, 100, 'UTF-8') . '...'
-                            : strip_tags($blog->content) !!}</p>
-                        <ul class="blog-footer">
-                          <li><i class="fas fa-calendar-alt"></i> {{ date_format($blog->created_at, 'd/m/Y') }}</li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                @endforeach
-              @endif
-            </div>
-
-            @if (count($blogs) > 0)
-              {{ $blogs->appends([
-                      'title' => request()->input('title'),
-                      'category' => request()->input('category'),
-                  ])->links() }}
-            @endif
-
-          </div>
-
-          @if (!empty(showAd(3)))
-            <div class="text-center mt-30">
-              {!! showAd(3) !!}
-            </div>
-          @endif
-        </div>
-
-        @includeIf('frontend.journal.side-bar')
+{{-- HEADER --}}
+<div class="bl-header">
+  <div class="container">
+    <div class="bl-header__inner">
+      <div>
+        <h1 class="bl-header__title">{{ $pageTitle }}</h1>
+        <p class="bl-header__sub">Ideas, novedades y consejos para organizadores y asistentes.</p>
       </div>
+      <form class="bl-search" action="{{ route('blogs') }}" method="GET">
+        @if($activeCategory)
+          <input type="hidden" name="category" value="{{ $activeCategory }}">
+        @endif
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" name="title" placeholder="Buscar artículos..." value="{{ $searchTitle }}">
+        <button type="submit">Buscar</button>
+      </form>
     </div>
-  </section>
-  <!--====== BLOG STANDARD PART END ======-->
+
+    {{-- Category pills --}}
+    <div class="bl-filters">
+      <a href="{{ route('blogs', $searchTitle ? ['title' => $searchTitle] : []) }}"
+         class="bl-filter{{ !$activeCategory ? ' bl-filter--active' : '' }}">
+        Todos <span>{{ $allBlogs }}</span>
+      </a>
+      @foreach($categories as $cat)
+        <a href="{{ route('blogs', array_filter(['category' => $cat->slug, 'title' => $searchTitle])) }}"
+           class="bl-filter{{ $activeCategory === $cat->slug ? ' bl-filter--active' : '' }}">
+          {{ $cat->name }} <span>{{ $cat->blogCount }}</span>
+        </a>
+      @endforeach
+    </div>
+  </div>
+</div>
+
+{{-- GRID --}}
+<section class="bl-section">
+  <div class="container">
+    @if(count($blogs) === 0)
+      <div class="bl-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <p>No se encontraron artículos.</p>
+      </div>
+    @else
+      <div class="bl-grid">
+        @foreach($blogs as $blog)
+          @php
+            $readTime = max(1, round(str_word_count(strip_tags($blog->content)) / 200));
+          @endphp
+          <a href="{{ route('blog_details', ['slug' => $blog->slug]) }}" class="bl-card">
+            <div class="bl-card__visual">
+              <div class="bl-card__img">
+                <img data-src="{{ asset('assets/admin/img/blogs/' . $blog->image) }}"
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                     class="lazy" alt="{{ $blog->title }}">
+                <div class="bl-card__gradient"></div>
+              </div>
+              <div class="bl-card__overlay" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                <span class="bl-card__overlay-label">Leer artículo</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+            <div class="bl-card__body">
+              <span class="bl-card__cat">{{ $blog->categoryName }}</span>
+              <h2 class="bl-card__title">{{ $blog->title }}</h2>
+              <p class="bl-card__excerpt">{{ Str::limit(strip_tags($blog->content), 120) }}</p>
+            </div>
+          </a>
+        @endforeach
+      </div>
+
+      <div class="bl-pagination">
+        {{ $blogs->appends(['title' => $searchTitle, 'category' => $activeCategory])->links() }}
+      </div>
+    @endif
+  </div>
+</section>
+
+{{-- Hidden form para compatibilidad con blog.js --}}
+<form class="d-none" action="{{ route('blogs') }}" method="GET">
+  <input type="hidden" name="title" value="{{ $searchTitle }}">
+  <input type="hidden" id="categoryKey" name="category">
+  <button type="submit" id="submitBtn"></button>
+</form>
+
 @endsection
 
 @section('script')

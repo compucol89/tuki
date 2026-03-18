@@ -56,7 +56,7 @@
 **Falta aplicar ❌**
 - [ ] `frontend/about.blade.php`
 - [ ] `frontend/faqs.blade.php`
-- [ ] `frontend/journal/blogs.blade.php` / `blog-details.blade.php`
+- [x] `frontend/journal/blogs.blade.php` / `blog-details.blade.php` — rediseño SaaS UI completo
 - [ ] `frontend/shop/` — index, detalle, carrito, checkout, invoice
 - [ ] `frontend/payment/success.blade.php` / `order_success.blade.php`
 - [ ] `frontend/event/invoice.blade.php` — entrada/ticket del cliente
@@ -75,6 +75,13 @@
 
 ## ✅ Completado recientemente
 
+- [x] Fix: login/signup organizador en inglés — `adminLang` pisaba locale `es` (`048231a`)
+- [x] Fix: traducciones faltantes signup organizador + "Repetir contraseña" (`89a5f77`)
+- [x] Decisión: social login NO se agrega al panel organizador (intencional por diseño)
+- [x] Fix: badge "Gratis" incorrecto en home para eventos con tickets `variation` (`50608cd`)
+- [x] Fix: precio "Gratis" en sidebar de event-details para tickets `variation` (`50608cd`)
+- [x] `payment/success.blade.php` — botón primario naranja + status free en verde (`50608cd`)
+
 - [x] Rediseño formulario edición de eventos (`edit.blade.php`) — cards por sección, Inter font, `admin-skin.css` (`de5e8e7`)
 - [x] Rediseño login/signup organizadores — auth-split layout (`89eb584`)
 - [x] Rediseño split-screen login clientes (`25ac1f9`)
@@ -86,4 +93,4 @@
 
 ---
 
-_Última actualización: 2026-03-18 — decisión: panel organizador y admin se quedan con Atlantis, no se tocan_
+_Última actualización: 2026-03-18 — blog SaaS UI: dark header, Sora font, 3-col grid, bl-card con overlay_

@@ -7,7 +7,7 @@ Route::post('organizer/check-qrcode/', 'BackEnd\Organizer\OrganizerController@ch
 Route::get('organizers/email/verify', 'BackEnd\Organizer\OrganizerController@confirm_email');
 
 Route::prefix('/organizer')->group(function () {
-  Route::middleware('guest:organizer', 'change.lang', 'adminLang')->group(function () {
+  Route::middleware('guest:organizer', 'change.lang')->group(function () {
     Route::get('/login', 'BackEnd\Organizer\OrganizerController@login')->name('organizer.login');
     Route::get('/signup', 'BackEnd\Organizer\OrganizerController@signup')->name('organizer.signup');
     Route::post('/create', 'BackEnd\Organizer\OrganizerController@create')->name('organizer.create');

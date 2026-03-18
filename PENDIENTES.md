@@ -59,7 +59,7 @@
 - [x] `frontend/journal/blogs.blade.php` / `blog-details.blade.php` — rediseño SaaS UI completo
 - [ ] `frontend/shop/` — index, detalle, carrito, checkout, invoice
 - [ ] `frontend/payment/success.blade.php` / `order_success.blade.php`
-- [ ] `frontend/event/invoice.blade.php` — entrada/ticket del cliente
+- [x] `frontend/event/invoice.blade.php` — rediseño completo: dark header, Inter, status badge, QR card, billing moderno
 - [ ] `frontend/customer/forget-password.blade.php` / `reset-password.blade.php`
 - [ ] `frontend/customer/dashboard/` — bookings details, orders details, support tickets, edit-profile, change-password
 - [ ] `frontend/organizer/forget-password.blade.php` / `reset-password.blade.php` / `details.blade.php` / `index.blade.php`
@@ -93,4 +93,4 @@
 
 ---
 
-_Última actualización: 2026-03-18 — fix catch vacío social login + tipografías ev-card (Inter título, Sora fecha/badge)_
+_Última actualización: 2026-03-18 — rediseño invoice/ticket evento: dark header, Inter, status badge, billing moderno_

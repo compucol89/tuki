@@ -161,10 +161,14 @@
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 @if (empty(Auth::guard('admin')->user()->role_id))
                                   @if (!empty($item->admin_id))
-                                    <a href="{{ route('admin.support_tickets.unassign', $item->id) }}"
-                                      class="dropdown-item">
-                                      {{ __('Unassign') }}
-                                    </a>
+                                    <form class="d-block"
+                                      action="{{ route('admin.support_tickets.unassign', $item->id) }}"
+                                      method="post">
+                                      @csrf
+                                      <button type="submit" class="dropdown-item border-0 bg-transparent text-left">
+                                        {{ __('Unassign') }}
+                                      </button>
+                                    </form>
                                   @else
                                     <a href="javascript:void(0)" data-toggle="modal"
                                       data-target="#exampleModal{{ $item->id }}" class="dropdown-item">

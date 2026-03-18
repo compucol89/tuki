@@ -2,9 +2,7 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">
-      {{ __('Report') }}
-    </h4>
+    <h4 class="page-title">{{ __('Report') }}</h4>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -25,179 +23,177 @@
       </li>
     </ul>
   </div>
+
+  @php
+    $fromDateValue = request()->filled('from_date') ? \Carbon\Carbon::parse(request()->input('from_date'))->format('Y-m-d') : '';
+    $toDateValue = request()->filled('to_date') ? \Carbon\Carbon::parse(request()->input('to_date'))->format('Y-m-d') : '';
+  @endphp
+
   <div class="row">
     <div class="col-md-12">
-
       <div class="card">
-        <div class="card-header p-1">
-          <div class="row">
-            <div class="col-lg-10">
-              <form action="{{ url()->full() }}" class="form-inline">
-                <div class="form-group">
-                  <label for="">{{ __('From') }}</label>
-                  <input class="form-control datepicker" type="text" name="from_date" placeholder="{{ __('From') }}"
-                    value="{{ request()->input('from_date') ? request()->input('from_date') : '' }}" required
-                    autocomplete="off">
-                </div>
+        <div class="card-header">
+          <h4 class="card-title mb-1">{{ __('Booking Report') }}</h4>
+          <p class="card-category mb-0">{{ __('Filtra reservas por rango de fechas, metodo y estado de pago.') }}</p>
+        </div>
 
+        <div class="card-body border-bottom">
+          <form action="{{ route('organizer.event_booking.report') }}" method="GET">
+            <div class="row align-items-end">
+              <div class="col-xl-3 col-md-6">
                 <div class="form-group">
-                  <label for="">{{ __('To') }}</label>
-                  <input class="form-control datepicker ml-1" type="text" name="to_date" placeholder="{{ __('To') }}"
-                    value="{{ request()->input('to_date') ? request()->input('to_date') : '' }}" required
-                    autocomplete="off">
+                  <label for="from_date">{{ __('Desde') }}</label>
+                  <input id="from_date" class="form-control" type="date" name="from_date" value="{{ $fromDateValue }}"
+                    required>
                 </div>
-
+              </div>
+              <div class="col-xl-3 col-md-6">
                 <div class="form-group">
-                  <label for="">{{ __('Payment Method') }}</label>
-                  <select name="payment_method" class="form-control ml-1">
-                    <option value="" selected>{{ __('All') }}</option>
-                    @if (!empty($onPms))
-                      @foreach ($onPms as $onPm)
-                        <option value="{{ $onPm->keyword }}"
-                          {{ request()->input('payment_method') == $onPm->keyword ? 'selected' : '' }}>
-                          {{ $onPm->name }}
-                        </option>
-                      @endforeach
-                    @endif
-                    @if (!empty($offPms))
-                      @foreach ($offPms as $offPm)
-                        <option value="{{ $offPm->name }}"
-                          {{ request()->input('payment_method') == $offPm->name ? 'selected' : '' }}>{{ $offPm->name }}
-                        </option>
-                      @endforeach
-                    @endif
+                  <label for="to_date">{{ __('Hasta') }}</label>
+                  <input id="to_date" class="form-control" type="date" name="to_date" value="{{ $toDateValue }}"
+                    required>
+                </div>
+              </div>
+              <div class="col-xl-3 col-md-6">
+                <div class="form-group">
+                  <label for="payment_method">{{ __('Metodo de pago') }}</label>
+                  <select id="payment_method" name="payment_method" class="form-control">
+                    <option value="">{{ __('Todos') }}</option>
+                    @foreach ($onPms as $onPm)
+                      <option value="{{ $onPm->keyword }}"
+                        {{ request()->input('payment_method') == $onPm->keyword ? 'selected' : '' }}>
+                        {{ $onPm->name }}
+                      </option>
+                    @endforeach
+                    @foreach ($offPms as $offPm)
+                      <option value="{{ $offPm->name }}"
+                        {{ request()->input('payment_method') == $offPm->name ? 'selected' : '' }}>
+                        {{ $offPm->name }}
+                      </option>
+                    @endforeach
                   </select>
                 </div>
-
+              </div>
+              <div class="col-xl-3 col-md-6">
                 <div class="form-group">
-                  <label for="">{{ __('Payment Status') }}</label>
-                  <select name="payment_status" class="form-control ml-1">
-                    <option value="" selected>{{ __('All') }}</option>
-                    <option value="Pending" {{ request()->input('payment_status') == 'Pending' ? 'selected' : '' }}>
-                      {{ __('Pending') }}</option>
-                    <option value="Completed" {{ request()->input('payment_status') == 'Completed' ? 'selected' : '' }}>
-                      {{ __('Completed') }}</option>
+                  <label for="payment_status">{{ __('Estado del pago') }}</label>
+                  <select id="payment_status" name="payment_status" class="form-control">
+                    <option value="">{{ __('Todos') }}</option>
+                    <option value="pending" {{ request()->input('payment_status') == 'pending' ? 'selected' : '' }}>
+                      {{ __('Pending') }}
+                    </option>
+                    <option value="completed" {{ request()->input('payment_status') == 'completed' ? 'selected' : '' }}>
+                      {{ __('Completed') }}
+                    </option>
+                    <option value="rejected" {{ request()->input('payment_status') == 'rejected' ? 'selected' : '' }}>
+                      {{ __('Rejected') }}
+                    </option>
                   </select>
                 </div>
-
-                <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-sm ml-1">{{ __('Submit') }}</button>
-                </div>
-              </form>
-            </div>
-            <div class="col-lg-2">
-              <form action="{{ route('organizer.event_bookings.export') }}" class="form-inline justify-content-lg-end justify-content-start">
-                <div class="form-group">
-                  <button type="submit" class="btn btn-success btn-sm ml-1"
+              </div>
+              <div class="col-12">
+                <div class="d-flex flex-wrap justify-content-end pt-2">
+                  <button type="submit" class="btn btn-primary btn-sm mr-2 mb-2">{{ __('Filtrar') }}</button>
+                  <a href="{{ route('organizer.event_booking.report') }}"
+                    class="btn btn-light btn-sm mr-2 mb-2">{{ __('Limpiar') }}</a>
+                  <button type="submit" class="btn btn-success btn-sm mb-2"
+                    formaction="{{ route('organizer.event_bookings.export') }}" formmethod="GET"
                     title="CSV Format">{{ __('Export') }}</button>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
+          </form>
         </div>
+
         <div class="card-body">
           <div class="row">
             <div class="col-lg-12">
               @if (count($bookings) > 0)
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="text-muted small">
+                    {{ __('Resultados') }}: {{ $bookings->total() }}
+                  </div>
+                </div>
+
                 <div class="table-responsive">
-                  <table class="table table-striped mt-3">
+                  <table class="table table-striped align-middle">
                     <thead>
                       <tr>
-                        <th scope="col">{{ __('Booking ID') }}</th>
-                        <th scope="col">{{ __('Event') }}</th>
-                        <th scope="col">{{ __('Customer Name') }}</th>
-                        <th scope="col">{{ __('Discount') }}</th>
-                        <th scope="col">{{ __('Early Bird Discount') }}</th>
-                        <th scope="col">{{ __('Quantity') }}</th>
-                        <th scope="col">{{ __('Total') }}</th>
-                        <th scope="col">{{ __('Name') }}</th>
-                        <th scope="col">{{ __('Email') }}</th>
-                        <th scope="col">{{ __('Phone') }}</th>
-                        <th scope="col">{{ __('City') }}</th>
-                        <th scope="col">{{ __('State') }}</th>
-                        <th scope="col">{{ __('Country') }}</th>
-                        <th scope="col">{{ __('Zip Code') }}</th>
-                        <th scope="col">{{ __('Gateway') }}</th>
-                        <th scope="col">{{ __('Payment') }}</th>
-                        <th scope="col">{{ __('Date') }}</th>
-                        <th scope="col">{{ __('Receipt') }}</th>
+                        <th scope="col">{{ __('Booking') }}</th>
+                        <th scope="col">{{ __('Evento') }}</th>
+                        <th scope="col">{{ __('Cliente') }}</th>
+                        <th scope="col">{{ __('Contacto') }}</th>
+                        <th scope="col">{{ __('Importes') }}</th>
+                        <th scope="col">{{ __('Pago') }}</th>
+                        <th scope="col">{{ __('Fecha') }}</th>
+                        <th scope="col">{{ __('Comprobante') }}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      @foreach ($bookings as $key => $booking)
+                      @foreach ($bookings as $booking)
                         <tr>
-                          <td>#{{ $booking->booking_id }}</td>
-                          <td><a
-                              href="{{ route('event.details', ['slug' => $booking->slug, 'id' => $booking->event_id]) }}"
-                              target="_blank">{{ strlen($booking->title) > 35 ? mb_substr($booking->title, 0, 35, 'utf-8') . '...' : $booking->title }}</a>
-                          </td>
-                          <td>{{ $booking->customerfname }} {{ $booking->customerlname }}</td>
-
                           <td>
-                            {{ $abs->base_currency_symbol_position == 'left' ? $abs->base_currency_symbol : '' }}{{ round($booking->discount, 2) }}{{ $abs->base_currency_symbol_position == 'right' ? $abs->base_currency_symbol : '' }}
+                            <strong>#{{ $booking->booking_id }}</strong><br>
+                            <small class="text-muted">{{ __('Cantidad') }}: {{ $booking->quantity }}</small>
                           </td>
-
                           <td>
-                            {{ $abs->base_currency_symbol_position == 'left' ? $abs->base_currency_symbol : '' }}{{ round($booking->early_bird_discount, 2) }}{{ $abs->base_currency_symbol_position == 'right' ? $abs->base_currency_symbol : '' }}
+                            <a href="{{ route('event.details', ['slug' => $booking->slug, 'id' => $booking->event_id]) }}"
+                              target="_blank">
+                              {{ strlen($booking->title) > 45 ? mb_substr($booking->title, 0, 45, 'utf-8') . '...' : $booking->title }}
+                            </a>
                           </td>
-
-                          <td>{{ $booking->quantity }}</td>
-
                           <td>
-                            {{ $abs->base_currency_symbol_position == 'left' ? $abs->base_currency_symbol : '' }}{{ round($booking->price, 2) }}{{ $abs->base_currency_symbol_position == 'right' ? $abs->base_currency_symbol : '' }}
+                            <strong>{{ $booking->customerfname }} {{ $booking->customerlname }}</strong><br>
+                            <small class="text-muted">{{ $booking->fname }} {{ $booking->lname }}</small>
                           </td>
-
-                          <td>{{ $booking->fname }} {{ $booking->lname }}</td>
-                          <td>{{ $booking->email }}</td>
-                          <td>{{ $booking->phone }}</td>
-                          <td>{{ $booking->city }}</td>
-                          <td>{{ $booking->state }}</td>
-                          <td>{{ $booking->country }}</td>
-                          <td>{{ $booking->zip_code }}</td>
-                          <td>{{ ucfirst($booking->paymentMethod) }}</td>
                           <td>
+                            <div>{{ $booking->email }}</div>
+                            <small class="d-block text-muted">{{ $booking->phone ?: '-' }}</small>
+                            <small class="d-block text-muted">
+                              {{ collect([$booking->city, $booking->state, $booking->country])->filter()->implode(', ') ?: '-' }}
+                            </small>
+                          </td>
+                          <td>
+                            <div>
+                              {{ __('Total') }}:
+                              {{ $abs->base_currency_symbol_position == 'left' ? $abs->base_currency_symbol : '' }}{{ round($booking->price, 2) }}{{ $abs->base_currency_symbol_position == 'right' ? $abs->base_currency_symbol : '' }}
+                            </div>
+                            <small class="d-block text-muted">
+                              {{ __('Discount') }}:
+                              {{ $abs->base_currency_symbol_position == 'left' ? $abs->base_currency_symbol : '' }}{{ round($booking->discount, 2) }}{{ $abs->base_currency_symbol_position == 'right' ? $abs->base_currency_symbol : '' }}
+                            </small>
+                            <small class="d-block text-muted">
+                              {{ __('Early Bird') }}:
+                              {{ $abs->base_currency_symbol_position == 'left' ? $abs->base_currency_symbol : '' }}{{ round($booking->early_bird_discount, 2) }}{{ $abs->base_currency_symbol_position == 'right' ? $abs->base_currency_symbol : '' }}
+                            </small>
+                          </td>
+                          <td>
+                            <div>{{ ucfirst($booking->paymentMethod) }}</div>
                             @if ($booking->paymentStatus == 'pending')
                               <span class="badge badge-warning">{{ __('Pending') }}</span>
                             @elseif ($booking->paymentStatus == 'completed')
-                              <span class="badge badge-success">{{ __("Completed") }}</span>
+                              <span class="badge badge-success">{{ __('Completed') }}</span>
+                            @else
+                              <span class="badge badge-danger">{{ __('Rejected') }}</span>
                             @endif
                           </td>
+                          <td>{{ \Carbon\Carbon::parse($booking->created_at)->format('d/m/Y H:i') }}</td>
                           <td>
-                            {{ $booking->created_at }}
-                          </td>
-                          <td>
-                            <a href="javascript:void(0)" data-toggle="modal"
-                              data-target="#receiptModal{{ $booking->id }}" class="btn btn-info btn-sm">{{ __('View') }}</a>
+                            <button type="button" class="btn btn-info btn-sm receiptPreviewBtn"
+                              data-toggle="modal" data-target="#receiptPreviewModal"
+                              data-receipt="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}">
+                              {{ __('View') }}
+                            </button>
                           </td>
                         </tr>
-
-
-                        {{-- Receipt Modal --}}
-                        <div class="modal fade" id="receiptModal{{ $booking->id }}" tabindex="-1" role="dialog"
-                          aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">{{ __('Receipt Image') }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <iframe src="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}"
-                                  frameborder="0" class="receipt"></iframe>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                  data-dismiss="modal">{{ __('Close') }}</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                       @endforeach
                     </tbody>
                   </table>
                 </div>
+              @elseif(request()->filled('from_date') && request()->filled('to_date'))
+                <div class="alert alert-info mb-0">{{ __('No bookings were found for the selected filters.') }}</div>
+              @else
+                <div class="alert alert-light mb-0">{{ __('Select a date range and optional filters to generate the report.') }}</div>
               @endif
             </div>
           </div>
@@ -221,4 +217,36 @@
     </div>
   </div>
 
+  <div class="modal fade" id="receiptPreviewModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ __('Receipt Image') }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <iframe src="" frameborder="0" class="receipt" id="receiptPreviewFrame"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Close') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+  <script>
+    'use strict';
+
+    $(document).on('click', '.receiptPreviewBtn', function() {
+      $('#receiptPreviewFrame').attr('src', $(this).data('receipt'));
+    });
+
+    $('#receiptPreviewModal').on('hidden.bs.modal', function() {
+      $('#receiptPreviewFrame').attr('src', '');
+    });
+  </script>
 @endsection

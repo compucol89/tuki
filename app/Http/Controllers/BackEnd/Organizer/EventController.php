@@ -25,6 +25,39 @@ use Mews\Purifier\Facades\Purifier;
 
 class EventController extends Controller
 {
+  private function getOwnedEventOrFail($eventId)
+  {
+    return Event::where('id', $eventId)
+      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->firstOrFail();
+  }
+
+  private function getOwnedEventImageOrFail($imageId)
+  {
+    $image = EventImage::where('id', $imageId)->firstOrFail();
+
+    if (!empty($image->event_id)) {
+      $this->getOwnedEventOrFail($image->event_id);
+
+      return $image;
+    }
+
+    $temporaryImageIds = session()->get('organizer_event_image_ids', []);
+    abort_unless(in_array($image->id, $temporaryImageIds), 403);
+
+    return $image;
+  }
+
+  private function forgetTemporaryImageId($imageId)
+  {
+    $temporaryImageIds = session()->get('organizer_event_image_ids', []);
+    $temporaryImageIds = array_values(array_filter($temporaryImageIds, function ($storedImageId) use ($imageId) {
+      return (int) $storedImageId !== (int) $imageId;
+    }));
+
+    session()->put('organizer_event_image_ids', $temporaryImageIds);
+  }
+
   //index
   public function index(Request $request)
   {
@@ -87,6 +120,10 @@ class EventController extends Controller
 
   public function gallerystore(Request $request)
   {
+    if (!empty($request->event_id)) {
+      $this->getOwnedEventOrFail($request->event_id);
+    }
+
     $img = $request->file('file');
     $allowedExts = array('jpg', 'png', 'jpeg');
     $rules = [
@@ -116,13 +153,19 @@ class EventController extends Controller
     }
     $pi->image = $filename;
     $pi->save();
+
+    $temporaryImageIds = session()->get('organizer_event_image_ids', []);
+    $temporaryImageIds[] = $pi->id;
+    session()->put('organizer_event_image_ids', array_values(array_unique($temporaryImageIds)));
+
     return response()->json(['status' => 'success', 'file_id' => $pi->id]);
   }
   public function imagermv(Request $request)
   {
-    $pi = EventImage::where('id', $request->fileid)->first();
+    $pi = $this->getOwnedEventImageOrFail($request->fileid);
     @unlink(public_path('assets/admin/img/event-gallery/') . $pi->image);
     $pi->delete();
+    $this->forgetTemporaryImageId($pi->id);
     return $pi->id;
   }
 
@@ -200,13 +243,15 @@ class EventController extends Controller
         $ticket = Ticket::create($in);
       }
 
-      $slders = $request->slider_images;
+      $slders = $request->slider_images ?? [];
+      $temporaryImageIds = session()->get('organizer_event_image_ids', []);
 
       foreach ($slders as $key => $id) {
         $event_image = EventImage::where('id', $id)->first();
-        if ($event_image) {
+        if ($event_image && in_array($event_image->id, $temporaryImageIds)) {
           $event_image->event_id = $event->id;
           $event_image->save();
+          $this->forgetTemporaryImageId($event_image->id);
         }
       }
       $languages = Language::all();
@@ -245,11 +290,7 @@ class EventController extends Controller
    */
   public function updateStatus(Request $request, $id)
   {
-    $event = Event::find($id);
-
-    if (Auth::guard('organizer')->user()->id != $event->organizer_id) {
-      return back();
-    }
+    $event = $this->getOwnedEventOrFail($id);
 
     $event->update([
       'status' => $request['status']
@@ -267,10 +308,7 @@ class EventController extends Controller
    */
   public function updateFeatured(Request $request, $id)
   {
-    $event = Event::find($id);
-    if (Auth::guard('organizer')->user()->id != $event->organizer_id) {
-      return back();
-    }
+    $event = $this->getOwnedEventOrFail($id);
 
     if ($request['is_featured'] == 'yes') {
       $event->is_featured = 'yes';
@@ -289,14 +327,10 @@ class EventController extends Controller
 
   public function edit($id)
   {
-    $event = Event::with('ticket')->where('id', $id)->firstOrFail();
-    if (Auth::guard('organizer')->user()->id != $event->organizer_id) {
-      return back();
-    }
-
-    if ($event->organizer_id != Auth::guard('organizer')->user()->id) {
-      return redirect()->route('organizer.dashboard');
-    }
+    $event = Event::with('ticket')
+      ->where('id', $id)
+      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->firstOrFail();
 
     $information['event'] = $event;
     $information['getCurrencyInfo']  = $this->getCurrencyInfo();
@@ -309,12 +343,13 @@ class EventController extends Controller
   }
   public function imagedbrmv(Request $request)
   {
-    $pi = EventImage::where('id', $request->fileid)->first();
+    $pi = $this->getOwnedEventImageOrFail($request->fileid);
     $event_id = $pi->event_id;
     $image_count = EventImage::where('event_id', $event_id)->get()->count();
     if ($image_count > 1) {
       @unlink(public_path('assets/admin/img/event-gallery/') . $pi->image);
       $pi->delete();
+      $this->forgetTemporaryImageId($pi->id);
       return $pi->id;
     } else {
       return 'false';
@@ -325,8 +360,19 @@ class EventController extends Controller
   }
   public function images($portid)
   {
+    $this->getOwnedEventOrFail($portid);
     $images = EventImage::where('event_id', $portid)->get();
     return $images;
+  }
+
+  public function deleteDate($id)
+  {
+    $date = EventDates::where('id', $id)->firstOrFail();
+    $this->getOwnedEventOrFail($date->event_id);
+
+    $date->delete();
+
+    return 'success';
   }
 
   public function update(UpdateRequest $request)
@@ -342,7 +388,7 @@ class EventController extends Controller
 
     $in = $request->all();
 
-    $event = Event::where('id', $request->event_id)->first();
+    $event = $this->getOwnedEventOrFail($request->event_id);
     if ($request->hasFile('thumbnail')) {
       @unlink(public_path('assets/admin/img/event/thumbnail/') . $event->thumbnail);
       $filename = time() . '.' . $img->getClientOriginalExtension();
@@ -399,8 +445,6 @@ class EventController extends Controller
       ]);
     }
 
-    $event = Event::where('id', $event->id)->first();
-
     if ($request->date_type == 'multiple') {
       $i = 1;
       foreach ($request->m_start_date as $key => $date) {
@@ -409,7 +453,9 @@ class EventController extends Controller
         $diffent = DurationCalulate($start, $end);
 
         if (!empty($request->date_ids[$key])) {
-          $event_date = EventDates::where('id', $request->date_ids[$key])->first();
+          $event_date = EventDates::where('id', $request->date_ids[$key])
+            ->where('event_id', $event->id)
+            ->firstOrFail();
           $event_date->start_date = $date;
           $event_date->start_time = $request->m_start_time[$key];
           $event_date->end_date = $request->m_end_date[$key];
@@ -442,6 +488,8 @@ class EventController extends Controller
     if ($request->date_type == 'single') {
       $in['end_date_time'] = Carbon::parse($request->end_date . ' ' . $request->end_time);
       $in['duration'] = $diffent;
+
+      EventDates::where('event_id', $event->id)->delete();
     } else {
       //update event date time
       $event_date = EventDates::where('event_id', $event->id)->orderBy('end_date_time', 'desc')->first();
@@ -463,10 +511,7 @@ class EventController extends Controller
    */
   public function destroy($id)
   {
-    $event = Event::find($id);
-    if (Auth::guard('organizer')->user()->id != $event->organizer_id) {
-      return back();
-    }
+    $event = $this->getOwnedEventOrFail($id);
 
     @unlink(public_path('assets/admin/img/event/thumbnail/') . $event->thumbnail);
 
@@ -513,10 +558,7 @@ class EventController extends Controller
   public function bulk_delete(Request $request)
   {
     foreach ($request->ids as $id) {
-      $event = Event::find($id);
-      if (Auth::guard('organizer')->user()->id != $event->organizer_id) {
-        return back();
-      }
+      $event = $this->getOwnedEventOrFail($id);
 
       @unlink(public_path('assets/admin/img/event/thumbnail/') . $event->thumbnail);
 
@@ -561,7 +603,10 @@ class EventController extends Controller
   }
   public function editTicketSetting($id)
   {
-    $event = Event::where('organizer_id',  Auth::guard('organizer')->user()->id)->with('ticket')->findOrFail($id);
+    $event = Event::where('id', $id)
+      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->with('ticket')
+      ->firstOrFail();
     $information['event'] = $event;
     return view('organizer.event.ticket-settings', $information);
   }
@@ -572,7 +617,7 @@ class EventController extends Controller
     $ticket_logo = $request->file('ticket_logo');
     $in = $request->all();
     $instructions = Purifier::clean($request->instructions);
-    $event = Event::where('id', $request->event_id)->first();
+    $event = $this->getOwnedEventOrFail($request->event_id);
     if ($request->hasFile('ticket_image')) {
       @unlink(public_path('assets/admin/img/event_ticket/') . $event->ticket_image);
       $filename = time() . rand(111, 999) . '.' . $ticket_image->getClientOriginalExtension();

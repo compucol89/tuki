@@ -10,11 +10,17 @@ use App\Models\Transaction;
 use App\Models\Withdraw;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class WithdrawController extends Controller
 {
+  private function getWithdrawOrFail($withdrawId)
+  {
+    return Withdraw::where('id', $withdrawId)->firstOrFail();
+  }
+
   //index
   public function index()
   {
@@ -31,15 +37,39 @@ class WithdrawController extends Controller
   //delete
   public function delete(Request $request)
   {
-    $delete = Withdraw::where('id', $request->id)->first();
-    $delete->delete();
+    $withdraw = $this->getWithdrawOrFail($request->id);
+
+    if ((int) $withdraw->status !== 0) {
+      return redirect()->back()->with('warning', 'Only pending withdraw requests can be deleted.');
+    }
+
+    DB::transaction(function () use ($withdraw) {
+      $organizer = Organizer::where('id', $withdraw->organizer_id)->lockForUpdate()->firstOrFail();
+      $organizer->amount += $withdraw->amount;
+      $organizer->save();
+
+      $transaction = Transaction::where('booking_id', $withdraw->id)
+        ->where('transcation_type', 3)
+        ->first();
+
+      if ($transaction) {
+        $transaction->update(['payment_status' => 2]);
+      }
+
+      $withdraw->delete();
+    });
+
     return redirect()->back()->with('success', 'Deleted Successfully');
   }
 
   //approve
   public function approve($id)
   {
-    $withdraw = Withdraw::where('id', $id)->first();
+    $withdraw = $this->getWithdrawOrFail($id);
+
+    if ((int) $withdraw->status !== 0) {
+      return redirect()->back()->with('warning', 'This withdraw request has already been processed.');
+    }
 
     //mail sending
     // get the website title & mail's smtp information from db
@@ -120,20 +150,40 @@ class WithdrawController extends Controller
     } catch (Exception $e) {
       Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
     }
-    $withdraw->status = 1;
+    try {
+      DB::transaction(function () use ($withdraw) {
+        $lockedWithdraw = Withdraw::where('id', $withdraw->id)->lockForUpdate()->firstOrFail();
 
-    $transcation = Transaction::where('booking_id', $withdraw->id)->where('transcation_type', 3)->first();
-    if ($transcation) {
-      $transcation->update(['payment_status' => 1]);
+        if ((int) $lockedWithdraw->status !== 0) {
+          throw new \RuntimeException('This withdraw request has already been processed.');
+        }
+
+        $lockedWithdraw->status = 1;
+
+        $transaction = Transaction::where('booking_id', $lockedWithdraw->id)
+          ->where('transcation_type', 3)
+          ->first();
+
+        if ($transaction) {
+          $transaction->update(['payment_status' => 1]);
+        }
+
+        $lockedWithdraw->save();
+      });
+    } catch (\RuntimeException $exception) {
+      return redirect()->back()->with('warning', $exception->getMessage());
     }
-    //mail sending end
-    $withdraw->save();
+
     return redirect()->back();
   }
   //decline
   public function decline($id)
   {
-    $withdraw = Withdraw::where('id', $id)->first();
+    $withdraw = $this->getWithdrawOrFail($id);
+
+    if ((int) $withdraw->status !== 0) {
+      return redirect()->back()->with('warning', 'This withdraw request has already been processed.');
+    }
 
     //mail sending
     // get the website title & mail's smtp information from db
@@ -205,19 +255,34 @@ class WithdrawController extends Controller
     } catch (Exception $e) {
       Session::flash('warning', 'Mail could not be sent.');
     }
-    $organizer = Organizer::where('id', $withdraw->organizer_id)->first();
-    $organizer->amount = ($organizer->amount + ($withdraw->amount));
-    $organizer->save();
+    try {
+      DB::transaction(function () use ($withdraw) {
+        $lockedWithdraw = Withdraw::where('id', $withdraw->id)->lockForUpdate()->firstOrFail();
 
-    $transcation = Transaction::where([['booking_id', $withdraw->id], ['transcation_type', 3]])->first();
-    if ($transcation) {
-      $transcation->update(['payment_status' => 2]);
+        if ((int) $lockedWithdraw->status !== 0) {
+          throw new \RuntimeException('This withdraw request has already been processed.');
+        }
+
+        $organizer = Organizer::where('id', $lockedWithdraw->organizer_id)->lockForUpdate()->firstOrFail();
+        $organizer->amount = $organizer->amount + $lockedWithdraw->amount;
+        $organizer->save();
+
+        $transaction = Transaction::where([
+          ['booking_id', $lockedWithdraw->id],
+          ['transcation_type', 3]
+        ])->first();
+
+        if ($transaction) {
+          $transaction->update(['payment_status' => 2]);
+        }
+
+        $lockedWithdraw->status = 2;
+        $lockedWithdraw->save();
+      });
+    } catch (\RuntimeException $exception) {
+      return redirect()->back()->with('warning', $exception->getMessage());
     }
 
-    $withdraw->status = 2;
-
-    //mail sending end
-    $withdraw->save();
     return redirect()->back();
   }
 }

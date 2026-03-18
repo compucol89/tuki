@@ -245,7 +245,7 @@ class TicketController extends Controller
   //delete_variation
   public function delete_variation($id)
   {
-    $variation = TicketVariation::where('id', $id)->first();
+    $variation = TicketVariation::where('id', $id)->firstOrFail();
     $variation->delete();
     return 'success';
   }

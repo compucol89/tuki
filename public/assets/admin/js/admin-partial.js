@@ -2,6 +2,8 @@
 $(document).ready(function () {
   'use strict';
 
+  const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
   // course thumbnail image
   $('.thumb-img-input').on('change', function (event) {
     let file = event.target.files[0];
@@ -483,7 +485,11 @@ $(document).ready(function () {
   $('tbody').on('click', '.deleteRowAndDB', function () {
     $('.request-loader').addClass('show');
 
-    $.get(baseUrl + '/admin/delete-variation/' + $(this).data('id'), function (data, status) {
+    const deleteUrl = $(this).data('url') ? $(this).data('url') : (baseUrl + '/admin/delete-variation/' + $(this).data('id'));
+
+    $.post(deleteUrl, {
+      _token: csrfToken
+    }, function (data, status) {
 
       if (data == 'success') {
         $('.request-loader').removeClass('show');
@@ -547,7 +553,9 @@ $(document).ready(function () {
   $('tbody').on('click', '.deleteDateDbRow', function () {
     $('.request-loader').addClass('show');
 
-    $.get($(this).data('url'), function (data, status) {
+    $.post($(this).data('url'), {
+      _token: csrfToken
+    }, function (data, status) {
 
       if (data == 'success') {
         $('.request-loader').removeClass('show');

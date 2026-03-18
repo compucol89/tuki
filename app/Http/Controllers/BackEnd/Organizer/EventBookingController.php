@@ -22,6 +22,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class EventBookingController extends Controller
 {
+  private function getOwnedBookingOrFail($bookingId)
+  {
+    return Booking::where('id', $bookingId)
+      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->firstOrFail();
+  }
+
   public function index(Request $request)
   {
     $bookingId = $paymentStatus = null;
@@ -199,11 +206,7 @@ class EventBookingController extends Controller
   //show
   public function show($id)
   {
-    $booking = Booking::where('id', $id)->firstOrFail();
-
-    if (!($booking) || $booking->organizer_id != Auth::guard('organizer')->user()->id) {
-      return redirect()->route('organizer.dashboard');
-    }
+    $booking = $this->getOwnedBookingOrFail($id);
 
     // get course title
     $language = $this->getLanguage();
@@ -218,11 +221,7 @@ class EventBookingController extends Controller
 
   public function destroy($id)
   {
-    $Booking = Booking::where('id', $id)->first();
-
-    if (Auth::guard('organizer')->user()->id != $Booking->organizer_id) {
-      return back();
-    }
+    $Booking = $this->getOwnedBookingOrFail($id);
 
     // first, delete the attachment
     @unlink(public_path('assets/admin/file/attachments/') . $Booking->attachment);
@@ -240,7 +239,7 @@ class EventBookingController extends Controller
     $ids = $request->ids;
 
     foreach ($ids as $id) {
-      $booking = Booking::where('id', $id)->first();
+      $booking = $this->getOwnedBookingOrFail($id);
 
       // first, delete the attachment
       @unlink(public_path('assets/admin/file/attachments/') . $booking->attachment);
@@ -262,8 +261,21 @@ class EventBookingController extends Controller
 
     $fromDate = $request->from_date;
     $toDate = $request->to_date;
-    $paymentStatus = $request->payment_status;
+    $paymentStatus = filled($request->payment_status) ? strtolower($request->payment_status) : null;
     $paymentMethod = $request->payment_method;
+
+    if (!empty($fromDate) && !empty($toDate) && Carbon::parse($toDate)->lt(Carbon::parse($fromDate))) {
+      Session::flash('warning', 'La fecha final no puede ser anterior a la fecha inicial.');
+      Session::put('booking_report', []);
+
+      $data['bookings'] = [];
+      $data['onPms'] = OnlineGateway::where('status', 1)->get();
+      $data['offPms'] = OfflineGateway::where('status', 1)->get();
+      $data['deLang'] = $language;
+      $data['abs'] = Basic::select('base_currency_symbol_position', 'base_currency_symbol')->first();
+
+      return view('organizer.event.booking.report', $data);
+    }
 
     if (!empty($fromDate) && !empty($toDate)) {
       $bookings = Booking::join('event_contents', 'event_contents.event_id', 'bookings.event_id')

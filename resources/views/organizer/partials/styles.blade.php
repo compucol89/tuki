@@ -1,3 +1,7 @@
+{{-- Inter font --}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 {{-- fontawesome css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/all.min.css') }}">
 
@@ -33,3 +37,6 @@
 
 {{-- admin-main css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-main.css') }}">
+
+{{-- admin skin: Modern SaaS UI override --}}
+<link rel="stylesheet" href="{{ asset('assets/admin/css/admin-skin.css') }}"><?php /* organizer-v1 */ ?>

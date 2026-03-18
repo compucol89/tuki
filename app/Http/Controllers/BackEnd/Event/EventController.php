@@ -243,7 +243,7 @@ class EventController extends Controller
    */
   public function deleteDate($id)
   {
-    $date = EventDates::where('id', $id)->first();
+    $date = EventDates::where('id', $id)->firstOrFail();
     $date->delete();
     return 'success';
   }
@@ -430,6 +430,8 @@ class EventController extends Controller
     if ($request->date_type == 'single') {
       $in['end_date_time'] = Carbon::parse($request->end_date . ' ' . $request->end_time);
       $in['duration'] = $diffent;
+
+      EventDates::where('event_id', $event->id)->delete();
     } else {
       //update event date time
       $event_date = EventDates::where('event_id', $event->id)->orderBy('end_date_time', 'desc')->first();

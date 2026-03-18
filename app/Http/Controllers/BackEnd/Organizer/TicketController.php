@@ -9,23 +9,35 @@ use App\Models\Event;
 use App\Models\Event\EventImage;
 use App\Models\Event\EventContent;
 use App\Models\Event\Ticket;
-use App\Models\Event\TicketVariation;
 use App\Http\Requests\Event\TicketRequest;
 use App\Models\Event\TicketContent;
 use App\Models\Event\VariationContent;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use Purifier;
 
 class TicketController extends Controller
 {
+  private function getOwnedEventOrFail($eventId)
+  {
+    return Event::where('id', $eventId)
+      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->firstOrFail();
+  }
+
+  private function getOwnedTicketOrFail($ticketId)
+  {
+    $ticket = Ticket::where('id', $ticketId)->firstOrFail();
+    $this->getOwnedEventOrFail($ticket->event_id);
+
+    return $ticket;
+  }
+
   public function index(Request $request)
   {
-    $evnt = Event::where('id', $request->event_id)->select('organizer_id')->firstOrFail();
-    if (!($evnt) || $evnt->organizer_id != Auth::guard('organizer')->user()->id) {
-      return redirect()->route('organizer.dashboard');
-    }
+    $this->getOwnedEventOrFail($request->event_id);
 
     $languages = Language::all();
 
@@ -44,10 +56,7 @@ class TicketController extends Controller
   //create
   public function create(Request $request)
   {
-    $evnt = Event::where('id', $request->event_id)->select('organizer_id')->firstOrFail();
-    if (!($evnt) || $evnt->organizer_id != Auth::guard('organizer')->user()->id) {
-      return redirect()->route('organizer.dashboard');
-    }
+    $this->getOwnedEventOrFail($request->event_id);
 
     $languages = Language::get();
     $language = Language::where('code', $request->language)->firstOrFail();
@@ -65,6 +74,8 @@ class TicketController extends Controller
   //store
   public function store(TicketRequest $request)
   {
+    $this->getOwnedEventOrFail($request->event_id);
+
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;
     $in['early_bird_discount_type'] = $request->discount_type;
@@ -138,10 +149,7 @@ class TicketController extends Controller
   //edit
   public function edit(Request $request)
   {
-    $evnt = Event::where('id', $request->event_id)->select('organizer_id')->firstOrFail();
-    if (!($evnt) || $evnt->organizer_id != Auth::guard('organizer')->user()->id) {
-      return redirect()->route('organizer.dashboard');
-    }
+    $this->getOwnedEventOrFail($request->event_id);
 
     $language = Language::where('code', $request->language)->firstOrFail();
     $languages = Language::get();
@@ -152,7 +160,8 @@ class TicketController extends Controller
       $event = EventContent::where('event_id', $request->event_id)->first();
     }
     $information['event'] = $event;
-    $ticket = Ticket::where('id', $request->id)->firstOrFail();
+    $ticket = $this->getOwnedTicketOrFail($request->id);
+    abort_unless((int) $ticket->event_id === (int) $request->event_id, 404);
     $information['ticket'] = $ticket;
     $information['getCurrencyInfo'] = $this->getCurrencyInfo();
     $variations = json_decode($ticket->variations, true);
@@ -162,6 +171,9 @@ class TicketController extends Controller
   //update
   public function update(TicketRequest $request)
   {
+    $ticket = $this->getOwnedTicketOrFail($request->ticket_id);
+    abort_unless((int) $ticket->event_id === (int) $request->event_id, 404);
+
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;
     $in['early_bird_discount_type'] = $request->discount_type;
@@ -172,18 +184,14 @@ class TicketController extends Controller
     if ($request->pricing_type_2 == 'free') {
       $in['pricing_type'] = 'free';
       $in['price'] = 0;
-      $ticket =  Ticket::where('id', $request->ticket_id)->first();
       $ticket->update($in);
     } elseif ($request->pricing_type_2 == 'normal') {
       $in['pricing_type'] = 'normal';
       $in['price'] = $request->price;
       $in['f_price'] = $request->price;
-      $ticket =  Ticket::where('id', $request->ticket_id)->first();
       $ticket->update($in);
     } elseif ($request->pricing_type_2 == 'variation') {
       $in['pricing_type'] = 'variation';
-      $ticket =  Ticket::where('id', $request->ticket_id)->first();
-
       $languages = Language::get();
       $variations = [];
       foreach ($languages as $language) {
@@ -245,15 +253,22 @@ class TicketController extends Controller
   //destroy
   public function destroy(Request $request)
   {
-    $ticket = Ticket::where('id', $request->id)->first();
+    $ticket = $this->getOwnedTicketOrFail($request->id);
     $ticket->delete();
     return redirect()->back()->with('success', 'Deleted Successfully');
   }
   //delete_variation
   public function delete_variation($id)
   {
-    $variation = TicketVariation::where('id', $id)->first();
-    $variation->delete();
+    $variation = DB::table('ticket_variations')
+      ->join('tickets', 'tickets.id', '=', 'ticket_variations.ticket_id')
+      ->join('events', 'events.id', '=', 'tickets.event_id')
+      ->where('ticket_variations.id', $id)
+      ->where('events.organizer_id', Auth::guard('organizer')->user()->id)
+      ->select('ticket_variations.id')
+      ->firstOrFail();
+
+    DB::table('ticket_variations')->where('id', $variation->id)->delete();
     return 'success';
   }
   //bulk_delete
@@ -262,7 +277,7 @@ class TicketController extends Controller
     $ids = $request->ids;
 
     foreach ($ids as $id) {
-      $ticket = Ticket::where('id', $id)->first();
+      $ticket = $this->getOwnedTicketOrFail($id);
       $ticket->delete();
     }
     Session::flash('success', 'Deleted Successfully');

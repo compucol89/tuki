@@ -147,11 +147,14 @@
                                   </button>
                                 </form>
 
-                                <a target="_blank"
-                                  href="{{ route('admin.customer_management.secret_login', ['id' => $customer->id]) }}"
-                                  class="dropdown-item">
-                                  {{ __('Secret Login') }}
-                                </a>
+                                <form class="d-block"
+                                  action="{{ route('admin.customer_management.secret_login', ['id' => $customer->id]) }}"
+                                  method="post" target="_blank">
+                                  @csrf
+                                  <button type="submit" class="dropdown-item border-0 bg-transparent text-left">
+                                    {{ __('Secret Login') }}
+                                  </button>
+                                </form>
                               </div>
                             </div>
                           </td>

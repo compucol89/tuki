@@ -102,18 +102,8 @@ class SupportTicketController extends Controller
     }
     public function zip_file_upload(Request $request)
     {
-        $file = $request->file('file');
-        $allowedExts = array('zip');
         $rules = [
-            'file' => [
-                function ($attribute, $value, $fail) use ($file, $allowedExts) {
-                    $ext = $file->getClientOriginalExtension();
-                    if (!in_array($ext, $allowedExts)) {
-                        return $fail("Only zip file supported");
-                    }
-                },
-                'max:20000'
-            ],
+            'file' => 'required|file|mimes:zip|max:20000',
         ];
 
         $messages = [
@@ -141,19 +131,15 @@ class SupportTicketController extends Controller
         if ($s_status->support_ticket_status != 'active') {
             return redirect()->route('organizer.dashboard');
         }
-        $file = $request->file('file');
-        $allowedExts = array('zip');
+        $ticket = SupportTicket::where([
+            ['id', $id],
+            ['user_id', Auth::guard('organizer')->user()->id],
+            ['user_type', 'organizer']
+        ])->firstOrFail();
+
         $rules = [
             'reply' => 'required',
-            'file' => [
-                function ($attribute, $value, $fail) use ($file, $allowedExts) {
-                    $ext = $file->getClientOriginalExtension();
-                    if (!in_array($ext, $allowedExts)) {
-                        return $fail("Only zip file supported");
-                    }
-                },
-                'max:20000'
-            ],
+            'file' => 'nullable|file|mimes:zip|max:20000',
         ];
 
         $messages = [
@@ -168,7 +154,7 @@ class SupportTicketController extends Controller
         $input['type'] = 3;
         $input['user_id'] = Auth::guard('organizer')->user()->id;
 
-        $input['support_ticket_id'] = $id;
+        $input['support_ticket_id'] = $ticket->id;
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = uniqid() . '.' . $file->getClientOriginalExtension();
@@ -185,7 +171,7 @@ class SupportTicketController extends Controller
             unlink($file);
         }
 
-        SupportTicket::where('id', $id)->update([
+        SupportTicket::where('id', $ticket->id)->update([
             'last_message' => Carbon::now(),
             'status' => 2,
             'user_id' => Auth::guard('organizer')->user()->id

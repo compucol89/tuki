@@ -156,9 +156,13 @@ class SupportTicketController extends Controller
 
   public function unassign_stuff($id)
   {
-    SupportTicket::where('id', $id)->update([
-      'admin_id' => null,
-    ]);
+    $ticket = SupportTicket::where('id', $id)->firstOrFail();
+
+    if (!empty($ticket->admin_id)) {
+      $ticket->update([
+        'admin_id' => null,
+      ]);
+    }
 
     Session::flash('success', 'Unassign stuff successfully!');
     return back();

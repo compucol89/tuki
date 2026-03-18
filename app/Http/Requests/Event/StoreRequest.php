@@ -5,6 +5,8 @@ namespace App\Http\Requests\Event;
 use App\Models\Event\EventContent;
 use App\Models\Language;
 use App\Rules\ImageMimeTypeRule;
+use Carbon\Carbon;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -125,27 +127,85 @@ class StoreRequest extends FormRequest
     $languages = Language::all();
 
     foreach ($languages as $language) {
-      $messageArray[$language->code . '_title.required'] = 'The title field is required for ' . $language->name . ' language.';
+      $messageArray[$language->code . '_title.required'] = 'El titulo es obligatorio para el idioma ' . $language->name . '.';
 
-      $messageArray[$language->code . '_address.required'] = 'The address field is required for ' . $language->name . ' language.';
-      $messageArray[$language->code . '_country.required'] = 'The Country field is required for ' . $language->name . ' language.';
-      $messageArray[$language->code . '_city.required'] = 'The City field is required for ' . $language->name . ' language.';
+      $messageArray[$language->code . '_address.required'] = 'La direccion es obligatoria para el idioma ' . $language->name . '.';
+      $messageArray[$language->code . '_country.required'] = 'El pais es obligatorio para el idioma ' . $language->name . '.';
+      $messageArray[$language->code . '_city.required'] = 'La ciudad es obligatoria para el idioma ' . $language->name . '.';
 
-      $messageArray[$language->code . '_address.required_if'] = 'The Address field is required for ' . $language->name . ' language.';
-      $messageArray[$language->code . '_country.required_if'] = 'The Country field is required for ' . $language->name . ' language.';
-      $messageArray[$language->code . '_city.required_if'] = 'The City field is required for ' . $language->name . ' language.';
+      $messageArray[$language->code . '_address.required_if'] = 'La direccion es obligatoria para el idioma ' . $language->name . '.';
+      $messageArray[$language->code . '_country.required_if'] = 'El pais es obligatorio para el idioma ' . $language->name . '.';
+      $messageArray[$language->code . '_city.required_if'] = 'La ciudad es obligatoria para el idioma ' . $language->name . '.';
 
-      $messageArray[$language->code . '_category_id.required'] = 'The category field is required for ' . $language->name . ' language.';
+      $messageArray[$language->code . '_category_id.required'] = 'La categoria es obligatoria para el idioma ' . $language->name . '.';
 
-      $messageArray[$language->code . '_description.min'] = 'The description must be at least 30 characters for ' . $language->name . ' language.';
+      $messageArray[$language->code . '_description.min'] = 'La descripcion debe tener al menos 30 caracteres para el idioma ' . $language->name . '.';
     }
 
 
-    $messageArray['m_start_date.required'] = 'The start date feild is required.!';
-    $messageArray['m_start_time.required'] = 'The start time feild is required.!';
-    $messageArray['m_end_date.required'] = 'The end date feild is required.!';
-    $messageArray['m_end_time.required'] = 'The end time feild is required.!';
+    $messageArray['m_start_date.required'] = 'La fecha de inicio es obligatoria.';
+    $messageArray['m_start_time.required'] = 'La hora de inicio es obligatoria.';
+    $messageArray['m_end_date.required'] = 'La fecha de finalizacion es obligatoria.';
+    $messageArray['m_end_time.required'] = 'La hora de finalizacion es obligatoria.';
+    $messageArray['m_start_date.*.required'] = 'La fecha de inicio es obligatoria.';
+    $messageArray['m_start_time.*.required'] = 'La hora de inicio es obligatoria.';
+    $messageArray['m_end_date.*.required'] = 'La fecha de finalizacion es obligatoria.';
+    $messageArray['m_end_time.*.required'] = 'La hora de finalizacion es obligatoria.';
+
+    $messageArray['start_date.required'] = 'La fecha de inicio es obligatoria.';
+    $messageArray['start_time.required'] = 'La hora de inicio es obligatoria.';
+    $messageArray['end_date.required'] = 'La fecha de finalizacion es obligatoria.';
+    $messageArray['end_time.required'] = 'La hora de finalizacion es obligatoria.';
 
     return $messageArray;
+  }
+
+  public function withValidator(Validator $validator)
+  {
+    $validator->after(function (Validator $validator) {
+      $this->validateChronologicalOrder($validator);
+    });
+  }
+
+  private function validateChronologicalOrder(Validator $validator)
+  {
+    if ($this->date_type === 'single') {
+      if ($this->filled('start_date') && $this->filled('start_time') && $this->filled('end_date') && $this->filled('end_time')) {
+        $start = Carbon::parse($this->start_date . ' ' . $this->start_time);
+        $end = Carbon::parse($this->end_date . ' ' . $this->end_time);
+
+        if ($end->lessThan($start)) {
+          $validator->errors()->add('end_date', 'La fecha y hora de finalizacion deben ser posteriores o iguales a la fecha y hora de inicio.');
+        }
+      }
+
+      return;
+    }
+
+    if ($this->date_type !== 'multiple') {
+      return;
+    }
+
+    $startDates = $this->input('m_start_date', []);
+    $startTimes = $this->input('m_start_time', []);
+    $endDates = $this->input('m_end_date', []);
+    $endTimes = $this->input('m_end_time', []);
+
+    foreach ($startDates as $index => $startDate) {
+      $startTime = $startTimes[$index] ?? null;
+      $endDate = $endDates[$index] ?? null;
+      $endTime = $endTimes[$index] ?? null;
+
+      if (empty($startDate) || empty($startTime) || empty($endDate) || empty($endTime)) {
+        continue;
+      }
+
+      $start = Carbon::parse($startDate . ' ' . $startTime);
+      $end = Carbon::parse($endDate . ' ' . $endTime);
+
+      if ($end->lessThan($start)) {
+        $validator->errors()->add('m_end_date.' . $index, 'La fecha y hora de finalizacion deben ser posteriores o iguales a la fecha y hora de inicio.');
+      }
+    }
   }
 }

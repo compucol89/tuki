@@ -38,6 +38,48 @@
                 ->first();
         }
 
+        $defaultEventContent = DB::table('event_contents')
+            ->where('language_id', $defaultLang->id)
+            ->where('event_id', $event->id)
+            ->first();
+
+        if (empty($defaultEventContent)) {
+            $defaultEventContent = DB::table('event_contents')
+                ->where('event_id', $event->id)
+                ->first();
+        }
+
+        $galleryCount = DB::table('event_images')->where('event_id', $event->id)->count();
+        $multipleDateCount = DB::table('event_dates')->where('event_id', $event->id)->count();
+
+        $hasTitle = !empty(optional($defaultEventContent)->title) && mb_strlen(trim($defaultEventContent->title)) >= 8;
+        $hasDescription = !empty(optional($defaultEventContent)->description) && mb_strlen(trim(strip_tags($defaultEventContent->description))) >= 80;
+        $hasRefundPolicy = !empty(optional($defaultEventContent)->refund_policy) && mb_strlen(trim($defaultEventContent->refund_policy)) >= 20;
+        $hasThumbnail = !empty($event->thumbnail);
+        $hasGallery = $galleryCount > 0;
+        $hasDates = $event->date_type === 'single' ? !empty($event->start_date) && !empty($event->end_date) : $multipleDateCount > 0;
+        $hasSalesSetup = $event->event_type === 'online'
+            ? !empty(optional($event->ticket)->pricing_type) || !is_null(optional($event->ticket)->price)
+            : $event->tickets()->count() > 0;
+        $isPublishedReady = (int) $event->status === 1;
+
+        $publicationChecks = [
+            ['done' => $hasThumbnail, 'label' => __('Miniatura cargada'), 'help' => __('Una buena portada mejora mucho la confianza del comprador.')],
+            ['done' => $hasGallery, 'label' => __('Galeria con imagenes'), 'help' => __('Sube al menos una imagen adicional para que la publicacion se vea mas completa.')],
+            ['done' => $hasDates, 'label' => __('Fechas configuradas'), 'help' => __('El comprador necesita ver claramente cuando ocurre el evento.')],
+            ['done' => $hasTitle, 'label' => __('Titulo claro'), 'help' => __('Intenta usar nombre del evento, artista o ciudad si aplica.')],
+            ['done' => $hasDescription, 'label' => __('Descripcion util'), 'help' => __('Explica que incluye la entrada, horarios, acceso y detalles importantes.')],
+            ['done' => $hasSalesSetup, 'label' => __('Venta configurada'), 'help' => __('Revisa precio, disponibilidad o tickets antes de publicar.')],
+            ['done' => $hasRefundPolicy, 'label' => __('Politica de reembolso'), 'help' => __('Aclara que pasa si alguien no puede asistir o necesita cambios.')],
+            ['done' => $isPublishedReady, 'label' => __('Estado activo'), 'help' => __('Cuando todo este listo, activa el evento para que pueda verse.')],
+        ];
+
+        $completedChecks = collect($publicationChecks)->where('done', true)->count();
+        $totalChecks = count($publicationChecks);
+        $publicationScore = (int) round(($completedChecks / max($totalChecks, 1)) * 100);
+        $publicationTone = $publicationScore >= 85 ? 'success' : ($publicationScore >= 60 ? 'warning' : 'danger');
+        $publicationHeadline = $publicationScore >= 85 ? __('Muy bien encaminado') : ($publicationScore >= 60 ? __('Vas bien, pero aun falta') : __('Todavia le falta informacion clave'));
+
       @endphp
       <li class="nav-item">
         <a href="#">
@@ -56,52 +98,162 @@
 
   <div class="row">
     <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title d-inline-block">{{ __('Edit Event') }}</div>
-          <a class="btn btn-info btn-sm float-right d-inline-block" href="{{ url()->previous() }}">
-            <span class="btn-label">
-              <i class="fas fa-backward"></i>
-            </span>
-            {{ __('Back') }}
-          </a>
-          <a class="mr-2 btn btn-success btn-sm float-right d-inline-block"
-            href="{{ route('event.details', ['slug' => eventSlug($defaultLang->id, $event->id), 'id' => $event->id]) }}"
-            target="_blank">
-            <span class="btn-label">
-              <i class="fas fa-eye"></i>
-            </span>
-            {{ __('Preview') }}
-          </a>
-          @if ($event->event_type == 'venue')
-            <a class="mr-2 btn btn-secondary btn-sm float-right d-inline-block"
-              href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
-              target="_blank">
-              <span class="btn-label">
-                <i class="far fa-ticket"></i>
-              </span>
-              {{ __('Tickets') }}
+      <div class="card border-0 shadow-none bg-transparent">
+        <div class="card-header p-0 bg-transparent border-0 mb-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <a class="btn btn-secondary btn-sm" href="{{ url()->previous() }}">
+              <span class="btn-label"><i class="fas fa-backward"></i></span> {{ __('Back') }}
             </a>
-          @endif
+            <div>
+              <a class="btn btn-success btn-sm mr-2"
+                href="{{ route('event.details', ['slug' => eventSlug($defaultLang->id, $event->id), 'id' => $event->id]) }}"
+                target="_blank">
+                <span class="btn-label"><i class="fas fa-eye"></i></span> {{ __('Preview') }}
+              </a>
+              @if ($event->event_type == 'venue')
+                <a class="btn btn-info btn-sm mr-2"
+                  href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
+                  target="_blank">
+                  <span class="btn-label"><i class="far fa-ticket"></i></span> {{ __('Tickets') }}
+                </a>
+              @endif
+              <button type="submit" id="EventSubmitTop" class="btn btn-primary btn-sm" onclick="document.getElementById('EventSubmit').click(); return false;">
+                <span class="btn-label"><i class="fas fa-save"></i></span> {{ __('Update') }}
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-0">
           <div class="row">
             <div class="col-lg-8 offset-lg-2">
               <div class="alert alert-danger pb-1 dis-none" id="eventErrors">
                 <button type="button" class="close" data-dismiss="alert">x</button>
                 <ul></ul>
               </div>
-              <div class="col-lg-12">
-                <label for="" class="mb-2"><strong>{{ __('Gallery Images') }} **</strong></label>
+              <div class="card border mb-4">
+                <div class="card-body py-3">
+                  <div class="mb-3">
+                    <span class="badge badge-primary mb-2">{{ __('Guia rapida') }}</span>
+                    <h5 class="mb-1">{{ __('Edita tu evento paso a paso') }}</h5>
+                    <p class="text-muted mb-0">{{ __('Sigue este orden para no perderte: imagenes, fechas, configuracion, contenido y extras.') }}</p>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-xl-4 mb-2">
+                      <a href="#section-media" class="btn btn-light btn-block text-left py-3">
+                        <span class="badge badge-primary mr-2">1</span>{{ __('Imagenes') }}
+                        <small class="d-block text-muted mt-1">{{ __('Galeria y miniatura') }}</small>
+                      </a>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-2">
+                      <a href="#section-schedule" class="btn btn-light btn-block text-left py-3">
+                        <span class="badge badge-primary mr-2">2</span>{{ __('Fechas') }}
+                        <small class="d-block text-muted mt-1">{{ __('Fecha unica o multiples funciones') }}</small>
+                      </a>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-2">
+                      <a href="#section-settings" class="btn btn-light btn-block text-left py-3">
+                        <span class="badge badge-primary mr-2">3</span>{{ __('Configuracion') }}
+                        <small class="d-block text-muted mt-1">{{ __('Estado, visibilidad y venta') }}</small>
+                      </a>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-2">
+                      <a href="#section-content" class="btn btn-light btn-block text-left py-3">
+                        <span class="badge badge-primary mr-2">4</span>{{ __('Contenido') }}
+                        <small class="d-block text-muted mt-1">{{ __('Titulos, descripcion y SEO') }}</small>
+                      </a>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-2">
+                      <a href="#section-media-links" class="btn btn-light btn-block text-left py-3">
+                        <span class="badge badge-primary mr-2">5</span>{{ __('Multimedia') }}
+                        <small class="d-block text-muted mt-1">{{ __('Spotify y YouTube') }}</small>
+                      </a>
+                    </div>
+                    <div class="col-md-6 col-xl-4 mb-2">
+                      <a href="#section-tracking" class="btn btn-light btn-block text-left py-3">
+                        <span class="badge badge-primary mr-2">6</span>{{ __('Pixeles') }}
+                        <small class="d-block text-muted mt-1">{{ __('Meta, Google y TikTok') }}</small>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card ev-section-card">
+                <div class="card-header ev-section-header">
+                  <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicacion') }}</h4>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                    <div class="mb-3 mb-md-0">
+                      <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
+                      <h5 class="mb-1">{{ $publicationHeadline }}</h5>
+                      <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si tu evento ya se entiende bien y esta listo para vender.') }}</p>
+                    </div>
+                    <div class="text-md-right">
+                      <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
+                      <small class="text-muted">{{ __('No bloquea el guardado. Solo te orienta.') }}</small>
+                    </div>
+                  </div>
+                  <div class="progress mb-4" style="height: 10px;">
+                    <div class="progress-bar bg-{{ $publicationTone }}" role="progressbar" style="width: {{ $publicationScore }}%;"
+                      aria-valuenow="{{ $publicationScore }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <div class="row">
+                    @foreach ($publicationChecks as $check)
+                      <div class="col-lg-6 mb-3">
+                        <div class="border rounded p-3 h-100 {{ $check['done'] ? 'border-success' : 'border-light' }}">
+                          <div class="d-flex align-items-start">
+                            <span class="mr-2 mt-1 text-{{ $check['done'] ? 'success' : 'muted' }}">
+                              <i class="fas {{ $check['done'] ? 'fa-check-circle' : 'fa-circle' }}"></i>
+                            </span>
+                            <div>
+                              <div class="font-weight-bold mb-1">{{ $check['label'] }}</div>
+                              <small class="text-muted d-block">{{ $check['help'] }}</small>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    @endforeach
+                  </div>
+                  @if ($publicationScore < 85)
+                    <div class="alert alert-light border mb-0">
+                      <strong>{{ __('Consejo rapido:') }}</strong>
+                      {{ __('Antes de publicar, prioriza imagenes, descripcion y fechas. Son las tres cosas que mas ayudan a vender y evitar dudas.') }}
+                    </div>
+                  @endif
+                </div>
+              </div>
+              <div class="card ev-section-card">
+                <div class="card-header ev-section-header">
+                  <h4 class="card-title"><i class="fas fa-images mr-2 text-primary"></i>{{ __('Imagenes del evento') }}</h4>
+                </div>
+              <div class="card-body">
+              <div id="section-media" class="mb-3">
+                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar">
+                  <div class="pr-lg-3 mb-2 mb-lg-0">
+                    <p class="text-muted mb-1">{{ __('Carga galeria y miniatura antes de seguir con el resto del formulario.') }}</p>
+                    <small class="text-muted">{{ __('Usa imagenes limpias y evita flyers con texto demasiado chico.') }}</small>
+                  </div>
+                  <div class="d-flex flex-wrap align-items-center">
+                    <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
+                    <small class="text-muted mb-0">{{ __('Formato recomendado: 1170x570') }}</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 px-0">
+                <label class="ev-label-section">{{ __('Gallery Images') }} <span class="text-warning">**</span></label>
                 <div id="reload-slider-div">
                   <div class="row mt-2">
                     <div class="col">
-                      <table class="table" id="img-table">
+                      <table class="table mb-0" id="img-table">
 
                       </table>
                     </div>
                   </div>
+                </div>
+                <div class="media-upload-separator d-flex align-items-center my-4">
+                  <span class="text-muted small pr-3">{{ __('Agregar mas imagenes') }}</span>
+                  <div class="flex-grow-1 border-top"></div>
                 </div>
                 <form action="{{ route('organizer.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata"
                   class="dropzone create">
@@ -114,7 +266,9 @@
                 <div class=" mb-0" id="errpreimg">
 
                 </div>
-                <p class="text-warning">{{ __('Image Size') . ' : 1170x570' }}</p>
+                <p class="text-warning small mt-2 mb-0">{{ __('Image Size') . ' : 1170x570' }}</p>
+              </div>
+              </div>
               </div>
 
               <form id="eventForm" action="{{ route('organizer.event.update') }}" method="POST"
@@ -123,13 +277,18 @@
                 <input type="hidden" name="event_id" value="{{ $event->id }}">
                 <input type="hidden" name="event_type" value="{{ $event->event_type }}">
                 <input type="hidden" name="gallery_images" value="0">
+                <div class="card ev-section-card">
+                  <div class="card-header ev-section-header">
+                    <h4 class="card-title"><i class="fas fa-calendar-alt mr-2 text-primary"></i>{{ __('Fechas y horarios') }}</h4>
+                  </div>
+                  <div class="card-body">
+                <label class="ev-label-section">{{ __('Thumbnail Image') }}*</label>
                 <div class="form-group">
-                  <label for="">{{ __('Thumbnail Image') . '*' }}</label>
                   <br>
                   <div class="thumb-preview">
                     <img
                       src="{{ $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg') }}"
-                      alt="..." class="uploaded-img">
+                      alt="..." class="uploaded-img ev-thumbnail-preview">
                   </div>
                   <div class="mt-3">
                     <div role="button" class="btn btn-primary btn-sm upload-btn">
@@ -137,7 +296,10 @@
                       <input type="file" class="img-input" name="thumbnail">
                     </div>
                   </div>
-                  <p class="text-warning">{{ __('Image Size') . ' : 320x230' }}</p>
+                  <p class="text-warning small mt-2 mb-4">{{ __('Image Size') . ' : 320x230' }}</p>
+                </div>
+                <div id="section-schedule" class="mb-3">
+                  <p class="text-muted mb-0">{{ __('Define si el evento tiene una sola fecha o varias funciones.') }}</p>
                 </div>
 
                 <div class="row">
@@ -201,7 +363,7 @@
 
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label>{{ __('End Date"') . '*' }}</label>
+                      <label>{{ __('End Date') . '*' }}</label>
                       <input type="date" name="end_date" value="{{ $event->end_date }}"
                         placeholder="Enter End Date" class="form-control">
                     </div>
@@ -277,7 +439,7 @@
                                   <input type="hidden" name="date_ids[]" value="{{ $date->id }}">
                                   <td>
                                     <a href="javascript:void(0)"
-                                      data-url="{{ route('admin.event.delete.date', $date->id) }}"
+                                      data-url="{{ route('organizer.event.delete.date', $date->id) }}"
                                       class="btn btn-danger deleteDateDbRow">
                                       <i class="fas fa-minus"></i></a>
                                   </td>
@@ -325,8 +487,16 @@
                   </div>
                 </div>
 
-
-
+                </div>
+                </div>
+                <div class="card ev-section-card">
+                  <div class="card-header ev-section-header">
+                    <h4 class="card-title"><i class="fas fa-cog mr-2 text-primary"></i>{{ __('Configuracion') }}</h4>
+                  </div>
+                  <div class="card-body">
+                <div id="section-settings" class="mb-3">
+                  <p class="text-muted mb-0">{{ __('Ajusta estado, visibilidad, ubicacion y condiciones de venta del evento.') }}</p>
+                </div>
                 <div class="row ">
 
                   <div class="col-lg-4">
@@ -542,6 +712,12 @@
                 @endif
 
 
+                </div>
+                </div>
+                <div id="section-content" class="pt-3 mb-3">
+                  <h5 class="mb-1">{{ __('Contenido por idioma') }}</h5>
+                  <p class="text-muted mb-0">{{ __('Aqui editas titulo, categoria, descripcion, politica de reembolso y SEO para cada idioma.') }}</p>
+                </div>
                 <div id="accordion" class="mt-3">
                   @foreach ($languages as $language)
                     <div class="version">
@@ -715,11 +891,12 @@
 
                 <div id="sliders"></div>
 
+                <div id="section-media-links"></div>
                 {{-- Multimedia del artista --}}
                 <div class="card mt-4">
                   <div class="card-header">
-                    <h4 class="card-title">{{ __('Multimedia del Artista') }}</h4>
-                    <small class="text-muted">{{ __('Opcional. Se mostrará en la página del evento para que los compradores conozcan al artista.') }}</small>
+                    <h4 class="card-title">{{ __('Multimedia del artista') }}</h4>
+                    <small class="text-muted">{{ __('Opcional. Se mostrara en la pagina del evento para que los compradores conozcan al artista.') }}</small>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -728,7 +905,7 @@
                           <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace del artista en Spotify') }}</label>
                           <input type="url" class="form-control" name="spotify_url" value="{{ $event->spotify_url }}"
                             placeholder="Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi">
-                          <small class="text-muted">{{ __('Abrí Spotify, buscá al artista, hacé clic en los tres puntos → Compartir → Copiar enlace del artista.') }}</small>
+                          <small class="text-muted">{{ __('Abre Spotify, busca al artista y copia el enlace del perfil.') }}</small>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -736,18 +913,19 @@
                           <label><i class="fab fa-youtube mr-1" style="color:#FF0000"></i> {{ __('Enlace del video en YouTube') }}</label>
                           <input type="url" class="form-control" name="youtube_url" value="{{ $event->youtube_url }}"
                             placeholder="Ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-                          <small class="text-muted">{{ __('Pegá el enlace del video de YouTube tal como aparece en el navegador.') }}</small>
+                          <small class="text-muted">{{ __('Pega el enlace completo del video tal como aparece en el navegador.') }}</small>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {{-- Píxeles de seguimiento --}}
+                {{-- Pixeles de seguimiento --}}
+                <div id="section-tracking"></div>
                 <div class="card mt-4">
                   <div class="card-header">
-                    <h4 class="card-title">{{ __('Píxeles de Seguimiento') }}</h4>
-                    <small class="text-muted">{{ __('Opcional. Agregá tus propios píxeles para medir conversiones de este evento.') }}</small>
+                    <h4 class="card-title">{{ __('Pixeles de seguimiento') }}</h4>
+                    <small class="text-muted">{{ __('Opcional. Agrega tus propios pixeles para medir conversiones de este evento.') }}</small>
                   </div>
                   <div class="card-body">
                     <div class="row">
@@ -781,8 +959,11 @@
         <div class="card-footer">
           <div class="row">
             <div class="col-12 text-center">
-              <button type="submit" id="EventSubmit" class="btn btn-primary">
-                {{ __('Update') }}
+              <p class="text-muted mb-3 mx-auto" style="max-width: 640px;">
+                {{ __('Guarda al final. Si falta un dato obligatorio, el sistema te mostrara el error arriba.') }}
+              </p>
+              <button type="submit" id="EventSubmit" class="btn btn-primary px-4">
+                {{ __('Guardar cambios del evento') }}
               </button>
             </div>
           </div>
@@ -790,6 +971,99 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('style')
+  <style>
+    #my-dropzone {
+      border: 2px dashed #d6d9e6;
+      border-radius: 14px;
+      background: #f8f9fc;
+      min-height: 160px;
+      padding: 24px;
+    }
+
+    #my-dropzone .dz-message {
+      margin: 1.5rem 0;
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    #my-dropzone .dz-message span::before {
+      content: "Arrastra imagenes aqui o haz click para subirlas";
+    }
+
+    #my-dropzone .dz-message span {
+      font-size: 0;
+    }
+
+    .compact-media-toolbar {
+      gap: 12px;
+    }
+
+    .media-upload-separator .border-top {
+      border-color: #e5e7eb !important;
+    }
+
+    #img-table,
+    #img-table tbody {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+    }
+
+    #img-table .table-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 170px;
+      background: #f8f9fc;
+      border: 1px solid #eaecf0;
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 0;
+    }
+
+    #img-table td {
+      border: none;
+      padding: 0;
+      background: transparent;
+    }
+
+    #img-table .thumb-preview {
+      width: 116px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #dbe1ea;
+      display: block;
+    }
+
+    #img-table .rmvbtndb {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff1f2;
+      color: #dc2626;
+      cursor: pointer;
+      transition: transform 0.18s ease, background-color 0.18s ease;
+    }
+
+    #img-table .rmvbtndb:hover {
+      transform: scale(1.05);
+      background: #ffe4e6;
+    }
+
+    @media (max-width: 575.98px) {
+      #img-table .table-row {
+        width: 100%;
+      }
+    }
+  </style>
 @endsection
 
 @section('script')

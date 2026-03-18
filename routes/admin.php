@@ -75,8 +75,8 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
   });
 
 
-  Route::get('/monthly-profit', 'BackEnd\AdminController@monthly_profit')->name('admin.monthly_profit');
-  Route::get('/monthly-earning', 'BackEnd\AdminController@monthly_earning')->name('admin.monthly_earning');
+  Route::get('/monthly-profit', 'BackEnd\AdminController@monthly_profit')->middleware('permission:Total Profit')->name('admin.monthly_profit');
+  Route::get('/monthly-earning', 'BackEnd\AdminController@monthly_earning')->middleware('permission:Lifetime Earning')->name('admin.monthly_earning');
 
   Route::group(['middleware' => 'permission:Event Management'], function () {
     Route::get('event-management/events/', 'BackEnd\Event\EventController@index')->name('admin.event_management.event');
@@ -94,7 +94,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
     Route::get('/edit-ticket-setting/{id}', 'BackEnd\Event\EventController@editTicketSetting')->name('admin.event_management.ticket_setting');
     Route::post('/update-ticket-setting', 'BackEnd\Event\EventController@updateTicketSetting')->name('admin.event_management.update_ticket_setting');
 
-    Route::get('/delete-date/{id}', 'BackEnd\Event\EventController@deleteDate')->name('admin.event.delete.date');
+    Route::post('/delete-date/{id}', 'BackEnd\Event\EventController@deleteDate')->name('admin.event.delete.date');
 
     Route::get('/event-images/{id}', 'BackEnd\Event\EventController@images')->name('admin.event.images');
     Route::post('/event-update', 'BackEnd\Event\EventController@update')->name('admin.event.update');
@@ -105,7 +105,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
     Route::post('event/ticket/store-ticket', 'BackEnd\Event\TicketController@store')->name('admin.ticket_management.store_ticket');
     Route::get('event/edit/ticket', 'BackEnd\Event\TicketController@edit')->name('admin.event.edit.ticket');
     Route::post('event/ticket/delete-ticket', 'BackEnd\Event\TicketController@destroy')->name('admin.ticket_management.delete_ticket');
-    Route::get('delete-variation/{id}', 'BackEnd\Event\TicketController@delete_variation')->name('delete.variation');
+    Route::post('delete-variation/{id}', 'BackEnd\Event\TicketController@delete_variation')->name('delete.variation');
     Route::post('ticket_management/update/ticket', 'BackEnd\Event\TicketController@update')->name('admin.ticket_management.update_ticket');
     Route::post('bulk/delete/bulk/event/ticket', 'BackEnd\Event\TicketController@bulk_delete')->name('admin.event_management.bulk_delete_event_ticket');
 
@@ -194,13 +194,13 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
 
     Route::get('withdraw/withdraw-request', 'BackEnd\WithdrawController@index')->name('admin.withdraw.withdraw_request');
     Route::post('withdraw/withdraw-request/delete', 'BackEnd\WithdrawController@delete')->name('admin.witdraw.delete_withdraw');
-    Route::get('withdraw/withdraw-request/approve/{id}', 'BackEnd\WithdrawController@approve')->name('admin.witdraw.approve_withdraw');
-    Route::get('withdraw/withdraw-request/decline/{id}', 'BackEnd\WithdrawController@decline')->name('admin.witdraw.decline_withdraw');
+    Route::post('withdraw/withdraw-request/approve/{id}', 'BackEnd\WithdrawController@approve')->name('admin.witdraw.approve_withdraw');
+    Route::post('withdraw/withdraw-request/decline/{id}', 'BackEnd\WithdrawController@decline')->name('admin.witdraw.decline_withdraw');
   });
 
 
 
-  Route::get('send-mail-template',  'BackEnd\Organizer\OrganizerManagementController@send_mail_template')->name('send.mail-tempalte');
+  Route::get('send-mail-template',  'BackEnd\Organizer\OrganizerManagementController@send_mail_template')->middleware('permission:Organizer Mangement')->name('send.mail-tempalte');
 
   // organizer management route start
   Route::prefix('/organizer-management')->middleware('permission:Organizer Mangement')->group(function () {
@@ -237,7 +237,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
 
       Route::post('/delete', 'BackEnd\Organizer\OrganizerManagementController@destroy')->name('admin.organizer_management.organizer.delete');
 
-      Route::get('/secret-login', 'BackEnd\Organizer\OrganizerManagementController@secret_login')->name('admin.organizer_management.organizer.secret_login');
+      Route::post('/secret-login', 'BackEnd\Organizer\OrganizerManagementController@secret_login')->name('admin.organizer_management.organizer.secret_login');
     });
 
     Route::post('/bulk-delete-user', 'BackEnd\Organizer\OrganizerManagementController@bulkDestroy')->name('admin.organizer_management.bulk_delete_organizer');
@@ -290,7 +290,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
 
       Route::post('/customer-delete', 'BackEnd\CustomerManagementController@destroy')->name('admin.customer_management.customer_delete');
 
-      Route::get('/secret-login', 'BackEnd\CustomerManagementController@secret_login')->name('admin.customer_management.secret_login');
+      Route::post('/secret-login', 'BackEnd\CustomerManagementController@secret_login')->name('admin.customer_management.secret_login');
     });
   });
   Route::post('bulk/delete-customer', 'BackEnd\CustomerManagementController@bulkDestroy')->name('admin.customer_management.bulk_delete_customer');
@@ -308,7 +308,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
     Route::post('support-ticket/closed/{id}', 'BackEnd\SupportTicketController@ticket_closed')->name('admin.support_ticket.close');
     Route::post('support-ticket/assign-stuff/{id}', 'BackEnd\SupportTicketController@assign_stuff')->name('assign_stuff.supoort.ticket');
 
-    Route::get('support-ticket/unassign-stuff/{id}', 'BackEnd\SupportTicketController@unassign_stuff')->name('admin.support_tickets.unassign');
+    Route::post('support-ticket/unassign-stuff/{id}', 'BackEnd\SupportTicketController@unassign_stuff')->name('admin.support_tickets.unassign');
 
     Route::post('support-ticket/delete/{id}', 'BackEnd\SupportTicketController@delete')->name('admin.support_tickets.delete');
     Route::post('support-ticket/bulk/delete/', 'BackEnd\SupportTicketController@bulk_delete')->name('admin.support_tickets.bulk_delete');
@@ -761,6 +761,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
 
 
   // subscriber route start
+  Route::group(['middleware' => 'permission:Subscribers'], function () {
   Route::get('/subscribers', 'BackEnd\User\SubscriberController@index')->name('admin.user_management.subscribers');
 
   Route::post(
@@ -779,8 +780,9 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
     '/subscribers/send-email',
     'BackEnd\User\SubscriberController@sendEmail'
   )->name('admin.user_management.subscribers.send_email');
+  });
 
-  Route::prefix('/push-notification')->group(function () {
+  Route::prefix('/push-notification')->middleware('permission:Push Notification')->group(function () {
     Route::get('/settings', 'BackEnd\User\PushNotificationController@settings')->name('admin.user_management.push_notification.settings');
 
     Route::post('/update-settings', 'BackEnd\User\PushNotificationController@updateSettings')->name('admin.user_management.push_notification.update_settings');

@@ -101,16 +101,26 @@
                                                                 <i class="fas fa-eye"></i>
                                                             </span> {{ __('View') }}</a>
                                                         @if ($item->status == 0)
-                                                            <a href="{{ route('admin.witdraw.approve_withdraw', ['id' => $item->id]) }}"
-                                                                class="btn btn-success mt-1 btn-xs  confirmBtn"><span
-                                                                    class="btn-label">
-                                                                    <i class="fas fa-check-circle"></i>
-                                                                </span> {{ __('Approve') }}</a>
-                                                            <a href="{{ route('admin.witdraw.decline_withdraw', ['id' => $item->id]) }}"
-                                                                class="btn btn-warning mt-1 btn-xs confirmBtn"><span
-                                                                    class="btn-label">
-                                                                    <i class="fas fa-times"></i>
-                                                                </span> {{ __('Decline') }}</a>
+                                                            <form class="d-inline-block confirmForm"
+                                                                action="{{ route('admin.witdraw.approve_withdraw', ['id' => $item->id]) }}"
+                                                                method="post">
+                                                                @csrf
+                                                                <button type="submit"
+                                                                    class="btn btn-success mt-1 btn-xs withdrawConfirmBtn"><span
+                                                                        class="btn-label">
+                                                                        <i class="fas fa-check-circle"></i>
+                                                                    </span> {{ __('Approve') }}</button>
+                                                            </form>
+                                                            <form class="d-inline-block confirmForm"
+                                                                action="{{ route('admin.witdraw.decline_withdraw', ['id' => $item->id]) }}"
+                                                                method="post">
+                                                                @csrf
+                                                                <button type="submit"
+                                                                    class="btn btn-warning mt-1 btn-xs withdrawConfirmBtn"><span
+                                                                        class="btn-label">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </span> {{ __('Decline') }}</button>
+                                                            </form>
                                                         @endif
 
 
@@ -151,4 +161,38 @@
 
     {{-- edit modal --}}
     @include('backend.withdraw.history.view')
+@endsection
+
+@section('script')
+    <script>
+        'use strict';
+
+        $(document).on('click', '.withdrawConfirmBtn', function(e) {
+            e.preventDefault();
+
+            const button = $(this);
+            const form = button.closest('form');
+
+            swal({
+                title: 'Are you sure?',
+                type: 'warning',
+                buttons: {
+                    confirm: {
+                        text: 'Yes',
+                        className: 'btn btn-success'
+                    },
+                    cancel: {
+                        visible: true,
+                        className: 'btn btn-danger'
+                    }
+                }
+            }).then((confirmed) => {
+                if (confirmed) {
+                    form.get(0).submit();
+                } else {
+                    swal.close();
+                }
+            });
+        });
+    </script>
 @endsection

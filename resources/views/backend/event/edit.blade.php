@@ -24,6 +24,48 @@
                 ->where('event_id', $event->id)
                 ->select('title')->first();
         }
+
+        $defaultEventContent = DB::table('event_contents')
+            ->where('language_id', $defaultLang->id)
+            ->where('event_id', $event->id)
+            ->first();
+
+        if (empty($defaultEventContent)) {
+            $defaultEventContent = DB::table('event_contents')
+                ->where('event_id', $event->id)
+                ->first();
+        }
+
+        $galleryCount = DB::table('event_images')->where('event_id', $event->id)->count();
+        $multipleDateCount = DB::table('event_dates')->where('event_id', $event->id)->count();
+
+        $hasTitle = !empty(optional($defaultEventContent)->title) && mb_strlen(trim($defaultEventContent->title)) >= 8;
+        $hasDescription = !empty(optional($defaultEventContent)->description) && mb_strlen(trim(strip_tags($defaultEventContent->description))) >= 80;
+        $hasRefundPolicy = !empty(optional($defaultEventContent)->refund_policy) && mb_strlen(trim($defaultEventContent->refund_policy)) >= 20;
+        $hasThumbnail = !empty($event->thumbnail);
+        $hasGallery = $galleryCount > 0;
+        $hasDates = $event->date_type === 'single' ? !empty($event->start_date) && !empty($event->end_date) : $multipleDateCount > 0;
+        $hasSalesSetup = $event->event_type === 'online'
+            ? !empty(optional($event->ticket)->pricing_type) || !is_null(optional($event->ticket)->price)
+            : $event->tickets()->count() > 0;
+        $isPublishedReady = (int) $event->status === 1;
+
+        $publicationChecks = [
+            ['done' => $hasThumbnail, 'label' => __('Miniatura cargada'), 'help' => __('Una buena portada mejora mucho la confianza del comprador.')],
+            ['done' => $hasGallery, 'label' => __('Galeria con imagenes'), 'help' => __('Sube al menos una imagen adicional para que la publicacion se vea mas completa.')],
+            ['done' => $hasDates, 'label' => __('Fechas configuradas'), 'help' => __('El comprador necesita ver claramente cuando ocurre el evento.')],
+            ['done' => $hasTitle, 'label' => __('Titulo claro'), 'help' => __('Intenta usar nombre del evento, artista o ciudad si aplica.')],
+            ['done' => $hasDescription, 'label' => __('Descripcion util'), 'help' => __('Explica que incluye la entrada, horarios, acceso y detalles importantes.')],
+            ['done' => $hasSalesSetup, 'label' => __('Venta configurada'), 'help' => __('Revisa precio, disponibilidad o tickets antes de publicar.')],
+            ['done' => $hasRefundPolicy, 'label' => __('Politica de reembolso'), 'help' => __('Aclara que pasa si alguien no puede asistir o necesita cambios.')],
+            ['done' => $isPublishedReady, 'label' => __('Estado activo'), 'help' => __('Cuando todo este listo, activa el evento para que pueda verse.')],
+        ];
+
+        $completedChecks = collect($publicationChecks)->where('done', true)->count();
+        $totalChecks = count($publicationChecks);
+        $publicationScore = (int) round(($completedChecks / max($totalChecks, 1)) * 100);
+        $publicationTone = $publicationScore >= 85 ? 'success' : ($publicationScore >= 60 ? 'warning' : 'danger');
+        $publicationHeadline = $publicationScore >= 85 ? __('Muy bien encaminado') : ($publicationScore >= 60 ? __('Vas bien, pero aun falta') : __('Todavia le falta informacion clave'));
       @endphp
       <li class="nav-item">
         <a href="#">{{ strlen($event_title->title) > 35 ? mb_substr($event_title->title, 0, 35, 'UTF-8') . '...' : $event_title->title }}</a>
@@ -66,20 +108,75 @@
         <ul></ul>
       </div>
 
+      <div class="card ev-section-card">
+        <div class="card-header ev-section-header">
+          <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicacion') }}</h4>
+        </div>
+        <div class="card-body">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+            <div class="mb-3 mb-md-0">
+              <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
+              <h5 class="mb-1">{{ $publicationHeadline }}</h5>
+              <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si el evento ya se entiende bien y esta listo para vender.') }}</p>
+            </div>
+            <div class="text-md-right">
+              <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
+              <small class="text-muted">{{ __('No bloquea el guardado. Solo orienta.') }}</small>
+            </div>
+          </div>
+          <div class="progress mb-4" style="height: 10px;">
+            <div class="progress-bar bg-{{ $publicationTone }}" role="progressbar" style="width: {{ $publicationScore }}%;"
+              aria-valuenow="{{ $publicationScore }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <div class="row">
+            @foreach ($publicationChecks as $check)
+              <div class="col-lg-6 mb-3">
+                <div class="border rounded p-3 h-100 {{ $check['done'] ? 'border-success' : 'border-light' }}">
+                  <div class="d-flex align-items-start">
+                    <span class="mr-2 mt-1 text-{{ $check['done'] ? 'success' : 'muted' }}">
+                      <i class="fas {{ $check['done'] ? 'fa-check-circle' : 'fa-circle' }}"></i>
+                    </span>
+                    <div>
+                      <div class="font-weight-bold mb-1">{{ $check['label'] }}</div>
+                      <small class="text-muted d-block">{{ $check['help'] }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+      </div>
+
       {{-- ===== CARD: IMÁGENES ===== --}}
       <div class="card ev-section-card">
         <div class="card-header ev-section-header">
           <h4 class="card-title"><i class="fas fa-images mr-2 text-primary"></i>{{ __('Imágenes del evento') }}</h4>
         </div>
         <div class="card-body">
+          <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar mb-3">
+            <div class="pr-lg-3 mb-2 mb-lg-0">
+              <p class="text-muted mb-1">{{ __('Carga galeria y miniatura antes de seguir con el resto del formulario.') }}</p>
+              <small class="text-muted">{{ __('Usa imagenes limpias y evita flyers con texto demasiado chico.') }}</small>
+            </div>
+            <div class="d-flex flex-wrap align-items-center">
+              <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
+              <small class="text-muted mb-0">{{ __('Formato recomendado: 1170x570') }}</small>
+            </div>
+          </div>
+
           {{-- Galería (form propio — dropzone AJAX) --}}
           <label class="ev-label-section">{{ __('Gallery Images') }} <span class="text-warning">**</span></label>
           <div id="reload-slider-div">
             <div class="row mt-1 mb-2">
               <div class="col">
-                <table class="table" id="img-table"></table>
+                <table class="table mb-0" id="img-table"></table>
               </div>
             </div>
+          </div>
+          <div class="media-upload-separator d-flex align-items-center my-4">
+            <span class="text-muted small pr-3">{{ __('Agregar mas imagenes') }}</span>
+            <div class="flex-grow-1 border-top"></div>
           </div>
           <form action="{{ route('admin.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata" class="dropzone create">
             @csrf
@@ -645,6 +742,9 @@
 
         {{-- Botón guardar --}}
         <div class="text-center mt-4 mb-5">
+          <p class="text-muted mb-3 mx-auto" style="max-width: 640px;">
+            {{ __('Guarda al final. Si falta un dato obligatorio, el sistema te mostrara el error arriba.') }}
+          </p>
           <button type="submit" id="EventSubmit" class="btn btn-primary btn-lg px-5">
             <i class="fas fa-save mr-2"></i>{{ __('Actualizar evento') }}
           </button>
@@ -654,6 +754,99 @@
 
     </div>
   </div>
+@endsection
+
+@section('style')
+  <style>
+    #my-dropzone {
+      border: 2px dashed #d6d9e6;
+      border-radius: 14px;
+      background: #f8f9fc;
+      min-height: 160px;
+      padding: 24px;
+    }
+
+    #my-dropzone .dz-message {
+      margin: 1.5rem 0;
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    #my-dropzone .dz-message span::before {
+      content: "Arrastra imagenes aqui o haz click para subirlas";
+    }
+
+    #my-dropzone .dz-message span {
+      font-size: 0;
+    }
+
+    .compact-media-toolbar {
+      gap: 12px;
+    }
+
+    .media-upload-separator .border-top {
+      border-color: #e5e7eb !important;
+    }
+
+    #img-table,
+    #img-table tbody {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+    }
+
+    #img-table .table-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 170px;
+      background: #f8f9fc;
+      border: 1px solid #eaecf0;
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 0;
+    }
+
+    #img-table td {
+      border: none;
+      padding: 0;
+      background: transparent;
+    }
+
+    #img-table .thumb-preview {
+      width: 116px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #dbe1ea;
+      display: block;
+    }
+
+    #img-table .rmvbtndb {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff1f2;
+      color: #dc2626;
+      cursor: pointer;
+      transition: transform 0.18s ease, background-color 0.18s ease;
+    }
+
+    #img-table .rmvbtndb:hover {
+      transform: scale(1.05);
+      background: #ffe4e6;
+    }
+
+    @media (max-width: 575.98px) {
+      #img-table .table-row {
+        width: 100%;
+      }
+    }
+  </style>
 @endsection
 
 @section('script')

@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\UpdateRequest;
 use App\Models\Admin;
 use App\Models\RolePermission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class SiteAdminController extends Controller
@@ -39,6 +40,10 @@ class SiteAdminController extends Controller
   public function updateStatus(Request $request, $id)
   {
     $admin = Admin::find($id);
+
+    if ((int) Auth::guard('admin')->id() === (int) $admin->id) {
+      return redirect()->back()->with('warning', 'You cannot change your own status.');
+    }
 
     if ($request->status == 1) {
       $admin->update(['status' => 1]);
@@ -71,6 +76,10 @@ class SiteAdminController extends Controller
   public function destroy($id)
   {
     $admin = Admin::find($id);
+
+    if ((int) Auth::guard('admin')->id() === (int) $admin->id) {
+      return redirect()->back()->with('warning', 'You cannot delete your own account.');
+    }
 
     // delete admin profile picture
     @unlink(public_path('assets/admin/img/admins/') . $admin->image);

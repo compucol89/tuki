@@ -12,12 +12,38 @@ use App\Models\WithdrawMethodInput;
 use App\Models\WithdrawPaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class OrganizerWithdrawController extends Controller
 {
+  private function cancelPendingWithdrawOrFail($withdrawId)
+  {
+    $withdraw = Withdraw::where('id', $withdrawId)
+      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->firstOrFail();
+
+    abort_if((int) $withdraw->status !== 0, 403);
+
+    DB::transaction(function () use ($withdraw) {
+      $organizer = Organizer::where('id', $withdraw->organizer_id)->lockForUpdate()->firstOrFail();
+      $organizer->amount += $withdraw->amount;
+      $organizer->save();
+
+      $transaction = Transaction::where('booking_id', $withdraw->id)
+        ->where('transcation_type', 3)
+        ->first();
+
+      if ($transaction) {
+        $transaction->update(['payment_status' => 2]);
+      }
+
+      $withdraw->delete();
+    });
+  }
+
   public function index()
   {
     $currencyInfo = $this->getCurrencyInfo();
@@ -67,44 +93,6 @@ class OrganizerWithdrawController extends Controller
   {
     $method = WithdrawPaymentMethod::where('id', $request->withdraw_method)->first();
 
-    $organizer = Organizer::where('id', Auth::guard('organizer')->user()->id)->first();
-
-
-    if (intval($request->withdraw_amount) < $method->min_limit) {
-      return Response::json(
-        [
-          'errors' => [
-            'withdraw_amount' => [
-              'Minimum withdraw limit is ' . $method->min_limit
-            ]
-          ]
-        ],
-        400
-      );
-    } elseif (intval($request->withdraw_amount) > $method->max_limit) {
-      return Response::json(
-        [
-          'errors' => [
-            'withdraw_amount' => [
-              'Maximum withdraw limit is ' . $method->max_limit
-            ]
-          ]
-        ],
-        400
-      );
-    } elseif ($organizer->amount < $request->withdraw_amount) {
-      return Response::json(
-        [
-          'errors' => [
-            'withdraw_amount' => [
-              'You do not have enough balance to Withdraw.'
-            ]
-          ]
-        ],
-        400
-      );
-    }
-
     $rules = [
       'withdraw_method' => 'required',
       'withdraw_amount' => 'required'
@@ -147,42 +135,70 @@ class OrganizerWithdrawController extends Controller
     //calculation end
 
 
-    $save = new Withdraw;
-    $save->withdraw_id = uniqid();
-    $save->organizer_id = Auth::guard('organizer')->user()->id;
-    $save->method_id = $request->withdraw_method;
+    try {
+      DB::transaction(function () use ($request, $method, $receive_balance, $total_charge, $fields) {
+        $organizer = Organizer::where('id', Auth::guard('organizer')->user()->id)
+          ->lockForUpdate()
+          ->firstOrFail();
 
+        if (intval($request->withdraw_amount) < $method->min_limit) {
+          throw new \RuntimeException('Minimum withdraw limit is ' . $method->min_limit);
+        }
 
-    $organizer = Organizer::where('id', Auth::guard('organizer')->user()->id)->first();
-    $pre_balance = $organizer->amount;
-    $organizer->amount = ($organizer->amount - ($request->withdraw_amount));
-    $organizer->save();
-    $after_balance = $organizer->amount;
+        if (intval($request->withdraw_amount) > $method->max_limit) {
+          throw new \RuntimeException('Maximum withdraw limit is ' . $method->max_limit);
+        }
 
-    $save->amount = $request->withdraw_amount;
-    $save->payable_amount = $receive_balance;
-    $save->total_charge = $total_charge;
-    $save->additional_reference = $request->additional_reference;
-    $save->feilds = json_encode($fields);
-    $save->save();
+        if ($organizer->amount < $request->withdraw_amount) {
+          throw new \RuntimeException('You do not have enough balance to Withdraw.');
+        }
 
-    //store data to transcation table 
-    $currencyInfo = $this->getCurrencyInfo();
-    $transcation = Transaction::create([
-      'transcation_id' => time(),
-      'booking_id' => $save->id,
-      'transcation_type' => 3,
-      'user_id' => null,
-      'organizer_id' => Auth::guard('organizer')->user()->id,
-      'payment_status' => 0,
-      'payment_method' => $save->method_id,
-      'grand_total' => $save->amount,
-      'pre_balance' => $pre_balance,
-      'after_balance' => $after_balance,
-      'gateway_type' => null,
-      'currency_symbol' => $currencyInfo->base_currency_symbol,
-      'currency_symbol_position' => $currencyInfo->base_currency_text_position,
-    ]);
+        $save = new Withdraw;
+        $save->withdraw_id = uniqid();
+        $save->organizer_id = Auth::guard('organizer')->user()->id;
+        $save->method_id = $request->withdraw_method;
+
+        $pre_balance = $organizer->amount;
+        $organizer->amount = $organizer->amount - $request->withdraw_amount;
+        $organizer->save();
+        $after_balance = $organizer->amount;
+
+        $save->amount = $request->withdraw_amount;
+        $save->payable_amount = $receive_balance;
+        $save->total_charge = $total_charge;
+        $save->additional_reference = $request->additional_reference;
+        $save->feilds = json_encode($fields);
+        $save->save();
+
+        $currencyInfo = $this->getCurrencyInfo();
+        Transaction::create([
+          'transcation_id' => time(),
+          'booking_id' => $save->id,
+          'transcation_type' => 3,
+          'user_id' => null,
+          'organizer_id' => Auth::guard('organizer')->user()->id,
+          'payment_status' => 0,
+          'payment_method' => $save->method_id,
+          'grand_total' => $save->amount,
+          'pre_balance' => $pre_balance,
+          'after_balance' => $after_balance,
+          'gateway_type' => null,
+          'currency_symbol' => $currencyInfo->base_currency_symbol,
+          'currency_symbol_position' => $currencyInfo->base_currency_text_position,
+        ]);
+      });
+    } catch (\RuntimeException $exception) {
+      return Response::json(
+        [
+          'errors' => [
+            'withdraw_amount' => [
+              $exception->getMessage()
+            ]
+          ]
+        ],
+        400
+      );
+    }
 
     Session::flash('success', 'Withdraw Request Send Successfully!');
 
@@ -192,8 +208,7 @@ class OrganizerWithdrawController extends Controller
   //Delete
   public function Delete(Request $request)
   {
-    $delete = Withdraw::where([['organizer_id', Auth::guard('organizer')->user()->id], ['id', $request->id]])->first();
-    $delete->delete();
+    $this->cancelPendingWithdrawOrFail($request->id);
     return redirect()->back()->with('success', 'Withdraw Request Deleted Successfully!');
   }
 
@@ -202,8 +217,7 @@ class OrganizerWithdrawController extends Controller
   {
     $ids = $request->ids;
     foreach ($ids as $id) {
-      $withdraw = Withdraw::where([['organizer_id', Auth::guard('organizer')->user()->id], ['id', $id]])->first();
-      $withdraw->delete();
+      $this->cancelPendingWithdrawOrFail($id);
     }
     Session::flash('success', 'Deleted Successfully');
 

@@ -63,4 +63,27 @@ class RouteRegistrationTest extends TestCase
 
     $this->assertSame([], $duplicates->all(), 'Duplicate route registrations: ' . $duplicates->implode(', '));
   }
+
+  public function test_sensitive_state_changing_routes_only_accept_post_requests(): void
+  {
+    $routeNames = [
+      'admin.witdraw.approve_withdraw',
+      'admin.witdraw.decline_withdraw',
+      'admin.event.delete.date',
+      'delete.variation',
+      'organizer.delete.variation',
+      'admin.organizer_management.organizer.secret_login',
+      'admin.customer_management.secret_login',
+      'admin.support_tickets.unassign',
+      'organizer.event.delete.date',
+    ];
+
+    foreach ($routeNames as $routeName) {
+      $route = Route::getRoutes()->getByName($routeName);
+
+      $this->assertNotNull($route, "Missing route [{$routeName}]");
+      $this->assertContains('POST', $route->methods(), "Route [{$routeName}] must accept POST");
+      $this->assertNotContains('GET', $route->methods(), "Route [{$routeName}] must not accept GET");
+    }
+  }
 }

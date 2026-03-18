@@ -18,20 +18,30 @@ class HasPermission
   public function handle(Request $request, Closure $next, $menuName)
   {
     $authAdmin = Auth::guard('admin')->user();
-    $role = null;
 
-    if (!is_null($authAdmin->role_id)) {
-      $role = $authAdmin->role()->first();
+    if (is_null($authAdmin)) {
+      abort(403);
     }
 
-    if (!is_null($role)) {
-      $rolePermissions = json_decode($role->permissions);
+    if (is_null($authAdmin->role_id)) {
+      if ((int) $authAdmin->id === 1) {
+        return $next($request);
+      }
+
+      abort(403);
     }
 
-    if (is_null($role) || (!empty($rolePermissions) && in_array($menuName, $rolePermissions))) {
+    $role = $authAdmin->role()->first();
+    $rolePermissions = [];
+
+    if (!is_null($role) && !empty($role->permissions)) {
+      $rolePermissions = json_decode($role->permissions, true) ?: [];
+    }
+
+    if (!empty($rolePermissions) && in_array($menuName, $rolePermissions, true)) {
       return $next($request);
     }
 
-    return redirect()->back();
+    abort(403);
   }
 }

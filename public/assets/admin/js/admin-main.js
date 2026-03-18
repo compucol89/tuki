@@ -676,6 +676,7 @@ $(function ($) {
   //withdraw request start
   $('.confirmBtn').on('click', function (e) {
     e.preventDefault();
+    let button = $(this);
     swal({
       title: 'Are you sure?',
       type: 'warning',
@@ -691,8 +692,7 @@ $(function ($) {
       }
     }).then((Delete) => {
       if (Delete) {
-        let location = $(this).attr('href');
-        window.location.replace(location);
+        button.closest('form').trigger('submit');
       } else {
         swal.close();
       }

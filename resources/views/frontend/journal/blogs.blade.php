@@ -18,6 +18,16 @@
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
 
+@section('custom-style')
+<style>
+  .main-header .header-upper { background: rgb(30,37,50); }
+  .main-header .logo img, .main-header .logo-mobile img { filter: brightness(0) invert(1); }
+  .main-header .main-menu .navigation li a { color: rgba(255,255,255,0.85); }
+  .main-header .main-menu .navigation > li > a:hover { color: var(--primary-color); }
+  .main-header .main-menu .navigation > li > a::after { background: var(--primary-color); }
+</style>
+@endsection
+
 @section('content')
 
 {{-- HEADER --}}

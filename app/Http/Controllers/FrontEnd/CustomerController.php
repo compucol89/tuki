@@ -540,6 +540,8 @@ class CustomerController extends Controller
         return redirect()->route('customer.dashboard');
       }
     } catch (Exception $e) {
+      Session::flash('error', 'No se pudo completar el inicio de sesión. Intentá de nuevo.');
+      return redirect()->route('customer.login');
     }
   }
 }

@@ -7,7 +7,7 @@
 ## 🔴 En progreso / Alta prioridad
 
 - [ ] **Social Login — Organizadores**: El login/signup de organizadores no tiene botones de Google/Facebook (solo los clientes los tienen).
-- [ ] **Social Login — catch vacío**: `authenticationViaProvider()` en `CustomerController` tiene el bloque `catch` vacío — los errores se tragan silenciosamente. Agregar manejo de error con redirección y mensaje.
+- [x] **Social Login — catch vacío**: `authenticationViaProvider()` en `CustomerController` — ahora redirige a login con mensaje de error en español.
 
 ---
 
@@ -93,4 +93,4 @@
 
 ---
 
-_Última actualización: 2026-03-18 — blog SaaS UI: dark header, Sora font, 3-col grid, bl-card con overlay_
+_Última actualización: 2026-03-18 — fix catch vacío social login + tipografías ev-card (Inter título, Sora fecha/badge)_

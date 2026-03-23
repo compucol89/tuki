@@ -89,6 +89,7 @@
         }
       @endphp
       <p>{!! !empty($footerInfo->copyright_text) ? $footer_text : '' !!}</p>
+      <p style="font-size:10px;opacity:.4;margin-top:4px;text-align:center;">v{{ trim(file_get_contents(base_path('VERSION'))) }}</p>
       <!-- Scroll Top Button -->
       <button class="scroll-top scroll-to-target" data-target="html" aria-label="{{ __('Scroll to top') }}"><span class="fa fa-angle-up"></span></button>
     </div>

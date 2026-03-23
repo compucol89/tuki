@@ -53,62 +53,51 @@
 
       <div class="{{ Auth::guard('customer')->check() ? 'col-lg-9' : 'col-lg-12' }}">
 
-        {{-- Header card --}}
-        <div class="cd-card cd-card--{{ $booking->paymentStatus }} mb-4">
-          {{-- Confirmation banner --}}
-          @php $isPending = $booking->paymentStatus === 'pending'; @endphp
-          <div class="cd-bk-confirm {{ $isPending ? 'cd-bk-confirm--pending' : '' }}">
-            <div class="cd-bk-confirm__icon">
+        {{-- HERO: Confirmation --}}
+        @php $isPending = $booking->paymentStatus === 'pending'; @endphp
+        <div class="cd-bk-hero {{ $isPending ? 'cd-bk-hero--pending' : 'cd-bk-hero--confirmed' }} mb-4">
+          <div class="cd-bk-hero__icon-wrap">
+            <div class="cd-bk-hero__icon">
               @if($isPending)
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               @else
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               @endif
             </div>
-            <div>
-              <p class="cd-bk-confirm__title">{{ $isPending ? 'Pago en proceso' : '¡Reserva confirmada!' }}</p>
-              <p class="cd-bk-confirm__sub">{{ $booking->quantity }} {{ $booking->quantity == 1 ? 'entrada' : 'entradas' }}{{ $booking->paymentMethod ? ' · ' . ucfirst($booking->paymentMethod) : '' }}</p>
-            </div>
           </div>
-          <div class="cd-bk-header">
-            <div class="cd-bk-header__left">
-              <div class="cd-bk-header__id">#{{ $booking->booking_id }}</div>
-              <span class="cd-status {{ $st['class'] }}">{{ $st['label'] }}</span>
-            </div>
-            <div class="cd-bk-header__right">
-              @if($hasPdf)
-                <a href="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}"
-                   download class="cd-bk-dl-btn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Descargar PDF
-                </a>
-              @endif
-              <a href="{{ route('customer.booking.my_booking') }}" class="cd-bk-back-btn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-                Mis entradas
-              </a>
-            </div>
-          </div>
-
-          <div class="cd-bk-meta">
-            <div class="cd-bk-meta__item">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <span><strong>Reservado el:</strong> {{ \Carbon\Carbon::parse($booking->created_at)->translatedFormat('D d/m/Y · H:i') }}hs</span>
-            </div>
-            <div class="cd-bk-meta__item">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span><strong>Fecha del evento:</strong> {{ \Carbon\Carbon::parse($booking->event_date)->translatedFormat('D d/m/Y · H:i') }}hs</span>
-            </div>
+          <div class="cd-bk-hero__body">
+            <p class="cd-bk-hero__label">{{ $isPending ? 'Pago en proceso' : '¡Reserva confirmada!' }}</p>
             @if($event)
-              <div class="cd-bk-meta__item">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <span><strong>Evento:</strong>
-                  <a href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->event_id]) }}" target="_blank" class="cd-table__link">
-                    {{ Str::limit($event->title, 60) }}
-                  </a>
-                </span>
-              </div>
+              <h2 class="cd-bk-hero__event">{{ $event->title }}</h2>
             @endif
+            <div class="cd-bk-hero__chips">
+              <span class="cd-bk-hero__chip cd-bk-hero__chip--id">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+                #{{ $booking->booking_id }}
+              </span>
+              <span class="cd-bk-hero__chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                {{ \Carbon\Carbon::parse($booking->event_date)->translatedFormat('D j M Y · H:i') }}hs
+              </span>
+              <span class="cd-bk-hero__chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 15a3 3 0 000 6h20a3 3 0 000-6"/></svg>
+                {{ $booking->quantity }} {{ $booking->quantity == 1 ? 'entrada' : 'entradas' }}
+              </span>
+            </div>
+          </div>
+          <div class="cd-bk-hero__actions">
+            @if($hasPdf)
+              <a href="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}" download class="cd-bk-hero__btn cd-bk-hero__btn--solid">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar PDF
+              </a>
+            @endif
+            @auth('customer')
+            <a href="{{ route('customer.booking.my_booking') }}" class="cd-bk-hero__btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+              Mis entradas
+            </a>
+            @endauth
           </div>
         </div>
 
@@ -124,30 +113,26 @@
               <h3 class="cd-card__title">Datos de facturación</h3>
             </div>
             <div class="cd-info-list">
-              @if($booking->fname || $booking->lname)
-                <div class="cd-info-row"><span class="cd-info-row__label">Nombre</span><span class="cd-info-row__val">{{ trim($booking->fname . ' ' . $booking->lname) }}</span></div>
-              @endif
-              @if($booking->email)
-                <div class="cd-info-row"><span class="cd-info-row__label">Email</span><span class="cd-info-row__val">{{ $booking->email }}</span></div>
-              @endif
-              @if($booking->phone)
-                <div class="cd-info-row"><span class="cd-info-row__label">Teléfono</span><span class="cd-info-row__val">{{ $booking->phone }}</span></div>
-              @endif
-              @if($booking->country)
-                <div class="cd-info-row"><span class="cd-info-row__label">País</span><span class="cd-info-row__val">{{ $booking->country }}</span></div>
-              @endif
-              @if($booking->state)
-                <div class="cd-info-row"><span class="cd-info-row__label">Provincia</span><span class="cd-info-row__val">{{ $booking->state }}</span></div>
-              @endif
-              @if($booking->city)
-                <div class="cd-info-row"><span class="cd-info-row__label">Ciudad</span><span class="cd-info-row__val">{{ $booking->city }}</span></div>
-              @endif
-              @if($booking->zip_code)
-                <div class="cd-info-row"><span class="cd-info-row__label">Código postal</span><span class="cd-info-row__val">{{ $booking->zip_code }}</span></div>
-              @endif
-              @if($booking->address)
-                <div class="cd-info-row"><span class="cd-info-row__label">Dirección</span><span class="cd-info-row__val">{{ $booking->address }}</span></div>
-              @endif
+              @php
+                $billingFields = [
+                  'Nombre'        => trim($booking->fname . ' ' . $booking->lname),
+                  'Email'         => $booking->email,
+                  'Teléfono'      => $booking->phone,
+                  'País'          => $booking->country,
+                  'Provincia'     => $booking->state,
+                  'Ciudad'        => $booking->city,
+                  'Código postal' => $booking->zip_code,
+                  'Dirección'     => $booking->address,
+                ];
+              @endphp
+              @foreach($billingFields as $label => $value)
+                @if($value && $value !== 'N/A' && $value !== 'n/a')
+                  <div class="cd-info-row">
+                    <span class="cd-info-row__label">{{ $label }}</span>
+                    <span class="cd-info-row__val">{{ $value }}</span>
+                  </div>
+                @endif
+              @endforeach
             </div>
           </div>
 
@@ -158,6 +143,11 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
               </div>
               <h3 class="cd-card__title">Información de pago</h3>
+            </div>
+            <div class="cd-payment-hero">
+              <span class="cd-payment-hero__label">Total pagado</span>
+              <span class="cd-payment-hero__amount" dir="ltr">{{ $booking->currencySymbol }}{{ number_format($booking->price + $booking->tax, 2) }}</span>
+              <span class="cd-status {{ $st['class'] }}">{{ $st['label'] }}</span>
             </div>
             <div class="cd-info-list">
               @if($booking->early_bird_discount)
@@ -178,14 +168,6 @@
                   <span class="cd-info-row__val" dir="ltr">{{ $position == 'left' ? $currency . ' ' : '' }}{{ $booking->tax }}{{ $position == 'right' ? ' ' . $currency : '' }}</span>
                 </div>
               @endif
-              <div class="cd-info-row cd-info-row--total">
-                <span class="cd-info-row__label">Total pagado</span>
-                <span class="cd-info-row__val" dir="ltr">{{ $booking->currencySymbol }}{{ $booking->price + $booking->tax }}</span>
-              </div>
-              <div class="cd-info-row">
-                <span class="cd-info-row__label">Estado</span>
-                <span class="cd-status {{ $st['class'] }}">{{ $st['label'] }}</span>
-              </div>
               @if($booking->paymentMethod)
                 <div class="cd-info-row">
                   <span class="cd-info-row__label">Método de pago</span>

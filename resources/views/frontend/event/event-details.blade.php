@@ -270,22 +270,18 @@ ttq.page();
             <div class="ed-gallery-wrap">
               {{-- Main image --}}
               <div class="ed-gallery-main">
-                <a href="{{ asset('assets/admin/img/event-gallery/' . $images->first()->image) }}"
-                   class="ed-gallery-main__link" id="edMainLink" target="_self">
+                <div class="ed-gallery-main__link" id="edMainLink">
                   <img id="edMainImg"
                        src="{{ asset('assets/admin/img/event-gallery/' . $images->first()->image) }}"
                        alt="{{ $content->title }}"
                        class="ed-gallery-main__img">
-                  <div class="ed-gallery-main__overlay">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-                  </div>
                   @if($images->count() > 1)
                   <div class="ed-gallery-count">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     {{ $images->count() }} {{ __('fotos') }}
                   </div>
                   @endif
-                </a>
+                </div>
               </div>
               {{-- Thumbnail strip --}}
               @if($images->count() > 1)
@@ -1209,33 +1205,6 @@ ttq.page();
   <!-- Event Details V2 End -->
 
   {{-- ── EVENTOS RELACIONADOS ── --}}
-  @if(isset($related_events) && $related_events->count() > 0)
-  @php
-    $ev_wishlist_map = [];
-    if (Auth::guard('customer')->check()) {
-      $ev_wishlist_map = array_flip(
-        DB::table('wishlists')
-          ->where('customer_id', Auth::guard('customer')->user()->id)
-          ->whereIn('event_id', $related_events->pluck('id')->toArray())
-          ->pluck('event_id')->toArray()
-      );
-    }
-  @endphp
-  <section class="ed-related">
-    <div class="container">
-      <div class="ed-related__header">
-        <h2 class="ed-related__title">{{ __('Eventos similares') }}</h2>
-        <a href="{{ route('events') }}" class="ed-related__more">{{ __('Ver todos') }} <span aria-hidden="true">→</span></a>
-      </div>
-      <div class="ed-related__grid">
-        @foreach($related_events->take(4) as $event)
-          <div>@include('frontend.partials.event-card')</div>
-        @endforeach
-      </div>
-    </div>
-  </section>
-  @endif
-
 @endsection
 @section('modals')
   @includeIf('frontend.partials.modals')
@@ -1251,10 +1220,8 @@ document.addEventListener('click', function(e) {
     t.classList.remove('ed-gallery-thumb--active');
   });
   btn.classList.add('ed-gallery-thumb--active');
-  var img  = document.getElementById('edMainImg');
-  var link = document.getElementById('edMainLink');
-  if (img)  { img.style.opacity = '0'; setTimeout(function(){ img.src = btn.dataset.src; img.style.opacity = '1'; }, 120); }
-  if (link) link.href = btn.dataset.src;
+  var img = document.getElementById('edMainImg');
+  if (img) { img.style.opacity = '0'; setTimeout(function(){ img.src = btn.dataset.src; img.style.opacity = '1'; }, 120); }
 });
 /* ── Total price: vanilla JS (independiente de jQuery/defer) ── */
 document.addEventListener('DOMContentLoaded', function() {
@@ -1288,19 +1255,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-/* ── Gallery lightbox (MagnificPopup) ── */
-$(function() {
-  var links = $('#edGalleryLinks a');
-  if (!links.length) return;
-  var items = links.map(function() { return { src: $(this).attr('href') }; }).get();
-  $('#edMainLink').on('click', function(e) {
-    e.preventDefault();
-    var cur = $('#edMainImg').attr('src');
-    var idx = 0;
-    items.forEach(function(l, i) { if (l.src === cur) idx = i; });
-    $.magnificPopup.open({ items: items, gallery: { enabled: true }, startAt: idx, type: 'image' });
-  });
-});
 </script>
 <script>
 (function () {

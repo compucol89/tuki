@@ -7650,6 +7650,7 @@ body.home-page .testimonial-section {
   position: relative;
 }
 .ed-gallery-main__overlay {
+  display: none;
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,0);

@@ -13,66 +13,85 @@
         <form id="modalForm" class="modal-form create" action="{{ route('admin.event_management.store_category') }}"
           method="post" enctype="multipart/form-data">
           @csrf
-          <div class="form-group">
-            <label for="">{{ __('Language') . '*' }}</label>
-            <select name="language_id" class="form-control">
-              <option selected disabled>{{ __('Select a Language') }}</option>
-              @foreach ($langs as $lang)
-                <option value="{{ $lang->id }}">{{ $lang->name }}</option>
-              @endforeach
-            </select>
-            <p id="err_language_id" class="mt-1 mb-0 text-danger em"></p>
+          <div class="category-modal-intro">
+            <span class="category-modal-intro__eyebrow">{{ __('Paso 1') }}</span>
+            <p class="category-modal-intro__text">{{ __('Define una categoria clara y facil de reconocer para que despues sea simple elegirla al crear cada evento.') }}</p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Image') . '*' }}</label>
-            <br>
-            <div class="thumb-preview">
-              <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
+          @if (!empty($langs) && count($langs) > 1)
+            <div class="form-group category-form-group">
+              <label for="">{{ __('Idioma') . '*' }}</label>
+              <select name="language_id" class="form-control">
+                <option selected disabled>{{ __('Selecciona un idioma') }}</option>
+                @foreach ($langs as $lang)
+                  <option value="{{ $lang->id }}">{{ $lang->name }}</option>
+                @endforeach
+              </select>
+              <p id="err_language_id" class="mt-1 mb-0 text-danger em"></p>
             </div>
+          @else
+            <input type="hidden" name="language_id" value="{{ $language->id }}">
+          @endif
 
-            <div class="mt-3">
-              <div role="button" class="btn btn-primary btn-sm upload-btn">
-                {{ __('Choose Image') }}
-                <input type="file" class="img-input" name="image">
+          <div class="form-group category-form-group">
+            <div class="category-image-box">
+              <div class="category-image-box__header">
+                <span class="category-image-box__title">{{ __('Imagen de la categoria') . '*' }}</span>
+                <span class="category-image-box__text">{{ __('Sube una imagen clara y facil de reconocer. Se vera en el listado y ayuda a identificar cada categoria mas rapido.') }}</span>
               </div>
-              <p id="err_image" class="mt-1 mb-0 text-danger em"></p>
+
+              <div class="category-image-box__body">
+                <div class="thumb-preview">
+                  <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
+                </div>
+
+                <label class="category-image-upload">
+                  <span class="category-image-upload__icon"><i class="fas fa-image"></i></span>
+                  <span class="category-image-upload__copy">
+                    <strong>{{ __('Elegir imagen') }}</strong>
+                    <span>{{ __('Haz clic para subir la portada de la categoria') }}</span>
+                  </span>
+                  <input type="file" class="img-input" name="image">
+                </label>
+              </div>
+
+              <p id="err_image" class="mt-3 mb-0 text-danger em"></p>
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Name') . '*' }}</label>
-            <input type="text" class="form-control" name="name" placeholder="Enter Category Name">
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Nombre') . '*' }}</label>
+            <input type="text" class="form-control" name="name" placeholder="{{ __('Ej: Musica en vivo') }}">
             <p id="err_name" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Status') . '*' }}</label>
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Estado') . '*' }}</label>
             <select name="status" class="form-control">
-              <option selected disabled>{{ __('Select a Status') }}</option>
-              <option value="1">{{ __('Active') }}</option>
-              <option value="0">{{ __('Deactive') }}</option>
+              <option selected disabled>{{ __('Selecciona un estado') }}</option>
+              <option value="1">{{ __('Activa') }}</option>
+              <option value="0">{{ __('Inactiva') }}</option>
             </select>
             <p id="err_status" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Featured') . '*' }}</label>
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Destacada') . '*' }}</label>
             <select name="is_featured" class="form-control">
-              <option selected disabled>{{ __('Select featured status') }}</option>
-              <option value="yes">{{ __('YES') }}</option>
-              <option value="no">{{ __('NO') }}</option>
+              <option selected disabled>{{ __('Selecciona si quieres destacarla') }}</option>
+              <option value="yes">{{ __('Si') }}</option>
+              <option value="no">{{ __('No') }}</option>
             </select>
             <p id="err_is_featured" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Serial Number') . '*' }}</label>
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Orden de aparicion') . '*' }}</label>
             <input type="number" class="form-control ltr" name="serial_number"
-              placeholder="Enter Category Serial Number">
+              placeholder="{{ __('Ej: 10') }}">
             <p id="err_serial_number" class="mt-1 mb-0 text-danger em"></p>
             <p class="text-warning mt-2 mb-0">
-              <small>{{ __('The higher the serial number is, the later the category will be shown.') }}</small>
+              <small>{{ __('Mientras mas alto sea el numero, mas abajo aparecera la categoria en el listado.') }}</small>
             </p>
           </div>
         </form>
@@ -80,10 +99,10 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
-          {{ __('Close') }}
+          {{ __('Cerrar') }}
         </button>
         <button id="modalSubmit" type="button" class="btn btn-primary btn-sm">
-          {{ __('Save') }}
+          {{ __('Guardar categoria') }}
         </button>
       </div>
     </div>

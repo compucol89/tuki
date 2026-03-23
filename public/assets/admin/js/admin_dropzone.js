@@ -10,6 +10,11 @@
     Dropzone.options.myDropzone = {
         acceptedFiles: '.png, .jpg, .jpeg',
         url: storeUrl,
+        dictDefaultMessage: 'Arrastra imagenes aqui o haz clic para subirlas',
+        dictInvalidFileType: 'Solo se permiten imagenes JPG o PNG.',
+        dictResponseError: 'No se pudo subir la imagen. Intenta de nuevo.',
+        dictCancelUpload: 'Cancelar carga',
+        dictRemoveFile: 'Quitar',
         success: function (file, response) {
             $("#sliders").append(`<input type="hidden" name="slider_images[]" id="slider${response.file_id}" value="${response.file_id}">`);
 
@@ -85,12 +90,12 @@
 
                 if (data == 'false') {
                     $(".request-loader").removeClass("show");
-                    content.message = "You can't delete all images.!!";
-                    content.title = 'Warning';
+                    content.message = 'No puedes borrar todas las imagenes.';
+                    content.title = 'Aviso';
                 } else {
                     $("#trdb" + indb).remove();
-                    content.message = 'Slider image deleted successfully!';
-                    content.title = 'Success';
+                    content.message = 'Imagen eliminada correctamente.';
+                    content.title = 'Listo';
                 }
 
                 content.icon = 'fa fa-bell';

@@ -11,7 +11,7 @@
         <h2 class="page-title">Ticket #{{ $ticket->id }}</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('customer.support_tickert') }}">Soporte</a></li>
             <li class="breadcrumb-item active">#{{ $ticket->id }}</li>
           </ol>

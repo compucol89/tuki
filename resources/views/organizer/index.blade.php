@@ -9,7 +9,7 @@
     @if (Auth::guard('organizer')->user()->status == 0 && $admin_setting->organizer_admin_approval == 1)
       <div class="mt-2 mb-4">
         <div class="alert alert-danger text-dark">
-          {{ $admin_setting->admin_approval_notice != null ? $admin_setting->admin_approval_notice : __( 'Your account is deactive') }}
+          {{ $admin_setting->admin_approval_notice != null ? $admin_setting->admin_approval_notice : __('Tu cuenta esta pendiente de aprobacion por parte del equipo administrador.') }}
         </div>
       </div>
     @endif

@@ -305,7 +305,7 @@
                 <div class="col-sm-6">
                   <div class="form-group">
                     <label for="company">{{ __('Zip/Post Code') . ' *' }}</label>
-                    <input type="text" name="zip_code" value="" class="form-control" placeholder="Zip Code">
+                    <input type="text" name="zip_code" value="" class="form-control" placeholder="Código postal">
                     @error('zip_code')
                       <p class="text-danger">{{ $message }}</p>
                     @enderror
@@ -599,7 +599,7 @@
           </div>
 
           <div class="iyzico-element {{ old('gateway') == 'iyzico' ? '': 'd-none'}}" >
-            <input type="text" name="identity_number" class="form_control" placeholder="Identity Number">
+            <input type="text" name="identity_number" class="form_control" placeholder="Número de documento de identidad">
             @error('identity_number')
               <p class="text-danger">{{ $message }}</p>
             @enderror

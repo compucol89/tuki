@@ -38,7 +38,7 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                           <label for="password">{{ __('New Password'.' *') }}</label>
-                          <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password" required>
+                          <input type="password" name="password" id="password" class="form-control" placeholder="Ingresá tu contraseña" required>
                           @error('password')
                             <p class="text-danger">{{ $message }}</p>
                           @enderror
@@ -47,11 +47,11 @@
                     <div class="col-sm-12">
                       <div class="form-group">
                           <label for="re-password">{{ __('Confirm Password'. ' *') }}</label>
-                          <input type="password" name="password_confirmation" id="re-password" class="form-control" placeholder="Confirm Password" required>
+                          <input type="password" name="password_confirmation" id="re-password" class="form-control" placeholder="Confirmá tu contraseña" required>
                       </div>
                     </div>
                     <div class="form-group mb-0">
-                        <button class="theme-btn br-30" type="submit" data-loading-text="Please wait...">{{ __('Reset Password') }}</button>
+                        <button class="theme-btn br-30" type="submit" data-loading-text="Por favor esperá...">{{ __('Reset Password') }}</button>
                     </div>
                 </form>
             </div>

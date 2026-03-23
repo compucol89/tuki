@@ -103,7 +103,7 @@
                                     .remove(), t(".cart-total-price")
                                         .remove(), t(".cart-middle")
                                             .remove(), t(".table-outer")
-                                                .html('\n                        <div class="bg-light py-5 text-center">\n                            <h3 class="text-uppercase">Cart is empty!</h3>\n                        </div>')), t(".cart-item-view")
+                                                .html('\n                        <div class="bg-light py-5 text-center">\n                            <h3 class="text-uppercase">¡El carrito está vacío!</h3>\n                        </div>')), t(".cart-item-view")
                                                     .text(a.count), t(".cart-total-view")
                                                         .text(("left" == position ? symbol + " " : "") + a.total + ("right" == position ? " " + symbol : "")), t(".remove" + e)
                                                             .remove(), t("#cartIconWrapper")

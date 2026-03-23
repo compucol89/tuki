@@ -1,18 +1,67 @@
-/node_modules
-/vendor
+# ── Laravel core ──────────────────────────────────────────────────────────────
+/vendor/
+/node_modules/
 /public/hot
 /public/storage
+/bootstrap/cache/*
+!/bootstrap/cache/.gitkeep
+.env
+.env.backup
+.env.*.local
+.phpunit.result.cache
+/storage/*.key
+storage/logs/*.log
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+
+# ── Generated / build artifacts ───────────────────────────────────────────────
+/docs/generated/
+npm-debug.log
+yarn-error.log
+mix-manifest.json
+
+# ── Database ──────────────────────────────────────────────────────────────────
+*.sql
+*.sqlite
+/database/*.sqlite
+
+# ── Homestead / Docker ────────────────────────────────────────────────────────
+Homestead.json
+Homestead.yaml
+docker-compose.override.yml
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── App-generated user uploads (no versionar contenido subido por usuarios) ──
 /public/assets/admin/file/invoices/
 /public/assets/admin/qrcodes/
 /public/assets/admin/img/customer-profile/
-/storage/*.key
-.env
-.env.backup
-.phpunit.result.cache
-/eventos.sql
-/docs/generated/
-docker-compose.override.yml
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
+
+# ── AI / Dev tooling (no son código de la app) ───────────────────────────────
+.opencode/
+tools/
+.agents/
+
+# ── Archivos temporales y screenshots de sesión ───────────────────────────────
+session-notes-*.md
+*.session.md
+nul
+/event-detail-*.png
+/tuki-*.png
+/*.png
+/*.jpg
+
+# ── Windows artifacts ─────────────────────────────────────────────────────────
+[Tt]humbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/

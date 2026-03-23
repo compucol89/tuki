@@ -25,6 +25,41 @@ use Mews\Purifier\Facades\Purifier;
 
 class EventController extends Controller
 {
+  private function eventGalleryValidationRules($img)
+  {
+    $allowedExts = ['jpg', 'png', 'jpeg'];
+
+    return [
+      'file' => [
+        function ($attribute, $value, $fail) use ($img, $allowedExts) {
+          if (empty($img)) {
+            return $fail('Debes seleccionar una imagen.');
+          }
+
+          $ext = strtolower($img->getClientOriginalExtension());
+
+          if (!in_array($ext, $allowedExts)) {
+            return $fail('Solo se permiten imagenes JPG o PNG.');
+          }
+
+          $imageSize = @getimagesize($img->getRealPath());
+
+          if ($imageSize === false) {
+            return $fail('No pudimos leer la imagen que intentaste subir.');
+          }
+
+          [$width, $height] = $imageSize;
+          $longestSide = max($width, $height);
+          $shortestSide = min($width, $height);
+
+          if ($longestSide < 600 || $shortestSide < 450) {
+            return $fail('La imagen debe tener al menos 600 px en su lado mas largo y 450 px en su lado mas corto. Puede ser horizontal, cuadrada o vertical.');
+          }
+        },
+      ]
+    ];
+  }
+
   private function getOwnedEventOrFail($eventId)
   {
     return Event::where('id', $eventId)
@@ -125,22 +160,7 @@ class EventController extends Controller
     }
 
     $img = $request->file('file');
-    $allowedExts = array('jpg', 'png', 'jpeg');
-    $rules = [
-      'file' => [
-        'dimensions:width=1170,height=570',
-        function ($attribute, $value, $fail) use ($img, $allowedExts) {
-          $ext = $img->getClientOriginalExtension();
-          if (!in_array($ext, $allowedExts)) {
-            return $fail("Only png, jpg, jpeg images are allowed");
-          }
-        },
-      ]
-    ];
-    $messages = [
-      'file.dimensions' => 'The file has invalid image dimensions ' . $img->getClientOriginalName()
-    ];
-    $validator = Validator::make($request->all(), $rules, $messages);
+    $validator = Validator::make($request->all(), $this->eventGalleryValidationRules($img));
     if ($validator->fails()) {
       $validator->getMessageBag()->add('error', 'true');
       return response()->json($validator->errors());

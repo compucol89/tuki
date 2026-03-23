@@ -22,13 +22,8 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/menu.css') }}">
-<!-- datatables css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/datatables.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/front/css/dataTables.bootstrap4.css') }}">
 <!-- dashboard css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/dashboard.css') }}">
-<!-- Menu css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/menu.css') }}">
 <!-- Main css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
 <!-- Responsive css -->
@@ -49,6 +44,8 @@
     --base-color: #454545;
     --heading-color: #1e2532;
     --primary-color: #{{ $basicInfo->primary_color }};
+    --primary-text-color: #C2410C;
+    --secondary-color: #ea580c;
     --light-color: #F7F7F7;
     --base-font: 'Inter', sans-serif;
     --heading-font: 'Plus Jakarta Sans', sans-serif;

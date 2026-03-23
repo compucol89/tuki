@@ -79,6 +79,7 @@
         $publicationScore = (int) round(($completedChecks / max($totalChecks, 1)) * 100);
         $publicationTone = $publicationScore >= 85 ? 'success' : ($publicationScore >= 60 ? 'warning' : 'danger');
         $publicationHeadline = $publicationScore >= 85 ? __('Muy bien encaminado') : ($publicationScore >= 60 ? __('Vas bien, pero aun falta') : __('Todavia le falta informacion clave'));
+        $singleLanguageMode = isset($languages) && count($languages) === 1;
 
       @endphp
       <li class="nav-item">
@@ -183,43 +184,57 @@
                   <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicacion') }}</h4>
                 </div>
                 <div class="card-body">
-                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
-                    <div class="mb-3 mb-md-0">
-                      <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
-                      <h5 class="mb-1">{{ $publicationHeadline }}</h5>
-                      <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si tu evento ya se entiende bien y esta listo para vender.') }}</p>
+                  @if ($publicationScore >= 100)
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                      <div class="mb-3 mb-md-0">
+                        <span class="badge badge-success mb-2">{{ __('Listo para vender') }}</span>
+                        <h5 class="mb-1">{{ __('El evento ya esta bien armado') }}</h5>
+                        <p class="text-muted mb-0">{{ __('En esta etapa ya no necesitas una checklist larga. Solo revisa cambios puntuales y guarda cuando termines.') }}</p>
+                      </div>
+                      <div class="text-md-right">
+                        <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos completos') }}</div>
+                        <small class="text-muted">{{ __('La checklist detallada tiene mas sentido durante la creacion.') }}</small>
+                      </div>
                     </div>
-                    <div class="text-md-right">
-                      <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
-                      <small class="text-muted">{{ __('No bloquea el guardado. Solo te orienta.') }}</small>
+                  @else
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                      <div class="mb-3 mb-md-0">
+                        <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
+                        <h5 class="mb-1">{{ $publicationHeadline }}</h5>
+                        <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si tu evento ya se entiende bien y esta listo para vender.') }}</p>
+                      </div>
+                      <div class="text-md-right">
+                        <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
+                        <small class="text-muted">{{ __('No bloquea el guardado. Solo te orienta.') }}</small>
+                      </div>
                     </div>
-                  </div>
-                  <div class="progress mb-4" style="height: 10px;">
-                    <div class="progress-bar bg-{{ $publicationTone }}" role="progressbar" style="width: {{ $publicationScore }}%;"
-                      aria-valuenow="{{ $publicationScore }}" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <div class="row">
-                    @foreach ($publicationChecks as $check)
-                      <div class="col-lg-6 mb-3">
-                        <div class="border rounded p-3 h-100 {{ $check['done'] ? 'border-success' : 'border-light' }}">
-                          <div class="d-flex align-items-start">
-                            <span class="mr-2 mt-1 text-{{ $check['done'] ? 'success' : 'muted' }}">
-                              <i class="fas {{ $check['done'] ? 'fa-check-circle' : 'fa-circle' }}"></i>
-                            </span>
-                            <div>
-                              <div class="font-weight-bold mb-1">{{ $check['label'] }}</div>
-                              <small class="text-muted d-block">{{ $check['help'] }}</small>
+                    <div class="progress mb-4" style="height: 10px;">
+                      <div class="progress-bar bg-{{ $publicationTone }}" role="progressbar" style="width: {{ $publicationScore }}%;"
+                        aria-valuenow="{{ $publicationScore }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="row">
+                      @foreach ($publicationChecks as $check)
+                        <div class="col-lg-6 mb-3">
+                          <div class="border rounded p-3 h-100 {{ $check['done'] ? 'border-success' : 'border-light' }}">
+                            <div class="d-flex align-items-start">
+                              <span class="mr-2 mt-1 text-{{ $check['done'] ? 'success' : 'muted' }}">
+                                <i class="fas {{ $check['done'] ? 'fa-check-circle' : 'fa-circle' }}"></i>
+                              </span>
+                              <div>
+                                <div class="font-weight-bold mb-1">{{ $check['label'] }}</div>
+                                <small class="text-muted d-block">{{ $check['help'] }}</small>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    @endforeach
-                  </div>
-                  @if ($publicationScore < 85)
-                    <div class="alert alert-light border mb-0">
-                      <strong>{{ __('Consejo rapido:') }}</strong>
-                      {{ __('Antes de publicar, prioriza imagenes, descripcion y fechas. Son las tres cosas que mas ayudan a vender y evitar dudas.') }}
+                      @endforeach
                     </div>
+                    @if ($publicationScore < 85)
+                      <div class="alert alert-light border mb-0">
+                        <strong>{{ __('Consejo rapido:') }}</strong>
+                        {{ __('Antes de publicar, prioriza imagenes, descripcion y fechas. Son las tres cosas que mas ayudan a vender y evitar dudas.') }}
+                      </div>
+                    @endif
                   @endif
                 </div>
               </div>
@@ -236,12 +251,12 @@
                   </div>
                   <div class="d-flex flex-wrap align-items-center">
                     <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
-                    <small class="text-muted mb-0">{{ __('Formato recomendado: 1170x570') }}</small>
+                    <small class="text-muted mb-0">{{ __('Recomendado: 1170x570 o mas, sin recortar el flyer') }}</small>
                   </div>
                 </div>
               </div>
               <div class="col-lg-12 px-0">
-                <label class="ev-label-section">{{ __('Gallery Images') }} <span class="text-warning">**</span></label>
+                <label class="ev-label-section">{{ __('Imagenes de la galeria') }} <span class="text-warning">**</span></label>
                 <div id="reload-slider-div">
                   <div class="row mt-2">
                     <div class="col">
@@ -266,7 +281,7 @@
                 <div class=" mb-0" id="errpreimg">
 
                 </div>
-                <p class="text-warning small mt-2 mb-0">{{ __('Image Size') . ' : 1170x570' }}</p>
+                <p class="text-warning small mt-2 mb-0">{{ __('La galeria acepta imagenes horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
               </div>
               </div>
               </div>
@@ -282,21 +297,32 @@
                     <h4 class="card-title"><i class="fas fa-calendar-alt mr-2 text-primary"></i>{{ __('Fechas y horarios') }}</h4>
                   </div>
                   <div class="card-body">
-                <label class="ev-label-section">{{ __('Thumbnail Image') }}*</label>
-                <div class="form-group">
-                  <br>
-                  <div class="thumb-preview">
-                    <img
-                      src="{{ $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg') }}"
-                      alt="..." class="uploaded-img ev-thumbnail-preview">
+                <div class="event-cover-box mb-4">
+                  <div class="event-cover-box__intro">
+                    <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
+                    <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
+                    <p class="event-cover-box__text">{{ __('El sistema acepta cualquier tamano. Se respeta la proporcion original del flyer para que no se corte ni se deforme.') }}</p>
                   </div>
-                  <div class="mt-3">
-                    <div role="button" class="btn btn-primary btn-sm upload-btn">
-                      {{ __('Choose Image') }}
-                      <input type="file" class="img-input" name="thumbnail">
+                  <div class="event-cover-box__body">
+                    <div class="thumb-preview event-cover-box__preview">
+                      <img
+                        src="{{ $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg') }}"
+                        alt="..." class="uploaded-img ev-thumbnail-preview">
+                    </div>
+                    <div class="event-cover-box__actions">
+                      <label class="event-cover-box__upload" role="button">
+                        <span class="event-cover-box__upload-icon">
+                          <i class="fas fa-image"></i>
+                        </span>
+                        <span class="event-cover-box__upload-copy">
+                          <strong>{{ __('Elegir imagen de portada') }}</strong>
+                          <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
+                        </span>
+                        <input type="file" class="img-input" name="thumbnail">
+                      </label>
+                      <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
                     </div>
                   </div>
-                  <p class="text-warning small mt-2 mb-4">{{ __('Image Size') . ' : 320x230' }}</p>
                 </div>
                 <div id="section-schedule" class="mb-3">
                   <p class="text-muted mb-0">{{ __('Define si el evento tiene una sola fecha o varias funciones.') }}</p>
@@ -305,18 +331,18 @@
                 <div class="row">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Date Type') . '*' }}</label>
+                      <label for="">{{ __('Tipo de fecha') . '*' }}</label>
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="date_type" {{ $event->date_type == 'single' ? 'checked' : '' }}
                             value="single" class="selectgroup-input eventDateType" checked>
-                          <span class="selectgroup-button">{{ __('Single') }}</span>
+                          <span class="selectgroup-button">{{ __('Fecha unica') }}</span>
                         </label>
 
                         <label class="selectgroup-item">
                           <input type="radio" name="date_type" {{ $event->date_type == 'multiple' ? 'checked' : '' }}
                             value="multiple" class="selectgroup-input eventDateType">
-                          <span class="selectgroup-button">{{ __('Multiple') }}</span>
+                          <span class="selectgroup-button">{{ __('Varias fechas') }}</span>
                         </label>
                       </div>
                     </div>
@@ -326,7 +352,7 @@
                 <div class="row countDownStatus {{ $event->date_type == 'multiple' ? 'd-none' : '' }} ">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Countdown Status') . '*' }}</label>
+                      <label for="">{{ __('Contador regresivo') . '*' }}</label>
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="countdown_status" value="1" class="selectgroup-input"
@@ -337,7 +363,7 @@
                         <label class="selectgroup-item">
                           <input type="radio" name="countdown_status" value="0" class="selectgroup-input"
                             {{ $event->countdown_status == 0 ? 'checked' : '' }}>
-                          <span class="selectgroup-button">{{ __('Deactive') }}</span>
+                          <span class="selectgroup-button">{{ __('Oculto') }}</span>
                         </label>
                       </div>
                     </div>
@@ -501,23 +527,23 @@
 
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label for="">{{ __('Status') . '*' }}</label>
+                      <label for="">{{ __('Estado') . '*' }}</label>
                       <select name="status" class="form-control">
-                        <option selected disabled>{{ __('Select a Status') }}</option>
+                        <option selected disabled>{{ __('Selecciona un estado') }}</option>
                         <option {{ $event->status == '1' ? 'selected' : '' }} value="1">
                           {{ __('Active') }}
                         </option>
                         <option {{ $event->status == '0' ? 'selected' : '' }} value="0">
-                          {{ __('Deactive') }}
+                          {{ __('Oculto') }}
                         </option>
                       </select>
                     </div>
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label for="">{{ __('Is Feature') . '*' }}</label>
+                      <label for="">{{ __('Evento destacado') . '*' }}</label>
                       <select name="is_featured" class="form-control">
-                        <option selected disabled>{{ __('Select') }}</option>
+                        <option selected disabled>{{ __('Selecciona una opcion') }}</option>
                         <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>
                           {{ __('Yes') }}
                         </option>
@@ -547,23 +573,27 @@
                   @endif
                 </div>
                 @if ($event->event_type == 'online')
+                  <div class="event-sales-note mb-5 mt-2">
+                    <div class="event-sales-note-title">{{ __('Como vender este evento') }}</div>
+                    <p class="mb-0">{{ __('Primero define si el evento va a ser gratis o pago. Despues ajusta cupos, limite por persona y, si te sirve, un descuento anticipado para mover las primeras ventas.') }}</p>
+                  </div>
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Total Number of Available Tickets') . '*' }}</label>
+                        <label for="">{{ __('Disponibilidad total de entradas') . '*' }}</label>
                         <div class="selectgroup w-100">
                           <label class="selectgroup-item">
                             <input type="radio" name="ticket_available_type" value="unlimited"
                               class="selectgroup-input"
                               {{ @$event->ticket->ticket_available_type == 'unlimited' ? 'checked' : '' }}>
-                            <span class="selectgroup-button">{{ __('Unlimited') }}</span>
+                            <span class="selectgroup-button">{{ __('Sin limite') }}</span>
                           </label>
 
                           <label class="selectgroup-item">
                             <input type="radio" name="ticket_available_type" value="limited"
                               class="selectgroup-input"
                               {{ @$event->ticket->ticket_available_type == 'limited' ? 'checked' : '' }}>
-                            <span class="selectgroup-button">{{ __('Limited') }}</span>
+                            <span class="selectgroup-button">{{ __('Con limite') }}</span>
                           </label>
                         </div>
                       </div>
@@ -571,7 +601,7 @@
                     <div class="col-lg-6 {{ @$event->ticket->ticket_available_type == 'limited' ? '' : 'd-none' }}"
                       id="ticket_available">
                       <div class="form-group">
-                        <label>{{ __('Enter total number of available tickets') . '*' }}</label>
+                        <label>{{ __('Cantidad total disponible') . '*' }}</label>
                         <input type="number" name="ticket_available"
                           placeholder="{{ __('Enter total number of available tickets') }}" class="form-control"
                           value="{{ @$event->ticket->ticket_available }}">
@@ -580,20 +610,20 @@
                     @if ($websiteInfo->event_guest_checkout_status != 1)
                       <div class="col-lg-6">
                         <div class="form-group mt-1">
-                          <label for="">{{ __('Maximum number of tickets for each customer') . '*' }}</label>
+                          <label for="">{{ __('Limite por comprador') . '*' }}</label>
                           <div class="selectgroup w-100">
                             <label class="selectgroup-item">
                               <input type="radio" name="max_ticket_buy_type" value="unlimited"
                                 class="selectgroup-input"
                                 {{ @$event->ticket->max_ticket_buy_type == 'unlimited' ? 'checked' : '' }}>
-                              <span class="selectgroup-button">{{ __('Unlimited') }}</span>
+                              <span class="selectgroup-button">{{ __('Sin limite') }}</span>
                             </label>
 
                             <label class="selectgroup-item">
                               <input type="radio" name="max_ticket_buy_type" value="limited"
                                 class="selectgroup-input"
                                 {{ @$event->ticket->max_ticket_buy_type == 'limited' ? 'checked' : '' }}>
-                              <span class="selectgroup-button">{{ __('Limited') }}</span>
+                              <span class="selectgroup-button">{{ __('Con limite') }}</span>
                             </label>
                           </div>
                         </div>
@@ -601,7 +631,7 @@
                       <div class="col-lg-6 {{ @$event->ticket->max_ticket_buy_type == 'limited' ? '' : 'd-none' }}"
                         id="max_buy_ticket">
                         <div class="form-group">
-                          <label>{{ __('Enter Maximum number of tickets for each customer') . '*' }}</label>
+                          <label>{{ __('Cantidad maxima por comprador') . '*' }}</label>
                           <input type="number" name="max_buy_ticket"
                             placeholder="{{ __('Enter Maximum number of tickets for each customer') }}"
                             class="form-control" value="{{ @$event->ticket->max_buy_ticket }}">
@@ -614,11 +644,11 @@
                     <div class="col-lg-4">
                       <div class="">
                         <div class="form-group">
-                          <label for="">{{ __('Price') }}
+                          <label for="">{{ __('Precio de la entrada') }}
                             ({{ $getCurrencyInfo->base_currency_text }})
                             *</label>
                           <input type="number" name="price" id="ticket-pricing"
-                            value="{{ $event->ticket->price }}" placeholder="{{ __('Enter Price') }}"
+                            value="{{ $event->ticket->price }}" placeholder="{{ __('Ej: 12000') }}"
                             class="form-control {{ optional($event->ticket)->pricing_type == 'free' ? 'd-none' : '' }}">
                         </div>
                       </div>
@@ -626,16 +656,16 @@
                         <input type="checkbox" name="pricing_type"
                           {{ optional($event->ticket)->pricing_type == 'free' ? 'checked' : '' }} value="free"
                           class="" id="free_ticket"> <label
-                          for="free_ticket">{{ __('Tickets are Free') }}</label>
+                          for="free_ticket">{{ __('Este evento es gratuito') }}</label>
                       </div>
                     </div>
                     <div class="col-lg-8">
                       <div class="">
                         <div class="form-group">
-                          <label for="">{{ __('Meeting Url') }}
+                          <label for="">{{ __('Enlace de acceso o meeting URL') }}
                             *</label>
                           <input type="text" name="meeting_url" value="{{ $event->meeting_url }}"
-                            placeholder="Enter Price" class="form-control">
+                            placeholder="{{ __('Ej: enlace de Zoom, Meet o plataforma de acceso') }}" class="form-control">
                         </div>
                       </div>
                     </div>
@@ -647,7 +677,7 @@
                     id="early_bird_discount_free">
                     <div class="col-lg-12">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Early Bird Discount') . '*' }}</label>
+                        <label for="">{{ __('Descuento anticipado') . '*' }}</label>
                         <div class="selectgroup w-100">
                           <label class="selectgroup-item">
                             <input type="radio" name="early_bird_discount_type"
@@ -673,7 +703,7 @@
                           <div class="form-group">
                             <label for="">{{ __('Discount') }} *</label>
                             <select name="discount_type" class="form-control discount_type">
-                              <option disabled>{{ __('Select Discount Type') }}</option>
+                              <option disabled>{{ __('Selecciona el tipo de descuento') }}</option>
                               <option
                                 {{ optional($event->ticket)->early_bird_discount_type == 'fixed' ? 'selected' : '' }}
                                 value="fixed">{{ __('Fixed') }}</option>
@@ -693,14 +723,14 @@
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Discount End Date') }} *</label>
+                            <label for="">{{ __('Fecha limite del descuento') }} *</label>
                             <input type="date" name="early_bird_discount_date"
                               value="{{ optional($event->ticket)->early_bird_discount_date }}" class="form-control">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Discount End Time') }} *</label>
+                            <label for="">{{ __('Hora limite del descuento') }} *</label>
                             <input type="time" name="early_bird_discount_time"
                               value="{{ optional($event->ticket)->early_bird_discount_time }}" class="form-control">
                           </div>
@@ -715,8 +745,10 @@
                 </div>
                 </div>
                 <div id="section-content" class="pt-3 mb-3">
-                  <h5 class="mb-1">{{ __('Contenido por idioma') }}</h5>
-                  <p class="text-muted mb-0">{{ __('Aqui editas titulo, categoria, descripcion, politica de reembolso y SEO para cada idioma.') }}</p>
+                  <h5 class="mb-1">{{ $singleLanguageMode ? __('Contenido principal') : __('Contenido por idioma') }}</h5>
+                  <p class="text-muted mb-0">
+                    {{ $singleLanguageMode ? __('Aqui editas el contenido principal del evento en espanol.') : __('Aqui editas titulo, categoria, descripcion, politica de reembolso y SEO para cada idioma.') }}
+                  </p>
                 </div>
                 <div id="accordion" class="mt-3">
                   @foreach ($languages as $language)
@@ -727,8 +759,8 @@
                             data-target="#collapse{{ $language->id }}"
                             aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
                             aria-controls="collapse{{ $language->id }}">
-                            {{ $language->name . ' ' . __('Language') }}
-                            {{ $language->is_default == 1 ? '(' . __('Default') . ')' : '' }}
+                            {{ $singleLanguageMode ? __('Contenido del evento') : $language->name }}
+                            {{ !$singleLanguageMode && $language->is_default == 1 ? '(' . __('Principal') . ')' : '' }}
                           </button>
                         </h5>
                       </div>
@@ -763,7 +795,7 @@
 
                                 <label for="">{{ __('Category') . '*' }}</label>
                                 <select name="{{ $language->code }}_category_id" class="form-control">
-                                  <option selected disabled>{{ __('Select Category') }}
+                                  <option selected disabled>{{ __('Selecciona una categoria') }}
                                   </option>
 
                                   @foreach ($categories as $category)
@@ -828,7 +860,7 @@
                               <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
                                 <label>{{ __('Description') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
-                                  name="{{ $language->code }}_description" placeholder="{{ __('Enter Event Description') }}" data-height="300">{!! @$event_content->description !!}</textarea>
+                                  name="{{ $language->code }}_description" placeholder="{{ __('Cuenta de que se trata el evento, que incluye la entrada y cualquier dato importante.') }}" data-height="300">{!! @$event_content->description !!}</textarea>
                               </div>
                             </div>
                           </div>
@@ -836,9 +868,9 @@
                           <div class="row">
                             <div class="col-lg-12">
                               <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
-                                <label>{{ __('Refund Policy') }} *</label>
+                                <label>{{ __('Politica de reembolso') }} *</label>
                                 <textarea class="form-control" name="{{ $language->code }}_refund_policy" rows="5"
-                                  placeholder="{{ __('Enter Refund Policy') }}">{{ @$event_content->refund_policy }}</textarea>
+                                  placeholder="{{ __('Explica que pasa si alguien no puede asistir, pide un cambio o solicita devolucion.') }}">{{ @$event_content->refund_policy }}</textarea>
                               </div>
                             </div>
                           </div>
@@ -846,10 +878,10 @@
                           <div class="row">
                             <div class="col-lg-12">
                               <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
-                                <label>{{ __('Meta Keywords') }}</label>
+                                <label>{{ __('Palabras clave para Google') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords"
                                   value="{{ @$event_content->meta_keywords }}"
-                                  placeholder="{{ __('Enter Meta Keywords') }}" data-role="tagsinput">
+                                  placeholder="{{ __('Ej: recital, cumbia, buenos aires') }}" data-role="tagsinput">
                               </div>
                             </div>
                           </div>
@@ -857,30 +889,32 @@
                           <div class="row">
                             <div class="col-lg-12">
                               <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
-                                <label>{{ __('Meta Description') }}</label>
+                                <label>{{ __('Descripcion corta para Google') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
-                                  placeholder="{{ __('Enter Meta Description') }}">{{ @$event_content->meta_description }}</textarea>
+                                  placeholder="{{ __('Una descripcion breve y clara para buscadores y enlaces compartidos.') }}">{{ @$event_content->meta_description }}</textarea>
                               </div>
                             </div>
                           </div>
 
                           <div class="row">
                             <div class="col">
-                              @php $currLang = $language; @endphp
+                              @if (!$singleLanguageMode)
+                                @php $currLang = $language; @endphp
 
-                              @foreach ($languages as $language)
-                                @continue($language->id == $currLang->id)
+                                @foreach ($languages as $language)
+                                  @continue($language->id == $currLang->id)
 
-                                <div class="form-check py-0">
-                                  <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox"
-                                      onchange="cloneInput('collapse{{ $currLang->id }}', 'collapse{{ $language->id }}', event)">
-                                    <span class="form-check-sign">{{ __('Clone for') }}
-                                      <strong class="text-capitalize text-secondary">{{ $language->name }}</strong>
-                                      {{ __('language') }}</span>
-                                  </label>
-                                </div>
-                              @endforeach
+                                  <div class="form-check py-0">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox"
+                                        onchange="cloneInput('collapse{{ $currLang->id }}', 'collapse{{ $language->id }}', event)">
+                                      <span class="form-check-sign">{{ __('Clone for') }}
+                                        <strong class="text-capitalize text-secondary">{{ $language->name }}</strong>
+                                        {{ __('language') }}</span>
+                                    </label>
+                                  </div>
+                                @endforeach
+                              @endif
                             </div>
                           </div>
                         </div>
@@ -984,21 +1018,184 @@
     }
 
     #my-dropzone .dz-message {
+      display: block !important;
       margin: 1.5rem 0;
-      color: #4b5563;
-      font-weight: 600;
+      color: #334155;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    #my-dropzone .dz-message::before {
+      content: "";
+      display: block;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 14px;
+      border-radius: 20px;
+      background-color: #e8f1ff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232564eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3Cpath d='M8 15a4 4 0 0 1 .9-7.9A5 5 0 0 1 18.8 8A3.5 3.5 0 0 1 19 15'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+    }
+
+    #my-dropzone.dz-started .dz-message {
+      opacity: 0.95;
     }
 
     #my-dropzone .dz-message span::before {
-      content: "Arrastra imagenes aqui o haz click para subirlas";
+      content: "Subi las imagenes del evento";
+      display: block;
+      font-size: 17px;
+      margin-bottom: 6px;
     }
 
     #my-dropzone .dz-message span {
       font-size: 0;
+      display: inline-block;
+      line-height: 1.5;
+    }
+
+    #my-dropzone .dz-message span::after {
+      content: "Arrastralas aqui o hace clic para elegirlas. Puedes seguir sumando imagenes aunque ya hayas cargado una.";
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .event-cover-box {
+      padding: 22px;
+      border: 1px solid #dbe5f3;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.04);
+    }
+
+    .event-cover-box__intro {
+      margin-bottom: 18px;
+    }
+
+    .event-cover-box__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e8f1ff;
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .event-cover-box__title {
+      margin-bottom: 6px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .event-cover-box__text,
+    .event-cover-box__hint {
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    .event-cover-box__body {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .event-cover-box__preview {
+      margin-bottom: 0;
+      flex: 0 0 220px;
+    }
+
+    .event-cover-box__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 360px;
+    }
+
+    .event-cover-box__upload {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      margin: 0;
+      padding: 14px 16px;
+      border: 1px dashed #bfdbfe;
+      border-radius: 16px;
+      background: #eff6ff;
+      cursor: pointer;
+    }
+
+    .event-cover-box__upload input {
+      display: none;
+    }
+
+    .event-cover-box__upload-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: #dbeafe;
+      color: #2563eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .event-cover-box__upload-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      color: #0f172a;
+    }
+
+    .event-cover-box__upload-copy strong {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .event-cover-box__upload-copy small {
+      color: #64748b;
+      font-size: 12px;
     }
 
     .compact-media-toolbar {
       gap: 12px;
+    }
+
+    .event-sales-note {
+      padding: 18px 20px;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f8fbff 0%, #f2f7ff 100%);
+      color: #334155;
+    }
+
+    .event-sales-note-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+    }
+
+    .event-sales-note p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #334155;
     }
 
     .media-upload-separator .border-top {

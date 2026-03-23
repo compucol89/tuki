@@ -137,9 +137,9 @@
   <div class="container">
 
     @if (count($information['events']) > 0)
-      <div class="row g-4">
+      <div class="row">
         @foreach ($information['events'] as $event)
-          <div class="col-sm-6 col-lg-4">
+          <div class="col-md-6 col-lg-4 ev-card-col">
             @include('frontend.partials.event-card')
           </div>
         @endforeach

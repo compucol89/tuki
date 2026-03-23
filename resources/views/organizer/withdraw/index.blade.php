@@ -1,6 +1,12 @@
 @extends('organizer.layout')
 
 @section('content')
+  @php
+    $balanceAmount = Auth::guard('organizer')->user()->amount;
+    $pendingCount = $collection->where('status', 0)->count();
+    $pendingAmount = $collection->where('status', 0)->sum('amount');
+    $approvedAmount = $collection->where('status', 1)->sum('payable_amount');
+  @endphp
   <div class="page-header">
     <h4 class="page-title">{{ __('Withdraws') }}</h4>
     <ul class="breadcrumbs">
@@ -20,48 +26,77 @@
 
   <div class="row">
     <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-lg-4">
-              <div class="card-title d-inline-block">
-                {{ __('My Withdraws') }}
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <div class="card-title">{{ __('Your Balance') }} :
-                {{ $settings->base_currency_symbol_position == 'left' ? $settings->base_currency_symbol : '' }}
-                {{ Auth::guard('organizer')->user()->amount }}
-                {{ $settings->base_currency_symbol_position == 'right' ? $settings->base_currency_symbol : '' }}</div>
-            </div>
-            <div class="col-lg-4 mt-2 mt-lg-0">
+      <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4">
+        <div class="mb-3 mb-lg-0">
+          <h4 class="mb-1">{{ __('Tus retiros') }}</h4>
+          <p class="text-muted mb-0">{{ __('Desde aqui puedes revisar solicitudes, ver su estado y pedir un nuevo retiro.') }}</p>
+        </div>
+        <div class="d-flex flex-wrap">
+          <a href="{{ route('organizer.withdraw.create', ['language' => $defaultLang->code]) }}"
+            class="btn btn-primary btn-sm mr-2 mb-2">
+            <i class="fas fa-plus"></i> {{ __('Solicitar retiro') }}
+          </a>
+          <button class="btn btn-danger btn-sm mb-2 d-none bulk-delete"
+            data-href="{{ route('organizer.witdraw.bulk_delete_withdraw') }}">
+            <i class="flaticon-interface-5"></i> {{ __('Cancelar seleccionados') }}
+          </button>
+        </div>
+      </div>
 
-              <a href="{{ route('organizer.withdraw.create', ['language' => $defaultLang->code]) }}"
-                class="btn btn-secondary btn-sm float-lg-right float-left">
-                <i class="fas fa-plus"></i> {{ __('Withdraw Now')."!" }}
-              </a>
-
-              <button class="btn btn-danger btn-sm float-lg-right float-left mr-2 d-none bulk-delete"
-                data-href="{{ route('organizer.witdraw.bulk_delete_withdraw') }}">
-                <i class="flaticon-interface-5"></i> {{ __('Delete') }}
-              </button>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card ev-section-card">
+            <div class="card-body">
+              <small class="text-muted d-block mb-2">{{ __('Saldo disponible') }}</small>
+              <h3 class="mb-1">
+                {{ $currencyInfo->base_currency_symbol_position == 'left' ? $currencyInfo->base_currency_symbol : '' }}{{ number_format($balanceAmount, 2) }}{{ $currencyInfo->base_currency_symbol_position == 'right' ? $currencyInfo->base_currency_symbol : '' }}
+              </h3>
+              <p class="text-muted mb-0">{{ __('Es el monto que hoy puedes retirar.') }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card ev-section-card">
+            <div class="card-body">
+              <small class="text-muted d-block mb-2">{{ __('Pendientes') }}</small>
+              <h3 class="mb-1">{{ $pendingCount }}</h3>
+              <p class="text-muted mb-0">
+                {{ $currencyInfo->base_currency_symbol_position == 'left' ? $currencyInfo->base_currency_symbol : '' }}{{ number_format($pendingAmount, 2) }}{{ $currencyInfo->base_currency_symbol_position == 'right' ? $currencyInfo->base_currency_symbol : '' }}
+                {{ __('todavia en revision.') }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card ev-section-card">
+            <div class="card-body">
+              <small class="text-muted d-block mb-2">{{ __('Aprobado historico') }}</small>
+              <h3 class="mb-1">
+                {{ $currencyInfo->base_currency_symbol_position == 'left' ? $currencyInfo->base_currency_symbol : '' }}{{ number_format($approvedAmount, 2) }}{{ $currencyInfo->base_currency_symbol_position == 'right' ? $currencyInfo->base_currency_symbol : '' }}
+              </h3>
+              <p class="text-muted mb-0">{{ __('Total aprobado en retiros ya procesados.') }}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-12">
+      <div class="card ev-section-card">
+        <div class="card-header ev-section-header">
+          <h4 class="card-title">{{ __('Historial de retiros') }}</h4>
+        </div>
+        <div class="card-body">
+          @if (session()->has('course_status_warning'))
+            <div class="alert alert-warning">
+              <p class="text-dark mb-0">{{ session()->get('course_status_warning') }}</p>
+            </div>
+          @endif
 
-            @if (session()->has('course_status_warning'))
-              <div class="alert alert-warning">
-                <p class="text-dark mb-0">{{ session()->get('course_status_warning') }}</p>
-              </div>
-            @endif
-
-
-
+          @if ($collection->isEmpty())
+            <div class="alert alert-light border mb-0">
+              <strong>{{ __('Aun no tienes retiros cargados.') }}</strong>
+              {{ __('Cuando envies una solicitud, la veras aqui con su estado.') }}
+            </div>
+          @else
             <div class="table-responsive">
               <table class="table table-striped mt-3" id="basic-datatables">
                 <thead>
@@ -69,13 +104,13 @@
                     <th scope="col">
                       <input type="checkbox" class="bulk-check" data-val="all">
                     </th>
-                    <th scope="col">{{ __('Withdraw Id') }}</th>
-                    <th scope="col">{{ __('Method Name') }}</th>
-                    <th scope="col">{{ __('Total Amount') }}</th>
-                    <th scope="col">{{ __('Total Charge') }}</th>
-                    <th scope="col">{{ __('Total Payable Amount') }}</th>
-                    <th scope="col">{{ __('Status') }}</th>
-                    <th scope="col">{{ __('Action') }}</th>
+                    <th scope="col">{{ __('Retiro') }}</th>
+                    <th scope="col">{{ __('Metodo') }}</th>
+                    <th scope="col">{{ __('Solicitado') }}</th>
+                    <th scope="col">{{ __('Comision') }}</th>
+                    <th scope="col">{{ __('Cobras') }}</th>
+                    <th scope="col">{{ __('Estado') }}</th>
+                    <th scope="col">{{ __('Acciones') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -107,35 +142,33 @@
                       </td>
                       <td>
                         @if ($item->status == 0)
-                          <span class="badge badge-danger">{{ __('Pending') }}</span>
+                          <span class="badge badge-warning">{{ __('Pendiente') }}</span>
                         @elseif($item->status == 1)
-                          <span class="badge badge-success">{{ __('Approved') }}</span>
+                          <span class="badge badge-success">{{ __('Aprobado') }}</span>
                         @elseif($item->status == 2)
-                          <span class="badge badge-warning">{{ __('Decline') }}</span>
+                          <span class="badge badge-danger">{{ __('Rechazado') }}</span>
                         @endif
                       </td>
                       <td>
                         <a href="javascript:void(0)" data-toggle="modal" data-target="#withdrawModal{{ $item->id }}"
-                          class="btn btn-primary btn-sm"><i class="fas fa-eye"></i></a>
-                        <form class="deleteForm d-inline-block"
-                          action="{{ route('organizer.witdraw.delete_withdraw', ['id' => $item->id]) }}" method="post">
-
-                          @csrf
-                          <button type="submit" class="btn btn-danger btn-sm deleteBtn"><i class="fas fa-trash"></i></button>
-                        </form>
+                          class="btn btn-primary btn-sm">{{ __('Ver') }}</a>
+                        @if ($item->status == 0)
+                          <form class="deleteForm d-inline-block"
+                            action="{{ route('organizer.witdraw.delete_withdraw', ['id' => $item->id]) }}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm deleteBtn">{{ __('Cancelar') }}</button>
+                          </form>
+                        @endif
                       </td>
                     </tr>
                   @endforeach
                 </tbody>
               </table>
             </div>
-          </div>
+          @endif
         </div>
       </div>
-
-      <div class="card-footer"></div>
     </div>
-  </div>
   </div>
   @foreach ($collection as $item)
     <div class="modal fade" id="withdrawModal{{ $item->id }}" tabindex="-1" role="dialog"

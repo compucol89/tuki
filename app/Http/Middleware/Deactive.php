@@ -23,7 +23,7 @@ class Deactive
             if ($type == 'organizer') {
                 if (Auth::guard('organizer')->user()->status == 0) {
                     if ($request->isMethod('POST') || $request->isMethod('PUT')) {
-                        session()->flash('warning', 'Your account is deactive or pending now. Please Contact with admin!');
+                        session()->flash('warning', 'Tu cuenta esta desactivada o pendiente de aprobacion. Si necesitas ayuda, ponte en contacto con el equipo administrador.');
                         return redirect()->back();
                     }
                 }

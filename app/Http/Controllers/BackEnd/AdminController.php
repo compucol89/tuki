@@ -74,7 +74,7 @@ class AdminController extends Controller
         return redirect()->route('admin.dashboard');
       }
     } else {
-      return redirect()->back()->with('alert', 'Oops, username or password does not match!');
+      return redirect()->back()->with('alert', __('Oops, username or password does not match!'));
     }
   }
 

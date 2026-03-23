@@ -8,7 +8,7 @@
         <h2 class="page-title">Editar perfil</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item active">Editar perfil</li>
           </ol>
         </nav>

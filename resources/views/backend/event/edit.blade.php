@@ -66,6 +66,7 @@
         $publicationScore = (int) round(($completedChecks / max($totalChecks, 1)) * 100);
         $publicationTone = $publicationScore >= 85 ? 'success' : ($publicationScore >= 60 ? 'warning' : 'danger');
         $publicationHeadline = $publicationScore >= 85 ? __('Muy bien encaminado') : ($publicationScore >= 60 ? __('Vas bien, pero aun falta') : __('Todavia le falta informacion clave'));
+        $singleLanguageMode = isset($languages) && count($languages) === 1;
       @endphp
       <li class="nav-item">
         <a href="#">{{ strlen($event_title->title) > 35 ? mb_substr($event_title->title, 0, 35, 'UTF-8') . '...' : $event_title->title }}</a>
@@ -113,38 +114,52 @@
           <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicacion') }}</h4>
         </div>
         <div class="card-body">
-          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
-            <div class="mb-3 mb-md-0">
-              <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
-              <h5 class="mb-1">{{ $publicationHeadline }}</h5>
-              <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si el evento ya se entiende bien y esta listo para vender.') }}</p>
+          @if ($publicationScore >= 100)
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+              <div class="mb-3 mb-md-0">
+                <span class="badge badge-success mb-2">{{ __('Listo para vender') }}</span>
+                <h5 class="mb-1">{{ __('El evento ya esta bien armado') }}</h5>
+                <p class="text-muted mb-0">{{ __('En esta etapa ya no necesitas una checklist larga. Solo revisa cambios puntuales y guarda cuando termines.') }}</p>
+              </div>
+              <div class="text-md-right">
+                <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos completos') }}</div>
+                <small class="text-muted">{{ __('La checklist detallada tiene mas sentido durante la creacion.') }}</small>
+              </div>
             </div>
-            <div class="text-md-right">
-              <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
-              <small class="text-muted">{{ __('No bloquea el guardado. Solo orienta.') }}</small>
+          @else
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+              <div class="mb-3 mb-md-0">
+                <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
+                <h5 class="mb-1">{{ $publicationHeadline }}</h5>
+                <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si el evento ya se entiende bien y esta listo para vender.') }}</p>
+              </div>
+              <div class="text-md-right">
+                <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
+                <small class="text-muted">{{ __('No bloquea el guardado. Solo orienta.') }}</small>
+              </div>
             </div>
-          </div>
-          <div class="progress mb-4" style="height: 10px;">
-            <div class="progress-bar bg-{{ $publicationTone }}" role="progressbar" style="width: {{ $publicationScore }}%;"
-              aria-valuenow="{{ $publicationScore }}" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <div class="row">
-            @foreach ($publicationChecks as $check)
-              <div class="col-lg-6 mb-3">
-                <div class="border rounded p-3 h-100 {{ $check['done'] ? 'border-success' : 'border-light' }}">
-                  <div class="d-flex align-items-start">
-                    <span class="mr-2 mt-1 text-{{ $check['done'] ? 'success' : 'muted' }}">
-                      <i class="fas {{ $check['done'] ? 'fa-check-circle' : 'fa-circle' }}"></i>
-                    </span>
-                    <div>
-                      <div class="font-weight-bold mb-1">{{ $check['label'] }}</div>
-                      <small class="text-muted d-block">{{ $check['help'] }}</small>
+            <div class="progress mb-4" style="height: 10px;">
+              <div class="progress-bar bg-{{ $publicationTone }}" role="progressbar" style="width: {{ $publicationScore }}%;"
+                aria-valuenow="{{ $publicationScore }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="row">
+              @foreach ($publicationChecks as $check)
+                <div class="col-lg-6 mb-3">
+                  <div class="border rounded p-3 h-100 {{ $check['done'] ? 'border-success' : 'border-light' }}">
+                    <div class="d-flex align-items-start">
+                      <span class="mr-2 mt-1 text-{{ $check['done'] ? 'success' : 'muted' }}">
+                        <i class="fas {{ $check['done'] ? 'fa-check-circle' : 'fa-circle' }}"></i>
+                      </span>
+                      <div>
+                        <div class="font-weight-bold mb-1">{{ $check['label'] }}</div>
+                        <small class="text-muted d-block">{{ $check['help'] }}</small>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            @endforeach
-          </div>
+              @endforeach
+            </div>
+          @endif
         </div>
       </div>
 
@@ -161,12 +176,12 @@
             </div>
             <div class="d-flex flex-wrap align-items-center">
               <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
-              <small class="text-muted mb-0">{{ __('Formato recomendado: 1170x570') }}</small>
+              <small class="text-muted mb-0">{{ __('Recomendado: 1170x570 o mas, sin recortar el flyer') }}</small>
             </div>
           </div>
 
           {{-- Galería (form propio — dropzone AJAX) --}}
-          <label class="ev-label-section">{{ __('Gallery Images') }} <span class="text-warning">**</span></label>
+          <label class="ev-label-section">{{ __('Imagenes de la galeria') }} <span class="text-warning">**</span></label>
           <div id="reload-slider-div">
             <div class="row mt-1 mb-2">
               <div class="col">
@@ -184,22 +199,34 @@
             <input type="hidden" value="{{ $event->id }}" name="event_id">
           </form>
           <div class="mb-0" id="errpreimg"></div>
-          <p class="text-warning small mt-2 mb-4">{{ __('Image Size : 1170 x 570') }}</p>
+          <p class="text-warning small mt-2 mb-4">{{ __('La galeria acepta imagenes horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
 
           {{-- Miniatura (pertenece al form principal via form="eventForm") --}}
-          <label class="ev-label-section">{{ __('Thumbnail Image') }}*</label>
-          <div class="d-flex align-items-center mt-2">
-            <div class="thumb-preview mr-4">
+          <div class="event-cover-box mt-4">
+            <div class="event-cover-box__intro">
+              <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
+              <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
+              <p class="event-cover-box__text">{{ __('El sistema acepta cualquier tamano. Se respeta la proporcion original del flyer para que no se corte ni se deforme.') }}</p>
+            </div>
+            <div class="event-cover-box__body">
+            <div class="thumb-preview event-cover-box__preview mr-4">
               <img src="{{ $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg') }}"
                 alt="..." class="uploaded-img ev-thumbnail-preview">
             </div>
-            <div>
-              <div role="button" class="btn btn-primary btn-sm upload-btn">
-                {{ __('Choose Image') }}
+            <div class="event-cover-box__actions">
+              <label class="event-cover-box__upload" role="button">
+                <span class="event-cover-box__upload-icon">
+                  <i class="fas fa-image"></i>
+                </span>
+                <span class="event-cover-box__upload-copy">
+                  <strong>{{ __('Elegir imagen de portada') }}</strong>
+                  <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
+                </span>
                 <input type="file" class="img-input" name="thumbnail" form="eventForm">
-              </div>
-              <p class="text-warning small mt-2 mb-0">{{ __('Image Size : 320x230') }}</p>
+              </label>
+              <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -221,7 +248,7 @@
             <div class="row">
               <div class="col-lg-12">
                 <div class="form-group">
-                  <label>{{ __('Date Type') }}*</label>
+                  <label>{{ __('Tipo de fecha') }}*</label>
                   <div class="selectgroup w-100">
                     <label class="selectgroup-item">
                       <input type="radio" name="date_type" {{ $event->date_type == 'single' ? 'checked' : '' }}
@@ -241,7 +268,7 @@
             <div class="row countDownStatus {{ $event->date_type == 'multiple' ? 'd-none' : '' }}">
               <div class="col-lg-12">
                 <div class="form-group">
-                  <label>{{ __('Countdown Status') }}*</label>
+                  <label>{{ __('Contador regresivo') }}*</label>
                   <div class="selectgroup w-100">
                     <label class="selectgroup-item">
                       <input type="radio" name="countdown_status" value="1" class="selectgroup-input"
@@ -347,9 +374,9 @@
             <div class="row">
               <div class="col-lg-4">
                 <div class="form-group">
-                  <label>{{ __('Status') }}*</label>
+                  <label>{{ __('Estado') }}*</label>
                   <select name="status" class="form-control">
-                    <option selected disabled>{{ __('Select a Status') }}</option>
+                    <option selected disabled>{{ __('Selecciona un estado') }}</option>
                     <option {{ $event->status == '1' ? 'selected' : '' }} value="1">{{ __('Active') }}</option>
                     <option {{ $event->status == '0' ? 'selected' : '' }} value="0">{{ __('Deactive') }}</option>
                   </select>
@@ -357,9 +384,9 @@
               </div>
               <div class="col-lg-4">
                 <div class="form-group">
-                  <label>{{ __('Is Feature') }}*</label>
+                  <label>{{ __('Evento destacado') }}*</label>
                   <select name="is_featured" class="form-control">
-                    <option selected disabled>{{ __('Select') }}</option>
+                    <option selected disabled>{{ __('Selecciona una opcion') }}</option>
                     <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>{{ __('Yes') }}</option>
                     <option value="no" {{ $event->is_featured == 'no' ? 'selected' : '' }}>{{ __('No') }}</option>
                   </select>
@@ -380,7 +407,7 @@
                 <div class="form-group">
                   <label>{{ __('Organizer') }}</label>
                   <select name="organizer_id" class="form-control js-example-basic-single">
-                    <option value="" selected>{{ __('Select Organizer') }}</option>
+                    <option value="" selected>{{ __('Selecciona un organizador') }}</option>
                     @foreach ($organizers as $organizer)
                       <option {{ $organizer->id == $event->organizer_id ? 'selected' : '' }} value="{{ $organizer->id }}">{{ $organizer->username }}</option>
                     @endforeach
@@ -407,10 +434,14 @@
             @if ($event->event_type == 'online')
               <hr class="ev-divider">
               <p class="ev-subsection-title"><i class="fas fa-ticket-alt mr-1"></i> {{ __('Tickets y precio') }}</p>
+              <div class="event-sales-note mb-5 mt-2">
+                <div class="event-sales-note-title">{{ __('Como vender este evento') }}</div>
+                <p class="mb-0">{{ __('Primero define si el evento va a ser gratis o pago. Despues ajusta cupos, limite por persona y, si te sirve, un descuento anticipado para mover las primeras ventas.') }}</p>
+              </div>
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <label>{{ __('Total Number of Available Tickets') }}*</label>
+                    <label>{{ __('Disponibilidad total de entradas') }}*</label>
                     <div class="selectgroup w-100">
                       <label class="selectgroup-item">
                         <input type="radio" name="ticket_available_type" value="unlimited" class="selectgroup-input"
@@ -427,14 +458,14 @@
                 </div>
                 <div class="col-lg-6 {{ @$event->ticket->ticket_available_type == 'limited' ? '' : 'd-none' }}" id="ticket_available">
                   <div class="form-group">
-                    <label>{{ __('Enter total number of available tickets') }}*</label>
+                    <label>{{ __('Cantidad total disponible') }}*</label>
                     <input type="number" name="ticket_available" class="form-control" value="{{ @$event->ticket->ticket_available }}">
                   </div>
                 </div>
                 @if ($websiteInfo->event_guest_checkout_status != 1)
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label>{{ __('Maximum number of tickets for each customer') }}*</label>
+                      <label>{{ __('Limite por comprador') }}*</label>
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="max_ticket_buy_type" value="unlimited" class="selectgroup-input"
@@ -451,7 +482,7 @@
                   </div>
                   <div class="col-lg-6 {{ @$event->ticket->max_ticket_buy_type == 'limited' ? '' : 'd-none' }}" id="max_buy_ticket">
                     <div class="form-group">
-                      <label>{{ __('Enter Maximum number of tickets for each customer') }}*</label>
+                      <label>{{ __('Cantidad maxima por comprador') }}*</label>
                       <input type="number" name="max_buy_ticket" class="form-control" value="{{ @$event->ticket->max_buy_ticket }}">
                     </div>
                   </div>
@@ -460,20 +491,20 @@
                 @endif
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label>{{ __('Price') }} ({{ $getCurrencyInfo->base_currency_text }})*</label>
+                    <label>{{ __('Precio de la entrada') }} ({{ $getCurrencyInfo->base_currency_text }})*</label>
                     <input type="number" name="price" id="ticket-pricing" value="{{ $event->ticket->price }}"
                       class="form-control {{ optional($event->ticket)->pricing_type == 'free' ? 'd-none' : '' }}">
                     <div class="mt-2">
                       <input type="checkbox" name="pricing_type"
                         {{ optional($event->ticket)->pricing_type == 'free' ? 'checked' : '' }} value="free" id="free_ticket">
-                      <label for="free_ticket" class="d-inline ml-1 font-weight-normal">{{ __('Tickets are Free') }}</label>
+                      <label for="free_ticket" class="d-inline ml-1 font-weight-normal">{{ __('Este evento es gratuito') }}</label>
                     </div>
                   </div>
                 </div>
                 <div class="col-lg-8">
                   <div class="form-group">
-                    <label>{{ __('Meeting Url') }}*</label>
-                    <input type="text" name="meeting_url" value="{{ $event->meeting_url }}" class="form-control">
+                    <label>{{ __('Enlace de acceso o meeting URL') }}*</label>
+                    <input type="text" name="meeting_url" value="{{ $event->meeting_url }}" placeholder="{{ __('Ej: enlace de Zoom, Meet o plataforma de acceso') }}" class="form-control">
                   </div>
                 </div>
               </div>
@@ -481,7 +512,7 @@
               <div class="row {{ optional($event->ticket)->pricing_type == 'free' ? 'd-none' : '' }}" id="early_bird_discount_free">
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label>{{ __('Early Bird Discount') }}*</label>
+                    <label>{{ __('Descuento anticipado') }}*</label>
                     <div class="selectgroup w-100">
                       <label class="selectgroup-item">
                         <input type="radio" name="early_bird_discount_type"
@@ -537,6 +568,12 @@
         </div>
 
         {{-- ===== CONTENIDO (accordion por idioma) ===== --}}
+        <div class="mb-3">
+          <h5 class="mb-1">{{ $singleLanguageMode ? __('Contenido principal') : __('Contenido por idioma') }}</h5>
+          <p class="text-muted mb-0">
+            {{ $singleLanguageMode ? __('Aqui editas el contenido principal del evento en espanol.') : __('Aqui editas titulo, categoria, descripcion, politica de reembolso y SEO para cada idioma.') }}
+          </p>
+        </div>
         <div id="accordion" class="mt-2">
           @foreach ($languages as $language)
             <div class="version ev-section-card" style="margin-bottom:12px;">
@@ -662,17 +699,19 @@
                       placeholder="Enter Meta Description">{{ @$event_content->meta_description }}</textarea>
                   </div>
 
-                  @php $currLang = $language; @endphp
-                  @foreach ($languages as $language)
-                    @continue($language->id == $currLang->id)
-                    <div class="form-check py-0">
-                      <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox"
-                          onchange="cloneInput('collapse{{ $currLang->id }}', 'collapse{{ $language->id }}', event)">
-                        <span class="form-check-sign">{{ __('Clone for') }} <strong class="text-capitalize text-secondary">{{ $language->name }}</strong> {{ __('language') }}</span>
-                      </label>
-                    </div>
-                  @endforeach
+                  @if (!$singleLanguageMode)
+                    @php $currLang = $language; @endphp
+                    @foreach ($languages as $language)
+                      @continue($language->id == $currLang->id)
+                      <div class="form-check py-0">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox"
+                            onchange="cloneInput('collapse{{ $currLang->id }}', 'collapse{{ $language->id }}', event)">
+                          <span class="form-check-sign">{{ __('Clone for') }} <strong class="text-capitalize text-secondary">{{ $language->name }}</strong> {{ __('language') }}</span>
+                        </label>
+                      </div>
+                    @endforeach
+                  @endif
 
                 </div>
               </div>
@@ -758,6 +797,27 @@
 
 @section('style')
   <style>
+    .event-sales-note {
+      padding: 18px 20px;
+      border: 1px solid #dbe7ff;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f8fbff 0%, #f2f7ff 100%);
+      color: #334155;
+    }
+
+    .event-sales-note-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+    }
+
+    .event-sales-note p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
     #my-dropzone {
       border: 2px dashed #d6d9e6;
       border-radius: 14px;
@@ -767,17 +827,159 @@
     }
 
     #my-dropzone .dz-message {
+      display: block !important;
       margin: 1.5rem 0;
-      color: #4b5563;
-      font-weight: 600;
+      color: #334155;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    #my-dropzone .dz-message::before {
+      content: "";
+      display: block;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 14px;
+      border-radius: 20px;
+      background-color: #e8f1ff;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232564eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3Cpath d='M8 15a4 4 0 0 1 .9-7.9A5 5 0 0 1 18.8 8A3.5 3.5 0 0 1 19 15'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+    }
+
+    #my-dropzone.dz-started .dz-message {
+      opacity: 0.95;
     }
 
     #my-dropzone .dz-message span::before {
-      content: "Arrastra imagenes aqui o haz click para subirlas";
+      content: "Subi las imagenes del evento";
+      display: block;
+      font-size: 17px;
+      margin-bottom: 6px;
     }
 
     #my-dropzone .dz-message span {
       font-size: 0;
+      display: inline-block;
+      line-height: 1.5;
+    }
+
+    #my-dropzone .dz-message span::after {
+      content: "Arrastralas aqui o hace clic para elegirlas. Puedes seguir sumando imagenes aunque ya hayas cargado una.";
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #64748b;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .event-cover-box {
+      padding: 22px;
+      border: 1px solid #dbe5f3;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.04);
+    }
+
+    .event-cover-box__intro {
+      margin-bottom: 18px;
+    }
+
+    .event-cover-box__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #e8f1ff;
+      color: #1d4ed8;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .event-cover-box__title {
+      margin-bottom: 6px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .event-cover-box__text,
+    .event-cover-box__hint {
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    .event-cover-box__body {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .event-cover-box__preview {
+      margin-bottom: 0;
+      flex: 0 0 220px;
+    }
+
+    .event-cover-box__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 360px;
+    }
+
+    .event-cover-box__upload {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      margin: 0;
+      padding: 14px 16px;
+      border: 1px dashed #bfdbfe;
+      border-radius: 16px;
+      background: #eff6ff;
+      cursor: pointer;
+    }
+
+    .event-cover-box__upload input {
+      display: none;
+    }
+
+    .event-cover-box__upload-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: #dbeafe;
+      color: #2563eb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .event-cover-box__upload-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      color: #0f172a;
+    }
+
+    .event-cover-box__upload-copy strong {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .event-cover-box__upload-copy small {
+      color: #64748b;
+      font-size: 12px;
     }
 
     .compact-media-toolbar {

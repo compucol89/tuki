@@ -50,6 +50,18 @@
             }
         });
 
+        // Keyboard support for nav dropdowns
+        navcollapse.children('a').on('keydown', function (e) {
+            if (viewportW < mobileWidth) return;
+            if (e.key === 'Enter' || e.key === ' ') {
+                var $sub = $(this).siblings('ul, .megamenu');
+                if ($sub.length) {
+                    e.preventDefault();
+                    $sub.stop(true, false, true).slideToggle(300);
+                }
+            }
+        });
+
         // 03. Submenu Dropdown Toggle
         if ($('.main-header .navigation li.dropdown ul').length) {
             $('.main-header .navigation li.dropdown').append('<div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>');
@@ -278,6 +290,21 @@
                 navigateByImgClick: true,
             },
         });
+
+        // Event card click delegation
+        $(document).on('click', '.ev-card[data-event-url]', function (e) {
+            if (!$(e.target).closest('a, button').length) {
+                window.location.href = this.dataset.eventUrl;
+            }
+        });
+        $(document).on('keydown', '.ev-card[data-event-url]', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (!$(e.target).closest('a, button').length) {
+                    e.preventDefault();
+                    window.location.href = this.dataset.eventUrl;
+                }
+            }
+        });
     });
 
 
@@ -459,7 +486,7 @@ var fileReader = function (input) {
         };
         reader.readAsDataURL(input.files[0]);
     } else {
-        errorMsg.html("Please upload a valid file type")
+        errorMsg.html("Por favor, subí un tipo de archivo válido")
     }
 }
 $("#imageUpload").on("change", function () {
@@ -581,6 +608,31 @@ $('.event-countdown').each(function () {
             timerBlock.bodyBlock.html('');
         }
     })
+    
+    // Motivational countdown messaging
+    function updateCountdownMessage() {
+        var days = $this.find('.syotimer-cell_type_day .syotimer-cell__value').text();
+        var labelEl = $this.closest('.ed-countdown-wrap').find('.ed-countdown-label');
+        var dayNum = parseInt(days) || 0;
+        var message = 'El evento comienza en';
+
+        if (dayNum === 0) {
+            message = '\u00A1Hoy es el d\u00EDa!';
+        } else if (dayNum === 1) {
+            message = '\u00A1Ma\u00F1ana! No te lo pierdas';
+        } else if (dayNum <= 7) {
+            message = '\u00A1Esta semana! Asegur\u00E1 tu lugar';
+        } else if (dayNum <= 30) {
+            message = '\u00A1En ' + dayNum + ' d\u00EDas! No te quedes afuera';
+        } else if (dayNum <= 60) {
+            message = 'Falta poco \u2014 compr\u00E1 con anticipaci\u00F3n';
+        }
+
+        labelEl.text(message);
+    }
+
+    setTimeout(updateCountdownMessage, 100);
+    setInterval(updateCountdownMessage, 60000);
 });
 
 $('.showLoader').on('click', function () {

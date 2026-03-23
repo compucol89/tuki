@@ -113,9 +113,7 @@
 <div class="ev-card"
      data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}"
      role="button"
-     tabindex="0"
-     onclick="if(!event.target.closest('a,button')){window.location.href=this.dataset.eventUrl}"
-     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href=this.dataset.eventUrl}">
+     tabindex="0">
 
   {{-- ── VISUAL: imagen + barra + overlay (sin overflow:hidden en el wrapper) ── --}}
   <div class="ev-card__visual">
@@ -175,9 +173,9 @@
 
       {{-- CTA hover --}}
       <div class="ev-card__dtbar-cta" aria-hidden="true">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 9v11a2 2 0 002 2h16a2 2 0 002-2V9"/><path d="M9 21V9"/></svg>
+        <svg width="13" height="13" stroke-width="2.5"><use href="#icon-ticket"/></svg>
         <span>{{ strtoupper($ev_cta) }}</span>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg width="13" height="13" stroke-width="2.5"><use href="#icon-arrow-right"/></svg>
       </div>
 
     </div>
@@ -203,7 +201,7 @@
 
     {{-- Ubicación — arriba del título --}}
     <div class="ev-card__loc-row">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <svg width="11" height="11" stroke-width="2.5" aria-hidden="true"><use href="#icon-map-pin"/></svg>
       <span>{{ $ev_location }}</span>
     </div>
 
@@ -212,7 +210,7 @@
 
     {{-- Entradas: reserva Y entradas desde --}}
     <div class="ev-card__ticket-row">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 9v11a2 2 0 002 2h16a2 2 0 002-2V9"/><path d="M9 21V9"/></svg>
+      <svg width="12" height="12" stroke-width="2" aria-hidden="true"><use href="#icon-ticket"/></svg>
       @if($ev_is_free && !$ev_is_mixed)
         <span>{{ __('Entrada gratuita · Reservá tu lugar') }}</span>
       @elseif($ev_is_mixed && $ev_display_price)
@@ -227,7 +225,7 @@
     {{-- Organizador --}}
     @if($ev_organizer_name)
       <div class="ev-card__org-row">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <svg width="12" height="12" stroke-width="2" aria-hidden="true"><use href="#icon-user"/></svg>
         <span>{{ __('Por') }} <a href="{{ $ev_organizer_url }}" onclick="event.stopPropagation()">{{ $ev_organizer_name }}</a></span>
       </div>
     @endif

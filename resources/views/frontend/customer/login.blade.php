@@ -65,20 +65,20 @@
         <a href="{{ route('check-out', ['type' => 'guest']) }}" class="auth-guest-btn auth-guest-btn--cta auth-guest-btn--green">
           @if($isFreeEvent)
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            Reservar entrada como invitado — sin registrarme
+            Reservar entrada sin cuenta
           @else
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-            Comprar como invitado — sin registrarme
+            Comprar entrada sin cuenta
           @endif
         </a>
-        <p class="auth-guest-hint">Rápido, seguro y sin crear cuenta</p>
+        <p class="auth-guest-hint">Rápido, seguro y sin necesidad de registrarte</p>
       @endif
       @if (!onlyDigitalItemsInCart() && request()->input('redirected') == 'checkout')
         <a href="{{ route('shop.checkout', ['type' => 'guest']) }}" class="auth-guest-btn auth-guest-btn--cta">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
           Comprar como invitado — sin registrarme
         </a>
-        <p class="auth-guest-hint">Rápido, seguro y sin crear cuenta</p>
+        <p class="auth-guest-hint">Rápido, seguro y sin necesidad de registrarte</p>
       @endif
 
       {{-- Alertas --}}

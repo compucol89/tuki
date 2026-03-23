@@ -85,20 +85,21 @@
       }
       $mq_flat = $mq_flat->shuffle()->values();
     @endphp
-    <div class="events-marquee">
+    <div class="events-marquee" aria-roledescription="carousel" aria-label="{{ __('Featured events') }}">
       <div class="events-marquee-track">
         <div class="events-marquee-inner">
           @for ($copy = 0; $copy < 3; $copy++)
             @foreach ($mq_flat as $mqi)
               @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
-              <a href="{{ $mqi['url'] }}" class="events-marquee-item">
-                <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" loading="lazy">
+              <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0) aria-hidden="true" tabindex="-1" @endif>
+                <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" loading="{{ $copy === 0 && $loop->index < 4 ? 'eager' : 'lazy' }}">
 
                 {{-- Fecha — top-left --}}
-                <div class="emq-date">
+                <div class="emq-date" aria-hidden="true">
                   <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>
                   <span class="emq-date__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
                 </div>
+                <span class="sr-only">{{ $mq_carbon->format('d') }} {{ $mq_carbon->translatedFormat('M') }}</span>
 
                 {{-- Badge — top-right --}}
                 @if($mqi['badge'])
@@ -591,6 +592,16 @@
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal-on-scroll:not(.revealed)').forEach(function(el) { io.observe(el); });
+})();
+
+// Marquee click/tap to pause
+(function() {
+  var marquee = document.querySelector('.events-marquee');
+  if (!marquee) return;
+  marquee.addEventListener('click', function(e) {
+    if (e.target.closest('a')) return;
+    marquee.classList.toggle('is-paused');
+  });
 })();
 </script>
 @endpush

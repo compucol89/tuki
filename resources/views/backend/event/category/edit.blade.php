@@ -15,54 +15,67 @@
           @csrf
           <input type="hidden" id="in_id" name="id">
 
-          <div class="form-group">
-            <label for="">{{ __('Image') . '*' }}</label>
-            <br>
-            <div class="thumb-preview">
-              <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img in_image">
-            </div>
+          <div class="category-modal-intro">
+            <span class="category-modal-intro__eyebrow">{{ __('Revision') }}</span>
+            <p class="category-modal-intro__text">{{ __('Ajusta el nombre, el estado o la imagen para que la categoria siga siendo clara y consistente con el resto del catalogo.') }}</p>
+          </div>
 
-            <div class="mt-3">
-              <div role="button" class="btn btn-primary btn-sm upload-btn">
-                {{ __('Choose Image') }}
-                <input type="file" class="img-input" name="image">
+          <div class="form-group category-form-group">
+            <div class="category-image-box">
+              <div class="category-image-box__header">
+                <span class="category-image-box__title">{{ __('Imagen de la categoria') . '*' }}</span>
+                <span class="category-image-box__text">{{ __('Puedes mantener la actual o reemplazarla por una imagen mas clara.') }}</span>
+              </div>
+
+              <div class="category-image-box__body">
+                <div class="thumb-preview">
+                  <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img in_image">
+                </div>
+
+                <label class="category-image-upload">
+                  <span class="category-image-upload__icon"><i class="fas fa-sync-alt"></i></span>
+                  <span class="category-image-upload__copy">
+                    <strong>{{ __('Reemplazar imagen') }}</strong>
+                    <span>{{ __('Haz clic para actualizar la imagen de esta categoria') }}</span>
+                  </span>
+                  <input type="file" class="img-input" name="image">
+                </label>
               </div>
             </div>
           </div>
 
-
-          <div class="form-group">
-            <label for="">{{ __('Name') . '*' }}</label>
-            <input type="text" id="in_name" class="form-control" name="name" placeholder="Enter Category Name">
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Nombre') . '*' }}</label>
+            <input type="text" id="in_name" class="form-control" name="name" placeholder="{{ __('Ej: Musica en vivo') }}">
             <p id="editErr_name" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Status') . '*' }}</label>
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Estado') . '*' }}</label>
             <select name="status" id="in_status" class="form-control">
-              <option disabled>{{ __('Select a Status') }}</option>
-              <option value="1">{{ __('Active') }}</option>
-              <option value="0">{{ __('Deactive') }}</option>
+              <option disabled>{{ __('Selecciona un estado') }}</option>
+              <option value="1">{{ __('Activa') }}</option>
+              <option value="0">{{ __('Inactiva') }}</option>
             </select>
             <p id="editErr_status" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Featured') . '*' }}</label>
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Destacada') . '*' }}</label>
             <select name="is_featured" id="in_is_featured" class="form-control">
-              <option  disabled>{{ __('Select Is Feature') }}</option>
-              <option value="yes">{{ __('YES') }}</option>
-              <option value="no">{{ __('NO') }}</option>
+              <option disabled>{{ __('Selecciona si quieres destacarla') }}</option>
+              <option value="yes">{{ __('Si') }}</option>
+              <option value="no">{{ __('No') }}</option>
             </select>
             <p id="editErr__is_featured" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
-          <div class="form-group">
-            <label for="">{{ __('Serial Number') . '*' }}</label>
-            <input type="number" id="in_serial_number" class="form-control ltr" name="serial_number" placeholder="Enter Category Serial Number">
+          <div class="form-group category-form-group">
+            <label for="">{{ __('Orden de aparicion') . '*' }}</label>
+            <input type="number" id="in_serial_number" class="form-control ltr" name="serial_number" placeholder="{{ __('Ej: 10') }}">
             <p id="editErr_serial_number" class="mt-1 mb-0 text-danger em"></p>
             <p class="text-warning mt-2 mb-0">
-              <small>{{ __('The higher the serial number is, the later the category will be shown.') }}</small>
+              <small>{{ __('Mientras mas alto sea el numero, mas abajo aparecera la categoria en el listado.') }}</small>
             </p>
           </div>
         </form>
@@ -70,10 +83,10 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
-          {{ __('Close') }}
+          {{ __('Cerrar') }}
         </button>
         <button id="updateBtn" type="button" class="btn btn-primary btn-sm">
-          {{ __('Update') }}
+          {{ __('Guardar cambios') }}
         </button>
       </div>
     </div>

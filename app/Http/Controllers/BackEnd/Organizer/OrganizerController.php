@@ -299,7 +299,7 @@ class OrganizerController extends Controller
         return redirect()->route('organizer.dashboard');
       }
     } else {
-      return redirect()->back()->with('alert', 'Oops, Username or password does not match!');
+      return redirect()->back()->with('alert', __('Oops, Username or password does not match!'));
     }
   }
   //forget_passord

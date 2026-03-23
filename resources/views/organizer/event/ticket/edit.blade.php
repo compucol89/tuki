@@ -52,22 +52,21 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <div class="row">
-            <div class="col-lg-8">
-              <div class="card-title d-inline-block">{{ __('Edit Ticket') }}</div>
+          <div class="ticket-form-header">
+            <div class="ticket-form-header__intro">
+              <span class="ticket-form-header__eyebrow">{{ __('Venta') }}</span>
+              <h3 class="ticket-form-header__title">{{ __('Editar entrada') }}</h3>
+              <p class="ticket-form-header__text">{{ __('Ajusta precio, cupo, limite por comprador o descuento anticipado sin perder claridad comercial.') }}</p>
             </div>
-            <div class="col-lg-4">
+            <div class="ticket-form-header__actions">
               <a href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => request()->input('event_id'), 'event_type' => request()->input('event_type')]) }}"
-                class="btn btn-info btn-sm float-right"><i class="fas fa-backward"></i>
-                {{ __('Back') }}</a>
+                class="btn btn-info ticket-form-header__btn"><i class="fas fa-arrow-left mr-1"></i>
+                {{ __('Volver') }}</a>
 
-              <a class="mr-2 btn btn-success btn-sm float-right d-inline-block"
+              <a class="btn btn-success ticket-form-header__btn"
                 href="{{ route('event.details', ['slug' => eventSlug($defaultLang->id, request()->input('event_id')), 'id' => request()->input('event_id')]) }}"
                 target="_blank">
-                <span class="btn-label">
-                  <i class="fas fa-eye"></i>
-                </span>
-                {{ __('Preview') }}
+                <i class="fas fa-eye mr-1"></i>{{ __('Vista previa') }}
               </a>
             </div>
           </div>
@@ -86,6 +85,10 @@
                 <input type="hidden" name="event_type" value="{{ request()->input('event_type') }}">
                 <input type="hidden" name="event_id" value="{{ request()->input('event_id') }}">
                 <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                <div class="ticket-form-intro">
+                  <span class="ticket-form-intro__eyebrow">{{ __('Revision') }}</span>
+                  <p class="ticket-form-intro__text">{{ __('Revisa precio, stock y limites antes de guardar. Un cambio aca impacta directo en la venta de esta entrada.') }}</p>
+                </div>
                 @if (request()->input('event_type') == 'venue')
                   <div class="row ">
 
@@ -439,7 +442,11 @@
 
                 @endif
                 <div class="col-lg-12">
-                  <div id="accordion" class="mt-3">
+                <div class="ticket-form-content-intro mt-3">
+                  <h4 class="ticket-form-content-intro__title">{{ __('Nombre y descripcion de la entrada') }}</h4>
+                  <p class="ticket-form-content-intro__text">{{ __('Asegurate de que el nombre siga siendo claro para quien compra y para quien administra la venta.') }}</p>
+                </div>
+                <div id="accordion" class="mt-3 ticket-form-language">
                     @foreach ($languages as $language)
                       <div class="version">
                         <div class="version-header" id="heading{{ $language->id }}">
@@ -512,12 +519,11 @@
         </div>
 
         <div class="card-footer">
-          <div class="row">
-            <div class="col-12 text-center">
-              <button type="submit" id="EventSubmit" class="btn btn-success">
-                {{ __('Update') }}
-              </button>
-            </div>
+          <div class="ticket-form-footer">
+            <p class="ticket-form-footer__text">{{ __('Guarda cuando termines. Si algun dato esta incompleto, el sistema te lo va a marcar antes de actualizar la entrada.') }}</p>
+            <button type="submit" id="EventSubmit" class="btn btn-success ticket-form-footer__btn">
+              {{ __('Guardar cambios') }}
+            </button>
           </div>
         </div>
       </div>
@@ -547,4 +553,29 @@
     "use strict";
     var removeUrl = "{{ route('organizer.event.imagermv') }}";
   </script>
+@endsection
+
+@section('style')
+  <style>
+    .ticket-form-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
+    .ticket-form-header__eyebrow,.ticket-form-intro__eyebrow{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#e8f1ff;color:#1d4ed8;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+    .ticket-form-header__title,.ticket-form-content-intro__title{margin-bottom:6px;color:#0f172a;font-size:28px;font-weight:700}
+    .ticket-form-content-intro__title{font-size:20px}
+    .ticket-form-header__text,.ticket-form-intro__text,.ticket-form-content-intro__text,.ticket-form-footer__text{margin-bottom:0;color:#64748b;line-height:1.7}
+    .ticket-form-header__actions{display:flex;gap:10px;flex-wrap:wrap}
+    .ticket-form-header__btn{border-radius:12px;padding-inline:16px}
+    .ticket-form-intro,.ticket-form-content-intro{margin-bottom:18px;padding:18px 20px;border:1px solid #e5e7eb;border-radius:20px;background:linear-gradient(180deg,#fcfdff 0%,#f8fbff 100%)}
+    #eventForm>.row{padding:20px;border:1px solid #e5e7eb;border-radius:20px;background:#fff;box-shadow:0 14px 30px rgba(15,23,42,.05)}
+    #eventForm .form-control{min-height:46px;border-radius:12px}
+    #eventForm label{color:#0f172a;font-weight:700;margin-bottom:8px}
+    #eventForm .selectgroup-button{min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:12px!important;font-weight:600}
+    #eventForm .table-bordered{border-color:#e5e7eb}
+    #eventForm .table-bordered th{background:#f8fafc;color:#475569;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+    .ticket-form-language .version{border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;margin-bottom:12px;background:#fff}
+    .ticket-form-language .version-header{background:#f8fafc}
+    .ticket-form-language .btn-link{width:100%;padding:16px 18px;text-align:left;color:#0f172a;font-weight:700;text-decoration:none}
+    .ticket-form-language .version-body{padding:18px}
+    .ticket-form-footer{max-width:560px;margin:0 auto;text-align:center}
+    .ticket-form-footer__btn{min-width:220px;border-radius:14px;padding:12px 22px;font-weight:700;margin-top:16px}
+  </style>
 @endsection

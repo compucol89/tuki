@@ -8,7 +8,7 @@
         <h2 class="page-title">Mis entradas</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item active">Mis entradas</li>
           </ol>
         </nav>
@@ -74,8 +74,8 @@
                         <td>
                           @if($item->paymentStatus == 'free')
                             <span class="cd-status cd-status--free">Gratis</span>
-                          @elseif($item->paymentStatus == 'paid')
-                            <span class="cd-status cd-status--paid">Pagado</span>
+                          @elseif($item->paymentStatus == 'paid' || $item->paymentStatus == 'completed')
+                            <span class="cd-status cd-status--paid">{{ $item->paymentStatus == 'completed' ? 'Completado' : 'Pagado' }}</span>
                           @elseif($item->paymentStatus == 'pending')
                             <span class="cd-status cd-status--pending">Pendiente</span>
                           @else

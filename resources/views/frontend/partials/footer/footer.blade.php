@@ -90,7 +90,7 @@
       @endphp
       <p>{!! !empty($footerInfo->copyright_text) ? $footer_text : '' !!}</p>
       <!-- Scroll Top Button -->
-      <button class="scroll-top scroll-to-target" data-target="html"><span class="fa fa-angle-up"></span></button>
+      <button class="scroll-top scroll-to-target" data-target="html" aria-label="{{ __('Scroll to top') }}"><span class="fa fa-angle-up"></span></button>
     </div>
   </div>
 </footer>

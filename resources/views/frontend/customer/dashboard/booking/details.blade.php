@@ -8,8 +8,10 @@
         <h2 class="page-title">Detalle de reserva</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
+            @auth('customer')
             <li class="breadcrumb-item"><a href="{{ route('customer.dashboard') }}">{{ __('Dashboard') }}</a></li>
             <li class="breadcrumb-item"><a href="{{ route('customer.booking.my_booking') }}">Mis entradas</a></li>
+            @endauth
             <li class="breadcrumb-item active">#{{ $booking->booking_id }}</li>
           </ol>
         </nav>
@@ -45,9 +47,11 @@
   <div class="container">
     <div class="row g-4">
 
+      @auth('customer')
       @includeIf('frontend.customer.partials.sidebar')
+      @endauth
 
-      <div class="col-lg-9">
+      <div class="{{ Auth::guard('customer')->check() ? 'col-lg-9' : 'col-lg-12' }}">
 
         {{-- Header card --}}
         <div class="cd-card mb-4">

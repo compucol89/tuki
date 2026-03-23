@@ -6,6 +6,7 @@ Route::middleware('change.lang')->group(function () {
   Route::post('/ticket-booking/{id}', 'FrontEnd\Event\BookingController@index')->name('ticket.booking');
   Route::get('/event-booking/{id}/cancel', 'FrontEnd\Event\BookingController@cancel')->name('event_booking.cancel');
   Route::get('/event-booking-complete', 'FrontEnd\Event\BookingController@complete')->name('event_booking.complete');
+  Route::get('/booking/view/{id}', 'FrontEnd\Event\CustomerBookingController@guestDetails')->name('booking.guest_view');
 });
 
 Route::middleware('change.lang')->group(function () {

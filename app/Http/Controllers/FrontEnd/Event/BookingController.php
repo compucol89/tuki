@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\PHPMailer;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -350,6 +351,7 @@ class BookingController extends Controller
         'attachmentFile' => array_key_exists('attachmentFile', $info) ? $info['attachmentFile'] : null,
         'event_date' => Session::get('event_date'),
         'conversation_id' => array_key_exists('conversation_id', $info) ? $info['conversation_id'] : null,
+        'access_token' => Auth::guard('customer')->check() ? null : Str::random(40),
       ]);
       return $booking;
     } catch (\Exception $th) {
@@ -435,7 +437,14 @@ class BookingController extends Controller
     }else{
       $mailBody = str_replace('{meeting_url}', '', $mailBody);
     }
-    
+
+    if ($bookingInfo->access_token) {
+      $guestLink = route('booking.guest_view', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
+      $mailBody = str_replace('{booking_link}', '<a href="' . $guestLink . '">' . __('Ver mi reserva') . '</a>', $mailBody);
+    } else {
+      $mailBody = str_replace('{booking_link}', '', $mailBody);
+    }
+
 
     // initialize a new mail
     $mail = new PHPMailer(true);

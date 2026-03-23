@@ -46,7 +46,8 @@ class Booking extends Model
     'attachmentFile',
     'event_date',
     'scan_status',
-    'conversation_id'
+    'conversation_id',
+    'access_token'
   ];
 
   public function event()

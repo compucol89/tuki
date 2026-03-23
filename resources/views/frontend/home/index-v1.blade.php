@@ -373,44 +373,45 @@
 
       </div>
     @endif
-    @if ($secInfo->how_work_section_status == 1)
-      @if ($howWork)
-        <div class="work-process text-center">
-          <div class="container">
-            <div class="work-process-inner">
+  </section>
+  <!-- Feature Section End -->
 
-              <div class="section-title mb-60">
-                <h2>{{ $howWork->title }}</h2>
-                <p>{{ $howWork->text }}</p>
-              </div>
-              <div class="row justify-content-center">
-                @foreach ($howWorkItems as $item)
-                  <div class="col-xl-3 col-md-6">
-                    <div class="work-process-item">
-                      <div class="icon">
-                        <span class="number">{{ $item->serial_number }}</span>
-                        <i class="{{ $item->icon }}"></i>
-                      </div>
-                      <div class="content">
-                        <h4>{{ $item->title }}</h4>
-                        <p>{{ $item->text }}</p>
-                      </div>
+  @if ($secInfo->how_work_section_status == 1)
+    <section class="work-process text-center">
+      <div class="container">
+        @if ($howWork)
+          <div class="work-process-inner">
+
+            <div class="section-title mb-60">
+              <h2>{{ $howWork->title }}</h2>
+              <p>{{ $howWork->text }}</p>
+            </div>
+            <div class="row justify-content-center">
+              @foreach ($howWorkItems as $item)
+                <div class="col-xl-3 col-md-6">
+                  <div class="work-process-item">
+                    <div class="icon">
+                      <span class="number">{{ $item->serial_number }}</span>
+                      <i class="{{ $item->icon }}"></i>
+                    </div>
+                    <div class="content">
+                      <h4>{{ $item->title }}</h4>
+                      <p>{{ $item->text }}</p>
                     </div>
                   </div>
-                @endforeach
+                </div>
+              @endforeach
+            </div>
+          @else
+            <div class="work-process text-center">
+              <div class="container">
+                <h2>{{ __('No Data Found for how work section') }}</h2>
               </div>
             </div>
-          </div>
-        </div>
-      @else
-        <div class="work-process text-center">
-          <div class="container">
-            <h2>{{ __('No Data Found for how work section') }}</h2>
-          </div>
-        </div>
-      @endif
-    @endif
-  </section>
+          @endif
+      </div>
+    </section>
+  @endif
   <!-- Feature Section End -->
 
 

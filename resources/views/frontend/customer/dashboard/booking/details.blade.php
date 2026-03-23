@@ -54,7 +54,22 @@
       <div class="{{ Auth::guard('customer')->check() ? 'col-lg-9' : 'col-lg-12' }}">
 
         {{-- Header card --}}
-        <div class="cd-card mb-4">
+        <div class="cd-card cd-card--{{ $booking->paymentStatus }} mb-4">
+          {{-- Confirmation banner --}}
+          @php $isPending = $booking->paymentStatus === 'pending'; @endphp
+          <div class="cd-bk-confirm {{ $isPending ? 'cd-bk-confirm--pending' : '' }}">
+            <div class="cd-bk-confirm__icon">
+              @if($isPending)
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              @else
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              @endif
+            </div>
+            <div>
+              <p class="cd-bk-confirm__title">{{ $isPending ? 'Pago en proceso' : '¡Reserva confirmada!' }}</p>
+              <p class="cd-bk-confirm__sub">{{ $booking->quantity }} {{ $booking->quantity == 1 ? 'entrada' : 'entradas' }}{{ $booking->paymentMethod ? ' · ' . ucfirst($booking->paymentMethod) : '' }}</p>
+            </div>
+          </div>
           <div class="cd-bk-header">
             <div class="cd-bk-header__left">
               <div class="cd-bk-header__id">#{{ $booking->booking_id }}</div>
@@ -103,6 +118,9 @@
           {{-- Datos de facturación --}}
           <div class="cd-card">
             <div class="cd-card__head">
+              <div class="cd-card__head-icon cd-card__head-icon--blue">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
               <h3 class="cd-card__title">Datos de facturación</h3>
             </div>
             <div class="cd-info-list">
@@ -136,6 +154,9 @@
           {{-- Información de pago --}}
           <div class="cd-card">
             <div class="cd-card__head">
+              <div class="cd-card__head-icon cd-card__head-icon--green">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              </div>
               <h3 class="cd-card__title">Información de pago</h3>
             </div>
             <div class="cd-info-list">
@@ -184,6 +205,9 @@
           @if($booking->organizer)
             <div class="cd-card">
               <div class="cd-card__head">
+                <div class="cd-card__head-icon cd-card__head-icon--purple">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                </div>
                 <h3 class="cd-card__title">Organizador</h3>
               </div>
               <div class="cd-info-list">
@@ -218,6 +242,9 @@
           @php $variations = json_decode($booking->variation, true); @endphp
           <div class="cd-card">
             <div class="cd-card__head">
+              <div class="cd-card__head-icon cd-card__head-icon--blue">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 15a3 3 0 000 6h20a3 3 0 000-6"/><path d="M12 3v18M8 3v18M16 3v18" opacity=".4"/></svg>
+              </div>
               <h3 class="cd-card__title">Entradas reservadas</h3>
               <span class="cd-count-pill">{{ collect($variations)->sum('qty') }} {{ collect($variations)->sum('qty') == 1 ? 'entrada' : 'entradas' }}</span>
             </div>

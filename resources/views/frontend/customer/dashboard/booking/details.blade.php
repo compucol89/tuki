@@ -53,23 +53,58 @@
 
       <div class="{{ Auth::guard('customer')->check() ? 'col-lg-9' : 'col-lg-12' }}">
 
-        {{-- HERO: Confirmation --}}
+        {{-- HERO: ticket stub --}}
         @php $isPending = $booking->paymentStatus === 'pending'; @endphp
         <div class="cd-bk-hero {{ $isPending ? 'cd-bk-hero--pending' : 'cd-bk-hero--confirmed' }} mb-4">
-          <div class="cd-bk-hero__icon-wrap">
-            <div class="cd-bk-hero__icon">
-              @if($isPending)
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              @else
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              @endif
+
+          {{-- TOP: dark slate --}}
+          <div class="cd-bk-hero__top">
+            @auth('customer')
+            <div class="cd-bk-hero__nav">
+              <a href="{{ route('customer.booking.my_booking') }}" class="cd-bk-hero__back">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Mis entradas
+              </a>
+            </div>
+            @endauth
+            <div class="cd-bk-hero__confirm-row">
+              <div class="cd-bk-hero__check-wrap">
+                <div class="cd-bk-hero__check-icon">
+                  @if($isPending)
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  @else
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  @endif
+                </div>
+              </div>
+              <div class="cd-bk-hero__confirm-text">
+                <p class="cd-bk-hero__label">{{ $isPending ? 'Pago en proceso' : '¡Reserva confirmada!' }}</p>
+                @if($event)
+                  <h2 class="cd-bk-hero__event">{{ $event->title }}</h2>
+                @endif
+              </div>
             </div>
           </div>
-          <div class="cd-bk-hero__body">
-            <p class="cd-bk-hero__label">{{ $isPending ? 'Pago en proceso' : '¡Reserva confirmada!' }}</p>
-            @if($event)
-              <h2 class="cd-bk-hero__event">{{ $event->title }}</h2>
-            @endif
+
+          {{-- TEAR LINE --}}
+          <div class="cd-bk-hero__tear">
+            <div class="cd-bk-hero__tear-dash"></div>
+          </div>
+
+          {{-- BOTTOM: white --}}
+          <div class="cd-bk-hero__bottom">
+            <div class="cd-bk-hero__bottom-row">
+              <div class="cd-bk-hero__price-block">
+                <span class="cd-bk-hero__price-label">Total pagado</span>
+                <span class="cd-bk-hero__price-amount">{{ $booking->currencySymbol }}{{ number_format($booking->price + $booking->tax, 2) }}</span>
+              </div>
+              @if($hasPdf && empty($isGuest))
+                <a href="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}" download class="cd-bk-hero__pdf-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Descargar PDF
+                </a>
+              @endif
+            </div>
             <div class="cd-bk-hero__chips">
               <span class="cd-bk-hero__chip cd-bk-hero__chip--id">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
@@ -85,20 +120,7 @@
               </span>
             </div>
           </div>
-          <div class="cd-bk-hero__actions">
-            @if($hasPdf)
-              <a href="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}" download class="cd-bk-hero__btn cd-bk-hero__btn--solid">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Descargar PDF
-              </a>
-            @endif
-            @auth('customer')
-            <a href="{{ route('customer.booking.my_booking') }}" class="cd-bk-hero__btn">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-              Mis entradas
-            </a>
-            @endauth
-          </div>
+
         </div>
 
         {{-- Guest orientation --}}

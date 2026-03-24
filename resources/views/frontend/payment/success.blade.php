@@ -245,6 +245,38 @@
           </div>
         </div>
 
+        {{-- Guest QR orientation --}}
+        @if($booking->access_token)
+        <div class="cd-guest-info" style="margin:0 0 20px;">
+          <div class="cd-guest-info__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2-2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="cd-guest-info__body">
+            <p class="cd-guest-info__title">Revisá tu correo — tus entradas están en camino</p>
+            <ul class="cd-guest-info__list">
+              <li>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Los <strong>códigos QR</strong> se envían por email por seguridad. No se muestran en la web.
+              </li>
+              <li>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Revisá tu carpeta de <strong>spam</strong> si no lo ves en los próximos minutos.
+              </li>
+              <li>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Guardá tu número de reserva: <strong class="cd-guest-info__id">#{{ $booking->booking_id }}</strong>
+              </li>
+            </ul>
+            <div class="cd-guest-info__cta">
+              <a href="{{ route('customer.signup') }}" class="cd-guest-info__link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                Crear cuenta para gestionar tus reservas futuras
+              </a>
+            </div>
+          </div>
+        </div>
+        @endif
+
         {{-- CTA --}}
         <div class="ps-cta-card">
           <p class="ps-cta-card__text">¿Buscás más experiencias?</p>

@@ -22,7 +22,8 @@ class CustomerBookingController extends Controller
     if (!$user || $user->id != $booking->customer_id) {
       return back();
     }
-    return view('frontend.customer.dashboard.booking.details', compact('booking'));
+    $isGuest = false;
+    return view('frontend.customer.dashboard.booking.details', compact('booking', 'isGuest'));
   }
 
   public function guestDetails($id, Request $request)
@@ -32,6 +33,7 @@ class CustomerBookingController extends Controller
       abort(403);
     }
     $booking = Booking::where('id', $id)->where('access_token', $token)->firstOrFail();
-    return view('frontend.customer.dashboard.booking.details', compact('booking'));
+    $isGuest = true;
+    return view('frontend.customer.dashboard.booking.details', compact('booking', 'isGuest'));
   }
 }

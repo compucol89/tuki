@@ -40,12 +40,12 @@
 
     <div class="container hero-content-wrapper">
       <div class="hero-content">
-        <h1>
-          {{ $heroSection ? $heroSection->first_title : __('Event Ticketing and Booking System') }}
-        </h1>
-        <p>
-          {{ $heroSection ? $heroSection->second_title : __('La plataforma de venta de entradas y gestión de eventos más completa.') }}
-        </p>
+        <h1>{{ __('Tu próximo evento a un clic') }}</h1>
+        <p>{{ __('Descubrí eventos o publicá el tuyo en Tukipass.') }}</p>
+        <div class="hero-actions">
+          <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Explorar eventos') }}</a>
+          <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Crear mi evento') }}</a>
+        </div>
       </div>
     </div>
   </section>
@@ -54,80 +54,84 @@
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
     @php
-      // Construir lista plana: thumbnail + galería de cada evento, mezclados
-      $mq_flat = collect();
-      $mq_badges_map = [];
-      foreach ($marqueeEvents as $ev) {
-        $mq_badges_map[$ev->id] = \App\Services\EventBadgeService::getBadge($ev);
-        $mq_carbon = \Carbon\Carbon::parse($ev->start_date)->locale('es');
-        $mq_time   = $ev->start_time ? \Carbon\Carbon::parse($ev->start_time)->format('H:i') : null;
-        $mq_free   = ($ev->pricing_type === 'free' || !$ev->min_price);
-        $mq_meta   = [
-          'event'   => $ev,
-          'carbon'  => $mq_carbon,
-          'time'    => $mq_time,
-          'free'    => $mq_free,
-          'badge'   => $mq_badges_map[$ev->id],
-          'url'     => route('event.details', [$ev->slug, $ev->id]),
+      $mq_items = $marqueeEvents->take(10)->map(function ($ev) use ($marqueeGallery) {
+        $galleryImage = isset($marqueeGallery[$ev->id]) && $marqueeGallery[$ev->id]->isNotEmpty()
+          ? asset('assets/admin/img/event-gallery/' . $marqueeGallery[$ev->id]->first()->image)
+          : asset('assets/admin/img/event/thumbnail/' . $ev->thumbnail);
+
+        return [
+          'event'  => $ev,
+          'src'    => $galleryImage,
+          'url'    => route('event.details', [$ev->slug, $ev->id]),
+          'badge'  => \App\Services\EventBadgeService::getBadge($ev),
+          'carbon' => \Carbon\Carbon::parse($ev->start_date)->locale('es'),
+          'time'   => $ev->start_time ? \Carbon\Carbon::parse($ev->start_time)->format('H:i') : null,
         ];
-        // Thumbnail
-        $mq_flat->push(array_merge($mq_meta, [
-          'src' => asset('assets/admin/img/event/thumbnail/' . $ev->thumbnail),
-        ]));
-        // Galería
-        if (isset($marqueeGallery[$ev->id])) {
-          foreach ($marqueeGallery[$ev->id] as $gi) {
-            $mq_flat->push(array_merge($mq_meta, [
-              'src' => asset('assets/admin/img/event-gallery/' . $gi->image),
-            ]));
-          }
-        }
-      }
-      $mq_flat = $mq_flat->shuffle()->values();
+      });
     @endphp
-    <div class="events-marquee" aria-roledescription="carousel" aria-label="{{ __('Featured events') }}">
-      <div class="events-marquee-track">
-        <div class="events-marquee-inner">
-          @for ($copy = 0; $copy < 3; $copy++)
-            @foreach ($mq_flat as $mqi)
-              @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
-              <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0) aria-hidden="true" tabindex="-1" @endif>
-                <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" loading="{{ $copy === 0 && $loop->index < 4 ? 'eager' : 'lazy' }}">
+    <section class="events-marquee" aria-label="{{ __('Eventos destacados') }}">
+      <div class="container">
+        <div class="hs-header mb-32">
+          <div class="hs-header__left">
+            <h2 class="hs-header__title">{{ __('Eventos que no te podés perder') }}</h2>
+            <p class="hs-header__sub">{{ __('Explorá destacados y conseguí tu entrada en minutos.') }}</p>
+          </div>
+          <a href="{{ route('events') }}" class="hs-header__cta">{{ __('Ver todos') }}</a>
+        </div>
 
-                {{-- Fecha — top-left --}}
-                <div class="emq-date" aria-hidden="true">
-                  <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>
-                  <span class="emq-date__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
-                </div>
-                <span class="sr-only">{{ $mq_carbon->format('d') }} {{ $mq_carbon->translatedFormat('M') }}</span>
+        <div class="events-marquee-track">
+          <div class="events-marquee-inner">
+            @for ($copy = 0; $copy < 3; $copy++)
+              @foreach ($mq_items as $mqi)
+                @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
+                <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0) aria-hidden="true" tabindex="-1" @endif>
+                  <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" loading="{{ $copy === 0 && $loop->index < 4 ? 'eager' : 'lazy' }}">
 
-                {{-- Badge — top-right --}}
-                @if($mqi['badge'])
-                  <span class="emq-badge">
-                    <span>{{ $mqi['badge']['icon'] }}</span>
-                    <span>{{ $mqi['badge']['label'] }}</span>
-                  </span>
-                @endif
+                  <div class="emq-date" aria-hidden="true">
+                    <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>
+                    <span class="emq-date__month">{{ strtoupper($mq_carbon->translatedFormat('M')) }}</span>
+                  </div>
+                  <span class="sr-only">{{ $mq_carbon->format('d') }} {{ $mq_carbon->translatedFormat('M') }}</span>
 
-                {{-- Gradiente inferior + título siempre visible --}}
-                <div class="emq-bottom">
-                  <span class="emq-bottom__title">{{ $ev->title }}</span>
-                </div>
+                  @if($mqi['badge'])
+                    <span class="emq-badge">
+                      <span>{{ $mqi['badge']['icon'] }}</span>
+                      <span>{{ $mqi['badge']['label'] }}</span>
+                    </span>
+                  @endif
 
-              </a>
-            @endforeach
-          @endfor
+                  <div class="emq-bottom">
+                    <span class="emq-bottom__eyebrow">
+                      {{ $mqi['time'] ? $mq_carbon->translatedFormat('d M') . ' · ' . $mqi['time'] : $mq_carbon->translatedFormat('d M') }}
+                    </span>
+                    <span class="emq-bottom__title">{{ $ev->title }}</span>
+                  </div>
+                </a>
+              @endforeach
+            @endfor
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   @endif
   <!-- Event Images Marquee End -->
 @endsection
 @section('content')
 
   {{-- ── BUSCADOR HOME — Modern SaaS UI ── --}}
+  @php
+    $today = \Carbon\Carbon::now();
+    $weekendStart = $today->copy()->next(\Carbon\Carbon::FRIDAY);
+    $weekendEnd = $weekendStart->copy()->addDays(2);
+  @endphp
   <section class="hs-search-wrap">
     <div class="container">
+      <div class="hs-search-head">
+        <div>
+          <h2 class="hs-search-head__title">{{ __('Encontrá tu próximo plan') }}</h2>
+          <p class="hs-search-head__sub">{{ __('Buscá por nombre, lugar, categoría o explorá filtros rápidos.') }}</p>
+        </div>
+      </div>
 
       <form action="{{ route('events') }}" method="GET" class="hs-search-form" id="hsSearchForm">
 
@@ -135,6 +139,14 @@
         <div class="hs-sf__field hs-sf__field--grow">
           <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" name="search-input" class="hs-sf__input" placeholder="¿Qué evento buscás?" autocomplete="off">
+        </div>
+
+        <div class="hs-sf__divider"></div>
+
+        {{-- Ubicación --}}
+        <div class="hs-sf__field hs-sf__field--location">
+          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <input type="text" name="location" class="hs-sf__input" placeholder="Ciudad o ubicación" autocomplete="off">
         </div>
 
         <div class="hs-sf__divider"></div>
@@ -172,12 +184,17 @@
 
       {{-- Quick filters --}}
       <div class="hs-search-chips">
-        <span class="hs-search-chips__label">Popular:</span>
+        <span class="hs-search-chips__label">Filtros rápidos:</span>
         <a href="{{ route('events') }}" class="hs-chip hs-chip--active">Todos</a>
-        @foreach ($categories->take(6) as $cat)
-          <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip">{{ $cat->name }}</a>
+        <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">Gratis</a>
+        <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">Pago</a>
+        <a href="{{ route('events', ['event' => 'venue']) }}" class="hs-chip">Presencial</a>
+        <a href="{{ route('events', ['event' => 'online']) }}" class="hs-chip">Online</a>
+        <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' to ' . $today->format('Y-m-d')]) }}" class="hs-chip">Hoy</a>
+        <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' to ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">Este finde</a>
+        @foreach ($categories->take(4) as $cat)
+          <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip hs-chip--category">{{ $cat->name }}</a>
         @endforeach
-        <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">🎫 Gratis</a>
       </div>
 
     </div>
@@ -282,93 +299,35 @@
   @endif
   <!-- Events Section End -->
 
-  <!-- Category Section Start -->
-  @if ($secInfo->categories_section_status == 1)
-    <section class="category-section">
-      <div class="container">
-        <div class="section-title mb-60">
-          <h2>{{ $secTitleInfo ? $secTitleInfo->category_section_title : __('Categories') }}</h2>
-        </div>
-        <div class="category-wrap text-white">
-          @if ($eventCategories->isNotEmpty())
-            @foreach ($eventCategories as $item)
-              <a href="{{ route('events', ['category' => $item->slug]) }}" class="category-item">
-                <img class="lazy" data-src="{{ asset('assets/admin/img/event-category/' . $item->image) }}"
-                  alt="{{ $item->name }}">
-                <div class="category-content">
-                  <h5>{{ $item->name }}</h5>
-                </div>
-              </a>
-            @endforeach
-          @else
-            <h3 class="text-dark">{{ __('No Category Found') }}</h3>
-          @endif
-
-
-        </div>
-      </div>
-    </section>
-  @endif
-  <!-- Category Section End -->
-
-  <!-- About Section Start -->
-  @if ($secInfo->about_section_status == 1)
-    <section class="about-section">
-      <div class="container">
-        @if (is_null($aboutUsSection))
-          <h2 class="text-center">{{ __('No data found for about section') }}</h2>
-        @endif
-        <div class="row align-items-center">
-          <div class="col-lg-6">
-            <div class="about-image-part pt-10 rmb-55">
-              @if (!is_null($aboutUsSection))
-                <img class="lazy"
-                  data-src="{{ asset('assets/admin/img/about-us-section/' . $aboutUsSection->image) }}"
-                  alt="About">
-              @endif
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="about-content">
-              <div class="section-title mb-30">
-                <h2>{{ $aboutUsSection ? $aboutUsSection->title : '' }}</h2>
-              </div>
-              <p>{{ $aboutUsSection ? $aboutUsSection->subtitle : '' }}</p>
-              <div>
-                {!! $aboutUsSection ? $aboutUsSection->text : '' !!}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  @endif
-  <!-- About Section End -->
-
-
   <!-- Feature Section Start -->
   <section class="feature-section bg-lighter">
     @if ($secInfo->features_section_status == 1)
-      <div class="container pb-40 rpb-30">
-        <div class="section-title text-center mb-55">
-          <h2>{{ $featureEventSection ? $featureEventSection->title : '' }}</h2>
-          <p>{{ $featureEventSection ? $featureEventSection->text : '' }}</p>
+      <div class="container">
+        <div class="feature-shell">
+          <div class="feature-shell__intro">
+            <div class="section-title text-center mb-55">
+              <h2>{{ $featureEventSection ? $featureEventSection->title : '' }}</h2>
+              <p>{{ $featureEventSection ? $featureEventSection->text : '' }}</p>
+            </div>
+          </div>
           @if ($featureEventItems->isEmpty())
             <h2>{{ __('No data found for features section') }}</h2>
           @endif
-        </div>
-        <div class="row justify-content-center">
-          @foreach ($featureEventItems as $item)
-            <div class="col-xl-4 col-md-6">
-              <div class="feature-item">
-                <i class="{{ $item->icon }}"></i>
-                <div class="feature-content">
-                  <h5>{{ $item->title }}</h5>
-                  <p>{{ $item->text }}</p>
+          <div class="row justify-content-center feature-grid">
+            @foreach ($featureEventItems as $item)
+              <div class="col-xl-4 col-md-6">
+                <div class="feature-item">
+                  <div class="feature-item__icon" aria-hidden="true">
+                    <i class="{{ $item->icon }}"></i>
+                  </div>
+                  <div class="feature-content">
+                    <h5>{{ $item->title }}</h5>
+                    <p>{{ $item->text }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          @endforeach
+            @endforeach
+          </div>
         </div>
 
       </div>
@@ -376,42 +335,6 @@
   </section>
   <!-- Feature Section End -->
 
-  @if ($secInfo->how_work_section_status == 1)
-    <section class="work-process text-center">
-      <div class="container">
-        @if ($howWork)
-          <div class="work-process-inner">
-
-            <div class="section-title mb-60">
-              <h2>{{ $howWork->title }}</h2>
-              <p>{{ $howWork->text }}</p>
-            </div>
-            <div class="row justify-content-center">
-              @foreach ($howWorkItems as $item)
-                <div class="col-xl-3 col-md-6">
-                  <div class="work-process-item">
-                    <div class="icon">
-                      <span class="number">{{ $item->serial_number }}</span>
-                      <i class="{{ $item->icon }}"></i>
-                    </div>
-                    <div class="content">
-                      <h4>{{ $item->title }}</h4>
-                      <p>{{ $item->text }}</p>
-                    </div>
-                  </div>
-                </div>
-              @endforeach
-            </div>
-          @else
-            <div class="work-process text-center">
-              <div class="container">
-                <h2>{{ __('No Data Found for how work section') }}</h2>
-              </div>
-            </div>
-          @endif
-      </div>
-    </section>
-  @endif
   <!-- Feature Section End -->
 
 
@@ -473,37 +396,30 @@
             </div>
           </div>
         </div>
-        <hr>
+        @if ($secInfo->partner_section_status == 1 && $partners->isNotEmpty())
+          <div class="trust-partners" aria-label="{{ __('Aliados estratégicos') }}">
+            <div class="trust-partners__intro">
+              <h3>{{ __('También confían en Tukipass') }}</h3>
+              <p>{{ __('Marcas y organizaciones que acompañan nuestro crecimiento.') }}</p>
+            </div>
+            <div class="client-logo-wrap trust-partners__logos">
+              @foreach ($partners as $item)
+                <div class="client-logo-item">
+                  <a href="{{ $item->url }}" target="_blank" rel="noopener noreferrer"
+                    aria-label="{{ __('Visitar sitio del aliado estratégico') }}">
+                    <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
+                      alt="">
+                  </a>
+                </div>
+              @endforeach
+            </div>
+          </div>
+        @endif
       </div>
 
     </section>
   @endif
   <!-- Testimonial Section End -->
-
-  <!-- Client Logo Start -->
-  @if ($secInfo->partner_section_status == 1)
-    <section class="client-logo-area text-center">
-      <div class="container">
-        <div class="section-title mb-55">
-          <h2>{{ $partnerInfo ? $partnerInfo->title : __('Our Partner') }}</h2>
-          <p>{{ $partnerInfo ? $partnerInfo->text : '' }}</p>
-        </div>
-        <div class="client-logo-wrap">
-          @if ($partners->isNotEmpty())
-            @foreach ($partners as $item)
-              <div class="client-logo-item">
-                <a href="{{ $item->url }}" target="_blank"><img class="lazy"
-                    data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="Client Logo"></a>
-              </div>
-            @endforeach
-          @else
-            <h5>{{ __('No Partner Found') }}</h5>
-          @endif
-        </div>
-      </div>
-    </section>
-  @endif
-  <!-- Client Logo End -->
 @endsection
 
 @push('scripts')

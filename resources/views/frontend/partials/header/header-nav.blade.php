@@ -1,4 +1,4 @@
-<header class="main-header">
+<header class="main-header main-header--premium">
 
   <!--Header-Upper-->
   <div class="header-upper">
@@ -7,7 +7,7 @@
       <div class="header-inner">
         <div class="logo-outer">
           <div class="logo"><a href="{{ route('index') }}"><img
-                src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Logo"></a></div>
+                src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a></div>
         </div>
 
         <div class="nav-outer ml-lg-auto">
@@ -15,7 +15,7 @@
           <nav class="main-menu navbar-expand-xl" aria-label="{{ __('Main navigation') }}">
             <div class="navbar-header">
               <div class="logo-mobile"><a href="{{ route('index') }}"><img
-                    src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Logo"></a></div>
+                    src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a></div>
               <!-- Toggle Button -->
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"
                 aria-controls="main-menu" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -30,7 +30,7 @@
                 $links = json_decode($menuInfos, true);
                 $currentUrl = url()->current();
               @endphp
-              <ul class="navigation clearfix">
+              <ul class="navigation navigation--premium clearfix">
                 @foreach ($links as $link)
                   @php
                     $href = get_href($link, $currentLanguageInfo->id);
@@ -61,10 +61,10 @@
                 @endforeach
               </ul>
 
-              <div class="menu-right">
+              <div class="menu-right menu-right--premium">
                 @if (!Auth::guard('customer')->check())
-                  <div class="dropdown">
-                    <button type="button" class="menu-btn dropdown-toggle mr-1" id="customerGuestDropdown"
+                  <div class="dropdown menu-dropdown menu-dropdown--customer">
+                    <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerGuestDropdown"
                       data-toggle="dropdown">{{ __('Customer') }}</button>
                     <div class="dropdown-menu" aria-labelledby="customerGuestDropdown">
                       <a class="dropdown-item" href="{{ route('customer.login') }}">{{ __('Login') }}</a>
@@ -72,8 +72,8 @@
                     </div>
                   </div>
                 @else
-                  <div class="dropdown">
-                    <button type="button" class="menu-btn dropdown-toggle mr-1" id="customerUserDropdown"
+                  <div class="dropdown menu-dropdown menu-dropdown--customer">
+                    <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerUserDropdown"
                       data-toggle="dropdown">{{ Auth::guard('customer')->user()->username }}</button>
                     <div class="dropdown-menu" aria-labelledby="customerUserDropdown">
                       <a class="dropdown-item" href="{{ route('customer.dashboard') }}">{{ __('Dashboard') }}</a>
@@ -82,8 +82,8 @@
                   </div>
                 @endif
                 @if (Auth::guard('organizer')->check())
-                  <div class="dropdown">
-                    <button type="button" class="menu-btn dropdown-toggle mr-1" id="organizerUserDropdown"
+                  <div class="dropdown menu-dropdown menu-dropdown--organizer">
+                    <button type="button" class="menu-btn menu-btn--organizer dropdown-toggle mr-1" id="organizerUserDropdown"
                       data-toggle="dropdown">{{ Auth::guard('organizer')->user()->username }}</button>
                     <div class="dropdown-menu" aria-labelledby="organizerUserDropdown">
                       <a class="dropdown-item" href="{{ route('organizer.dashboard') }}">{{ __('Dashboard') }}</a>
@@ -91,8 +91,8 @@
                     </div>
                   </div>
                 @elseif (!Auth::guard('customer')->check())
-                  <div class="dropdown">
-                    <button type="button" class="menu-btn dropdown-toggle" id="organizerGuestDropdown"
+                  <div class="dropdown menu-dropdown menu-dropdown--organizer">
+                    <button type="button" class="menu-btn menu-btn--organizer dropdown-toggle" id="organizerGuestDropdown"
                       data-toggle="dropdown">{{ __('Organizer') }}</button>
                     <div class="dropdown-menu" aria-labelledby="organizerGuestDropdown">
                       <a class="dropdown-item" href="{{ route('organizer.login') }}">{{ __('Login') }}</a>

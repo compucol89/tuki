@@ -41,7 +41,7 @@
         Volver
       </a>
       <div class="co-page-header__text">
-        <h2 class="co-page-title">{{ $isGuestCheckout ? __('Checkout invitado') : __('Finalizar compra') }}</h2>
+        <h2 class="co-page-title">{{ $isGuestCheckout ? __('Terminá tu compra') : __('Finalizar compra') }}</h2>
         @if ($isGuestCheckout)
           <p class="co-page-subtitle">{{ __('Completá tus datos y pagá con Mercado Pago. Te enviamos el PDF al instante.') }}</p>
         @endif

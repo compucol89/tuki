@@ -9,6 +9,7 @@
 @section('content')
 @php
   $authUser = Auth::guard('customer')->user();
+  $isGuestCheckout = request()->query('type') === 'guest';
   // Compute totals
   $selTickets           = Session::get('selTickets');
   $s_sub_total          = Session::get('sub_total');
@@ -23,19 +24,6 @@
   // Gateway meta
   $gwMeta = [
     'mercadopago' => ['label' => 'Mercado Pago', 'sub' => 'Débito, crédito y efectivo'],
-    'stripe'      => ['label' => 'Stripe',        'sub' => 'Tarjeta de crédito/débito'],
-    'paypal'      => ['label' => 'PayPal',         'sub' => 'Pagá con tu cuenta PayPal'],
-    'razorpay'    => ['label' => 'Razorpay',       'sub' => 'Tarjeta, UPI y más'],
-    'flutterwave' => ['label' => 'Flutterwave',    'sub' => 'Pagos internacionales'],
-    'instamojo'   => ['label' => 'Instamojo',      'sub' => 'Pago online'],
-    'paytm'       => ['label' => 'Paytm',          'sub' => 'Billetera digital'],
-    'iyzico'      => ['label' => 'iyzico',         'sub' => 'Tarjeta de crédito'],
-    'midtrans'    => ['label' => 'Midtrans',       'sub' => 'Pago online'],
-    'paymongo'    => ['label' => 'PayMongo',       'sub' => 'Tarjeta y e-wallet'],
-    'myfatoorah'  => ['label' => 'MyFatoorah',     'sub' => 'Pagos regionales'],
-    'xendit'      => ['label' => 'Xendit',         'sub' => 'Pago online'],
-    'sslcommerz'  => ['label' => 'SSLCommerz',     'sub' => 'Pago online'],
-    'paystack'    => ['label' => 'Paystack',       'sub' => 'Tarjeta y banco'],
   ];
 
   // First available gateway for default selection
@@ -43,7 +31,7 @@
   $defaultGw = $firstGateway ? $firstGateway->keyword : ($offline_gateways->first() ? (string)$offline_gateways->first()->id : '');
 @endphp
 
-<section class="checkout-v2 pt-60 pb-80">
+<section class="checkout-v2 pt-60 pb-80{{ $isGuestCheckout ? ' checkout-v2--guest' : '' }}">
   <div class="container">
 
     {{-- Page header --}}
@@ -52,14 +40,37 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         Volver
       </a>
-      <h2 class="co-page-title">Finalizar compra</h2>
+      <div class="co-page-header__text">
+        <h2 class="co-page-title">{{ $isGuestCheckout ? __('Checkout invitado') : __('Finalizar compra') }}</h2>
+        @if ($isGuestCheckout)
+          <p class="co-page-subtitle">{{ __('Completá tus datos y pagá con Mercado Pago. Te enviamos el PDF al instante.') }}</p>
+        @endif
+      </div>
     </div>
 
-    {{-- Countdown timer --}}
-    <div class="co-timer" id="co-timer">
-      <svg class="co-timer__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      <span class="co-timer__text">Tenés <strong id="co-timer-display">10:00</strong> para completar tu compra</span>
-    </div>
+    @if (!$isGuestCheckout)
+      {{-- Countdown timer (default position) --}}
+      <div class="co-timer" id="co-timer">
+        <svg class="co-timer__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="co-timer__text">Tenés <strong id="co-timer-display" class="co-timer__digits" aria-live="polite">10:00</strong> para completar tu compra</span>
+      </div>
+    @endif
+
+    @if ($isGuestCheckout)
+      <div class="co-guest-note" role="note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <div class="co-guest-note__text">
+          <strong>{{ __('Después del pago') }}</strong>
+          <span>{{ __('Vas a ver la confirmación en Tukipass. Para ver tu QR en el sitio necesitás registrarte con el mismo email.') }}</span>
+        </div>
+      </div>
+
+      {{-- Countdown timer (guest: más visible, debajo de la nota) --}}
+      <div class="co-timer co-timer--guest" id="co-timer" aria-live="polite">
+        <svg class="co-timer__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="co-timer__text">Tenés <strong id="co-timer-display" class="co-timer__digits" aria-live="polite">10:00</strong> para completar tu compra</span>
+      </div>
+    @endif
 
     <form class="form" action="{{ route('ticket.booking', [$event->id, 'type' => 'guest']) }}"
           method="POST" enctype="multipart/form-data" id="payment-form">
@@ -251,16 +262,6 @@
                 @endforeach
               </div>
 
-              {{-- Stripe card element --}}
-              <div id="stripe-element" class="co-stripe-element mt-3 mb-2 d-none"></div>
-              <div id="stripe-errors" role="alert" class="text-danger mb-2" style="font-size:13px"></div>
-
-              {{-- iyzico --}}
-              <div class="iyzico-element d-none mt-3">
-                <input type="text" name="identity_number" class="form-control" placeholder="Número de identidad">
-                @error('identity_number')<p class="co-field__error">{{ $message }}</p>@enderror
-              </div>
-
               {{-- Offline gateway info panels --}}
               @foreach ($offline_gateways as $offlineGateway)
                 <div class="@if ($errors->has('attachment') && request()->session()->get('gatewayId') == $offlineGateway->id) d-block @else d-none @endif offline-gateway-info co-offline-info mt-3"
@@ -442,7 +443,11 @@
             {{-- Trust badges --}}
             <div class="co-trust mt-3">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Pago 100% seguro · Tu ticket llega al email en segundos
+              @if ($isGuestCheckout)
+                {{ __('Pago seguro con Mercado Pago · PDF con QR al mail al instante') }}
+              @else
+                Pago 100% seguro · Tu ticket llega al email en segundos
+              @endif
             </div>
 
             <div class="co-trust-logos mt-3">
@@ -488,42 +493,63 @@
 @endsection
 
 @section('custom-script')
-  <script src="https://js.stripe.com/v3/"></script>
   <script type="text/javascript">
-    let url         = "{{ route('apply-coupon') }}";
-    let stripe_key  = "{{ $stripe_key }}";
+    let url = "{{ route('apply-coupon') }}";
   </script>
   <script src="{{ asset('assets/front/js/event_checkout.js') }}"></script>
   <script>
-    // Payment cards → drive hidden select
-    document.querySelectorAll('.pgw-card').forEach(function(card) {
-      card.addEventListener('click', function() {
-        document.querySelectorAll('.pgw-card').forEach(c => c.classList.remove('pgw-card--active'));
-        this.classList.add('pgw-card--active');
-        var gw = this.dataset.gateway;
-        var sel = document.getElementById('payment');
-        sel.value = gw;
-        $(sel).trigger('change');
-      });
-      card.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
-      });
-    });
+    (function initCheckoutUi() {
+      try {
+        // Payment cards → drive hidden select
+        document.querySelectorAll('.pgw-card').forEach(function(card) {
+          card.addEventListener('click', function() {
+            document.querySelectorAll('.pgw-card').forEach(c => c.classList.remove('pgw-card--active'));
+            this.classList.add('pgw-card--active');
+            var gw = this.dataset.gateway;
+            var sel = document.getElementById('payment');
+            if (!sel) return;
+            sel.value = gw;
+            if (window.jQuery) {
+              window.jQuery(sel).trigger('change');
+            } else {
+              sel.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          });
+          card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+          });
+        });
 
-    // Trigger default gateway on load
-    $(document).ready(function() {
-      var active = document.querySelector('.pgw-card--active');
-      if (active) {
-        $('#payment').val(active.dataset.gateway).trigger('change');
+        // Trigger default gateway on load
+        document.addEventListener('DOMContentLoaded', function() {
+          try {
+            var active = document.querySelector('.pgw-card--active');
+            var sel = document.getElementById('payment');
+            if (!active || !sel) return;
+            sel.value = active.dataset.gateway;
+            if (window.jQuery) {
+              window.jQuery(sel).trigger('change');
+            } else {
+              sel.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          } catch (e) {}
+        });
+
+        // Coupon toggle
+        var couponToggle = document.getElementById('couponToggle');
+        if (couponToggle) {
+          couponToggle.addEventListener('click', function() {
+            var body = document.getElementById('couponBody');
+            if (!body) return;
+            body.style.display = body.style.display === 'none' ? 'block' : 'none';
+            this.classList.toggle('co-coupon__toggle--open');
+          });
+        }
+      } catch (e) {
+        // No bloquear el countdown si algo falla acá
+        console && console.warn && console.warn('Checkout UI init warning:', e);
       }
-    });
-
-    // Coupon toggle
-    document.getElementById('couponToggle') && document.getElementById('couponToggle').addEventListener('click', function() {
-      var body = document.getElementById('couponBody');
-      body.style.display = body.style.display === 'none' ? 'block' : 'none';
-      this.classList.toggle('co-coupon__toggle--open');
-    });
+    })();
 
     // Checkout countdown — 10 minutes
     (function() {
@@ -533,15 +559,39 @@
       var banner   = document.getElementById('co-timer');
       if (!display || !banner) return;
 
-      function tick() {
-        remaining--;
-        var m = Math.floor(remaining / 60);
-        var s = remaining % 60;
-        display.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      function pad2(n) {
+        n = Math.floor(n);
+        return (n < 10 ? '0' : '') + n;
+      }
+
+      function formatTime(seconds) {
+        var m = Math.floor(seconds / 60);
+        var s = seconds % 60;
+        return pad2(m) + ':' + pad2(s);
+      }
+
+      function pulseTick() {
+        banner.classList.remove('co-timer--tick');
+        // Re-trigger animation reliably
+        void banner.offsetWidth;
+        banner.classList.add('co-timer--tick');
+      }
+
+      function render() {
+        display.textContent = formatTime(Math.max(remaining, 0));
+        pulseTick();
 
         if (remaining <= 120) {
           banner.classList.add('co-timer--urgent');
+        } else {
+          banner.classList.remove('co-timer--urgent');
         }
+      }
+
+      function tick() {
+        remaining--;
+        render();
+
         if (remaining <= 0) {
           clearInterval(interval);
           banner.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span class="co-timer__text">Tu tiempo expiró. Serás redirigido...</span>';
@@ -549,6 +599,7 @@
         }
       }
 
+      render();
       var interval = setInterval(tick, 1000);
     })();
   </script>

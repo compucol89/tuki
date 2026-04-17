@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+# Optional semver patch bump.
+#
+# Default: OFF (prevents accidental VERSION churn on every commit)
+# Enable:   BUMP_VERSION=1 git commit ...
+#
+# Install:
+#   ./scripts/install-git-hooks.sh
+
+VERSION_FILE="VERSION"
+
+if [[ "${BUMP_VERSION:-0}" != "1" ]]; then
+  exit 0
+fi
+
+if [[ ! -f "$VERSION_FILE" ]]; then
+  exit 0
+fi
+
+VERSION="$(tr -d '[:space:]' < "$VERSION_FILE")"
+MAJOR="$(echo "$VERSION" | cut -d. -f1)"
+MINOR="$(echo "$VERSION" | cut -d. -f2)"
+PATCH="$(echo "$VERSION" | cut -d. -f3)"
+PATCH="$((PATCH + 1))"
+NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+
+echo "$NEW_VERSION" > "$VERSION_FILE"
+git add "$VERSION_FILE"
+echo "[versión] $VERSION → $NEW_VERSION"

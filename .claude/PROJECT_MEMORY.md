@@ -6,7 +6,7 @@ Este archivo sustituye o complementa búsquedas en sesiones anteriores. Actualiz
 
 - **Remoto:** `origin` → `git@github.com:compucol89/tuki.git`
 - **Rama principal:** `master` (tracking `origin/master`)
-- **Último push documentado (sesión):** 2026-04-17 — commit amplio de frontend Laravel (Sobre nosotros, tokens de diseño, i18n, assets, rutas, checkout, etc.). Revisar `git log -1` para el hash exacto.
+- **Último push documentado (sesión):** 2026-04-17 — commit `53c20bf` en `master`: frontend Laravel (Sobre nosotros, tokens `--about-ds-*`, hero, i18n, assets, checkout, referencias design-md, etc.).
 
 ## Memoria cross-session instalada (usuario)
 

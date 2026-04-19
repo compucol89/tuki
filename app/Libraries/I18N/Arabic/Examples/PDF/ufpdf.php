@@ -281,10 +281,10 @@ function utf8_to_utf16be(&$txt, $bom = true) {
   $l = strlen($txt);
   $out = $bom ? "\xFE\xFF" : '';
   for ($i = 0; $i < $l; ++$i) {
-    $c = ord($txt{$i});
+    $c = ord($txt[$i]);
     // ASCII
     if ($c < 0x80) {
-      $out .= "\x00". $txt{$i};
+      $out .= "\x00". $txt[$i];
     }
     // Lost continuation byte
     else if ($c < 0xC0) {
@@ -305,13 +305,13 @@ function utf8_to_utf16be(&$txt, $bom = true) {
       // 5/6 byte sequences not possible for Unicode.
       else {
         $out .= "\xFF\xFD";
-        while (ord($txt{$i + 1}) >= 0x80 && ord($txt{$i + 1}) < 0xC0) { ++$i; }
+        while (ord($txt[$i + 1]) >= 0x80 && ord($txt[$i + 1]) < 0xC0) { ++$i; }
         continue;
       }
       
       $q = array($c);
       // Fetch rest of sequence
-      while (ord($txt{$i + 1}) >= 0x80 && ord($txt{$i + 1}) < 0xC0) { ++$i; $q[] = ord($txt{$i}); }
+      while (ord($txt[$i + 1]) >= 0x80 && ord($txt[$i + 1]) < 0xC0) { ++$i; $q[] = ord($txt[$i]); }
       
       // Check length
       if (count($q) != $s) {
@@ -330,7 +330,7 @@ function utf8_to_utf16be(&$txt, $bom = true) {
             $out .= chr($cp >> 8);
             $out .= chr($cp & 0xFF);
           }
-          continue;
+          continue 2;
 
         case 3:
           $cp = (($q[0] ^ 0xE0) << 12) | (($q[1] ^ 0x80) << 6) | ($q[2] ^ 0x80);
@@ -346,7 +346,7 @@ function utf8_to_utf16be(&$txt, $bom = true) {
             $out .= chr($cp >> 8);
             $out .= chr($cp & 0xFF);
           }
-          continue;
+          continue 2;
 
         case 4:
           $cp = (($q[0] ^ 0xF0) << 18) | (($q[1] ^ 0x80) << 12) | (($q[2] ^ 0x80) << 6) | ($q[3] ^ 0x80);
@@ -369,7 +369,7 @@ function utf8_to_utf16be(&$txt, $bom = true) {
             $out .= chr($s2 >> 8);
             $out .= chr($s2 & 0xFF);
           }
-          continue;
+          continue 2;
       }
     }
   }
@@ -382,10 +382,10 @@ function utf8_to_codepoints(&$txt) {
   $l = strlen($txt);
   $out = array();
   for ($i = 0; $i < $l; ++$i) {
-    $c = ord($txt{$i});
+    $c = ord($txt[$i]);
     // ASCII
     if ($c < 0x80) {
-      $out[] = ord($txt{$i});
+      $out[] = ord($txt[$i]);
     }
     // Lost continuation byte
     else if ($c < 0xC0) {
@@ -406,13 +406,13 @@ function utf8_to_codepoints(&$txt) {
       // 5/6 byte sequences not possible for Unicode.
       else {
         $out[] = 0xFFFD;
-        while (ord($txt{$i + 1}) >= 0x80 && ord($txt{$i + 1}) < 0xC0) { ++$i; }
+        while (ord($txt[$i + 1]) >= 0x80 && ord($txt[$i + 1]) < 0xC0) { ++$i; }
         continue;
       }
       
       $q = array($c);
       // Fetch rest of sequence
-      while (ord($txt{$i + 1}) >= 0x80 && ord($txt{$i + 1}) < 0xC0) { ++$i; $q[] = ord($txt{$i}); }
+        while (ord($txt[$i + 1]) >= 0x80 && ord($txt[$i + 1]) < 0xC0) { ++$i; $q[] = ord($txt[$i]); }
       
       // Check length
       if (count($q) != $s) {
@@ -430,7 +430,7 @@ function utf8_to_codepoints(&$txt) {
           else {
             $out[] = $cp;
           }
-          continue;
+          continue 2;
 
         case 3:
           $cp = (($q[0] ^ 0xE0) << 12) | (($q[1] ^ 0x80) << 6) | ($q[2] ^ 0x80);
@@ -445,7 +445,7 @@ function utf8_to_codepoints(&$txt) {
           else {
             $out[] = $cp;
           }
-          continue;
+          continue 2;
 
         case 4:
           $cp = (($q[0] ^ 0xF0) << 18) | (($q[1] ^ 0x80) << 12) | (($q[2] ^ 0x80) << 6) | ($q[3] ^ 0x80);
@@ -460,7 +460,7 @@ function utf8_to_codepoints(&$txt) {
           else {
             $out[] = $cp;
           }
-          continue;
+          continue 2;
       }
     }
   }

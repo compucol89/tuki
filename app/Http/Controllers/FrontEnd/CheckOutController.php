@@ -289,7 +289,9 @@ class CheckOutController extends Controller
       ->select('events.*', 'event_contents.title', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
       ->first();
     Session::put('event', $event);
-    $online_gateways = OnlineGateway::where('status', 1)->get();
+    $online_gateways = OnlineGateway::where('status', 1)
+      ->where('keyword', 'mercadopago')
+      ->get();
     $offline_gateways = OfflineGateway::where('status', 1)->orderBy('serial_number', 'asc')->get();
     Session::put('online_gateways', $online_gateways);
     Session::put('offline_gateways', $offline_gateways);
@@ -316,9 +318,6 @@ class CheckOutController extends Controller
     $information['online_gateways'] = Session::get('online_gateways');
     $information['offline_gateways'] = Session::get('offline_gateways');
     $information['basicData'] = Basic::select('tax')->first();
-    $stripe = OnlineGateway::where('keyword', 'stripe')->first();
-    $stripe_info = $stripe ? json_decode($stripe->information, true) : [];
-    $information['stripe_key'] = $stripe_info['key'] ?? '';
 
     return view('frontend.check-out', $information);
   }

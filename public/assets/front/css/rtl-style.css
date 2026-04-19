@@ -215,9 +215,13 @@ blockquote{
 .about-section,
 .category-section,
 .events-section,
-.hero-section,
+.hero-section:not(.hero-collage-section--premium),
 .main-header{
     text-align: right;
+}
+
+.hero-collage-section--premium .hero-content {
+    text-align: center;
 }
 
 .mr-1 {

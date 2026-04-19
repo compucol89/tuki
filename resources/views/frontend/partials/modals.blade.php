@@ -1,19 +1,19 @@
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-    <div class="modal-content p-2">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+@if (!empty($map_address ?? null))
+  <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content p-2">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
 
-      <iframe
-        src="//maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q={{ $map_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-        height="380" style="border:0; width: 100%;max-height:600px" allowfullscreen="" loading="lazy"></iframe>
-
-
+        <iframe
+          src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=es&amp;q={{ urlencode($map_address) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+          height="380" style="border:0; width: 100%;max-height:600px" allowfullscreen="" loading="lazy"></iframe>
+      </div>
     </div>
   </div>
-</div>
+@endif
 
 <div class="modal fade share-event" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
   aria-hidden="true">
@@ -31,11 +31,11 @@
             <i class="fab fa-facebook-f"></i>
             <p>{{ __('Facebook') }}</p>
           </a>
-          <a href="//twitter.com/intent/tweet?text=my share text&amp;url={{ urlencode(url()->current()) }}"
+          <a href="//twitter.com/intent/tweet?text={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}&amp;url={{ urlencode(url()->current()) }}"
             target="_blank"><i class="fab fa-twitter"></i>
             <p>{{ __('Twitter') }}</p>
           </a>
-          <a href="//www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title="
+          <a href="//www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}"
             target="_blank"><i class="fab fa-linkedin"></i>
             <p>{{ __('linkedin') }}</p>
           </a>

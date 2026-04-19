@@ -61,7 +61,7 @@
             <div class="form-group">
               <label for="email">{{ __('Email Address') }} *</label>
               <input type="email" name="email" value="{{ old('email') }}" id="email" class="form-control"
-                placeholder="{{ __('Enter Your Email') }}" required>
+                placeholder="{{ __('Ingresá tu correo') }}" required>
               @error('email')
                 <p class="text-danger">{{ $message }}</p>
               @enderror

@@ -70,10 +70,18 @@ class BlogController extends Controller
       $categoryId = BlogInformation::where('language_id', $language->id)->where('slug', $slug)->pluck('blog_category_id')->first();
 
       $queryResult['relatedBlogs'] = Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
+        ->join('blog_categories', 'blog_categories.id', '=', 'blog_informations.blog_category_id')
         ->where('blog_informations.language_id', '=', $language->id)
         ->where('blog_informations.blog_category_id', '=', $categoryId)
         ->where('blog_informations.slug', '<>', $slug)
-        ->select('blogs.image', 'blogs.created_at', 'blog_informations.title', 'blog_informations.slug', 'blog_informations.content')
+        ->select(
+          'blogs.image',
+          'blogs.created_at',
+          'blog_informations.title',
+          'blog_informations.slug',
+          'blog_informations.content',
+          'blog_categories.name as categoryName'
+        )
         ->orderBy('blogs.serial_number', 'asc')
         ->limit(4)
         ->get();

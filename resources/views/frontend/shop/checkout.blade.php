@@ -1,6 +1,6 @@
 @extends('frontend.layout')
 @section('pageHeading')
-  {{ __('Check Out') }}
+  {{ __('Checkout') }}
 @endsection
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
@@ -12,7 +12,7 @@
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
       <div class="banner-inner">
-        <h2 class="page-title">{{ __('Shop') }}</h2>
+          <h2 class="page-title">{{ __('Tienda') }}</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
@@ -577,7 +577,9 @@
                   $offline_gateways = App\Models\PaymentGateway\OfflineGateway::where('status', 1)
                       ->orderBy('serial_number', 'asc')
                       ->get();
-                  $online_gateways = App\Models\PaymentGateway\OnlineGateway::where('status', 1)->get();
+                  $online_gateways = App\Models\PaymentGateway\OnlineGateway::where('status', 1)
+                      ->where('keyword', 'mercadopago')
+                      ->get();
                 @endphp
                 @foreach ($online_gateways as $online_gateway)
                   <option value="{{ $online_gateway->keyword }}"
@@ -597,19 +599,6 @@
                 <p class="text-danger">{{ Session::get('error') }}</p>
               @enderror
           </div>
-
-          <div class="iyzico-element {{ old('gateway') == 'iyzico' ? '': 'd-none'}}" >
-            <input type="text" name="identity_number" class="form_control" placeholder="Número de documento de identidad">
-            @error('identity_number')
-              <p class="text-danger">{{ $message }}</p>
-            @enderror
-          </div>
-
-          <div id="stripe-element" class="mb-2">
-            <!-- A Stripe Element will be inserted here. -->
-          </div>
-          <!-- Used to display form errors -->
-          <div id="stripe-errors" role="alert" class="mb-2"></div>
 
           @foreach ($offline_gateways as $offlineGateway)
             <div class="@if (
@@ -653,18 +642,10 @@
 <!-- CheckOut Area End -->
 @endsection
 
-@php
-  $stripe = App\Models\PaymentGateway\OnlineGateway::where('keyword', 'stripe')->first();
-  $stripe_info = json_decode($stripe->information, true);
-  $stripe_key = $stripe_info['key'];
-@endphp
-
 @section('script')
-<script src="https://js.stripe.com/v3/"></script>
 <script src="{{ asset('assets/front/js/custom.js') }}"></script>
 <script>
   let coupon_url = "{{ route('shop.apply-coupon') }}";
-  let stripe_key = "{{ $stripe_key }}";
 </script>
 <script src="{{ asset('assets/front/js/product_checkout.js') }}"></script>
 @endsection

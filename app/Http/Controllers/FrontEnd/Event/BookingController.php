@@ -3,25 +3,8 @@
 namespace App\Http\Controllers\FrontEnd\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\FrontEnd\PaymentGateway\FlutterwaveController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\InstamojoController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\IyzipayController;
 use App\Http\Controllers\FrontEnd\PaymentGateway\MercadoPagoController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\MidtransController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\MollieController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\MyFatoorahController;
 use App\Http\Controllers\FrontEnd\PaymentGateway\OfflineController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\PayPalController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\PaystackController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\PaytabsController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\PaytmController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\PerfectMoneyController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\PhonepeController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\RazorpayController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\StripeController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\ToyyibpayController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\XenditController;
-use App\Http\Controllers\FrontEnd\PaymentGateway\YocoController;
 use App\Jobs\BookingInvoiceJob;
 use App\Models\BasicSettings\Basic;
 use App\Models\BasicSettings\MailTemplate;
@@ -75,80 +58,17 @@ class BookingController extends Controller
         Session::flash('error', 'Por favor seleccioná un método de pago.');
 
         return redirect()->back();
-      } else if ($request['gateway'] == 'paypal') {
-        $paypal = new PayPalController();
-
-        return $paypal->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'razorpay') {
-        $razorpay = new RazorpayController();
-
-        return $razorpay->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'instamojo') {
-        $instamojo = new InstamojoController();
-
-        return $instamojo->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'paystack') {
-        $paystack = new PaystackController();
-
-        return $paystack->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'flutterwave') {
-        $flutterwave = new FlutterwaveController();
-
-        return $flutterwave->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'mercadopago') {
+      } else if ($request['gateway'] === 'mercadopago') {
         $mercadopago = new MercadoPagoController();
 
         return $mercadopago->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'mollie') {
-        $mollie = new MollieController();
-
-        return $mollie->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'stripe') {
-        $stripe = new StripeController();
-
-        return $stripe->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'paytm') {
-        $paytm = new PaytmController();
-
-        return $paytm->bookingProcess($request, $id);
-      } else if ($request['gateway'] == 'midtrans') {
-        Session::put('midtrans_payment_type', 'event');
-        $paytm = new MidtransController();
-
-        return $paytm->makePayment($request, $id);
-      } else if ($request['gateway'] == 'iyzico') {
-        $paytm = new IyzipayController();
-
-        return $paytm->makePayment($request, $id);
-      } else if ($request['gateway'] == 'paytabs') {
-        $paytabs = new PaytabsController();
-
-        return $paytabs->makePayment($request, $id);
-      } else if ($request['gateway'] == 'toyyibpay') {
-        $toyyibpay = new ToyyibpayController();
-
-        return $toyyibpay->makePayment($request, $id);
-      } else if ($request['gateway'] == 'phonepe') {
-        $phonepe = new PhonepeController();
-
-        return $phonepe->makePayment($request, $id);
-      } else if ($request['gateway'] == 'yoco') {
-        $yoco = new YocoController();
-
-        return $yoco->makePayment($request, $id);
-      } else if ($request['gateway'] == 'xendit') {
-        $xindit = new XenditController();
-
-        return $xindit->makePayment($request, $id);
-      } else if ($request['gateway'] == 'myfatoorah') {
-        $xindit = new MyFatoorahController();
-
-        return $xindit->makePayment($request, $id);
-      } else if ($request['gateway'] == 'perfect_money') {
-        $perfect_money = new PerfectMoneyController();
-
-        return $perfect_money->makePayment($request, $id);
       } else {
+        if (!is_numeric((string) $request['gateway'])) {
+          Session::flash('error', 'Por ahora solo Mercado Pago está habilitado como pago online.');
+
+          return redirect()->back()->withInput();
+        }
+
         $offline = new OfflineController();
         return $offline->bookingProcess($request, $id);
       }

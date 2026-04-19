@@ -12,7 +12,7 @@
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper">
         <div class="popup-one bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}">
           <div class="popup_main-content" style="background-color: {{ '#' . $popupInfo->background_color }}; opacity: {{ $popupInfo->background_color_opacity }};">
-            <h1>{{ $popupInfo->title }}</h1>
+            <h2>{{ $popupInfo->title }}</h2>
             <p>{{ $popupInfo->text }}</p>
             <a href="{{ $popupInfo->button_url }}" class="popup-main-btn" style="background-color: {{ '#' . $popupInfo->button_color }};">{{ $popupInfo->button_text }}</a>
           </div>
@@ -22,7 +22,7 @@
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper">
         <div class="popup-two bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}">
           <div class="popup_main-content" style="background-color: {{ '#' . $popupInfo->background_color }}; opacity: {{ $popupInfo->background_color_opacity }};">
-            <h1>{{ $popupInfo->title }}</h1>
+            <h2>{{ $popupInfo->title }}</h2>
             <p>{{ $popupInfo->text }}</p>
 
             <div class="subscribe-form">
@@ -48,7 +48,7 @@
           <div class="popup_main-content">
             <div class="left-bg bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}"></div>
             <div class="right-content">
-              <h1>{{ $popupInfo->title }}</h1>
+              <h2>{{ $popupInfo->title }}</h2>
               <p>{{ $popupInfo->text }}</p>
               <a href="{{ $popupInfo->button_url }}" class="popup-main-btn" style="background-color: {{ '#' . $popupInfo->button_color }};">{{ $popupInfo->button_text }}</a>
             </div>
@@ -61,7 +61,7 @@
           <div class="popup_main-content">
             <div class="left-bg bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}"></div>
             <div class="right-content">
-              <h1>{{ $popupInfo->title }}</h1>
+              <h2>{{ $popupInfo->title }}</h2>
               <p>{{ $popupInfo->text }}</p>
 
               <div class="subscribe-form">
@@ -86,7 +86,7 @@
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper">
         <div class="popup-five bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}">
           <div class="popup_main-content">
-            <h1>{{ $popupInfo->title }}</h1>
+            <h2>{{ $popupInfo->title }}</h2>
             <h4>{{ $popupInfo->text }}</h4>
 
             <div class="offer-timer" data-end_date="{{ $popupInfo->end_date }}" data-end_time="{{ $popupInfo->end_time }}"></div>
@@ -102,7 +102,7 @@
             <div class="left-bg bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}"></div>
 
             <div class="right-content bg_cover" style="background-color: {{ '#' . $popupInfo->background_color }}; background-image: url({{ asset('assets/admin/img/popups/right-bg.png') }});">
-              <h1>{{ $popupInfo->title }}</h1>
+              <h2>{{ $popupInfo->title }}</h2>
               <h4>{{ $popupInfo->text }}</h4>
 
               <div class="offer-timer" data-end_date="{{ $popupInfo->end_date }}" data-end_time="{{ $popupInfo->end_time }}"></div>

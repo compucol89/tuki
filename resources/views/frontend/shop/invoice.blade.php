@@ -8,7 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   {{-- title --}}
-  <title>{{ 'Invoice | ' . config('app.name') }}</title>
+  <title>{{ __('Factura') . ' | ' . config('app.name') }}</title>
 
   {{-- fav icon --}}
   <link rel="shortcut icon" type="image/png" href="{{ asset('assets/admin/img/' . $websiteInfo->favicon) }}">
@@ -39,7 +39,7 @@
       <div class="row">
         <div class="col-lg-12">
           <div class="logo text-center" style="margin-bottom: {{ $mb }};">
-            <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="Company Logo">
+            <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('Logo de la empresa') }}">
           </div>
 
           <div class="bg-primary">
@@ -111,7 +111,7 @@
                   {{ $orderInfo->currency_symbol_position == 'right' ? $orderInfo->currency_symbol : '' }} </strong>
               </p>
               <p>
-                <strong>{{ __('Total Price') . ': ' }}
+                <strong>{{ __('Total a pagar') . ': ' }}
                   {{ $orderInfo->currency_symbol_position == 'left' ? $orderInfo->currency_symbol : '' }}
                   {{ $orderInfo->total }}
                   {{ $orderInfo->currency_symbol_position == 'right' ? $orderInfo->currency_symbol : '' }}</strong>

@@ -168,7 +168,6 @@ return [
     Barryvdh\DomPDF\ServiceProvider::class,
     // KingFlamez\Rave\RaveServiceProvider::class,
     Anand\LaravelPaytmWallet\PaytmWalletServiceProvider::class,
-    Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
 
     /*
     * Application Service Providers...
@@ -237,7 +236,6 @@ return [
     'PDF' => Barryvdh\DomPDF\Facade::class,
     // 'Rave' => KingFlamez\Rave\Facades\Rave::class,
     'PaytmWallet' => Anand\LaravelPaytmWallet\Facades\PaytmWallet::class,
-    'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
 
     'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 

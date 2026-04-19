@@ -24,7 +24,7 @@
 
   $eventTitle   = @$event->information->title ?? '';
   $eventSlug    = @$event->information->slug  ?? '';
-  $eventAddress = @$event->information->address ?? ($event->event_type == 'online' ? 'Online' : '');
+  $eventAddress = @$event->information->address ?? ($event->event_type == 'online' ? __('Online') : '');
 
   $position   = $booking->currencyTextPosition;
   $currency   = $booking->currencyText;

@@ -10,7 +10,6 @@ Route::middleware('change.lang')->group(function () {
   Route::get('/blog/{slug}', 'FrontEnd\BlogController@details')->name('blog_details');
   Route::get('/faq', 'FrontEnd\FaqController@faqs')->name('faqs');
   Route::get('/contacto', 'FrontEnd\ContactController@contact')->name('contact');
-  Route::get('/about-us', 'FrontEnd\HomeController@about')->name('about');
 });
 
 Route::post('/contact/send-mail', 'FrontEnd\ContactController@sendMail')->name('contact.send_mail');

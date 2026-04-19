@@ -580,13 +580,6 @@ $('#add_to_wishlist').on('click', function () {
     })
 });
 
-$(document).ready(function () {
-    $('#example').DataTable({
-        responsive: true,
-        ordering: false
-    });
-});
-
 $(".read-more-btn").on("click", function () {
     $(this).parent().toggleClass('show');
 })

@@ -1,4 +1,4 @@
-var CACHE_STATIC_NAME = 'static-v26';
+var CACHE_STATIC_NAME = 'static-v29';
 
 self.addEventListener('install', function(event) {
     event.waitUntil(
@@ -35,10 +35,25 @@ self.addEventListener('fetch', function(event) {
       caches.match(event.request)
         .then(function(response) {
           if (response) {
+            var dest = event.request.destination;
+            if (dest === 'script' || dest === 'style') {
+              var ct = (response.headers.get('content-type') || '').toLowerCase();
+              if (dest === 'script' && ct.indexOf('javascript') === -1 && ct.indexOf('ecmascript') === -1) {
+                return fetch(event.request);
+              }
+              if (dest === 'style' && ct.indexOf('css') === -1) {
+                return fetch(event.request);
+              }
+            }
             return response;
           } else {
             return fetch(event.request)
               .catch(function(err) {
+                var req = event.request;
+                var isDocument = req.mode === 'navigate' || (req.destination && req.destination === 'document');
+                if (!isDocument) {
+                  return Promise.reject(err);
+                }
                 return caches.open(CACHE_STATIC_NAME)
                   .then(function(cache) {
                     return cache.match('./offline');

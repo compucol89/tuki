@@ -1,11 +1,5 @@
-<!-- Preconnect -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-<!-- Google Fonts -->
-<link
-  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;800&family=Sora:wght@400;500;600;700;800&display=swap"
-  rel="stylesheet">
+<link rel="stylesheet" href="{{ mix('css/app.css') }}">
 <!-- FlatIcon Font -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}">
 <!-- Font Awesome -->

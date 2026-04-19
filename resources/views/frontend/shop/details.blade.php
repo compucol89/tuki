@@ -25,7 +25,7 @@
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
       <div class="banner-inner">
-        <h2 class="page-title">{{ __('Shop') }}</h2>
+        <h2 class="page-title">{{ __('Tienda') }}</h2>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
@@ -56,7 +56,7 @@
                 <a class="product-image-preview"
                   href="{{ asset('assets/admin/img/product/gallery/' . $gallery->image) }}">
                   <img class="lazy" data-src="{{ asset('assets/admin/img/product/gallery/' . $gallery->image) }}"
-                    alt="Preview">
+                    alt="{{ __('Vista previa del producto') }}">
                 </a>
               @endforeach
             </div>
@@ -64,7 +64,7 @@
               @foreach ($galleries as $gallery)
                 <div class="product-thumb-item">
                   <img class="lazy" data-src="{{ asset('assets/admin/img/product/gallery/' . $gallery->image) }}"
-                    alt="Thumb">
+                    alt="{{ __('Miniatura del producto') }}">
                 </div>
               @endforeach
             </div>
@@ -122,7 +122,7 @@
                   <div class="btns pt-20">
                     <a class="cart-link2 theme-btn" data-href="{{ route('add.cart2', $product->id) }}"
                       data-toggle="tooltip" data-placement="top" title="{{ __('Add to Cart') }}"
-                      class="theme-btn cart-link2">{{ __('Add to Cart') }}</a>
+                      class="theme-btn cart-link2">{{ __('Agregar al carrito') }}</a>
                   </div>
                 </form>
 
@@ -130,7 +130,7 @@
               <div class="social-style-two mt-30 mb-15">
                 <a href="//www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"><i
                     class="fab fa-facebook-f"></i></a>
-                <a href="//twitter.com/intent/tweet?text=my share text&amp;url={{ urlencode(url()->current()) }}"><i
+                <a href="//twitter.com/intent/tweet?text={{ urlencode($product->title) }}&amp;url={{ urlencode(url()->current()) }}"><i
                     class="fab fa-twitter"></i></a>
                 <a
                   href="//www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ $product->title }}"><i
@@ -178,7 +178,7 @@
                         @endphp
                         <img class="lazy"
                           src="{{ $customer->photo != null ? asset('assets/admin/img/customer-profile/' . $customer->photo) : asset('assets/front/images/profile.jpg') }}"
-                          alt="user image" width="60">
+                          alt="{{ __('Imagen del usuario') }}" width="60">
 
 
                         <ul>

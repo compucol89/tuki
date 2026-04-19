@@ -108,12 +108,17 @@
   } else {
     $ev_wishlist_route = route('customer.login');
   }
+
+  $ev_card_title_id = 'ev-card-title-' . $event->id;
 @endphp
 
-<div class="ev-card"
-     data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}"
-     role="button"
-     tabindex="0">
+<article class="ev-card"
+         data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}">
+  <a href="{{ route('event.details', [$event->slug, $event->id]) }}"
+     class="ev-card__link"
+     aria-labelledby="{{ $ev_card_title_id }}">
+    <span class="sr-only">{{ __('Ver detalles del evento') }}</span>
+  </a>
 
   {{-- ── VISUAL: imagen + barra + overlay (sin overflow:hidden en el wrapper) ── --}}
   <div class="ev-card__visual">
@@ -205,8 +210,8 @@
       <span>{{ $ev_location }}</span>
     </div>
 
-    {{-- Título — 3 líneas --}}
-    <h3 class="ev-card__title">{{ $event->title }}</h3>
+    {{-- Título — 2 líneas --}}
+    <h3 class="ev-card__title" id="{{ $ev_card_title_id }}">{{ $event->title }}</h3>
 
     {{-- Entradas: reserva Y entradas desde --}}
     <div class="ev-card__ticket-row">
@@ -231,4 +236,4 @@
     @endif
 
   </div>{{-- /.ev-card__body --}}
-</div>{{-- /.ev-card --}}
+</article>{{-- /.ev-card --}}

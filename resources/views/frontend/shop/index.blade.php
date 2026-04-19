@@ -1,9 +1,9 @@
 @extends('frontend.layout')
 @section('pageHeading')
   @if (!empty($pageHeading))
-    {{ $pageHeading->shop_page_title ?? __('Shop') }}
+    {{ $pageHeading->shop_page_title ?? __('Tienda') }}
   @else
-    {{ __('Shop') }}
+    {{ __('Tienda') }}
   @endif
 @endsection
 @php
@@ -21,9 +21,9 @@
       <div class="banner-inner">
         <h2 class="page-title">
           @if (!empty($pageHeading))
-            {{ $pageHeading->shop_page_title ?? __('Shop') }}
+            {{ $pageHeading->shop_page_title ?? __('Tienda') }}
           @else
-            {{ __('Shop') }}
+            {{ __('Tienda') }}
           @endif
         </h2>
         <nav aria-label="breadcrumb">
@@ -31,9 +31,9 @@
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
             <li class="breadcrumb-item active">
               @if (!empty($pageHeading))
-                {{ $pageHeading->shop_page_title ?? __('Shop') }}
+                {{ $pageHeading->shop_page_title ?? __('Tienda') }}
               @else
-                {{ __('Shop') }}
+                {{ __('Tienda') }}
               @endif
             </li>
           </ol>
@@ -54,7 +54,7 @@
               <form action="">
                 <input type="text" name="search"
                   value="{{ !empty(request()->input('search')) ? request()->input('search') : '' }}"
-                  placeholder="{{ __('Search') }}.....">
+                  placeholder="{{ __('Buscar') }}...">
                 <button type="submit" id="product-search-button" class="fa fa-search"></button>
               </form>
             </div>
@@ -62,7 +62,7 @@
               <h5 class="widget-title">{{ __('Category') }}</h5>
               <form action="{{ route('shop') }}" id="catForm">
                 <select id="category" name="category" class="widget-select">
-                  <option disabled>{{ __('Select a Category') }}</option>
+                  <option disabled>{{ __('Elegí una categoría') }}</option>
                   <option value="">{{ __('All') }}</option>
                   @foreach ($product_categories as $item)
                     <option {{ request()->input('category') == $item->slug ? 'selected' : '' }}
@@ -116,16 +116,16 @@
               <div class="products-dropdown pb-35">
                 <select class="product_short" name="product_short" id="products-dropdown-select">
                   <option {{ request()->input('product_short') == 'default' ? 'selected' : '' }} value="default">
-                    {{ __('Default Sorting') }}</option>
+                    {{ __('Orden predeterminado') }}</option>
                   <option {{ request()->input('product_short') == 'new' ? 'selected' : '' }} value="new">
-                    {{ __('Sort by Latest') }}</option>
+                    {{ __('Más recientes') }}</option>
                   <option {{ request()->input('product_short') == 'old' ? 'selected' : '' }} value="old">
-                    {{ __('Oldest Product') }}</option>
+                    {{ __('Más antiguos') }}</option>
                   <option {{ request()->input('product_short') == 'hight-to-low' ? 'selected' : '' }}
                     value="hight-to-low">
-                    {{ __('High To Low') }}</option>
+                    {{ __('De mayor a menor precio') }}</option>
                   <option {{ request()->input('product_short') == 'low-to-high' ? 'selected' : '' }} value="low-to-high">
-                    {{ __('Low To High') }}</option>
+                    {{ __('De menor a mayor precio') }}</option>
                 </select>
               </div>
             </form>
@@ -138,7 +138,7 @@
                       <div class="image">
                         <img class="lazy"
                           data-src="{{ asset('assets/admin/img/product/feature_image/' . $item->feature_image) }}"
-                          alt="Product">
+                          alt="{{ __('Producto') }}">
                         <div class="product-icons">
                           <a class="cart-link cart" data-href="{{ route('add.cart', $item->id) }}" data-toggle="tooltip"
                             data-placement="top" title="{{ __('Add to Cart') }}"><i class="fas fa-shopping-cart"></i></a>
@@ -181,7 +181,7 @@
                 @endforeach
               @else
                 <div class="col-lg-12">
-                  <h3 class="text-center">{{ __('No Product Found') }}</h3>
+                  <h3 class="text-center">{{ __('No encontramos productos') }}</h3>
                 </div>
               @endif
             </div>

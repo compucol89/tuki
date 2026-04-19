@@ -9,6 +9,7 @@
 .env.backup
 .env.*.local
 .phpunit.result.cache
+.phpunit.cache/
 /storage/*.key
 storage/logs/*.log
 storage/framework/cache/*

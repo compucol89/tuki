@@ -35,12 +35,12 @@
         <div class="col-lg-12">
           <div class="booking-success">
             <div class="icon text-success"><i class="far fa-check-circle"></i></div>
-            <h2>{{ __('Success') }}!</h2>
+            <h2>{{ __('Pago confirmado') }}</h2>
 
-            <p>{{ __('Your transaction was successful') }}.</p>
-            <p>{{ __('We have sent you a mail with an invoice') }}.</p>
+            <p>{{ __('Tu pago se acreditó correctamente') }}.</p>
+            <p>{{ __('Te enviamos un correo con tu comprobante') }}.</p>
 
-            <p class="mt-4">{{ __('Thank you') }}.</p>
+            <p class="mt-4">{{ __('Gracias por tu compra') }}.</p>
           </div>
         </div>
       </div>

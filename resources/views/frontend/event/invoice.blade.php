@@ -18,10 +18,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ __('Booking INVOICE') }} — {{ $eventInfo->title ?? config('app.name') }}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>{{ __('Comprobante de reserva') }} — {{ $eventInfo->title ?? config('app.name') }}</title>
+  <link rel="stylesheet" href="{{ mix('css/fonts-inter.css') }}">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { background: #f0f2f5; font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; color: #1e2532; -webkit-print-color-adjust: exact; print-color-adjust: exact; }

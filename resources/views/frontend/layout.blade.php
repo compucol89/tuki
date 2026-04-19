@@ -2,24 +2,49 @@
 <html lang="{{ $currentLanguageInfo->code == 'es' ? 'es-AR' : ($currentLanguageInfo->code ?? 'es-AR') }}" dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : 'ltr' }}">
 
 <head>
+  @php
+    $metaDescription = trim($__env->yieldContent('meta-description'));
+    $metaKeywords = trim($__env->yieldContent('meta-keywords'));
+    $metaRobots = trim($__env->yieldContent('meta-robots')) ?: 'index,follow,max-image-preview:large';
+    $ogTitle = trim($__env->yieldContent('og-title')) ?: trim($__env->yieldContent('pageHeading'));
+    $ogDescription = trim($__env->yieldContent('og-description')) ?: $metaDescription;
+    $ogImage = trim($__env->yieldContent('og-image'));
+    $ogImageSecure = trim($__env->yieldContent('og-image-secure')) ?: $ogImage;
+    $ogImageWidth = trim($__env->yieldContent('og-image-width')) ?: '1200';
+    $ogImageHeight = trim($__env->yieldContent('og-image-height')) ?: '630';
+    $ogImageType = trim($__env->yieldContent('og-image-type')) ?: 'image/jpeg';
+    $ogImageAlt = trim($__env->yieldContent('og-image-alt')) ?: $ogTitle;
+    $ogUrl = trim($__env->yieldContent('og-url')) ?: url()->current();
+    $ogType = trim($__env->yieldContent('og-type')) ?: 'website';
+    $canonicalUrl = trim($__env->yieldContent('canonical')) ?: url()->current();
+  @endphp
   <!-- Required meta tags -->
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <meta name="description" content="@yield('meta-description')">
-  <meta name="keywords" content="@yield('meta-keywords')">
+  <meta name="description" content="{{ $metaDescription }}">
+  <meta name="keywords" content="{{ $metaKeywords }}">
+  <meta name="robots" content="{{ $metaRobots }}">
 
-  <meta property="og:title" content="@yield('og-title')" />
-  <meta property="og:description" content="@yield('og-description')" />
-  <meta property="og:image" content="@yield('og-image')" />
-  <meta property="og:url" content="@yield('og-url', url()->current())" />
-  <meta property="og:type" content="@yield('og-type', 'website')" />
+  <meta property="og:title" content="{{ $ogTitle }}" />
+  <meta property="og:description" content="{{ $ogDescription }}" />
+  <meta property="og:image" content="{{ $ogImage }}" />
+  <meta property="og:image:secure_url" content="{{ $ogImageSecure }}" />
+  <meta property="og:image:width" content="{{ $ogImageWidth }}" />
+  <meta property="og:image:height" content="{{ $ogImageHeight }}" />
+  <meta property="og:image:type" content="{{ $ogImageType }}" />
+  <meta property="og:image:alt" content="{{ $ogImageAlt }}" />
+  <meta property="og:url" content="{{ $ogUrl }}" />
+  <meta property="og:type" content="{{ $ogType }}" />
   <meta property="og:site_name" content="{{ $websiteInfo->website_title }}" />
   <meta property="og:locale" content="es_AR" />
+  <meta property="og:locale:alternate" content="es_ES" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="@yield('og-title')" />
-  <meta name="twitter:description" content="@yield('og-description')" />
-  <meta name="twitter:image" content="@yield('og-image')" />
-  <link rel="canonical" href="@yield('canonical', url()->current())" />
+  <meta name="twitter:title" content="{{ $ogTitle }}" />
+  <meta name="twitter:description" content="{{ $ogDescription }}" />
+  <meta name="twitter:image" content="{{ $ogImage }}" />
+  <meta name="twitter:image:alt" content="{{ $ogImageAlt }}" />
+  <meta name="twitter:url" content="{{ $ogUrl }}" />
+  <link rel="canonical" href="{{ $canonicalUrl }}" />
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -33,6 +58,22 @@
   @includeIf('frontend.partials.styles')
   @yield('custom-style')
   @stack('styles')
+  {{-- Prerender sólo "Sobre nosotros" (/sobre-nosotros): hover / intención, sin masificar todo el sitio --}}
+  <script type="speculationrules">
+  {
+    "prerender": [{
+      "where": {
+        "and": [
+          { "href_matches": "*sobre-nosotros*" },
+          { "not": { "href_matches": "*logout*" } },
+          { "not": { "selector_matches": "[rel~=nofollow]" } },
+          { "not": { "selector_matches": "[data-no-prerender]" } }
+        ]
+      },
+      "eagerness": "moderate"
+    }]
+  }
+  </script>
 </head>
 
 <body class="@yield('body-class')">

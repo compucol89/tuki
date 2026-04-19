@@ -37,7 +37,7 @@
                   <input type="hidden" name="token" value="{{ request()->input('token') }}">
                     <div class="col-sm-12">
                       <div class="form-group">
-                          <label for="password">{{ __('New Password'.' *') }}</label>
+                          <label for="password">{{ __('Nueva contraseña') }} *</label>
                           <input type="password" name="password" id="password" class="form-control" placeholder="Ingresá tu contraseña" required>
                           @error('password')
                             <p class="text-danger">{{ $message }}</p>
@@ -46,7 +46,7 @@
                     </div>
                     <div class="col-sm-12">
                       <div class="form-group">
-                          <label for="re-password">{{ __('Confirm Password'. ' *') }}</label>
+                          <label for="re-password">{{ __('Confirmar contraseña') }} *</label>
                           <input type="password" name="password_confirmation" id="re-password" class="form-control" placeholder="Confirmá tu contraseña" required>
                       </div>
                     </div>
@@ -60,4 +60,3 @@
   </div>
   <!-- LogIn Area End -->
 @endsection
-

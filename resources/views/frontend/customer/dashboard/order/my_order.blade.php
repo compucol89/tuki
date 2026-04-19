@@ -129,3 +129,23 @@
   </section>
   <!--====== End Dashboard Section ======-->
 @endsection
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/datatables.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/dataTables.bootstrap4.css') }}">
+@endpush
+
+@section('script')
+  <script defer src="{{ asset('assets/front/js/datatables.min.js') }}"></script>
+  <script defer src="{{ asset('assets/front/js/dataTables.bootstrap4.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof jQuery === 'undefined' || typeof jQuery.fn.DataTable === 'undefined') return;
+      if (!document.getElementById('example')) return;
+      jQuery('#example').DataTable({
+        responsive: true,
+        ordering: false
+      });
+    });
+  </script>
+@endsection

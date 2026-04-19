@@ -24,8 +24,8 @@
     @if (Session::has('message'))
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var type = @json(Session::get('alert-type', 'info'));
-        var msg = @json(Session::get('message'));
+        var type = {!! json_encode(Session::get('alert-type') ?? 'info', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
+        var msg = {!! json_encode(Session::get('message'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
         toastr.options = {
           "closeButton": true,
           "progressBar": true,

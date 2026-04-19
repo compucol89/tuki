@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "accessibility": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "computedHash": "6462f04969f59f771150e6410e6a11fa397f2934be0b51e8650f495feed1e28d"
+    },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
@@ -11,15 +16,50 @@
       "sourceType": "github",
       "computedHash": "645b891da1edbae76ab79c7b088d4e73397464f8396edaf773c0e01971ce75d6"
     },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
+    },
+    "information-architecture": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "computedHash": "6f3b7bda59ad39507f94df6e5714fa5280c156c780659f821481f8da15546d40"
+    },
+    "laravel-patterns": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "computedHash": "c56253bf241431910bd23fa1e04f72eae90af8ae744843b57c21f5f8fd9152c2"
+    },
+    "laravel-specialist": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "computedHash": "d42a21cb81a384d31b90d4a563570fa3e33441a6beb968487fcf95a338985a7e"
+    },
     "marketing-ideas": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "computedHash": "ece95da6d74dc84deb45035109311748697b7b074af1a78e111299464306cad2"
     },
+    "og-image-design": {
+      "source": "inferen-sh/skills",
+      "sourceType": "github",
+      "computedHash": "76a4dc47a65b3c5dace3a481b6ecab7ac39f68979410d1a96dc44de2d58662df"
+    },
+    "postmark": {
+      "source": "activecampaign/postmark-skills",
+      "sourceType": "github",
+      "computedHash": "8b80b86aaf3fc4c731265e6426d7cd0fb73801e1932c04364098951bdb7f4a88"
+    },
     "sales-enablement": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
-      "computedHash": "39a5491a17f8e7aa5e3a12b146c12cb8a5d53ac6fbb639827aa3da20a51f8205"
+      "computedHash": "7447155639ac2677bc23ef826b079bbf8e415ec35900f6a3c7b25c33e6ad856a"
+    },
+    "seo": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "computedHash": "f1fed683b76913d26fbf1aa1e008e6932f7771701fc3a79925b042236aa4681a"
     },
     "ui-design-system": {
       "source": "samhvw8/dot-claude",

@@ -16,18 +16,13 @@ class RouteRegistrationTest extends TestCase
     );
 
     $this->assertSame(
-      'App\Http\Controllers\FrontEnd\PaymentGateway\IyzipayController@notify',
-      Route::getRoutes()->getByName('event_booking.iyzico.notify')?->getActionName()
+      'App\Http\Controllers\FrontEnd\PaymentGateway\MercadoPagoController@notify',
+      Route::getRoutes()->getByName('event_booking.mercadopago.notify')?->getActionName()
     );
 
     $this->assertSame(
-      'App\Http\Controllers\FrontEnd\PaymentGateway\XenditController@notify',
-      Route::getRoutes()->getByName('event_booking.xindit.notify')?->getActionName()
-    );
-
-    $this->assertSame(
-      'App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MidtransController@makePayment',
-      Route::getRoutes()->getByName('shop.makePayment')?->getActionName()
+      'App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MercadoPagoController@notify',
+      Route::getRoutes()->getByName('product_order.mercadopago.notify')?->getActionName()
     );
   }
 
@@ -36,11 +31,10 @@ class RouteRegistrationTest extends TestCase
     $criticalRoutes = collect(Route::getRoutes()->getRoutes())
       ->filter(function (IlluminateRoute $route) {
         return in_array($route->getName(), [
-          'makePayment',
-          'event_booking.iyzico.makePayment',
-          'shop.makePayment',
-          'event_booking.paytabs.makePayment',
-          'shop.paytabs.makePayment',
+          'ticket.booking',
+          'event_booking.mercadopago.notify',
+          'shop.buy',
+          'product_order.mercadopago.notify',
         ], true);
       })
       ->map(fn (IlluminateRoute $route) => implode('|', $route->methods()) . ' ' . $route->uri());

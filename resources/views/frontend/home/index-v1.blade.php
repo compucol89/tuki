@@ -1,12 +1,12 @@
-﻿@extends('frontend.layout')
+@extends('frontend.layout')
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
 @section('body-class', 'home-page')
 
 @php
   $metaKeywords    = !empty($seo->meta_keyword_home)    ? $seo->meta_keyword_home    : 'eventos, entradas, tickets, conciertos, shows, teatro, deportes, Argentina, Tukipass';
-  $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'Tukipass — Comprá entradas y tickets para los mejores eventos en Argentina. Conciertos, teatro, deportes y más. Fácil, rápido y seguro.';
-  $ogImage = !empty($firstHeroImage)
-    ? asset('assets/admin/img/event-gallery/' . $firstHeroImage)
+  $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'Tukipass — Descubrí y comprá entradas para conciertos, teatro, deportes y más en Argentina. Si organizás eventos, también podés vender online con Tukipass.';
+  $ogImage = !empty($firstHeroSlideUrl)
+    ? $firstHeroSlideUrl
     : asset('assets/admin/img/' . $basicInfo->breadcrumb);
 @endphp
 @section('meta-keywords',    $metaKeywords)
@@ -14,37 +14,42 @@
 @section('og-title',       'Tukipass — Entradas y Tickets Online para Eventos en Argentina')
 @section('og-description', $metaDescription)
 @section('og-image',       $ogImage)
+@section('og-image-alt',   'Tukipass, plataforma para descubrir y comprar entradas de eventos en Argentina')
+@section('og-image-width', '1200')
+@section('og-image-height','630')
 @section('og-type',        'website')
-
-@push('styles')
-@if(!empty($firstHeroImage))
-<link rel="preload" as="image" href="{{ asset('assets/admin/img/event-gallery/' . $firstHeroImage) }}">
-@endif
-@endpush
+@section('og-url',         url()->current())
+@section('canonical',      url()->current())
 
 @section('hero-section')
   <!-- Hero Section Start -->
-  <section class="hero-section hero-collage-section" id="heroSection">
+  <section class="hero-section hero-collage-section hero-collage-section--premium" id="heroSection" aria-labelledby="heroHeadingHome">
 
     {{-- Slideshow de fondo --}}
     <div class="hero-slideshow" id="heroCollageBg">
-      @foreach($heroGalleryImages->values() as $i => $thumb)
-        <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/event-gallery/' . $thumb) }}');"></div>
-      @endforeach
+      @forelse($heroSlideUrls ?? [] as $slideUrl)
+        <div class="hero-slide" style="background-image: url('{{ $slideUrl }}');"></div>
+      @empty
+        <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}');"></div>
+      @endforelse
     </div>
 
-    {{-- Overlay oscuro --}}
-    <div class="hero-overlay"></div>
-    {{-- Textura noise --}}
-    <div class="hero-noise"></div>
+    <div class="hero-overlay hero-overlay--premium" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <div class="hero-ambient" aria-hidden="true">
+      <span class="hero-ambient__orb hero-ambient__orb--a"></span>
+      <span class="hero-ambient__orb hero-ambient__orb--b"></span>
+      <span class="hero-ambient__orb hero-ambient__orb--c"></span>
+    </div>
+    <div class="hero-noise" aria-hidden="true"></div>
 
     <div class="container hero-content-wrapper">
-      <div class="hero-content">
-        <h1>{{ __('Tu próximo evento a un clic') }}</h1>
-        <p>{{ __('Descubrí eventos o publicá el tuyo en Tukipass.') }}</p>
-        <div class="hero-actions">
-          <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Explorar eventos') }}</a>
-          <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Crear mi evento') }}</a>
+      <div class="hero-content hero-content--premium text-center">
+        <h1 id="heroHeadingHome">{{ __('Tu próximo evento a un solo clic') }}</h1>
+        <p class="hero-lede">{{ __('Descubrí eventos y sacá tus entradas en minutos') }}</p>
+        <div class="hero-actions justify-content-center">
+          <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Ver eventos') }}</a>
+          <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Vender mis entradas') }}</a>
         </div>
       </div>
     </div>
@@ -73,10 +78,10 @@
       <div class="container">
         <div class="hs-header mb-32">
           <div class="hs-header__left">
-            <h2 class="hs-header__title">{{ __('Eventos que no te podés perder') }}</h2>
-            <p class="hs-header__sub">{{ __('Explorá destacados y conseguí tu entrada en minutos.') }}</p>
+            <h2 class="hs-header__title">{{ __('Lo que no te podés perder') }}</h2>
+            <p class="hs-header__sub">{{ __('Descubrí destacados, elegí tu fecha y sacá tu entrada sin vueltas.') }}</p>
           </div>
-          <a href="{{ route('events') }}" class="hs-header__cta">{{ __('Ver todos') }}</a>
+          <a href="{{ route('events') }}" class="hs-header__cta">{{ __('Ver agenda') }}</a>
         </div>
 
         <div class="events-marquee-track">
@@ -128,8 +133,8 @@
     <div class="container">
       <div class="hs-search-head">
         <div>
-          <h2 class="hs-search-head__title">{{ __('Encontrá tu próximo plan') }}</h2>
-          <p class="hs-search-head__sub">{{ __('Buscá por nombre, lugar, categoría o explorá filtros rápidos.') }}</p>
+          <h2 class="hs-search-head__title">{{ __('Encontrá un plan que te cierre') }}</h2>
+          <p class="hs-search-head__sub">{{ __('Buscá por evento, ciudad o categoría y filtrá en segundos.') }}</p>
         </div>
       </div>
 
@@ -155,43 +160,33 @@
         <div class="hs-sf__field hs-sf__field--select">
           <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           <select name="category" class="hs-sf__select">
-            <option value="">Todas las categorías</option>
+            <option value="">{{ __('Categorías') }}</option>
             @foreach ($categories as $cat)
               <option value="{{ $cat->slug }}">{{ $cat->name }}</option>
             @endforeach
           </select>
         </div>
 
-        <div class="hs-sf__divider"></div>
-
-        {{-- Tipo --}}
-        <div class="hs-sf__field hs-sf__field--select hs-sf__field--type">
-          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <select name="event" class="hs-sf__select">
-            <option value="">Presencial u Online</option>
-            <option value="venue">Presencial</option>
-            <option value="online">Online</option>
-          </select>
-        </div>
-
-        {{-- CTA --}}
+        {{-- CTA — inner centra icono+texto sin depender del padding asimétrico --}}
         <button type="submit" class="hs-sf__btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Buscar eventos
+          <span class="hs-sf__btn-inner">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            {{ __('Buscar') }}
+          </span>
         </button>
 
       </form>
 
       {{-- Quick filters --}}
       <div class="hs-search-chips">
-        <span class="hs-search-chips__label">Filtros rápidos:</span>
-        <a href="{{ route('events') }}" class="hs-chip hs-chip--active">Todos</a>
-        <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">Gratis</a>
-        <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">Pago</a>
-        <a href="{{ route('events', ['event' => 'venue']) }}" class="hs-chip">Presencial</a>
-        <a href="{{ route('events', ['event' => 'online']) }}" class="hs-chip">Online</a>
-        <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' to ' . $today->format('Y-m-d')]) }}" class="hs-chip">Hoy</a>
-        <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' to ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">Este finde</a>
+        <span class="hs-search-chips__label">{{ __('Explorá rápido:') }}</span>
+        <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Todos') }}</a>
+        <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">{{ __('Gratis') }}</a>
+        <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">{{ __('Pagos') }}</a>
+        <a href="{{ route('events', ['event' => 'venue']) }}" class="hs-chip">{{ __('Presenciales') }}</a>
+        <a href="{{ route('events', ['event' => 'online']) }}" class="hs-chip">{{ __('En línea') }}</a>
+        <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' to ' . $today->format('Y-m-d')]) }}" class="hs-chip">{{ __('Hoy') }}</a>
+        <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' to ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">{{ __('Este finde') }}</a>
         @foreach ($categories->take(4) as $cat)
           <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip hs-chip--category">{{ $cat->name }}</a>
         @endforeach
@@ -206,7 +201,7 @@
       <div class="container">
 
         @if ($eventCategories->isEmpty())
-          <p class="text-center">{{ __('No Events Found') }}</p>
+          <p class="text-center">{{ __('Por ahora no encontramos eventos destacados.') }}</p>
         @else
           @php
             // ── Pre-cargar wishlist: UNA query para todos los eventos ──
@@ -311,7 +306,7 @@
             </div>
           </div>
           @if ($featureEventItems->isEmpty())
-            <h2>{{ __('No data found for features section') }}</h2>
+            <h2>{{ __('Pronto vas a ver más razones para elegir Tukipass.') }}</h2>
           @endif
           <div class="row justify-content-center feature-grid">
             @foreach ($featureEventItems as $item)
@@ -346,7 +341,7 @@
           <div class="col-lg-4">
             <div class="testimonial-content pt-10 rmb-55">
               <div class="section-title mb-30">
-                <h2>{{ $testimonialData ? $testimonialData->title : __('What say our client about us') }}</h2>
+                <h2>{{ $testimonialData ? $testimonialData->title : __('Lo que dicen quienes usan Tukipass') }}</h2>
               </div>
               <p>{{ $testimonialData ? $testimonialData->text : '' }}</p>
               <div class="total-client-reviews mt-40 bg-lighter">
@@ -354,14 +349,14 @@
                   @if (!is_null($testimonialData))
                     <img class="lazy"
                       data-src="{{ asset('assets/admin/img/testimonial/' . $testimonialData->image) }}"
-                      alt="Reviewer">
+                      alt="{{ __('Reseña destacada') }}">
                   @else
                     <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/clients.png') }}"
-                      alt="Reviewer">
+                      alt="{{ __('Reseña destacada') }}">
                   @endif
                   <span class="pluse"><i class="fas fa-plus"></i></span>
                 </div>
-                <h6>{{ $testimonialData ? $testimonialData->review_text : __('0 Clients Reviews') }}</h6>
+                <h6>{{ $testimonialData ? $testimonialData->review_text : __('Opiniones de nuestra comunidad') }}</h6>
               </div>
             </div>
           </div>
@@ -374,7 +369,7 @@
                       <div class="testimonial-item">
                         <div class="author">
                           <img class="lazy" data-src="{{ asset('assets/admin/img/clients/' . $item->image) }}"
-                            alt="Author">
+                            alt="{{ __('Foto de quien dejó la reseña') }}">
                           <div class="content">
                             <h5>{{ $item->name }}</h5>
                             <span>{{ $item->occupation }}</span>
@@ -391,7 +386,7 @@
                   @endforeach
                 </div>
               @else
-                <h4 class="text-center">{{ __('No Review Found') }}</h4>
+                <h4 class="text-center">{{ __('Todavía no hay reseñas publicadas.') }}</h4>
               @endif
             </div>
           </div>
@@ -399,17 +394,27 @@
         @if ($secInfo->partner_section_status == 1 && $partners->isNotEmpty())
           <div class="trust-partners" aria-label="{{ __('Aliados estratégicos') }}">
             <div class="trust-partners__intro">
-              <h3>{{ __('También confían en Tukipass') }}</h3>
-              <p>{{ __('Marcas y organizaciones que acompañan nuestro crecimiento.') }}</p>
+              <h3>{{ __('También eligen Tukipass') }}</h3>
+              <p>{{ __('Marcas y organizaciones que confían en nuestra plataforma para crecer.') }}</p>
             </div>
             <div class="client-logo-wrap trust-partners__logos">
               @foreach ($partners as $item)
+                @php
+                  $partnerUrl = trim((string) ($item->url ?? ''));
+                @endphp
                 <div class="client-logo-item">
-                  <a href="{{ $item->url }}" target="_blank" rel="noopener noreferrer"
-                    aria-label="{{ __('Visitar sitio del aliado estratégico') }}">
-                    <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
-                      alt="">
-                  </a>
+                  @if ($partnerUrl !== '')
+                    <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
+                      aria-label="{{ __('Visitar sitio del aliado estratégico') }}">
+                      <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
+                        alt="">
+                    </a>
+                  @else
+                    <span aria-hidden="true">
+                      <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
+                        alt="">
+                    </span>
+                  @endif
                 </div>
               @endforeach
             </div>

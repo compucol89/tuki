@@ -12,13 +12,13 @@
 
         <div class="nav-outer ml-lg-auto">
           <!-- Main Menu -->
-          <nav class="main-menu navbar-expand-xl" aria-label="{{ __('Main navigation') }}">
+          <nav class="main-menu navbar-expand-xl" aria-label="{{ __('Navegación principal') }}">
             <div class="navbar-header">
               <div class="logo-mobile"><a href="{{ route('index') }}"><img
                     src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a></div>
               <!-- Toggle Button -->
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"
-                aria-controls="main-menu" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                aria-controls="main-menu" aria-expanded="false" aria-label="{{ __('Abrir o cerrar navegación') }}">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -65,10 +65,10 @@
                 @if (!Auth::guard('customer')->check())
                   <div class="dropdown menu-dropdown menu-dropdown--customer">
                     <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerGuestDropdown"
-                      data-toggle="dropdown">{{ __('Customer') }}</button>
+                      data-toggle="dropdown">{{ __('Cliente') }}</button>
                     <div class="dropdown-menu" aria-labelledby="customerGuestDropdown">
-                      <a class="dropdown-item" href="{{ route('customer.login') }}">{{ __('Login') }}</a>
-                      <a class="dropdown-item" href="{{ route('customer.signup') }}">{{ __('Signup') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.login') }}">{{ __('Ingresar') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.signup') }}">{{ __('Crear cuenta') }}</a>
                     </div>
                   </div>
                 @else
@@ -76,8 +76,8 @@
                     <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerUserDropdown"
                       data-toggle="dropdown">{{ Auth::guard('customer')->user()->username }}</button>
                     <div class="dropdown-menu" aria-labelledby="customerUserDropdown">
-                      <a class="dropdown-item" href="{{ route('customer.dashboard') }}">{{ __('Dashboard') }}</a>
-                      <a class="dropdown-item" href="{{ route('customer.logout') }}">{{ __('Logout') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.dashboard') }}">{{ __('Mi cuenta') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.logout') }}">{{ __('Salir') }}</a>
                     </div>
                   </div>
                 @endif
@@ -86,17 +86,17 @@
                     <button type="button" class="menu-btn menu-btn--organizer dropdown-toggle mr-1" id="organizerUserDropdown"
                       data-toggle="dropdown">{{ Auth::guard('organizer')->user()->username }}</button>
                     <div class="dropdown-menu" aria-labelledby="organizerUserDropdown">
-                      <a class="dropdown-item" href="{{ route('organizer.dashboard') }}">{{ __('Dashboard') }}</a>
-                      <a class="dropdown-item" href="{{ route('organizer.logout') }}">{{ __('Logout') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.dashboard') }}">{{ __('Panel') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.logout') }}">{{ __('Salir') }}</a>
                     </div>
                   </div>
                 @elseif (!Auth::guard('customer')->check())
                   <div class="dropdown menu-dropdown menu-dropdown--organizer">
                     <button type="button" class="menu-btn menu-btn--organizer dropdown-toggle" id="organizerGuestDropdown"
-                      data-toggle="dropdown">{{ __('Organizer') }}</button>
+                      data-toggle="dropdown">{{ __('Organizador') }}</button>
                     <div class="dropdown-menu" aria-labelledby="organizerGuestDropdown">
-                      <a class="dropdown-item" href="{{ route('organizer.login') }}">{{ __('Login') }}</a>
-                      <a class="dropdown-item" href="{{ route('organizer.signup') }}">{{ __('Signup') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.login') }}">{{ __('Ingresar') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.signup') }}">{{ __('Crear cuenta') }}</a>
                     </div>
                   </div>
                 @endif

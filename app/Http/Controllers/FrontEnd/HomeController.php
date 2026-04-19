@@ -12,7 +12,6 @@ use App\Models\Event;
 use App\Models\Event\Booking;
 use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
-use App\Models\Event\EventImage;
 use App\Models\Footer\FooterContent;
 use App\Models\Footer\QuickLink;
 use App\Models\HomePage\AboutUsSection;
@@ -28,6 +27,7 @@ use App\Models\HomePage\Testimonial;
 use App\Models\HomePage\TestimonialSection;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Services\HeroSlideUrlsService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -113,12 +113,10 @@ class HomeController extends Controller
     $queryResult['marqueeGallery'] = \App\Models\Event\EventImage::whereIn('event_id', $marqueeEventIds)
         ->get()->groupBy('event_id');
 
-    // Gallery images for hero slideshow (solo archivos que existen en disco)
-    $queryResult['heroGalleryImages'] = EventImage::inRandomOrder()->limit(20)->pluck('image')
-        ->filter(fn($img) => file_exists(public_path('assets/admin/img/event-gallery/' . $img)))
-        ->take(8)
-        ->values();
-    $queryResult['firstHeroImage'] = $queryResult['heroGalleryImages']->first();
+    // Hero: intercala imágenes de campaña (hero-campaign) con fotos reales de eventos
+    $heroSlideUrls = HeroSlideUrlsService::build();
+    $queryResult['heroSlideUrls'] = $heroSlideUrls;
+    $queryResult['firstHeroSlideUrl'] = $heroSlideUrls[0] ?? null;
 
     return view('frontend.home.index-v1', $queryResult);
   }
@@ -150,6 +148,7 @@ class HomeController extends Controller
       $queryResult['heroSection'] = HeroSection::where('language_id', $language->id)->first();
 
       $queryResult['aboutUsSection'] = AboutUsSection::where('language_id', $language->id)->first();
+      $queryResult['aboutMetrics'] = config('about_metrics');
 
       if ($sectionInfo->testimonials_section_status == 1) {
         $queryResult['testimonialData'] = TestimonialSection::where('language_id', $language->id)->first();

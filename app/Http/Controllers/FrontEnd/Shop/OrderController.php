@@ -3,25 +3,8 @@
 namespace App\Http\Controllers\FrontEnd\Shop;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\FlutterwaveController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\InstamojoController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\IyzipayController;
 use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MercadoPagoController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MidtransController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MollieController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MyFatoorahController;
 use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\OfflineController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\PaypalController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\PaystackController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\PaytabsController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\PaytmController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\PerfectMoneyController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\PhonepeController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\RazorpayController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\StripeController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\ToyyibpayController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\XenditController;
-use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\YocoController;
 use App\Models\ShopManagement\ProductContent;
 use App\Models\ShopManagement\ProductOrder;
 use App\Models\BasicSettings\MailTemplate;
@@ -49,7 +32,6 @@ class OrderController extends Controller
       'zip_code' => 'required',
       'gateway' => 'required',
       'address' => 'required',
-      'identity_number' => $request->gateway == 'iyzico' ? 'required':'',
     ];
 
     if ($request->sameas_shipping == null) {
@@ -93,78 +75,17 @@ class OrderController extends Controller
       Session::flash('error', 'Please select a payment method.');
 
       return redirect()->back();
-    } else if ($request['gateway'] == 'paypal') {
-      $paypal = new PaypalController();
-
-      return $paypal->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'razorpay') {
-      $razorpay = new RazorpayController();
-
-      return $razorpay->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'instamojo') {
-      $instamojo = new InstamojoController();
-
-      return $instamojo->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'paystack') {
-      $paystack = new PaystackController();
-
-      return $paystack->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'flutterwave') {
-      $flutterwave = new FlutterwaveController();
-
-      return $flutterwave->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'mercadopago') {
+    } else if ($request['gateway'] === 'mercadopago') {
       $mercadopago = new MercadoPagoController();
 
       return $mercadopago->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'mollie') {
-      $mollie = new MollieController();
-
-      return $mollie->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'stripe') {
-      $stripe = new StripeController();
-
-      return $stripe->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'paytm') {
-      $paytm = new PaytmController();
-
-      return $paytm->enrolmentProcess($request);
-    } else if ($request['gateway'] == 'midtrans') {
-      Session::put('midtrans_payment_type', 'shop');
-      $midtrans = new MidtransController();
-
-      return $midtrans->purchaseProcess($request);
-    } else if ($request['gateway'] == 'iyzico') {
-      $iyzico = new IyzipayController();
-
-      return $iyzico->purchaseProcess($request);
-    } else if ($request['gateway'] == 'paytabs') {
-      $paytabs = new PaytabsController();
-
-      return $paytabs->purchaseProcess($request);
-    } else if ($request['gateway'] == 'toyyibpay') {
-      $toyyibpay = new ToyyibpayController();
-
-      return $toyyibpay->purchaseProcess($request);
-    } else if ($request['gateway'] == 'phonepe') {
-      $phonepe = new PhonepeController();
-
-      return $phonepe->purchaseProcess($request);
-    } else if ($request['gateway'] == 'yoco') {
-      $yoco = new YocoController();
-
-      return $yoco->purchaseProcess($request);
-    } else if ($request['gateway'] == 'xendit') {
-      $yoco = new XenditController();
-
-      return $yoco->purchaseProcess($request);
-    } else if ($request['gateway'] == 'myfatoorah') {
-      $myfatoorah = new MyFatoorahController();
-      return $myfatoorah->purchaseProcess($request);
-    } else if ($request['gateway'] == 'perfect_money') {
-      $perfect_money = new PerfectMoneyController();
-      return $perfect_money->purchaseProcess($request);
     } else {
+      if (!is_numeric((string) $request['gateway'])) {
+        Session::flash('error', 'Only Mercado Pago is enabled for online payments right now.');
+
+        return redirect()->back()->withInput();
+      }
+
       $offline = new OfflineController();
 
       return $offline->enrolmentProcess($request);

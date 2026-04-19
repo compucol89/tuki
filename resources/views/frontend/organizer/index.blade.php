@@ -1,9 +1,9 @@
 @extends('frontend.layout')
 @section('pageHeading')
   @if (!empty($pageHeading))
-    {{ $pageHeading->organizer_page_title ?? __('Organizer') }}
+    {{ $pageHeading->organizer_page_title ?? __('Organizadores') }}
   @else
-    {{ __('Organizer') }}
+    {{ __('Organizadores') }}
   @endif
 @endsection
 @php
@@ -21,9 +21,9 @@
       <div class="banner-inner">
         <h2 class="page-title">
           @if (!empty($pageHeading))
-            {{ $pageHeading->organizer_page_title ?? __('Organizer') }}
+            {{ $pageHeading->organizer_page_title ?? __('Organizadores') }}
           @else
-            {{ __('Organizer') }}
+            {{ __('Organizadores') }}
           @endif
         </h2>
         <nav aria-label="breadcrumb">
@@ -31,33 +31,33 @@
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
             <li class="breadcrumb-item active">
               @if (!empty($pageHeading))
-                {{ $pageHeading->organizer_page_title ?? __('Organizer') }}
+                {{ $pageHeading->organizer_page_title ?? __('Organizadores') }}
               @else
-                {{ __('Organizer') }}
+                {{ __('Organizadores') }}
               @endif
             </li>
           </ol>
         </nav>
         <div class="authors-search-filter mt-30">
-          <form {{ route('frontend.all.organizer') }}>
+          <form action="{{ route('frontend.all.organizer') }}" method="GET">
             <div class="search-filter-form">
               <div class="row no-gutters justify-content-center">
                 <div class="search-item">
                   <input type="text" class="form_control" name="organizer"
-                    placeholder="{{ __('Enter Organizar Name') }}" value="{{ request()->input('organizer') }}">
+                    placeholder="{{ __('Ingresá el nombre del organizador') }}" value="{{ request()->input('organizer') }}">
                 </div>
 
                 <div class="search-item">
-                  <input type="text" class="form_control" placeholder="{{ __('Enter Username') }}" name="username"
+                  <input type="text" class="form_control" placeholder="{{ __('Ingresá el usuario') }}" name="username"
                     value="{{ request()->input('username') }}" />
                 </div>
                 <div class="search-item">
-                  <input type="text" class="form_control" name="location" placeholder="{{ __('Enter Location') }}"
+                  <input type="text" class="form_control" name="location" placeholder="{{ __('Ingresá la ubicación') }}"
                     value="{{ request()->input('location') }}" />
                 </div>
 
                 <div class="search-item">
-                  <button type="submit" class="theme-btn rounded-0">{{ __('Search') }}</button>
+                  <button type="submit" class="theme-btn rounded-0">{{ __('Buscar') }}</button>
                 </div>
               </div>
             </div>
@@ -78,7 +78,7 @@
           <div class="product-filter">
             <div class="row justify-content-between align-items-center">
               <div class="col-lg-3 col-md-4">
-                <h6 class="mb-20">{{ __('Total organizer showing') }}: {{ count($collection) }}</h6>
+                <h6 class="mb-20">{{ __('Organizadores encontrados') }}: {{ count($collection) }}</h6>
               </div>
             </div>
           </div>
@@ -88,12 +88,12 @@
                 <div class="card card-center p-4 mb-30">
                   <figure class="card-img mx-auto mb-20">
                     <a href="{{ route('frontend.organizer.details', [$item->id, str_replace(' ', '-', $item->username)]) }}"
-                      target="_self" title="kreativDev">
+                      target="_self" title="{{ $item->username }}">
                       @if ($item->photo == null)
-                        <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="image">
+                        <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Foto del organizador') }}">
                       @else
                         <img class="rounded-lg lazy" data-src="{{ asset('assets/admin/img/organizer-photo/' . $item->photo) }}"
-                          alt="image">
+                          alt="{{ __('Foto del organizador') }}">
                       @endif
                     </a>
                   </figure>
@@ -108,10 +108,10 @@
                     </div>
                     <div class="mb-15 font-sm">
                       <span>{{ OrganizerEventCount($item->id) }}
-                        {{ OrganizerEventCount($item->id) > 1 ? __('Events') : __('Event') }}</span>
+                        {{ OrganizerEventCount($item->id) > 1 ? __('eventos') : __('evento') }}</span>
                     </div>
                     <a href="{{ route('frontend.organizer.details', [$item->id, str_replace(' ', '-', $item->username)]) }}"
-                      target="_self" title="{{ $item->username }}" class="btn-text"> {{ __('View Profile') }} </a>
+                      target="_self" title="{{ $item->username }}" class="btn-text"> {{ __('Ver perfil') }} </a>
                   </div>
                 </div>
               </div>

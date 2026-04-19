@@ -1,7 +1,7 @@
 <div class="footer-item mt-30">
   <div class="footer-title item-3">
     <i class="fal fa-blog"></i>
-    <h4 class="title">{{ __('Latest Blog') }}</h4>
+    <h4 class="title">{{ __('Últimos artículos') }}</h4>
   </div>
 
   <div class="footer-instagram">
@@ -12,7 +12,7 @@
         @foreach ($latestBlogInfos as $latestBlogInfo)
           <div class="item mt-20 d-flex align-items-center">
             <div class="blog-img {{ $currentLanguageInfo->direction == 0 ? 'mr-4' : 'ml-4' }}">
-              <img data-src="{{ asset('assets/admin/img/blogs/' . $latestBlogInfo->image) }}" class="lazy" alt="image">
+              <img data-src="{{ asset('assets/admin/img/blogs/' . $latestBlogInfo->image) }}" class="lazy" alt="{{ __('Imagen del artículo') }}">
             </div>
 
             <div class="blog-info">

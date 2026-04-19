@@ -1,7 +1,4 @@
 "use strict";
-$(document).ready(function () {
-  $('#stripe-element').addClass('d-none');
-})
 $('select[name="gateway"]').on('change', function () {
   let value = $(this).val();
   let dataType = parseInt(value);
@@ -13,28 +10,7 @@ $('select[name="gateway"]').on('change', function () {
 
     // hide offline gateway informations
     $('.offline-gateway-info').addClass('d-none');
-
-    // show or hide stripe card inputs
-    if (value == 'stripe') {
-      $('#stripe-element').removeClass('d-none');
-      $('.iyzico-element').addClass('d-none');
-    } else if (value == 'iyzico') {
-      $('.iyzico-element').removeClass('d-none');
-      $('#stripe-element').addClass('d-none');
-    } else {
-      $('#stripe-element').addClass('d-none');
-      $('.iyzico-element').addClass('d-none');
-    }
   } else {
-    // hide stripe gateway card inputs
-    if (!$('#stripe-element').hasClass('d-none')) {
-      $('#stripe-element').addClass('d-none');
-      $('#stripe-element').removeClass('d-block');
-    }
-    if (!$('.iyzico-element').hasClass('d-none')) {
-      $('.iyzico-element').addClass('d-none');
-    }
-
     // hide offline gateway informations
     $('.offline-gateway-info').addClass('d-none');
 
@@ -97,64 +73,3 @@ $(".base-btn").on('click', function (e) {
 $('#coupon-code').on('submit', function (e) {
   e.preventDefault();
 });
-
-// Set your Stripe public key
-var stripe = Stripe(stripe_key);
-
-// Create a Stripe Element for the card field
-var elements = stripe.elements();
-var cardElement = elements.create('card', {
-  style: {
-    base: {
-      iconColor: '#454545',
-      color: '#454545',
-      fontWeight: '500',
-      lineHeight: '50px',
-      fontSmoothing: 'antialiased',
-      backgroundColor: '#f2f2f2',
-      ':-webkit-autofill': {
-        color: '#454545',
-      },
-      '::placeholder': {
-        color: '#454545',
-      },
-    }
-  },
-});
-
-// Add an instance of the card Element into the `card-element` div
-cardElement.mount('#stripe-element');
-
-// Handle form submission
-var form = document.getElementById('payment-form');
-form.addEventListener('submit', function (event) {
-  event.preventDefault();
-  if ($('#payment').val() == 'stripe') {
-    stripe.createToken(cardElement).then(function (result) {
-      if (result.error) {
-        // Display errors to the customer
-        var errorElement = document.getElementById('stripe-errors');
-        errorElement.textContent = result.error.message;
-      } else {
-        // Send the token to your server
-        stripeTokenHandler(result.token);
-      }
-    });
-  } else {
-    $('#payment-form').submit();
-  }
-});
-
-// Send the token to your server
-function stripeTokenHandler(token) {
-  // Add the token to the form data before submitting to the server
-  var form = document.getElementById('payment-form');
-  var hiddenInput = document.createElement('input');
-  hiddenInput.setAttribute('type', 'hidden');
-  hiddenInput.setAttribute('name', 'stripeToken');
-  hiddenInput.setAttribute('value', token.id);
-  form.appendChild(hiddenInput);
-
-  // Submit the form to your server
-  form.submit();
-}

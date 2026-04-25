@@ -52,5 +52,18 @@ services:
       - db
     restart: unless-stopped
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8890:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: tukipass
+    depends_on:
+      - db
+    restart: unless-stopped
+
 volumes:
   mysql_data:

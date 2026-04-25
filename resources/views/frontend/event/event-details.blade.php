@@ -45,8 +45,221 @@
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
   <style>
+    .page-event-detail .ed-body {
+      padding-top: var(--tuki-space-8);
+      background: #f8fafc;
+    }
+
+    .page-event-detail .ed-card {
+      margin-bottom: var(--tuki-space-10);
+      border: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+      border-radius: var(--tuki-radius-lg);
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+    }
+
+    .page-event-detail .ed-card__head {
+      padding: var(--tuki-space-5) var(--tuki-space-6) var(--tuki-space-3);
+    }
+
+    .page-event-detail .ed-card__body {
+      padding: 0 var(--tuki-space-6) var(--tuki-space-6);
+    }
+
+    .page-event-detail .ed-card__eyebrow {
+      display: block;
+      margin-bottom: var(--tuki-space-1);
+      font-size: var(--tuki-text-xs);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--tuki-muted);
+    }
+
+    .page-event-detail .ed-card__title {
+      margin: 0;
+      color: var(--tuki-dark);
+    }
+
+    .page-event-detail .ed-section {
+      margin-bottom: var(--tuki-space-10);
+      border: 0;
+      border-top: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: visible;
+      padding-top: 42px;
+    }
+
+    .page-event-detail .ed-section .ed-card__head {
+      padding: 0 0 var(--tuki-space-4);
+    }
+
+    .page-event-detail .ed-section .ed-card__body {
+      padding: 0;
+    }
+
+    .page-event-detail .ed-section__head {
+      margin-bottom: var(--tuki-space-5);
+    }
+
+    .page-event-detail .ed-section__title {
+      margin: 0;
+      color: var(--tuki-dark);
+      font-size: clamp(22px, 2vw, 28px);
+      line-height: 1.25;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+    }
+
+    .page-event-detail .ed-section__content {
+      color: #4b5563;
+      font-size: var(--tuki-text-base);
+      line-height: 1.75;
+    }
+
+    .page-event-detail .ed-section--summary {
+      padding: 24px 0 18px;
+      border-top: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+      border-bottom: 1px solid rgba(var(--tuki-dark-rgb), 0.06);
+      border-left: 0;
+      border-right: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .page-event-detail .ed-section--summary .ed-card__head {
+      padding: 0 0 var(--tuki-space-3);
+    }
+
+    .page-event-detail .ed-section--summary .ed-card__body {
+      padding: 0;
+    }
+
+    .page-event-detail .ed-section--summary .ed-summary-grid {
+      gap: 14px 20px;
+    }
+
+    .page-event-detail .ed-section--contextual {
+      margin-top: calc(-1 * var(--tuki-space-6));
+      padding-top: 0;
+      border-top: 0;
+      margin-bottom: var(--tuki-space-5);
+    }
+
+    .page-event-detail .ed-context-band {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 2px 0 0;
+      margin-top: 0;
+    }
+
+    .page-event-detail .ed-body-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--tuki-space-1);
+      padding: var(--tuki-space-2) var(--tuki-space-3);
+      border: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+      border-radius: var(--tuki-radius-full);
+      background: var(--tuki-surface-alt);
+      color: var(--tuki-dark);
+      font-size: var(--tuki-text-xs);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .page-event-detail .ed-section--description .summernote-content {
+      max-width: 72ch;
+      color: var(--tuki-dark);
+    }
+
+    .page-event-detail .ed-section--media {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .page-event-detail .ed-section--media .ed-card__head {
+      padding: 0 0 var(--tuki-space-4);
+    }
+
+    .page-event-detail .ed-section--media .ed-card__body {
+      padding: 0;
+    }
+
+    .page-event-detail .ed-gallery-wrap,
+    .page-event-detail .ed-spotify-embed,
+    .page-event-detail .ed-card__body--embed,
+    .page-event-detail .ed-card__video-wrap {
+      border-radius: var(--tuki-radius-lg);
+      overflow: hidden;
+    }
+
+    .page-event-detail .ed-refund-band {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--tuki-space-3);
+      padding: var(--tuki-space-4);
+      margin-top: var(--tuki-space-10);
+      border: 1px solid #f1e7dc;
+      border-radius: var(--tuki-radius-md);
+      background: linear-gradient(180deg, rgba(249, 115, 22, 0.06) 0%, #fffaf3 100%);
+      color: #4b5563;
+    }
+
+    .page-event-detail .ed-refund-band__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 36px;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--tuki-radius-full);
+      background: rgba(249, 115, 22, 0.12);
+      color: var(--tuki-primary-accessible);
+    }
+
+    .page-event-detail .ed-refund-band__content {
+      min-width: 0;
+      max-width: 72ch;
+    }
+
+    .page-event-detail .ed-refund-band__content strong {
+      display: block;
+      margin-bottom: var(--tuki-space-1);
+      color: var(--tuki-dark);
+      font-weight: 700;
+    }
+
+    .page-event-detail .ed-refund-band__content p {
+      margin: 0;
+      font-size: var(--tuki-text-sm);
+      line-height: 1.6;
+    }
+
+    .page-event-detail .ed-ticket-card,
+    .page-event-detail .ei-card {
+      border: 1px solid rgba(var(--tuki-dark-rgb), 0.10);
+      border-radius: var(--tuki-radius-lg);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 40px rgba(var(--tuki-dark-rgb), 0.10);
+      overflow: hidden;
+    }
+
+    .page-event-detail .ed-related > .container > .ed-card {
+      box-shadow: none;
+      border-color: transparent;
+      background: transparent;
+    }
+
     .ed-breadcrumbs {
-      padding: 18px 0 0;
+      padding: var(--tuki-radius-lg) 0 0;
     }
 
     .ed-breadcrumbs__list {
@@ -153,13 +366,24 @@
     }
 
     .ed-related {
-      padding: 8px 0 0;
+      padding: 20px 0 28px;
+      background: transparent;
+      border-top: 0;
     }
 
     .ed-related__grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+      justify-content: center;
       gap: 20px;
+    }
+
+    .ed-related--count-1 .ed-related__grid {
+      grid-template-columns: minmax(280px, 360px);
+    }
+
+    .ed-related--count-1 .ed-card__body {
+      padding-bottom: 0;
     }
 
     .ed-related__card {
@@ -168,10 +392,18 @@
       height: 100%;
       border-radius: var(--tuki-radius-xl);
       overflow: hidden;
-      background: var(--tuki-surface);
-      box-shadow: 0 18px 40px rgba(var(--tuki-dark-rgb), 0.08);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+      box-shadow: 0 10px 24px rgba(var(--tuki-dark-rgb), 0.06);
       text-decoration: none !important;
       color: inherit;
+      transition: transform var(--tuki-transition-base), box-shadow var(--tuki-transition-base), border-color var(--tuki-transition-base);
+    }
+
+    .ed-related__card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(249, 115, 22, 0.18);
+      box-shadow: 0 16px 30px rgba(var(--tuki-dark-rgb), 0.08);
     }
 
     .ed-related__thumb {
@@ -341,6 +573,36 @@
       .ed-related__grid {
         grid-template-columns: 1fr;
       }
+
+      .ed-related {
+        padding: 16px 0 24px;
+      }
+
+      .page-event-detail .ed-section,
+      .page-event-detail .ed-card,
+      .page-event-detail .ed-ticket-card,
+      .page-event-detail .ei-card {
+        margin-bottom: var(--tuki-space-6);
+      }
+
+      .page-event-detail .ed-section--summary,
+      .page-event-detail .ed-section--media {
+        padding: 0;
+      }
+
+      .page-event-detail .ed-section {
+        margin-bottom: var(--tuki-space-6);
+        padding-top: 24px;
+      }
+
+      .page-event-detail .ed-section__title {
+        font-size: 22px;
+      }
+
+      .page-event-detail .ed-refund-band {
+        padding: 14px;
+        margin-top: var(--tuki-space-6);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -352,6 +614,252 @@
 
       html:focus-within {
         scroll-behavior: auto;
+      }
+    }
+
+    /* ================================================================
+       HERO EVENTO — scope: .ed-hero-event / .ed-ev-*
+       ================================================================ */
+
+    .ed-hero-event .hero-content-wrapper {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+
+    /* Hero: anular centrado global de .hero-content */
+    .ed-hero-event .hero-content--premium {
+      max-width: 960px;
+      margin-left: 0;
+      margin-right: auto;
+      text-align: left;
+    }
+    .ed-hero-event .hero-content--premium h1 {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+      white-space: normal;
+    }
+    /* Kicker: neutralizar herencia de .ed-hero__status-pill en chips */
+    .ed-ev-kicker .ed-hero__status-pill {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+    .ed-ev-kicker .ed-hero__status-pill::before {
+      display: none;
+    }
+    .ed-ev-kicker .ed-hero__status-pill[class*="--"] {
+      box-shadow: none;
+      padding: 4px 12px;
+    }
+
+    .ed-ev-badge-row {
+      margin-bottom: 14px;
+    }
+
+    .ed-ev-category-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: rgba(249, 115, 22, 0.18);
+      border: 1px solid rgba(249, 115, 22, 0.42);
+      color: #fdba74;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none !important;
+      transition: background 0.2s;
+    }
+
+    .ed-ev-category-badge:hover {
+      background: rgba(249, 115, 22, 0.30);
+      color: #fed7aa;
+    }
+
+    .ed-ev-kicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .ed-ev-kicker__chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .ed-ev-kicker__chip--category {
+      background: rgba(249, 115, 22, 0.18);
+      border: 1px solid rgba(249, 115, 22, 0.42);
+      color: #fdba74;
+    }
+    .ed-ev-kicker__chip--category:hover,
+    .ed-ev-kicker__chip--category:focus-visible {
+      background: rgba(249, 115, 22, 0.30);
+      color: #fed7aa;
+      text-decoration: none;
+    }
+    .ed-ev-kicker__chip--category:focus-visible {
+      outline: 2px solid rgba(249, 115, 22, 0.55);
+      outline-offset: 3px;
+    }
+    .ed-ev-kicker__chip--status {
+      background: rgba(255, 255, 255, 0.10);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .ed-ev-title {
+      font-size: clamp(24px, 3.5vw, 50px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin: 0 0 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .ed-ev-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin: 0 0 22px;
+    }
+
+    .ed-ev-meta__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.80);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .ed-ev-meta__item svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+      stroke: #f97316;
+    }
+
+    .ed-ev-price {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 12px 18px;
+      margin-bottom: 22px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .ed-ev-price__label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.60);
+    }
+
+    .ed-ev-price__value {
+      font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #ffffff;
+    }
+
+    .ed-hero-event .hero-actions {
+      justify-content: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .ed-ev-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ed-breadcrumbs--below-hero {
+      padding: 14px 0 4px;
+      border-bottom: 1px solid rgba(var(--tuki-dark-rgb), 0.07);
+      margin-bottom: var(--tuki-space-6);
+    }
+
+    .ed-body-breadcrumbs {
+      padding: 8px 0 16px;
+    }
+    .ed-body-breadcrumbs .ed-breadcrumbs__list {
+      font-size: var(--tuki-text-xs);
+    }
+
+    .ed-event-quickfacts {
+      padding: 0;
+      border: 0;
+      border-top: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+      margin-bottom: var(--tuki-space-6);
+    }
+    .ed-event-quickfacts .ed-summary-item {
+      background: #ffffff;
+      border: 1px solid rgba(var(--tuki-dark-rgb), 0.06);
+      box-shadow: none;
+      border-radius: var(--tuki-radius-md);
+    }
+
+    @media (max-width: 991.98px) {
+      .ed-ev-title {
+        font-size: clamp(20px, 6.5vw, 32px);
+        margin-bottom: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .ed-ev-meta {
+        gap: 9px;
+        margin-bottom: 18px;
+      }
+
+      .ed-ev-price {
+        margin-bottom: 16px;
+      }
+
+      .ed-hero-event .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .ed-hero-event .hero-actions .hero-btn {
+        text-align: center;
+        justify-content: center;
+      }
+
+      .ed-hero-event .hero-content--premium {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .ed-hero-event .hero-content--premium {
+        max-width: 100%;
+      }
+      .ed-ev-title {
+        font-size: clamp(18px, 5.5vw, 26px);
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
     }
   </style>
@@ -547,110 +1055,127 @@ ttq.page();
     }
   @endphp
 
-  <div class="container ed-breadcrumbs">
-    <nav aria-label="{{ __('Breadcrumb') }}">
-      <ol class="ed-breadcrumbs__list">
-        <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
-        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-        <li><a href="{{ route('events') }}">{{ __('Eventos') }}</a></li>
-        @if (!empty($content->name))
-          <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-          <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
-        @endif
-        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-        <li class="ed-breadcrumbs__current" aria-current="page">{{ $content->title }}</li>
-      </ol>
-    </nav>
-  </div>
+  {{-- Hero Evento: Collage Slideshow --}}
+  @php
+    $heroSlides = [];
+    if ($images->count() > 0) {
+      foreach ($images as $img) {
+        $heroSlides[] = asset('assets/admin/img/event-gallery/' . $img->image);
+      }
+    }
+    if (empty($heroSlides)) {
+      $heroSlides[] = asset('assets/admin/img/event/thumbnail/' . $content->thumbnail);
+    }
+  @endphp
 
-  {{-- Hero --}}
-  <div class="ed-hero">
-    {{-- Background image (blurred, like home hero) --}}
-    <div class="ed-hero__slide" style="background-image: url('{{ asset('assets/admin/img/event/thumbnail/' . $content->thumbnail) }}');"></div>
-    {{-- Overlay oscuro --}}
-    <div class="ed-hero__overlay"></div>
-    {{-- Textura noise --}}
-    <div class="ed-hero__noise"></div>
+  <section class="hero-section hero-collage-section hero-collage-section--premium ed-hero-event" id="heroSection" aria-labelledby="heroHeadingEvent">
 
-    <div class="container ed-hero__actions-wrap">
-      <div class="ed-hero__actions">
-        @if (Auth::guard('customer')->check())
-          @php
-            $customer_id = Auth::guard('customer')->user()->id;
-            $event_id = $content->id;
-            $checkWishList = checkWishList($event_id, $customer_id);
-          @endphp
-        @else
-          @php $checkWishList = false; @endphp
-        @endif
-        <a href="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}"
-          class="ed-hero__btn {{ $checkWishList == true ? 'text-success' : '' }}"
-          aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}"
-          title="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
-          <i class="fas fa-bookmark"></i>
-          <span class="sr-only">{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}</span>
-        </a>
-        <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Compartir evento') }}">
-          <i class="fas fa-share-alt"></i>
-        </button>
-        @if ($content->event_type != 'online' && !empty($map_address))
-          <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".bd-example-modal-lg" aria-label="{{ __('Ver mapa') }}">
-            <i class="fas fa-map-marker-alt"></i>
-          </button>
-        @endif
-      </div>
+    <div class="hero-slideshow" id="heroCollageBg">
+      @foreach($heroSlides as $slideUrl)
+        <div class="hero-slide" style="background-image: url('{{ $slideUrl }}');"></div>
+      @endforeach
     </div>
 
-    <div class="ed-hero__inner">
-      <div class="container">
-        <h1 class="ed-hero__title">{{ $content->title }}</h1>
+    <div class="hero-overlay hero-overlay--premium" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <div class="hero-ambient" aria-hidden="true">
+      <span class="hero-ambient__orb hero-ambient__orb--a"></span>
+      <span class="hero-ambient__orb hero-ambient__orb--b"></span>
+      <span class="hero-ambient__orb hero-ambient__orb--c"></span>
+    </div>
+    <div class="hero-noise" aria-hidden="true"></div>
 
-        @php $heroDate = \Carbon\Carbon::parse($heroDateTimestamp)->timezone($websiteInfo->timezone); @endphp
-        <div class="ed-hero__meta">
-          <span class="ed-hero__meta-item ed-hero__meta-item--date">
-            <svg width="14" height="14" stroke-width="2" aria-hidden="true"><use href="#icon-calendar"/></svg>
-            <span class="ed-date__part ed-date__part--day">{{ ucfirst($heroDate->translatedFormat('l')) }}</span>
-            <span class="ed-date__sep" aria-hidden="true">·</span>
-            <span class="ed-date__part ed-date__part--num">{{ $heroDate->format('j') }}</span>
-            <span class="ed-date__sep" aria-hidden="true">·</span>
-            <span class="ed-date__part ed-date__part--month">{{ ucfirst($heroDate->translatedFormat('F')) }}</span>
-            <span class="ed-date__sep" aria-hidden="true">·</span>
-            <span class="ed-date__part ed-date__part--year">{{ $heroDate->format('Y') }}</span>
-          </span>
-          @if ($content->event_type == 'venue')
-            <span class="ed-hero__meta-item">
-              <svg width="14" height="14" stroke-width="2" aria-hidden="true"><use href="#icon-map-pin"/></svg>
-              @if ($content->city != null){{ $content->city }}@endif
-              @if ($content->state), {{ $content->state }}@endif
-              @if ($content->country), {{ $content->country }}@endif
-            </span>
-          @else
-            <span class="ed-hero__meta-item">
-              <svg width="14" height="14" stroke-width="2" aria-hidden="true"><use href="#icon-map-pin"/></svg>
-              {{ __('Online') }}
+    <div class="container hero-content-wrapper">
+      <div class="hero-content hero-content--premium">
+
+        {{-- Kicker: categoría + estado --}}
+        <div class="ed-ev-kicker" aria-label="{{ __('Información rápida del evento') }}">
+          @if (!empty($content->name))
+            <a href="{{ route('events', ['category' => $content->slug]) }}"
+               class="ed-ev-kicker__chip ed-ev-kicker__chip--category"
+               aria-label="{{ __('Ver categoría') }}: {{ $content->name }}">
+              {{ $content->name }}
+            </a>
+          @endif
+          @if (!empty($heroStatusLabel))
+            <span class="ed-ev-kicker__chip ed-ev-kicker__chip--status ed-hero__status-pill {{ $heroStatusClass ?? '' }}" role="status">
+              {{ $heroStatusLabel }}
             </span>
           @endif
         </div>
 
-        <div class="ed-hero__commerce">
-          <div class="ed-hero__pricebox">
-            <span class="ed-hero__pricebox-label">{{ __('Entradas desde') }}</span>
-            <strong class="ed-hero__pricebox-value" dir="ltr">{{ $heroPriceLabel }}</strong>
+        {{-- Título H1 --}}
+        <h1 id="heroHeadingEvent" class="ed-ev-title">{{ $content->title }}</h1>
+
+        {{-- Meta: fecha, ubicación, organizador --}}
+        @php $heroDate = \Carbon\Carbon::parse($heroDateTimestamp)->timezone($websiteInfo->timezone); @endphp
+        <div class="ed-ev-meta">
+
+          <div class="ed-ev-meta__item">
+            <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-calendar"/></svg>
+            <span>
+              {{ ucfirst($heroDate->translatedFormat('l')) }},
+              {{ $heroDate->format('j') }} de {{ ucfirst($heroDate->translatedFormat('F Y')) }}
+              &middot; {{ $heroDate->format('H:i') }}
+            </span>
           </div>
 
-          <div class="ed-hero__cta-group">
-            <a href="#event-booking-card" class="ed-hero__cta ed-hero__cta--primary" data-scroll-target="#event-booking-card">
-              {{ __('Reservar mi lugar') }}
-            </a>
-            <a href="#event-booking-card" class="ed-hero__cta ed-hero__cta--secondary" data-scroll-target="#event-booking-card">
-              {{ __('Elegir entradas') }}
-            </a>
+          <div class="ed-ev-meta__item">
+            <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-map-pin"/></svg>
+            @if ($content->event_type == 'venue')
+              <span>
+                @if ($content->city != null){{ $content->city }}@endif
+                @if ($content->state), {{ $content->state }}@endif
+                @if ($content->country), {{ $content->country }}@endif
+              </span>
+            @else
+              <span>{{ __('Online') }}</span>
+            @endif
           </div>
+
+          @if (!empty($summaryOrganizer))
+            <div class="ed-ev-meta__item">
+              <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-user"/></svg>
+              <span>{{ $summaryOrganizer }}</span>
+            </div>
+          @endif
+
         </div>
+        {{-- /Meta --}}
+
+        {{-- Acciones: favoritos, share, mapa --}}
+        <div class="ed-ev-actions">
+          @if (Auth::guard('customer')->check())
+            @php
+              $customer_id = Auth::guard('customer')->user()->id;
+              $event_id = $content->id;
+              $checkWishList = checkWishList($event_id, $customer_id);
+            @endphp
+          @else
+            @php $checkWishList = false; @endphp
+          @endif
+          <a href="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}"
+            class="ed-hero__btn {{ $checkWishList == true ? 'text-success' : '' }}"
+            aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}"
+            title="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
+            <i class="fas fa-bookmark"></i>
+            <span class="sr-only">{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}</span>
+          </a>
+          <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Compartir evento') }}">
+            <i class="fas fa-share-alt"></i>
+          </button>
+          @if ($content->event_type != 'online' && !empty($map_address))
+            <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".bd-example-modal-lg" aria-label="{{ __('Ver mapa') }}">
+              <i class="fas fa-map-marker-alt"></i>
+            </button>
+          @endif
+        </div>
+
       </div>
     </div>
-  </div>
-  {{-- /Hero --}}
+
+  </section>
+  {{-- /Hero Evento --}}
 
   <section class="ed-body" id="main-content" tabindex="-1">
     <div class="container">
@@ -659,93 +1184,47 @@ ttq.page();
         {{-- Left column --}}
         <div class="col-lg-8">
 
-	          @php $summaryDate = \Carbon\Carbon::parse($startDateTime)->timezone($websiteInfo->timezone); @endphp
+          {{-- Breadcrumb --}}
+          <nav class="ed-body-breadcrumbs" aria-label="{{ __('Breadcrumb') }}">
+            <ol class="ed-breadcrumbs__list">
+              <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
+              <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+              <li><a href="{{ route('events') }}">{{ __('Eventos') }}</a></li>
+              @if (!empty($content->name))
+                <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+                <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
+              @endif
+              <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+              <li class="ed-breadcrumbs__current" aria-current="page">{{ $content->title }}</li>
+            </ol>
+          </nav>
 
-	          <div class="ed-card ed-card--summary">
-	            <div class="ed-card__head">
-	              <div>
-	                <span class="ed-card__eyebrow">{{ __('Vista rápida') }}</span>
-	                <h2 class="ed-card__title">{{ __('Resumen del evento') }}</h2>
-	              </div>
-	            </div>
-	            <div class="ed-card__body">
-	              <div class="ed-summary-grid">
-	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ __('Horario') }}</span>
-	                  <strong class="ed-summary-item__value">{{ $summaryDate->format('H:i') }}</strong>
-	                  <span class="ed-summary-item__meta">{{ $summaryDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
-	                </div>
-	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ __('Precio') }}</span>
-	                  <strong class="ed-summary-item__value" dir="ltr">{{ $heroPriceLabel }}</strong>
-	                  <span class="ed-summary-item__meta">{{ $over ? __('Venta cerrada') : __('Venta abierta') }}</span>
-	                </div>
-	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ __('Acceso') }}</span>
-	                  <strong class="ed-summary-item__value">{{ $content->event_type == 'online' ? __('Online') : __('Presencial') }}</strong>
-	                  <span class="ed-summary-item__meta">{{ $content->event_type == 'online' ? __('Participá desde cualquier lugar') : __('Revisá el mapa y dirección') }}</span>
-	                </div>
-	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ __('Organiza') }}</span>
-	                  <strong class="ed-summary-item__value">{{ $summaryOrganizer }}</strong>
-	                  <span class="ed-summary-item__meta">{{ $content->date_type == 'multiple' ? __('Elegí la fecha que mejor te quede') : __('Reservá online en pocos pasos') }}</span>
-	                </div>
-	              </div>
-                @if (
-                  !$over &&
-                  $content->date_type == 'single' &&
-                  $content->countdown_status == 1
-                )
-                <div class="ed-summary-signals">
-                  <div class="ed-signal-grid">
-                    @if ($startDateTime >= $nowTime)
-                      @php
-                        $dt = Carbon\Carbon::parse($startDateTime);
-                        $days_until = (int) \Carbon\Carbon::now()->diffInDays($dt);
-                        $year = $dt->year; $month = $dt->month; $day = $dt->day;
-                        $end_time = Carbon\Carbon::parse($startDateTime);
-                        $hour = $end_time->hour; $minute = $end_time->minute;
-                        $now = str_replace('+00:00', '.000' . timeZoneOffset($websiteInfo->timezone) . '00:00', gmdate('c'));
-                      @endphp
-                      <div class="ed-countdown-wrap">
-                        <p class="ed-countdown-label">{{ __('Próxima fecha') }}</p>
-                        @if ($days_until <= 14)
-                          <div class="count-down" dir="ltr">
-                            <div class="event-countdown" data-now="{{ $now }}" data-year="{{ $year }}"
-                              data-month="{{ $month }}" data-day="{{ $day }}"
-                              data-hour="{{ $hour }}" data-minute="{{ $minute }}"
-                              data-timezone="{{ timeZoneOffset($websiteInfo->timezone) }}">
-                            </div>
-                          </div>
-                        @else
-                          <p class="mb-0"><strong>{{ ucfirst($dt->translatedFormat('l j \\d\\e F \\a \\l\\a\\s H:i')) }}</strong></p>
-                        @endif
-                      </div>
-                    @elseif ($startDateTime <= $endDateTime && $endDateTime >= $nowTime)
-                      <div class="ed-status-pill ed-status-pill--running">
-                        <span class="ed-status-pill__dot"></span> {{ __('El evento está en curso') }}
-                      </div>
-                    @endif
-                </div>
-                </div>
-                @endif
-	            </div>
-	          </div>
-
-            @if ($heroStatusLabel)
-              <div class="ed-card ed-card--context">
-                <div class="ed-card__body">
-                  <div class="ed-body-topline">
-                    <a href="{{ route('events', ['category' => $content->slug]) }}" class="ed-body-chip ed-body-chip--category">
-                      <i class="fas fa-tag"></i> {{ $content->name }}
-                    </a>
-                    @if ($heroStatusLabel)
-                      <span class="ed-body-chip ed-hero__status-pill {{ $heroStatusClass }}">{{ $heroStatusLabel }}</span>
-                    @endif
-                  </div>
-                </div>
+          {{-- Quick facts: datos clave del evento --}}
+          @php $quickDate = \Carbon\Carbon::parse($startDateTime)->timezone($websiteInfo->timezone); @endphp
+          <div class="ed-event-quickfacts ed-section" aria-label="{{ __('Información clave del evento') }}">
+            <div class="ed-summary-grid">
+              <div class="ed-summary-item">
+                <span class="ed-summary-item__label">{{ __('Horario') }}</span>
+                <strong class="ed-summary-item__value">{{ $quickDate->format('H:i') }}</strong>
+                <span class="ed-summary-item__meta">{{ $quickDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
               </div>
-            @endif
+              <div class="ed-summary-item">
+                <span class="ed-summary-item__label">{{ __('Precio') }}</span>
+                <strong class="ed-summary-item__value" dir="ltr">{{ $heroPriceLabel }}</strong>
+                <span class="ed-summary-item__meta">{{ $over ? __('Venta cerrada') : __('Venta abierta') }}</span>
+              </div>
+              <div class="ed-summary-item">
+                <span class="ed-summary-item__label">{{ __('Acceso') }}</span>
+                <strong class="ed-summary-item__value">{{ $content->event_type == 'online' ? __('Online') : __('Presencial') }}</strong>
+                <span class="ed-summary-item__meta">{{ $content->event_type == 'online' ? __('Participá desde cualquier lugar') : __('Revisá el mapa y dirección') }}</span>
+              </div>
+              <div class="ed-summary-item">
+                <span class="ed-summary-item__label">{{ __('Organiza') }}</span>
+                <strong class="ed-summary-item__value">{{ $summaryOrganizer }}</strong>
+                <span class="ed-summary-item__meta">{{ $content->date_type == 'multiple' ? __('Elegí la fecha que mejor te quede') : __('Reservá online en pocos pasos') }}</span>
+              </div>
+            </div>
+          </div>
 
 	          {{-- Session errors --}}
 	          @if (Session::has('paypal_error'))
@@ -754,26 +1233,21 @@ ttq.page();
           @php Session::forget('paypal_error'); @endphp
 
           {{-- Description card --}}
-	          <div class="ed-card">
-	            <div class="ed-card__head">
-	              <div>
-	                <span class="ed-card__eyebrow">{{ __('Información') }}</span>
-	                <h2 class="ed-card__title">{{ __('Descripción') }}</h2>
-	              </div>
+	          <section class="ed-section ed-section--description" aria-labelledby="event-description-title">
+	            <div class="ed-section__head">
+	                <h2 class="ed-section__title" id="event-description-title">{{ __('Descripción') }}</h2>
 	            </div>
-	              <div class="ed-card__body">
-	              <div class="summernote-content">
+	              <div class="ed-section__content summernote-content">
                 {!! $eventDescriptionHtml !!}
               </div>
-            </div>
-          </div>
+          </section>
 
           @if($images->count() > 0)
-          <div class="ed-card ed-card--gallery">
+          <div class="ed-card ed-card--gallery ed-section ed-section--media">
             <div class="ed-card__head">
               <div>
                 <span class="ed-card__eyebrow">{{ __('Contenido visual') }}</span>
-                <h2 class="ed-card__title">{{ __('Galería del evento') }}</h2>
+                <h2 class="ed-card__title">{{ __('Galería') }}</h2>
               </div>
             </div>
             <div class="ed-gallery-wrap">
@@ -821,7 +1295,7 @@ ttq.page();
           @endif
 
           @if ($spotifyEmbedUrl)
-            <div class="ed-card ed-card--context">
+            <div class="ed-card ed-card--context ed-section ed-section--media">
               <div class="ed-card__head">
                 <div>
                   <span class="ed-card__eyebrow">{{ __('Ambiente del evento') }}</span>
@@ -842,7 +1316,7 @@ ttq.page();
 
           {{-- Map card --}}
           @if ($content->event_type != 'online' && !empty($map_address))
-	            <div class="ed-card">
+	            <div class="ed-card ed-section ed-section--media">
 	              <div class="ed-card__head">
 	                <div>
 	                  <span class="ed-card__eyebrow">{{ __('Ubicación') }}</span>
@@ -867,7 +1341,7 @@ ttq.page();
             }
           @endphp
           @if($youtubeEmbedUrl)
-	            <div class="ed-card">
+	            <div class="ed-card ed-section ed-section--media">
 	              <div class="ed-card__head">
 	                <div>
 	                  <span class="ed-card__eyebrow">{{ __('Contenido') }}</span>
@@ -889,16 +1363,17 @@ ttq.page();
 
           {{-- Refund policy card --}}
           @if (!empty($content->refund_policy))
-	            <div class="ed-card">
-	              <div class="ed-card__head">
-	                <div>
-	                  <span class="ed-card__eyebrow">{{ __('Condiciones') }}</span>
-	                  <h2 class="ed-card__title">{{ __('Política de reembolso') }}</h2>
-	                </div>
-	              </div>
-              <div class="ed-card__body">
-                <p>{{ $content->refund_policy }}</p>
-              </div>
+	            <div class="ed-refund-band" role="note">
+                <span class="ed-refund-band__icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/>
+                    <path d="M9.5 12.5l1.7 1.7 3.3-3.7"/>
+                  </svg>
+                </span>
+                <div class="ed-refund-band__content">
+                  <strong>{{ __('Política de reembolso') }}</strong>
+                  <p>{{ $content->refund_policy }}</p>
+                </div>
             </div>
           @endif
 
@@ -1560,13 +2035,21 @@ ttq.page();
   </div>
 
   @if (!empty($related_events) && $related_events->count() > 0)
-    <section class="ed-related">
+    <section class="ed-related ed-related--count-{{ min($related_events->count(), 3) }}">
       <div class="container">
         <div class="ed-card">
           <div class="ed-card__head">
             <div>
-              <span class="ed-card__eyebrow">{{ __('Seguí explorando') }}</span>
-              <h2 class="ed-card__title">{{ __('Eventos relacionados') }}</h2>
+              @if (($relatedEventsMode ?? null) === 'upcoming')
+                <span class="ed-card__eyebrow">{{ __('Próximos eventos') }}</span>
+                <h2 class="ed-card__title">{{ __('De este organizador') }}</h2>
+              @elseif (($relatedEventsMode ?? null) === 'past')
+                <span class="ed-card__eyebrow">{{ __('Eventos anteriores') }}</span>
+                <h2 class="ed-card__title">{{ __('De este organizador') }}</h2>
+              @else
+                <span class="ed-card__eyebrow">{{ __('Más del organizador') }}</span>
+                <h2 class="ed-card__title">{{ __('Eventos de este organizador') }}</h2>
+              @endif
             </div>
           </div>
           <div class="ed-card__body">
@@ -1689,6 +2172,74 @@ document.addEventListener('DOMContentLoaded', function() {
       url: window.location.href
     }).catch(function () {});
   });
+})();
+</script>
+<script>
+(function() {
+  // --- Crossfade slideshow hero de evento ---
+  var slides = Array.from(document.querySelectorAll('#heroCollageBg .hero-slide'));
+  var n = slides.length;
+  if (n === 0) return;
+
+  slides[0].style.opacity = '1';
+  slides[0].style.zIndex  = '0';
+
+  if (n === 1) return;
+
+  var cur = 0;
+
+  function nextSlide() {
+    var nxt  = (cur + 1) % n;
+    var prev = cur;
+    slides[prev].style.zIndex = '0';
+    slides[nxt].style.zIndex  = '1';
+    slides[nxt].style.transition = 'opacity 1.2s ease-in-out';
+    slides[nxt].style.opacity    = '1';
+    setTimeout(function() {
+      slides[prev].style.transition = 'none';
+      slides[prev].style.opacity    = '0';
+    }, 1200);
+    cur = nxt;
+  }
+
+  setInterval(nextSlide, 5000);
+
+  // --- Parallax — solo corre cuando el hero es visible ---
+  var hero = document.getElementById('heroSection');
+  var bg   = document.getElementById('heroCollageBg');
+  if (!hero || !bg) return;
+
+  var tx = 0, ty = 0, cx = 0, cy = 0;
+  var rafId = null;
+  var heroRect = hero.getBoundingClientRect();
+
+  window.addEventListener('resize', function() { heroRect = hero.getBoundingClientRect(); }, { passive: true });
+
+  hero.addEventListener('mousemove', function(e) {
+    tx = -(e.clientX - heroRect.left) / heroRect.width  * 14 + 7;
+    ty = -(e.clientY - heroRect.top)  / heroRect.height * 14 + 7;
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', function() { tx = 0; ty = 0; }, { passive: true });
+
+  function parallaxLoop() {
+    cx += (tx - cx) * 0.04;
+    cy += (ty - cy) * 0.04;
+    bg.style.transform = 'translate(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px)';
+    rafId = requestAnimationFrame(parallaxLoop);
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      if (!rafId) rafId = requestAnimationFrame(parallaxLoop);
+    } else {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      cx = 0; cy = 0; tx = 0; ty = 0;
+      bg.style.transform = 'translate(0px,0px)';
+    }
+  }, { threshold: 0 });
+
+  observer.observe(hero);
 })();
 </script>
 @endpush

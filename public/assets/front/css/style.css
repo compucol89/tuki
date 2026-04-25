@@ -60,8 +60,35 @@
     --dark-color: #1e2532;
     --light-color: #F7F7F7;
     --accent-color: #F97316;
-    --base-font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --heading-font: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    /* Tipografía — Inter unificado (Fontsource self-hosted) */
+    --tuki-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --base-font: var(--tuki-font-sans);
+    --heading-font: var(--tuki-font-sans);
+    /* Text scale */
+    --tuki-text-xs: clamp(11px, 0.8vw + 9px, 12px);
+    --tuki-text-sm: clamp(12px, 0.8vw + 10px, 14px);
+    --tuki-text-base: clamp(14px, 0.8vw + 12px, 16px);
+    --tuki-text-lg: clamp(16px, 1vw + 14px, 18px);
+    --tuki-text-xl: clamp(18px, 1.2vw + 15px, 22px);
+    --tuki-text-2xl: clamp(22px, 1.6vw + 16px, 28px);
+    --tuki-text-3xl: clamp(28px, 2.2vw + 18px, 40px);
+    --tuki-text-4xl: clamp(34px, 3vw + 20px, 56px);
+    /* Line heights */
+    --tuki-leading-tight: 1.1;
+    --tuki-leading-snug: 1.25;
+    --tuki-leading-normal: 1.5;
+    --tuki-leading-relaxed: 1.7;
+    /* Weights */
+    --tuki-weight-regular: 400;
+    --tuki-weight-medium: 500;
+    --tuki-weight-semibold: 600;
+    --tuki-weight-bold: 700;
+    --tuki-weight-extrabold: 800;
+    /* Tracking */
+    --tuki-tracking-tight: -0.04em;
+    --tuki-tracking-snug: -0.02em;
+    --tuki-tracking-normal: 0;
+    --tuki-tracking-wide: 0.04em;
     --flow-space: 1lh;
     --flow-space-tight: 0.75lh;
     /* Espacio antes de un título cuando sigue a un bloque de texto */
@@ -417,7 +444,7 @@ a.theme-btn {
     display: inline-block;
     background: var(--primary-color);
     border: 1px solid var(--primary-color);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--tuki-font-sans);
     letter-spacing: -0.1px;
     -webkit-font-smoothing: antialiased;
 }
@@ -933,13 +960,13 @@ body.loaded {
     margin-right: auto;
     font-size: clamp(0.9rem, 0.65vw + 0.78rem, 1.05rem);
     line-height: 1.58;
-    font-weight: 450;
+    font-weight: 500;
     color: rgba(248, 250, 252, 0.88);
 }
 
 .hero-content--premium h1 {
     font-family: var(--heading-font);
-    font-weight: 750;
+    font-weight: 800;
     font-size: clamp(2.15rem, 1.2vw + 1.85rem, 3.65rem);
     line-height: 1.05;
     letter-spacing: -0.045em;
@@ -965,7 +992,7 @@ body.loaded {
     align-items: center;
     gap: 9px;
     font-size: 11px;
-    font-weight: 650;
+    font-weight: 600;
     letter-spacing: 0.11em;
     text-transform: uppercase;
     color: rgba(226, 232, 240, 0.62);
@@ -3141,12 +3168,27 @@ blockquote {
     z-index: 3;
 }
 
+.footer-section.footer-section--premium {
+    background:
+        radial-gradient(900px 520px at 18% 0%, rgba(249, 115, 22, 0.10) 0%, transparent 55%),
+        radial-gradient(700px 380px at 92% 100%, rgba(59, 130, 241, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, #111827 0%, #0f141f 46%, #0b1018 100%);
+    background-color: #111827;
+}
+
 .footer-section__ambient {
     position: absolute;
     inset: 0;
     z-index: 0;
     pointer-events: none;
     background: radial-gradient(ellipse 120% 80% at 50% -40%, rgba(255, 255, 255, 0.06) 0%, transparent 55%);
+}
+
+.footer-section.footer-section--premium .footer-section__ambient {
+    background:
+        radial-gradient(720px 360px at 18% 0%, rgba(249, 115, 22, 0.08) 0%, transparent 60%),
+        radial-gradient(620px 320px at 90% 100%, rgba(59, 130, 241, 0.06) 0%, transparent 55%);
+    opacity: 1;
 }
 
 .footer-section__grain {
@@ -3157,6 +3199,10 @@ blockquote {
     opacity: 0.22;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='gf'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23gf)' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+.footer-section.footer-section--premium .footer-section__grain {
+    opacity: 0.04;
 }
 
 .footer-section__container {
@@ -3186,6 +3232,10 @@ blockquote {
 /* Listado del blog: menos aire entre último bloque (p. ej. publicidad) y el footer */
 body.blog-site:not(.blog-detail) .footer-section.footer-section--premium {
     padding-top: clamp(40px, 6vw, 64px) !important;
+}
+
+body.page-event-detail .footer-section.footer-section--premium {
+    padding-top: clamp(20px, 3vw, 32px) !important;
 }
 
 .footer-logo img {
@@ -3489,7 +3539,7 @@ body.blog-site:not(.blog-detail) .footer-section.footer-section--premium {
   margin-left: 2px;
   border-radius: 12px;
   font-size: 15px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -0.01em;
   color: #334155;
   transition: color 0.22s ease, background 0.22s ease;
@@ -4200,7 +4250,6 @@ body.blog-site:not(.blog-detail) .footer-section.footer-section--premium {
 .popup-five .popup_main-content h4 {
     color: #fff;
     font-size: 25px;
-    font-weight: 35px;
     margin-bottom: 40px;
     font-weight: 400;
 }
@@ -5859,7 +5908,7 @@ html[dir*=rtl] .modal .close {
     left: 50%;
     transform: translateX(-50%);
     content: "\f304";
-    font-weight: 900;
+    font-weight: 800;
     font-family: "Font Awesome 5 Free";
 }
 
@@ -6289,7 +6338,7 @@ html[dir*=rtl] .modal .close {
 }
 
 .emq-date__day {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--tuki-font-sans);
     font-size: 16px;
     font-weight: 800;
     color: #fff;
@@ -6297,7 +6346,7 @@ html[dir*=rtl] .modal .close {
 }
 
 .emq-date__month {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--tuki-font-sans);
     font-size: 9px;
     font-weight: 700;
     color: var(--primary-text-color);
@@ -6318,7 +6367,7 @@ html[dir*=rtl] .modal .close {
     background: rgba(20, 26, 38, 0.88);
     border-radius: 6px;
     padding: 4px 7px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--tuki-font-sans);
     font-size: 10px;
     font-weight: 700;
     color: #fff;
@@ -6586,7 +6635,7 @@ body.home-page .work-process-inner {
     background: #fff;
     text-decoration: none;
     transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--tuki-font-sans);
 }
 
 .price-filter-btn:hover {
@@ -7060,7 +7109,7 @@ body.home-page .work-process-inner {
   color: #fff;
   padding: 6px 12px;
   border-radius: 999px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
@@ -7155,7 +7204,7 @@ body.home-page .work-process-inner {
 .ev-card__overlay-day,
 .ev-card__overlay-hhmm {
   display: block;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 34px;
   font-weight: 800;
   color: #fff;
@@ -7166,7 +7215,7 @@ body.home-page .work-process-inner {
 
 .ev-card__overlay-month {
   display: block;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 16px;
   font-weight: 700;
   color: rgba(255,255,255,0.82);
@@ -7263,7 +7312,7 @@ body.home-page .work-process-inner {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
@@ -7330,9 +7379,9 @@ body.home-page .work-process-inner {
 
 /* Número del día — grande, translúcido */
 .ev-card__img-day {
-  font-family: 'Sora', -apple-system, sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 28px;
-  font-weight: 900;
+  font-weight: 800;
   color: #16202e;
   line-height: 1;
   letter-spacing: -1px;
@@ -7348,7 +7397,7 @@ body.home-page .work-process-inner {
 }
 
 .ev-card__img-month-text {
-  font-family: 'Sora', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 12px;
   font-weight: 700;
   color: #16202e;
@@ -7357,7 +7406,7 @@ body.home-page .work-process-inner {
 }
 
 .ev-card__img-year-text {
-  font-family: 'Sora', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 10px;
   font-weight: 500;
   color: rgba(30,37,50,0.5);
@@ -7416,9 +7465,9 @@ body.home-page .work-process-inner {
 }
 
 .ev-card__dtbar-badge-label {
-  font-family: 'Sora', sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 600;
   color: #223042;
   letter-spacing: -0.01em;
   white-space: nowrap;
@@ -7498,7 +7547,7 @@ body.home-page .work-process-inner {
 
 .ev-card__loc-row span {
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 600;
   color: #6b7280;
   white-space: nowrap;
   overflow: hidden;
@@ -7538,7 +7587,7 @@ body.home-page .work-process-inner {
 .ev-card__ticket-row span {
   font-size: 12.5px;
   color: #667085;
-  font-weight: 520;
+  font-weight: 500;
   line-height: 1.45;
 }
 
@@ -7564,7 +7613,7 @@ body.home-page .work-process-inner {
 .ev-card__org-row span {
   font-size: 12.5px;
   color: #667085;
-  font-weight: 520;
+  font-weight: 500;
   line-height: 1.45;
 }
 
@@ -9318,7 +9367,7 @@ body.home-page .events-section .text-center.mt-4 img {
 
 .checkout-v2--guest .co-timer--guest .co-timer__text {
   font-size: 15px;
-  font-weight: 650;
+  font-weight: 700;
   color: #0f172a;
 }
 
@@ -9607,7 +9656,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 /* Event title — editorial, high contrast */
 .ed-hero__title {
-  font-family: var(--heading-font, 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif);
+  font-family: var(--heading-font);
   font-size: clamp(26px, 3.4vw + 8px, 52px);
   font-weight: 800;
   color: #ffffff;
@@ -11020,7 +11069,7 @@ a.evf-btn--primary {
 .cd-bk-hero--confirmed .cd-bk-hero__price-label { color: #059669; }
 .cd-bk-hero--pending   .cd-bk-hero__price-label { color: #c2410c; }
 .cd-bk-hero__price-amount {
-  font-size: 42px; font-weight: 900; letter-spacing: -.04em; line-height: 1; color: #0f172a;
+  font-size: 42px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: #0f172a;
 }
 .cd-bk-hero__pdf-btn {
   display: inline-flex; align-items: center; gap: 7px;
@@ -11082,7 +11131,7 @@ a.evf-btn--primary {
   color: #15803d; font-weight: 700; margin-bottom: 4px;
 }
 .cd-payment-hero__amount {
-  font-size: 44px; font-weight: 900; color: #064e3b;
+  font-size: 44px; font-weight: 800; color: #064e3b;
   letter-spacing: -0.05em; line-height: 1; margin-bottom: 12px;
 }
 
@@ -12193,7 +12242,7 @@ a.evf-btn--primary {
 }
 
 .ed-ticket-card__head-price {
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 36px !important;
   letter-spacing: -0.05em !important;
   line-height: 1.02;
@@ -12338,7 +12387,7 @@ a.evf-btn--primary {
 
 .ed-ticket-card__body .price-count h6 {
   line-height: 1.2 !important;
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 24px !important;
   letter-spacing: -0.04em;
 }
@@ -12375,7 +12424,7 @@ a.evf-btn--primary {
 .ed-total-value {
   font-size: 28px;
   letter-spacing: -0.045em;
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
 }
 
 .ed-cta-zone {
@@ -12442,7 +12491,7 @@ a.evf-btn--primary {
 .ei-org__name,
 .ed-organizer__name {
   letter-spacing: -0.02em;
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
 }
 
 @media (max-width: 991px) {
@@ -12691,7 +12740,7 @@ a.evf-btn--primary {
 }
 
 .ed-card__title {
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -12929,7 +12978,7 @@ a.evf-btn--primary {
 .ed-card .summernote-content h2,
 .ed-card .summernote-content h3,
 .ed-card .summernote-content h4 {
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
   color: #172131;
   letter-spacing: -0.04em;
   line-height: 1.2;
@@ -13467,7 +13516,7 @@ body.page-event-detail .ei-meta__text {
 }
 
 .ed-related__title {
-  font-family: 'Sora', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans);
   letter-spacing: -0.03em;
 }
 
@@ -13587,7 +13636,7 @@ body.page-event-detail .ei-meta__text {
 
 /* ═══════════════════════════════════════════
    BLOG — Tipografía alineada al sitio (Fontsource:
-   Inter + Plus Jakarta Sans vía resources/css/app.css
+   Inter vía resources/css/app.css (Fontsource self-hosted)
    y variables :root en styles.blade.php — sin Google Fonts)
    ═══════════════════════════════════════════ */
 
@@ -14452,7 +14501,7 @@ body.page-event-detail .ei-meta__text {
 .blog-detail .bl-article__content h3,
 .blog-detail .bl-article__content h4 {
   font-family: var(--heading-font);
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: -0.035em;
   color: #0f172a;
   margin-block: 0;
@@ -14526,7 +14575,7 @@ body.page-event-detail .ei-meta__text {
   padding: 10px 18px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 650;
+  font-weight: 600;
   text-decoration: none !important;
   font-family: var(--base-font);
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;

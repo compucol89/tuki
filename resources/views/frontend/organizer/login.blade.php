@@ -95,6 +95,29 @@
       <h1 class="auth-split__title">{{ __('organizer.login.form_title') }}</h1>
       <p class="auth-split__subtitle">{{ __('organizer.login.form_subtitle') }}</p>
 
+      @if (Auth::guard('customer')->check())
+        <div class="alert mb-4" style="border: 1px solid rgba(249, 115, 22, 0.18); border-radius: 18px; background: linear-gradient(180deg, rgba(249, 115, 22, 0.08) 0%, rgba(255, 255, 255, 0.96) 100%); color: #1e2532; box-shadow: 0 14px 32px rgba(30, 37, 50, 0.06);">
+          <div class="d-flex align-items-center mb-2">
+            <span class="d-inline-flex align-items-center justify-content-center mr-2" style="width: 34px; height: 34px; border-radius: 10px; background: rgba(249, 115, 22, 0.14); color: #f97316; font-size: 16px;">
+              <i class="fas fa-info-circle"></i>
+            </span>
+            <strong style="font-size: 18px;">Estás ingresando al panel de organizadores</strong>
+          </div>
+          <p class="mb-2" style="color: #4b5563;">
+            Actualmente tenés una sesión activa como cliente. Las cuentas de cliente y organizador son accesos distintos en TukiPass.
+          </p>
+          <p class="mb-3" style="color: #4b5563;">
+            Tu cuenta de cliente te permite comprar entradas y ver tus reservas. Para crear y gestionar eventos necesitás iniciar sesión o registrarte como organizador.
+          </p>
+          <div class="d-flex flex-wrap" style="gap: 10px;">
+            <a href="{{ route('organizer.login') }}" class="theme-btn" style="min-width: 220px;">Continuar al login de organizador</a>
+            <a href="{{ route('organizer.signup') }}" class="btn btn-light" style="min-width: 220px; border-radius: 10px; border: 1px solid rgba(30, 37, 50, 0.12); color: #1e2532;">Crear cuenta de organizador</a>
+            <a href="{{ route('customer.dashboard') }}" class="btn btn-light" style="min-width: 220px; border-radius: 10px; border: 1px solid rgba(30, 37, 50, 0.12); color: #1e2532;">Ir a mi cuenta de cliente</a>
+            <a href="{{ route('customer.logout') }}" class="btn btn-link p-0 align-self-center" style="color: #f97316; font-weight: 700;">Cerrar sesión de cliente</a>
+          </div>
+        </div>
+      @endif
+
       @if (Session::has('success'))
         <div class="alert alert-success mb-3">{{ Session::get('success') }}</div>
       @endif

@@ -152,6 +152,76 @@
       display: none;
     }
 
+    .ed-related {
+      padding: 8px 0 0;
+    }
+
+    .ed-related__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .ed-related__card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(30, 37, 50, 0.08);
+      text-decoration: none !important;
+      color: inherit;
+    }
+
+    .ed-related__thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #f3f4f6;
+    }
+
+    .ed-related__body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px;
+    }
+
+    .ed-related__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .ed-related__title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.3;
+      color: #1e2532;
+    }
+
+    .ed-related__desc {
+      margin: 0;
+      color: #4b5563;
+    }
+
+    .ed-related__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      font-weight: 700;
+      color: #1e2532;
+    }
+
+    .ed-related__price {
+      color: #C2410C;
+    }
+
     .ed-hero__btn,
     .quantity-input button {
       min-width: 44px;
@@ -178,6 +248,10 @@
       outline: 3px solid #1e2532;
       outline-offset: 3px;
       box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9);
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     @media (max-width: 991.98px) {
@@ -262,6 +336,10 @@
       .ed-mobile-bar__cta--disabled {
         background: #9ca3af;
         pointer-events: none;
+      }
+
+      .ed-related__grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -356,8 +434,44 @@
   $jsonLd = array_filter($jsonLd, function ($value) {
     return !is_null($value) && $value !== '';
   });
+
+  $breadcrumbJsonLd = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+      [
+        '@type' => 'ListItem',
+        'position' => 1,
+        'name' => __('Inicio'),
+        'item' => url('/'),
+      ],
+      [
+        '@type' => 'ListItem',
+        'position' => 2,
+        'name' => __('Eventos'),
+        'item' => route('events', [], true),
+      ],
+    ],
+  ];
+
+  if (!empty($content->name)) {
+    $breadcrumbJsonLd['itemListElement'][] = [
+      '@type' => 'ListItem',
+      'position' => 3,
+      'name' => $content->name,
+      'item' => route('events', ['category' => $content->slug], true),
+    ];
+  }
+
+  $breadcrumbJsonLd['itemListElement'][] = [
+    '@type' => 'ListItem',
+    'position' => !empty($content->name) ? 4 : 3,
+    'name' => $eventName,
+    'item' => $eventUrl,
+  ];
 @endphp
 <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
+<script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}</script>
 
 @if(!empty($content->meta_pixel_id))
 <!-- Meta Pixel -->
@@ -471,8 +585,10 @@ ttq.page();
         @endif
         <a href="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}"
           class="ed-hero__btn {{ $checkWishList == true ? 'text-success' : '' }}"
-          aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
+          aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}"
+          title="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
           <i class="fas fa-bookmark"></i>
+          <span class="sr-only">{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}</span>
         </a>
         <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Compartir evento') }}">
           <i class="fas fa-share-alt"></i>
@@ -487,19 +603,6 @@ ttq.page();
 
     <div class="ed-hero__inner">
       <div class="container">
-        @if (!$over)
-          <div class="ed-hero__signalbar" aria-label="{{ __('Señales del evento') }}">
-            <div class="ed-viewer-counter" aria-label="{{ $ev_viewers }} {{ __('personas viendo este evento ahora') }}">
-              <span class="ed-viewer-counter__live" aria-hidden="true"></span>
-              <span class="ed-viewer-counter__icon" aria-hidden="true">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </span>
-              <span class="ed-viewer-counter__num">{{ $ev_viewers }}</span>
-              <span class="ed-viewer-counter__label">{{ __('personas viendo ahora') }}</span>
-            </div>
-          </div>
-        @endif
-
         <h1 class="ed-hero__title">{{ $content->title }}</h1>
 
         @php $heroDate = \Carbon\Carbon::parse($heroDateTimestamp)->timezone($websiteInfo->timezone); @endphp
@@ -540,7 +643,7 @@ ttq.page();
               {{ __('Reservar mi lugar') }}
             </a>
             <a href="#event-booking-card" class="ed-hero__cta ed-hero__cta--secondary" data-scroll-target="#event-booking-card">
-              {{ __('Ver entradas') }}
+              {{ __('Elegir entradas') }}
             </a>
           </div>
         </div>
@@ -605,9 +708,7 @@ ttq.page();
                         $now = str_replace('+00:00', '.000' . timeZoneOffset($websiteInfo->timezone) . '00:00', gmdate('c'));
                       @endphp
                       <div class="ed-countdown-wrap">
-                        <p class="ed-countdown-label">
-                          {{ $days_until <= 14 ? __('El evento comienza en') : __('Fecha del evento') }}
-                        </p>
+                        <p class="ed-countdown-label">{{ __('Próxima fecha') }}</p>
                         @if ($days_until <= 14)
                           <div class="count-down" dir="ltr">
                             <div class="event-countdown" data-now="{{ $now }}" data-year="{{ $year }}"
@@ -1339,7 +1440,7 @@ ttq.page();
                             </span>
                             <span class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                              {{ __('Reembolso') }}
+                              {{ __('Política de reembolso') }}
                             </span>
                             <span class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
@@ -1370,7 +1471,7 @@ ttq.page();
                   <div class="ei-org__info">
                     <span class="ei-label">{{ __('Organizado por') }}</span>
                     <p class="ei-org__name">{{ $admin->username }}</p>
-                    <a class="ei-org__link" href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">{{ __('Ver perfil') }} <i class="fas fa-arrow-right ei-org__arrow" aria-hidden="true"></i></a>
+                    <a class="ei-org__link" href="{{ route('frontend.organizer.details', [$admin->id, str_replace(' ', '-', $admin->username), 'admin' => 'true']) }}">{{ __('Ver perfil del organizador') }} <i class="fas fa-arrow-right ei-org__arrow" aria-hidden="true"></i></a>
                   </div>
                 </div>
               @else
@@ -1384,7 +1485,7 @@ ttq.page();
                   <div class="ei-org__info">
                     <span class="ei-label">{{ __('Organizado por') }}</span>
                     <p class="ei-org__name">{{ $organizer->username }}</p>
-                    <a class="ei-org__link" href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">{{ __('Ver perfil') }} <i class="fas fa-arrow-right ei-org__arrow" aria-hidden="true"></i></a>
+                    <a class="ei-org__link" href="{{ route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)]) }}">{{ __('Ver perfil del organizador') }} <i class="fas fa-arrow-right ei-org__arrow" aria-hidden="true"></i></a>
                   </div>
                 </div>
               @endif
@@ -1458,7 +1559,61 @@ ttq.page();
     </div>
   </div>
 
-  {{-- ── EVENTOS RELACIONADOS ── --}}
+  @if (!empty($related_events) && $related_events->count() > 0)
+    <section class="ed-related">
+      <div class="container">
+        <div class="ed-card">
+          <div class="ed-card__head">
+            <div>
+              <span class="ed-card__eyebrow">{{ __('Seguí explorando') }}</span>
+              <h2 class="ed-card__title">{{ __('Eventos relacionados') }}</h2>
+            </div>
+          </div>
+          <div class="ed-card__body">
+            <div class="ed-related__grid">
+              @foreach ($related_events->take(3) as $item)
+                @php
+                  $relatedTicket = $relatedTickets[$item->id] ?? null;
+                  $relatedOrganizer = !empty($item->organizer_id) ? ($relatedOrganizers[$item->organizer_id] ?? null) : null;
+                  $relatedPrice = __('Próximamente');
+
+                  if (!empty($relatedTicket)) {
+                    if ($relatedTicket->pricing_type == 'free') {
+                      $relatedPrice = __('Gratis');
+                    } elseif (is_numeric($relatedTicket->price ?? null)) {
+                      $relatedPrice = symbolPrice($relatedTicket->price);
+                    }
+                  }
+                @endphp
+                <a href="{{ route('event.details', ['slug' => $item->slug, 'id' => $item->id]) }}" class="ed-related__card">
+                  <img
+                    src="{{ asset('assets/admin/img/event/thumbnail/' . $item->thumbnail) }}"
+                    alt="{{ $item->title }}"
+                    class="ed-related__thumb">
+                  <div class="ed-related__body">
+                    <div class="ed-related__meta">
+                      @if (!empty($item->city) || !empty($item->country))
+                        <span>{{ collect([$item->city, $item->country])->filter()->implode(', ') }}</span>
+                      @endif
+                      @if (!empty($relatedOrganizer))
+                        <span>{{ __('Por') }} {{ $relatedOrganizer->username }}</span>
+                      @endif
+                    </div>
+                    <h3 class="ed-related__title">{{ $item->title }}</h3>
+                    <p class="ed-related__desc">{{ \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/u', ' ', strip_tags($item->description ?? ''))), 110, '...') }}</p>
+                    <div class="ed-related__footer">
+                      <span class="ed-related__price" dir="ltr">{{ $relatedPrice }}</span>
+                      <span>{{ __('Ver evento') }}</span>
+                    </div>
+                  </div>
+                </a>
+              @endforeach
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  @endif
 @endsection
 @section('modals')
   @includeIf('frontend.partials.modals')

@@ -75,6 +75,9 @@
     .skip-link:focus {
       top: 16px;
       color: #fff;
+      outline: 3px solid #fff;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 4px rgba(30, 37, 50, 0.55);
     }
   </style>
   {{-- Prerender sólo "Sobre nosotros" (/sobre-nosotros): hover / intención, sin masificar todo el sitio --}}

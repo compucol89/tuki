@@ -1,10 +1,12 @@
+name: tuki
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8800:8080"
+      - "8801:8080"
     depends_on:
       db:
         condition: service_healthy
@@ -28,7 +30,7 @@ services:
   db:
     image: mysql:8.0
     ports:
-      - "3307:3306"
+      - "3311:3306"
     environment:
       MYSQL_ROOT_PASSWORD: tukipass
       MYSQL_DATABASE: eventos
@@ -45,7 +47,7 @@ services:
   adminer:
     image: adminer:standalone
     ports:
-      - "8888:8080"
+      - "8889:8080"
     depends_on:
       - db
     restart: unless-stopped

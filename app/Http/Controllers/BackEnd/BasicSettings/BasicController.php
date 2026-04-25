@@ -175,13 +175,16 @@ class BasicController extends Controller
 
   public function updateMailFromAdmin(MailFromAdminRequest $request)
   {
+    $encryption = strtoupper(trim($request->encryption));
+    $encryption = $encryption == 'STARTTLS' ? 'TLS' : $encryption;
+
     DB::table('basic_settings')->updateOrInsert(
       ['uniqid' => 12345],
       [
         'smtp_status' => $request->smtp_status,
         'smtp_host' => $request->smtp_host,
         'smtp_port' => $request->smtp_port,
-        'encryption' => $request->encryption,
+        'encryption' => $encryption,
         'smtp_username' => $request->smtp_username,
         'smtp_password' => $request->smtp_password,
         'from_mail' => $request->from_mail,

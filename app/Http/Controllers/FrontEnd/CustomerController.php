@@ -69,7 +69,9 @@ class CustomerController extends Controller
       $rules['g-recaptcha-response'] = 'required|captcha';
     }
 
-    $messages = [];
+    $messages = [
+      'email.unique' => 'Ese correo ya está registrado. ¿Querés iniciar sesión?',
+    ];
 
     if ($info->google_recaptcha_status == 1) {
       $messages['g-recaptcha-response.required'] = 'Please verify that you are not a robot.';
@@ -139,7 +141,7 @@ class CustomerController extends Controller
 
       $mail->send();
 
-      Session::flash('success', 'A verification mail has been sent to your email address.');
+      Session::flash('success', '¡Listo! Te mandamos un mail de verificación. Revisá tu bandeja de entrada y, por las dudas, también la carpeta de spam o correo no deseado.');
     } catch (Exception $e) {
       Session::flash('error', 'Mail could not be sent!');
     }
@@ -158,15 +160,12 @@ class CustomerController extends Controller
         'verification_token' => null
       ]);
 
-      Session::flash('success', 'Your email has verified.');
       // after email verification, authenticate this customer
       Auth::guard('customer')->login($customer);
 
-      return redirect()->route('customer.dashboard');
+      return view('frontend.customer.signup-verify', ['status' => 'success']);
     } catch (ModelNotFoundException $e) {
-      Session::flash('error', 'Could not verify your email!');
-
-      return redirect()->route('customer.signup');
+      return view('frontend.customer.signup-verify', ['status' => 'error']);
     }
   }
 

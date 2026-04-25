@@ -312,7 +312,13 @@ class EventController extends Controller
       $information['relatedOrganizers'] = $relatedOrganizers;
 
       // SEO / Open Graph
-      $rawDescription = trim(preg_replace('/\s+/u', ' ', strip_tags($content->description ?? '')));
+      $cleanText = function ($value) {
+        return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+      };
+      $normalizedTitle = $cleanText($content->title);
+      $rawDescription = $cleanText($content->description);
+      $rawMetaDescription = $cleanText($content->meta_description);
+      $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
       $seoParts = [];
       $locationText = $content->event_type == 'online'
         ? __('Evento online')
@@ -321,8 +327,8 @@ class EventController extends Controller
         ? \Carbon\Carbon::parse($statusMeta['start_date_time'], $websiteTimezone)->locale('es')->translatedFormat('j \d\e F \d\e Y')
         : null;
 
-      if (!empty($content->meta_description)) {
-        $seoDescription = trim(preg_replace('/\s+/u', ' ', strip_tags($content->meta_description)));
+      if ($rawMetaDescription !== '' && !Str::contains(Str::lower($rawMetaDescription), $placeholderPatterns)) {
+        $seoDescription = $rawMetaDescription;
       } else {
         if ($rawDescription !== '') {
           $seoParts[] = $rawDescription;
@@ -334,22 +340,27 @@ class EventController extends Controller
           $seoParts[] = __('Fecha: :date', ['date' => $eventDateText]);
         }
 
-        $seoDescription = Str::limit(implode('. ', $seoParts), 160, '');
+        $seoDescription = Str::limit(implode('. ', $seoParts), 158, '');
       }
 
       if ($seoDescription === '') {
-        $seoDescription = trim($content->title . ' | ' . __('Comprá entradas y descubrí toda la información del evento en Tukipass.'));
+        $seoDescription = __(':title es un evento :mode en TukiPass. Reservá tu lugar para :date y accedé a la información del evento.', [
+          'title' => $normalizedTitle,
+          'mode' => $content->event_type == 'online' ? __('online') : __('presencial'),
+          'date' => $eventDateText ?: __('próximamente'),
+        ]);
+        $seoDescription = Str::limit($cleanText($seoDescription), 158, '');
       }
       $officialEventUrl = route('event.details', ['slug' => $content->eventSlug, 'id' => $content->id], true);
       $ogImage = $images->isNotEmpty()
         ? asset('assets/admin/img/event-gallery/' . $images->first()->image)
         : asset('assets/admin/img/event/thumbnail/' . $content->thumbnail);
 
-      $information['seo_title'] = $content->title;
-      $information['og_title'] = $content->title . ' | ' . $websiteTitle;
+      $information['seo_title'] = $normalizedTitle;
+      $information['og_title'] = $normalizedTitle . ' | ' . $websiteTitle;
       $information['og_description'] = $seoDescription;
       $information['og_image'] = $ogImage;
-      $information['og_image_alt'] = $content->title . ' — ' . __('evento en Tukipass');
+      $information['og_image_alt'] = $normalizedTitle . ' — ' . __('evento en Tukipass');
       $information['og_url'] = $officialEventUrl;
       $information['canonical'] = $officialEventUrl;
       $information['event_currency'] = $baseCurrencyText;

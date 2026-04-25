@@ -24,12 +24,21 @@
 
 @push('scripts')
 @php
-  $schemaStartDate = !empty($startDateTime)
-    ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)->toIso8601String()
+  $schemaStart = !empty($startDateTime)
+    ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)
     : null;
-  $schemaEndDate = !empty($endDateTime)
-    ? \Carbon\Carbon::parse($endDateTime, $websiteTimezone ?? $websiteInfo->timezone)->toIso8601String()
+  $schemaEnd = !empty($endDateTime)
+    ? \Carbon\Carbon::parse($endDateTime, $websiteTimezone ?? $websiteInfo->timezone)
     : null;
+
+  if (!empty($schemaStart) && !empty($schemaEnd)) {
+    if ($schemaEnd->lessThanOrEqualTo($schemaStart) || $schemaStart->diffInDays($schemaEnd) > 31) {
+      $schemaEnd = null;
+    }
+  }
+
+  $schemaStartDate = !empty($schemaStart) ? $schemaStart->toIso8601String() : null;
+  $schemaEndDate = !empty($schemaEnd) ? $schemaEnd->toIso8601String() : null;
   $schemaDescription = $og_description ?? trim(preg_replace('/\s+/u', ' ', strip_tags($content->description ?? '')));
   $schemaLocationName = collect([$content->address, $content->city, $content->state, $content->country])->filter()->implode(', ');
   $schemaLocation = null;

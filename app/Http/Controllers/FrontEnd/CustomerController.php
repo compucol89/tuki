@@ -104,7 +104,7 @@ class CustomerController extends Controller
       ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
       ->first();
 
-    $link = '<a href=' . url("customer/signup-verify/" . $token) . '>Click Here</a>';
+    $link = url("customer/signup-verify/" . $token);
 
     $mailBody = str_replace('{username}', $request->fname . ' ' . $request->lname, $mailBody);
     $mailBody = str_replace('{verification_link}', $link, $mailBody);

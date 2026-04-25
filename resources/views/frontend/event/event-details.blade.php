@@ -44,6 +44,239 @@
 
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
+  <style>
+    .ed-breadcrumbs {
+      padding: 18px 0 0;
+    }
+
+    .ed-breadcrumbs__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .ed-breadcrumbs__list a {
+      color: #1e2532;
+      text-decoration: none;
+    }
+
+    .ed-breadcrumbs__current {
+      color: #f97316;
+      font-weight: 700;
+    }
+
+    .ed-breadcrumbs__sep {
+      opacity: 0.5;
+    }
+
+    .ed-hero__commerce {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px 18px;
+      margin-top: 22px;
+    }
+
+    .ed-hero__pricebox {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      min-width: 180px;
+    }
+
+    .ed-hero__pricebox-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.78;
+    }
+
+    .ed-hero__pricebox-value {
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .ed-hero__cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .ed-hero__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      text-decoration: none !important;
+      transition: all 0.2s ease;
+    }
+
+    .ed-hero__cta--primary {
+      background: #C2410C;
+      color: #fff;
+      box-shadow: 0 16px 30px rgba(194, 65, 12, 0.24);
+    }
+
+    .ed-hero__cta--primary:hover {
+      color: #fff;
+      background: #9A3412;
+      transform: translateY(-1px);
+    }
+
+    .ed-hero__cta--secondary {
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .ed-hero__cta--secondary:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .ed-mobile-bar {
+      display: none;
+    }
+
+    .ed-hero__btn,
+    .quantity-input button {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quantity {
+      min-height: 44px;
+    }
+
+    .ed-hero__btn:focus-visible,
+    .ed-hero__cta:focus-visible,
+    .ed-buy-btn:focus-visible,
+    .ed-mobile-bar__cta:focus-visible,
+    .ei-org__link:focus-visible,
+    .ei-cal__btn:focus-visible,
+    .quantity-input button:focus-visible,
+    .quantity:focus-visible,
+    .ed-breadcrumbs__list a:focus-visible,
+    .read-more-btn:focus-visible {
+      outline: 3px solid #1e2532;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9);
+    }
+
+    @media (max-width: 991.98px) {
+      .ed-hero__commerce {
+        align-items: stretch;
+      }
+
+      .ed-hero__pricebox,
+      .ed-hero__cta-group {
+        width: 100%;
+      }
+
+      .ed-hero__cta-group {
+        flex-direction: column;
+      }
+
+      .ed-hero__cta {
+        width: 100%;
+      }
+
+      .page-event-detail .ed-body {
+        padding-bottom: 108px;
+      }
+
+      .ed-mobile-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1050;
+        display: block;
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+        background: rgba(255, 255, 255, 0.97);
+        border-top: 1px solid rgba(30, 37, 50, 0.08);
+        box-shadow: 0 -12px 28px rgba(30, 37, 50, 0.14);
+        backdrop-filter: blur(12px);
+      }
+
+      .ed-mobile-bar__inner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .ed-mobile-bar__price {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ed-mobile-bar__label {
+        font-size: 11px;
+        line-height: 1.2;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+      }
+
+      .ed-mobile-bar__value {
+        font-size: 20px;
+        line-height: 1.1;
+        font-weight: 800;
+        color: #1e2532;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ed-mobile-bar__cta {
+        flex: 1 1 auto;
+        min-height: 48px;
+        border-radius: 999px;
+        background: #C2410C;
+        color: #fff !important;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none !important;
+      }
+
+      .ed-mobile-bar__cta--disabled {
+        background: #9ca3af;
+        pointer-events: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ed-hero__cta,
+      .ed-gallery-main__img,
+      .skip-link {
+        transition: none !important;
+      }
+
+      html:focus-within {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
 @endsection
 
 @push('scripts')
@@ -186,6 +419,35 @@ ttq.page();
     $eventDescriptionHtml = preg_replace('/<\s*h1\b/i', '<h2', $eventDescriptionHtml);
     $eventDescriptionHtml = preg_replace('/<\s*\/\s*h1\s*>/i', '</h2>', $eventDescriptionHtml);
   @endphp
+  @php
+    if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price'])) {
+      $heroPriceLabel = __('Gratis');
+    } elseif($ticketSummary['min_ticket_price'] == 0 && $ticketSummary['max_ticket_price'] > 0) {
+      $heroPriceLabel = __('Gratis') . ' — ' . symbolPrice($ticketSummary['max_ticket_price']);
+    } elseif($ticketSummary['min_ticket_price'] == 0) {
+      $heroPriceLabel = __('Gratis');
+    } elseif($ticketSummary['has_price_range']) {
+      $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']) . ' — ' . symbolPrice($ticketSummary['max_ticket_price']);
+    } else {
+      $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']);
+    }
+  @endphp
+
+  <div class="container ed-breadcrumbs">
+    <nav aria-label="{{ __('Breadcrumb') }}">
+      <ol class="ed-breadcrumbs__list">
+        <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
+        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+        <li><a href="{{ route('events') }}">{{ __('Eventos') }}</a></li>
+        @if (!empty($content->name))
+          <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+          <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
+        @endif
+        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+        <li class="ed-breadcrumbs__current" aria-current="page">{{ $content->title }}</li>
+      </ol>
+    </nav>
+  </div>
 
   {{-- Hero --}}
   <div class="ed-hero">
@@ -209,14 +471,14 @@ ttq.page();
         @endif
         <a href="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}"
           class="ed-hero__btn {{ $checkWishList == true ? 'text-success' : '' }}"
-          aria-label="{{ $checkWishList ? __('Remove from wishlist') : __('Add to wishlist') }}">
+          aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
           <i class="fas fa-bookmark"></i>
         </a>
-        <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Share event') }}">
+        <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Compartir evento') }}">
           <i class="fas fa-share-alt"></i>
         </button>
         @if ($content->event_type != 'online' && !empty($map_address))
-          <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".bd-example-modal-lg" aria-label="{{ __('Map') }}">
+          <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".bd-example-modal-lg" aria-label="{{ __('Ver mapa') }}">
             <i class="fas fa-map-marker-alt"></i>
           </button>
         @endif
@@ -234,11 +496,6 @@ ttq.page();
               </span>
               <span class="ed-viewer-counter__num">{{ $ev_viewers }}</span>
               <span class="ed-viewer-counter__label">{{ __('personas viendo ahora') }}</span>
-            </div>
-
-            <div class="ed-nudge" role="status" aria-live="polite" id="edNudge">
-              <span class="ed-nudge__icon" aria-hidden="true" id="edNudgeIcon"></span>
-              <span class="ed-nudge__text" id="edNudgeText"></span>
             </div>
           </div>
         @endif
@@ -271,67 +528,33 @@ ttq.page();
             </span>
           @endif
         </div>
+
+        <div class="ed-hero__commerce">
+          <div class="ed-hero__pricebox">
+            <span class="ed-hero__pricebox-label">{{ __('Entradas desde') }}</span>
+            <strong class="ed-hero__pricebox-value" dir="ltr">{{ $heroPriceLabel }}</strong>
+          </div>
+
+          <div class="ed-hero__cta-group">
+            <a href="#event-booking-card" class="ed-hero__cta ed-hero__cta--primary" data-scroll-target="#event-booking-card">
+              {{ __('Reservar mi lugar') }}
+            </a>
+            <a href="#event-booking-card" class="ed-hero__cta ed-hero__cta--secondary" data-scroll-target="#event-booking-card">
+              {{ __('Ver entradas') }}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   {{-- /Hero --}}
 
-  <section class="ed-body">
+  <section class="ed-body" id="main-content" tabindex="-1">
     <div class="container">
       <div class="row">
 
         {{-- Left column --}}
         <div class="col-lg-8">
-
-	          {{-- Gallery card --}}
-	          @if($images->count() > 0)
-	          <div class="ed-card ed-card--gallery">
-	            <div class="ed-gallery-wrap">
-	              {{-- Main image --}}
-	              <div class="ed-gallery-main">
-	                <button type="button" class="ed-gallery-main__link" id="edMainLink" aria-label="{{ __('Abrir galería del evento') }}">
-	                  <img id="edMainImg"
-	                       src="{{ asset('assets/admin/img/event-gallery/' . $images->first()->image) }}"
-	                       alt="{{ $content->title }}"
-	                       class="ed-gallery-main__img">
-	                  <span class="ed-gallery-main__overlay" aria-hidden="true">
-	                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-	                  </span>
-	                  @if($images->count() > 1)
-	                  <div class="ed-gallery-count">
-	                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-	                    {{ $images->count() }} {{ __('fotos') }}
-	                  </div>
-	                  @endif
-	                </button>
-	              </div>
-              {{-- Thumbnail strip --}}
-              @if($images->count() > 1)
-              <div class="ed-gallery-thumbs" id="edGalleryThumbs">
-                @foreach($images as $i => $item)
-                <button type="button"
-                        class="ed-gallery-thumb {{ $i === 0 ? 'ed-gallery-thumb--active' : '' }}"
-                        data-src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
-                        data-action="thumb-switch">
-                  <img src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
-                       alt="{{ $content->title }} — foto {{ $i + 1 }}">
-                </button>
-                @endforeach
-              </div>
-              @endif
-              {{-- Links ocultos para MagnificPopup --}}
-              <div id="edGalleryLinks" style="display:none">
-                @foreach($images as $item)
-                <a href="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
-                   class="ed-gallery-popup-link"
-                   aria-label="{{ $content->title }} — abrir imagen de galería">
-                  <span class="sr-only">{{ $content->title }} — abrir imagen de galería</span>
-                </a>
-                @endforeach
-              </div>
-            </div>
-          </div>
-	          @endif
 
 	          @php $summaryDate = \Carbon\Carbon::parse($startDateTime)->timezone($websiteInfo->timezone); @endphp
 
@@ -345,24 +568,24 @@ ttq.page();
 	            <div class="ed-card__body">
 	              <div class="ed-summary-grid">
 	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ $content->date_type == 'multiple' ? __('Próxima fecha') : __('Fecha y hora') }}</span>
-	                  <strong class="ed-summary-item__value">{{ ucfirst($summaryDate->translatedFormat('l j \\d\\e F')) }}</strong>
+	                  <span class="ed-summary-item__label">{{ __('Horario') }}</span>
+	                  <strong class="ed-summary-item__value">{{ $summaryDate->format('H:i') }}</strong>
 	                  <span class="ed-summary-item__meta">{{ $summaryDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
 	                </div>
 	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ __('Modalidad') }}</span>
-	                  <strong class="ed-summary-item__value">{{ $content->event_type == 'online' ? __('Online') : __('Presencial') }}</strong>
-	                  <span class="ed-summary-item__meta">{{ $content->event_type == 'online' ? __('Acceso digital') : __('Asistencia en locación') }}</span>
+	                  <span class="ed-summary-item__label">{{ __('Precio') }}</span>
+	                  <strong class="ed-summary-item__value" dir="ltr">{{ $heroPriceLabel }}</strong>
+	                  <span class="ed-summary-item__meta">{{ $over ? __('Venta cerrada') : __('Venta abierta') }}</span>
 	                </div>
 	                <div class="ed-summary-item">
-	                  <span class="ed-summary-item__label">{{ __('Ubicación') }}</span>
-	                  <strong class="ed-summary-item__value">{{ $summaryLocation ?: __('A confirmar') }}</strong>
+	                  <span class="ed-summary-item__label">{{ __('Acceso') }}</span>
+	                  <strong class="ed-summary-item__value">{{ $content->event_type == 'online' ? __('Online') : __('Presencial') }}</strong>
 	                  <span class="ed-summary-item__meta">{{ $content->event_type == 'online' ? __('Participá desde cualquier lugar') : __('Revisá el mapa y dirección') }}</span>
 	                </div>
 	                <div class="ed-summary-item">
 	                  <span class="ed-summary-item__label">{{ __('Organiza') }}</span>
 	                  <strong class="ed-summary-item__value">{{ $summaryOrganizer }}</strong>
-	                  <span class="ed-summary-item__meta">{{ __('Entradas gestionadas con Tukipass') }}</span>
+	                  <span class="ed-summary-item__meta">{{ $content->date_type == 'multiple' ? __('Elegí la fecha que mejor te quede') : __('Reservá online en pocos pasos') }}</span>
 	                </div>
 	              </div>
                 @if (
@@ -372,56 +595,32 @@ ttq.page();
                 )
                 <div class="ed-summary-signals">
                   <div class="ed-signal-grid">
-                      @if ($startDateTime >= $nowTime)
+                    @if ($startDateTime >= $nowTime)
                       @php
-                          $dt = Carbon\Carbon::parse($startDateTime);
-                          $days_until = (int) \Carbon\Carbon::now()->diffInDays($dt);
-                          $year = $dt->year; $month = $dt->month; $day = $dt->day;
-                          $end_time = Carbon\Carbon::parse($startDateTime);
-                          $hour = $end_time->hour; $minute = $end_time->minute;
-                          $now = str_replace('+00:00', '.000' . timeZoneOffset($websiteInfo->timezone) . '00:00', gmdate('c'));
-                        @endphp
+                        $dt = Carbon\Carbon::parse($startDateTime);
+                        $days_until = (int) \Carbon\Carbon::now()->diffInDays($dt);
+                        $year = $dt->year; $month = $dt->month; $day = $dt->day;
+                        $end_time = Carbon\Carbon::parse($startDateTime);
+                        $hour = $end_time->hour; $minute = $end_time->minute;
+                        $now = str_replace('+00:00', '.000' . timeZoneOffset($websiteInfo->timezone) . '00:00', gmdate('c'));
+                      @endphp
+                      <div class="ed-countdown-wrap">
+                        <p class="ed-countdown-label">
+                          {{ $days_until <= 14 ? __('El evento comienza en') : __('Fecha del evento') }}
+                        </p>
                         @if ($days_until <= 14)
-                          <div class="ed-countdown-wrap">
-                            <p class="ed-countdown-label">{{ __('El evento comienza en') }}</p>
-                            <div class="count-down" dir="ltr">
-                              <div class="event-countdown" data-now="{{ $now }}" data-year="{{ $year }}"
-                                data-month="{{ $month }}" data-day="{{ $day }}"
-                                data-hour="{{ $hour }}" data-minute="{{ $minute }}"
-                                data-timezone="{{ timeZoneOffset($websiteInfo->timezone) }}">
-                              </div>
+                          <div class="count-down" dir="ltr">
+                            <div class="event-countdown" data-now="{{ $now }}" data-year="{{ $year }}"
+                              data-month="{{ $month }}" data-day="{{ $day }}"
+                              data-hour="{{ $hour }}" data-minute="{{ $minute }}"
+                              data-timezone="{{ timeZoneOffset($websiteInfo->timezone) }}">
                             </div>
                           </div>
                         @else
-                          <div class="ed-countdown-wrap">
-                            <p class="ed-countdown-label">{{ __('Fecha del evento') }}</p>
-                            <div class="count-down" dir="ltr">
-                              <div class="syotimer">
-                                <div class="syotimer__head"></div>
-                                <div class="syotimer__body">
-                                  <div class="syotimer-cell">
-                                    <div class="syotimer-cell__value">{{ $dt->format('d') }}</div>
-                                    <div class="syotimer-cell__unit">{{ $dt->translatedFormat('D') }}</div>
-                                  </div>
-                                  <div class="syotimer-cell">
-                                    <div class="syotimer-cell__value">{{ $dt->translatedFormat('M') }}</div>
-                                    <div class="syotimer-cell__unit">{{ $dt->format('Y') }}</div>
-                                  </div>
-                                  <div class="syotimer-cell">
-                                    <div class="syotimer-cell__value">{{ $dt->format('H') }}</div>
-                                    <div class="syotimer-cell__unit">{{ __('hora') }}</div>
-                                  </div>
-                                  <div class="syotimer-cell">
-                                    <div class="syotimer-cell__value">{{ $dt->format('i') }}</div>
-                                    <div class="syotimer-cell__unit">{{ __('min') }}</div>
-                                  </div>
-                                </div>
-                                <div class="syotimer__footer"></div>
-                              </div>
-                            </div>
-                          </div>
+                          <p class="mb-0"><strong>{{ ucfirst($dt->translatedFormat('l j \\d\\e F \\a \\l\\a\\s H:i')) }}</strong></p>
                         @endif
-                        @elseif ($startDateTime <= $endDateTime && $endDateTime >= $nowTime)
+                      </div>
+                    @elseif ($startDateTime <= $endDateTime && $endDateTime >= $nowTime)
                       <div class="ed-status-pill ed-status-pill--running">
                         <span class="ed-status-pill__dot"></span> {{ __('El evento está en curso') }}
                       </div>
@@ -429,57 +628,12 @@ ttq.page();
                 </div>
                 </div>
                 @endif
-
-                @if (!$over)
-                <script>
-                (function(){
-                  var icons = {
-                    eye:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
-                    fire:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 23c-3.87 0-7-3.13-7-7 0-2.38 1.19-4.47 3-5.74C8 10.26 8.5 9.5 8.5 9.5S9.77 11 12 11c2.1 0 3.5-2 3.5-2s.5 1.5.5 3c0 3.87-3.13 7-7 7z"/><path d="M12 23c-1.66 0-3-1.34-3-3 0-1.1.58-2.06 1.46-2.6.35-.22.54-.08.54.3v.8c0 1.1.9 2 2 2s2-.9 2-2c0-.53-.21-1.01-.55-1.36A3.001 3.001 0 0012 23z" opacity=".6"/></svg>',
-                    zap:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-                    trending:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
-                    heart:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>',
-                    clock:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
-                    star:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-                    shield:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>',
-                    users:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>',
-                    calendar:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
-                    alert:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
-                  };
-                  var colors = {eye:'eye',fire:'fire',zap:'zap',trending:'trending',heart:'fire',clock:'zap',star:'trending',shield:'eye',users:'trending',calendar:'zap',alert:'alert'};
-                  var pool = {!! json_encode($ed_nudge_pool, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!};
-                  var idx = 0, wrap = document.getElementById('edNudge'), ic = document.getElementById('edNudgeIcon'), tx = document.getElementById('edNudgeText');
-                  function show(i){
-                    var n = pool[i];
-                    wrap.style.opacity='0';
-                    setTimeout(function(){
-                      ic.className='ed-nudge__icon ed-nudge__icon--'+colors[n.icon];
-                      ic.innerHTML=icons[n.icon]||'';
-                      tx.innerHTML=n.text;
-                      wrap.style.opacity='1';
-                    },250);
-                  }
-                  show(0);
-                  setInterval(function(){ idx=(idx+1)%pool.length; show(idx); }, 8000);
-                })();
-                </script>
-                @endif
 	            </div>
 	          </div>
 
-            @if ($spotifyEmbedUrl || $heroStatusLabel)
+            @if ($heroStatusLabel)
               <div class="ed-card ed-card--context">
                 <div class="ed-card__body">
-                  @if ($spotifyEmbedUrl)
-                    <div class="ed-spotify-embed">
-                      <iframe src="{{ $spotifyEmbedUrl }}"
-                        frameborder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy"
-                        title="{{ __('Spotify del evento') }}: {{ $content->title }}"></iframe>
-                    </div>
-                  @endif
-
                   <div class="ed-body-topline">
                     <a href="{{ route('events', ['category' => $content->slug]) }}" class="ed-body-chip ed-body-chip--category">
                       <i class="fas fa-tag"></i> {{ $content->name }}
@@ -506,12 +660,84 @@ ttq.page();
 	                <h2 class="ed-card__title">{{ __('Descripción') }}</h2>
 	              </div>
 	            </div>
-	            <div class="ed-card__body">
+	              <div class="ed-card__body">
 	              <div class="summernote-content">
                 {!! $eventDescriptionHtml !!}
               </div>
             </div>
           </div>
+
+          @if($images->count() > 0)
+          <div class="ed-card ed-card--gallery">
+            <div class="ed-card__head">
+              <div>
+                <span class="ed-card__eyebrow">{{ __('Contenido visual') }}</span>
+                <h2 class="ed-card__title">{{ __('Galería del evento') }}</h2>
+              </div>
+            </div>
+            <div class="ed-gallery-wrap">
+              <div class="ed-gallery-main">
+                <button type="button" class="ed-gallery-main__link" id="edMainLink" aria-label="{{ __('Abrir galería del evento') }}">
+                  <img id="edMainImg"
+                       src="{{ asset('assets/admin/img/event-gallery/' . $images->first()->image) }}"
+                       alt="{{ $content->title }}"
+                       class="ed-gallery-main__img">
+                  <span class="ed-gallery-main__overlay" aria-hidden="true">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  </span>
+                  @if($images->count() > 1)
+                  <div class="ed-gallery-count">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    {{ $images->count() }} {{ __('fotos') }}
+                  </div>
+                  @endif
+                </button>
+              </div>
+              @if($images->count() > 1)
+              <div class="ed-gallery-thumbs" id="edGalleryThumbs">
+                @foreach($images as $i => $item)
+                <button type="button"
+                        class="ed-gallery-thumb {{ $i === 0 ? 'ed-gallery-thumb--active' : '' }}"
+                        data-src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
+                        data-action="thumb-switch">
+                  <img src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
+                       alt="{{ $content->title }} — foto {{ $i + 1 }}">
+                </button>
+                @endforeach
+              </div>
+              @endif
+              <div id="edGalleryLinks" style="display:none">
+                @foreach($images as $item)
+                <a href="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
+                   class="ed-gallery-popup-link"
+                   aria-label="{{ $content->title }} — abrir imagen de galería">
+                  <span class="sr-only">{{ $content->title }} — abrir imagen de galería</span>
+                </a>
+                @endforeach
+              </div>
+            </div>
+          </div>
+          @endif
+
+          @if ($spotifyEmbedUrl)
+            <div class="ed-card ed-card--context">
+              <div class="ed-card__head">
+                <div>
+                  <span class="ed-card__eyebrow">{{ __('Ambiente del evento') }}</span>
+                  <h2 class="ed-card__title">{{ __('Escuchá el playlist') }}</h2>
+                </div>
+              </div>
+              <div class="ed-card__body">
+                <div class="ed-spotify-embed">
+                  <iframe src="{{ $spotifyEmbedUrl }}"
+                    frameborder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    title="{{ __('Spotify del evento') }}: {{ $content->title }}"></iframe>
+                </div>
+              </div>
+            </div>
+          @endif
 
           {{-- Map card --}}
           @if ($content->event_type != 'online' && !empty($map_address))
@@ -583,7 +809,7 @@ ttq.page();
           <div class="sidebar-sticky">
 
             {{-- CARD 1: Ticket form --}}
-            <div class="ed-ticket-card">
+            <div class="ed-ticket-card" id="event-booking-card">
               <div class="ed-ticket-card__head">
                 {{-- Status pill --}}
                 <div class="ed-head-top">
@@ -729,6 +955,7 @@ ttq.page();
                               -
                             </button>
                             <input class="quantity" type="number" readonly value="1"
+                              aria-label="{{ __('Cantidad de entradas para') }} {{ __('entrada') }}"
                               data-price="{{ $calculate_price }}" data-max_buy_ticket="{{ $ticket->max_buy_ticket }}"
                               name="quantity" data-ticket_id="{{ $ticket->id }}" data-stock="{{ $stock }}"
                               data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
@@ -744,8 +971,8 @@ ttq.page();
                               $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
                             @endphp
                             @if (!$discount_date->isPast())
-                              <p>{{ __('Discount available') . ' ' }} :
-                                ({{ __('till') . ' ' }} :
+                              <p>{{ __('Descuento disponible') . ' ' }} :
+                                ({{ __('hasta') . ' ' }} :
                                 <span
                                   dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('d/m/Y H:i') }}</span>)
                               </p>
@@ -783,13 +1010,14 @@ ttq.page();
                       @endphp
                       <div class="price-count">
                         <h6>
-                          {{ __('Free') }}
+                          {{ __('Gratis') }}
                         </h6>
                         <div class="quantity-input">
                           <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
                             -
                           </button>
                           <input class="quantity" readonly type="number" value="1"
+                            aria-label="{{ __('Cantidad de entradas para') }} {{ __('entrada online') }}"
                             data-price="{{ $content->price }}" data-max_buy_ticket="{{ $max_buy_ticket }}"
                             name="quantity" data-ticket_id="{{ $ticket->id }}" data-stock="{{ $stock }}"
                             data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
@@ -835,8 +1063,8 @@ ttq.page();
                               </div>
                               @if (strlen(@$ticket_content->description) > 50)
                                 <div class="read-more-btn">
-                                  <span>{{ __('Read more') }}</span>
-                                  <span>{{ __('Read less') }}</span>
+                                  <span>{{ __('Ver más') }}</span>
+                                  <span>{{ __('Ver menos') }}</span>
                                 </div>
                               @endif
                             </div>
@@ -874,6 +1102,7 @@ ttq.page();
                                   -
                                 </button>
                                 <input class="quantity" readonly type="number" value="0"
+                                  aria-label="{{ __('Cantidad de entradas para') }} {{ __('entrada') }}"
                                   data-price="{{ $calculate_price }}"
                                   data-max_buy_ticket="{{ $ticket->max_buy_ticket }}" name="quantity[]"
                                   data-ticket_id="{{ $ticket->id }}" data-stock="{{ $stock }}"
@@ -889,8 +1118,8 @@ ttq.page();
                                   $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
                                 @endphp
                                 @if (!$discount_date->isPast())
-                                  <p>{{ __('Discount available') . ' ' }} :
-                                    ({{ __('till') . ' ' }} :
+                                  <p>{{ __('Descuento disponible') . ' ' }} :
+                                    ({{ __('hasta') . ' ' }} :
                                     <span
                                       dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('d/m/Y H:i') }}</span>)
                                   </p>
@@ -940,8 +1169,8 @@ ttq.page();
                                 </div>
                                 @if (strlen(@$ticket_content->description) > 50)
                                   <div class="read-more-btn">
-                                    <span>{{ __('Read more') }}</span>
-                                    <span>{{ __('Read less') }}</span>
+                                    <span>{{ __('Ver más') }}</span>
+                                    <span>{{ __('Ver menos') }}</span>
                                   </div>
                                 @endif
                               </div>
@@ -1003,6 +1232,7 @@ ttq.page();
                                     }
                                   @endphp
                                   <input type="number" value="0" class="quantity"
+                                    aria-label="{{ __('Cantidad para') }} {{ __('entrada') }} {{ __(@$varition_names[$key]['name'] ?: '') }}"
                                     data-price="{{ $calculate_price }}" data-max_buy_ticket="{{ $max_buy }}"
                                     data-name="{{ $item->name }}" name="quantity[]"
                                     data-ticket_id="{{ $ticket->id }}" readonly data-stock="{{ $stock }}"
@@ -1016,8 +1246,8 @@ ttq.page();
                                     $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
                                   @endphp
                                   @if (!$discount_date->isPast())
-                                    <p>{{ __('Discount available') . ' ' }} :
-                                      ({{ __('till') . ' ' }} :
+                                    <p>{{ __('Descuento disponible') . ' ' }} :
+                                      ({{ __('hasta') . ' ' }} :
                                       <span
                                         dir="ltr">{{ \Carbon\Carbon::parse($discount_date)->timezone($websiteInfo->timezone)->translatedFormat('d/m/Y H:i') }}</span>)
                                     </p>
@@ -1052,20 +1282,21 @@ ttq.page();
                               </div>
                               @if (strlen(@$ticket_content->description) > 50)
                                 <div class="read-more-btn">
-                                  <span>{{ __('Read more') }}</span>
-                                  <span>{{ __('Read less') }}</span>
+                                  <span>{{ __('Ver más') }}</span>
+                                  <span>{{ __('Ver menos') }}</span>
                                 </div>
                               @endif
                             </div>
                             <div class="price-count">
                               <h6>
-                                <span class="">{{ __('free') }}</span>
+                                <span class="">{{ __('Gratis') }}</span>
                               </h6>
                               <div class="quantity-input">
                                 <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
                                   -
                                 </button>
                                 <input class="quantity" data-max_buy_ticket="{{ $ticket->max_buy_ticket }}"
+                                  aria-label="{{ __('Cantidad de entradas para') }} {{ __('entrada') }}"
                                   type="number" value="0" data-price="{{ $ticket->price }}" name="quantity[]"
                                   data-ticket_id="{{ $ticket->id }}" readonly data-stock="{{ $stock }}"
                                   data-purchase="{{ $purchase['status'] }}" data-p_qty="{{ $purchase['p_qty'] }}">
@@ -1211,6 +1442,22 @@ ttq.page();
   </section>
   <!-- Event Details V2 End -->
 
+  <div class="ed-mobile-bar d-lg-none" aria-label="{{ __('Acceso rápido a la compra') }}">
+    <div class="container">
+      <div class="ed-mobile-bar__inner">
+        <div class="ed-mobile-bar__price">
+          <span class="ed-mobile-bar__label">{{ __('Entradas desde') }}</span>
+          <strong class="ed-mobile-bar__value" id="mobileStickyPrice">{{ $heroPriceLabel }}</strong>
+        </div>
+        <a href="#event-booking-card"
+          class="ed-mobile-bar__cta {{ $over ? 'ed-mobile-bar__cta--disabled' : '' }}"
+          data-scroll-target="#event-booking-card">
+          {{ $over ? __('Evento finalizado') : __('Reservar mi lugar') }}
+        </a>
+      </div>
+    </div>
+  </div>
+
   {{-- ── EVENTOS RELACIONADOS ── --}}
 @endsection
 @section('modals')
@@ -1234,6 +1481,15 @@ document.addEventListener('click', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
   var symL = '{{ $basicInfo->base_currency_symbol_position == "left"  ? addslashes($basicInfo->base_currency_symbol) : "" }}';
   var symR = '{{ $basicInfo->base_currency_symbol_position == "right" ? addslashes($basicInfo->base_currency_symbol) : "" }}';
+  var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-scroll-target]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      var target = document.querySelector(link.getAttribute('data-scroll-target'));
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
 
   function recalcTotal() {
     var total = 0;
@@ -1245,10 +1501,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var elTotal   = document.getElementById('total_price');
     var elHidden  = document.getElementById('total');
     var elRecap   = document.getElementById('edRecapPrice');
+    var elMobile  = document.getElementById('mobileStickyPrice');
     var formatted = total > 0 ? total.toFixed(2) : '0';
     if (elTotal)  elTotal.textContent = formatted;
     if (elHidden) elHidden.value      = formatted;
     if (elRecap)  elRecap.textContent = total > 0 ? ' · ' + symL + formatted + symR : '';
+    if (elMobile) elMobile.textContent = total > 0 ? (symL + formatted + symR) : {!! json_encode($heroPriceLabel, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!};
   }
 
   /* Ejecutar al cargar */

@@ -58,6 +58,25 @@
   @includeIf('frontend.partials.styles')
   @yield('custom-style')
   @stack('styles')
+  <style>
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 2000;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: #1e2532;
+      color: #fff;
+      text-decoration: none;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 16px;
+      color: #fff;
+    }
+  </style>
   {{-- Prerender sólo "Sobre nosotros" (/sobre-nosotros): hover / intención, sin masificar todo el sitio --}}
   <script type="speculationrules">
   {
@@ -77,6 +96,7 @@
 </head>
 
 <body class="@yield('body-class')">
+  <a href="#main-content" class="skip-link">{{ __('Saltar al contenido principal') }}</a>
   <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
     <symbol id="icon-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 9v11a2 2 0 002 2h16a2 2 0 002-2V9"/><path d="M9 21V9"/></symbol>
     <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></symbol>

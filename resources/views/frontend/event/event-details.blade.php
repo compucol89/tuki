@@ -52,21 +52,21 @@
     .ed-breadcrumbs__list {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: var(--tuki-space-2);
       margin: 0;
       padding: 0;
       list-style: none;
-      font-size: 14px;
-      color: #6b7280;
+      font-size: var(--tuki-text-sm);
+      color: var(--tuki-muted);
     }
 
     .ed-breadcrumbs__list a {
-      color: #1e2532;
+      color: var(--tuki-dark);
       text-decoration: none;
     }
 
     .ed-breadcrumbs__current {
-      color: #f97316;
+      color: var(--tuki-primary);
       font-weight: 700;
     }
 
@@ -78,7 +78,7 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 14px 18px;
+      gap: 14px var(--tuki-radius-lg);
       margin-top: 22px;
     }
 
@@ -87,22 +87,22 @@
       flex-direction: column;
       gap: 2px;
       padding: 14px 18px;
-      border-radius: 18px;
+      border-radius: var(--tuki-radius-lg);
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(10px);
-      color: #fff;
+      color: var(--tuki-surface);
       min-width: 180px;
     }
 
     .ed-hero__pricebox-label {
-      font-size: 12px;
+      font-size: var(--tuki-text-xs);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       opacity: 0.78;
     }
 
     .ed-hero__pricebox-value {
-      font-size: 28px;
+      font-size: var(--tuki-text-3xl);
       line-height: 1.1;
       font-weight: 800;
     }
@@ -110,7 +110,7 @@
     .ed-hero__cta-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: var(--tuki-space-3);
     }
 
     .ed-hero__cta {
@@ -119,32 +119,32 @@
       justify-content: center;
       min-height: 50px;
       padding: 0 22px;
-      border-radius: 999px;
+      border-radius: var(--tuki-radius-full);
       font-weight: 700;
       text-decoration: none !important;
-      transition: all 0.2s ease;
+      transition: all var(--tuki-transition-base);
     }
 
     .ed-hero__cta--primary {
-      background: #C2410C;
-      color: #fff;
+      background: var(--tuki-primary-accessible);
+      color: var(--tuki-surface);
       box-shadow: 0 16px 30px rgba(194, 65, 12, 0.24);
     }
 
     .ed-hero__cta--primary:hover {
-      color: #fff;
-      background: #9A3412;
+      color: var(--tuki-surface);
+      background: var(--tuki-primary-hover);
       transform: translateY(-1px);
     }
 
     .ed-hero__cta--secondary {
       border: 1px solid rgba(255, 255, 255, 0.38);
-      color: #fff;
+      color: var(--tuki-surface);
       background: rgba(255, 255, 255, 0.08);
     }
 
     .ed-hero__cta--secondary:hover {
-      color: #fff;
+      color: var(--tuki-surface);
       background: rgba(255, 255, 255, 0.14);
     }
 
@@ -166,10 +166,10 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      border-radius: 24px;
+      border-radius: var(--tuki-radius-xl);
       overflow: hidden;
-      background: #fff;
-      box-shadow: 0 18px 40px rgba(30, 37, 50, 0.08);
+      background: var(--tuki-surface);
+      box-shadow: 0 18px 40px rgba(var(--tuki-dark-rgb), 0.08);
       text-decoration: none !important;
       color: inherit;
     }
@@ -178,14 +178,14 @@
       width: 100%;
       aspect-ratio: 16 / 10;
       object-fit: cover;
-      background: #f3f4f6;
+      background: var(--tuki-border-light);
     }
 
     .ed-related__body {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 18px;
+      padding: var(--tuki-radius-lg);
     }
 
     .ed-related__meta {
@@ -193,14 +193,14 @@
       flex-wrap: wrap;
       gap: 8px 12px;
       font-size: 13px;
-      color: #6b7280;
+      color: var(--tuki-muted);
     }
 
     .ed-related__title {
       margin: 0;
-      font-size: 20px;
+      font-size: var(--tuki-text-xl);
       line-height: 1.3;
-      color: #1e2532;
+      color: var(--tuki-dark);
     }
 
     .ed-related__desc {
@@ -215,11 +215,11 @@
       gap: 12px;
       margin-top: auto;
       font-weight: 700;
-      color: #1e2532;
+      color: var(--tuki-dark);
     }
 
     .ed-related__price {
-      color: #C2410C;
+      color: var(--tuki-primary-accessible);
     }
 
     .ed-hero__btn,
@@ -245,9 +245,9 @@
     .quantity:focus-visible,
     .ed-breadcrumbs__list a:focus-visible,
     .read-more-btn:focus-visible {
-      outline: 3px solid #1e2532;
+      outline: 3px solid var(--tuki-dark);
       outline-offset: 3px;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9);
+      box-shadow: var(--tuki-shadow-focus);
     }
 
     html {
@@ -281,12 +281,12 @@
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 1050;
+        z-index: var(--tuki-z-modal);
         display: block;
         padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
         background: rgba(255, 255, 255, 0.97);
-        border-top: 1px solid rgba(30, 37, 50, 0.08);
-        box-shadow: 0 -12px 28px rgba(30, 37, 50, 0.14);
+        border-top: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
+        box-shadow: 0 -12px 28px rgba(var(--tuki-dark-rgb), 0.14);
         backdrop-filter: blur(12px);
       }
 
@@ -307,14 +307,14 @@
         line-height: 1.2;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: #6b7280;
+        color: var(--tuki-muted);
       }
 
       .ed-mobile-bar__value {
-        font-size: 20px;
+        font-size: var(--tuki-text-xl);
         line-height: 1.1;
         font-weight: 800;
-        color: #1e2532;
+        color: var(--tuki-dark);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -323,9 +323,9 @@
       .ed-mobile-bar__cta {
         flex: 1 1 auto;
         min-height: 48px;
-        border-radius: 999px;
-        background: #C2410C;
-        color: #fff !important;
+        border-radius: var(--tuki-radius-full);
+        background: var(--tuki-primary-accessible);
+        color: var(--tuki-surface) !important;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
@@ -334,7 +334,7 @@
       }
 
       .ed-mobile-bar__cta--disabled {
-        background: #9ca3af;
+        background: var(--tuki-muted-light);
         pointer-events: none;
       }
 

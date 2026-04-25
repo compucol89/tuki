@@ -2,21 +2,45 @@
 
 @section('body-class', 'page-event-detail')
 
-@section('pageHeading')
-  {{ $seo_title ?? $content->title }}
-@endsection
+@php
+  $cleanSeoText = function ($value) {
+    return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+  };
 
+  $eventName = $cleanSeoText($content->title);
+  $eventUrl = $canonical ?? route('event.details', ['slug' => $content->eventSlug ?? $content->slug, 'id' => $content->id], true);
+  $eventMode = $content->event_type == 'online' ? 'online' : 'presencial';
+  $eventDateLabel = !empty($startDateTime)
+    ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)->locale('es')->translatedFormat('j \d\e F \d\e Y')
+    : 'próximamente';
+
+  $metaDescriptionSource = $cleanSeoText($content->meta_description ?? '');
+  $descriptionSource = $cleanSeoText($content->description ?? '');
+  $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
+
+  if ($metaDescriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($metaDescriptionSource), $placeholderPatterns)) {
+    $seoDescription = $metaDescriptionSource;
+  } elseif ($descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns)) {
+    $seoDescription = $descriptionSource;
+  } else {
+    $seoDescription = "{$eventName} es un evento {$eventMode} en TukiPass. Reservá tu lugar para el {$eventDateLabel} y accedé a toda la información.";
+  }
+
+  $seoDescription = \Illuminate\Support\Str::limit($cleanSeoText($seoDescription), 158, '');
+@endphp
+
+@section('pageHeading', $eventName)
 @section('meta-keywords', $content->meta_keywords ?? '')
-@section('meta-description', $og_description ?? '')
-@section('og-title', $og_title ?? $content->title)
-@section('og-description', $og_description ?? '')
+@section('meta-description', $seoDescription)
+@section('og-title', $eventName . ' | ' . $websiteInfo->website_title)
+@section('og-description', $seoDescription)
 @section('og-image', $og_image ?? asset('assets/admin/img/event/thumbnail/' . $content->thumbnail))
-@section('og-image-alt', $og_image_alt ?? $content->title)
+@section('og-image-alt', $og_image_alt ?? $eventName)
 @section('og-image-width', '1200')
 @section('og-image-height', '630')
-@section('og-url', $og_url ?? url()->current())
+@section('og-url', $eventUrl)
 @section('og-type', 'event')
-@section('canonical', $canonical ?? url()->current())
+@section('canonical', $eventUrl)
 
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
@@ -39,14 +63,14 @@
 
   $schemaStartDate = !empty($schemaStart) ? $schemaStart->toIso8601String() : null;
   $schemaEndDate = !empty($schemaEnd) ? $schemaEnd->toIso8601String() : null;
-  $schemaDescription = $og_description ?? trim(preg_replace('/\s+/u', ' ', strip_tags($content->description ?? '')));
+  $schemaDescription = $seoDescription;
   $schemaLocationName = collect([$content->address, $content->city, $content->state, $content->country])->filter()->implode(', ');
   $schemaLocation = null;
 
   if ($content->event_type == 'online') {
     $schemaLocation = [
       '@type' => 'VirtualLocation',
-      'url' => $canonical ?? ($og_url ?? url()->current()),
+      'url' => $eventUrl,
       'name' => __('Evento online'),
     ];
   } elseif ($schemaLocationName !== '') {
@@ -67,7 +91,7 @@
   $jsonLd = [
     '@context' => 'https://schema.org',
     '@type' => 'Event',
-    'name' => $content->title,
+    'name' => $eventName,
     'description' => \Illuminate\Support\Str::limit($schemaDescription, 300, ''),
     'startDate' => $schemaStartDate,
     'endDate' => $schemaEndDate,
@@ -75,7 +99,7 @@
     'eventAttendanceMode' => 'https://schema.org/' . ($content->event_type == 'online' ? 'OnlineEventAttendanceMode' : 'OfflineEventAttendanceMode'),
     'location' => $schemaLocation,
     'image' => !empty($og_image) ? [$og_image] : null,
-    'url' => $canonical ?? ($og_url ?? url()->current()),
+    'url' => $eventUrl,
     'organizer' => [
       '@type' => 'Organization',
       'name' => !empty($organizer) ? $organizer->username : $websiteInfo->website_title,
@@ -93,7 +117,7 @@
       'price' => is_numeric($ticketSummary['min_ticket_price'] ?? null) ? $ticketSummary['min_ticket_price'] : 0,
       'priceCurrency' => $event_currency ?? 'ARS',
       'availability' => 'https://schema.org/InStock',
-      'url' => $canonical ?? ($og_url ?? url()->current()),
+      'url' => $eventUrl,
     ];
   }
   $jsonLd = array_filter($jsonLd, function ($value) {

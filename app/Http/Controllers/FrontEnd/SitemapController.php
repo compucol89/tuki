@@ -35,7 +35,7 @@ class SitemapController extends Controller
 
     $events = EventContent::join('events', 'events.id', '=', 'event_contents.event_id')
       ->where('events.status', 1)
-      ->whereDate('events.end_date_time', '>=', $this->now_date_time)
+      ->whereDate('events.end_date_time', '>=', now()->toDateString())
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
         return $query->where('event_contents.language_id', $defaultLanguageId);
       })

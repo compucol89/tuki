@@ -251,10 +251,11 @@ class EventController extends Controller
       }
 
       $basicSettings = DB::table('basic_settings')
-        ->select('timezone', 'website_title')
+        ->select('timezone', 'website_title', 'base_currency_text')
         ->first();
       $websiteTimezone = $basicSettings->timezone ?? config('app.timezone');
       $websiteTitle = $basicSettings->website_title ?? config('app.name');
+      $baseCurrencyText = $basicSettings->base_currency_text ?? 'ARS';
 
       $statusMeta = $this->buildEventStatusMeta($content, $websiteTimezone);
       $ticketSummary = $this->buildTicketSummary($content);
@@ -312,10 +313,34 @@ class EventController extends Controller
 
       // SEO / Open Graph
       $rawDescription = trim(preg_replace('/\s+/u', ' ', strip_tags($content->description ?? '')));
-      $seoDescription = trim($content->meta_description ?: Str::limit($rawDescription, 160, ''));
+      $seoParts = [];
+      $locationText = $content->event_type == 'online'
+        ? __('Evento online')
+        : collect([$content->city, $content->state, $content->country])->filter()->implode(', ');
+      $eventDateText = !empty($statusMeta['start_date_time'])
+        ? \Carbon\Carbon::parse($statusMeta['start_date_time'], $websiteTimezone)->locale('es')->translatedFormat('j \d\e F \d\e Y')
+        : null;
+
+      if (!empty($content->meta_description)) {
+        $seoDescription = trim(preg_replace('/\s+/u', ' ', strip_tags($content->meta_description)));
+      } else {
+        if ($rawDescription !== '') {
+          $seoParts[] = $rawDescription;
+        }
+        if (!empty($locationText)) {
+          $seoParts[] = __('Ubicación: :location', ['location' => $locationText]);
+        }
+        if (!empty($eventDateText)) {
+          $seoParts[] = __('Fecha: :date', ['date' => $eventDateText]);
+        }
+
+        $seoDescription = Str::limit(implode('. ', $seoParts), 160, '');
+      }
+
       if ($seoDescription === '') {
         $seoDescription = trim($content->title . ' | ' . __('Comprá entradas y descubrí toda la información del evento en Tukipass.'));
       }
+      $officialEventUrl = route('event.details', ['slug' => $content->eventSlug, 'id' => $content->id], true);
       $ogImage = $images->isNotEmpty()
         ? asset('assets/admin/img/event-gallery/' . $images->first()->image)
         : asset('assets/admin/img/event/thumbnail/' . $content->thumbnail);
@@ -325,8 +350,9 @@ class EventController extends Controller
       $information['og_description'] = $seoDescription;
       $information['og_image'] = $ogImage;
       $information['og_image_alt'] = $content->title . ' — ' . __('evento en Tukipass');
-      $information['og_url'] = url()->current();
-      $information['canonical'] = url()->current();
+      $information['og_url'] = $officialEventUrl;
+      $information['canonical'] = $officialEventUrl;
+      $information['event_currency'] = $baseCurrencyText;
 
       return view('frontend.event.event-details', $information);
     } catch (\Exception $th) {

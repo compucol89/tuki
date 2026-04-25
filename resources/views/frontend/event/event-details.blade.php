@@ -15,7 +15,7 @@
 @section('og-image-width', '1200')
 @section('og-image-height', '630')
 @section('og-url', $og_url ?? url()->current())
-@section('og-type', 'website')
+@section('og-type', 'event')
 @section('canonical', $canonical ?? url()->current())
 
 @section('custom-style')
@@ -31,6 +31,30 @@
     ? \Carbon\Carbon::parse($endDateTime, $websiteTimezone ?? $websiteInfo->timezone)->toIso8601String()
     : null;
   $schemaDescription = $og_description ?? trim(preg_replace('/\s+/u', ' ', strip_tags($content->description ?? '')));
+  $schemaLocationName = collect([$content->address, $content->city, $content->state, $content->country])->filter()->implode(', ');
+  $schemaLocation = null;
+
+  if ($content->event_type == 'online') {
+    $schemaLocation = [
+      '@type' => 'VirtualLocation',
+      'url' => $canonical ?? ($og_url ?? url()->current()),
+      'name' => __('Evento online'),
+    ];
+  } elseif ($schemaLocationName !== '') {
+    $schemaLocation = [
+      '@type' => 'Place',
+      'name' => $schemaLocationName,
+      'address' => array_filter([
+        '@type' => 'PostalAddress',
+        'streetAddress' => $content->address ?? '',
+        'addressLocality' => $content->city ?? '',
+        'addressRegion' => $content->state ?? '',
+        'postalCode' => $content->zip_code ?? '',
+        'addressCountry' => $content->country ?? '',
+      ]),
+    ];
+  }
+
   $jsonLd = [
     '@context' => 'https://schema.org',
     '@type' => 'Event',
@@ -40,26 +64,9 @@
     'endDate' => $schemaEndDate,
     'eventStatus' => 'https://schema.org/EventScheduled',
     'eventAttendanceMode' => 'https://schema.org/' . ($content->event_type == 'online' ? 'OnlineEventAttendanceMode' : 'OfflineEventAttendanceMode'),
-    'location' => $content->event_type == 'online'
-      ? [
-          '@type' => 'VirtualLocation',
-          'url' => $og_url ?? url()->current(),
-          'name' => __('Evento online'),
-        ]
-      : [
-          '@type' => 'Place',
-          'name' => $content->address ?: collect([$content->city, $content->state, $content->country])->filter()->implode(', '),
-          'address' => [
-            '@type' => 'PostalAddress',
-            'streetAddress' => $content->address ?? '',
-            'addressLocality' => $content->city ?? '',
-            'addressRegion' => $content->state ?? '',
-            'postalCode' => $content->zip_code ?? '',
-            'addressCountry' => $content->country ?? 'AR',
-          ],
-        ],
-    'image' => [$og_image ?? asset('assets/admin/img/event/thumbnail/' . $content->thumbnail)],
-    'url' => url()->current(),
+    'location' => $schemaLocation,
+    'image' => !empty($og_image) ? [$og_image] : null,
+    'url' => $canonical ?? ($og_url ?? url()->current()),
     'organizer' => [
       '@type' => 'Organization',
       'name' => !empty($organizer) ? $organizer->username : $websiteInfo->website_title,
@@ -75,9 +82,9 @@
     $jsonLd['offers'] = [
       '@type' => 'Offer',
       'price' => is_numeric($ticketSummary['min_ticket_price'] ?? null) ? $ticketSummary['min_ticket_price'] : 0,
-      'priceCurrency' => 'ARS',
+      'priceCurrency' => $event_currency ?? 'ARS',
       'availability' => 'https://schema.org/InStock',
-      'url' => url()->current(),
+      'url' => $canonical ?? ($og_url ?? url()->current()),
     ];
   }
   $jsonLd = array_filter($jsonLd, function ($value) {

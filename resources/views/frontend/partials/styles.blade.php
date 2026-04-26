@@ -41,8 +41,9 @@
     --primary-text-color: #C2410C;
     --secondary-color: #ea580c;
     --light-color: #F7F7F7;
-    --base-font: 'Inter', sans-serif;
-    --heading-font: 'Plus Jakarta Sans', sans-serif;
+    --tuki-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --base-font: var(--tuki-font-sans);
+    --heading-font: var(--tuki-font-sans);
   }
 
   .overlay:before {

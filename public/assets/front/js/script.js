@@ -549,6 +549,16 @@ $('.quantity-down_variation').on('click', function () {
     $('.max_error_' + ticket_id + max_qty).text('');
 });
 
+/** Total en UI: miles con punto, sin decimales (es-AR). El hidden #total sigue siendo entero sin separadores. */
+function formatTukiTotalDisplay(amount) {
+    var n = Math.round(Number(amount) || 0);
+    try {
+        return n.toLocaleString('es-AR', { maximumFractionDigits: 0, minimumFractionDigits: 0 });
+    } catch (e) {
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+}
+
 function calcTotal() {
     let sum = 0;
     $(".quantity").each(function (index) {
@@ -558,11 +568,11 @@ function calcTotal() {
 
         if (sum > 0) {
             $('.currency_symbol').removeClass('d-none');
-            $('#total_price').html(sum.toFixed(2));
-            $('#total').val(sum.toFixed(2));
+            $('#total_price').html(formatTukiTotalDisplay(sum));
+            $('#total').val(String(Math.round(sum)));
         } else {
-            $('#total_price').html(0);
-            $('#total').val(0);
+            $('#total_price').html('0');
+            $('#total').val('0');
             $('.currency_symbol').addClass('d-none');
         }
 
@@ -587,14 +597,40 @@ $(".read-more-btn").on("click", function () {
 
 $('.event-countdown').each(function () {
     let $this = $(this);
+    let endDate = $this.data('end_date');
+    let endTime = $this.data('end_time') || '00:00:00';
+    let targetDate = null;
+    let nowValue = $this.data('now');
+    let currentDate = nowValue ? new Date(String(nowValue).replace(' ', 'T')) : new Date();
+    let year = $this.data('year');
+    let month = $this.data('month');
+    let day = $this.data('day');
+    let hour = $this.data('hour');
+    let minute = $this.data('minute');
+
+    if (Number.isNaN(currentDate.getTime())) {
+        currentDate = new Date();
+    }
+
+    if (endDate) {
+        targetDate = new Date(String(endDate + 'T' + endTime).replace(' ', 'T'));
+
+        if (!Number.isNaN(targetDate.getTime())) {
+            year = targetDate.getFullYear();
+            month = targetDate.getMonth() + 1;
+            day = targetDate.getDate();
+            hour = targetDate.getHours();
+            minute = targetDate.getMinutes();
+        }
+    }
 
     $this.syotimer({
-        date: new Date($this.data('now')),
-        year: $this.data('year'),
-        month: $this.data('month'),
-        day: $this.data('day'),
-        hour: $this.data('hour'),
-        minute: $this.data('minute'),
+        date: currentDate,
+        year: year,
+        month: month,
+        day: day,
+        hour: hour,
+        minute: minute,
         timeZone: $this.data('timezone'),
         lang: 'spa',
         afterDeadline: function (timerBlock) {
@@ -714,7 +750,6 @@ $('body').on('submit', '#vendorContactForm', function (e) {
 
 
 })
-
 
 
 

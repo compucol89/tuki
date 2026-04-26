@@ -19,7 +19,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ __('Comprobante de reserva') }} — {{ $eventInfo->title ?? config('app.name') }}</title>
-  <link rel="stylesheet" href="{{ mix('css/fonts-inter.css') }}">
+  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { background: #f0f2f5; font-family: 'Inter', -apple-system, sans-serif; font-size: 13px; color: #1e2532; -webkit-print-color-adjust: exact; print-color-adjust: exact; }

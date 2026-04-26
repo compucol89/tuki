@@ -1,285 +1,244 @@
-# === SYSTEM: TOKEN-OPTIMIZED EXECUTION ===
+# === TUKIPASS — AGENTE DE PRECISIÓN ===
 
-You are a precision execution agent for a Laravel application.
-
-Goal:
-Solve tasks with maximum accuracy and minimum token usage.
+Sos un agente de ejecución quirúrgica para una app Laravel en producción.  
+Máxima precisión. Mínimo token. Cero exploración innecesaria.
 
 ---
 
-# === STACK ===
-Laravel 9 · PHP 8 · MySQL · Blade · Bootstrap · jQuery  
-Auth: Socialite  
-Payments: Stripe · MercadoPago · PayPal  
+## STACK
+
+Laravel 12 · PHP 8.2+ · MySQL · Eloquent · Blade · Bootstrap 4 · jQuery  
+CSS custom: `public/assets/front/css/style.css` (14.7k+ líneas)  
+JS plugins: syotimer · slick · magnific-popup · DataTables · Lazy  
+Auth: Guards custom (admin / organizer / customer) + Socialite (Google, Facebook)  
+Pagos: MercadoPago · Stripe · PayPal + 16 gateways más  
+Assets: Laravel Mix 6
 
 ---
 
-# === PROJECT STRUCTURE (LIMITED CONTEXT) ===
+## PROYECTO
 
-Frontend: resources/views/frontend/  
-Organizer: resources/views/organizer/  
-Admin: resources/views/backend/  
-
-Controllers:
-- FrontEnd → app/Http/Controllers/FrontEnd/
-- BackEnd → app/Http/Controllers/BackEnd/
-
-Models: app/Models/  
-Routes: routes/web.php · routes/admin.php · routes/api.php  
-
-Domains:
-- Event/
-- PaymentGateway/
-- ShopManagement/
-
-Helper:
-app/Http/Helpers/Helper.php ⚠️ LARGE FILE
+**TukiPass** — SaaS de gestión de eventos y venta de entradas.  
+Idioma frontend: **español (Argentina)** — TODO texto visible al cliente va en español.  
+Diseño objetivo: Modern SaaS — Inter font, naranja `#F97316`, gris oscuro `#1e2532`.  
+Referencia técnica completa: **`INFORME.md`** (leer si la tarea lo requiere).
 
 ---
 
-# === HARD RULE: SCOPE ===
+## ESTRUCTURA CLAVE
 
-- Work ONLY on explicitly mentioned files
-- Never explore the full repo
-- Never read directories without instruction
-
----
-
-# === FILE READING RULES ===
-
-- Search FIRST (rg / grep)
-- Read ONLY required lines or functions
-- Max 1–2 files per task
-- Max 300 lines per read
-- Never open full large files
-
-For Helper.php:
-→ ALWAYS search function before reading
-
----
-
-# === FORBIDDEN PATHS ===
-
-Do NOT read:
-
-vendor/  
-node_modules/  
-storage/  
-logs/  
-cache/  
-build/  
-dist/  
-.git/  
+```
+app/Http/Controllers/FrontEnd/     ← Lógica pública (cliente)
+app/Http/Controllers/BackEnd/      ← Admin + Organizer
+app/Http/Helpers/Helper.php        ⚠️ ENORME — buscar función antes de leer
+app/Models/                        ← Admin.php · Customer.php · Organizer.php (guards separados)
+app/Models/Event/                  ← Event · EventContent · Ticket · Booking · Coupon
+app/Models/ShopManagement/         ← Product · ProductOrder
+routes/web.php                     ← Entry point, incluye sub-archivos
+routes/frontend_*.php              ← auth · events · customer · payments · shop · pages
+routes/admin.php                   ← Panel admin
+routes/organizer*.php              ← Panel organizer
+resources/views/frontend/          ← Vistas públicas
+resources/views/organizer/         ← Panel organizer
+resources/views/backend/           ← Panel admin (Atlantis theme)
+public/assets/front/css/style.css  ← CSS principal frontend
+```
 
 ---
 
-# === EXECUTION MODE ===
+## AUTH — TRES GUARDS (no hay User.php estándar)
 
-Default behavior:
+| Guard | Modelo | Prefijo |
+|---|---|---|
+| `admin` | `App\Models\Admin` | `/admin/*` |
+| `organizer` | `App\Models\Organizer` | `/organizer/*` |
+| `customer` | `App\Models\Customer` | `/customer/*` |
 
-- Code only
-- No explanations
-- No comments
-- No refactors
-- No assumptions
-
-If explanation is requested:
-
-- Max 3 lines
+Middlewares: `auth:admin` / `auth:organizer` / `auth:customer`  
+RBAC admin: `permission:NombrePermiso` (ej: `permission:Event Management`)  
+Socialite cliente: Google → `auth.google` · Facebook → `auth.facebook`
 
 ---
 
-# === WORKFLOW ===
+## CSS — CASCADA (detalle de evento)
 
-1. Identify exact target
-2. Search minimal context
-3. Apply smallest fix
-4. Stop immediately
+```
+style.css  <  styles.blade.php  <  @section('custom-style') del blade
+```
 
-Max 2 reasoning steps
-
----
-
-# === EDITING RULES ===
-
-- Modify ONLY what is requested
-- Do NOT touch unrelated code
-- Do NOT reformat
-- Do NOT rename things
-- Do NOT add abstractions
-
-Prefer:
-→ minimal diff
+- Feature nuevo reutilizable → agregar al **final** de `style.css`
+- Override específico de evento → `@section('custom-style')` en `event-details.blade.php`
+- Scoping: usar `body.page-event-detail .clase` para aislar estilos por página
+- No usar Tailwind, React ni dependencias nuevas sin aprobación
 
 ---
 
-# === OUTPUT RULES ===
+## CHECKOUT — ZONA PROHIBIDA ⚠️
 
-Always return:
+**Nunca modificar sin análisis explícito:**
 
-- minimal patch OR
-- exact code block
+```
+FrontEnd\CheckOutController@checkout2      POST /check-out2
+FrontEnd\Event\BookingController
+FrontEnd\PaymentGateway\*Controller
+```
 
-Never:
+**Campos HTML que NUNCA se tocan:**
+```
+name="event_id"   name="pricing_type"   name="quantity"   name="quantity[]"
+name="date_type"  name="event_date"     data-price        data-stock
+data-ticket_id    data-purchase         data-p_qty        #total_price
+#total            @csrf                 route('check-out2')
+```
 
-- full file (unless asked)
-- duplicated code
-
----
-
-# === TASK MODEL ===
-
-One task = one response
-
-If task is large:
-→ do NOT solve entirely
-→ wait for next instruction
-
----
-
-# === PROMPT COMPATIBILITY MODE ===
-
-If prompt includes:
-
-- TARGET FILE → only use that
-- ALLOWED READS → respect strictly
-- FORBIDDEN READS → enforce strictly
-
-If enough context is already provided:
-→ DO NOT read any files
+**JS crítico:** `recalcTotal()` — nunca modificar.  
+Botones de cantidad: `.quantity-up` · `.quantity-down` · `.quantity-down_variation`
 
 ---
 
-# === STOP CONDITION ===
+## VARIABLES DISPONIBLES EN event-details.blade.php
 
-Stop after completing the requested change.
-
-Do not suggest improvements.  
-Do not continue beyond scope.
-
----
-
-# === SESSION MANAGEMENT ===
-
-- Run /cost when session grows long to monitor cache ratio.
-- Start a new session when switching to an unrelated task.
-
----
-
-# === OBJECTIVE ===
-
-Maximum precision  
-Minimum tokens  
-Zero unnecessary exploration
-
-<!-- autoskills:start -->
-
-Summary generated by `autoskills`. Check the full files inside `.claude/skills`.
-
-## Accessibility (a11y)
-
-Audit and improve web accessibility following WCAG 2.2 guidelines. Use when asked to "improve accessibility", "a11y audit", "WCAG compliance", "screen reader support", "keyboard navigation", or "make accessible".
-
-- `.claude/skills/accessibility/SKILL.md`
-- `.claude/skills/accessibility/references/A11Y-PATTERNS.md`: Practical, copy-paste-ready patterns for common accessibility requirements. Each pattern is self-contained and linked from the main [SKILL.md](../SKILL.md).
-- `.claude/skills/accessibility/references/WCAG.md`
-
-## Copywriting
-
-When the user wants to write, rewrite, or improve marketing copy for any page — including homepage, landing pages, pricing pages, feature pages, about pages, or product pages. Also use when the user says "write copy for," "improve this copy," "rewrite this page," "marketing copy," "headline help,...
-
-- `.claude/skills/copywriting/SKILL.md`
-- `.claude/skills/copywriting/references/copy-frameworks.md`: Headline formulas, page section types, and structural templates.
-- `.claude/skills/copywriting/references/natural-transitions.md`: Transitional phrases to guide readers through your content. Good signposting improves readability, user engagement, and helps search engines understand content structure.
-
-## Find Skills
-
-Helps users discover and install agent skills when they ask questions like "how do I do X", "find a skill for X", "is there a skill that can...", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable...
-
-- `.claude/skills/find-skills/SKILL.md`
-
-## Design Thinking
-
-Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beaut...
-
-- `.claude/skills/frontend-design/SKILL.md`
-
-## Laravel Development Patterns
-
-Laravel architecture patterns, routing/controllers, Eloquent ORM, service layers, queues, events, caching, and API resources for production apps.
-
-- `.claude/skills/laravel-patterns/SKILL.md`
-
-## Laravel Specialist
-
-Build and configure Laravel 10+ applications, including creating Eloquent models and relationships, implementing Sanctum authentication, configuring Horizon queues, designing RESTful APIs with API resources, and building reactive interfaces with Livewire. Use when creating Laravel models, setting...
-
-- `.claude/skills/laravel-specialist/SKILL.md`
-- `.claude/skills/laravel-specialist/references/eloquent.md`
-- `.claude/skills/laravel-specialist/references/livewire.md`
-- `.claude/skills/laravel-specialist/references/queues.md`
-- `.claude/skills/laravel-specialist/references/routing.md`
-- `.claude/skills/laravel-specialist/references/testing.md`
-
-## Marketing Ideas for SaaS
-
-When the user needs marketing ideas, inspiration, or strategies for their SaaS or software product. Also use when the user asks for 'marketing ideas,' 'growth ideas,' 'how to market,' 'marketing strategies,' 'marketing tactics,' 'ways to promote,' 'ideas to grow,' 'what else can I try,' 'I don't...
-
-- `.claude/skills/marketing-ideas/SKILL.md`
-- `.claude/skills/marketing-ideas/references/ideas-by-category.md`: Complete list of proven marketing approaches organized by category.
-
-## PHP Pro
-
-Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs...
-
-- `.claude/skills/php-pro/SKILL.md`
-- `.claude/skills/php-pro/references/async-patterns.md`
-- `.claude/skills/php-pro/references/laravel-patterns.md`
-- `.claude/skills/php-pro/references/modern-php-features.md`
-- `.claude/skills/php-pro/references/symfony-patterns.md`
-- `.claude/skills/php-pro/references/testing-quality.md`
-
-## Sales Enablement
-
-When the user wants to create sales collateral, pitch decks, one-pagers, objection handling docs, or demo scripts. Also use when the user mentions 'sales deck,' 'pitch deck,' 'one-pager,' 'leave-behind,' 'objection handling,' 'deal-specific ROI analysis,' 'demo script,' 'talk track,' 'sales playb...
-
-- `.claude/skills/sales-enablement/SKILL.md`
-- `.claude/skills/sales-enablement/references/deck-frameworks.md`: Detailed slide-by-slide guidance for building sales decks that tell a story and close deals.
-- `.claude/skills/sales-enablement/references/demo-scripts.md`: Scene-by-scene templates for different call types, with timing, talk tracks, and interaction guidance.
-- `.claude/skills/sales-enablement/references/objection-library.md`: Common B2B SaaS objections with response frameworks. Organized by category for quick reference.
-- `.claude/skills/sales-enablement/references/one-pager-templates.md`: Templates for different one-pager use cases, with layout guidance and copy prompts.
-
-## SEO optimization
-
-Optimize for search engine visibility and ranking. Use when asked to "improve SEO", "optimize for search", "fix meta tags", "add structured data", "sitemap optimization", or "search engine optimization".
-
-- `.claude/skills/seo/SKILL.md`
-
-## UI/UX Design & Development Expert
-
-React UI component systems with TailwindCSS + Radix + shadcn/ui. Stack: TailwindCSS (styling), Radix UI (primitives), shadcn/ui (components), React/Next.js. Capabilities: design system architecture, accessible components, responsive layouts, theming, dark mode, component composition. Actions: rev...
-
-- `.claude/skills/ui-design-system/SKILL.md`
-- `.claude/skills/ui-design-system/references/canvas-design-system.md`: Visual design philosophy, systematic composition, and sophisticated visual communication.
-- `.claude/skills/ui-design-system/references/CUSTOMIZATION.md`: shadcn/ui components live in your codebase - full ownership.
-- `.claude/skills/ui-design-system/references/DESIGN_TOKENS.md`: Based on USWDS, IBM Carbon, and Shopify Polaris patterns.
-- `.claude/skills/ui-design-system/references/INTEGRATION_PATTERNS.md`: Advanced patterns for integrating TailwindCSS, Radix UI, and shadcn/ui in production applications.
-- `.claude/skills/ui-design-system/references/PERFORMANCE_OPTIMIZATION.md`: Lazy load heavy components to reduce initial bundle size.
-- `.claude/skills/ui-design-system/references/RADIX_REFERENCE.md`: Complete guide to Radix UI accessible component primitives for building custom components.
-- `.claude/skills/ui-design-system/references/RESPONSIVE_PATTERNS.md`: Mobile-first breakpoints ensure optimal experience across all devices.
-- `.claude/skills/ui-design-system/references/SHADCN_REFERENCE.md`: Quick reference for shadcn/ui components with installation and usage examples.
-- `.claude/skills/ui-design-system/references/TAILWIND_REFERENCE.md`: Complete reference for TailwindCSS utilities and patterns within the UI design system.
-
-## UI/UX Pro Max - Design Intelligence
-
-UI/UX design intelligence for web and mobile. Includes 50+ styles, 161 color palettes, 57 font pairings, 161 product types, 99 UX guidelines, and 25 chart types across 10 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, and HTML/CSS). Actions: plan, build,...
-
-- `.claude/skills/ui-ux-pro-max/SKILL.md`
-
-<!-- autoskills:end -->
+```php
+$content               // EventContent (con join a events)
+$heroStatusLabel       // "En curso" | "Próximo" | etc.
+$heroStatusClass       // CSS class del pill
+$heroPriceLabel        // "Desde $X" | "Gratis"
+$heroDateTimestamp
+$ticketSummary         // array: min_price, max_price, has_price_range, total_stock
+$edInterestIndicator   // int: interesados (crc32 + señales reales)
+$over                  // bool: evento pasado / venta cerrada
+$images                // colección galería
+$organizer             // modelo Organizer ('' si es admin)
+$related_events
+$relatedEventsMode     // 'upcoming' | 'past' | null
+$summaryOrganizer      // string nombre
+$map_address
+$websiteInfo           // timezone, config global
+```
 
 ---
 
-# === PROJECT MEMORY (leer al arrancar tareas de contexto) ===
+## CLASES CSS CLAVE — DETALLE DE EVENTO
 
-Notas persistentes del repo (git, diseño «Sobre nosotros», **claude-mem**): **`.claude/PROJECT_MEMORY.md`**
+| Clase | Función |
+|---|---|
+| `.ed-hero-event` | Section hero |
+| `.ed-ev-kicker` | Chips categoría + estado |
+| `.ed-ev-title` | H1 del evento |
+| `.ed-ev-meta` | Fila metadatos (fecha, lugar, organizador) |
+| `.ed-hero-nudge` | Rotador de frases (aria-live, opacity transition) |
+| `.ed-event-quickfacts` | Strip datos rápidos |
+| `.ed-ticket-card` | Card de compra sidebar |
+| `.ed-ticket-card__head` | Header oscuro de la card |
+| `.ed-head-pill` | Pill estado de venta |
+| `.ed-buy-btn` | CTA "Reservar mi lugar" |
+| `.ed-countdown-wrap` | Wrapper countdown syotimer |
+| `.ed-interest-indicator` | Indicador interés compuesto |
+| `.ed-body` | Sección principal bajo el hero |
+| `.sidebar-sticky` | Sidebar derecha |
+| `.ed-trust-row` | Items de confianza bajo CTA |
+
+---
+
+## REGLAS DE EJECUCIÓN
+
+### Scope
+- Trabajar SOLO en archivos mencionados explícitamente
+- Nunca explorar el repo completo
+- Nunca leer directorios sin instrucción
+
+### Lectura de archivos
+- Buscar primero con `rg` / `grep`
+- Leer SOLO líneas necesarias
+- Máx 2 archivos por tarea · Máx 300 líneas por lectura
+- `Helper.php`: SIEMPRE buscar la función antes de abrir
+
+### Edición
+- Modificar SOLO lo solicitado
+- No tocar código no relacionado
+- No reformatear · No renombrar · No agregar abstracciones
+- Preferir diff mínimo
+
+### Output
+- Código o patch mínimo
+- Sin explicaciones salvo que se pidan (máx 3 líneas)
+- Sin código completo del archivo salvo que se pida
+- Una tarea = una respuesta
+
+---
+
+## PATHS PROHIBIDOS
+
+```
+vendor/   node_modules/   storage/   logs/
+cache/    build/          dist/      .git/
+.env      config/auth.php (sin análisis)
+```
+
+---
+
+## ZONAS DE RIESGO — requieren confirmación explícita
+
+```
+routes/           → analizar conflictos antes de agregar
+auth guards       → no modificar config/auth.php
+gateways de pago  → no tocar PaymentGateway/*Controller
+migraciones       → no crear/modificar en producción
+seeds             → no ejecutar en producción
+Admin.php (model) → no modificar sin análisis
+```
+
+---
+
+## COMANDOS FRECUENTES
+
+```bash
+rg "nombre_funcion" app/                      # buscar antes de leer
+grep -rn "clase" resources/views/             # buscar en vistas
+npm run dev                                    # compilar assets
+php artisan migrate                            # migraciones
+```
+
+---
+
+## REFERENCIA
+
+| Archivo | Contenido |
+|---|---|
+| `CLAUDE.md` | Este archivo — reglas del agente |
+| `INFORME.md` | Mapa técnico completo del proyecto |
+| `PENDIENTES.md` | Tareas activas y backlog |
+| `.claude/PROJECT_MEMORY.md` | Memoria persistente de sesiones |
+
+---
+
+## SKILLS DISPONIBLES (leer SKILL.md antes de usarlas)
+
+```
+.claude/skills/laravel-patterns/SKILL.md
+.claude/skills/laravel-specialist/SKILL.md
+.claude/skills/php-pro/SKILL.md
+.claude/skills/frontend-design/SKILL.md
+.claude/skills/accessibility/SKILL.md
+.claude/skills/seo/SKILL.md
+.claude/skills/copywriting/SKILL.md
+```
+
+---
+
+## FOCO ACTUAL
+
+1. Rediseño frontend "Modern SaaS" — `event-details.blade.php` como página piloto
+2. Traducción completa al español del frontend público
+3. Social Login para Organizadores (paridad con login de clientes)
+
+---
+
+## OBJETIVO
+
+Máxima precisión · Mínimo tokens · Cero exploración innecesaria
+
+# userEmail
+The user's email address is infocompucol@gmail.com.
+# currentDate
+Today's date is 2026-04-26.

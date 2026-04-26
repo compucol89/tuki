@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ mix('css/fonts-inter.css') }}">
+<link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
 {{-- fontawesome css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/all.min.css') }}">

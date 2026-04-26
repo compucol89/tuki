@@ -259,7 +259,7 @@ class EventController extends Controller
 
       $statusMeta = $this->buildEventStatusMeta($content, $websiteTimezone);
       $ticketSummary = $this->buildTicketSummary($content);
-      $signalMeta = $this->buildSignalMeta($content->id, $ticketSummary['limited_stock_total']);
+      $interestMeta = $this->buildInterestIndicator((int) $content->id, $content);
 
       $information['websiteTimezone'] = $websiteTimezone;
       $information['websiteTitle'] = $websiteTitle;
@@ -273,9 +273,9 @@ class EventController extends Controller
       $information['heroStatusLabel'] = $statusMeta['hero_status_label'];
       $information['ticketSummary'] = $ticketSummary;
       $information['signalStock'] = $ticketSummary['limited_stock_total'];
-      $information['ev_viewers'] = $signalMeta['viewers'];
-      $information['ev_saved'] = $signalMeta['saved'];
-      $information['ed_nudge_pool'] = $signalMeta['nudge_pool'];
+      $information['edInterestIndicator'] = $interestMeta['interest'];
+      $information['edInterestWishlistCount'] = $interestMeta['wishlist_count'];
+      $information['edInterestBookingCount'] = $interestMeta['booking_count'];
       $information['spotifyEmbedUrl'] = $this->buildSpotifyEmbedUrl($content->spotify_url);
       $information['summaryLocation'] = $content->event_type == 'online'
         ? __('Online')
@@ -284,16 +284,44 @@ class EventController extends Controller
         ? $information['organizer']->username
         : $websiteTitle;
 
-      $category_id = $content->event_category_id;
       $event_id = $content->id;
-      $related_events = EventContent::join('events', 'events.id', 'event_contents.event_id')
-        ->where('event_contents.language_id', $language->id)
-        ->where('event_contents.event_category_id', $category_id)
-        ->where('events.id', '!=', $event_id)
-        ->whereDate('events.end_date_time', '>=', $this->now_date_time)
-        ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
-        ->orderBy('events.id', 'desc')
-        ->get();
+      $currentOrganizerId = $content->organizer_id ?? null;
+      $related_events = collect();
+      $relatedEventsMode = null;
+
+      if ($currentOrganizerId) {
+        // Próximos eventos del mismo organizador
+        $related_events = EventContent::join('events', 'events.id', 'event_contents.event_id')
+          ->where('event_contents.language_id', $language->id)
+          ->where('events.organizer_id', $currentOrganizerId)
+          ->where('events.id', '!=', $event_id)
+          ->where('events.status', 1)
+          ->whereDate('events.end_date_time', '>=', $this->now_date_time)
+          ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
+          ->orderBy('events.start_date_time', 'asc')
+          ->limit(6)
+          ->get();
+
+        if ($related_events->isNotEmpty()) {
+          $relatedEventsMode = 'upcoming';
+        } else {
+          // Fallback: eventos anteriores del mismo organizador
+          $related_events = EventContent::join('events', 'events.id', 'event_contents.event_id')
+            ->where('event_contents.language_id', $language->id)
+            ->where('events.organizer_id', $currentOrganizerId)
+            ->where('events.id', '!=', $event_id)
+            ->where('events.status', 1)
+            ->whereDate('events.end_date_time', '<', $this->now_date_time)
+            ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
+            ->orderBy('events.end_date_time', 'desc')
+            ->limit(6)
+            ->get();
+
+          if ($related_events->isNotEmpty()) {
+            $relatedEventsMode = 'past';
+          }
+        }
+      }
 
       // Pre-cargar tickets y organizadores de eventos relacionados en 2 queries (evita N+1)
       $relatedIds = $related_events->pluck('id')->toArray();
@@ -310,6 +338,7 @@ class EventController extends Controller
       $information['related_events'] = $related_events;
       $information['relatedTickets'] = $relatedTickets;
       $information['relatedOrganizers'] = $relatedOrganizers;
+      $information['relatedEventsMode'] = $relatedEventsMode;
 
       // SEO / Open Graph
       $cleanText = function ($value) {
@@ -479,6 +508,53 @@ class EventController extends Controller
       'limited_stock_total' => (int) Ticket::where('event_id', $content->id)
         ->where('ticket_available_type', 'limited')
         ->sum('ticket_available'),
+    ];
+  }
+
+  private function buildInterestIndicator(int $eventId, $content): array
+  {
+    $createdAt = \Carbon\Carbon::parse($content->created_at ?? now());
+    $hoursSincePublication = max(0, (int) $createdAt->diffInHours(now()));
+
+    // Seed estable por evento: mismo evento = misma base para todos los usuarios.
+    $seed = abs(crc32('tukipass-event-interest-' . $eventId));
+    $normalized = ($seed % 1000) / 1000;
+
+    // Día de vida para progresión suave (no cambia en cada refresh, cambia por día).
+    $eventAgeDays = (int) floor($hoursSincePublication / 24);
+    $dailySeed = abs(crc32('tukipass-event-interest-day-' . $eventId . '-' . $eventAgeDays));
+
+    if ($hoursSincePublication < 24) {
+      $base = 19 + (int) floor($normalized * 44); // 19–62
+      $timeGrowth = 0;
+    } else {
+      $base = 146 + (int) floor($normalized * 45); // 146–190
+      $dailyGrowth = min($eventAgeDays * 6, 180);
+      $dailyVariation = $dailySeed % 7;
+      $timeGrowth = $dailyGrowth + $dailyVariation;
+    }
+
+    $viewsCount = (int) ($content->views_count ?? 0);
+
+    $wishlistCount = \App\Models\Event\Wishlist::where('event_id', $eventId)->count();
+
+    $bookingCount = (int) \App\Models\Event\Booking::where('event_id', $eventId)
+      ->where('paymentStatus', 'paid')
+      ->sum('quantity');
+
+    // Señales reales ponderadas — alimentan el interés compuesto, no se muestran como visitas.
+    $signalScore = (int) floor(
+      ($viewsCount * 0.05) +
+      ($wishlistCount * 0.30) +
+      ($bookingCount * 0.50)
+    );
+
+    $interest = min($base + $timeGrowth + $signalScore, 5000);
+
+    return [
+      'interest' => max(0, (int) $interest),
+      'wishlist_count' => $wishlistCount,
+      'booking_count' => $bookingCount,
     ];
   }
 

@@ -6398,7 +6398,7 @@ html[dir*=rtl] .modal .close {
 }
 
 .emq-bottom__title {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
     font-size: 15px;
     font-weight: 800;
     color: #fff;
@@ -6762,7 +6762,7 @@ body.home-page .work-process-inner {
   border: none;
   outline: none;
   background: transparent;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 15px;
   font-weight: 600;
   color: #1e2532;
@@ -6780,7 +6780,7 @@ body.home-page .work-process-inner {
   border: none;
   outline: none;
   background: transparent;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 14px;
   font-weight: 600;
   color: #1e2532;
@@ -6814,7 +6814,7 @@ body.home-page .work-process-inner {
   margin: 0;
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -6852,7 +6852,7 @@ body.home-page .work-process-inner {
 }
 
 .hs-search-chips__label {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -6867,7 +6867,7 @@ body.home-page .work-process-inner {
   align-items: center;
   padding: 7px 14px;
   border-radius: 999px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 12.5px;
   font-weight: 600;
   color: #4b5563;
@@ -7485,7 +7485,7 @@ body.home-page .work-process-inner {
   pointer-events: none;
   transition: opacity 0.08s ease;
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -7556,7 +7556,7 @@ body.home-page .work-process-inner {
 
 /* Título — 2 líneas */
 .ev-card__title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 20px;
   font-weight: 700;
   color: #18212f;
@@ -7646,7 +7646,7 @@ body.home-page .work-process-inner {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 11.5px;
   font-weight: 800;
   color: var(--primary-text-color, #C2410C);
@@ -8200,7 +8200,7 @@ body.home-page .events-section .text-center.mt-4 img {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.1);
   color: rgba(255,255,255,0.74);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -8232,7 +8232,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__tagline h2 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: clamp(32px, 3.2vw, 40px);
   font-weight: 700;
   color: #fff;
@@ -8243,7 +8243,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__tagline p {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 14px;
   color: rgba(255, 255, 255, 0.78);
   line-height: 1.65;
@@ -8400,7 +8400,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__context-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -8410,7 +8410,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__context-row strong {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.42;
@@ -8448,7 +8448,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-choice-card__head strong {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 18px;
   line-height: 1.28;
   letter-spacing: -0.035em;
@@ -8527,7 +8527,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__title {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 32px;
   font-weight: 700;
   color: #1e2532;
@@ -8541,7 +8541,7 @@ body.home-page .events-section .text-center.mt-4 img {
   align-items: center;
   margin-block: 0 1lh;
   color: #6b7280;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -8549,7 +8549,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__subtitle {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 14px;
   color: #6b7280;
   line-height: 1.6;
@@ -8558,7 +8558,7 @@ body.home-page .events-section .text-center.mt-4 img {
 
 /* Form controls override */
 .auth-split__form-inner .form-group label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 12px;
   font-weight: 600;
   color: #4b5563;
@@ -8568,7 +8568,7 @@ body.home-page .events-section .text-center.mt-4 img {
 }
 
 .auth-split__form-inner .form-control {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   height: 52px;
   border: 1px solid #dde3ea;
   border-radius: 14px;
@@ -8594,7 +8594,7 @@ body.home-page .events-section .text-center.mt-4 img {
   height: 56px;
   font-size: 15px;
   font-weight: 700;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   letter-spacing: -0.02em;
   border-radius: 16px !important;
   width: 100%;
@@ -8618,7 +8618,7 @@ body.home-page .events-section .text-center.mt-4 img {
   height: 46px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 13px;
   font-weight: 600;
   color: #475569;
@@ -8646,7 +8646,7 @@ body.home-page .events-section .text-center.mt-4 img {
   align-items: center;
   gap: 12px;
   margin-block: 1lh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -8664,7 +8664,7 @@ body.home-page .events-section .text-center.mt-4 img {
 
 /* Forgot password link */
 .auth-forgot-link {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 12px;
   font-weight: 600;
   color: #6b7280;
@@ -8679,7 +8679,7 @@ body.home-page .events-section .text-center.mt-4 img {
 /* Bottom links */
 .auth-split__links {
   margin-top: 18px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 13px;
   color: #6b7280;
   text-align: center;
@@ -8705,7 +8705,7 @@ body.home-page .events-section .text-center.mt-4 img {
   height: 54px;
   border: 1px solid #dfe5ec;
   border-radius: 14px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 14px;
   font-weight: 600;
   color: #1f2937;
@@ -9986,7 +9986,7 @@ body.home-page .events-section .text-center.mt-4 img {
 .cd-sidebar {
   background: #fff; border: 1px solid #e5e7eb;
   border-radius: 16px; overflow: hidden;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   position: sticky; top: 20px;
 }
 .cd-sidebar__profile {
@@ -10197,7 +10197,7 @@ body.home-page .events-section .text-center.mt-4 img {
 .ps-hero__icon svg { width: 30px; height: 30px; }
 
 .ps-hero__title {
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: clamp(26px, 5vw, 36px);
   font-weight: 800; letter-spacing: -0.03em;
   color: #111827; margin-bottom: 10px;
@@ -10228,7 +10228,7 @@ body.home-page .events-section .text-center.mt-4 img {
 .ps-card {
   background: #fff; border: 1px solid #e5e7eb;
   border-radius: 16px; overflow: hidden;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   margin-bottom: 20px;
 }
 .ps-card--sticky { position: sticky; top: 90px; margin-bottom: 16px; }
@@ -10358,7 +10358,7 @@ body.home-page .events-section .text-center.mt-4 img {
   background: #fff; border: 1px solid #e5e7eb;
   border-radius: 16px; padding: 20px;
   text-align: center;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
 }
 .ps-cta-card__text {
   font-size: 13px; color: #6b7280; margin-bottom: 12px;
@@ -11507,7 +11507,7 @@ a.evf-btn--primary {
   border: 1px solid #e5e7eb;
   border-radius: 14px;
   padding: 16px 18px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
 }
 
 .ev-filter-label {
@@ -11616,7 +11616,7 @@ a.evf-btn--primary {
 /* Reset heredados del body para el sidebar */
 .ed-ticket-card,
 .ed-info-card {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -11994,8 +11994,8 @@ a.evf-btn--primary {
 /* Field label */
 .ed-field-label { font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; display:block; }
 
-/* Ticket rows — mini-card design */
-.ed-ticket-card__body .event-details-information > p.mb-0 {
+/* Ticket rows — legacy e-commerce (no aplica en detalle evento: allí manda body.page-event-detail …) */
+body:not(.page-event-detail) .ed-ticket-card__body .event-details-information > p.mb-0 {
   font-size: 12px !important; font-weight: 600 !important; color: #6b7280 !important;
   letter-spacing: 0.04em; text-transform: uppercase !important;
   margin: 16px 0 0 !important; line-height: 1.3;
@@ -12003,7 +12003,7 @@ a.evf-btn--primary {
   border-bottom: none !important; border-radius: 10px 10px 0 0 !important;
   padding: 10px 14px 8px !important;
 }
-.ed-ticket-card__body .price-count {
+body:not(.page-event-detail) .ed-ticket-card__body .price-count {
   display: flex !important; align-items: center !important;
   justify-content: space-between !important; flex-wrap: nowrap !important;
   gap: 12px; padding: 10px 14px !important;
@@ -12011,23 +12011,23 @@ a.evf-btn--primary {
   background: #f8fafc !important; border: 1px solid #e5e7eb !important;
   border-top: none !important; border-radius: 0 0 10px 10px !important;
 }
-.ed-ticket-card__body .price-count h6 {
+body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 {
   flex: 1 !important;
   font-size: 16px !important; font-weight: 800 !important; color: #111827 !important;
   margin: 0 !important; line-height: 34px !important; letter-spacing: -0.03em;
 }
-.ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:5px; letter-spacing:0; }
+body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:5px; letter-spacing:0; }
 /* "gratis" */
-.ed-ticket-card__body .price-count h6 span { font-size:16px !important; font-weight:800 !important; letter-spacing:-0.03em; color:#059669 !important; }
-.ed-ticket-card__body .click-show { font-size:11px; color:#9ca3af; margin:2px 0 0; line-height:1.4; }
+body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 span { font-size:16px !important; font-weight:800 !important; letter-spacing:-0.03em; color:#059669 !important; }
+body:not(.page-event-detail) .ed-ticket-card__body .click-show { font-size:11px; color:#9ca3af; margin:2px 0 0; line-height:1.4; }
 
 /* Quantity control — connected pill */
-.ed-ticket-card__body .quantity-input { display:flex; align-items:stretch; border:1.5px solid #e5e7eb; border-radius:8px; overflow:hidden; flex-shrink:0; background:#fff; transition: border-color 0.2s, box-shadow 0.2s; }
-.ed-ticket-card__body .quantity-input:focus-within { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(249,115,22,0.12); }
-.ed-ticket-card__body .quantity-input button { width:44px !important; height:44px !important; background:#fff !important; border:none !important; border-radius:0 !important; font-size:18px; font-weight:600; cursor:pointer; color:#374151; line-height:1; transition:background 0.15s,color 0.15s,transform 0.1s; display:flex; align-items:center; justify-content:center; touch-action:manipulation; }
-.ed-ticket-card__body .quantity-input button:hover { background:#f3f4f6 !important; color:#1e2532 !important; }
-.ed-ticket-card__body .quantity-input button:active { background:#e5e7eb !important; transform:scale(0.92); }
-.ed-ticket-card__body .quantity-input input.quantity { width:44px !important; height:44px !important; text-align:center; font-weight:700; font-size:14px; color:#1e2532; border:none !important; border-left:1.5px solid #e5e7eb !important; border-right:1.5px solid #e5e7eb !important; background:#fff; border-radius:0 !important; }
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input { display:flex; align-items:stretch; border:1.5px solid #e5e7eb; border-radius:8px; overflow:hidden; flex-shrink:0; background:#fff; transition: border-color 0.2s, box-shadow 0.2s; }
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input:focus-within { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(249,115,22,0.12); }
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input button { width:44px !important; height:44px !important; background:#fff !important; border:none !important; border-radius:0 !important; font-size:18px; font-weight:600; cursor:pointer; color:#374151; line-height:1; transition:background 0.15s,color 0.15s,transform 0.1s; display:flex; align-items:center; justify-content:center; touch-action:manipulation; }
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input button:hover { background:#f3f4f6 !important; color:#1e2532 !important; }
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input button:active { background:#e5e7eb !important; transform:scale(0.92); }
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input input.quantity { width:44px !important; height:44px !important; text-align:center; font-weight:700; font-size:14px; color:#1e2532; border:none !important; border-left:1.5px solid #e5e7eb !important; border-right:1.5px solid #e5e7eb !important; background:#fff; border-radius:0 !important; }
 
 /* Buy button improvements */
 .ed-buy-btn {
@@ -12036,7 +12036,7 @@ a.evf-btn--primary {
   touch-action: manipulation;
 }
 /* Ticket row separator — venue multi-ticket */
-.ed-ticket-card__body .price-count + p.mb-0 {
+body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   border-top: 1px solid #f3f4f6;
   padding-top: 14px;
   margin-top: 8px;
@@ -12123,7 +12123,7 @@ a.evf-btn--primary {
   border:1px solid #e5e7eb;
   box-shadow:0 1px 3px rgba(0,0,0,0.06);
   overflow:hidden; margin-bottom:16px;
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
   font-size:14px; line-height:1.5;
   -webkit-font-smoothing:antialiased;
 }
@@ -12367,7 +12367,7 @@ a.evf-btn--primary {
   line-height: 1.45;
 }
 
-.ed-ticket-card__body .event-details-information > p.mb-0 {
+body:not(.page-event-detail) .ed-ticket-card__body .event-details-information > p.mb-0 {
   margin-top: 14px !important;
   padding: 12px 14px 9px !important;
   background: #f8fafc !important;
@@ -12376,7 +12376,7 @@ a.evf-btn--primary {
   border-radius: 14px;
 }
 
-.ed-ticket-card__body .price-count {
+body:not(.page-event-detail) .ed-ticket-card__body .price-count {
   gap: 14px;
   padding: 13px 14px !important;
   background: linear-gradient(180deg, #f8fafc 0%, #fdfefe 100%) !important;
@@ -12385,35 +12385,35 @@ a.evf-btn--primary {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
 }
 
-.ed-ticket-card__body .price-count h6 {
+body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 {
   line-height: 1.2 !important;
   font-family: var(--tuki-font-sans);
   font-size: 24px !important;
   letter-spacing: -0.04em;
 }
 
-.ed-ticket-card__body .click-show {
+body:not(.page-event-detail) .ed-ticket-card__body .click-show {
   margin: 6px 0 2px;
   line-height: 1.5;
 }
 
-.ed-ticket-card__body .quantity-input {
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input {
   border-radius: 12px;
   border-color: #dbe1e8;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
-.ed-ticket-card__body .quantity-input button,
-.ed-ticket-card__body .quantity-input input.quantity {
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input button,
+body:not(.page-event-detail) .ed-ticket-card__body .quantity-input input.quantity {
   height: 42px !important;
 }
 
-.ed-total-row {
+body:not(.page-event-detail) .ed-total-row {
   padding: 20px 0 12px;
   margin-top: 12px;
 }
 
-.ed-total-label {
+body:not(.page-event-detail) .ed-total-label {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -12421,20 +12421,20 @@ a.evf-btn--primary {
   color: #94a3b8;
 }
 
-.ed-total-value {
+body:not(.page-event-detail) .ed-total-value {
   font-size: 28px;
   letter-spacing: -0.045em;
   font-family: var(--tuki-font-sans);
 }
 
-.ed-cta-zone {
+body:not(.page-event-detail) .ed-cta-zone {
   background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
   margin: 2px -24px -24px;
   padding: 22px 24px 22px;
   border-top: 1px solid #eef2f6;
 }
 
-.ed-buy-btn {
+body:not(.page-event-detail) .ed-buy-btn {
   height: 56px;
   border-radius: 16px;
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
@@ -12444,7 +12444,7 @@ a.evf-btn--primary {
   letter-spacing: 0.01em;
 }
 
-.ed-buy-btn:hover {
+body:not(.page-event-detail) .ed-buy-btn:hover {
   background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
   box-shadow:
     0 1px 0 rgba(255,255,255,0.18) inset,
@@ -12532,16 +12532,16 @@ a.evf-btn--primary {
     padding-right: 12px;
   }
 
-  .ed-ticket-card__body .price-count {
+  body:not(.page-event-detail) .ed-ticket-card__body .price-count {
     align-items: flex-start !important;
   }
 
-  .ed-cta-zone {
+  body:not(.page-event-detail) .ed-cta-zone {
     margin: 2px -18px -20px;
     padding: 18px 18px 20px;
   }
 
-  .ed-buy-btn {
+  body:not(.page-event-detail) .ed-buy-btn {
     height: 54px;
     font-size: 15px;
   }
@@ -12600,24 +12600,6 @@ a.evf-btn--primary {
   height: auto;
   position: relative;
 }
-.ed-gallery-main__overlay {
-  display: none;
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-.ed-gallery-main__overlay svg {
-  opacity: 0;
-  transition: opacity 0.2s;
-  color: #fff;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
-}
-.ed-gallery-main__link:hover .ed-gallery-main__overlay { background: rgba(0,0,0,0.25); }
-.ed-gallery-main__link:hover .ed-gallery-main__overlay svg { opacity: 1; }
 
 .ed-gallery-count {
   position: absolute;
@@ -12642,7 +12624,7 @@ a.evf-btn--primary {
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: #e5e7eb transparent;
-  background: #f8fafc;
+  background: transparent;
 }
 .ed-gallery-thumbs::-webkit-scrollbar { height: 4px; }
 .ed-gallery-thumbs::-webkit-scrollbar-track { background: transparent; }
@@ -12772,7 +12754,27 @@ a.evf-btn--primary {
 }
 
 .ed-card--gallery {
-  background: #ffffff;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-card.ed-card--gallery {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+body.page-event-detail .ed-card.ed-card--context {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+body.page-event-detail .ed-card--context .ed-card__body {
+  background: transparent;
 }
 
 .ed-card--summary {
@@ -13009,33 +13011,12 @@ a.evf-btn--primary {
   margin: 0;
   border: 0;
   background: transparent;
-  cursor: zoom-in;
-}
-
-.ed-gallery-main__overlay {
-  background: linear-gradient(180deg, rgba(7,10,16,0.02) 0%, rgba(7,10,16,0.2) 100%);
-  transition: background 0.2s ease;
-}
-
-.ed-gallery-main__overlay svg {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  transform: scale(0.94);
+  cursor: pointer;
 }
 
 .ed-gallery-main__link:hover .ed-gallery-main__img,
 .ed-gallery-main__link:focus-visible .ed-gallery-main__img {
   transform: scale(1.02);
-}
-
-.ed-gallery-main__link:hover .ed-gallery-main__overlay,
-.ed-gallery-main__link:focus-visible .ed-gallery-main__overlay {
-  background: linear-gradient(180deg, rgba(7,10,16,0.05) 0%, rgba(7,10,16,0.3) 100%);
-}
-
-.ed-gallery-main__link:hover .ed-gallery-main__overlay svg,
-.ed-gallery-main__link:focus-visible .ed-gallery-main__overlay svg {
-  opacity: 1;
-  transform: scale(1);
 }
 
 .ed-gallery-main__link:focus-visible {
@@ -13055,7 +13036,7 @@ a.evf-btn--primary {
 .ed-gallery-thumbs {
   gap: 8px;
   padding: 12px;
-  background: linear-gradient(180deg, #f8fafc 0%, #fbfdff 100%);
+  background: transparent;
 }
 
 .ed-gallery-thumb {
@@ -13168,6 +13149,137 @@ body.page-event-detail {
   --ed-card-stack-gap: 24px;
   /* Misma columna visual que .ed-card__body (columna izquierda) */
   --ed-sidebar-rail: clamp(1.25rem, 3.5vw, 1.875rem);
+  /* Alinear hero-aside con .sidebar-sticky = interior de col-lg-4 (mismo cálculo que BS row) */
+  --ed-col4-pl: 12px;
+  --ed-col4-pr: 15px;
+  /*
+    El hero usa .container + grid propio; el body usa .row (margen negativo BS).
+    Nudge horizontal + ancho extra para alinear borde derecho con .sidebar-sticky.
+  */
+  --ed-hero-aside-nudge-x: 6px;
+  --ed-hero-aside-w: calc(33.3333333333% - var(--ed-col4-pl) - var(--ed-col4-pr) + 10px);
+  --ed-hero-aside-left: calc(66.6666666667% + var(--ed-col4-pl) + var(--ed-hero-aside-nudge-x));
+  /* Ritmo col-8 → col-4 en body: pr 24px + pl 12px → reserva para texto del hero */
+  --ed-hero-aside-gap: 36px;
+}
+
+/* ── Detalle evento: hero compacto + ticket card en aside absoluto (sin grid de 2 cols) ── */
+body.page-event-detail .ed-hero-event.hero-collage-section,
+body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+  position: relative;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: visible;
+}
+
+/*
+  Collage global: slides a -20px. En detalle: inset moderado (-12px) solo dentro de
+  .hero-slideshow (overflow hidden) para cubrir bordes en crossfade sin invadir el header.
+*/
+/* Slideshow: capa con recorte y color base; los slides un poco más grandes cubren bordes al crossfade */
+body.page-event-detail .ed-hero-event .hero-slideshow {
+  overflow: hidden;
+  background-color: rgb(12, 16, 26);
+}
+
+body.page-event-detail .ed-hero-event .hero-slide {
+  top: -12px;
+  left: -12px;
+  right: -12px;
+  bottom: -12px;
+}
+
+body.page-event-detail .hero-section.hero-collage-section.ed-hero-event {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+body.page-event-detail .ed-hero-event .hero-content-wrapper {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+body.page-event-detail .ed-hero-grid {
+  position: relative;
+  display: block;
+}
+
+body.page-event-detail .ed-hero-grid__main.hero-content {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  margin-right: auto;
+  text-align: left;
+  padding-top: 56px;
+  padding-bottom: 68px;
+  padding-right: calc(33.3333333333% - var(--ed-col4-pl) + var(--ed-hero-aside-gap) - var(--ed-hero-aside-nudge-x));
+}
+
+body.page-event-detail .ed-hero-grid__main.hero-content h1 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+body.page-event-detail .ed-hero-grid__aside {
+  position: absolute;
+  z-index: 10;
+  top: 56px;
+  left: var(--ed-hero-aside-left);
+  right: auto;
+  width: var(--ed-hero-aside-w);
+  max-width: none;
+  box-sizing: border-box;
+}
+
+body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
+  width: 100%;
+}
+
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  body.page-event-detail .ed-body .col-lg-4 .sidebar-sticky {
+    /*
+      Reserva bajo la ticket del hero (absolute): si es bajo, el countdown queda pegado
+      al bloque de entradas porque main-content empieza al cerrar el hero.
+    */
+    padding-top: 168px;
+  }
+}
+
+@media (min-width: 1200px) {
+  body.page-event-detail .ed-body .col-lg-4 .sidebar-sticky {
+    padding-top: 188px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    max-width: none;
+    padding-right: 0;
+    padding-top: 48px;
+    padding-bottom: 28px;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    position: static;
+    left: auto;
+    width: 100%;
+    max-width: none;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    top: auto;
+    right: auto;
+  }
+
+  body.page-event-detail .ed-body .col-lg-4 .sidebar-sticky {
+    padding-top: 0;
+  }
+}
+
+body.page-event-detail .ed-body {
+  padding-top: 0;
 }
 
 body.page-event-detail .ed-card {
@@ -13190,15 +13302,20 @@ body.page-event-detail .ed-summary-grid {
   gap: 16px;
 }
 
-body.page-event-detail .ed-summary-item {
+/* Quick facts: acercar al breadcrumb; cards → bloque TukiPass (más abajo) */
+body.page-event-detail .ed-event-quickfacts .ed-summary-grid {
+  margin-top: -6px;
+}
+
+body.page-event-detail .ed-summary-item:not(.ed-summary-item--quickfact) {
   padding: 1lh clamp(1rem, 2.6vw, 1.125rem);
 }
 
-body.page-event-detail .ed-summary-item__label {
+body.page-event-detail .ed-summary-item:not(.ed-summary-item--quickfact) .ed-summary-item__label {
   margin-bottom: 0.4lh;
 }
 
-body.page-event-detail .ed-summary-item__meta {
+body.page-event-detail .ed-summary-item:not(.ed-summary-item--quickfact) .ed-summary-item__meta {
   margin-top: 0.5lh;
 }
 
@@ -13245,24 +13362,30 @@ body.page-event-detail .ed-head-stock {
   margin-top: 0.65lh !important;
 }
 
-body.page-event-detail .ed-ticket-card__body {
-  padding: 1.25lh var(--ed-sidebar-rail) 1.25lh;
-}
-
 body.page-event-detail .ed-total-row {
-  padding: 1lh 0 0.75lh;
-  margin-top: 0.75lh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 8px;
+  margin-top: var(--ed-space-4, 16px);
+  margin-bottom: 0;
+  padding-top: var(--ed-space-4, 16px);
+  padding-bottom: 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  text-align: left;
 }
 
 body.page-event-detail .ed-cta-zone {
-  margin: 0.25lh calc(-1 * var(--ed-sidebar-rail)) calc(-1 * var(--ed-sidebar-rail));
-  padding: 1.25lh var(--ed-sidebar-rail) 1.5lh;
-  border-top: 1px solid rgba(226, 232, 240, 0.95);
+  margin: var(--ed-space-3, 12px) calc(-1 * var(--ed-sidebar-rail)) calc(-1 * var(--ed-sidebar-rail));
+  padding: var(--ed-space-4, 16px) var(--ed-sidebar-rail) var(--ed-space-5, 20px);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: transparent;
 }
 
 body.page-event-detail .ed-trust,
 body.page-event-detail .ed-trust-row {
-  margin-top: 0.85lh;
+  margin-top: 0;
 }
 
 body.page-event-detail .ed-info-card {
@@ -13333,17 +13456,18 @@ body.page-event-detail .ei-meta__text {
   }
 
   body.page-event-detail .ed-ticket-card__body {
-    padding: 1.1lh 1.125rem 1.15lh;
+    padding: 18px 1.125rem 18px;
   }
 
   body.page-event-detail .ed-cta-zone {
     margin-left: -1.125rem;
     margin-right: -1.125rem;
     margin-bottom: -1.125rem;
+    margin-top: 12px;
     padding-left: 1.125rem;
     padding-right: 1.125rem;
-    padding-top: 1.1lh;
-    padding-bottom: 1.25lh;
+    padding-top: 16px;
+    padding-bottom: 20px;
   }
 
   body.page-event-detail .ei-org,
@@ -14723,5 +14847,945 @@ body.page-event-detail .ei-meta__text {
   .blog-detail .bl-detail__shell {
     padding-left: 4px;
     padding-right: 4px;
+  }
+}
+
+/* =========================================================
+   Event detail: interest indicator (sidebar)
+   ========================================================= */
+.ed-interest-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: #fff8f3;
+  border: 1px solid rgba(249,115,22,0.20);
+  border-radius: 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.35;
+}
+.ed-interest-indicator__icon { flex-shrink: 0; color: #f97316; }
+.ed-interest-indicator__text strong { color: #111827; }
+
+/* =========================================================
+   Event detail: hero nudge rotator
+   ========================================================= */
+.ed-hero-nudge {
+  position: relative;
+  height: 19px;
+  margin-top: -6px;
+  margin-bottom: 0;
+  max-width: 560px;
+  padding-left: 15px;
+  overflow: hidden;
+}
+.ed-hero-nudge::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--primary-color, #f97316);
+  flex-shrink: 0;
+}
+.ed-hero-nudge__item {
+  position: absolute;
+  left: 15px;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.65s ease;
+  color: rgba(255,255,255,0.72);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 19px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.ed-hero-nudge__item--active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.ed-hero-nudge__item--leaving {
+  transition: opacity 0.4s ease;
+}
+.ed-hero-nudge__item--typing::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: currentColor;
+  vertical-align: -0.12em;
+  opacity: 1;
+  animation: ed-hero-nudge-caret 0.85s step-end infinite;
+}
+@keyframes ed-hero-nudge-caret {
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ed-hero-nudge__item { transition: none; }
+  .ed-hero-nudge__item--typing::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   Event detail: ticket card + quick facts visual polish
+   ========================================================= */
+
+/* ── Ticket card ── */
+/* Wrapper transparente para que el hero se vea en el header; el blanco va solo al body. */
+body.page-event-detail .ed-ticket-card {
+  overflow: hidden;
+  border-radius: 24px;
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  /* Sin inset: el highlight blanco tapaba el vidrio del header frente al hero */
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.14);
+}
+
+body.page-event-detail .ed-ticket-card__body {
+  padding: 22px var(--ed-sidebar-rail) 22px;
+  background: #ffffff;
+  border-radius: 0 0 24px 24px;
+}
+
+/* Mismo lenguaje que `.ed-hero__btn`: casi sin tinte, solo velo + borde; blur opcional para vidrio */
+body.page-event-detail .ed-ticket-card__head {
+  position: relative;
+  /* Mismo arco que la card (24px − 1px de borde): sin esto los inset-shadow son rectos y en la curva “desaparecen” */
+  border-radius: 23px 23px 0 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.028);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.12);
+  backdrop-filter: blur(14px) saturate(1.12);
+  /* Marco suave: laterales + brillo arriba; abajo solo el border-bottom (evita doble línea) */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 1px 0 0 rgba(255, 255, 255, 0.09),
+    inset -1px 0 0 rgba(255, 255, 255, 0.09);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: none;
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  body.page-event-detail .ed-ticket-card__head {
+    background: rgba(255, 255, 255, 0.055);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      inset 1px 0 0 rgba(255, 255, 255, 0.1),
+      inset -1px 0 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  body.page-event-detail .ed-ticket-card__head {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(26, 31, 42, 0.88);
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 1px 0 0 rgba(255, 255, 255, 0.06),
+      inset -1px 0 0 rgba(255, 255, 255, 0.06);
+  }
+}
+
+body.page-event-detail .ed-ticket-card__head::after {
+  display: none;
+}
+
+body.page-event-detail .ed-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+body.page-event-detail .ed-head-status {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+body.page-event-detail .ed-head-status--open {
+  color: #bbf7d0;
+}
+
+body.page-event-detail .ed-head-status--over {
+  color: #fecaca;
+}
+
+body.page-event-detail .ed-head-stock__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.16);
+}
+
+body.page-event-detail .ed-head-stock__dot.ed-head-stock__dot--low {
+  background: #fbbf24;
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.22);
+}
+
+body.page-event-detail .ed-head-stock--over .ed-head-stock__dot {
+  background: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.16);
+}
+
+body.page-event-detail .ed-ticket-card__head-title {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-ticket-card__head-price {
+  margin: 20px 0 5px;
+  color: #ffffff;
+  font-size: clamp(34px, 3vw, 44px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+body.page-event-detail .ed-head-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ── Ticket card body — minimal, sobrio (naranja casi solo en CTA) ── */
+body.page-event-detail .ed-ticket-card__body .ed-section-label {
+  margin: 0 0 12px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* Event detail — align ticket price and quantity controls (scope página; h6 vía .event-details-information para vencer margin-bottom legacy) */
+body.page-event-detail .price-count {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+body.page-event-detail .ed-ticket-card__body .price-count {
+  flex-wrap: nowrap;
+  padding: 15px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+}
+
+body.page-event-detail .event-details-information .price-count h6,
+body.page-event-detail .event-details-information .price-count .price,
+body.page-event-detail .event-details-information .price-count .ticket-price {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  color: #0f172a;
+  line-height: 1;
+}
+
+body.page-event-detail .event-details-information .price-count h6 {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+/* Anula margin-bottom global de .quantity-input y el 34×34 legacy (evita desalinear el eje vertical del flex) */
+body.page-event-detail .event-details-information .price-count .quantity-input {
+  margin: 0;
+  min-height: 36px;
+}
+
+body.page-event-detail .event-details-information .price-count .quantity-input .quantity-up,
+body.page-event-detail .event-details-information .price-count .quantity-input .quantity-down,
+body.page-event-detail .event-details-information .price-count .quantity-input .quantity-down_variation {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+body.page-event-detail .event-details-information .price-count .quantity-input input.quantity {
+  height: 36px;
+  min-height: 36px;
+}
+
+body.page-event-detail .ed-ticket-card__body .quantity-input {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin: 0;
+  overflow: hidden;
+  flex: 0 0 auto;
+  min-height: 36px;
+  border-radius: 13px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ticket-card__body .quantity-up,
+body.page-event-detail .ed-ticket-card__body .quantity-down,
+body.page-event-detail .ed-ticket-card__body .quantity-down_variation {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: #475569;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+body.page-event-detail .ed-ticket-card__body .quantity-up:hover,
+body.page-event-detail .ed-ticket-card__body .quantity-down:hover,
+body.page-event-detail .ed-ticket-card__body .quantity-down_variation:hover {
+  background: rgba(15, 23, 42, 0.04);
+  color: #0f172a;
+}
+
+body.page-event-detail .ed-ticket-card__body .quantity-up:focus-visible,
+body.page-event-detail .ed-ticket-card__body .quantity-down:focus-visible,
+body.page-event-detail .ed-ticket-card__body .quantity-down_variation:focus-visible {
+  outline: 3px solid rgba(249, 115, 22, 0.22);
+  outline-offset: 2px;
+}
+
+body.page-event-detail .ed-ticket-card__body .quantity {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid rgba(15, 23, 42, 0.08);
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+}
+
+body.page-event-detail .ed-ticket-card__body .quantity:focus {
+  outline: none;
+}
+
+body.page-event-detail .ed-total-label {
+  grid-column: 1;
+  grid-row: 1;
+  margin: 0;
+  justify-self: start;
+  max-width: 16rem;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+body.page-event-detail .ed-total-value {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 0.18em;
+  color: #0f172a;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+  text-align: right;
+}
+
+body.page-event-detail .ed-total-value__currency,
+body.page-event-detail .ed-total-value__amount,
+body.page-event-detail .ed-total-value #total_price {
+  color: inherit;
+  font: inherit;
+  font-weight: 800;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+body.page-event-detail .ed-total-row__note {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin: 0;
+  max-width: none;
+  color: #94a3b8;
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+}
+
+body.page-event-detail .ed-buy-btn {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 15px;
+  border: 0;
+  background: #f97316;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  box-shadow: none !important;
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease;
+}
+
+body.page-event-detail .ed-buy-btn:hover {
+  transform: translateY(-1px);
+  background: #ea580c;
+  box-shadow: none !important;
+}
+
+body.page-event-detail .ed-buy-btn:focus-visible {
+  outline: 3px solid rgba(249, 115, 22, 0.28);
+  outline-offset: 3px;
+  box-shadow: none !important;
+}
+
+body.page-event-detail .ed-buy-btn:active {
+  box-shadow: none !important;
+}
+
+body.page-event-detail .ed-buy-btn:disabled {
+  transform: none;
+  box-shadow: none !important;
+  background: #cbd5e1;
+  color: #f8fafc;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+body.page-event-detail .ed-buy-btn::before {
+  display: none;
+}
+
+body.page-event-detail .ed-trust-integrated {
+  margin-top: 15px;
+}
+
+body.page-event-detail .ed-conversion-trust__fixed--cta-integrated {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.page-event-detail .ed-conversion-trust__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+body.page-event-detail .ed-conversion-trust__item svg,
+body.page-event-detail .ed-conversion-trust__item i {
+  flex: 0 0 auto;
+  color: #16a34a;
+  opacity: 0.9;
+}
+
+body.page-event-detail .ed-cta-zone__hint {
+  color: #64748b;
+  text-align: center;
+  line-height: 1.45;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body.page-event-detail .ed-cta-zone .ed-trust-row {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: var(--ed-space-4, 16px) 0 0;
+  padding: var(--ed-space-4, 16px) 0 0;
+  padding-inline-start: 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+  background: transparent;
+  list-style: none;
+  text-align: left;
+}
+
+body.page-event-detail .ed-cta-zone .ed-trust-item {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #64748b;
+  white-space: normal;
+  max-width: 11.5rem;
+  text-align: left;
+}
+
+body.page-event-detail .ed-cta-zone .ed-trust-item__icon {
+  flex-shrink: 0;
+  color: #15803d;
+  opacity: 0.88;
+}
+
+/* ── Quick facts — barra 2 celdas (horario + acceso; precio/organizador en hero/sidebar) ── */
+body.page-event-detail .ed-event-quickfacts {
+  margin: 0 0 26px;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  align-items: stretch;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.045);
+  overflow: hidden;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  list-style: none;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:first-child {
+  border-right: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact__inner {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 100%;
+  padding: 15px 14px 14px;
+  transition: background-color 160ms ease;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  margin-bottom: 0;
+  border-radius: 12px;
+  background: #f1f5f9;
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: none;
+  color: #475569;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__icon-svg {
+  display: block;
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  color: inherit;
+  opacity: 0.92;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-quickfact__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__label {
+  display: block;
+  margin: 0;
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__value {
+  display: block;
+  margin: 0;
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__meta {
+  display: block;
+  margin: 0;
+  margin-top: 1px;
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:hover .ed-summary-item--quickfact__inner {
+  background: rgba(15, 23, 42, 0.025);
+}
+
+body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:hover .ed-summary-item__icon {
+  background: #e2e8f0;
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #334155;
+}
+
+/* Optional secondary card normalization */
+body.page-event-detail .ei-card,
+body.page-event-detail .ed-interest-indicator,
+body.page-event-detail .ed-countdown-wrap,
+body.page-event-detail .ed-refund-band {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-summary-grid--quickfacts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact {
+    border-bottom: 0 !important;
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:first-child {
+    border-right: 1px solid rgba(15, 23, 42, 0.08) !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-event-quickfacts {
+    margin-bottom: 22px;
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts {
+    grid-template-columns: 1fr;
+    border-radius: 16px;
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact {
+    border-right: 0 !important;
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:not(:last-child) {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact__inner {
+    padding: 14px 13px;
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 11px;
+  }
+
+  body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact .ed-summary-item__value {
+    font-size: 17px;
+  }
+
+  body.page-event-detail .ed-ticket-card__body .price-count {
+    padding: 14px;
+    border-radius: 15px;
+  }
+
+  body.page-event-detail .event-details-information .price-count h6 {
+    font-size: 18px;
+  }
+
+  body.page-event-detail .ed-total-value {
+    font-size: 25px;
+  }
+
+  body.page-event-detail .ed-buy-btn {
+    min-height: 50px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-event-detail .ed-ticket-card *,
+  body.page-event-detail .ed-summary-item--quickfact,
+  body.page-event-detail .ed-buy-btn {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+}
+
+/* =========================================================
+   Event Detail — spacing/radius normalization pass
+   Scoped final layer to stabilize rhythm without touching logic
+   ========================================================= */
+body.page-event-detail {
+  --ed-space-1: 4px;
+  --ed-space-2: 8px;
+  --ed-space-3: 12px;
+  --ed-space-4: 16px;
+  --ed-space-5: 20px;
+  --ed-space-6: 24px;
+  --ed-space-7: 32px;
+  --ed-space-8: 40px;
+  --ed-space-9: 48px;
+  --ed-space-10: 64px;
+
+  --ed-radius-sm: 14px;
+  --ed-radius-md: 18px;
+  --ed-radius-lg: 22px;
+  --ed-radius-xl: 24px;
+
+  --ed-border-soft: rgba(15, 23, 42, 0.08);
+  --ed-shadow-soft: 0 10px 28px rgba(15, 23, 42, 0.045);
+  --ed-shadow-card: 0 18px 44px rgba(15, 23, 42, 0.075);
+  --ed-sidebar-rail: 1.375rem;
+}
+
+body.page-event-detail #main-content {
+  padding-top: var(--ed-space-7);
+}
+
+body.page-event-detail .ed-body {
+  padding-bottom: var(--ed-space-10);
+}
+
+body.page-event-detail .ed-section {
+  margin-bottom: var(--ed-space-8);
+  padding-top: var(--ed-space-8);
+}
+
+body.page-event-detail .ed-section__head {
+  margin-bottom: var(--ed-space-6);
+}
+
+/* Media apilada (galería / Spotify / mapa / video): compactar vs. secciones de texto */
+body.page-event-detail .ed-card.ed-section.ed-section--media {
+  padding-top: 0;
+  margin-bottom: var(--ed-space-5);
+}
+
+body.page-event-detail .ed-card.ed-section.ed-section--media + .ed-card.ed-section.ed-section--media {
+  margin-top: var(--ed-space-3);
+  padding-top: 0;
+  border-top: 0;
+}
+
+body.page-event-detail .ed-card,
+body.page-event-detail .ei-card,
+body.page-event-detail .ed-interest-indicator,
+body.page-event-detail .ed-refund-band,
+body.page-event-detail .ed-countdown-wrap {
+  border-radius: var(--ed-radius-lg);
+}
+
+body.page-event-detail .ed-card {
+  box-shadow: var(--ed-shadow-soft);
+}
+
+body.page-event-detail .ed-card__head {
+  padding: var(--ed-space-5) var(--ed-space-6) var(--ed-space-4);
+}
+
+body.page-event-detail .ed-card__body:not(.ed-card__body--embed) {
+  padding: var(--ed-space-6);
+}
+
+body.page-event-detail .ed-card__eyebrow {
+  margin-bottom: var(--ed-space-2);
+}
+
+body.page-event-detail .ed-event-quickfacts {
+  margin: 0 0 var(--ed-space-6);
+  padding-top: var(--ed-space-4);
+}
+
+body.page-event-detail .ed-body-breadcrumbs {
+  padding: 0 0 var(--ed-space-3);
+  margin-bottom: var(--ed-space-3);
+}
+
+body.page-event-detail .ed-event-quickfacts .ed-summary-grid {
+  margin-top: 0;
+}
+
+body.page-event-detail .ed-refund-band {
+  margin-top: var(--ed-space-7);
+  padding: var(--ed-space-5);
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-section--description .summernote-content + .ed-refund-band {
+  margin-top: var(--ed-space-6);
+}
+
+body.page-event-detail .ed-body .col-lg-8 {
+  padding-right: 18px;
+}
+
+body.page-event-detail .ed-body .col-lg-4 {
+  padding-left: 18px;
+}
+
+body.page-event-detail .sidebar-sticky {
+  gap: var(--ed-space-5);
+}
+
+body.page-event-detail .ed-countdown-wrap {
+  padding: 18px 20px;
+  border-left: 3px solid var(--primary-color);
+}
+
+body.page-event-detail .ei-org,
+body.page-event-detail .ei-meta,
+body.page-event-detail .ei-cal,
+body.page-event-detail .ed-info-row {
+  padding-left: var(--ed-space-5);
+  padding-right: var(--ed-space-5);
+}
+
+body.page-event-detail .ei-org {
+  padding-top: var(--ed-space-5);
+  padding-bottom: 18px;
+}
+
+body.page-event-detail .ei-meta {
+  padding-top: var(--ed-space-4);
+  padding-bottom: var(--ed-space-4);
+}
+
+body.page-event-detail .ei-cal {
+  padding-top: 18px;
+  padding-bottom: var(--ed-space-5);
+}
+
+@media (max-width: 1199.98px) {
+  body.page-event-detail .ed-body .col-lg-8,
+  body.page-event-detail .ed-body .col-lg-4 {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail #main-content {
+    padding-top: var(--ed-space-6);
+  }
+
+  body.page-event-detail .ed-body {
+    padding-bottom: 64px;
+  }
+
+  body.page-event-detail .ed-section {
+    margin-bottom: var(--ed-space-7);
+    padding-top: var(--ed-space-7);
+  }
+
+  body.page-event-detail .sidebar-sticky {
+    gap: var(--ed-space-4);
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail {
+    --ed-space-5: 18px;
+    --ed-space-6: 20px;
+    --ed-space-7: 24px;
+    --ed-space-8: 32px;
+    --ed-sidebar-rail: 1.125rem;
+  }
+
+  body.page-event-detail #main-content {
+    padding-top: var(--ed-space-5);
+  }
+
+  body.page-event-detail .ed-body {
+    padding-bottom: 48px;
+  }
+
+  body.page-event-detail .ed-section {
+    margin-bottom: var(--ed-space-6);
+    padding-top: var(--ed-space-6);
+  }
+
+  body.page-event-detail .ed-refund-band,
+  body.page-event-detail .ei-card,
+  body.page-event-detail .ed-interest-indicator,
+  body.page-event-detail .ed-countdown-wrap {
+    border-radius: var(--ed-radius-md);
   }
 }

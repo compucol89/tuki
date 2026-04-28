@@ -59,13 +59,16 @@
     @endphp
 
     <div class="row justify-content-between">
-      <div class="col-lg-5 col-sm-6">
+      <div class="col-lg-4 col-sm-6">
         <div class="footer-widget about-widget footer-brand">
           <div class="footer-logo mb-30">
             <a href="{{ route('index') }}"><img
                 src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a>
           </div>
           <div class="footer-copy">{!! $footerInfo ? $footerInfo->about_company : '' !!}</div>
+          <p class="footer-section__operator">
+            {{ __('Operada por') }} <strong>TAYRONA - GROUP S.A.S.</strong> — CUIT 30-71885087-4
+          </p>
           <div class="footer-social">
             <p class="footer-social__label">{{ __('Seguinos') }}</p>
             <div class="social-style-one mt-30">
@@ -109,7 +112,7 @@
           </ul>
         </div>
       </div>
-      <div class="col-lg-4 col-sm-6">
+      <div class="col-lg-3 col-sm-6">
         <div class="footer-widget about-widget footer-contact ml-sm-auto">
           <h5 class="footer-title">{{ __('Contacto') }}</h5>
           @if (!is_null($bex) && (!empty($addresses) || !empty($mails) || !empty($phones)))

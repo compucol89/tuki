@@ -52,14 +52,14 @@
 - [x] Mis entradas / orders (`a4c7e99`)
 - [x] Lista de deseos / wishlist (`26b705f`)
 - [x] Contacto (`d6adbbe`)
+- [x] `frontend/about.blade.php`
+- [x] `frontend/faqs.blade.php`
+- [x] `frontend/journal/blogs.blade.php` / `blog-details.blade.php`
+- [x] `frontend/event/invoice.blade.php`
 
 **Falta aplicar ❌**
-- [ ] `frontend/about.blade.php`
-- [ ] `frontend/faqs.blade.php`
-- [x] `frontend/journal/blogs.blade.php` / `blog-details.blade.php` — rediseño SaaS UI completo
 - [ ] `frontend/shop/` — index, detalle, carrito, checkout, invoice
 - [ ] `frontend/payment/success.blade.php` / `order_success.blade.php`
-- [x] `frontend/event/invoice.blade.php` — rediseño completo: dark header, Inter, status badge, QR card, billing moderno
 - [ ] `frontend/customer/forget-password.blade.php` / `reset-password.blade.php`
 - [ ] `frontend/customer/dashboard/` — bookings details, orders details, support tickets, edit-profile, change-password
 - [ ] `frontend/organizer/forget-password.blade.php` / `reset-password.blade.php` / `details.blade.php` / `index.blade.php`
@@ -129,7 +129,7 @@
 
 ## 🔴 Deuda técnica — separada
 
-- [ ] Error `KdInstallerController` (`tommybot/` submodule) — bloquea `php artisan route:list`. No afecta SEO ni sitemap, pero dificulta diagnósticos Artisan.
+- [ ] Error `KdInstallerController` — paquete `kreativdev/installer ^1.1` referenciado en `composer.json` y `composer.lock` (`Kreativdev\Installer\KdInstallerServiceProvider`), pero faltan archivos en `vendor/`. Bloquea `php artisan route:list`. No afecta SEO ni sitemap, pero dificulta diagnósticos Artisan. Fix seguro: `composer remove kreativdev/installer` o `composer install` si el paquete es intencional.
 - [ ] Alt descriptivos adicionales — revisar listados de eventos, blogs, productos si se detectan más `alt=""` en imágenes informativas.
 
 ---

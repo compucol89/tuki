@@ -140,20 +140,37 @@ class WsaaClient
         try {
             file_put_contents($tempTra, $tra);
 
-            $passphrase = $this->passphrase ?: null;
+            $passphrase = $this->passphrase ?: '';
 
-            // Sin PKCS7_BINARY: el body del SMIME queda en base64 directamente
+            $certContent = file_get_contents($this->certificate);
+            if ($certContent === false) {
+                throw new Exception('Cannot read certificate file: ' . $this->certificate);
+            }
+            $cert = openssl_x509_read($certContent);
+            if ($cert === false) {
+                throw new Exception('Cannot parse certificate: ' . $this->drainOpenSslErrors());
+            }
+
+            $keyContent = file_get_contents($this->privateKey);
+            if ($keyContent === false) {
+                throw new Exception('Cannot read private key file: ' . $this->privateKey);
+            }
+            $key = openssl_pkey_get_private($keyContent, $passphrase);
+            if ($key === false) {
+                throw new Exception('Cannot load private key: ' . $this->drainOpenSslErrors());
+            }
+
             $signed = openssl_pkcs7_sign(
                 $tempTra,
                 $tempSigned,
-                'file://' . $this->certificate,
-                ['file://' . $this->privateKey, $passphrase],
+                $cert,
+                $key,
                 [],
                 PKCS7_NOATTR
             );
 
             if (!$signed) {
-                throw new Exception('Failed to sign TRA: ' . openssl_error_string());
+                throw new Exception('Failed to sign TRA: ' . $this->drainOpenSslErrors());
             }
 
             $smime = file_get_contents($tempSigned);
@@ -175,6 +192,15 @@ class WsaaClient
             if (file_exists($tempTra)) unlink($tempTra);
             if (file_exists($tempSigned)) unlink($tempSigned);
         }
+    }
+
+    protected function drainOpenSslErrors(): string
+    {
+        $errors = [];
+        while ($e = openssl_error_string()) {
+            $errors[] = $e;
+        }
+        return $errors ? implode('; ', $errors) : 'unknown OpenSSL error';
     }
 
     /**

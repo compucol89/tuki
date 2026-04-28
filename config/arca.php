@@ -38,16 +38,16 @@ return [
     | Endpoints WSAA (Web Service de Autorización)
     */
     'wsaa' => [
-        'homologation' => 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms',
-        'production'   => 'https://wsaa.afip.gov.ar/ws/services/LoginCms',
+        'homologation' => 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl',
+        'production'   => 'https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl',
     ],
 
     /*
     | Endpoints WSFEv1 (Web Service de Factura Electrónica)
     */
     'wsfe' => [
-        'homologation' => 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx',
-        'production'   => 'https://servicios1.afip.gov.ar/wsfev1/service.asmx',
+        'homologation' => 'https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL',
+        'production'   => 'https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL',
     ],
 
     /*

@@ -58,21 +58,21 @@ class WsaaClient
 
         $response = $client->loginCms(['in0' => $cms]);
 
-        if (isset($response->loginCmsReturn)) {
-            $xml = simplexml_load_string($response->loginCmsReturn);
-
-            if ($xml->header->estatus === 'OK') {
-                return [
-                    'token' => (string) $xml->credentials->token,
-                    'sign' => (string) $xml->credentials->sign,
-                    'expiration' => (string) $xml->header->expirationtime,
-                ];
-            }
-
-            throw new Exception("WSAA error: {$xml->header->error}");
+        if (!isset($response->loginCmsReturn)) {
+            throw new Exception('WSAA returned empty response');
         }
 
-        throw new Exception('WSAA returned empty response');
+        $xml = simplexml_load_string($response->loginCmsReturn);
+
+        if ($xml === false || empty((string) $xml->credentials->token)) {
+            throw new Exception('WSAA returned invalid or empty token');
+        }
+
+        return [
+            'token' => (string) $xml->credentials->token,
+            'sign'  => (string) $xml->credentials->sign,
+            'expiration' => (string) $xml->header->expirationTime,
+        ];
     }
 
     /**
@@ -85,10 +85,11 @@ class WsaaClient
             '<loginTicketRequest version="1.0"></loginTicketRequest>'
         );
 
+        $now = time();
         $tra->addChild('header');
-        $tra->header->addChild('uniqueId', date('U'));
-        $tra->header->addChild('generation', date('c', date('U') - 60));
-        $tra->header->addChild('expiration', date('c', date('U') + 600));
+        $tra->header->addChild('uniqueId', (string) $now);
+        $tra->header->addChild('generationTime', gmdate('Y-m-d\TH:i:s.000\Z', $now - 60));
+        $tra->header->addChild('expirationTime', gmdate('Y-m-d\TH:i:s.000\Z', $now + 600));
 
         $tra->addChild('service', $this->service);
 
@@ -101,9 +102,6 @@ class WsaaClient
      */
     protected function signTRA(string $tra): string
     {
-        $cert = file_get_contents($this->certificate);
-        $key = file_get_contents($this->privateKey);
-
         $tempTra = tempnam(sys_get_temp_dir(), 'tra_');
         $tempSigned = tempnam(sys_get_temp_dir(), 'signed_');
 
@@ -112,32 +110,38 @@ class WsaaClient
 
             $passphrase = $this->passphrase ?: null;
 
+            // Sin PKCS7_BINARY: el body del SMIME queda en base64 directamente
             $signed = openssl_pkcs7_sign(
                 $tempTra,
                 $tempSigned,
-                $cert,
-                [$key, $passphrase],
+                'file://' . $this->certificate,
+                ['file://' . $this->privateKey, $passphrase],
                 [],
-                PKCS7_BINARY | PKCS7_NOATTR
+                PKCS7_NOATTR
             );
 
             if (!$signed) {
-                throw new Exception('Failed to sign TRA. Check certificate and private key.');
+                throw new Exception('Failed to sign TRA: ' . openssl_error_string());
             }
 
-            $signedContent = file_get_contents($tempSigned);
+            $smime = file_get_contents($tempSigned);
 
-            // Extraer solo el body del CMS
-            $parts = explode("\n\n", $signedContent, 2);
+            // El SMIME tiene headers + línea vacía + body base64
+            // AFIP espera el body base64 (DER encoded) sin los headers MIME
+            if (($pos = strpos($smime, "\r\n\r\n")) !== false) {
+                $body = substr($smime, $pos + 4);
+            } elseif (($pos = strpos($smime, "\n\n")) !== false) {
+                $body = substr($smime, $pos + 2);
+            } else {
+                $body = $smime;
+            }
 
-            return base64_encode($parts[1] ?? $signedContent);
+            // Limpiar saltos de línea del base64
+            return str_replace(["\r\n", "\r", "\n"], '', trim($body));
+
         } finally {
-            if (file_exists($tempTra)) {
-                unlink($tempTra);
-            }
-            if (file_exists($tempSigned)) {
-                unlink($tempSigned);
-            }
+            if (file_exists($tempTra)) unlink($tempTra);
+            if (file_exists($tempSigned)) unlink($tempSigned);
         }
     }
 

@@ -70,44 +70,51 @@ class ArcaTestConnection extends Command
     {
         $this->warn('── Configuration ──');
 
-        $required = [
-            'ARCA_CUIT' => config('arca.cuit'),
-            'ARCA_CERT_PATH' => config('arca.certificate'),
-            'ARCA_KEY_PATH' => config('arca.private_key'),
-        ];
+        $errors = 0;
 
-        $missing = [];
-        foreach ($required as $key => $value) {
-            if (empty($value)) {
-                $missing[] = $key;
-                $this->error("  ✗ {$key} is not set");
-            } else {
-                $this->info("  ✓ {$key} is set");
-            }
+        // CUIT es siempre requerido
+        if (empty(config('arca.cuit'))) {
+            $this->error("  ✗ ARCA_CUIT is not set");
+            $errors++;
+        } else {
+            $this->info("  ✓ ARCA_CUIT is set");
         }
 
-        if (!empty($missing)) {
-            $this->error("  Missing: " . implode(', ', $missing));
-            return 1;
-        }
-
-        // Verificar que los archivos existan
+        // Certificado: aceptar ARCA_CERT_PATH o ARCA_CERT_B64
         $certPath = config('arca.certificate');
+        $certB64 = env('ARCA_CERT_B64');
+        if (!empty($certPath)) {
+            if (!File::exists($certPath)) {
+                $this->error("  ✗ Certificate file not found: {$certPath}");
+                $errors++;
+            } else {
+                $this->info("  ✓ ARCA_CERT_PATH set and file exists: {$certPath}");
+            }
+        } elseif (!empty($certB64)) {
+            $this->info("  ✓ ARCA_CERT_B64 set (base64 mode)");
+        } else {
+            $this->error("  ✗ No certificate configured (set ARCA_CERT_PATH or ARCA_CERT_B64)");
+            $errors++;
+        }
+
+        // Clave privada: aceptar ARCA_KEY_PATH o ARCA_KEY_B64
         $keyPath = config('arca.private_key');
-
-        if (!File::exists($certPath)) {
-            $this->error("  ✗ Certificate file not found: {$certPath}");
-            return 1;
+        $keyB64 = env('ARCA_KEY_B64');
+        if (!empty($keyPath)) {
+            if (!File::exists($keyPath)) {
+                $this->error("  ✗ Private key file not found: {$keyPath}");
+                $errors++;
+            } else {
+                $this->info("  ✓ ARCA_KEY_PATH set and file exists: {$keyPath}");
+            }
+        } elseif (!empty($keyB64)) {
+            $this->info("  ✓ ARCA_KEY_B64 set (base64 mode)");
+        } else {
+            $this->error("  ✗ No private key configured (set ARCA_KEY_PATH or ARCA_KEY_B64)");
+            $errors++;
         }
-        $this->info("  ✓ Certificate file exists: {$certPath}");
 
-        if (!File::exists($keyPath)) {
-            $this->error("  ✗ Private key file not found: {$keyPath}");
-            return 1;
-        }
-        $this->info("  ✓ Private key file exists: {$keyPath}");
-
-        return 0;
+        return $errors > 0 ? 1 : 0;
     }
 
     protected function checkCertificate(): int

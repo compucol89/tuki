@@ -80,12 +80,16 @@
 6. Sitemap XML expandido — ahora incluye blogs, productos, páginas CMS y organizadores (`SitemapController`).
 7. Titles de eventos truncados a 55 chars para evitar > 70 en `<title>`; H1, OG title y schema Event intactos.
 8. Alt descriptivos en logos aliados del home (reemplazados `alt=""` vacíos).
+9. URLs públicas en español cerradas — `/organizadores`, `/tienda`, `/preguntas-frecuentes` + 301 desde `/organizers`, `/shop`, `/faq`.
+10. Aliases auth en español cerrados — `/cliente/*` y `/organizador/*`, manteniendo compatibilidad con `/customer/*` y `/organizer/*`.
 
 **Commits:**
 - `19b5547` SEO: canonical, OG, schemas JSON-LD y BreadcrumbList en frontend
 - `64e0ee5` SEO: truncar title largos en eventos y alt descriptivos en logos aliados
+- `8ed5289` Auth: add Spanish auth route aliases
+- `a40da31` SEO: add Spanish public URL redirects
 
-**Nota:** No se requieren más cambios de código por ahora. El resto es post-deploy/manual.
+**Nota:** Bloque auditado y cerrado. No tocar más rutas sin auditoría nueva. El resto es post-deploy/manual.
 
 ---
 
@@ -99,10 +103,17 @@
 - [ ] Inspeccionar y solicitar indexación de:
   - [ ] Home
   - [ ] `/eventos`
+  - [ ] `/organizadores`
+  - [ ] `/preguntas-frecuentes`
+  - [ ] `/tienda` si shop está activo
   - [ ] 2-3 eventos importantes activos
   - [ ] 1 blog publicado
   - [ ] 1 producto si shop está activo
   - [ ] 1 página CMS importante
+- [ ] Validar redirects 301:
+  - [ ] `/organizers` → `/organizadores`
+  - [ ] `/shop` → `/tienda`
+  - [ ] `/faq` → `/preguntas-frecuentes`
 - [ ] Validar Rich Results Test:
   - [ ] Home → WebSite + Organization
   - [ ] Evento → Event + BreadcrumbList + Offer
@@ -113,6 +124,7 @@
   - [ ] Event detail
 - [ ] Revisar cobertura/indexación a las 48-72h.
 - [ ] Verificar que no aparezcan URLs privadas indexadas: `/admin/`, `/customer/`, `/checkout/`, `/cart/`.
+- [ ] Mantener congeladas: `/event/{slug}/{id}`, `/checkout`, `/check-out2`, `/event-booking/*`, `/product-order/*`, `/shop/cart`, `/shop/checkout`, gateways, callbacks, cron, `/admin/*`.
 
 **Bloqueado por:** Deploy a producción + acceso a Google Search Console.
 

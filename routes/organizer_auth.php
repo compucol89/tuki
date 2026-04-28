@@ -19,6 +19,15 @@ Route::prefix('/organizer')->group(function () {
   });
 });
 
+Route::prefix('/organizador')->group(function () {
+  Route::middleware('guest:organizer', 'change.lang')->group(function () {
+    Route::get('/login', 'BackEnd\Organizer\OrganizerController@login')->name('organizador.login');
+    Route::get('/registro', 'BackEnd\Organizer\OrganizerController@signup')->name('organizador.registro');
+    Route::get('/olvide-contrasena', 'BackEnd\Organizer\OrganizerController@forget_passord')->name('organizador.olvide-contrasena');
+    Route::get('/restablecer-contrasena', 'BackEnd\Organizer\OrganizerController@reset_password')->name('organizador.restablecer-contrasena');
+  });
+});
+
 Route::prefix('/organizer')->middleware('auth:organizer')->group(function () {
   Route::get('/logout', 'BackEnd\Organizer\OrganizerController@logout')->name('organizer.logout');
   Route::get('/change-password', 'BackEnd\Organizer\OrganizerController@change_password')->name('organizer.change.password');

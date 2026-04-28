@@ -34,6 +34,15 @@ Route::middleware('change.lang')->prefix('/customer')->group(function () {
   });
 });
 
+Route::middleware('change.lang')->prefix('/cliente')->group(function () {
+  Route::middleware('guest:customer', 'change.lang')->group(function () {
+    Route::get('/login', 'FrontEnd\CustomerController@login')->name('cliente.login');
+    Route::get('/registro', 'FrontEnd\CustomerController@signup')->name('cliente.registro');
+    Route::get('/olvide-contrasena', 'FrontEnd\CustomerController@forget_passord')->name('cliente.olvide-contrasena');
+    Route::get('/restablecer-contrasena', 'FrontEnd\CustomerController@reset_password')->name('cliente.restablecer-contrasena');
+  });
+});
+
 Route::middleware('auth:customer', 'change.lang')->prefix('/customer')->group(function () {
   Route::get('/logout', 'FrontEnd\CustomerController@logout')->name('customer.logout');
   Route::get('/change-password', 'FrontEnd\CustomerController@change_password')->name('customer.change.password');

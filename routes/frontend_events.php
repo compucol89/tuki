@@ -16,6 +16,7 @@ Route::middleware('change.lang')->group(function () {
   Route::get('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
   Route::get('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');
   Route::get('organizer/details/{id}/{name}', 'FrontEnd\OrganizerController@details')->name('frontend.organizer.details');
-  Route::get('organizers/', 'FrontEnd\OrganizerController@index')->name('frontend.all.organizer');
+  Route::redirect('organizers/', '/organizadores', 301);
+  Route::get('organizadores', 'FrontEnd\OrganizerController@index')->name('frontend.all.organizer');
   Route::post('organizers/contact/send-mail', 'FrontEnd\OrganizerController@sendMail')->name('organizer.contact.send_mail');
 });

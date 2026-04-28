@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('change.lang')->group(function () {
   Route::post('/check-out2', 'FrontEnd\CheckOutController@checkout2')->name('check-out2');
   Route::get('/checkout', 'FrontEnd\CheckOutController@checkout')->name('check-out');
+  Route::get('/tienda', 'FrontEnd\Shop\ShopController@index')->name('shop');
 
   Route::prefix('shop')->group(function () {
-    Route::get('/', 'FrontEnd\Shop\ShopController@index')->name('shop');
+    Route::redirect('/', '/tienda', 301);
     Route::get('/details/{slug}/{id}', 'FrontEnd\Shop\ShopController@details')->name('shop.details');
     Route::post('review-submit', 'FrontEnd\Shop\ShopController@review')->name('product.review.submit');
     Route::get('add-to-cart/{id}', 'FrontEnd\Shop\ShopController@addToCart')->name('add.cart');

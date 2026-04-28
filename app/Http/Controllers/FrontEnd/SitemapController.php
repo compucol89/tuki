@@ -113,12 +113,15 @@ class SitemapController extends Controller
       'sitemap',
       'event',
       'eventos',
+      'organizadores',
       'blog',
       'shop',
+      'tienda',
       'contacto',
       'sobre-nosotros',
       'faq',
       'faqs',
+      'preguntas-frecuentes',
     ];
 
     $customPages = Page::join('page_contents', 'pages.id', '=', 'page_contents.page_id')

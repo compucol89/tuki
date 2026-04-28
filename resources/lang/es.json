@@ -1169,5 +1169,14 @@
   "Support": "Soporte",
   "Change Password": "Cambiar contraseña",
   "Edit Profile": "Editar perfil",
-  "My Events": "Mis eventos"
+  "My Events": "Mis eventos",
+  "Blog": "Blog",
+  "No Category Found": "No se encontraron categorías",
+  "Cart": "Carrito",
+  "Available Now": "Disponible ahora",
+  "Out Of Stock Now": "Sin stock",
+  "checkout": "finalizar compra",
+  "Checkout": "Finalizar compra",
+  "Email": "Email",
+  "Country": "País"
 }

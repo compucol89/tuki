@@ -105,6 +105,7 @@
             <li><a href="{{ url('/eliminacion-de-datos') }}">{{ __('Eliminación de datos') }}</a></li>
             <li><a href="{{ url('/politica-de-reembolsos') }}">{{ __('Política de reembolsos') }}</a></li>
             <li><a href="{{ url('/politica-de-cookies') }}">{{ __('Política de cookies') }}</a></li>
+            <li><a href="{{ url('/defensa-al-consumidor') }}">{{ __('Defensa al consumidor') }}</a></li>
           </ul>
         </div>
       </div>

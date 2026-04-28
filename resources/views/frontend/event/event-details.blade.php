@@ -1077,6 +1077,65 @@ ttq.page();
     }
   });
 })();
+
+/**
+ * Alinea el padding superior del sidebar (#main-content) con el borde inferior real
+ * de #event-booking-card (hero, position absolute). Evita countdown "pegado" o huecos
+ * cuando la altura de la tarjeta no coincide con valores fijos en CSS.
+ */
+(function syncEventDetailSidebarReserve() {
+  var body = document.body;
+  if (!body.classList.contains('page-event-detail')) return;
+
+  var mq = window.matchMedia('(min-width: 992px)');
+  var rafScheduled = false;
+
+  function measure() {
+    rafScheduled = false;
+    if (!mq.matches) {
+      body.style.removeProperty('--ed-sidebar-reserve');
+      return;
+    }
+    var card = document.getElementById('event-booking-card');
+    var sidebar = document.querySelector('.ed-body .col-lg-4 .sidebar-sticky');
+    if (!card || !sidebar) return;
+
+    var overlap = Math.round(card.getBoundingClientRect().bottom - sidebar.getBoundingClientRect().top);
+    var gap = 20;
+    var reserve = overlap > 0 ? overlap + gap : 0;
+    var cap = Math.round(window.innerHeight * 0.92);
+    if (reserve > cap) reserve = cap;
+
+    body.style.setProperty('--ed-sidebar-reserve', reserve + 'px');
+  }
+
+  function schedule() {
+    if (rafScheduled) return;
+    rafScheduled = true;
+    requestAnimationFrame(measure);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', schedule);
+  } else {
+    schedule();
+  }
+
+  window.addEventListener('resize', schedule);
+  window.addEventListener('orientationchange', schedule);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    var card = document.getElementById('event-booking-card');
+    if (card) {
+      var ro = new ResizeObserver(schedule);
+      ro.observe(card);
+    }
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(schedule).catch(function() { schedule(); });
+  }
+})();
 </script>
 @endpush
 

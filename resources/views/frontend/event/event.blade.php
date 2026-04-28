@@ -13,6 +13,8 @@
 @section('og-description', $metaDescription)
 @section('og-image',       $ogImage)
 @section('og-type',        'website')
+@section('canonical',      url()->current())
+@section('og-url',         url()->current())
 
 {{-- ─── HERO — premium (collage + capas editoriales) ─── --}}
 @section('hero-section')

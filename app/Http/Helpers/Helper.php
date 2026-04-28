@@ -350,16 +350,28 @@ if (!function_exists('eventSlug')) {
 }
 
 if (!function_exists('symbolPrice')) {
+  /**
+   * Precio con símbolo de moneda. Enteros, miles con punto (es-AR), sin decimales.
+   */
   function symbolPrice($price)
   {
     $basic = Basic::where('uniqid', 12345)->select('base_currency_symbol_position', 'base_currency_symbol')->first();
-    if ($basic->base_currency_symbol_position == 'left') {
-      $data = $basic->base_currency_symbol . round($price, 2);
-      return str_replace(' ', '', $data);
-    } elseif ($basic->base_currency_symbol_position == 'right') {
-      $data = round($price, 2) . $basic->base_currency_symbol;
-      return str_replace(' ', '', $data);
+    if (empty($basic)) {
+      return is_numeric($price)
+        ? number_format((int) round((float) $price, 0, PHP_ROUND_HALF_UP), 0, ',', '.')
+        : '';
     }
+    $amount = is_numeric($price) ? (float) $price : 0.0;
+    $formatted = number_format((int) round($amount, 0, PHP_ROUND_HALF_UP), 0, ',', '.');
+    $symbol = str_replace(' ', '', (string) $basic->base_currency_symbol);
+    if ($basic->base_currency_symbol_position == 'left') {
+      return $symbol . $formatted;
+    }
+    if ($basic->base_currency_symbol_position == 'right') {
+      return $formatted . $symbol;
+    }
+
+    return $formatted;
   }
 }
 

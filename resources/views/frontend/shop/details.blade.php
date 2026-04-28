@@ -14,6 +14,9 @@
 @section('og-title', "$og_title")
 @section('og-description', "$og_description")
 @section('og-image', "$og_image")
+@section('canonical', url()->current())
+@section('og-url', url()->current())
+@section('og-type', 'product')
 
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/front/css/common-style.css') }}">
@@ -267,3 +270,58 @@
   </section>
   <!-- Shop Details End -->
 @endsection
+
+@push('scripts')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => __('Inicio'),
+            'item' => url('/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => __('Tienda'),
+            'item' => route('shop'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $product->title ?? __('Producto'),
+            'item' => url()->current(),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
+
+@push('scripts')
+@php
+$productSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Product',
+    'name' => $product->title ?? null,
+    'description' => !empty($product->description) ? \Illuminate\Support\Str::limit(strip_tags($product->description), 300, '') : null,
+    'image' => !empty($product->feature_image) ? asset('assets/admin/img/product/feature_image/' . $product->feature_image) : null,
+    'url' => url()->current(),
+];
+if (isset($product->current_price) && is_numeric($product->current_price)) {
+    $productSchema['offers'] = [
+        '@type' => 'Offer',
+        'priceCurrency' => 'ARS',
+        'price' => (string) $product->current_price,
+        'availability' => ($product->stock ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        'url' => url()->current(),
+    ];
+}
+$productSchema = array_filter($productSchema, fn ($value) => !is_null($value));
+@endphp
+<script type="application/ld+json">
+{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush

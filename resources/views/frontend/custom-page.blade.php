@@ -4,15 +4,18 @@
   {{ $pageInfo->title }}
 @endsection
 
-@section('metaKeywords')
+@section('meta-keywords')
   {{ $pageInfo->meta_keywords }}
 @endsection
 
-@section('metaDescription')
+@section('meta-description')
   {{ $pageInfo->meta_description }}
 @endsection
 
 @section('og-title', "$pageInfo->title")
+@section('og-url', url()->current())
+@section('og-type', 'website')
+@section('canonical', url()->current())
 
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">

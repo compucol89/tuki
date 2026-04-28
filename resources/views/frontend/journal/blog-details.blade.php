@@ -19,6 +19,9 @@
 @section('og-title', "$og_title")
 @section('og-description', "$og_description")
 @section('og-image', "$og_image")
+@section('canonical', url()->current())
+@section('og-url', url()->current())
+@section('og-type', 'article')
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection
@@ -150,6 +153,35 @@
   <input type="hidden" id="categoryKey" name="category">
   <button type="submit" id="submitBtn"></button>
 </form>
+
+@push('scripts')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => __('Inicio'),
+            'item' => url('/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => __('Blog'),
+            'item' => route('blogs'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 3,
+            'name' => $details->title ?? __('Artículo'),
+            'item' => url()->current(),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
 
 @endsection
 

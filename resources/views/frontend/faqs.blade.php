@@ -18,7 +18,9 @@
 @endphp
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
-
+@section('canonical', url()->current())
+@section('og-url', url()->current())
+@section('og-type', 'website')
 
 @section('hero-section')
   <!-- Page Banner Start -->
@@ -414,3 +416,26 @@
   </section>
   <!--====== FAQ PART END ======-->
 @endsection
+
+@push('scripts')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => __('Inicio'),
+            'item' => url('/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => !empty($pageHeading) ? ($pageHeading->faq_page_title ?? __('Preguntas frecuentes')) : __('Preguntas frecuentes'),
+            'item' => url()->current(),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush

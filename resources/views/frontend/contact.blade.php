@@ -9,6 +9,9 @@
 @endphp
 @section('meta-keywords',    $metaKeywords)
 @section('meta-description', $metaDescription)
+@section('canonical', url()->current())
+@section('og-url', url()->current())
+@section('og-type', 'website')
 
 @push('styles')
 <style>

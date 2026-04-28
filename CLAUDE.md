@@ -71,6 +71,17 @@ style.css  <  styles.blade.php  <  @section('custom-style') del blade
 - Scoping: usar `body.page-event-detail .clase` para aislar estilos por página
 - No usar Tailwind, React ni dependencias nuevas sin aprobación
 
+## Ritmo tipográfico con `lh`
+
+El ritmo vertical para textos largos ya está resuelto en `public/assets/front/css/style.css` con variables `--flow-space: 1lh`, `--flow-space-tight: 0.75lh` y `--flow-space-heading: 2lh`, aplicadas mediante contenedores tipográficos scopeados con `:where()`.
+
+- Usar `.summernote-content` como clase canónica para contenido WYSIWYG.
+- No inventar márgenes manuales en `px`, `%` o `em` para texto editorial largo si el contenido ya puede vivir dentro de los contenedores cubiertos por el sistema de flow.
+- `px` sí es aceptable en componentes UI: cards, botones, badges, nav, formularios, sliders y microcopy corto.
+- No crear `.tp-rich-text`, `.tp-copy` ni `.tp-prose` salvo decisión formal de arquitectura.
+- No aplicar reglas globales tipo `p { margin-block: ... }`.
+- Gaps detectados para revisión futura: `.show-content`, `.about-organizer-pitch__card-text`, `.about-organizer-pitch__pullquote-text`.
+
 ---
 
 ## CHECKOUT — ZONA PROHIBIDA ⚠️

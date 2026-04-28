@@ -12,6 +12,9 @@
 @endphp
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
+@section('canonical', url()->current())
+@section('og-url', url()->current())
+@section('og-type', 'website')
 
 @section('hero-section')
   <!-- Page Banner Start -->
@@ -227,6 +230,29 @@
 
     <button type="submit" id="submitBtn"></button>
   </form>
+@push('scripts')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => __('Inicio'),
+            'item' => url('/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => !empty($pageHeading) ? ($pageHeading->shop_page_title ?? __('Tienda')) : __('Tienda'),
+            'item' => url()->current(),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
+
 @endsection
 
 @section('custom-script')

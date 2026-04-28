@@ -428,6 +428,28 @@
 @endsection
 
 @push('scripts')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'WebSite',
+    'name' => $websiteInfo->website_title ?? 'TukiPass',
+    'url' => url('/'),
+    'inLanguage' => 'es-AR',
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'Organization',
+    'name' => $websiteInfo->website_title ?? 'TukiPass',
+    'url' => url('/'),
+    'logo' => !empty($websiteInfo->logo) ? asset('assets/admin/img/' . $websiteInfo->logo) : null,
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+</script>
+@endpush
+
+@push('scripts')
 <script>
 (function() {
   // --- Crossfade slideshow ---

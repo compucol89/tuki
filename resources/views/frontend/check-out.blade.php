@@ -33,17 +33,18 @@
 
 <section class="checkout-v2 pt-60 pb-80{{ $isGuestCheckout ? ' checkout-v2--guest' : '' }}">
   <div class="container">
+    <main id="checkout-main" class="checkout-main">
 
     {{-- Page header --}}
     <div class="co-page-header mb-40">
       <a href="{{ url()->previous() }}" class="co-back-link">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
         Volver
       </a>
       <div class="co-page-header__text">
-        <h2 class="co-page-title">{{ $isGuestCheckout ? __('Terminá tu compra') : __('Finalizar compra') }}</h2>
+        <h1 class="co-page-title">{{ $isGuestCheckout ? __('Terminá tu compra como invitado') : __('Finalizar compra') }}</h1>
         @if ($isGuestCheckout)
-          <p class="co-page-subtitle">{{ __('Completá tus datos y pagá con Mercado Pago. Te enviamos el PDF al instante.') }}</p>
+          <p class="co-page-subtitle">{{ __('No necesitás crear una cuenta. Te enviamos la entrada digital al email que ingreses; podés presentarla desde el celular.') }}</p>
         @endif
       </div>
     </div>
@@ -60,8 +61,8 @@
       <div class="co-guest-note" role="note">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         <div class="co-guest-note__text">
-          <strong>{{ __('Después del pago') }}</strong>
-          <span>{{ __('Vas a ver la confirmación en Tukipass. Para ver tu QR en el sitio necesitás registrarte con el mismo email.') }}</span>
+          <strong>{{ __('Comprás sin crear una cuenta') }}</strong>
+          <span>{{ __('Te enviamos la confirmación y la entrada digital al email que ingreses. Si después querés ver tu QR desde tu cuenta TukiPass, registrate con ese mismo email.') }}</span>
         </div>
       </div>
 
@@ -111,8 +112,9 @@
                     <input type="text" name="fname" id="fname" required
                            class="form-control @error('fname') is-invalid @enderror"
                            value="{{ old('fname', $authUser?->fname ?? '') }}"
-                           placeholder="Tu nombre" autocomplete="given-name">
-                    @error('fname')<p class="co-field__error">{{ $message }}</p>@enderror
+                           placeholder="Tu nombre" autocomplete="given-name"
+                           @if ($errors->has('fname')) aria-invalid="true" aria-describedby="fname-error" @endif>
+                    @error('fname')<p id="fname-error" class="co-field__error" role="alert">{{ $message }}</p>@enderror
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -121,8 +123,9 @@
                     <input type="text" name="lname" id="lname" required
                            class="form-control @error('lname') is-invalid @enderror"
                            value="{{ old('lname', $authUser?->lname ?? '') }}"
-                           placeholder="Tu apellido" autocomplete="family-name">
-                    @error('lname')<p class="co-field__error">{{ $message }}</p>@enderror
+                           placeholder="Tu apellido" autocomplete="family-name"
+                           @if ($errors->has('lname')) aria-invalid="true" aria-describedby="lname-error" @endif>
+                    @error('lname')<p id="lname-error" class="co-field__error" role="alert">{{ $message }}</p>@enderror
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -131,8 +134,11 @@
                     <input type="email" name="email" id="email" required
                            class="form-control @error('email') is-invalid @enderror"
                            value="{{ old('email', $authUser?->email ?? '') }}"
-                           placeholder="tu@email.com" autocomplete="email">
-                    @error('email')<p class="co-field__error">{{ $message }}</p>@enderror
+                           placeholder="tu@email.com" autocomplete="email"
+                           aria-describedby="{{ $errors->has('email') ? 'email-error email-hint' : 'email-hint' }}"
+                           @if ($errors->has('email')) aria-invalid="true" @endif>
+                    @error('email')<p id="email-error" class="co-field__error" role="alert">{{ $message }}</p>@enderror
+                    <p class="co-helper-text" id="email-hint">{{ __('Usá un email al que tengas acceso: ahí vas a recibir tu entrada digital.') }}</p>
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -141,8 +147,9 @@
                     <input type="text" name="phone" id="phone" required
                            class="form-control @error('phone') is-invalid @enderror"
                            value="{{ old('phone', $authUser?->phone ?? '') }}"
-                           placeholder="+54 11 XXXX-XXXX" autocomplete="tel">
-                    @error('phone')<p class="co-field__error">{{ $message }}</p>@enderror
+                           placeholder="+54 11 XXXX-XXXX" autocomplete="tel"
+                           @if ($errors->has('phone')) aria-invalid="true" aria-describedby="phone-error" @endif>
+                    @error('phone')<p id="phone-error" class="co-field__error" role="alert">{{ $message }}</p>@enderror
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -151,8 +158,9 @@
                     <input type="text" name="dni" id="dni" required
                            class="form-control @error('dni') is-invalid @enderror"
                            value="{{ old('dni') }}"
-                           placeholder="Número de documento" inputmode="numeric">
-                    @error('dni')<p class="co-field__error">{{ $message }}</p>@enderror
+                           placeholder="Número de documento" inputmode="numeric"
+                           @if ($errors->has('dni')) aria-invalid="true" aria-describedby="dni-error" @endif>
+                    @error('dni')<p id="dni-error" class="co-field__error" role="alert">{{ $message }}</p>@enderror
                   </div>
                 </div>
               </div>
@@ -173,14 +181,14 @@
 
               {{-- Errores de pago --}}
               @if (Session::has('paypal_error'))
-                <p class="text-danger mb-2">{{ Session::get('paypal_error') }}</p>
+                <p class="text-danger mb-2" role="alert">{{ Session::get('paypal_error') }}</p>
                 @php Session::forget('paypal_error'); @endphp
               @endif
               @if (Session::has('error'))
-                <p class="text-danger mb-2">{{ Session::get('error') }}</p>
+                <p class="text-danger mb-2" role="alert">{{ Session::get('error') }}</p>
               @endif
               @if (Session::has('currency_error'))
-                <p class="text-danger mb-2">{{ Session::get('currency_error') }}</p>
+                <p class="text-danger mb-2" role="alert">{{ Session::get('currency_error') }}</p>
               @endif
 
               {{-- Select oculto — el JS lo escucha --}}
@@ -216,18 +224,18 @@
                       @if ($og->keyword == 'mercadopago')
                         <img src="{{ asset('assets/front/images/mercadopago_logo.svg') }}" alt="Mercado Pago" style="width:130px;height:auto;display:block;">
                       @elseif ($og->keyword == 'stripe')
-                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                           <rect width="56" height="36" rx="5" fill="#635BFF"/>
                           <text x="28" y="22" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">stripe</text>
                         </svg>
                       @elseif ($og->keyword == 'paypal')
-                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                           <rect width="56" height="36" rx="5" fill="#003087"/>
                           <text x="28" y="22" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#009CDE" text-anchor="middle">Pay</text>
                           <text x="38" y="22" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="white" text-anchor="middle">Pal</text>
                         </svg>
                       @else
-                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                           <rect width="56" height="36" rx="5" fill="#1e2532"/>
                           <text x="28" y="22" font-family="Arial,sans-serif" font-size="8" font-weight="700" fill="white" text-anchor="middle">{{ strtoupper(substr($og->keyword,0,7)) }}</text>
                         </svg>
@@ -248,7 +256,7 @@
                       <div class="pgw-card__dot"></div>
                     </div>
                     <div class="pgw-card__logo">
-                      <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg">
+                      <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                         <rect width="56" height="36" rx="5" fill="#374151"/>
                         <text x="28" y="16" font-family="Arial,sans-serif" font-size="7" fill="white" text-anchor="middle">Pago</text>
                         <text x="28" y="26" font-family="Arial,sans-serif" font-size="7" fill="white" text-anchor="middle">Manual</text>
@@ -280,9 +288,10 @@
                   @endif
                   @if ($offlineGateway->has_attachment == 1)
                     <div class="mb-3">
-                      <label class="fw-semibold">Adjunto *</label><br>
-                      <input type="file" name="attachment">
-                      @error('attachment')<p class="co-field__error mt-1">{{ $message }}</p>@enderror
+                      <label class="fw-semibold" for="attachment-{{ $offlineGateway->id }}">Adjunto *</label><br>
+                      <input type="file" name="attachment" id="attachment-{{ $offlineGateway->id }}"
+                             @if ($errors->has('attachment')) aria-invalid="true" aria-describedby="attachment-error-{{ $offlineGateway->id }}" @endif>
+                      @error('attachment')<p id="attachment-error-{{ $offlineGateway->id }}" class="co-field__error mt-1" role="alert">{{ $message }}</p>@enderror
                     </div>
                   @endif
                 </div>
@@ -332,7 +341,7 @@
             <div class="co-summary__divider"></div>
 
             {{-- Desglose tickets --}}
-            <div id="couponReload">
+            <div id="couponReload" aria-live="polite" aria-atomic="true">
               @php
                 $ticketIds = $selTickets ? array_column($selTickets, 'ticket_id') : [];
                 $ticketsMap = $ticketIds ? App\Models\Event\Ticket::whereIn('id', $ticketIds)->select('id','pricing_type')->get()->keyBy('id') : collect();
@@ -411,13 +420,14 @@
             {{-- Cupón --}}
             @if ($total != 0 || Session::get('sub_total') != 0)
               <div class="co-coupon mt-3">
-                <div class="co-coupon__toggle" id="couponToggle">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                <button type="button" class="co-coupon__toggle" id="couponToggle" aria-expanded="false" aria-controls="couponBody">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                   Tengo un cupón de descuento
-                </div>
+                </button>
                 <div class="co-coupon__body" id="couponBody" style="display:none">
                   <div class="co-coupon__row mt-2">
-                    <input type="text" id="coupon-code" class="form-control" placeholder="Ingresá el código">
+                    <label for="coupon-code" class="sr-only">{{ __('Código de cupón') }}</label>
+                    <input type="text" id="coupon-code" class="form-control" placeholder="{{ __('Ingresá tu cupón') }}">
                     <button type="button" class="base-btn co-coupon__btn">Aplicar</button>
                   </div>
                 </div>
@@ -428,26 +438,32 @@
             <div class="mt-4">
               @if ($total != 0 || Session::get('sub_total') != 0)
                 <button type="submit" class="co-pay-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                  Pagar {{ symbolPrice($grand_total) }}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                  {{ __('Pagar y recibir mi entrada') }} — {{ symbolPrice($grand_total) }}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
+                <p class="co-cta-microcopy">{{ __('Al confirmar, procesamos el pago de forma segura y te enviamos la entrada digital al email que ingresaste apenas se confirme el pago.') }}</p>
               @else
                 <button type="submit" class="co-pay-btn">
                   Confirmar reserva gratis
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
+                <p class="co-cta-microcopy">{{ __('Al confirmar, te enviamos la confirmación al email que ingresaste.') }}</p>
               @endif
             </div>
 
             {{-- Trust badges --}}
             <div class="co-trust mt-3">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              @if ($isGuestCheckout)
-                {{ __('Pago seguro con Mercado Pago · PDF con QR al mail al instante') }}
-              @else
-                Pago 100% seguro · Tu ticket llega al email en segundos
-              @endif
+              <div class="co-trust__icon-wrap" aria-hidden="true">
+                <svg class="co-trust__icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <span class="co-trust__text">
+                @if ($isGuestCheckout)
+                  {{ __('Pago seguro · Te enviamos la entrada digital al email apenas se confirme el pago') }}
+                @else
+                  Pago 100% seguro · Tu ticket llega al email en segundos
+                @endif
+              </span>
             </div>
 
             <div class="co-trust-logos mt-3">
@@ -488,6 +504,8 @@
 
       </div>
     </form>
+
+    </main>
   </div>
 </section>
 @endsection

@@ -15693,6 +15693,232 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
   margin-top: var(--ed-space-6);
 }
 
+/* =========================================================
+   TukiPass - CMS Editorial Pages
+   Scope: paginas CMS con contenido Summernote
+   Nota: actualmente las CMS activas son paginas legales.
+   ========================================================= */
+
+.custom-page-area {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 42%, #f8fafc 100%);
+  padding-top: 96px;
+  padding-bottom: 96px;
+}
+
+.custom-page-area .container {
+  max-width: 1040px;
+}
+
+.custom-page-area .summernote-content {
+  position: relative;
+  max-width: 920px;
+  margin-inline: auto;
+  padding: 56px 64px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(30, 37, 50, 0.08);
+  border-radius: 28px;
+  box-shadow:
+    0 24px 70px rgba(15, 23, 42, 0.10),
+    0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.custom-page-area .summernote-content::before {
+  content: "Documento informativo";
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 18px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(249, 115, 22, 0.10);
+  color: #c2410c;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.custom-page-area .summernote-content h2 {
+  max-width: 760px;
+  margin: 0 0 14px;
+  color: #1e2532;
+  font-size: 48px;
+  line-height: 1.05;
+  letter-spacing: 0;
+  font-weight: 900;
+}
+
+.custom-page-area .summernote-content h2 + p {
+  margin-top: 0;
+}
+
+.custom-page-area .summernote-content h3,
+.custom-page-area .summernote-content h4 {
+  position: relative;
+  margin-block: 1.65lh 0.55lh;
+  padding-top: 20px;
+  color: #1e2532;
+  font-size: 28px;
+  line-height: 1.18;
+  letter-spacing: 0;
+  font-weight: 900;
+}
+
+.custom-page-area .summernote-content h4 {
+  font-size: 23px;
+}
+
+.custom-page-area .summernote-content h3::before,
+.custom-page-area .summernote-content h4::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f97316, rgba(249, 115, 22, 0.12));
+}
+
+.custom-page-area .summernote-content p,
+.custom-page-area .summernote-content li {
+  margin-block: 0 1lh;
+  max-width: 78ch;
+}
+
+.custom-page-area .summernote-content p:last-child,
+.custom-page-area .summernote-content li:last-child {
+  margin-block-end: 0;
+}
+
+.custom-page-area .summernote-content ul,
+.custom-page-area .summernote-content ol {
+  margin-block: 0 1lh;
+  padding-left: 1.35rem;
+  max-width: 78ch;
+}
+
+.custom-page-area .summernote-content strong {
+  color: #1e2532;
+  font-weight: 800;
+}
+
+.custom-page-area .summernote-content a {
+  color: #ea580c;
+  font-weight: 700;
+  text-decoration: none;
+  text-underline-offset: 4px;
+}
+
+.custom-page-area .summernote-content a:hover,
+.custom-page-area .summernote-content a:focus {
+  color: #c2410c;
+  text-decoration: underline;
+}
+
+.custom-page-area .summernote-content a:focus-visible {
+  outline: 3px solid rgba(249, 115, 22, 0.35);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.custom-page-area .summernote-content blockquote {
+  margin-block: 1.25lh;
+  max-width: 78ch;
+  padding: 18px 22px;
+  border-left: 4px solid #f97316;
+  border-radius: 14px;
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.custom-page-area .summernote-content table {
+  width: 100%;
+  max-width: 100%;
+  margin-block: 1.25lh;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.custom-page-area .summernote-content table th,
+.custom-page-area .summernote-content table td {
+  padding: 12px 14px;
+  border: 1px solid rgba(30, 37, 50, 0.10);
+  vertical-align: top;
+}
+
+.custom-page-area .summernote-content table th {
+  background: #fff7ed;
+  color: #1e2532;
+  font-weight: 800;
+}
+
+.custom-page-area .text-center.mt-30 {
+  margin-top: 40px;
+}
+
+.custom-page-area .text-center.mt-30 img {
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.10);
+}
+
+@media (max-width: 991.98px) {
+  .custom-page-area {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .custom-page-area .summernote-content {
+    padding: 42px 34px;
+    border-radius: 24px;
+  }
+
+  .custom-page-area .summernote-content h2 {
+    font-size: 40px;
+  }
+
+  .custom-page-area .summernote-content h3 {
+    font-size: 25px;
+  }
+
+  .custom-page-area .summernote-content h4 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .custom-page-area {
+    padding-top: 48px;
+    padding-bottom: 56px;
+  }
+
+  .custom-page-area .summernote-content {
+    padding: 30px 20px;
+    border-radius: 20px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .custom-page-area .summernote-content::before {
+    margin-bottom: 14px;
+    font-size: 12px;
+  }
+
+  .custom-page-area .summernote-content h2 {
+    font-size: 34px;
+  }
+
+  .custom-page-area .summernote-content h3 {
+    font-size: 22px;
+  }
+
+  .custom-page-area .summernote-content h4 {
+    font-size: 20px;
+  }
+}
+
 body.page-event-detail .ed-body .col-lg-8 {
   padding-right: 18px;
 }

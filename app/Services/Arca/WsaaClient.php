@@ -29,12 +29,12 @@ class WsaaClient
         // Soporte dual: archivo en disco o base64 en variable de entorno (EasyPanel/Docker)
         $this->certificate = $this->resolveCredentialPath(
             $config['certificate'],
-            env('ARCA_CERT_B64'),
+            env('ARCA_CERT_B64') ?: (env('ARCA_CERT_B64_1') . env('ARCA_CERT_B64_2')),
             'arca_cert'
         );
         $this->privateKey = $this->resolveCredentialPath(
             $config['private_key'],
-            env('ARCA_KEY_B64'),
+            env('ARCA_KEY_B64') ?: (env('ARCA_KEY_B64_1') . env('ARCA_KEY_B64_2')),
             'arca_key'
         );
     }

@@ -82,7 +82,7 @@ class ArcaTestConnection extends Command
 
         // Certificado: aceptar ARCA_CERT_PATH o ARCA_CERT_B64
         $certPath = config('arca.certificate');
-        $certB64 = env('ARCA_CERT_B64');
+        $certB64 = env('ARCA_CERT_B64') ?: (env('ARCA_CERT_B64_1') . env('ARCA_CERT_B64_2'));
         if (!empty($certPath)) {
             if (!File::exists($certPath)) {
                 $this->error("  ✗ Certificate file not found: {$certPath}");
@@ -99,7 +99,7 @@ class ArcaTestConnection extends Command
 
         // Clave privada: aceptar ARCA_KEY_PATH o ARCA_KEY_B64
         $keyPath = config('arca.private_key');
-        $keyB64 = env('ARCA_KEY_B64');
+        $keyB64 = env('ARCA_KEY_B64') ?: (env('ARCA_KEY_B64_1') . env('ARCA_KEY_B64_2'));
         if (!empty($keyPath)) {
             if (!File::exists($keyPath)) {
                 $this->error("  ✗ Private key file not found: {$keyPath}");

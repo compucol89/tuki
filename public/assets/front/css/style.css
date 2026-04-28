@@ -15701,8 +15701,8 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 
 .custom-page-area {
   background: linear-gradient(180deg, #f8fafc 0%, #ffffff 42%, #f8fafc 100%);
-  padding-top: 96px;
-  padding-bottom: 96px;
+  padding-top: 48px !important;
+  padding-bottom: 72px !important;
 }
 
 .custom-page-area .container {
@@ -15713,10 +15713,10 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
   position: relative;
   max-width: 920px;
   margin-inline: auto;
-  padding: 56px 64px;
+  padding: 44px 52px;
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(30, 37, 50, 0.08);
-  border-radius: 28px;
+  border-radius: 24px;
   box-shadow:
     0 24px 70px rgba(15, 23, 42, 0.10),
     0 1px 0 rgba(255, 255, 255, 0.85) inset;
@@ -15729,7 +15729,7 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
   content: "Documento informativo";
   display: inline-flex;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   padding: 8px 12px;
   border-radius: 999px;
   background: rgba(249, 115, 22, 0.10);
@@ -15741,9 +15741,9 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 
 .custom-page-area .summernote-content h2 {
   max-width: 760px;
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   color: #1e2532;
-  font-size: 48px;
+  font-size: 44px;
   line-height: 1.05;
   letter-spacing: 0;
   font-weight: 900;
@@ -15756,8 +15756,8 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 .custom-page-area .summernote-content h3,
 .custom-page-area .summernote-content h4 {
   position: relative;
-  margin-block: 1.65lh 0.55lh;
-  padding-top: 20px;
+  margin-block: 1.35lh 0.45lh;
+  padding-top: 16px;
   color: #1e2532;
   font-size: 28px;
   line-height: 1.18;
@@ -15783,7 +15783,7 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 
 .custom-page-area .summernote-content p,
 .custom-page-area .summernote-content li {
-  margin-block: 0 1lh;
+  margin-block: 0 0.9lh;
   max-width: 78ch;
 }
 
@@ -15794,7 +15794,7 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 
 .custom-page-area .summernote-content ul,
 .custom-page-area .summernote-content ol {
-  margin-block: 0 1lh;
+  margin-block: 0 0.9lh;
   padding-left: 1.35rem;
   max-width: 78ch;
 }
@@ -15866,13 +15866,13 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 
 @media (max-width: 991.98px) {
   .custom-page-area {
-    padding-top: 72px;
-    padding-bottom: 72px;
+    padding-top: 40px !important;
+    padding-bottom: 56px !important;
   }
 
   .custom-page-area .summernote-content {
-    padding: 42px 34px;
-    border-radius: 24px;
+    padding: 34px 28px;
+    border-radius: 22px;
   }
 
   .custom-page-area .summernote-content h2 {
@@ -15890,13 +15890,13 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 
 @media (max-width: 575.98px) {
   .custom-page-area {
-    padding-top: 48px;
-    padding-bottom: 56px;
+    padding-top: 30px !important;
+    padding-bottom: 44px !important;
   }
 
   .custom-page-area .summernote-content {
-    padding: 30px 20px;
-    border-radius: 20px;
+    padding: 24px 18px;
+    border-radius: 18px;
     font-size: 15px;
     line-height: 1.75;
   }
@@ -15907,11 +15907,11 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
   }
 
   .custom-page-area .summernote-content h2 {
-    font-size: 34px;
+    font-size: 30px;
   }
 
   .custom-page-area .summernote-content h3 {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .custom-page-area .summernote-content h4 {

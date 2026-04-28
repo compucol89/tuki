@@ -15919,6 +15919,106 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
   }
 }
 
+/* =========================================================
+   TukiPass - Premium Footer final polish
+   ========================================================= */
+
+.footer-section .footer-section__operator {
+  display: block;
+  max-width: 420px;
+  margin-top: 14px;
+  color: rgba(248, 250, 252, 0.58);
+  font-size: 12px;
+  line-height: 1.65;
+  letter-spacing: 0;
+}
+
+.footer-section .footer-section__operator strong {
+  color: rgba(248, 250, 252, 0.86);
+  font-weight: 800;
+}
+
+.footer-section .footer-contact-list {
+  gap: 12px;
+}
+
+.footer-section .footer-contact-item {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 11px;
+}
+
+.footer-section .footer-contact-item__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+}
+
+.footer-section .footer-contact-item__body span,
+.footer-section .footer-contact-item__body a {
+  font-size: 13px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.footer-section .footer-section__bottom .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.footer-section .footer-section__legal {
+  max-width: 720px;
+  text-align: left;
+}
+
+.footer-section .footer-section__legal small,
+.footer-section .footer-section__legal p {
+  color: rgba(248, 250, 252, 0.56);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.footer-section .footer-version {
+  flex: 0 0 auto;
+  color: rgba(248, 250, 252, 0.46);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 991.98px) {
+  .footer-section .footer-section__operator {
+    max-width: 100%;
+  }
+
+  .footer-section .footer-section__bottom .container {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-section .footer-section__legal {
+    text-align: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .footer-section .footer-section__operator {
+    font-size: 11px;
+  }
+
+  .footer-section .footer-section__bottom .container {
+    gap: 10px;
+  }
+
+  .footer-section .footer-section__legal small,
+  .footer-section .footer-section__legal p,
+  .footer-section .footer-version {
+    font-size: 11px;
+  }
+}
+
 body.page-event-detail .ed-body .col-lg-8 {
   padding-right: 18px;
 }

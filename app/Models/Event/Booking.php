@@ -3,6 +3,7 @@
 namespace App\Models\Event;
 
 use App\Models\Customer;
+use App\Models\CustomerFiscalProfile;
 use App\Models\Event;
 use App\Models\Organizer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,6 +63,10 @@ class Booking extends Model
   public function customerInfo()
   {
     return $this->hasOne(Customer::class, 'id', 'customer_id');
+  }
+  public function fiscalProfile()
+  {
+    return $this->hasOne(CustomerFiscalProfile::class, 'booking_id', 'id');
   }
   public function organizer()
   {

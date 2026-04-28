@@ -61,6 +61,10 @@ class Customer extends Model implements AuthenticatableContract
   {
     return $this->hasMany(Booking::class);
   }
+  public function fiscalProfile()
+  {
+    return $this->hasOne(CustomerFiscalProfile::class);
+  }
   //order_items
   public function order_items()
   {

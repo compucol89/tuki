@@ -58,7 +58,7 @@
           ->values();
     @endphp
 
-    <div class="row justify-content-between">
+    <div class="row justify-content-between footer-main-grid">
       <div class="col-lg-4 col-sm-6">
         <div class="footer-widget about-widget footer-brand">
           <div class="footer-logo mb-30">
@@ -66,9 +66,6 @@
                 src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a>
           </div>
           <div class="footer-copy">{!! $footerInfo ? $footerInfo->about_company : '' !!}</div>
-          <p class="footer-section__operator">
-            {{ __('Operada por') }} <strong>TAYRONA - GROUP S.A.S.</strong> — CUIT 30-71885087-4
-          </p>
           <div class="footer-social">
             <p class="footer-social__label">{{ __('Seguinos') }}</p>
             <div class="social-style-one mt-30">
@@ -76,11 +73,18 @@
                 @foreach ($socialMediaInfos as $socialMediaInfo)
                   @php
                     $socialUrl = trim((string) ($socialMediaInfo->url ?? ''));
+                    $socialLabel = $socialMediaInfo->title ?? match (true) {
+                        str_contains($socialMediaInfo->icon ?? '', 'facebook') || str_contains($socialUrl, 'facebook') => 'Facebook',
+                        str_contains($socialMediaInfo->icon ?? '', 'linkedin') || str_contains($socialUrl, 'linkedin') => 'LinkedIn',
+                        str_contains($socialMediaInfo->icon ?? '', 'twitter') || str_contains($socialUrl, 'twitter') => 'Twitter',
+                        str_contains($socialMediaInfo->icon ?? '', 'instagram') || str_contains($socialUrl, 'instagram') => 'Instagram',
+                        default => 'Red social',
+                    };
                   @endphp
                   @if ($socialUrl !== '')
-                    <a href="{{ $socialUrl === '#' ? 'javascript:void(0)' : $socialUrl }}" target="_blank" rel="noopener noreferrer" title="{{ $socialUrl }}">
-                      <i class="{{ $socialMediaInfo->icon }}"></i>
-                      <span class="sr-only">{{ $socialMediaInfo->title ?? 'Red social' }}</span>
+                    <a href="{{ $socialUrl === '#' ? 'javascript:void(0)' : $socialUrl }}" target="_blank" rel="noopener noreferrer" title="{{ $socialLabel }}" aria-label="{{ $socialLabel }}">
+                      <i class="{{ $socialMediaInfo->icon }}" aria-hidden="true"></i>
+                      <span class="sr-only">{{ $socialLabel }}</span>
                     </a>
                   @endif
                 @endforeach
@@ -90,18 +94,18 @@
         </div>
       </div>
       <div class="col-lg-3 col-sm-6">
-        <div class="footer-widget link-widget ml-sm-auto">
-          <h5 class="footer-title">{{ __('Accesos rápidos') }}</h5>
+        <nav class="footer-widget link-widget ml-sm-auto" aria-labelledby="footer-quick-links-title">
+          <h5 class="footer-title" id="footer-quick-links-title">{{ __('Accesos rápidos') }}</h5>
           <ul>
             @foreach ($footerQuickLinks as $quickLink)
               <li><a href="{{ $quickLink['url'] }}">{{ $quickLink['title'] }}</a></li>
             @endforeach
           </ul>
-        </div>
+        </nav>
       </div>
       <div class="col-lg-2 col-sm-6">
-        <div class="footer-widget link-widget">
-          <h5 class="footer-title">{{ __('Legal') }}</h5>
+        <nav class="footer-widget link-widget" aria-labelledby="footer-legal-title">
+          <h5 class="footer-title" id="footer-legal-title">{{ __('Legal') }}</h5>
           <ul>
             <li><a href="{{ url('/terminos-y-condiciones') }}">{{ __('Términos y condiciones') }}</a></li>
             <li><a href="{{ url('/politica-de-privacidad') }}">{{ __('Política de privacidad') }}</a></li>
@@ -110,7 +114,7 @@
             <li><a href="{{ url('/politica-de-cookies') }}">{{ __('Política de cookies') }}</a></li>
             <li><a href="{{ url('/defensa-al-consumidor') }}">{{ __('Defensa al consumidor') }}</a></li>
           </ul>
-        </div>
+        </nav>
       </div>
       <div class="col-lg-3 col-sm-6">
         <div class="footer-widget about-widget footer-contact ml-sm-auto">
@@ -121,6 +125,7 @@
                 <li class="footer-contact-item">
                   <span class="footer-contact-item__icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></span>
                   <div class="footer-contact-item__body">
+                    <span class="sr-only">{{ __('Dirección') }}</span>
                     @foreach ($addresses as $address)
                       <span>{{ $address }}</span>
                     @endforeach
@@ -132,6 +137,7 @@
                 <li class="footer-contact-item">
                   <span class="footer-contact-item__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
                   <div class="footer-contact-item__body">
+                    <span class="sr-only">{{ __('Email') }}</span>
                     @foreach ($mails as $mail)
                       <a href="mailto:{{ $mail }}" class="text-transform-normal">{{ $mail }}</a>
                     @endforeach
@@ -143,6 +149,7 @@
                 <li class="footer-contact-item">
                   <span class="footer-contact-item__icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></span>
                   <div class="footer-contact-item__body">
+                    <span class="sr-only">{{ __('Teléfono') }}</span>
                     @foreach ($phones as $phone)
                       <a href="tel:{{ $phone }}">{{ $phone }}</a>
                     @endforeach
@@ -164,9 +171,24 @@
             $footer_text = str_replace('{year}', $date, $footerInfo->copyright_text);
         }
       @endphp
-      <div class="footer-section__legal">{!! !empty($footerInfo->copyright_text) ? $footer_text : '' !!}</div>
-      <p class="footer-version">v{{ trim(file_get_contents(base_path('VERSION'))) }}</p>
-      <button type="button" class="scroll-top scroll-to-target" data-target="html" aria-label="{{ __('Volver arriba') }}"><span class="fa fa-angle-up"></span></button>
+      <div class="footer-bottom__group footer-bottom__group--legal">
+        <div class="footer-section__legal">{!! !empty($footerInfo->copyright_text) ? $footer_text : '' !!}</div>
+      </div>
+      <div class="footer-bottom__group footer-bottom__group--trust" aria-label="{{ __('Métodos de pago aceptados') }}">
+        <span class="footer-trust__label">
+          <i class="fas fa-lock" aria-hidden="true"></i> {{ __('Pagos seguros') }}
+        </span>
+        <div class="footer-trust__icons">
+          <i class="fab fa-cc-visa" title="Visa" aria-hidden="true"></i>
+          <i class="fab fa-cc-mastercard" title="Mastercard" aria-hidden="true"></i>
+          <i class="fab fa-cc-paypal" title="PayPal" aria-hidden="true"></i>
+          <span class="footer-trust__mp" aria-label="MercadoPago">MP</span>
+        </div>
+      </div>
+      <div class="footer-bottom__group footer-bottom__group--meta">
+        <p class="footer-version">v{{ trim(file_get_contents(base_path('VERSION'))) }}</p>
+        <button type="button" class="scroll-top scroll-to-target" data-target="html" aria-label="{{ __('Volver arriba') }}"><span class="fa fa-angle-up"></span></button>
+      </div>
     </div>
   </div>
 </footer>

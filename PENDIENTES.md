@@ -129,7 +129,7 @@
 
 ## 🔴 Deuda técnica — separada
 
-- [ ] Error `KdInstallerController` — paquete `kreativdev/installer ^1.1` referenciado en `composer.json` y `composer.lock` (`Kreativdev\Installer\KdInstallerServiceProvider`), pero faltan archivos en `vendor/`. Bloquea `php artisan route:list`. No afecta SEO ni sitemap, pero dificulta diagnósticos Artisan. Fix seguro: `composer remove kreativdev/installer` o `composer install` si el paquete es intencional.
+- [x] **Resuelto** — Removido `kreativdev/installer` y `rachidlaasri/laravel-installer` de Composer. `php artisan route:list` vuelve a funcionar (514 rutas). Validado `composer install`, `view:clear`, `config:clear`, sitemap 200 OK.
 - [ ] Alt descriptivos adicionales — revisar listados de eventos, blogs, productos si se detectan más `alt=""` en imágenes informativas.
 
 ---

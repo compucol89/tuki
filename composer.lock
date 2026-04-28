@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "01e19a45eb59fb2ad22b99f026ea04bb",
+    "content-hash": "b44dc2c6343571e84fe6f4b872a36c0b",
     "packages": [
         {
             "name": "anandsiddharth/laravel-paytm-wallet",
@@ -2094,53 +2094,6 @@
                 "source": "https://github.com/JamesHeinrich/getID3/tree/v1.9.25"
             },
             "time": "2026-03-10T11:56:47+00:00"
-        },
-        {
-            "name": "kreativdev/installer",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://gitlab.com/packages9950522/installer.git",
-                "reference": "d43d50386f91bea3c09b19695235331a19bf6f2c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/packages9950522%2Finstaller/repository/archive.zip?sha=d43d50386f91bea3c09b19695235331a19bf6f2c",
-                "reference": "d43d50386f91bea3c09b19695235331a19bf6f2c",
-                "shasum": ""
-            },
-            "require": {
-                "rachidlaasri/laravel-installer": "^4.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Kreativdev\\Installer\\KdInstallerServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kreativdev\\Installer\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "KreativDev",
-                    "email": "kreativdev.envato@gmail.com"
-                }
-            ],
-            "description": "This package will add installer in Laravel Items of KreativDev (Non-SAAS)",
-            "support": {
-                "issues": "https://gitlab.com/packages9950522/installer/-/issues",
-                "source": "https://gitlab.com/packages9950522/installer/-/tree/1.1.0"
-            },
-            "time": "2024-07-05T18:30:11+00:00"
         },
         {
             "name": "laravel-notification-channels/webpush",
@@ -5544,71 +5497,6 @@
                 "source": "https://github.com/bobthecow/psysh/tree/v0.12.22"
             },
             "time": "2026-03-22T23:03:24+00:00"
-        },
-        {
-            "name": "rachidlaasri/laravel-installer",
-            "version": "4.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rashidlaasri/LaravelInstaller.git",
-                "reference": "b751b4c23dba893e9a4a12f881a6fd8fa921d228"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rashidlaasri/LaravelInstaller/zipball/b751b4c23dba893e9a4a12f881a6fd8fa921d228",
-                "reference": "b751b4c23dba893e9a4a12f881a6fd8fa921d228",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "RachidLaasri\\LaravelInstaller\\Providers\\LaravelInstallerServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/Helpers/functions.php"
-                ],
-                "psr-4": {
-                    "RachidLaasri\\LaravelInstaller\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rachid Laasri",
-                    "email": "rashidlaasri@gmail.com"
-                },
-                {
-                    "name": "Jeremy Kenedy",
-                    "email": "jeremykenedy@gmail.com"
-                }
-            ],
-            "description": "Laravel web installer",
-            "support": {
-                "issues": "https://github.com/rashidlaasri/LaravelInstaller/issues",
-                "source": "https://github.com/rashidlaasri/LaravelInstaller/tree/4.1.0"
-            },
-            "funding": [
-                {
-                    "url": "https://rachidlaasri.com",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://twitter.com/rashidlaasri",
-                    "type": "custom"
-                }
-            ],
-            "abandoned": true,
-            "time": "2020-05-19T13:19:45+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

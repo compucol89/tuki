@@ -67,6 +67,73 @@
 
 ---
 
+## 🟢 SEO técnico — CERRADO
+
+> Bloque SEO técnico completado y validado. Commits limpios, 0 archivos sensibles tocados.
+
+**Quick wins completados:**
+1. Fix meta tags CMS (`custom-page.blade.php`) — `@section('meta-keywords')` corregido.
+2. Canonical + OG básico en 8 vistas principales (`about`, `contact`, `event`, `faqs`, `blog`, `blog-details`, `shop`, `shop-details`).
+3. WebSite + Organization schema JSON-LD en home (`index-v1.blade.php`).
+4. Product schema JSON-LD en `shop/details.blade.php`.
+5. BreadcrumbList JSON-LD en 6 vistas con breadcrumb HTML (`blog-details`, `shop/index`, `shop/details`, `faqs`, `about`, `organizer/details`).
+6. Sitemap XML expandido — ahora incluye blogs, productos, páginas CMS y organizadores (`SitemapController`).
+7. Titles de eventos truncados a 55 chars para evitar > 70 en `<title>`; H1, OG title y schema Event intactos.
+8. Alt descriptivos en logos aliados del home (reemplazados `alt=""` vacíos).
+
+**Commits:**
+- `19b5547` SEO: canonical, OG, schemas JSON-LD y BreadcrumbList en frontend
+- `64e0ee5` SEO: truncar title largos en eventos y alt descriptivos en logos aliados
+
+**Nota:** No se requieren más cambios de código por ahora. El resto es post-deploy/manual.
+
+---
+
+## 🟡 Search Console — PENDIENTE EXTERNO (post-deploy/manual)
+
+> No mezclar Search Console con tareas de código. Es validación post-deploy/manual.
+
+**Checklist post-deploy:**
+- [ ] Verificar dominio en Google Search Console (si no está hecho).
+- [ ] Reenviar `https://www.tukipass.com/sitemap.xml`.
+- [ ] Inspeccionar y solicitar indexación de:
+  - [ ] Home
+  - [ ] `/eventos`
+  - [ ] 2-3 eventos importantes activos
+  - [ ] 1 blog publicado
+  - [ ] 1 producto si shop está activo
+  - [ ] 1 página CMS importante
+- [ ] Validar Rich Results Test:
+  - [ ] Home → WebSite + Organization
+  - [ ] Evento → Event + BreadcrumbList + Offer
+  - [ ] Producto → Product + BreadcrumbList + Offer
+  - [ ] Blog detail → BlogPosting + BreadcrumbList
+- [ ] PageSpeed Insights mobile:
+  - [ ] Home
+  - [ ] Event detail
+- [ ] Revisar cobertura/indexación a las 48-72h.
+- [ ] Verificar que no aparezcan URLs privadas indexadas: `/admin/`, `/customer/`, `/checkout/`, `/cart/`.
+
+**Bloqueado por:** Deploy a producción + acceso a Google Search Console.
+
+---
+
+## 🔵 Features SEO futuras (con confirmación)
+
+- [ ] `/mapa-del-sitio` HTML — página visible para usuarios, enlazada desde footer. Requiere confirmación explícita porque toca `routes/` y footer.
+- [ ] Datos estructurados `FAQPage` en `/faq` si el contenido crece.
+- [ ] Datos estructurados `LocalBusiness` si hay venue físico principal.
+- [ ] Sitemap indexado (dividir en múltiples archivos si > 50k URLs).
+
+---
+
+## 🔴 Deuda técnica — separada
+
+- [ ] Error `KdInstallerController` (`tommybot/` submodule) — bloquea `php artisan route:list`. No afecta SEO ni sitemap, pero dificulta diagnósticos Artisan.
+- [ ] Alt descriptivos adicionales — revisar listados de eventos, blogs, productos si se detectan más `alt=""` en imágenes informativas.
+
+---
+
 ## 🟡 Pendiente confirmación
 
 - [ ] Verificar si hay otras tareas pendientes que el usuario recuerde de sesiones anteriores.

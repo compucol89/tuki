@@ -160,14 +160,13 @@ class WsaaClient
                 throw new Exception('Cannot load private key: ' . $this->drainOpenSslErrors());
             }
 
-            $signed = openssl_pkcs7_sign(
-                $tempTra,
-                $tempSigned,
-                $cert,
-                $key,
-                [],
-                PKCS7_NOATTR
-            );
+            // openssl_cms_sign works with OpenSSL 3.x (avoids SHA-1 legacy provider issue).
+            // Fallback to openssl_pkcs7_sign for older PHP/OpenSSL combos.
+            if (function_exists('openssl_cms_sign')) {
+                $signed = @openssl_cms_sign($tempTra, $tempSigned, $cert, $key, [], OPENSSL_CMS_NOATTR);
+            } else {
+                $signed = @openssl_pkcs7_sign($tempTra, $tempSigned, $cert, $key, [], PKCS7_NOATTR);
+            }
 
             if (!$signed) {
                 throw new Exception('Failed to sign TRA: ' . $this->drainOpenSslErrors());

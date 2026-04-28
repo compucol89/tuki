@@ -96,6 +96,18 @@
           </ul>
         </div>
       </div>
+      <div class="col-lg-2 col-sm-6">
+        <div class="footer-widget link-widget">
+          <h5 class="footer-title">{{ __('Legal') }}</h5>
+          <ul>
+            <li><a href="{{ url('/terminos-y-condiciones') }}">{{ __('Términos y condiciones') }}</a></li>
+            <li><a href="{{ url('/politica-de-privacidad') }}">{{ __('Política de privacidad') }}</a></li>
+            <li><a href="{{ url('/eliminacion-de-datos') }}">{{ __('Eliminación de datos') }}</a></li>
+            <li><a href="{{ url('/politica-de-reembolsos') }}">{{ __('Política de reembolsos') }}</a></li>
+            <li><a href="{{ url('/politica-de-cookies') }}">{{ __('Política de cookies') }}</a></li>
+          </ul>
+        </div>
+      </div>
       <div class="col-lg-4 col-sm-6">
         <div class="footer-widget about-widget footer-contact ml-sm-auto">
           <h5 class="footer-title">{{ __('Contacto') }}</h5>

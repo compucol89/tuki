@@ -407,12 +407,12 @@
                     <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
                       aria-label="{{ __('Visitar sitio del aliado estratégico') }}">
                       <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
-                        alt="">
+                        alt="{{ $item->name ?? $item->title ?? __('Logo de aliado estratégico') }}">
                     </a>
                   @else
                     <span aria-hidden="true">
                       <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
-                        alt="">
+                        alt="{{ $item->name ?? $item->title ?? __('Logo de aliado estratégico') }}">
                     </span>
                   @endif
                 </div>

@@ -30,7 +30,7 @@
   $seoDescription = \Illuminate\Support\Str::limit($cleanSeoText($seoDescription), 158, '');
 @endphp
 
-@section('pageHeading', $eventName)
+@section('pageHeading', \Illuminate\Support\Str::limit($eventName, 55, ''))
 @section('meta-keywords', $content->meta_keywords ?? '')
 @section('meta-description', $seoDescription)
 @section('og-title', $eventName . ' | ' . $websiteInfo->website_title)

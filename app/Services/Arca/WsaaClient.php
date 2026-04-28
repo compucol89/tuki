@@ -21,12 +21,44 @@ class WsaaClient
         $config = config('arca');
         $env = $config['environment'] ?? 'homologation';
 
-        $this->endpoint = $config['wsaa'][$env];
-        $this->certificate = $config['certificate'];
-        $this->privateKey = $config['private_key'];
+        $this->endpoint  = $config['wsaa'][$env];
         $this->passphrase = $config['passphrase'] ?? '';
-        $this->cuit = $config['cuit'];
-        $this->service = $service;
+        $this->cuit      = $config['cuit'];
+        $this->service   = $service;
+
+        // Soporte dual: archivo en disco o base64 en variable de entorno (EasyPanel/Docker)
+        $this->certificate = $this->resolveCredentialPath(
+            $config['certificate'],
+            env('ARCA_CERT_B64'),
+            'arca_cert'
+        );
+        $this->privateKey = $this->resolveCredentialPath(
+            $config['private_key'],
+            env('ARCA_KEY_B64'),
+            'arca_key'
+        );
+    }
+
+    /**
+     * Resuelve la ruta del archivo de credencial.
+     * Si el archivo no existe pero hay base64 en env, lo decodifica a un archivo temporal.
+     */
+    protected function resolveCredentialPath(?string $filePath, ?string $base64, string $prefix): string
+    {
+        if ($filePath && file_exists($filePath)) {
+            return $filePath;
+        }
+
+        if ($base64) {
+            $tmpPath = sys_get_temp_dir() . '/' . $prefix . '_' . md5($base64) . '.pem';
+            if (!file_exists($tmpPath)) {
+                file_put_contents($tmpPath, base64_decode($base64));
+                chmod($tmpPath, 0600);
+            }
+            return $tmpPath;
+        }
+
+        return (string) $filePath;
     }
 
     /**

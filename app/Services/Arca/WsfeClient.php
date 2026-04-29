@@ -103,12 +103,13 @@ class WsfeClient
 
         $tipos = [];
         if (isset($result->FEParamGetTiposCbteResult->ResultGet->CbteTipo)) {
-            foreach ($result->FEParamGetTiposCbteResult->ResultGet->CbteTipo as $tipo) {
-                $tipos[(int) $tipo->Id] = [
-                    'id' => (int) $tipo->Id,
-                    'descripcion' => (string) $tipo->Desc,
-                    'fecha_vigencia_desde' => (string) ($tipo->FchDesde ?? ''),
-                    'fecha_vigencia_hasta' => (string) ($tipo->FchHasta ?? ''),
+            foreach ($this->soapItems($result->FEParamGetTiposCbteResult->ResultGet->CbteTipo) as $tipo) {
+                $id = (int) $this->soapField($tipo, 'Id');
+                $tipos[$id] = [
+                    'id' => $id,
+                    'descripcion' => (string) $this->soapField($tipo, 'Desc'),
+                    'fecha_vigencia_desde' => (string) ($this->soapField($tipo, 'FchDesde') ?? ''),
+                    'fecha_vigencia_hasta' => (string) ($this->soapField($tipo, 'FchHasta') ?? ''),
                 ];
             }
         }
@@ -131,8 +132,8 @@ class WsfeClient
 
         $tipos = [];
         if (isset($result->FEParamGetTiposDocResult->ResultGet->DocTipo)) {
-            foreach ($result->FEParamGetTiposDocResult->ResultGet->DocTipo as $tipo) {
-                $tipos[(int) $tipo->Id] = (string) $tipo->Desc;
+            foreach ($this->soapItems($result->FEParamGetTiposDocResult->ResultGet->DocTipo) as $tipo) {
+                $tipos[(int) $this->soapField($tipo, 'Id')] = (string) $this->soapField($tipo, 'Desc');
             }
         }
 
@@ -154,8 +155,8 @@ class WsfeClient
 
         $tipos = [];
         if (isset($result->FEParamGetTiposIvaResult->ResultGet->IvaTipo)) {
-            foreach ($result->FEParamGetTiposIvaResult->ResultGet->IvaTipo as $tipo) {
-                $tipos[(int) $tipo->Id] = (string) $tipo->Desc;
+            foreach ($this->soapItems($result->FEParamGetTiposIvaResult->ResultGet->IvaTipo) as $tipo) {
+                $tipos[(int) $this->soapField($tipo, 'Id')] = (string) $this->soapField($tipo, 'Desc');
             }
         }
 
@@ -177,8 +178,8 @@ class WsfeClient
 
         $tipos = [];
         if (isset($result->FEParamGetTiposMonedasResult->ResultGet->Moneda)) {
-            foreach ($result->FEParamGetTiposMonedasResult->ResultGet->Moneda as $tipo) {
-                $tipos[(string) $tipo->Id] = (string) $tipo->Desc;
+            foreach ($this->soapItems($result->FEParamGetTiposMonedasResult->ResultGet->Moneda) as $tipo) {
+                $tipos[(string) $this->soapField($tipo, 'Id')] = (string) $this->soapField($tipo, 'Desc');
             }
         }
 
@@ -355,6 +356,36 @@ class WsfeClient
     |--------------------------------------------------------------------------
     */
 
+    protected function soapItems($value): array
+    {
+        if (is_array($value)) {
+            if (!array_is_list($value)) {
+                return [$value];
+            }
+
+            return array_values(array_filter($value, fn ($item) => is_object($item) || is_array($item)));
+        }
+
+        if (is_object($value)) {
+            return [$value];
+        }
+
+        return [];
+    }
+
+    protected function soapField($item, string $field)
+    {
+        if (is_object($item)) {
+            return $item->{$field} ?? null;
+        }
+
+        if (is_array($item)) {
+            return $item[$field] ?? null;
+        }
+
+        return null;
+    }
+
     /**
      * Verifica si la respuesta contiene errores de ARCA/AFIP.
      * Método genérico que detecta errores en cualquier respuesta WSFEv1.
@@ -366,43 +397,43 @@ class WsfeClient
 
         // Patrón 1: Errores genéricos en ResultGet (FEParamGetTiposCbte, etc.)
         if (isset($result->Errors) && isset($result->Errors->Err)) {
-            foreach ($result->Errors->Err as $err) {
-                $errors[] = "[{$err->Code}] {$err->Msg}";
+            foreach ($this->soapItems($result->Errors->Err) as $err) {
+                $errors[] = "[{$this->soapField($err, 'Code')}] {$this->soapField($err, 'Msg')}";
             }
         }
 
         // Patrón 2: Errores en método específico (FECAESolicitarResult)
         if (isset($result->FECAESolicitarResult->Errors)) {
-            foreach ($result->FECAESolicitarResult->Errors->Err as $err) {
-                $errors[] = "[{$err->Code}] {$err->Msg}";
+            foreach ($this->soapItems($result->FECAESolicitarResult->Errors->Err) as $err) {
+                $errors[] = "[{$this->soapField($err, 'Code')}] {$this->soapField($err, 'Msg')}";
             }
         }
 
         // Patrón 3: Errores en FECompUltimoAutorizadoResult
         if (isset($result->FECompUltimoAutorizadoResult->Errors)) {
-            foreach ($result->FECompUltimoAutorizadoResult->Errors->Err as $err) {
-                $errors[] = "[{$err->Code}] {$err->Msg}";
+            foreach ($this->soapItems($result->FECompUltimoAutorizadoResult->Errors->Err) as $err) {
+                $errors[] = "[{$this->soapField($err, 'Code')}] {$this->soapField($err, 'Msg')}";
             }
         }
 
         // Patrón 4: Errores en FECompConsultarResult
         if (isset($result->FECompConsultarResult->Errors)) {
-            foreach ($result->FECompConsultarResult->Errors->Err as $err) {
-                $errors[] = "[{$err->Code}] {$err->Msg}";
+            foreach ($this->soapItems($result->FECompConsultarResult->Errors->Err) as $err) {
+                $errors[] = "[{$this->soapField($err, 'Code')}] {$this->soapField($err, 'Msg')}";
             }
         }
 
         // Patrón 5: Errores en FEParamGetCotizacionResult
         if (isset($result->FEParamGetCotizacionResult->Errors)) {
-            foreach ($result->FEParamGetCotizacionResult->Errors->Err as $err) {
-                $errors[] = "[{$err->Code}] {$err->Msg}";
+            foreach ($this->soapItems($result->FEParamGetCotizacionResult->Errors->Err) as $err) {
+                $errors[] = "[{$this->soapField($err, 'Code')}] {$this->soapField($err, 'Msg')}";
             }
         }
 
         // Patrón 6: Observaciones en FECAESolicitarResult (no son errores fatales pero se registran)
         if (isset($result->FECAESolicitarResult->FeCabResp->Observaciones)) {
-            foreach ($result->FECAESolicitarResult->FeCabResp->Observaciones->Obs as $obs) {
-                $errors[] = "[{$obs->Code}] {$obs->Msg}";
+            foreach ($this->soapItems($result->FECAESolicitarResult->FeCabResp->Observaciones->Obs) as $obs) {
+                $errors[] = "[{$this->soapField($obs, 'Code')}] {$this->soapField($obs, 'Msg')}";
             }
         }
 
@@ -423,8 +454,8 @@ class WsfeClient
     protected function checkErrorsRecursive($data, array &$errors): void
     {
         if (is_object($data)) {
-            if (isset($data->Code) && isset($data->Msg)) {
-                $errors[] = "[{$data->Code}] {$data->Msg}";
+            if ($this->soapField($data, 'Code') !== null && $this->soapField($data, 'Msg') !== null) {
+                $errors[] = "[{$this->soapField($data, 'Code')}] {$this->soapField($data, 'Msg')}";
                 return;
             }
             foreach ($data as $key => $child) {
@@ -434,7 +465,14 @@ class WsfeClient
                 $this->checkErrorsRecursive($child, $errors);
             }
         } elseif (is_array($data)) {
-            foreach ($data as $child) {
+            if ($this->soapField($data, 'Code') !== null && $this->soapField($data, 'Msg') !== null) {
+                $errors[] = "[{$this->soapField($data, 'Code')}] {$this->soapField($data, 'Msg')}";
+                return;
+            }
+            foreach ($data as $key => $child) {
+                if (in_array($key, ['Events', 'Evts', 'Evt'], true)) {
+                    continue;
+                }
                 $this->checkErrorsRecursive($child, $errors);
             }
         }
@@ -453,11 +491,11 @@ class WsfeClient
         if (is_object($data)) {
             foreach ($data as $key => $child) {
                 if (in_array($key, ['Events', 'Evts'], true) && isset($child->Evt)) {
-                    foreach (is_array($child->Evt) ? $child->Evt : [$child->Evt] as $event) {
-                        if (isset($event->Code) && isset($event->Msg)) {
+                    foreach ($this->soapItems($child->Evt) as $event) {
+                        if ($this->soapField($event, 'Code') !== null && $this->soapField($event, 'Msg') !== null) {
                             $this->informationalEvents[] = [
-                                'code' => (int) $event->Code,
-                                'message' => (string) $event->Msg,
+                                'code' => (int) $this->soapField($event, 'Code'),
+                                'message' => (string) $this->soapField($event, 'Msg'),
                             ];
                         }
                     }
@@ -467,7 +505,19 @@ class WsfeClient
                 $this->collectInformationalEvents($child);
             }
         } elseif (is_array($data)) {
-            foreach ($data as $child) {
+            foreach ($data as $key => $child) {
+                if (in_array($key, ['Events', 'Evts'], true) && isset($child['Evt'])) {
+                    foreach ($this->soapItems($child['Evt']) as $event) {
+                        if ($this->soapField($event, 'Code') !== null && $this->soapField($event, 'Msg') !== null) {
+                            $this->informationalEvents[] = [
+                                'code' => (int) $this->soapField($event, 'Code'),
+                                'message' => (string) $this->soapField($event, 'Msg'),
+                            ];
+                        }
+                    }
+                    continue;
+                }
+
                 $this->collectInformationalEvents($child);
             }
         }
@@ -481,10 +531,10 @@ class WsfeClient
         $observaciones = [];
 
         if (isset($detalle->Observaciones) && isset($detalle->Observaciones->Obs)) {
-            foreach ($detalle->Observaciones->Obs as $obs) {
+            foreach ($this->soapItems($detalle->Observaciones->Obs) as $obs) {
                 $observaciones[] = [
-                    'code' => (int) $obs->Code,
-                    'message' => (string) $obs->Msg,
+                    'code' => (int) $this->soapField($obs, 'Code'),
+                    'message' => (string) $this->soapField($obs, 'Msg'),
                 ];
             }
         }

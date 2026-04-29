@@ -201,11 +201,11 @@ class ArcaTestConnection extends Command
             $this->displayArcaEvents($wsfe);
             $this->info("  ✓ Tipos de comprobante: " . count($tiposCbte) . " disponibles");
 
-            // Verificar que Factura C (tipo 6) exista
-            if (isset($tiposCbte[6])) {
-                $this->info("  ✓ Factura C (tipo 6): {$tiposCbte[6]['descripcion']}");
+            // Verificar que Factura C (tipo 11) exista
+            if (isset($tiposCbte[11])) {
+                $this->info("  ✓ Factura C (tipo 11): {$tiposCbte[11]['descripcion']}");
             } else {
-                $this->warn("  ⚠ Factura C (tipo 6) not found in available types");
+                $this->warn("  ⚠ Factura C (tipo 11) not found in available types");
             }
 
             // Test tipos de moneda
@@ -216,7 +216,7 @@ class ArcaTestConnection extends Command
             }
 
             // Test último comprobante
-            $ultimo = $wsfe->getLastComprobante(6);
+            $ultimo = $wsfe->getLastComprobante(11);
             $this->displayArcaEvents($wsfe);
             $this->info("  ✓ Último comprobante (Factura C): {$ultimo}");
             $this->info("  ✓ WSFEv1 parameters check successful");

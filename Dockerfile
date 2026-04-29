@@ -5,7 +5,7 @@ RUN apk add --no-cache \
     freetype-dev libpng-dev libjpeg-turbo-dev \
     libzip-dev libxml2-dev oniguruma-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip
+    && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip soap
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

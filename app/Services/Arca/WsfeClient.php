@@ -36,10 +36,14 @@ class WsfeClient
 
         $ta = $this->wsaa->getTicketAcceso();
 
+        // AFIP's WSFE server uses a legacy DH key rejected by OpenSSL 3.x at SECLEVEL=2.
+        $sslContext = stream_context_create(['ssl' => ['ciphers' => 'DEFAULT@SECLEVEL=1']]);
+
         $this->soapClient = new \SoapClient($this->endpoint, [
             'soap_version' => SOAP_1_2,
             'trace' => true,
             'exceptions' => true,
+            'stream_context' => $sslContext,
         ]);
 
         return $this->soapClient;

@@ -100,11 +100,15 @@ class WsaaClient
             throw new Exception('WSAA returned invalid or empty token');
         }
 
-        return [
+        $ta = [
             'token' => (string) $xml->credentials->token,
             'sign'  => (string) $xml->credentials->sign,
             'expiration' => (string) $xml->header->expirationTime,
         ];
+
+        Cache::put("arca.ta.{$this->service}", $ta, now()->addHours(10));
+
+        return $ta;
     }
 
     /**

@@ -152,7 +152,7 @@ class ArcaTestConnection extends Command
 
         try {
             $wsaa = new WsaaClient();
-            $ta = $wsaa->requestNewTA();
+            $ta = $wsaa->getTicketAcceso();
 
             $this->info("  ✓ Authentication successful");
             $this->info("  TA expires: {$ta['expiration']}");
@@ -198,6 +198,7 @@ class ArcaTestConnection extends Command
 
             // Test tipos de comprobante
             $tiposCbte = $wsfe->getTiposComprobante();
+            $this->displayArcaEvents($wsfe);
             $this->info("  ✓ Tipos de comprobante: " . count($tiposCbte) . " disponibles");
 
             // Verificar que Factura C (tipo 6) exista
@@ -209,18 +210,28 @@ class ArcaTestConnection extends Command
 
             // Test tipos de moneda
             $tiposMoneda = $wsfe->getTiposMoneda();
+            $this->displayArcaEvents($wsfe);
             if (isset($tiposMoneda['PES'])) {
                 $this->info("  ✓ Moneda PES: {$tiposMoneda['PES']}");
             }
 
             // Test último comprobante
             $ultimo = $wsfe->getLastComprobante(6);
+            $this->displayArcaEvents($wsfe);
             $this->info("  ✓ Último comprobante (Factura C): {$ultimo}");
+            $this->info("  ✓ WSFEv1 parameters check successful");
 
             return 0;
         } catch (\Exception $e) {
             $this->error("  ✗ WSFEv1 parameters check failed: {$e->getMessage()}");
             return 1;
+        }
+    }
+
+    protected function displayArcaEvents(WsfeClient $wsfe): void
+    {
+        foreach ($wsfe->pullInformationalEvents() as $event) {
+            $this->warn("  ⚠ ARCA informational event [{$event['code']}]: {$event['message']}");
         }
     }
 

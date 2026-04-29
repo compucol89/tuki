@@ -13,6 +13,7 @@ class WsfeClient
     protected int $puntoVenta;
     protected WsaaClient $wsaa;
     protected ?\SoapClient $soapClient = null;
+    protected array $informationalEvents = [];
 
     public function __construct()
     {
@@ -361,6 +362,7 @@ class WsfeClient
     protected function checkErrors($result, string $method = ''): void
     {
         $errors = [];
+        $this->collectInformationalEvents($result);
 
         // Patrón 1: Errores genéricos en ResultGet (FEParamGetTiposCbte, etc.)
         if (isset($result->Errors) && isset($result->Errors->Err)) {
@@ -425,12 +427,48 @@ class WsfeClient
                 $errors[] = "[{$data->Code}] {$data->Msg}";
                 return;
             }
-            foreach ($data as $child) {
+            foreach ($data as $key => $child) {
+                if (in_array($key, ['Events', 'Evts', 'Evt'], true)) {
+                    continue;
+                }
                 $this->checkErrorsRecursive($child, $errors);
             }
         } elseif (is_array($data)) {
             foreach ($data as $child) {
                 $this->checkErrorsRecursive($child, $errors);
+            }
+        }
+    }
+
+    public function pullInformationalEvents(): array
+    {
+        $events = $this->informationalEvents;
+        $this->informationalEvents = [];
+
+        return $events;
+    }
+
+    protected function collectInformationalEvents($data): void
+    {
+        if (is_object($data)) {
+            foreach ($data as $key => $child) {
+                if (in_array($key, ['Events', 'Evts'], true) && isset($child->Evt)) {
+                    foreach (is_array($child->Evt) ? $child->Evt : [$child->Evt] as $event) {
+                        if (isset($event->Code) && isset($event->Msg)) {
+                            $this->informationalEvents[] = [
+                                'code' => (int) $event->Code,
+                                'message' => (string) $event->Msg,
+                            ];
+                        }
+                    }
+                    continue;
+                }
+
+                $this->collectInformationalEvents($child);
+            }
+        } elseif (is_array($data)) {
+            foreach ($data as $child) {
+                $this->collectInformationalEvents($child);
             }
         }
     }

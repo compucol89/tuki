@@ -464,12 +464,12 @@ class BookingController extends Controller
         //generate qr code for without wise ticket
         $variations = json_decode($bookingInfo->variation, true);
         foreach ($variations as $variation) {
-          QrCode::size(200)->generate($bookingInfo->booking_id . '__' . $variation['unique_id'], public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+          QrCode::size(110)->generate($bookingInfo->booking_id . '__' . $variation['unique_id'], public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
         }
       } else {
         //generate qr code for without wise ticket
         for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-          QrCode::size(200)->generate($bookingInfo->booking_id . '__' . $i, public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
+          QrCode::size(110)->generate($bookingInfo->booking_id . '__' . $i, public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
         }
       }
 

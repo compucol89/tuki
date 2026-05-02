@@ -4,7 +4,9 @@ namespace App\Http\Controllers\FrontEnd\PaymentGateway;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\Event\BookingController;
+use App\Jobs\ArcaInvoiceIssuingJob;
 use App\Jobs\BookingInvoiceJob;
+use App\Models\BillingSetting;
 use App\Models\BasicSettings\Basic;
 use App\Models\Earning;
 use App\Models\Event;
@@ -83,6 +85,7 @@ class MercadoPagoController extends Controller
       'lname' => $request->lname,
       'email' => $request->email,
       'phone' => $request->phone,
+      'dni' => $request->input('dni'),
       'country' => $request->country,
       'state' => $request->state,
       'city' => $request->city,
@@ -225,6 +228,10 @@ class MercadoPagoController extends Controller
 
     // store the course enrolment information in database
     $bookingInfo = $enrol->storeData($arrData);
+
+    if (BillingSetting::current()->enabled) {
+      ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));
+    }
 
     $ticket = DB::table('basic_settings')->select('how_ticket_will_be_send')->first();
 

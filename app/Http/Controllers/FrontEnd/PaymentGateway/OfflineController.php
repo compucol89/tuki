@@ -76,6 +76,7 @@ class OfflineController extends Controller
       'lname' => $request->lname,
       'email' => $request->email,
       'phone' => $request->phone,
+      'dni' => $request->input('dni'),
       'country' => $request->country,
       'state' => $request->state,
       'city' => $request->city,

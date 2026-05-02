@@ -5,9 +5,12 @@ namespace App\Http\Controllers\FrontEnd\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\PaymentGateway\MercadoPagoController;
 use App\Http\Controllers\FrontEnd\PaymentGateway\OfflineController;
+use App\Jobs\ArcaInvoiceIssuingJob;
 use App\Jobs\BookingInvoiceJob;
+use App\Models\BillingSetting;
 use App\Models\BasicSettings\Basic;
 use App\Models\BasicSettings\MailTemplate;
+use App\Models\CustomerFiscalProfile;
 use App\Models\Event;
 use App\Models\Event\Booking;
 use App\Models\Event\EventContent;
@@ -93,6 +96,7 @@ class BookingController extends Controller
           'lname' => $request->lname,
           'email' => $request->email,
           'phone' => $request->phone,
+          'dni' => $request->input('dni'),
           'country' => $request->country,
           'state' => $request->state,
           'city' => $request->city,
@@ -136,6 +140,10 @@ class BookingController extends Controller
           // send a mail to the customer with the invoice
           $this->sendMail($bookingInfo);
         } else {
+          if (BillingSetting::current()->enabled) {
+            ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));
+          }
+
           BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
         }
 
@@ -273,6 +281,39 @@ class BookingController extends Controller
         'conversation_id' => array_key_exists('conversation_id', $info) ? $info['conversation_id'] : null,
         'access_token' => Auth::guard('customer')->check() ? null : Str::random(40),
       ]);
+
+      if (!empty($info['dni'])) {
+        try {
+          $customerId = Auth::guard('customer')->id();
+          if (
+            $customerId !== null &&
+            CustomerFiscalProfile::where('customer_id', $customerId)
+              ->where('booking_id', '<>', $booking->id)
+              ->exists()
+          ) {
+            $customerId = null;
+          }
+
+          CustomerFiscalProfile::updateOrCreate(
+            ['booking_id' => $booking->id],
+            [
+              'customer_id' => $customerId,
+              'full_name' => trim(($info['fname'] ?? '') . ' ' . ($info['lname'] ?? '')),
+              'document_type' => 'DNI',
+              'document_number' => $info['dni'],
+              'iva_condition' => 'consumidor_final',
+              'fiscal_address' => $info['address'] ?? null,
+              'fiscal_email' => $info['email'] ?? null,
+            ]
+          );
+        } catch (\Throwable $e) {
+          Log::warning('Could not create customer fiscal profile for booking.', [
+            'booking_id' => $booking->id,
+            'error' => $e->getMessage(),
+          ]);
+        }
+      }
+
       return $booking;
     } catch (\Exception $th) {
       Log::error('storeData failed: ' . $th->getMessage());

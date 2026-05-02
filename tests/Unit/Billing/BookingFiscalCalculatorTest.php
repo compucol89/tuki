@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Billing;
 
+use App\Models\BillingSetting;
 use App\Models\Customer;
 use App\Models\CustomerFiscalProfile;
 use App\Models\Event;
@@ -9,17 +10,38 @@ use App\Models\Event\Booking;
 use App\Models\Event\Ticket;
 use App\Models\Organizer;
 use App\Services\Billing\BookingFiscalCalculator;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class BookingFiscalCalculatorTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (! Schema::hasTable('billing_settings')) {
+            $this->artisan('migrate', [
+                '--path' => 'database/migrations/2026_05_02_090359_create_billing_settings_table.php',
+                '--force' => true,
+            ]);
+        }
+
+        BillingSetting::query()->delete();
+        BillingSetting::create([
+            'enabled' => false,
+            'environment' => 'testing',
+            'issuer_cuit' => null,
+            'issuer_iva_condition' => null,
+            'point_of_sale' => null,
+            'service_fee_percentage' => 10,
+            'service_fee_tax_mode' => 'no_vat_added',
+            'vat_percentage' => 0,
+            'default_invoice_type' => null,
+        ]);
+    }
+
     public function test_calculates_default_ten_percent_commission_preview(): void
     {
-        config([
-            'arca.default_commission_rate' => 0.10,
-            'arca.default_vat_rate' => 0,
-        ]);
-
         $booking = $this->booking([
             'price' => 100000,
             'quantity' => 1,
@@ -34,13 +56,13 @@ class BookingFiscalCalculatorTest extends TestCase
         $this->assertSame(0.10, $preview['platform_commission_rate']);
         $this->assertSame(10000.0, $preview['platform_commission_amount']);
         $this->assertSame(110000.0, $preview['buyer_total_estimated']);
-        $this->assertContains('Comisión no persistida; usando default de preview', $preview['warnings']);
+        $this->assertContains('Comisión no persistida; usando porcentaje de billing_settings', $preview['warnings']);
+        $this->assertSame('no_vat_added', $preview['service_fee_tax_mode_used']);
+        $this->assertSame(10.0, $preview['service_fee_percentage_used']);
     }
 
     public function test_does_not_modify_booking_attributes(): void
     {
-        config(['arca.default_commission_rate' => 0.10]);
-
         $booking = $this->booking([
             'price' => 100000,
             'quantity' => 1,
@@ -56,8 +78,6 @@ class BookingFiscalCalculatorTest extends TestCase
 
     public function test_blocks_preview_when_booking_is_not_paid(): void
     {
-        config(['arca.default_commission_rate' => 0.10]);
-
         $preview = (new BookingFiscalCalculator())->calculate($this->booking([
             'price' => 100000,
             'quantity' => 1,
@@ -69,8 +89,6 @@ class BookingFiscalCalculatorTest extends TestCase
 
     public function test_blocks_preview_when_customer_fiscal_data_is_missing(): void
     {
-        config(['arca.default_commission_rate' => 0.10]);
-
         $preview = (new BookingFiscalCalculator())->calculate($this->booking([
             'price' => 100000,
             'quantity' => 1,
@@ -132,8 +150,6 @@ class BookingFiscalCalculatorTest extends TestCase
 
     public function test_uses_persisted_commission_when_available(): void
     {
-        config(['arca.default_commission_rate' => 0.10]);
-
         $preview = (new BookingFiscalCalculator())->calculate($this->booking([
             'price' => 100000,
             'commission' => 7500,
@@ -144,7 +160,83 @@ class BookingFiscalCalculatorTest extends TestCase
 
         $this->assertSame(0.075, $preview['platform_commission_rate']);
         $this->assertSame(7500.0, $preview['platform_commission_amount']);
-        $this->assertNotContains('Comisión no persistida; usando default de preview', $preview['warnings']);
+        $this->assertNotContains('Comisión no persistida; usando porcentaje de billing_settings', $preview['warnings']);
+        $this->assertSame(7.5, $preview['service_fee_percentage_used']);
+    }
+
+    public function test_vat_added_mode(): void
+    {
+        BillingSetting::query()->delete();
+        BillingSetting::create([
+            'enabled' => false,
+            'environment' => 'testing',
+            'issuer_cuit' => null,
+            'issuer_iva_condition' => null,
+            'point_of_sale' => null,
+            'service_fee_percentage' => 10,
+            'service_fee_tax_mode' => 'vat_added',
+            'vat_percentage' => 21,
+            'default_invoice_type' => null,
+        ]);
+
+        $booking = $this->booking([
+            'price' => 100000,
+            'quantity' => 1,
+            'paymentStatus' => 'completed',
+        ]);
+        $booking->customerInfo->setRelation('fiscalProfile', new CustomerFiscalProfile([
+            'full_name' => 'Cliente Demo',
+            'document_type' => 'DNI',
+            'document_number' => '12345678',
+            'iva_condition' => 'consumidor_final',
+        ]));
+
+        $preview = (new BookingFiscalCalculator())->calculate($booking);
+
+        $this->assertSame(10000.0, $preview['platform_commission_amount']);
+        $this->assertSame(10000.0, $preview['taxable_amount_for_tukipass']);
+        $this->assertSame(2100.0, $preview['vat_amount']);
+        $this->assertSame(12100.0, $preview['invoice_total']);
+        $this->assertSame(112100.0, $preview['buyer_total_estimated']);
+        $this->assertSame('vat_added', $preview['service_fee_tax_mode_used']);
+        $this->assertSame(0.21, $preview['vat_rate']);
+    }
+
+    public function test_vat_included_mode(): void
+    {
+        BillingSetting::query()->delete();
+        BillingSetting::create([
+            'enabled' => false,
+            'environment' => 'testing',
+            'issuer_cuit' => null,
+            'issuer_iva_condition' => null,
+            'point_of_sale' => null,
+            'service_fee_percentage' => 10,
+            'service_fee_tax_mode' => 'vat_included',
+            'vat_percentage' => 21,
+            'default_invoice_type' => null,
+        ]);
+
+        $booking = $this->booking([
+            'price' => 100000,
+            'quantity' => 1,
+            'paymentStatus' => 'completed',
+        ]);
+        $booking->customerInfo->setRelation('fiscalProfile', new CustomerFiscalProfile([
+            'full_name' => 'Cliente Demo',
+            'document_type' => 'DNI',
+            'document_number' => '12345678',
+            'iva_condition' => 'consumidor_final',
+        ]));
+
+        $preview = (new BookingFiscalCalculator())->calculate($booking);
+
+        $this->assertSame(10000.0, $preview['platform_commission_amount']);
+        $this->assertSame(8264.46, $preview['taxable_amount_for_tukipass']);
+        $this->assertSame(1735.54, $preview['vat_amount']);
+        $this->assertSame(10000.0, $preview['invoice_total']);
+        $this->assertSame(110000.0, $preview['buyer_total_estimated']);
+        $this->assertSame('vat_included', $preview['service_fee_tax_mode_used']);
     }
 
     private function booking(array $attributes): Booking

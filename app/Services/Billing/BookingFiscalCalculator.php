@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Billing;
 
+use App\Models\BillingSetting;
 use App\Models\Event\Booking;
 use App\Models\CustomerFiscalProfile;
 
@@ -14,11 +15,23 @@ class BookingFiscalCalculator
         $warnings = [];
         $blockedReasons = [];
 
+        $settings = BillingSetting::current();
+        $feePct = (float) ($settings->service_fee_percentage ?? 0);
+        $vatPct = (float) ($settings->vat_percentage ?? 0);
+        $taxMode = (string) ($settings->service_fee_tax_mode ?? 'no_vat_added');
+        if (!in_array($taxMode, ['no_vat_added', 'vat_added', 'vat_included'], true)) {
+            $taxMode = 'no_vat_added';
+        }
+
         $ticketAmount = $this->money((float) ($booking->price ?? 0));
         $quantity = (float) ($booking->quantity ?? 1);
         $organizerGrossAmount = $this->money($ticketAmount * max($quantity, 1));
 
-        [$commissionRate, $commissionAmount, $commissionWarning] = $this->resolveCommission($booking, $organizerGrossAmount);
+        [$commissionRate, $commissionAmount, $commissionWarning, $serviceFeePercentageUsed] = $this->resolveCommission(
+            $booking,
+            $organizerGrossAmount,
+            $feePct
+        );
         if ($commissionWarning !== null) {
             $warnings[] = $commissionWarning;
         }
@@ -30,15 +43,14 @@ class BookingFiscalCalculator
             $blockedReasons[] = 'La comisión calculada debe ser mayor a cero';
         }
 
-        $vatRate = (float) config('arca.default_vat_rate', 0);
-        if ($vatRate <= 0) {
-            $warnings[] = 'IVA no configurado; preview sin IVA';
-            $vatRate = 0.0;
+        [$netAmount, $vatAmount, $invoiceTotal] = $this->splitCommissionTax($commissionAmount, $taxMode, $vatPct);
+
+        if (($taxMode === 'vat_added' || $taxMode === 'vat_included') && $vatPct <= 0) {
+            $warnings[] = 'Modo IVA con porcentaje 0 en billing_settings; IVA resultante 0.';
         }
 
-        $vatAmount = $this->money($commissionAmount * $vatRate);
-        $invoiceTotal = $this->money($commissionAmount + $vatAmount);
-        $buyerTotalEstimated = $this->money($organizerGrossAmount + $commissionAmount + $vatAmount);
+        $vatRateFraction = $vatPct > 0 ? $this->rate($vatPct / 100) : 0.0;
+        $buyerTotalEstimated = $this->money($organizerGrossAmount + $invoiceTotal);
 
         if (!$this->isPaid((string) ($booking->paymentStatus ?? ''))) {
             $blockedReasons[] = 'La reserva no está pagada';
@@ -61,33 +73,72 @@ class BookingFiscalCalculator
             'platform_commission_rate' => $commissionRate,
             'platform_commission_amount' => $commissionAmount,
             'buyer_total_estimated' => $buyerTotalEstimated,
-            'taxable_amount_for_tukipass' => $commissionAmount,
-            'vat_rate' => $vatRate,
+            'taxable_amount_for_tukipass' => $netAmount,
+            'vat_rate' => $vatRateFraction,
             'vat_amount' => $vatAmount,
             'invoice_total' => $invoiceTotal,
+            'service_fee_percentage_used' => $this->rate($serviceFeePercentageUsed),
+            'service_fee_tax_mode_used' => $taxMode,
+            'vat_percentage_used' => $this->rate($vatPct),
             'warnings' => array_values(array_unique($warnings)),
             'blocked_reasons' => array_values(array_unique($blockedReasons)),
             'recipient' => $recipient,
         ];
     }
 
-    private function resolveCommission(Booking $booking, float $baseAmount): array
+    /**
+     * @return array{0: float, 1: float, 2: string|null, 3: float} rate, amount, warning, service_fee_percentage_used (0-100)
+     */
+    private function resolveCommission(Booking $booking, float $baseAmount, float $serviceFeePercentage): array
     {
         $persistedCommission = (float) ($booking->commission ?? 0);
         if ($persistedCommission > 0) {
             $percentage = (float) ($booking->commission_percentage ?? 0);
             $rate = $percentage > 0 ? $percentage / 100 : ($baseAmount > 0 ? $persistedCommission / $baseAmount : 0);
+            $pctUsed = $percentage > 0 ? $percentage : ($baseAmount > 0 ? round(($persistedCommission / $baseAmount) * 100, 4) : 0.0);
 
-            return [$this->rate($rate), $this->money($persistedCommission), null];
+            return [$this->rate($rate), $this->money($persistedCommission), null, (float) $pctUsed];
         }
 
-        $defaultRate = (float) config('arca.default_commission_rate', 0.10);
+        $defaultRate = $serviceFeePercentage / 100;
+        $warning = 'Comisión no persistida; usando porcentaje de billing_settings';
 
         return [
             $this->rate($defaultRate),
             $this->money($baseAmount * $defaultRate),
-            'Comisión no persistida; usando default de preview',
+            $warning,
+            (float) $serviceFeePercentage,
         ];
+    }
+
+    /**
+     * @return array{0: float, 1: float, 2: float} net, vat, total (ARS, 2 decimals)
+     */
+    private function splitCommissionTax(float $commissionAmount, string $mode, float $vatPct): array
+    {
+        $commissionAmount = $this->money($commissionAmount);
+
+        if ($mode === 'no_vat_added') {
+            return [$commissionAmount, 0.0, $commissionAmount];
+        }
+
+        if ($mode === 'vat_added') {
+            $net = $commissionAmount;
+            $vat = $this->money($net * ($vatPct / 100));
+            $total = $this->money($net + $vat);
+
+            return [$net, $vat, $total];
+        }
+
+        $total = $commissionAmount;
+        if ($vatPct <= 0) {
+            return [$total, 0.0, $total];
+        }
+
+        $net = $this->money($total / (1 + $vatPct / 100));
+        $vat = $this->money($total - $net);
+
+        return [$net, $vat, $total];
     }
 
     private function resolveRecipient(Booking $booking): array

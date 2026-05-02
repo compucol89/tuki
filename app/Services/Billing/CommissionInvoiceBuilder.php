@@ -6,6 +6,7 @@ namespace App\Services\Billing;
 
 use App\Models\Arca\ArcaInvoice;
 use App\Models\Arca\ArcaInvoiceItem;
+use App\Models\BillingSetting;
 use Illuminate\Database\Eloquent\Collection;
 
 class CommissionInvoiceBuilder
@@ -13,6 +14,7 @@ class CommissionInvoiceBuilder
     public function buildPreview(array $calculation): ArcaInvoice
     {
         $blockedReasons = $calculation['blocked_reasons'] ?? [];
+        $billing = BillingSetting::current();
 
         $invoice = new ArcaInvoice([
             'booking_id' => $calculation['booking_id'] ?? null,
@@ -39,6 +41,12 @@ class CommissionInvoiceBuilder
             'commission_rate' => $calculation['platform_commission_rate'] ?? null,
             'commission_base_amount' => $calculation['organizer_gross_amount'] ?? null,
             'commission_amount' => $calculation['platform_commission_amount'] ?? null,
+            'service_fee_percentage_used' => $calculation['service_fee_percentage_used'] ?? null,
+            'service_fee_tax_mode_used' => $calculation['service_fee_tax_mode_used'] ?? null,
+            'vat_percentage_used' => $calculation['vat_percentage_used'] ?? null,
+            'issuer_cuit_used' => $billing->issuer_cuit,
+            'invoice_type_used' => $billing->default_invoice_type,
+            'point_of_sale_used' => $billing->point_of_sale,
             'error_message' => empty($blockedReasons) ? null : implode(' | ', $blockedReasons),
         ]);
 

@@ -47,11 +47,17 @@ class ArcaPreviewBookingInvoice extends Command
         $this->line('Cantidad: ' . number_format($calculation['quantity'], 2, ',', '.'));
         $this->line('Monto organizador: ARS ' . number_format($calculation['organizer_gross_amount'], 2, ',', '.'));
         $this->line('Comisión: ' . number_format($calculation['platform_commission_rate'] * 100, 2, ',', '.') . '%');
-        $this->line('Comisión ARS: ' . number_format($calculation['platform_commission_amount'], 2, ',', '.'));
-        $this->line('Total booking estimado: ARS ' . number_format($calculation['buyer_total_estimated'], 2, ',', '.'));
-        $this->line('Importe que facturaría TukiPass: ARS ' . number_format($calculation['taxable_amount_for_tukipass'], 2, ',', '.'));
-        $this->line('IVA estimado: ARS ' . number_format($calculation['vat_amount'], 2, ',', '.'));
-        $this->line('Total factura estimado: ARS ' . number_format($calculation['invoice_total'], 2, ',', '.'));
+        $this->line('Comisión ARS (base servicio): ' . number_format($calculation['platform_commission_amount'], 2, ',', '.'));
+        $this->newLine();
+        $this->info('Billing settings (dinámico)');
+        $this->line('Porcentaje comisión de servicio usado (%): ' . number_format((float) ($calculation['service_fee_percentage_used'] ?? 0), 4, ',', '.'));
+        $this->line('Modo IVA comisión: ' . ($calculation['service_fee_tax_mode_used'] ?? '—'));
+        $this->line('IVA (%): ' . number_format((float) ($calculation['vat_percentage_used'] ?? 0), 4, ',', '.'));
+        $this->newLine();
+        $this->line('Neto factura TukiPass: ARS ' . number_format($calculation['taxable_amount_for_tukipass'], 2, ',', '.'));
+        $this->line('IVA factura TukiPass: ARS ' . number_format($calculation['vat_amount'], 2, ',', '.'));
+        $this->line('Total factura TukiPass: ARS ' . number_format($calculation['invoice_total'], 2, ',', '.'));
+        $this->line('Total booking estimado (organizador + factura TukiPass): ARS ' . number_format($calculation['buyer_total_estimated'], 2, ',', '.'));
         $this->line("Estado: {$invoice->status}");
 
         $this->printList('Warnings', $calculation['warnings']);

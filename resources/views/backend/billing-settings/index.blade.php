@@ -43,10 +43,10 @@
                 <div class="form-group">
                   <label>{{ __('Emisión automática') }}</label>
                   <select name="enabled" class="form-control">
-                    <option value="0" {{ old('enabled', (int) $settings->enabled) == 0 ? 'selected' : '' }}>
+                    <option value="0" {{ old('enabled', (int) $billingSettings->enabled) == 0 ? 'selected' : '' }}>
                       {{ __('Desactivada') }}
                     </option>
-                    <option value="1" {{ old('enabled', (int) $settings->enabled) == 1 ? 'selected' : '' }}>
+                    <option value="1" {{ old('enabled', (int) $billingSettings->enabled) == 1 ? 'selected' : '' }}>
                       {{ __('Activada') }}
                     </option>
                   </select>
@@ -58,10 +58,10 @@
                 <div class="form-group">
                   <label>{{ __('Ambiente') . '*' }}</label>
                   <select name="environment" class="form-control">
-                    <option value="testing" {{ old('environment', $settings->environment) == 'testing' ? 'selected' : '' }}>
+                    <option value="testing" {{ old('environment', $billingSettings->environment) == 'testing' ? 'selected' : '' }}>
                       {{ __('Testing') }}
                     </option>
-                    <option value="production" {{ old('environment', $settings->environment) == 'production' ? 'selected' : '' }}>
+                    <option value="production" {{ old('environment', $billingSettings->environment) == 'production' ? 'selected' : '' }}>
                       {{ __('Producción') }}
                     </option>
                   </select>
@@ -73,7 +73,7 @@
                 <div class="form-group">
                   <label>{{ __('CUIT emisor') }}</label>
                   <input type="text" name="issuer_cuit" class="form-control"
-                    value="{{ old('issuer_cuit', $settings->issuer_cuit) }}">
+                    value="{{ old('issuer_cuit', $billingSettings->issuer_cuit) }}">
                   @if ($errors->has('issuer_cuit'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('issuer_cuit') }}</p>
                   @endif
@@ -82,7 +82,7 @@
                 <div class="form-group">
                   <label>{{ __('Condición IVA emisor') }}</label>
                   <input type="text" name="issuer_iva_condition" class="form-control"
-                    value="{{ old('issuer_iva_condition', $settings->issuer_iva_condition) }}">
+                    value="{{ old('issuer_iva_condition', $billingSettings->issuer_iva_condition) }}">
                   @if ($errors->has('issuer_iva_condition'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('issuer_iva_condition') }}</p>
                   @endif
@@ -91,7 +91,7 @@
                 <div class="form-group">
                   <label>{{ __('Punto de venta') }}</label>
                   <input type="number" min="1" name="point_of_sale" class="form-control"
-                    value="{{ old('point_of_sale', $settings->point_of_sale) }}">
+                    value="{{ old('point_of_sale', $billingSettings->point_of_sale) }}">
                   @if ($errors->has('point_of_sale'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('point_of_sale') }}</p>
                   @endif
@@ -100,7 +100,7 @@
                 <div class="form-group">
                   <label>{{ __('Comisión de servicio (%)') . '*' }}</label>
                   <input type="number" min="0" max="100" step="0.0001" name="service_fee_percentage"
-                    class="form-control" value="{{ old('service_fee_percentage', $settings->service_fee_percentage) }}">
+                    class="form-control" value="{{ old('service_fee_percentage', $billingSettings->service_fee_percentage) }}">
                   @if ($errors->has('service_fee_percentage'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('service_fee_percentage') }}</p>
                   @endif
@@ -110,15 +110,15 @@
                   <label>{{ __('Tratamiento IVA comisión') . '*' }}</label>
                   <select name="service_fee_tax_mode" class="form-control">
                     <option value="no_vat_added"
-                      {{ old('service_fee_tax_mode', $settings->service_fee_tax_mode) == 'no_vat_added' ? 'selected' : '' }}>
+                      {{ old('service_fee_tax_mode', $billingSettings->service_fee_tax_mode) == 'no_vat_added' ? 'selected' : '' }}>
                       {{ __('Sin IVA agregado') }}
                     </option>
                     <option value="vat_added"
-                      {{ old('service_fee_tax_mode', $settings->service_fee_tax_mode) == 'vat_added' ? 'selected' : '' }}>
+                      {{ old('service_fee_tax_mode', $billingSettings->service_fee_tax_mode) == 'vat_added' ? 'selected' : '' }}>
                       {{ __('IVA agregado') }}
                     </option>
                     <option value="vat_included"
-                      {{ old('service_fee_tax_mode', $settings->service_fee_tax_mode) == 'vat_included' ? 'selected' : '' }}>
+                      {{ old('service_fee_tax_mode', $billingSettings->service_fee_tax_mode) == 'vat_included' ? 'selected' : '' }}>
                       {{ __('IVA incluido') }}
                     </option>
                   </select>
@@ -130,7 +130,7 @@
                 <div class="form-group">
                   <label>{{ __('IVA (%)') . '*' }}</label>
                   <input type="number" min="0" max="100" step="0.0001" name="vat_percentage" class="form-control"
-                    value="{{ old('vat_percentage', $settings->vat_percentage) }}">
+                    value="{{ old('vat_percentage', $billingSettings->vat_percentage) }}">
                   @if ($errors->has('vat_percentage'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('vat_percentage') }}</p>
                   @endif
@@ -139,7 +139,7 @@
                 <div class="form-group">
                   <label>{{ __('Tipo de comprobante por defecto') }}</label>
                   <input type="number" min="1" name="default_invoice_type" class="form-control"
-                    value="{{ old('default_invoice_type', $settings->default_invoice_type) }}">
+                    value="{{ old('default_invoice_type', $billingSettings->default_invoice_type) }}">
                   @if ($errors->has('default_invoice_type'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('default_invoice_type') }}</p>
                   @endif

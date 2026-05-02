@@ -11,9 +11,9 @@ class BillingSettingController extends Controller
 {
   public function index()
   {
-    $settings = BillingSetting::current();
+    $billingSettings = BillingSetting::current();
 
-    return view('backend.billing-settings.index', compact('settings'));
+    return view('backend.billing-settings.index', compact('billingSettings'));
   }
 
   public function update(Request $request)
@@ -30,9 +30,9 @@ class BillingSettingController extends Controller
       'default_invoice_type' => ['nullable', 'integer', 'min:1'],
     ]);
 
-    $settings = BillingSetting::current();
+    $billingSettings = BillingSetting::current();
     $validated['enabled'] = $request->boolean('enabled');
-    $settings->update($validated);
+    $billingSettings->update($validated);
 
     $request->session()->flash('success', 'Updated Successfully');
 

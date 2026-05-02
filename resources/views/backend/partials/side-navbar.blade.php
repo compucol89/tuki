@@ -987,6 +987,7 @@
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Basic Settings', $rolePermissions)))
           <li
             class="nav-item @if (request()->routeIs('admin.basic_settings.general_settings')) active 
+            @elseif (request()->routeIs('admin.basic_settings.billing_settings')) active
             @elseif (request()->routeIs('admin.basic_settings.mail_from_admin')) active
             @elseif (request()->routeIs('admin.basic_settings.mail_to_admin')) active
             @elseif (request()->routeIs('admin.basic_settings.mail_templates')) active
@@ -1008,6 +1009,7 @@
             <div id="basic_settings"
               class="collapse
               @if (request()->routeIs('admin.basic_settings.general_settings')) show
+              @elseif (request()->routeIs('admin.basic_settings.billing_settings')) show
               @elseif (request()->routeIs('admin.basic_settings.mail_from_admin')) show
               @elseif (request()->routeIs('admin.basic_settings.mail_to_admin')) show
               @elseif (request()->routeIs('admin.basic_settings.mail_templates')) show
@@ -1024,6 +1026,12 @@
                 <li class="{{ request()->routeIs('admin.basic_settings.general_settings') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.general_settings') }}">
                     <span class="sub-item">{{ __('General Settings') }}</span>
+                  </a>
+                </li>
+
+                <li class="{{ request()->routeIs('admin.basic_settings.billing_settings') ? 'active' : '' }}">
+                  <a href="{{ route('admin.basic_settings.billing_settings') }}">
+                    <span class="sub-item">{{ __('Facturación ARCA') }}</span>
                   </a>
                 </li>
 

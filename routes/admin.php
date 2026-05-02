@@ -400,6 +400,10 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
 
     Route::post('/update-general-settings', 'BackEnd\BasicSettings\BasicController@update_general_setting')->name('admin.basic_settings.general_settings.update');
 
+    Route::get('/billing-settings', 'BackEnd\BillingSettingController@index')->name('admin.basic_settings.billing_settings');
+
+    Route::post('/update-billing-settings', 'BackEnd\BillingSettingController@update')->name('admin.basic_settings.billing_settings.update');
+
     // basic settings (theme & home) route
     Route::get('/theme-and-home', 'BackEnd\BasicSettings\BasicController@themeAndHome')->name('admin.basic_settings.theme_and_home');
 

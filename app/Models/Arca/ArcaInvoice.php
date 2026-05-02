@@ -42,6 +42,12 @@ class ArcaInvoice extends Model
         'commission_rate',
         'commission_base_amount',
         'commission_amount',
+        'service_fee_percentage_used',
+        'service_fee_tax_mode_used',
+        'vat_percentage_used',
+        'issuer_cuit_used',
+        'invoice_type_used',
+        'point_of_sale_used',
         'cae',
         'cae_due_date',
         'arca_request',
@@ -61,6 +67,10 @@ class ArcaInvoice extends Model
         'service_from' => 'date',
         'service_to' => 'date',
         'due_date' => 'date',
+        'service_fee_percentage_used' => 'decimal:4',
+        'vat_percentage_used' => 'decimal:4',
+        'invoice_type_used' => 'integer',
+        'point_of_sale_used' => 'integer',
     ];
 
     public function booking(): BelongsTo

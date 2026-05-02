@@ -164,11 +164,7 @@ class MercadoPagoController extends Controller
     $request->session()->put('mp_expected_amount', $chargeTotal);
 
     if ($this->sandbox_status == 1) {
-      // Forzar dominio sandbox si el token APP_USR no redirige correctamente
-      $redirectUrl = $responseInfo['sandbox_init_point'] ?? $responseInfo['init_point'];
-      $redirectUrl = str_replace('https://www.mercadopago.com.ar', 'https://sandbox.mercadopago.com.ar', $redirectUrl);
-      $redirectUrl = str_replace('https://www.mercadopago.com', 'https://sandbox.mercadopago.com', $redirectUrl);
-      return redirect($redirectUrl);
+      return redirect($responseInfo['sandbox_init_point']);
     } else {
       return redirect($responseInfo['init_point']);
     }

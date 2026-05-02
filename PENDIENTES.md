@@ -6,6 +6,7 @@
 
 ## 🔴 En progreso / Alta prioridad
 
+- [ ] **ARCA — confirmar modelo fiscal con contador**: Ya existe primera etapa técnica con `ArcaInvoiceIssuingJob` + unique `arca_invoices.booking_id`. Falta definir modelo de facturación, tipo de comprobante, homologación, datos fiscales requeridos y mecanismo de disparo automático antes de tocar checkout/gateways.
 - [ ] **Social Login — Organizadores**: El login/signup de organizadores no tiene botones de Google/Facebook (solo los clientes los tienen).
 - [x] **Social Login — catch vacío**: `authenticationViaProvider()` en `CustomerController` — ahora redirige a login con mensaje de error en español.
 

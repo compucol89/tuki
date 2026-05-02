@@ -249,8 +249,11 @@
             @if($hasPdf)
               <a href="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}" download class="ps-btn ps-btn--primary">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Descargar comprobante
+                Descargar comprobante de reserva
               </a>
+              <p class="mt-2 mb-0" style="font-size: 0.875rem; color: #6c757d;">
+                <small>Este comprobante es interno y no reemplaza una factura fiscal. La factura fiscal, si corresponde, se emitirá por separado.</small>
+              </p>
             @endif
             <a href="{{ $booking->access_token ? route('booking.guest_view', $booking->id) . '?token=' . $booking->access_token : route('customer.booking_details', $booking->id) }}" class="ps-btn ps-btn--secondary">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>

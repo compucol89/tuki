@@ -54,7 +54,7 @@
   <style>
     @page { 
       size: A4; 
-      margin: 45mm 20mm;
+      margin: 55mm 20mm 30mm 20mm;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,10 +92,9 @@
     .ticket::after {
       content: '';
       position: absolute;
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       background: #ffffff;
-      border: 2px solid #F97316;
       border-radius: 50%;
       top: 50%;
       transform: translateY(-50%);
@@ -104,12 +103,10 @@
 
     .ticket::before {
       left: -14px;
-      border-left: none;
     }
 
     .ticket::after {
       right: -14px;
-      border-right: none;
     }
 
     /* Header */
@@ -134,7 +131,7 @@
       font-weight: bold;
       line-height: 1.2;
       margin-bottom: 6px;
-      color: #ffffff;
+      color: #1a1a1a;
     }
 
     .event-date {

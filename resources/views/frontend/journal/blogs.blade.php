@@ -2,6 +2,10 @@
 
 @section('body-class', 'blog-site')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ mix('css/blog.css') }}">
+@endpush
+
 @section('pageHeading')
   @if (!empty($pageHeading))
     {{ $pageHeading->blog_page_title ?? __('Blog') }}

@@ -2,6 +2,10 @@
 
 @section('body-class', 'page-event-detail')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ mix('css/detail-event.css') }}">
+@endpush
+
 @php
   $cleanSeoText = function ($value) {
     return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')));

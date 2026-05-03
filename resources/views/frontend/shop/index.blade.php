@@ -1,4 +1,9 @@
 @extends('frontend.layout')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ mix('css/shop.css') }}">
+@endpush
+
 @section('pageHeading')
   @if (!empty($pageHeading))
     {{ $pageHeading->shop_page_title ?? __('Tienda') }}

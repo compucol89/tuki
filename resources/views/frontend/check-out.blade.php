@@ -3,6 +3,7 @@
 @section('body-class', 'checkout-page')
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
+  <link rel="stylesheet" href="{{ mix('css/checkout.css') }}">
 @endsection
 <meta name="csrf-token" content="{{ csrf_token() }}">
 

@@ -2,6 +2,10 @@
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
 @section('body-class', 'home-page')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ mix('css/home.css') }}">
+@endpush
+
 @php
   $metaKeywords    = !empty($seo->meta_keyword_home)    ? $seo->meta_keyword_home    : 'eventos, entradas, tickets, conciertos, shows, teatro, deportes, Argentina, Tukipass';
   $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'Tukipass — Descubrí y comprá entradas para conciertos, teatro, deportes y más en Argentina. Si organizás eventos, también podés vender online con Tukipass.';

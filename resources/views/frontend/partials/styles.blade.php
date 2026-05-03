@@ -10,8 +10,8 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/menu.css') }}">
-<!-- Main css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
+  <!-- Base css (global) -->
+  <link rel="stylesheet" href="{{ asset('assets/front/css/style-base.css') }}">
 <!-- Responsive css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/responsive.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}">

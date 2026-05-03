@@ -493,9 +493,17 @@ class BookingController extends Controller
 
       PDF::loadView('frontend.event.invoice', compact('bookingInfo', 'event', 'eventInfo', 'width', 'float', 'mb', 'ml', 'language', 'websiteInfo'))->save($fileLocated);
 
+      // Verificar que el archivo se creó correctamente
+      if (!file_exists($fileLocated) || filesize($fileLocated) < 1000) {
+        Log::error('generateInvoice: PDF no se creó correctamente o está vacío: ' . $fileLocated);
+        return "z";
+      }
+
+      Log::info('generateInvoice: PDF generado exitosamente: ' . $fileName);
       return $fileName;
     } catch (\Exception $e) {
-      Log::info($e->getMessage());
+      Log::error('generateInvoice ERROR: ' . $e->getMessage());
+      Log::error('generateInvoice TRACE: ' . $e->getTraceAsString());
       Session::flash('error', $e->getMessage());
       return "z";
     }

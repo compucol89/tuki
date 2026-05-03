@@ -236,27 +236,41 @@ class MercadoPagoController extends Controller
     $ticket = DB::table('basic_settings')->select('how_ticket_will_be_send')->first();
 
     if ($ticket->how_ticket_will_be_send == 'instant') {
-      // generate an invoice in pdf format
-      $invoice = $enrol->generateInvoice($bookingInfo, $bookingInfo->event_id);
+      try {
+        // generate an invoice in pdf format
+        $invoice = $enrol->generateInvoice($bookingInfo, $bookingInfo->event_id);
 
-      //unlink qr code
-      if ($bookingInfo->variation != null) {
-        $variations = json_decode($bookingInfo->variation, true);
-        foreach ($variations as $variation) {
-          @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+        // Verificar que se generó correctamente (debe terminar en .pdf)
+        if ($invoice && substr($invoice, -4) === '.pdf') {
+          //unlink qr code
+          if ($bookingInfo->variation != null) {
+            $variations = json_decode($bookingInfo->variation, true);
+            foreach ($variations as $variation) {
+              @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+            }
+          } else {
+            for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
+              @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
+            }
+          }
+
+          // then, update the invoice field info in database
+          $bookingInfo->invoice = $invoice;
+          $bookingInfo->save();
+
+          // send a mail to the customer with the invoice
+          $enrol->sendMail($bookingInfo);
+        } else {
+          \Log::error('MercadoPago: generateInvoice retornó valor inválido: ' . $invoice);
+          // Generar invoice en background si falló el instantáneo
+          BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(5));
         }
-      } else {
-        for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-          @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
-        }
+      } catch (\Exception $e) {
+        \Log::error('MercadoPago: Error generando invoice: ' . $e->getMessage());
+        \Log::error($e->getTraceAsString());
+        // Intentar generar en background si falló
+        BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(5));
       }
-
-      // then, update the invoice field info in database
-      $bookingInfo->invoice = $invoice;
-      $bookingInfo->save();
-
-      // send a mail to the customer with the invoice
-      $enrol->sendMail($bookingInfo);
     } else {
       BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
     }

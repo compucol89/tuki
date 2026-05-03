@@ -261,13 +261,14 @@ if (!function_exists('checkWishList')) {
 if (!function_exists('OrganizerEventCount')) {
   function OrganizerEventCount($organizer_id, $admin = null)
   {
-    if ($admin == true) {
-      $count = App\Models\Event::where('organizer_id', null)
-        ->count();
-    } else {
-      $count = App\Models\Event::where('organizer_id', $organizer_id)
-        ->count();
-    }
+    $cacheKey = 'organizer_event_count_' . $organizer_id . '_' . ($admin ? 'admin' : 'public');
+    $count = \Illuminate\Support\Facades\Cache::remember($cacheKey, now()->addMinutes(30), function () use ($organizer_id, $admin) {
+      if ($admin == true) {
+        return App\Models\Event::where('organizer_id', null)->count();
+      } else {
+        return App\Models\Event::where('organizer_id', $organizer_id)->count();
+      }
+    });
 
     if ($count) {
       return $count;
@@ -355,7 +356,9 @@ if (!function_exists('symbolPrice')) {
    */
   function symbolPrice($price)
   {
-    $basic = Basic::where('uniqid', 12345)->select('base_currency_symbol_position', 'base_currency_symbol')->first();
+    $basic = \Illuminate\Support\Facades\Cache::remember('currency_symbol_config', now()->addHours(24), function () {
+      return Basic::where('uniqid', 12345)->select('base_currency_symbol_position', 'base_currency_symbol')->first();
+    });
     if (empty($basic)) {
       return is_numeric($price)
         ? number_format((int) round((float) $price, 0, PHP_ROUND_HALF_UP), 0, ',', '.')

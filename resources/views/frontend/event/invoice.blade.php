@@ -44,7 +44,8 @@
   $mpLogoPath = public_path('assets/front/images/mercadopago_logo.svg');
   $mpLogoExists = file_exists($mpLogoPath);
   
-  $tukiLogoPath = public_path('assets/front/images/logos/logo.png');
+  // Logo del admin
+  $tukiLogoPath = public_path('assets/admin/img/logo.png');
   $tukiLogoExists = file_exists($tukiLogoPath);
 @endphp
 <head>
@@ -53,219 +54,221 @@
   <style>
     @page { 
       size: A4; 
-      margin: 15mm 10mm;
+      margin: 10mm 15mm;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body { 
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 11px;
-      line-height: 1.4;
+      font-size: 10px;
+      line-height: 1.3;
       color: #1a1a1a;
       background: #ffffff;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-      padding-top: 15px;
     }
 
     .ticket-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 100%;
       margin: 0 auto;
-      padding-top: 20px;
     }
 
+    /* Ticket con forma de ticket real */
     .ticket {
       background: #ffffff;
       border: 2px solid #F97316;
       border-radius: 15px;
       overflow: hidden;
       page-break-inside: avoid;
-      margin-bottom: 20px;
+      position: relative;
+    }
+
+    /* Perforaciones circulares en los bordes */
+    .ticket::before,
+    .ticket::after {
+      content: '';
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: #ffffff;
+      border: 2px solid #F97316;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+
+    .ticket::before {
+      left: -17px;
+      border-left: none;
+    }
+
+    .ticket::after {
+      right: -17px;
+      border-right: none;
     }
 
     /* Header */
     .ticket-header {
       background: #F97316;
       color: #ffffff;
-      padding: 25px 20px;
-      text-align: center;
-    }
-
-    .event-type {
-      font-size: 10px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .event-title {
-      font-size: 20px;
-      font-weight: bold;
-      line-height: 1.2;
-      margin-bottom: 8px;
-    }
-
-    .event-date {
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .event-location {
-      font-size: 11px;
-      margin-top: 5px;
-    }
-
-    /* Logo Section */
-    .logo-section {
-      background: #F97316;
-      padding: 15px;
+      padding: 15px 25px;
       text-align: center;
     }
 
     .logo-container {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 10px 20px;
-      display: inline-block;
+      margin-bottom: 10px;
     }
 
     .logo-container img {
-      height: 30px;
+      height: 28px;
+      filter: brightness(0) invert(1); /* Hace el logo blanco */
+    }
+
+    .event-title {
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+    .event-date {
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .event-location {
+      font-size: 10px;
+      margin-top: 3px;
     }
 
     /* QR Section */
     .qr-section {
       background: #F97316;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
     }
 
     .qr-container {
       background: #ffffff;
       border-radius: 10px;
-      padding: 15px;
+      padding: 12px;
       display: inline-block;
     }
 
     .qr-container img {
-      width: 130px;
-      height: 130px;
+      width: 100px;
+      height: 100px;
     }
 
     .qr-label {
-      font-size: 10px;
+      font-size: 9px;
       color: #666;
-      margin-top: 8px;
+      margin-top: 5px;
       font-weight: bold;
       text-transform: uppercase;
     }
 
-    /* Perforation */
-    .perforation {
-      height: 15px;
-      background: #ffffff;
-      position: relative;
-      border-top: 2px dashed #ddd;
-      border-bottom: 2px dashed #ddd;
-    }
-
     /* Ticket Details */
     .ticket-details {
-      padding: 20px;
+      padding: 15px 25px;
       background: #ffffff;
     }
 
     .ticket-type {
       text-align: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #ddd;
     }
 
     .ticket-type-label {
-      font-size: 9px;
+      font-size: 8px;
       color: #F97316;
       font-weight: bold;
       text-transform: uppercase;
     }
 
     .ticket-type-name {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       color: #1a1a1a;
-      margin-top: 5px;
-    }
-
-    /* Info Grid - usando tablas para DomPDF */
-    .info-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 15px;
-    }
-
-    .info-table td {
-      padding: 8px 5px;
-      border-bottom: 1px solid #f0f0f0;
-      width: 50%;
-    }
-
-    .info-label-small {
-      font-size: 8px;
-      color: #999;
-      text-transform: uppercase;
-    }
-
-    .info-value-small {
-      font-size: 11px;
-      font-weight: bold;
-      color: #333;
+      margin-top: 3px;
     }
 
     /* Attendee */
     .attendee-section {
       text-align: center;
-      padding: 15px 0;
-      border-top: 1px dashed #ddd;
+      padding: 10px 0;
+      margin-bottom: 12px;
       border-bottom: 1px dashed #ddd;
-      margin-bottom: 15px;
     }
 
     .attendee-label {
-      font-size: 9px;
+      font-size: 8px;
       color: #999;
       text-transform: uppercase;
     }
 
     .attendee-name {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: bold;
       color: #1a1a1a;
     }
 
     .attendee-email {
-      font-size: 10px;
+      font-size: 9px;
       color: #666;
-      margin-top: 3px;
+    }
+
+    /* Info Grid - 3 columnas */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+    }
+
+    .info-table td {
+      padding: 6px 4px;
+      border-bottom: 1px solid #f0f0f0;
+      width: 33.33%;
+      vertical-align: top;
+    }
+
+    .info-label-small {
+      font-size: 7px;
+      color: #999;
+      text-transform: uppercase;
+    }
+
+    .info-value-small {
+      font-size: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .payment-method-cell img {
+      height: 14px;
+      margin-top: 2px;
     }
 
     /* Payment Summary */
     .payment-section {
       background: #fafafa;
       border: 1px solid #eee;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
 
     .payment-title {
-      font-size: 10px;
+      font-size: 9px;
       color: #F97316;
       font-weight: bold;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-align: center;
     }
 
@@ -275,8 +278,8 @@
     }
 
     .payment-table td {
-      padding: 5px 0;
-      font-size: 10px;
+      padding: 3px 0;
+      font-size: 9px;
     }
 
     .payment-table td:first-child {
@@ -294,79 +297,78 @@
     }
 
     .payment-total {
-      margin-top: 10px;
-      padding-top: 10px;
+      margin-top: 8px;
+      padding-top: 8px;
       border-top: 2px solid #F97316;
     }
 
     .payment-total td {
       font-weight: bold;
-      font-size: 12px;
+      font-size: 10px;
     }
 
     .payment-total td:last-child {
-      font-size: 16px;
+      font-size: 14px;
       color: #F97316;
+    }
+
+    /* Instructions */
+    .instructions {
+      background: #fffbeb;
+      border-left: 3px solid #F97316;
+      padding: 10px;
+      margin-bottom: 12px;
+    }
+
+    .instructions-title {
+      font-size: 9px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin-bottom: 5px;
+    }
+
+    .instructions ul {
+      margin: 0;
+      padding-left: 12px;
+    }
+
+    .instructions li {
+      font-size: 8px;
+      color: #555;
+      margin-bottom: 2px;
     }
 
     /* Footer */
     .ticket-footer {
       background: #1a1a1a;
       color: #ffffff;
-      padding: 15px;
+      padding: 12px;
       text-align: center;
     }
 
     .footer-code {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       letter-spacing: 2px;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .footer-brand {
-      font-size: 10px;
+      font-size: 9px;
       color: #ccc;
     }
 
     .footer-disclaimer {
-      font-size: 8px;
+      font-size: 7px;
       color: #999;
-      margin-top: 8px;
+      margin-top: 5px;
       font-style: italic;
-    }
-
-    /* Instructions */
-    .instructions {
-      background: #fffbeb;
-      border: 1px solid #F97316;
-      border-left: 3px solid #F97316;
-      padding: 12px;
-      margin: 0 15px 15px;
-    }
-
-    .instructions-title {
-      font-size: 10px;
-      font-weight: bold;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-    }
-
-    .instructions ul {
-      margin: 0;
-      padding-left: 15px;
-    }
-
-    .instructions li {
-      font-size: 9px;
-      color: #555;
-      margin-bottom: 4px;
     }
 
     /* Page break */
     .page-break {
       page-break-after: always;
-      height: 20px;
+      height: 15px;
     }
   </style>
 </head>
@@ -390,23 +392,18 @@
         
         <!-- Header -->
         <div class="ticket-header">
-          <div class="event-type">Entrada para</div>
+          <div class="logo-container">
+            @if($tukiLogoExists)
+              <img src="{{ $tukiLogoPath }}" alt="TukiPass">
+            @else
+              <span style="font-size:18px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
+            @endif
+          </div>
           <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
           <div class="event-date">{{ ucfirst($eventDate) }} · {{ $eventTime }} hs</div>
           @if($location)
             <div class="event-location">{{ $location }}</div>
           @endif
-        </div>
-
-        <!-- Logo Section -->
-        <div class="logo-section">
-          <div class="logo-container">
-            @if($tukiLogoExists)
-              <img src="{{ $tukiLogoPath }}" alt="TukiPass">
-            @else
-              <span style="font-size:20px;font-weight:bold;color:#F97316;">TUKIPASS</span>
-            @endif
-          </div>
         </div>
 
         <!-- QR Section -->
@@ -415,14 +412,11 @@
             @if (file_exists($qrPath))
               <img src="{{ $qrPath }}" alt="QR">
             @else
-              <div style="width:130px;height:130px;background:#f0f0f0;"></div>
+              <div style="width:100px;height:100px;background:#f0f0f0;"></div>
             @endif
             <div class="qr-label">Entrada {{ $idx + 1 }} / {{ $ticketCount }}</div>
           </div>
         </div>
-
-        <!-- Perforation -->
-        <div class="perforation"></div>
 
         <!-- Ticket Details -->
         <div class="ticket-details">
@@ -446,7 +440,7 @@
             <div class="attendee-email">{{ $bookingInfo->email }}</div>
           </div>
 
-          <!-- Info Grid -->
+          <!-- Info Grid - 3 columnas -->
           <table class="info-table">
             <tr>
               <td>
@@ -457,10 +451,24 @@
                 <div class="info-label-small">Fecha de Reserva</div>
                 <div class="info-value-small">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</div>
               </td>
+              <td class="payment-method-cell">
+                <div class="info-label-small">Método de Pago</div>
+                <div class="info-value-small">
+                  @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
+                    @if($mpLogoExists)
+                      <img src="{{ $mpLogoPath }}" alt="Mercado Pago">
+                    @else
+                      Mercado Pago
+                    @endif
+                  @else
+                    {{ $bookingInfo->paymentMethod ?? '—' }}
+                  @endif
+                </div>
+              </td>
             </tr>
             @if ($address)
             <tr>
-              <td colspan="2">
+              <td colspan="3">
                 <div class="info-label-small">Dirección del Evento</div>
                 <div class="info-value-small">{{ $address }}</div>
               </td>
@@ -503,31 +511,17 @@
           </div>
           @endif
 
-          <!-- Payment Method -->
-          <div style="text-align:center;margin-bottom:5px;">
-            <div class="info-label-small" style="margin-bottom:6px;">Método de Pago</div>
-            @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
-              @if($mpLogoExists)
-                <img src="{{ $mpLogoPath }}" height="20" alt="Mercado Pago">
-              @else
-                <span style="font-weight:bold;color:#009EE3;font-size:14px;">Mercado Pago</span>
-              @endif
-            @else
-              <span style="font-weight:bold;font-size:14px;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
-            @endif
+          <!-- Instructions -->
+          <div class="instructions">
+            <div class="instructions-title">Instrucciones</div>
+            <ul>
+              <li>Presentá esta entrada junto con tu DNI al ingresar.</li>
+              <li>No compartas el código QR. Es único e intransferible.</li>
+              <li>Válida para una sola persona.</li>
+              <li>{{ config('app.name') }} es plataforma de venta; el organizador es responsable del evento.</li>
+            </ul>
           </div>
 
-        </div>
-
-        <!-- Instructions -->
-        <div class="instructions">
-          <div class="instructions-title">Instrucciones Importantes</div>
-          <ul>
-            <li>Presentá esta entrada junto con tu DNI al ingresar al evento.</li>
-            <li>No compartas el código QR con terceros. Es único e intransferible.</li>
-            <li>La entrada es válida para una sola persona.</li>
-            <li>{{ config('app.name') }} es plataforma de venta; el organizador es responsable del evento.</li>
-          </ul>
         </div>
 
         <!-- Footer -->
@@ -558,23 +552,18 @@
         
         <!-- Header -->
         <div class="ticket-header">
-          <div class="event-type">Entrada para</div>
+          <div class="logo-container">
+            @if($tukiLogoExists)
+              <img src="{{ $tukiLogoPath }}" alt="TukiPass">
+            @else
+              <span style="font-size:18px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
+            @endif
+          </div>
           <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
           <div class="event-date">{{ ucfirst($eventDate) }} · {{ $eventTime }} hs</div>
           @if($location)
             <div class="event-location">{{ $location }}</div>
           @endif
-        </div>
-
-        <!-- Logo Section -->
-        <div class="logo-section">
-          <div class="logo-container">
-            @if($tukiLogoExists)
-              <img src="{{ $tukiLogoPath }}" alt="TukiPass">
-            @else
-              <span style="font-size:20px;font-weight:bold;color:#F97316;">TUKIPASS</span>
-            @endif
-          </div>
         </div>
 
         <!-- QR Section -->
@@ -583,14 +572,11 @@
             @if (file_exists($qrPath))
               <img src="{{ $qrPath }}" alt="QR">
             @else
-              <div style="width:130px;height:130px;background:#f0f0f0;"></div>
+              <div style="width:100px;height:100px;background:#f0f0f0;"></div>
             @endif
             <div class="qr-label">Entrada {{ $i }} / {{ $bookingInfo->quantity }}</div>
           </div>
         </div>
-
-        <!-- Perforation -->
-        <div class="perforation"></div>
 
         <!-- Ticket Details -->
         <div class="ticket-details">
@@ -608,7 +594,7 @@
             <div class="attendee-email">{{ $bookingInfo->email }}</div>
           </div>
 
-          <!-- Info Grid -->
+          <!-- Info Grid - 3 columnas -->
           <table class="info-table">
             <tr>
               <td>
@@ -619,10 +605,24 @@
                 <div class="info-label-small">Fecha de Reserva</div>
                 <div class="info-value-small">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</div>
               </td>
+              <td class="payment-method-cell">
+                <div class="info-label-small">Método de Pago</div>
+                <div class="info-value-small">
+                  @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
+                    @if($mpLogoExists)
+                      <img src="{{ $mpLogoPath }}" alt="Mercado Pago">
+                    @else
+                      Mercado Pago
+                    @endif
+                  @else
+                    {{ $bookingInfo->paymentMethod ?? '—' }}
+                  @endif
+                </div>
+              </td>
             </tr>
             @if ($address)
             <tr>
-              <td colspan="2">
+              <td colspan="3">
                 <div class="info-label-small">Dirección del Evento</div>
                 <div class="info-value-small">{{ $address }}</div>
               </td>
@@ -665,31 +665,17 @@
           </div>
           @endif
 
-          <!-- Payment Method -->
-          <div style="text-align:center;margin-bottom:5px;">
-            <div class="info-label-small" style="margin-bottom:6px;">Método de Pago</div>
-            @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
-              @if($mpLogoExists)
-                <img src="{{ $mpLogoPath }}" height="20" alt="Mercado Pago">
-              @else
-                <span style="font-weight:bold;color:#009EE3;font-size:14px;">Mercado Pago</span>
-              @endif
-            @else
-              <span style="font-weight:bold;font-size:14px;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
-            @endif
+          <!-- Instructions -->
+          <div class="instructions">
+            <div class="instructions-title">Instrucciones</div>
+            <ul>
+              <li>Presentá esta entrada junto con tu DNI al ingresar.</li>
+              <li>No compartas el código QR. Es único e intransferible.</li>
+              <li>Válida para una sola persona.</li>
+              <li>{{ config('app.name') }} es plataforma de venta; el organizador es responsable del evento.</li>
+            </ul>
           </div>
 
-        </div>
-
-        <!-- Instructions -->
-        <div class="instructions">
-          <div class="instructions-title">Instrucciones Importantes</div>
-          <ul>
-            <li>Presentá esta entrada junto con tu DNI al ingresar al evento.</li>
-            <li>No compartas el código QR con terceros. Es único e intransferible.</li>
-            <li>La entrada es válida para una sola persona.</li>
-            <li>{{ config('app.name') }} es plataforma de venta; el organizador es responsable del evento.</li>
-          </ul>
         </div>
 
         <!-- Footer -->

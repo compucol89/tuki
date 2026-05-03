@@ -17,7 +17,7 @@
   <div class="error-area">
     <div>
       <div class="offline">
-        <img src="{{ asset('assets/front/images/offline.png') }}" alt="">
+        <img src="{{ asset('assets/front/images/offline.png') }}" alt="" width="400" height="300">
       </div>
       <div class="text-center">
         <h2>{{ __('Sorry, you are offline') . '...' }}</h2>

@@ -2005,7 +2005,8 @@ ttq.page();
                   <img id="edMainImg"
                        src="{{ asset('assets/admin/img/event-gallery/' . $images->first()->image) }}"
                        alt="{{ $content->title }}"
-                       class="ed-gallery-main__img">
+                       class="ed-gallery-main__img"
+                       width="800" height="533">
                   @if($images->count() > 1)
                   <div class="ed-gallery-count">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -2022,7 +2023,8 @@ ttq.page();
                         data-src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
                         data-action="thumb-switch">
                   <img src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
-                       alt="{{ $content->title }} — foto {{ $i + 1 }}">
+                       alt="{{ $content->title }} — foto {{ $i + 1 }}"
+                       width="150" height="100">
                 </button>
                 @endforeach
               </div>

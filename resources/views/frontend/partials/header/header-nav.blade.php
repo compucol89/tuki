@@ -7,7 +7,7 @@
       <div class="header-inner">
         <div class="logo-outer">
           <div class="logo"><a href="{{ route('index') }}"><img
-                src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a></div>
+                src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}" width="150" height="40"></a></div>
         </div>
 
         <div class="nav-outer ml-lg-auto">
@@ -22,7 +22,7 @@
                 <span class="icon-bar"></span>
               </button>
               <div class="logo-mobile"><a href="{{ route('index') }}"><img
-                    src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}"></a></div>
+                    src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}" width="150" height="40"></a></div>
               @if (!Auth::guard('customer')->check())
                 <a href="{{ route('customer.login') }}" class="header-ingresar-btn">{{ __('Ingresar') }}</a>
               @endif

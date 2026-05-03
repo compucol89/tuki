@@ -69,7 +69,8 @@
            data-src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}"
            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
            alt="{{ $event->title }}"
-           loading="lazy">
+           loading="lazy"
+           width="400" height="267">
 
       <div class="ev-card__gradient"></div>
 

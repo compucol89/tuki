@@ -169,7 +169,7 @@
   <div class="page-wrapper">
 
     <div class="request-loader">
-      <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="loader">
+      <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="loader" width="50" height="50">
     </div>
 
 

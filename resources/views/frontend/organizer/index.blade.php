@@ -90,7 +90,10 @@
                     <a href="{{ route('frontend.organizer.details', [$item->id, str_replace(' ', '-', $item->username)]) }}"
                       target="_self" title="{{ $item->username }}">
                       @if ($item->photo == null)
-                        <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Foto del organizador') }}">
+                        <picture>
+                          <source srcset="{{ asset('assets/front/images/user.webp') }}" type="image/webp">
+                          <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Foto del organizador') }}">
+                        </picture>
                       @else
                         <img class="rounded-lg lazy" data-src="{{ asset('assets/admin/img/organizer-photo/' . $item->photo) }}"
                           alt="{{ __('Foto del organizador') }}">

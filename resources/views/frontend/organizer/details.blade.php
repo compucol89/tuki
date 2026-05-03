@@ -26,7 +26,10 @@
                       alt="{{ __('Perfil del organizador') }}">
                   @else
                     @if ($organizer->photo == null)
-                      <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Perfil del organizador') }}">
+                      <picture>
+                        <source srcset="{{ asset('assets/front/images/user.webp') }}" type="image/webp">
+                        <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Perfil del organizador') }}">
+                      </picture>
                     @else
                       <img class="rounded-lg lazy"
                         data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}" alt="{{ __('Perfil del organizador') }}">
@@ -214,8 +217,11 @@
                       alt="{{ __('Perfil del organizador') }}">
                   @else
                     @if ($organizer->photo == null)
-                      <img class="rounded-lg lazy org-profile-card__img" data-src="{{ asset('assets/front/images/user.png') }}"
-                        alt="{{ __('Perfil del organizador') }}">
+                      <picture>
+                        <source srcset="{{ asset('assets/front/images/user.webp') }}" type="image/webp">
+                        <img class="rounded-lg lazy org-profile-card__img" data-src="{{ asset('assets/front/images/user.png') }}"
+                          alt="{{ __('Perfil del organizador') }}">
+                      </picture>
                     @else
                       <img class="rounded-lg lazy org-profile-card__img"
                         data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}"

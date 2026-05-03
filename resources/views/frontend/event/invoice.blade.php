@@ -54,15 +54,15 @@
   <style>
     @page { 
       size: A4; 
-      margin: 10mm 15mm;
+      margin: 25mm 20mm;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body { 
       font-family: Helvetica, Arial, sans-serif;
-      font-size: 10px;
-      line-height: 1.3;
+      font-size: 11px;
+      line-height: 1.4;
       color: #1a1a1a;
       background: #ffffff;
       -webkit-print-color-adjust: exact;
@@ -71,18 +71,20 @@
 
     .ticket-container {
       width: 100%;
-      max-width: 100%;
+      max-width: 400px;
       margin: 0 auto;
+      padding-top: 30px;
     }
 
     /* Ticket con forma de ticket real */
     .ticket {
       background: #ffffff;
       border: 2px solid #F97316;
-      border-radius: 15px;
+      border-radius: 20px;
       overflow: hidden;
       page-break-inside: avoid;
       position: relative;
+      box-shadow: 0 4px 15px rgba(249, 115, 22, 0.2);
     }
 
     /* Perforaciones circulares en los bordes */
@@ -90,8 +92,8 @@
     .ticket::after {
       content: '';
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
       background: #ffffff;
       border: 2px solid #F97316;
       border-radius: 50%;
@@ -101,119 +103,126 @@
     }
 
     .ticket::before {
-      left: -17px;
+      left: -14px;
       border-left: none;
     }
 
     .ticket::after {
-      right: -17px;
+      right: -14px;
       border-right: none;
     }
 
     /* Header */
     .ticket-header {
-      background: #F97316;
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
       color: #ffffff;
-      padding: 15px 25px;
+      padding: 20px 15px 15px;
       text-align: center;
     }
 
     .logo-container {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .logo-container img {
-      height: 28px;
-      filter: brightness(0) invert(1); /* Hace el logo blanco */
+      height: 32px;
+      filter: brightness(0) invert(1);
     }
 
     .event-title {
       font-size: 18px;
       font-weight: bold;
       line-height: 1.2;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .event-date {
       font-size: 11px;
-      font-weight: bold;
+      font-weight: 600;
+      opacity: 0.95;
     }
 
     .event-location {
       font-size: 10px;
-      margin-top: 3px;
+      opacity: 0.85;
+      margin-top: 4px;
     }
 
     /* QR Section */
     .qr-section {
-      background: #F97316;
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
       padding: 15px;
       text-align: center;
     }
 
     .qr-container {
       background: #ffffff;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 12px;
       display: inline-block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .qr-container img {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
     }
 
     .qr-label {
       font-size: 9px;
       color: #666;
-      margin-top: 5px;
+      margin-top: 6px;
       font-weight: bold;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     /* Ticket Details */
     .ticket-details {
-      padding: 15px 25px;
+      padding: 18px 20px;
       background: #ffffff;
     }
 
     .ticket-type {
       text-align: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
-      border-bottom: 1px dashed #ddd;
+      margin-bottom: 15px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #e5e5e5;
     }
 
     .ticket-type-label {
-      font-size: 8px;
+      font-size: 9px;
       color: #F97316;
       font-weight: bold;
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .ticket-type-name {
       font-size: 16px;
       font-weight: bold;
       color: #1a1a1a;
-      margin-top: 3px;
+      margin-top: 4px;
     }
 
     /* Attendee */
     .attendee-section {
       text-align: center;
-      padding: 10px 0;
-      margin-bottom: 12px;
-      border-bottom: 1px dashed #ddd;
+      padding: 12px 0;
+      margin-bottom: 15px;
+      border-bottom: 1px dashed #e5e5e5;
     }
 
     .attendee-label {
       font-size: 8px;
       color: #999;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 3px;
     }
 
     .attendee-name {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: bold;
       color: #1a1a1a;
     }
@@ -221,17 +230,18 @@
     .attendee-email {
       font-size: 9px;
       color: #666;
+      margin-top: 2px;
     }
 
     /* Info Grid - 3 columnas */
     .info-table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
     }
 
     .info-table td {
-      padding: 6px 4px;
+      padding: 8px 4px;
       border-bottom: 1px solid #f0f0f0;
       width: 33.33%;
       vertical-align: top;
@@ -241,6 +251,8 @@
       font-size: 7px;
       color: #999;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
     }
 
     .info-value-small {
@@ -249,8 +261,12 @@
       color: #333;
     }
 
+    .payment-method-cell .info-value-small {
+      color: #009EE3;
+    }
+
     .payment-method-cell img {
-      height: 14px;
+      height: 16px;
       margin-top: 2px;
     }
 
@@ -258,9 +274,9 @@
     .payment-section {
       background: #fafafa;
       border: 1px solid #eee;
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
     }
 
     .payment-title {
@@ -268,6 +284,7 @@
       color: #F97316;
       font-weight: bold;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-bottom: 8px;
       text-align: center;
     }
@@ -278,8 +295,8 @@
     }
 
     .payment-table td {
-      padding: 3px 0;
-      font-size: 9px;
+      padding: 4px 0;
+      font-size: 10px;
     }
 
     .payment-table td:first-child {
@@ -304,11 +321,11 @@
 
     .payment-total td {
       font-weight: bold;
-      font-size: 10px;
+      font-size: 11px;
     }
 
     .payment-total td:last-child {
-      font-size: 14px;
+      font-size: 15px;
       color: #F97316;
     }
 
@@ -316,15 +333,16 @@
     .instructions {
       background: #fffbeb;
       border-left: 3px solid #F97316;
-      padding: 10px;
-      margin-bottom: 12px;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      border-radius: 0 8px 8px 0;
     }
 
     .instructions-title {
       font-size: 9px;
       font-weight: bold;
       color: #1a1a1a;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .instructions ul {
@@ -335,40 +353,46 @@
     .instructions li {
       font-size: 8px;
       color: #555;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
+      line-height: 1.4;
     }
 
     /* Footer */
     .ticket-footer {
       background: #1a1a1a;
       color: #ffffff;
-      padding: 12px;
+      padding: 15px;
       text-align: center;
     }
 
     .footer-code {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
       letter-spacing: 2px;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
     .footer-brand {
       font-size: 9px;
-      color: #ccc;
+      color: rgba(255,255,255,0.7);
     }
 
     .footer-disclaimer {
       font-size: 7px;
-      color: #999;
-      margin-top: 5px;
+      color: rgba(255,255,255,0.5);
+      margin-top: 6px;
       font-style: italic;
     }
 
     /* Page break */
     .page-break {
       page-break-after: always;
-      height: 15px;
+      height: 20px;
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      .ticket { box-shadow: none; }
     }
   </style>
 </head>
@@ -396,7 +420,7 @@
             @if($tukiLogoExists)
               <img src="{{ $tukiLogoPath }}" alt="TukiPass">
             @else
-              <span style="font-size:18px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
+              <span style="font-size:20px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
             @endif
           </div>
           <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
@@ -412,7 +436,7 @@
             @if (file_exists($qrPath))
               <img src="{{ $qrPath }}" alt="QR">
             @else
-              <div style="width:100px;height:100px;background:#f0f0f0;"></div>
+              <div style="width:120px;height:120px;background:#f0f0f0;border-radius:4px;"></div>
             @endif
             <div class="qr-label">Entrada {{ $idx + 1 }} / {{ $ticketCount }}</div>
           </div>
@@ -513,11 +537,11 @@
 
           <!-- Instructions -->
           <div class="instructions">
-            <div class="instructions-title">Instrucciones</div>
+            <div class="instructions-title">Instrucciones Importantes</div>
             <ul>
-              <li>Presentá esta entrada junto con tu DNI al ingresar.</li>
-              <li>No compartas el código QR. Es único e intransferible.</li>
-              <li>Válida para una sola persona.</li>
+              <li>Presentá esta entrada junto con tu DNI al ingresar al evento.</li>
+              <li>No compartas el código QR con terceros. Es único e intransferible.</li>
+              <li>La entrada es válida para una sola persona.</li>
               <li>{{ config('app.name') }} es plataforma de venta; el organizador es responsable del evento.</li>
             </ul>
           </div>
@@ -556,7 +580,7 @@
             @if($tukiLogoExists)
               <img src="{{ $tukiLogoPath }}" alt="TukiPass">
             @else
-              <span style="font-size:18px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
+              <span style="font-size:20px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
             @endif
           </div>
           <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
@@ -572,7 +596,7 @@
             @if (file_exists($qrPath))
               <img src="{{ $qrPath }}" alt="QR">
             @else
-              <div style="width:100px;height:100px;background:#f0f0f0;"></div>
+              <div style="width:120px;height:120px;background:#f0f0f0;border-radius:4px;"></div>
             @endif
             <div class="qr-label">Entrada {{ $i }} / {{ $bookingInfo->quantity }}</div>
           </div>
@@ -667,11 +691,11 @@
 
           <!-- Instructions -->
           <div class="instructions">
-            <div class="instructions-title">Instrucciones</div>
+            <div class="instructions-title">Instrucciones Importantes</div>
             <ul>
-              <li>Presentá esta entrada junto con tu DNI al ingresar.</li>
-              <li>No compartas el código QR. Es único e intransferible.</li>
-              <li>Válida para una sola persona.</li>
+              <li>Presentá esta entrada junto con tu DNI al ingresar al evento.</li>
+              <li>No compartas el código QR con terceros. Es único e intransferible.</li>
+              <li>La entrada es válida para una sola persona.</li>
               <li>{{ config('app.name') }} es plataforma de venta; el organizador es responsable del evento.</li>
             </ul>
           </div>

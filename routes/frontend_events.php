@@ -7,6 +7,7 @@ Route::middleware('change.lang')->group(function () {
   Route::get('/event-booking/{id}/cancel', 'FrontEnd\Event\BookingController@cancel')->name('event_booking.cancel');
   Route::get('/event-booking-complete', 'FrontEnd\Event\BookingController@complete')->name('event_booking.complete');
   Route::get('/booking/view/{id}', 'FrontEnd\Event\CustomerBookingController@guestDetails')->name('booking.guest_view');
+  Route::get('/booking/{id}/ticket/download', 'FrontEnd\Event\BookingTicketDownloadController@download')->name('booking.ticket.download');
 });
 
 Route::middleware('change.lang')->group(function () {

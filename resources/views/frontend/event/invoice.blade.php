@@ -6,124 +6,395 @@
   $primary     = '#' . ($websiteInfo->primary_color ?? 'f97316');
   $position    = $bookingInfo->currencyTextPosition ?? 'left';
   $currency    = $bookingInfo->currencyText ?? 'ARS';
+  
   function formatMoney($amount, $position, $currency) {
     $amt = number_format((float)$amount, 2, ',', '.');
     return $position == 'left' ? $currency . ' ' . $amt : $amt . ' ' . $currency;
   }
+  
+  function cleanLocationPart($part) {
+    if (empty($part)) return null;
+    $cleaned = trim($part);
+    if (strtoupper($cleaned) === 'N/A') return null;
+    if (strtoupper($cleaned) === 'NA') return null;
+    if ($cleaned === '-') return null;
+    return $cleaned;
+  }
+  
   $tickets    = $bookingInfo->variation != null ? json_decode($bookingInfo->variation, true) : null;
   $ticketCount = $tickets ? count($tickets) : $bookingInfo->quantity;
   $eventDate  = \Carbon\Carbon::parse($bookingInfo->event_date)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY');
 
-  // Construir ubicación solo con datos reales, sin N/A
+  // Construir ubicación solo con datos reales
   $locationParts = array_filter([
-    $bookingInfo->city ?? null,
-    $bookingInfo->state ?? null,
-    $bookingInfo->country ?? null,
-  ], function ($part) {
-    return filled($part) && strtoupper(trim($part)) !== 'N/A';
-  });
+    cleanLocationPart($bookingInfo->city ?? null),
+    cleanLocationPart($bookingInfo->state ?? null),
+    cleanLocationPart($bookingInfo->country ?? null),
+  ]);
   $location = implode(', ', $locationParts);
+  
+  // Limpiar dirección
+  $address = cleanLocationPart($bookingInfo->address ?? null);
 
-  // Calcular valor unitario
-  $unitPrice = ($bookingInfo->quantity > 0) ? ($bookingInfo->price / $bookingInfo->quantity) : 0;
+  // Calcular valores económicos
+  $quantity = $bookingInfo->quantity ?? 1;
+  $unitPrice = ($quantity > 0) ? ($bookingInfo->price / $quantity) : 0;
+  $subtotal = $bookingInfo->price ?? 0;
+  $tax = $bookingInfo->tax ?? 0;
+  $earlyBirdDiscount = $bookingInfo->early_bird_discount ?? 0;
+  $couponDiscount = $bookingInfo->discount ?? 0;
+  $totalDiscount = $earlyBirdDiscount + $couponDiscount;
+  $total = $subtotal + $tax - $totalDiscount;
+  
+  // Verificar logo MercadoPago
+  $mpLogoPath = public_path('assets/front/images/mercadopago_logo.svg');
+  $mpLogoExists = file_exists($mpLogoPath);
 @endphp
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ __('Comprobante de reserva') }} — {{ $eventInfo->title ?? config('app.name') }}</title>
-  <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+  <title>Comprobante de Entrada — {{ $eventInfo->title ?? config('app.name') }}</title>
   <style>
-    @page { size: A4; margin: 15mm 10mm; }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: #f0f2f5; font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; color: #1e2532; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { 
+      size: A4; 
+      margin: 20mm 15mm;
+    }
+    
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body { 
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #1a1a1a;
+      background: #ffffff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
 
-    /* ── WRAPPER ── */
-    .ticket { width: 100%; max-width: 680px; margin: 0 auto 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1); background: #fff; page-break-inside: avoid; break-inside: avoid; }
+    /* Contenedor principal */
+    .ticket-wrapper {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    
+    .ticket {
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      page-break-inside: avoid;
+      margin-bottom: 20px;
+    }
 
-    /* ── HEADER ── */
-    .ticket__header { background: #1e2532; padding: 20px 24px 16px; position: relative; overflow: hidden; }
-    .ticket__header::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.04); }
-    .ticket__header::after  { content: ''; position: absolute; right: 60px; bottom: -60px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,0.03); }
-    .ticket__header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .ticket__brand { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; }
-    .ticket__status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-    .ticket__status--paid  { background: rgba(34,197,94,0.15); color: #22c55e; }
-    .ticket__status--free  { background: rgba(34,197,94,0.15); color: #22c55e; }
-    .ticket__status--pending { background: rgba(251,191,36,0.15); color: #fbbf24; }
-    .ticket__status--default { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
-    .ticket__status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-    .ticket__event-title { font-size: 24px; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 8px; letter-spacing: -0.02em; }
-    .ticket__event-meta { font-size: 12px; color: rgba(255,255,255,0.55); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .ticket__event-meta-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+    /* Header */
+    .ticket-header {
+      background: linear-gradient(135deg, #1e2532 0%, #2d3748 100%);
+      color: #ffffff;
+      padding: 24px 20px;
+      position: relative;
+    }
+    
+    .ticket-header-top {
+      display: table;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    
+    .ticket-brand {
+      display: table-cell;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    .ticket-status {
+      display: table-cell;
+      text-align: right;
+    }
+    
+    .ticket-status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .status-paid { background: #22c55e; color: #ffffff; }
+    .status-free { background: #22c55e; color: #ffffff; }
+    .status-pending { background: #f59e0b; color: #ffffff; }
+    
+    .ticket-event-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    
+    .ticket-event-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+    }
+    
+    .ticket-event-meta span {
+      display: inline;
+    }
 
-    /* ── ACCENT BAR ── */
-    .ticket__accent { height: 3px; background: {{ $primary }}; }
+    /* Body */
+    .ticket-body {
+      padding: 24px 20px;
+    }
 
-    /* ── BODY ── */
-    .ticket__body { padding: 20px 24px; }
+    /* Sección título */
+    .section-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: {{ $primary }};
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid {{ $primary }};
+    }
 
-    /* ── INFO ROW ── */
-    .ticket__info { display: flex; gap: 20px; margin-bottom: 16px; }
-    .ticket__info-main { flex: 1; }
-    .ticket__info-qr { width: 120px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8f9fb; border-radius: 10px; padding: 12px; border: 1px solid #eaecf0; }
-    .ticket__info-qr img { width: 90px; height: 90px; display: block; }
-    .ticket__info-qr-label { font-size: 10px; color: #8b95a3; margin-top: 6px; font-weight: 500; }
+    /* Layout de 2 columnas con tabla */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+    
+    .info-table td {
+      vertical-align: top;
+      padding: 0;
+    }
+    
+    .info-table td.info-col {
+      width: 65%;
+      padding-right: 20px;
+    }
+    
+    .info-table td.qr-col {
+      width: 35%;
+      text-align: center;
+      background: #f8f9fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+    }
 
-    /* ── SECTION LABEL ── */
-    .ticket__section-label { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: {{ $primary }}; margin-bottom: 8px; }
+    /* Campos de información */
+    .info-row {
+      margin-bottom: 12px;
+    }
+    
+    .info-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+    
+    .info-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
 
-    /* ── FIELDS GRID ── */
-    .ticket__fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
-    .ticket__fields--full { grid-template-columns: 1fr; }
-    .ticket__field { display: flex; flex-direction: column; gap: 2px; }
-    .ticket__field-label { font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #9ca3af; }
-    .ticket__field-value { font-size: 12px; font-weight: 600; color: #1e2532; line-height: 1.3; }
+    /* QR */
+    .qr-container img {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 8px;
+    }
+    
+    .qr-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #374151;
+    }
+    
+    .qr-note {
+      font-size: 8px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
 
-    /* ── DIVIDER ── */
-    .ticket__divider { position: relative; margin: 16px -24px; border: none; }
-    .ticket__divider::before { content: ''; display: block; border-top: 2px dashed #e5e7eb; }
-    .ticket__divider-circle { position: absolute; top: 50%; width: 20px; height: 20px; background: #f0f2f5; border-radius: 50%; transform: translateY(-50%); }
-    .ticket__divider-circle--left  { left: -10px; }
-    .ticket__divider-circle--right { right: -10px; }
+    /* Información de pago */
+    .billing-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .billing-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .billing-table td {
+      padding: 6px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .billing-table td:first-child {
+      text-align: left;
+      color: #6b7280;
+      font-size: 11px;
+    }
+    
+    .billing-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+      font-size: 11px;
+      color: #1a1a1a;
+    }
+    
+    .billing-table tr.discount td:last-child {
+      color: #16a34a;
+    }
+    
+    .billing-table tr.total {
+      background: #1e2532;
+    }
+    
+    .billing-table tr.total td {
+      padding: 12px 0;
+      border-bottom: none;
+    }
+    
+    .billing-table tr.total td:first-child {
+      color: rgba(255,255,255,0.8);
+      font-weight: 700;
+      padding-left: 12px;
+    }
+    
+    .billing-table tr.total td:last-child {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 16px;
+      padding-right: 12px;
+    }
 
-    /* ── BILLING ── */
-    .ticket__billing { margin-bottom: 14px; }
-    .ticket__billing-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 11px; border-bottom: 1px solid #f3f4f6; }
-    .ticket__billing-row:last-child { border-bottom: none; }
-    .ticket__billing-row-label { color: #6b7280; }
-    .ticket__billing-row-value { font-weight: 600; color: #1e2532; }
-    .ticket__billing-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f8f9fb; border-radius: 8px; border: 1px solid #eaecf0; margin-top: 10px; }
-    .ticket__billing-total-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
-    .ticket__billing-total-value { font-size: 16px; font-weight: 800; color: {{ $primary }}; letter-spacing: -0.02em; }
+    /* Método de pago */
+    .payment-method-section {
+      margin-bottom: 20px;
+    }
+    
+    .payment-method-box {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+    }
+    
+    .mp-logo {
+      height: 24px;
+      vertical-align: middle;
+    }
+    
+    .mp-text {
+      font-weight: 700;
+      color: #009EE3;
+      font-size: 14px;
+    }
 
-    /* ── PAYMENT META ── */
-    .ticket__payment-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    /* Instrucciones */
+    .instructions-section {
+      background: #fffbeb;
+      border-left: 4px solid {{ $primary }};
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .instructions-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+    
+    .instructions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .instructions-list li {
+      font-size: 10px;
+      color: #4b5563;
+      margin-bottom: 6px;
+      padding-left: 12px;
+      position: relative;
+      line-height: 1.5;
+    }
+    
+    .instructions-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: {{ $primary }};
+      font-weight: bold;
+    }
 
-    /* ── INSTRUCTIONS ── */
-    .ticket__instructions { margin-top: 14px; padding: 12px; background: #fffbf5; border-left: 3px solid {{ $primary }}; border-radius: 0 8px 8px 0; font-size: 11px; color: #555; line-height: 1.5; }
+    /* Footer */
+    .ticket-footer {
+      background: #1e2532;
+      color: #ffffff;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    
+    .footer-booking-id {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+    
+    .footer-brand {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 8px;
+    }
+    
+    .footer-disclaimer {
+      font-size: 9px;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
 
-    /* ── FOOTER ── */
-    .ticket__footer { background: #f8f9fb; border-top: 1px solid #eaecf0; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-    .ticket__booking-id { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: #1e2532; color: #fff; border-radius: 99px; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; }
-    .ticket__footer-note { font-size: 10px; color: #9ca3af; }
-    .ticket__footer-note strong { color: #6b7280; }
-    .ticket__disclaimer { width: 100%; text-align: center; font-size: 9px; color: #6b7280; padding-top: 8px; border-top: 1px dashed #d1d5db; margin-top: 8px; }
-
-    /* ── PAGE BREAK ── */
-    .page-break { page-break-after: always; margin: 20px 0; }
+    /* Page break */
+    .page-break {
+      page-break-after: always;
+      height: 20px;
+    }
 
     @media print {
-      body { background: #fff; }
-      .ticket { margin: 0 0 15px; box-shadow: none; border-radius: 0; width: 100%; page-break-inside: avoid; break-inside: avoid; }
-      .ticket__divider-circle { background: #fff; }
+      body { background: #ffffff; }
+      .ticket { border: 1px solid #ccc; }
     }
   </style>
 </head>
 <body>
 
-{{-- ═══════════════════════════════════════════════════════════ --}}
-{{-- VARIACIÓN: un ticket por cada variación seleccionada       --}}
-{{-- ═══════════════════════════════════════════════════════════ --}}
+{{-- TICKET POR VARIACIÓN --}}
 @if ($tickets)
   @foreach ($tickets as $idx => $variation)
     @php
@@ -138,172 +409,182 @@
       $isPending = $bookingInfo->paymentStatus == 'pending';
     @endphp
 
-    <div class="ticket">
-
-      {{-- HEADER --}}
-      <div class="ticket__header">
-        <div class="ticket__header-top">
-          <span class="ticket__brand">{{ config('app.name') }}</span>
-          <span class="ticket__status {{ $isPaid ? 'ticket__status--paid' : ($isFree ? 'ticket__status--free' : ($isPending ? 'ticket__status--pending' : 'ticket__status--default')) }}">
-            <span class="ticket__status-dot"></span>
-            @if($isFree) Reserva gratuita confirmada
-            @elseif($isPaid) Pago confirmado
-            @elseif($isPending) Pendiente de confirmación
-            @else {{ ucfirst($bookingInfo->paymentStatus) }}
-            @endif
-          </span>
-        </div>
-        <div class="ticket__event-title">{{ $eventInfo->title ?? '' }}</div>
-        <div class="ticket__event-meta">
-          <span>{{ ucfirst($eventDate) }}</span>
-          @if($location)
-            <span class="ticket__event-meta-sep"></span>
-            <span>{{ $location }}</span>
-          @endif
-        </div>
-      </div>
-
-      <div class="ticket__accent"></div>
-
-      {{-- BODY --}}
-      <div class="ticket__body">
-
-        {{-- INFO + QR --}}
-        <div class="ticket__info">
-          <div class="ticket__info-main">
-            <div class="ticket__section-label">Datos de la reserva</div>
-            <div class="ticket__fields">
-              <div class="ticket__field">
-                <span class="ticket__field-label">FECHA DE RESERVA</span>
-                <span class="ticket__field-value">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">NÚMERO DE RESERVA</span>
-                <span class="ticket__field-value">#{{ $bookingInfo->booking_id }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">Nombre</span>
-                <span class="ticket__field-value">{{ $bookingInfo->fname }} {{ $bookingInfo->lname }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">Correo electrónico</span>
-                <span class="ticket__field-value" style="font-size:12px;word-break:break-all">{{ $bookingInfo->email }}</span>
-              </div>
-              @if ($ticket_content && $ticket && $ticket->pricing_type == 'variation')
-              <div class="ticket__field" style="grid-column:1/-1">
-                <span class="ticket__field-label">Nombre de la entrada</span>
-                <span class="ticket__field-value">{{ $ticket_content->title }} — {{ $variation['name'] }}</span>
-              </div>
+    <div class="ticket-wrapper">
+      <div class="ticket">
+        
+        {{-- Header --}}
+        <div class="ticket-header">
+          <div class="ticket-header-top">
+            <div class="ticket-brand">{{ config('app.name') }}</div>
+            <div class="ticket-status">
+              @if($isFree)
+                <span class="ticket-status-badge status-free">Reserva Gratuita</span>
+              @elseif($isPaid)
+                <span class="ticket-status-badge status-paid">Pago Confirmado</span>
+              @elseif($isPending)
+                <span class="ticket-status-badge status-pending">Pendiente</span>
+              @else
+                <span class="ticket-status-badge">{{ ucfirst($bookingInfo->paymentStatus) }}</span>
               @endif
-              <div class="ticket__field" style="grid-column:1/-1">
-                <span class="ticket__field-label">Dirección</span>
-                <span class="ticket__field-value">{{ $bookingInfo->address }}</span>
-              </div>
             </div>
           </div>
-
-          <div class="ticket__info-qr">
-            @if (file_exists($qrPath))
-              <img src="{{ $qrPath }}" alt="QR">
+          <div class="ticket-event-title">{{ $eventInfo->title ?? '' }}</div>
+          <div class="ticket-event-meta">
+            <span>{{ ucfirst($eventDate) }}</span>
+            @if($location)
+              <span> &nbsp;|&nbsp; {{ $location }}</span>
             @endif
-            <span class="ticket__info-qr-label">Entrada {{ $idx + 1 }} / {{ $ticketCount }}</span>
           </div>
         </div>
 
-        {{-- DIVIDER --}}
-        <hr class="ticket__divider">
-        <div class="ticket__divider-circle ticket__divider-circle--left"></div>
-        <div class="ticket__divider-circle ticket__divider-circle--right"></div>
+        {{-- Body --}}
+        <div class="ticket-body">
+          
+          {{-- Datos de la reserva + QR --}}
+          <div class="section-title">Datos de la Reserva</div>
+          <table class="info-table">
+            <tr>
+              <td class="info-col">
+                <div class="info-row">
+                  <div class="info-label">Fecha de Reserva</div>
+                  <div class="info-value">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</div>
+                </div>
+                <div class="info-row">
+                  <div class="info-label">Número de Reserva</div>
+                  <div class="info-value">#{{ $bookingInfo->booking_id }}</div>
+                </div>
+                <div class="info-row">
+                  <div class="info-label">Titular</div>
+                  <div class="info-value">{{ $bookingInfo->fname }} {{ $bookingInfo->lname }}</div>
+                </div>
+                <div class="info-row">
+                  <div class="info-label">Correo Electrónico</div>
+                  <div class="info-value">{{ $bookingInfo->email }}</div>
+                </div>
+                @if ($address)
+                <div class="info-row">
+                  <div class="info-label">Dirección</div>
+                  <div class="info-value">{{ $address }}</div>
+                </div>
+                @endif
+                @if ($ticket_content && $ticket && $ticket->pricing_type == 'variation')
+                <div class="info-row">
+                  <div class="info-label">Tipo de Entrada</div>
+                  <div class="info-value">{{ $ticket_content->title }} — {{ $variation['name'] }}</div>
+                </div>
+                @endif
+                <div class="info-row">
+                  <div class="info-label">Entrada</div>
+                  <div class="info-value">{{ $idx + 1 }} de {{ $ticketCount }}</div>
+                </div>
+              </td>
+              <td class="qr-col">
+                <div class="qr-container">
+                  @if (file_exists($qrPath))
+                    <img src="{{ $qrPath }}" alt="Código QR de Acceso">
+                  @else
+                    <div style="width:100px;height:100px;background:#e5e7eb;border-radius:4px;margin:0 auto;"></div>
+                  @endif
+                  <div class="qr-label">Entrada {{ $idx + 1 }} / {{ $ticketCount }}</div>
+                  <div class="qr-note">Presentá este código al ingresar</div>
+                </div>
+              </td>
+            </tr>
+          </table>
 
-        {{-- BILLING --}}
-        <div class="ticket__billing">
-          <div class="ticket__section-label">Información de pago</div>
-          @if ($bookingInfo->price > 0 && $bookingInfo->quantity > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Valor unitario</span>
-            <span class="ticket__billing-row-value">{{ formatMoney($unitPrice, $position, $currency) }}</span>
-          </div>
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Cantidad</span>
-            <span class="ticket__billing-row-value">{{ $bookingInfo->quantity }}</span>
-          </div>
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Subtotal</span>
-            <span class="ticket__billing-row-value">{{ formatMoney($bookingInfo->price, $position, $currency) }}</span>
-          </div>
-          @endif
-          @if ($bookingInfo->tax > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Impuestos</span>
-            <span class="ticket__billing-row-value">{{ formatMoney($bookingInfo->tax, $position, $currency) }}</span>
-          </div>
-          @endif
-          @if ($bookingInfo->early_bird_discount > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Descuento anticipado</span>
-            <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->early_bird_discount, $position, $currency) }}</span>
-          </div>
-          @endif
-          @if ($bookingInfo->discount > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Cupón</span>
-            <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->discount, $position, $currency) }}</span>
-          </div>
-          @endif
-          <div class="ticket__billing-total">
-            <span class="ticket__billing-total-label">TOTAL PAGADO</span>
-            <span class="ticket__billing-total-value">
-              @if($isFree) Gratis
-              @else {{ formatMoney($bookingInfo->price + $bookingInfo->tax, $position, $currency) }}
+          {{-- Información de Pago --}}
+          <div class="section-title">Detalle de Pago</div>
+          <div class="billing-section">
+            <table class="billing-table">
+              @if ($subtotal > 0)
+              <tr>
+                <td>Valor Unitario</td>
+                <td>{{ formatMoney($unitPrice, $position, $currency) }}</td>
+              </tr>
+              <tr>
+                <td>Cantidad</td>
+                <td>x {{ $quantity }}</td>
+              </tr>
+              <tr>
+                <td>Subtotal</td>
+                <td>{{ formatMoney($subtotal, $position, $currency) }}</td>
+              </tr>
               @endif
-            </span>
+              @if ($tax > 0)
+              <tr>
+                <td>Impuestos</td>
+                <td>{{ formatMoney($tax, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($earlyBirdDiscount > 0)
+              <tr class="discount">
+                <td>Descuento Anticipado</td>
+                <td>− {{ formatMoney($earlyBirdDiscount, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($couponDiscount > 0)
+              <tr class="discount">
+                <td>Cupón de Descuento</td>
+                <td>− {{ formatMoney($couponDiscount, $position, $currency) }}</td>
+              </tr>
+              @endif
+              <tr class="total">
+                <td>TOTAL PAGADO</td>
+                <td>
+                  @if($isFree) GRATIS
+                  @else {{ formatMoney($total, $position, $currency) }}
+                  @endif
+                </td>
+              </tr>
+            </table>
           </div>
-        </div>
 
-        {{-- PAYMENT META --}}
-        <div class="ticket__payment-meta">
-          <div class="ticket__field">
-            <span class="ticket__field-label">MÉTODO DE PAGO</span>
-            <span class="ticket__field-value">
+          {{-- Método de Pago --}}
+          <div class="section-title">Método de Pago</div>
+          <div class="payment-method-section">
+            <div class="payment-method-box">
               @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
-                @if(file_exists(public_path('assets/front/images/mercadopago_logo.svg')))
-                  <img src="{{ public_path('assets/front/images/mercadopago_logo.svg') }}" height="16" alt="Mercado Pago" style="vertical-align:middle;">
+                @if($mpLogoExists)
+                  <img src="{{ $mpLogoPath }}" alt="Mercado Pago" class="mp-logo">
                 @else
-                  <span style="font-weight:700;color:#009EE3;">Mercado Pago</span>
+                  <span class="mp-text">Mercado Pago</span>
                 @endif
               @else
-                {{ $bookingInfo->paymentMethod ?? '—' }}
+                <span style="font-weight:600;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
               @endif
-            </span>
-          </div>
-          <div class="ticket__field">
-            <span class="ticket__field-label">ESTADO DEL PAGO</span>
-            <span class="ticket__field-value">
+            </div>
+            <span style="margin-left:12px;font-size:10px;color:#6b7280;">
               @if($isFree) Reserva gratuita
               @elseif($isPaid) Pago confirmado
-              @elseif($isPending) Pendiente
+              @elseif($isPending) Pendiente de confirmación
               @else {{ ucfirst($bookingInfo->paymentStatus) }}
               @endif
             </span>
           </div>
+
+          {{-- Instrucciones --}}
+          <div class="instructions-section">
+            <div class="instructions-title">Instrucciones Importantes</div>
+            <ul class="instructions-list">
+              <li>Somos {{ config('app.name') }}, una plataforma de venta de entradas. No somos los organizadores del evento, por lo que no nos hacemos responsables de las condiciones del establecimiento, reprogramaciones o cancelaciones.</li>
+              <li>Ante cualquier eventualidad, deberás contactar directamente a la empresa organizadora del evento.</li>
+              <li>Si adquirís tu entrada en puntos de venta no autorizados, la responsabilidad es tuya. La entrada podría ser falsa o adulterada.</li>
+              <li>No compartas ni reveles tu código QR con terceros. Conservá esta entrada en un lugar seguro.</li>
+              <li><strong>IMPORTANTE:</strong> Al llegar al evento, presentá esta entrada (impresa o digital) junto con tu documento de identidad.</li>
+              <li>Si contrataste un seguro, el certificado será enviado por {{ config('app.name') }} al correo electrónico indicado.</li>
+            </ul>
+          </div>
+
         </div>
 
-        @if (!empty($event->instructions))
-          <div class="ticket__instructions">
-            <div class="ticket__section-label" style="margin-bottom:8px">Instrucciones</div>
-            {!! $event->instructions !!}
-          </div>
-        @endif
+        {{-- Footer --}}
+        <div class="ticket-footer">
+          <div class="footer-booking-id">#{{ $bookingInfo->booking_id }}</div>
+          <div class="footer-brand">{{ config('app.name') }} · Gracias por tu compra</div>
+          <div class="footer-disclaimer">Este comprobante es interno y no reemplaza una factura fiscal válida.</div>
+        </div>
 
       </div>
-
-      {{-- FOOTER --}}
-      <div class="ticket__footer">
-        <span class="ticket__booking-id">#{{ $bookingInfo->booking_id }}</span>
-        <span class="ticket__footer-note"><strong>{{ config('app.name') }}</strong> &nbsp;·&nbsp; Gracias por tu compra</span>
-        <div class="ticket__disclaimer">Este comprobante es interno y no reemplaza una factura fiscal válida.</div>
-      </div>
-
     </div>
 
     @if (!$loop->last)
@@ -311,9 +592,7 @@
     @endif
   @endforeach
 
-{{-- ═══════════════════════════════════════════════════════════ --}}
-{{-- NORMAL: un ticket por cantidad comprada                    --}}
-{{-- ═══════════════════════════════════════════════════════════ --}}
+{{-- TICKET NORMAL --}}
 @else
   @for ($i = 1; $i <= $bookingInfo->quantity; $i++)
     @php
@@ -323,163 +602,176 @@
       $isPending = $bookingInfo->paymentStatus == 'pending';
     @endphp
 
-    <div class="ticket">
-
-      <div class="ticket__header">
-        <div class="ticket__header-top">
-          <span class="ticket__brand">{{ config('app.name') }}</span>
-          <span class="ticket__status {{ $isPaid ? 'ticket__status--paid' : ($isFree ? 'ticket__status--free' : ($isPending ? 'ticket__status--pending' : 'ticket__status--default')) }}">
-            <span class="ticket__status-dot"></span>
-            @if($isFree) Reserva gratuita confirmada
-            @elseif($isPaid) Pago confirmado
-            @elseif($isPending) Pendiente de confirmación
-            @else {{ ucfirst($bookingInfo->paymentStatus) }}
-            @endif
-          </span>
-        </div>
-        <div class="ticket__event-title">{{ $eventInfo->title ?? '' }}</div>
-        <div class="ticket__event-meta">
-          <span>{{ ucfirst($eventDate) }}</span>
-          @if($location)
-            <span class="ticket__event-meta-sep"></span>
-            <span>{{ $location }}</span>
-          @endif
-        </div>
-      </div>
-
-      <div class="ticket__accent"></div>
-
-      <div class="ticket__body">
-
-        <div class="ticket__info">
-          <div class="ticket__info-main">
-            <div class="ticket__section-label">Datos de la reserva</div>
-            <div class="ticket__fields">
-              <div class="ticket__field">
-                <span class="ticket__field-label">FECHA DE RESERVA</span>
-                <span class="ticket__field-value">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">NÚMERO DE RESERVA</span>
-                <span class="ticket__field-value">#{{ $bookingInfo->booking_id }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">Nombre</span>
-                <span class="ticket__field-value">{{ $bookingInfo->fname }} {{ $bookingInfo->lname }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">Correo electrónico</span>
-                <span class="ticket__field-value" style="font-size:12px;word-break:break-all">{{ $bookingInfo->email }}</span>
-              </div>
-              <div class="ticket__field" style="grid-column:1/-1">
-                <span class="ticket__field-label">Dirección</span>
-                <span class="ticket__field-value">{{ $bookingInfo->address }}</span>
-              </div>
-              <div class="ticket__field">
-                <span class="ticket__field-label">Entrada</span>
-                <span class="ticket__field-value">{{ $i }} / {{ $bookingInfo->quantity }}</span>
-              </div>
+    <div class="ticket-wrapper">
+      <div class="ticket">
+        
+        {{-- Header --}}
+        <div class="ticket-header">
+          <div class="ticket-header-top">
+            <div class="ticket-brand">{{ config('app.name') }}</div>
+            <div class="ticket-status">
+              @if($isFree)
+                <span class="ticket-status-badge status-free">Reserva Gratuita</span>
+              @elseif($isPaid)
+                <span class="ticket-status-badge status-paid">Pago Confirmado</span>
+              @elseif($isPending)
+                <span class="ticket-status-badge status-pending">Pendiente</span>
+              @else
+                <span class="ticket-status-badge">{{ ucfirst($bookingInfo->paymentStatus) }}</span>
+              @endif
             </div>
           </div>
-
-          <div class="ticket__info-qr">
-            @if (file_exists($qrPath))
-              <img src="{{ $qrPath }}" alt="QR">
+          <div class="ticket-event-title">{{ $eventInfo->title ?? '' }}</div>
+          <div class="ticket-event-meta">
+            <span>{{ ucfirst($eventDate) }}</span>
+            @if($location)
+              <span> &nbsp;|&nbsp; {{ $location }}</span>
             @endif
-            <span class="ticket__info-qr-label">Entrada {{ $i }} / {{ $bookingInfo->quantity }}</span>
           </div>
         </div>
 
-        <hr class="ticket__divider">
-        <div class="ticket__divider-circle ticket__divider-circle--left"></div>
-        <div class="ticket__divider-circle ticket__divider-circle--right"></div>
+        {{-- Body --}}
+        <div class="ticket-body">
+          
+          {{-- Datos de la reserva + QR --}}
+          <div class="section-title">Datos de la Reserva</div>
+          <table class="info-table">
+            <tr>
+              <td class="info-col">
+                <div class="info-row">
+                  <div class="info-label">Fecha de Reserva</div>
+                  <div class="info-value">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</div>
+                </div>
+                <div class="info-row">
+                  <div class="info-label">Número de Reserva</div>
+                  <div class="info-value">#{{ $bookingInfo->booking_id }}</div>
+                </div>
+                <div class="info-row">
+                  <div class="info-label">Titular</div>
+                  <div class="info-value">{{ $bookingInfo->fname }} {{ $bookingInfo->lname }}</div>
+                </div>
+                <div class="info-row">
+                  <div class="info-label">Correo Electrónico</div>
+                  <div class="info-value">{{ $bookingInfo->email }}</div>
+                </div>
+                @if ($address)
+                <div class="info-row">
+                  <div class="info-label">Dirección</div>
+                  <div class="info-value">{{ $address }}</div>
+                </div>
+                @endif
+                <div class="info-row">
+                  <div class="info-label">Entrada</div>
+                  <div class="info-value">{{ $i }} de {{ $bookingInfo->quantity }}</div>
+                </div>
+              </td>
+              <td class="qr-col">
+                <div class="qr-container">
+                  @if (file_exists($qrPath))
+                    <img src="{{ $qrPath }}" alt="Código QR de Acceso">
+                  @else
+                    <div style="width:100px;height:100px;background:#e5e7eb;border-radius:4px;margin:0 auto;"></div>
+                  @endif
+                  <div class="qr-label">Entrada {{ $i }} / {{ $bookingInfo->quantity }}</div>
+                  <div class="qr-note">Presentá este código al ingresar</div>
+                </div>
+              </td>
+            </tr>
+          </table>
 
-        <div class="ticket__billing">
-          <div class="ticket__section-label">Información de pago</div>
-          @if ($bookingInfo->price > 0 && $bookingInfo->quantity > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Valor unitario</span>
-            <span class="ticket__billing-row-value">{{ formatMoney($unitPrice, $position, $currency) }}</span>
-          </div>
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Cantidad</span>
-            <span class="ticket__billing-row-value">{{ $bookingInfo->quantity }}</span>
-          </div>
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Subtotal</span>
-            <span class="ticket__billing-row-value">{{ formatMoney($bookingInfo->price, $position, $currency) }}</span>
-          </div>
-          @endif
-          @if ($bookingInfo->tax > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Impuestos</span>
-            <span class="ticket__billing-row-value">{{ formatMoney($bookingInfo->tax, $position, $currency) }}</span>
-          </div>
-          @endif
-          @if ($bookingInfo->early_bird_discount > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Descuento anticipado</span>
-            <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->early_bird_discount, $position, $currency) }}</span>
-          </div>
-          @endif
-          @if ($bookingInfo->discount > 0)
-          <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">Cupón</span>
-            <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->discount, $position, $currency) }}</span>
-          </div>
-          @endif
-          <div class="ticket__billing-total">
-            <span class="ticket__billing-total-label">TOTAL PAGADO</span>
-            <span class="ticket__billing-total-value">
-              @if($isFree) Gratis
-              @else {{ formatMoney($bookingInfo->price + $bookingInfo->tax, $position, $currency) }}
+          {{-- Información de Pago --}}
+          <div class="section-title">Detalle de Pago</div>
+          <div class="billing-section">
+            <table class="billing-table">
+              @if ($subtotal > 0)
+              <tr>
+                <td>Valor Unitario</td>
+                <td>{{ formatMoney($unitPrice, $position, $currency) }}</td>
+              </tr>
+              <tr>
+                <td>Cantidad</td>
+                <td>x {{ $quantity }}</td>
+              </tr>
+              <tr>
+                <td>Subtotal</td>
+                <td>{{ formatMoney($subtotal, $position, $currency) }}</td>
+              </tr>
               @endif
-            </span>
+              @if ($tax > 0)
+              <tr>
+                <td>Impuestos</td>
+                <td>{{ formatMoney($tax, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($earlyBirdDiscount > 0)
+              <tr class="discount">
+                <td>Descuento Anticipado</td>
+                <td>− {{ formatMoney($earlyBirdDiscount, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($couponDiscount > 0)
+              <tr class="discount">
+                <td>Cupón de Descuento</td>
+                <td>− {{ formatMoney($couponDiscount, $position, $currency) }}</td>
+              </tr>
+              @endif
+              <tr class="total">
+                <td>TOTAL PAGADO</td>
+                <td>
+                  @if($isFree) GRATIS
+                  @else {{ formatMoney($total, $position, $currency) }}
+                  @endif
+                </td>
+              </tr>
+            </table>
           </div>
-        </div>
 
-        <div class="ticket__payment-meta">
-          <div class="ticket__field">
-            <span class="ticket__field-label">MÉTODO DE PAGO</span>
-            <span class="ticket__field-value">
+          {{-- Método de Pago --}}
+          <div class="section-title">Método de Pago</div>
+          <div class="payment-method-section">
+            <div class="payment-method-box">
               @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
-                @if(file_exists(public_path('assets/front/images/mercadopago_logo.svg')))
-                  <img src="{{ public_path('assets/front/images/mercadopago_logo.svg') }}" height="16" alt="Mercado Pago" style="vertical-align:middle;">
+                @if($mpLogoExists)
+                  <img src="{{ $mpLogoPath }}" alt="Mercado Pago" class="mp-logo">
                 @else
-                  <span style="font-weight:700;color:#009EE3;">Mercado Pago</span>
+                  <span class="mp-text">Mercado Pago</span>
                 @endif
               @else
-                {{ $bookingInfo->paymentMethod ?? '—' }}
+                <span style="font-weight:600;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
               @endif
-            </span>
-          </div>
-          <div class="ticket__field">
-            <span class="ticket__field-label">ESTADO DEL PAGO</span>
-            <span class="ticket__field-value">
+            </div>
+            <span style="margin-left:12px;font-size:10px;color:#6b7280;">
               @if($isFree) Reserva gratuita
               @elseif($isPaid) Pago confirmado
-              @elseif($isPending) Pendiente
+              @elseif($isPending) Pendiente de confirmación
               @else {{ ucfirst($bookingInfo->paymentStatus) }}
               @endif
             </span>
           </div>
+
+          {{-- Instrucciones --}}
+          <div class="instructions-section">
+            <div class="instructions-title">Instrucciones Importantes</div>
+            <ul class="instructions-list">
+              <li>Somos {{ config('app.name') }}, una plataforma de venta de entradas. No somos los organizadores del evento, por lo que no nos hacemos responsables de las condiciones del establecimiento, reprogramaciones o cancelaciones.</li>
+              <li>Ante cualquier eventualidad, deberás contactar directamente a la empresa organizadora del evento.</li>
+              <li>Si adquirís tu entrada en puntos de venta no autorizados, la responsabilidad es tuya. La entrada podría ser falsa o adulterada.</li>
+              <li>No compartas ni reveles tu código QR con terceros. Conservá esta entrada en un lugar seguro.</li>
+              <li><strong>IMPORTANTE:</strong> Al llegar al evento, presentá esta entrada (impresa o digital) junto con tu documento de identidad.</li>
+              <li>Si contrataste un seguro, el certificado será enviado por {{ config('app.name') }} al correo electrónico indicado.</li>
+            </ul>
+          </div>
+
         </div>
 
-        @if (!empty($event->instructions))
-          <div class="ticket__instructions">
-            <div class="ticket__section-label" style="margin-bottom:8px">Instrucciones</div>
-            {!! $event->instructions !!}
-          </div>
-        @endif
+        {{-- Footer --}}
+        <div class="ticket-footer">
+          <div class="footer-booking-id">#{{ $bookingInfo->booking_id }}</div>
+          <div class="footer-brand">{{ config('app.name') }} · Gracias por tu compra</div>
+          <div class="footer-disclaimer">Este comprobante es interno y no reemplaza una factura fiscal válida.</div>
+        </div>
 
       </div>
-
-      <div class="ticket__footer">
-        <span class="ticket__booking-id">#{{ $bookingInfo->booking_id }}</span>
-        <span class="ticket__footer-note"><strong>{{ config('app.name') }}</strong> &nbsp;·&nbsp; Gracias por tu compra</span>
-        <div class="ticket__disclaimer">Este comprobante es interno y no reemplaza una factura fiscal válida.</div>
-      </div>
-
     </div>
 
     @if ($i < $bookingInfo->quantity)

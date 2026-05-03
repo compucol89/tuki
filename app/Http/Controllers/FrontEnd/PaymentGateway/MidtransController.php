@@ -134,7 +134,7 @@ class MidtransController extends Controller
 
         if ($ticket->how_ticket_will_be_send == 'instant') {
             // generate an invoice in pdf format
-            $invoice = $bookingInfo->generateInvoice($bookingInfo, $bookingInfo->event_id);
+            $invoice = $booking->generateInvoice($bookingInfo, $bookingInfo->event_id);
 
             //unlink qr code 
             if (
@@ -213,7 +213,7 @@ class MidtransController extends Controller
 
                 if ($ticket->how_ticket_will_be_send == 'instant') {
                     // generate an invoice in pdf format
-                    $invoice = $bookingInfo->generateInvoice($bookingInfo, $bookingInfo->event_id);
+                    $invoice = $booking->generateInvoice($bookingInfo, $bookingInfo->event_id);
 
                     //unlink qr code 
                     if (

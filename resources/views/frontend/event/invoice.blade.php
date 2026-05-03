@@ -13,7 +13,19 @@
   $tickets    = $bookingInfo->variation != null ? json_decode($bookingInfo->variation, true) : null;
   $ticketCount = $tickets ? count($tickets) : $bookingInfo->quantity;
   $eventDate  = \Carbon\Carbon::parse($bookingInfo->event_date)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY');
-  $location   = trim(($bookingInfo->city ?? '') . ($bookingInfo->state ? ', ' . $bookingInfo->state : '') . ', ' . ($bookingInfo->country ?? ''), ', ');
+
+  // Construir ubicación solo con datos reales, sin N/A
+  $locationParts = array_filter([
+    $bookingInfo->city ?? null,
+    $bookingInfo->state ?? null,
+    $bookingInfo->country ?? null,
+  ], function ($part) {
+    return filled($part) && strtoupper(trim($part)) !== 'N/A';
+  });
+  $location = implode(', ', $locationParts);
+
+  // Calcular valor unitario
+  $unitPrice = ($bookingInfo->quantity > 0) ? ($bookingInfo->price / $bookingInfo->quantity) : 0;
 @endphp
 <head>
   <meta charset="UTF-8">
@@ -21,7 +33,7 @@
   <title>{{ __('Comprobante de reserva') }} — {{ $eventInfo->title ?? config('app.name') }}</title>
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <style>
-    @page { size: A4; margin: 8mm; }
+    @page { size: A4; margin: 15mm 10mm; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { background: #f0f2f5; font-family: 'Inter', -apple-system, sans-serif; font-size: 12px; color: #1e2532; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
@@ -206,7 +218,15 @@
         {{-- BILLING --}}
         <div class="ticket__billing">
           <div class="ticket__section-label">Información de pago</div>
-          @if ($bookingInfo->price > 0)
+          @if ($bookingInfo->price > 0 && $bookingInfo->quantity > 0)
+          <div class="ticket__billing-row">
+            <span class="ticket__billing-row-label">Valor unitario</span>
+            <span class="ticket__billing-row-value">{{ formatMoney($unitPrice, $position, $currency) }}</span>
+          </div>
+          <div class="ticket__billing-row">
+            <span class="ticket__billing-row-label">Cantidad</span>
+            <span class="ticket__billing-row-value">{{ $bookingInfo->quantity }}</span>
+          </div>
           <div class="ticket__billing-row">
             <span class="ticket__billing-row-label">Subtotal</span>
             <span class="ticket__billing-row-value">{{ formatMoney($bookingInfo->price, $position, $currency) }}</span>
@@ -220,13 +240,13 @@
           @endif
           @if ($bookingInfo->early_bird_discount > 0)
           <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">DESCUENTO ANTICIPADO</span>
+            <span class="ticket__billing-row-label">Descuento anticipado</span>
             <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->early_bird_discount, $position, $currency) }}</span>
           </div>
           @endif
           @if ($bookingInfo->discount > 0)
           <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">CUPÓN</span>
+            <span class="ticket__billing-row-label">Cupón</span>
             <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->discount, $position, $currency) }}</span>
           </div>
           @endif
@@ -244,7 +264,17 @@
         <div class="ticket__payment-meta">
           <div class="ticket__field">
             <span class="ticket__field-label">MÉTODO DE PAGO</span>
-            <span class="ticket__field-value">{{ $bookingInfo->paymentMethod ?? '—' }}</span>
+            <span class="ticket__field-value">
+              @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
+                @if(file_exists(public_path('assets/front/images/mercadopago_logo.svg')))
+                  <img src="{{ public_path('assets/front/images/mercadopago_logo.svg') }}" height="16" alt="Mercado Pago" style="vertical-align:middle;">
+                @else
+                  <span style="font-weight:700;color:#009EE3;">Mercado Pago</span>
+                @endif
+              @else
+                {{ $bookingInfo->paymentMethod ?? '—' }}
+              @endif
+            </span>
           </div>
           <div class="ticket__field">
             <span class="ticket__field-label">ESTADO DEL PAGO</span>
@@ -366,7 +396,15 @@
 
         <div class="ticket__billing">
           <div class="ticket__section-label">Información de pago</div>
-          @if ($bookingInfo->price > 0)
+          @if ($bookingInfo->price > 0 && $bookingInfo->quantity > 0)
+          <div class="ticket__billing-row">
+            <span class="ticket__billing-row-label">Valor unitario</span>
+            <span class="ticket__billing-row-value">{{ formatMoney($unitPrice, $position, $currency) }}</span>
+          </div>
+          <div class="ticket__billing-row">
+            <span class="ticket__billing-row-label">Cantidad</span>
+            <span class="ticket__billing-row-value">{{ $bookingInfo->quantity }}</span>
+          </div>
           <div class="ticket__billing-row">
             <span class="ticket__billing-row-label">Subtotal</span>
             <span class="ticket__billing-row-value">{{ formatMoney($bookingInfo->price, $position, $currency) }}</span>
@@ -380,13 +418,13 @@
           @endif
           @if ($bookingInfo->early_bird_discount > 0)
           <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">DESCUENTO ANTICIPADO</span>
+            <span class="ticket__billing-row-label">Descuento anticipado</span>
             <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->early_bird_discount, $position, $currency) }}</span>
           </div>
           @endif
           @if ($bookingInfo->discount > 0)
           <div class="ticket__billing-row">
-            <span class="ticket__billing-row-label">CUPÓN</span>
+            <span class="ticket__billing-row-label">Cupón</span>
             <span class="ticket__billing-row-value" style="color:#22c55e">− {{ formatMoney($bookingInfo->discount, $position, $currency) }}</span>
           </div>
           @endif
@@ -403,7 +441,17 @@
         <div class="ticket__payment-meta">
           <div class="ticket__field">
             <span class="ticket__field-label">MÉTODO DE PAGO</span>
-            <span class="ticket__field-value">{{ $bookingInfo->paymentMethod ?? '—' }}</span>
+            <span class="ticket__field-value">
+              @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
+                @if(file_exists(public_path('assets/front/images/mercadopago_logo.svg')))
+                  <img src="{{ public_path('assets/front/images/mercadopago_logo.svg') }}" height="16" alt="Mercado Pago" style="vertical-align:middle;">
+                @else
+                  <span style="font-weight:700;color:#009EE3;">Mercado Pago</span>
+                @endif
+              @else
+                {{ $bookingInfo->paymentMethod ?? '—' }}
+              @endif
+            </span>
           </div>
           <div class="ticket__field">
             <span class="ticket__field-label">ESTADO DEL PAGO</span>

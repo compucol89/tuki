@@ -1,6 +1,10 @@
 @extends('frontend.layout')
 @section('body-class', 'auth-page')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
+@endpush
+
 @php
   $signupPageTitle = filled(optional($pageHeading)->organizer_signup_page_title)
     ? $pageHeading->organizer_signup_page_title

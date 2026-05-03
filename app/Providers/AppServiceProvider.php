@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -46,6 +47,25 @@ class AppServiceProvider extends ServiceProvider
 
       $data = DB::table('basic_settings')->select('favicon', 'website_title', 'logo', 'timezone', 'preloader', 'event_guest_checkout_status', 'primary_color')->first();
 
+      if ($data === null) {
+        $data = (object) [
+          'favicon' => '',
+          'website_title' => config('app.name', 'Tukipass'),
+          'logo' => '',
+          'timezone' => config('app.timezone', 'UTC'),
+          'preloader' => '',
+          'event_guest_checkout_status' => 0,
+          'primary_color' => '#F97316',
+        ];
+      } elseif (empty($data->timezone)) {
+        $data->timezone = config('app.timezone', 'UTC');
+      } else {
+        try {
+          new \DateTimeZone((string) $data->timezone);
+        } catch (\Exception $e) {
+          $data->timezone = config('app.timezone', 'UTC');
+        }
+      }
 
       // send this information to only back-end view files
       View::composer('backend.*', function ($view) {
@@ -93,16 +113,48 @@ class AppServiceProvider extends ServiceProvider
 
       // send this information to only front-end view files
       View::composer('frontend.*', function ($view) {
-        // get basic info
-        $basicData = DB::table('basic_settings')->select('theme_version', 'footer_logo', 'primary_color', 'breadcrumb_overlay_color', 'breadcrumb_overlay_opacity', 'breadcrumb', 'email_address', 'contact_number', 'address', 'latitude', 'longitude', 'base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate', 'is_shop_rating', 'facebook_login_status', 'google_login_status', 'google_recaptcha_status')->first();
+        $cacheTTL = now()->addHours(6);
 
+        $cachedBasicData = Cache::remember('frontend_basic_settings', $cacheTTL, function () {
+          return DB::table('basic_settings')->select('theme_version', 'footer_logo', 'primary_color', 'breadcrumb_overlay_color', 'breadcrumb_overlay_opacity', 'breadcrumb', 'email_address', 'contact_number', 'address', 'latitude', 'longitude', 'base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate', 'is_shop_rating', 'facebook_login_status', 'google_login_status', 'google_recaptcha_status')->first();
+        });
 
-        // get all the languages of this system
-        $allLanguages = Language::all();
+        if ($cachedBasicData === null) {
+          $cachedBasicData = (object) [
+            'theme_version' => 3,
+            'footer_logo' => '',
+            'primary_color' => '#F97316',
+            'breadcrumb_overlay_color' => '#000000',
+            'breadcrumb_overlay_opacity' => '0.5',
+            'breadcrumb' => '',
+            'email_address' => '',
+            'contact_number' => '',
+            'address' => '',
+            'latitude' => '',
+            'longitude' => '',
+            'base_currency_symbol' => '$',
+            'base_currency_symbol_position' => 'left',
+            'base_currency_text' => 'ARS',
+            'base_currency_text_position' => 'left',
+            'base_currency_rate' => 1,
+            'is_shop_rating' => 0,
+            'facebook_login_status' => 0,
+            'google_login_status' => 0,
+            'google_recaptcha_status' => 0,
+          ];
+        }
 
-        // Site is configured to always use Spanish
-        $language = Language::where('code', 'es')->first();
+        $cachedAllLanguages = Cache::remember('frontend_all_languages', $cacheTTL, function () {
+          return Language::all();
+        });
+
+        $cachedLanguageEs = Cache::remember('frontend_language_es', $cacheTTL, function () {
+          return Language::where('code', 'es')->first();
+        });
+
+        $language = $cachedLanguageEs;
         if (!$language) {
+          $locale = null;
           if (Session::has('lang')) {
             $locale = Session::get('lang');
           }
@@ -116,41 +168,50 @@ class AppServiceProvider extends ServiceProvider
           }
         }
 
-        // get all the social medias
-        $socialMedias = SocialMedia::orderBy('serial_number')->get();
+        $cachedSocialMedias = Cache::remember('frontend_social_medias', $cacheTTL, function () {
+          return SocialMedia::orderBy('serial_number', 'asc')->get();
+        });
 
-        //seo
-        $seo = SEO::where('language_id', $language->id)->first();
-        //seo
-        $pageHeading = PageHeading::where('language_id', $language->id)->first();
+        $cachedSeo = Cache::remember('frontend_seo_' . $language->id, $cacheTTL, function () use ($language) {
+          return SEO::where('language_id', $language->id)->first();
+        });
 
-        // get the menus of this website
-        $siteMenuInfo = $language->menuInfo;
+        $cachedPageHeading = Cache::remember('frontend_page_heading_' . $language->id, $cacheTTL, function () use ($language) {
+          return PageHeading::where('language_id', $language->id)->first();
+        });
 
-        if (is_null($siteMenuInfo)) {
+        $cachedMenuBuilder = Cache::remember('frontend_menu_builder_' . $language->id, $cacheTTL, function () use ($language) {
+          return $language->menuInfo()->first();
+        });
+
+        if (is_null($cachedMenuBuilder)) {
           $menus = json_encode([]);
         } else {
-          $menus = $siteMenuInfo->menus;
+          $menus = $cachedMenuBuilder->menus;
         }
 
-        // get the announcement popups
-        $popups = $language->announcementPopup()->where('status', 1)->orderBy('serial_number', 'asc')->get();
+        $cachedAnnouncementPopup = Cache::remember('frontend_announcement_popup_' . $language->id, $cacheTTL, function () use ($language) {
+          return $language->announcementPopup()->where('status', 1)->orderBy('serial_number', 'asc')->get();
+        });
 
-        // get the cookie alert info
-        $cookieAlert = $language->cookieAlertInfo()->first();
+        $cachedCookieAlert = Cache::remember('frontend_cookie_alert_' . $language->id, $cacheTTL, function () use ($language) {
+          return $language->cookieAlertInfo()->first();
+        });
 
-        // get footer section status (enable/disable) information
-        $footerSectionStatus = Section::query()->pluck('footer_section_status')->first();
+        $cachedSectionStatus = Cache::remember('frontend_section_status', $cacheTTL, function () {
+          return Section::query()->pluck('footer_section_status')->first();
+        });
 
-        if ($footerSectionStatus == 1) {
-          // get the footer info
-          $footerData = $language->footerContent()->first();
+        if ($cachedSectionStatus == 1) {
+          $cachedFooterContent = Cache::remember('frontend_footer_content_' . $language->id, $cacheTTL, function () use ($language) {
+            return $language->footerContent()->first();
+          });
 
-          // get the quick links of footer
-          $quickLinks = $language->footerQuickLink()->orderBy('serial_number', 'asc')->get();
+          $cachedQuickLinks = Cache::remember('frontend_quick_links_' . $language->id, $cacheTTL, function () use ($language) {
+            return $language->footerQuickLink()->orderBy('serial_number', 'asc')->get();
+          });
 
-          // get latest blogs
-          if ($basicData->theme_version != 3) {
+          if ($cachedBasicData->theme_version != 3) {
             $blogs = Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
               ->where('blog_informations.language_id', '=', $language->id)
               ->select('blogs.image', 'blogs.created_at', 'blog_informations.title', 'blog_informations.slug')
@@ -159,36 +220,34 @@ class AppServiceProvider extends ServiceProvider
               ->get();
           }
 
-          // get newsletter title
-          if ($basicData->theme_version == 2) {
+          if ($cachedBasicData->theme_version == 2) {
             $newsletterTitle = $language->newsletterSec()->pluck('title')->first();
           }
         }
 
         $bex = ContactPage::where('language_id', $language->id)->first();
 
-        $view->with('basicInfo', $basicData);
-        $view->with('seo', $seo);
+        $view->with('basicInfo', $cachedBasicData);
+        $view->with('seo', $cachedSeo);
         $view->with('bex', $bex);
-        $view->with('allLanguageInfos', $allLanguages);
+        $view->with('allLanguageInfos', $cachedAllLanguages);
         $view->with('currentLanguageInfo', $language);
-        $view->with('socialMediaInfos', $socialMedias);
+        $view->with('socialMediaInfos', $cachedSocialMedias);
         $view->with('menuInfos', $menus);
-        $view->with('popupInfos', $popups);
-        $view->with('cookieAlertInfo', $cookieAlert);
-        $view->with('footerSecStatus', $footerSectionStatus);
-        $view->with('pageHeading', $pageHeading);
+        $view->with('popupInfos', $cachedAnnouncementPopup);
+        $view->with('cookieAlertInfo', $cachedCookieAlert);
+        $view->with('footerSecStatus', $cachedSectionStatus);
+        $view->with('pageHeading', $cachedPageHeading);
 
+        if ($cachedSectionStatus == 1) {
+          $view->with('footerInfo', $cachedFooterContent);
+          $view->with('quickLinkInfos', $cachedQuickLinks);
 
-        if ($footerSectionStatus == 1) {
-          $view->with('footerInfo', $footerData);
-          $view->with('quickLinkInfos', $quickLinks);
-
-          if ($basicData->theme_version != 3) {
+          if ($cachedBasicData->theme_version != 3) {
             $view->with('latestBlogInfos', $blogs);
           }
 
-          if ($basicData->theme_version == 2) {
+          if ($cachedBasicData->theme_version == 2) {
             $view->with('newsletterTitle', $newsletterTitle);
           }
         }

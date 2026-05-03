@@ -53,18 +53,12 @@ class EventController extends Controller
     if ($request->filled('location')) {
       $location = $request['location'];
 
-      $event_contents = EventContent::where(function ($query) use ($location) {
+      $eventSIds = EventContent::where(function ($query) use ($location) {
         return $query->where('address', 'like', '%' . $location . '%')
           ->orWhere('city', 'like', '%' . $location . '%')
           ->orWhere('country', 'like', '%' . $location . '%')
           ->orWhere('state', 'like', '%' . $location . '%');
-      })->where('language_id', $language->id)->get();
-
-      foreach ($event_contents as $event_content) {
-        if (!in_array($event_content->event_id, $eventSIds)) {
-          array_push($eventSIds, $event_content->event_id);
-        }
-      }
+      })->where('language_id', $language->id)->pluck('event_id')->unique()->toArray();
     }
 
     if ($request->filled('event')) {
@@ -76,13 +70,7 @@ class EventController extends Controller
       $min = $request['min'];
       $max = $request['max'];
 
-      $tickets = Ticket::where('tickets.f_price', '>=', $min)->where('tickets.f_price', '<=', $max)->get();
-
-      foreach ($tickets as $ticket) {
-        if (!in_array($ticket->event_id, $eventIds)) {
-          array_push($eventIds, $ticket->event_id);
-        }
-      }
+      $eventIds = Ticket::where('tickets.f_price', '>=', $min)->where('tickets.f_price', '<=', $max)->pluck('event_id')->unique()->toArray();
     }
 
     if ($request->filled('search-input')) {
@@ -94,46 +82,36 @@ class EventController extends Controller
     if ($request->filled('pricing')) {
       $pricing = $request['pricing'];
       if ($pricing === 'free') {
-        $tickets = Ticket::where('pricing_type', 'free')->get();
+        $pricingEventIds = Ticket::where('pricing_type', 'free')->pluck('event_id')->unique()->toArray();
       } elseif ($pricing === 'paid') {
-        $tickets = Ticket::where('pricing_type', '!=', 'free')->get();
-      }
-      if (isset($tickets)) {
-        foreach ($tickets as $ticket) {
-          if (!in_array($ticket->event_id, $pricingEventIds)) {
-            array_push($pricingEventIds, $ticket->event_id);
-          }
-        }
+        $pricingEventIds = Ticket::where('pricing_type', '!=', 'free')->pluck('event_id')->unique()->toArray();
       }
     }
 
     $eventIds2 = [];
     if ($request->filled('dates')) {
-
       $dates = $request['dates'];
       $dateArray = explode(' ', $dates);
 
       $date1 = $dateArray[0];
       $date2 = $dateArray[2];
 
-      $q_events = EventDates::whereDate('start_date', '<=', $date1)->whereDate('end_date', '>=', $date2)->get();
-      foreach ($q_events as $evnt) {
-        if (!in_array($evnt->event_id, $eventIds2)) {
-          array_push($eventIds2, $evnt->event_id);
-        }
-      }
-
-      $events = Event::whereDate('start_date', '<=', $date1)->whereDate('end_date', '>=', $date2)->get();
-
-      foreach ($events as $event) {
-        if (!in_array($event->id, $eventIds2)) {
-          array_push($eventIds2, $event->id);
-        }
-      }
+      $eventIdsFromDates = EventDates::whereDate('start_date', '<=', $date1)->whereDate('end_date', '>=', $date2)->pluck('event_id')->toArray();
+      $eventIdsFromEvents = Event::whereDate('start_date', '<=', $date1)->whereDate('end_date', '>=', $date2)->pluck('id')->toArray();
+      $eventIds2 = array_unique(array_merge($eventIdsFromDates, $eventIdsFromEvents));
     }
 
+    // Subquery de tickets para pre-carga (evita N+1 en event-card)
+    $ticketSub = DB::raw("(SELECT event_id,
+      COUNT(*) as ticket_count,
+      MIN(CASE WHEN pricing_type != 'free' AND price > 0 THEN CAST(price AS DECIMAL(10,2)) END) as min_price,
+      MAX(CASE WHEN pricing_type = 'free' THEN 1 ELSE 0 END) as has_free,
+      MAX(CASE WHEN pricing_type = 'variation' OR (pricing_type != 'free' AND price > 0) THEN 1 ELSE 0 END) as has_paid
+      FROM tickets GROUP BY event_id) as tk");
 
     $events = EventContent::join('events', 'events.id', 'event_contents.event_id')
+      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
       ->where('event_contents.language_id', $language->id)
       ->when($category, function ($query, $category) {
         return $query->where('event_contents.event_category_id', '=', $category);
@@ -158,17 +136,34 @@ class EventController extends Controller
       })
       ->where('events.status', 1)
       ->whereDate('events.end_date_time', '>=', $this->now_date_time)
-      ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.address', 'event_contents.zip_code', 'event_contents.slug')
+      ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.address', 'event_contents.zip_code', 'event_contents.slug',
+        'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+        'organizers.id as org_id', 'organizers.username as org_username')
       ->orderBy('events.id', 'desc')
       ->paginate(9);
 
-    $max = Ticket::max('f_price');
-    $min = Ticket::min('f_price');
+    $priceStats = Ticket::selectRaw('MIN(f_price) as min_price, MAX(f_price) as max_price')->first();
+    $min = $priceStats->min_price ?? 0;
+    $max = $priceStats->max_price ?? 0;
     $information['max'] = $max;
     $information['min'] = $min;
     $information['events'] = $events;
 
-    return view('frontend.event.event', compact('information') + [
+    // Pre-calcular badges para eventos del listado (3 queries en vez de N×3)
+    $information['badgeMap'] = \App\Services\EventBadgeService::getBadgesForEvents($events->getCollection());
+
+    // Wishlist del customer autenticado (evita N+1 en event-card)
+    $wishlistMap = [];
+    if (Auth::guard('customer')->check()) {
+      $wishlistMap = array_flip(
+        DB::table('wishlists')
+          ->where('customer_id', Auth::guard('customer')->user()->id)
+          ->pluck('event_id')
+          ->toArray()
+      );
+    }
+
+    return view('frontend.event.event', compact('information', 'wishlistMap') + [
       'heroSlideUrls' => HeroSlideUrlsService::build(),
       'heroSection'   => $information['heroSection'],
       'categories'    => $information['categories'],
@@ -178,7 +173,6 @@ class EventController extends Controller
   //details
   public function details($slug, $id)
   {
-    try {
       $language = $this->getLanguage();
       $information = [];
 
@@ -191,10 +185,12 @@ class EventController extends Controller
       Session::forget('online_gateways');
       Session::forget('offline_gateways');
 
-      \App\Models\Event::where('id', $id)->increment('views_count');
-      \App\Models\Event::where('id', $id)->increment('views_last_24h');
+      \App\Models\Event::where('id', $id)->update([
+        'views_count' => DB::raw('views_count + 1'),
+        'views_last_24h' => DB::raw('views_last_24h + 1'),
+      ]);
 
-      $tickets_count = Ticket::where('event_id', $id)->get()->count();
+      $tickets_count = Ticket::where('event_id', $id)->count();
       $information['tickets_count'] = $tickets_count;
       if ($tickets_count < 1) {
         $content = EventContent::join('events', 'events.id', 'event_contents.event_id')
@@ -253,9 +249,20 @@ class EventController extends Controller
       $basicSettings = DB::table('basic_settings')
         ->select('timezone', 'website_title', 'base_currency_text')
         ->first();
-      $websiteTimezone = $basicSettings->timezone ?? config('app.timezone');
-      $websiteTitle = $basicSettings->website_title ?? config('app.name');
-      $baseCurrencyText = $basicSettings->base_currency_text ?? 'ARS';
+      $websiteTimezone = config('app.timezone', 'UTC');
+      if ($basicSettings !== null) {
+        $tz = $basicSettings->timezone ?? '';
+        if ($tz !== '') {
+          try {
+            new \DateTimeZone((string) $tz);
+            $websiteTimezone = $tz;
+          } catch (\Exception $e) {
+            $websiteTimezone = config('app.timezone', 'UTC');
+          }
+        }
+      }
+      $websiteTitle = $basicSettings?->website_title ?? config('app.name');
+      $baseCurrencyText = $basicSettings?->base_currency_text ?? 'ARS';
 
       $statusMeta = $this->buildEventStatusMeta($content, $websiteTimezone);
       $ticketSummary = $this->buildTicketSummary($content);
@@ -298,7 +305,8 @@ class EventController extends Controller
           ->where('events.status', 1)
           ->whereDate('events.end_date_time', '>=', $this->now_date_time)
           ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
-          ->orderBy('events.start_date_time', 'asc')
+          ->orderBy('events.start_date', 'asc')
+          ->orderBy('events.start_time', 'asc')
           ->limit(6)
           ->get();
 
@@ -340,6 +348,9 @@ class EventController extends Controller
       $information['relatedOrganizers'] = $relatedOrganizers;
       $information['relatedEventsMode'] = $relatedEventsMode;
 
+      // Pre-calcular badges para related events
+      $information['relatedBadgeMap'] = \App\Services\EventBadgeService::getBadgesForEvents($related_events);
+
       // SEO / Open Graph
       $cleanText = function ($value) {
         return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
@@ -352,9 +363,14 @@ class EventController extends Controller
       $locationText = $content->event_type == 'online'
         ? __('Evento online')
         : collect([$content->city, $content->state, $content->country])->filter()->implode(', ');
-      $eventDateText = !empty($statusMeta['start_date_time'])
-        ? \Carbon\Carbon::parse($statusMeta['start_date_time'], $websiteTimezone)->locale('es')->translatedFormat('j \d\e F \d\e Y')
-        : null;
+      $eventDateText = null;
+      if (!empty($statusMeta['start_date_time'])) {
+        try {
+          $eventDateText = \Carbon\Carbon::parse($statusMeta['start_date_time'], $websiteTimezone)->locale('es')->translatedFormat('j \d\e F \d\e Y');
+        } catch (\Throwable $e) {
+          $eventDateText = null;
+        }
+      }
 
       if ($rawMetaDescription !== '' && !Str::contains(Str::lower($rawMetaDescription), $placeholderPatterns)) {
         $seoDescription = $rawMetaDescription;
@@ -395,9 +411,6 @@ class EventController extends Controller
       $information['event_currency'] = $baseCurrencyText;
 
       return view('frontend.event.event-details', $information);
-    } catch (\Exception $th) {
-      return view('errors.404');
-    }
   }
 
   private function buildEventStatusMeta($content, string $timezone): array
@@ -436,10 +449,12 @@ class EventController extends Controller
         $heroStatusLabel = __('Finalizado');
       }
     } elseif ($content->date_type == 'multiple') {
-      if ($startDateTime >= $nowTime) {
+      $startStr = (string) ($startDateTime ?? '');
+      $lastStr = (string) ($lastEndDate ?? '');
+      if ($startStr !== '' && $startStr >= $nowTime) {
         $heroStatusClass = 'ed-hero__status-pill--upcoming';
         $heroStatusLabel = __('Próximamente');
-      } elseif ($startDateTime <= $lastEndDate && $lastEndDate >= $nowTime) {
+      } elseif ($startStr !== '' && $lastStr !== '' && $startStr <= $lastStr && $lastStr >= $nowTime) {
         $heroStatusClass = 'ed-hero__status-pill--running';
         $heroStatusLabel = __('En curso');
       } else {

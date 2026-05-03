@@ -138,8 +138,18 @@
 
                 <div class="form-group">
                   <label>{{ __('Tipo de comprobante por defecto') }}</label>
-                  <input type="number" min="1" name="default_invoice_type" class="form-control"
-                    value="{{ old('default_invoice_type', $billingSettings->default_invoice_type) }}">
+                  <select name="default_invoice_type" class="form-control">
+                    <option value="">{{ __('Seleccionar tipo de comprobante') }}</option>
+                    <option value="6" {{ (string) old('default_invoice_type', $billingSettings->default_invoice_type) === '6' ? 'selected' : '' }}>
+                      {{ __('Factura B — Consumidor final (6)') }}
+                    </option>
+                    <option value="2" {{ (string) old('default_invoice_type', $billingSettings->default_invoice_type) === '2' ? 'selected' : '' }}>
+                      {{ __('Factura A — Responsable inscripto (2)') }}
+                    </option>
+                    <option value="11" {{ (string) old('default_invoice_type', $billingSettings->default_invoice_type) === '11' ? 'selected' : '' }}>
+                      {{ __('Factura C — Monotributo (11)') }}
+                    </option>
+                  </select>
                   @if ($errors->has('default_invoice_type'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('default_invoice_type') }}</p>
                   @endif

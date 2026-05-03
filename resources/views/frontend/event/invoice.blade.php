@@ -84,7 +84,7 @@
       overflow: hidden;
       page-break-inside: avoid;
       position: relative;
-      box-shadow: 0 4px 15px rgba(249, 115, 22, 0.2);
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.08);
     }
 
     /* Perforaciones circulares en los bordes */

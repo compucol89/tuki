@@ -18,6 +18,10 @@
 @section('og-url', url()->current())
 @section('og-type', 'website')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
+@endpush
+
 @section('hero-section')
   <!-- Page Banner — sobre nosotros: editorial + chips (scoped solo esta página) -->
   <section
@@ -452,7 +456,7 @@ body.about-page {
     0 12px 28px rgba(15, 23, 42, 0.05);
   --about-ds-shadow-organizer-hover:
     0 1px 0 rgba(255, 255, 255, 1) inset,
-    0 16px 36px rgba(249, 115, 22, 0.09);
+    0 16px 36px rgba(15, 23, 42, 0.1);
   --about-ds-shadow-chip:
     0 1px 0 rgba(255, 255, 255, 0.22) inset,
     0 14px 42px rgba(0, 0, 0, 0.2);
@@ -838,7 +842,6 @@ body.about-page .about-organizer-pitch__cta.theme-btn {
   padding-inline: 2lh;
   border-radius: var(--about-ds-radius-pill);
   font-weight: 700;
-  box-shadow: 0 10px 28px rgba(249, 115, 22, 0.22);
 }
 
 body.about-page .about-organizer-pitch__link {

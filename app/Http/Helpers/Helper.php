@@ -263,10 +263,10 @@ if (!function_exists('OrganizerEventCount')) {
   {
     if ($admin == true) {
       $count = App\Models\Event::where('organizer_id', null)
-        ->get()->count();
+        ->count();
     } else {
       $count = App\Models\Event::where('organizer_id', $organizer_id)
-        ->get()->count();
+        ->count();
     }
 
     if ($count) {

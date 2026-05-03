@@ -28,6 +28,7 @@ use App\Models\HomePage\TestimonialSection;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\HeroSlideUrlsService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -117,6 +118,79 @@ class HomeController extends Controller
     $heroSlideUrls = HeroSlideUrlsService::build();
     $queryResult['heroSlideUrls'] = $heroSlideUrls;
     $queryResult['firstHeroSlideUrl'] = $heroSlideUrls[0] ?? null;
+
+    // ── Wishlist del customer autenticado ──
+    $wishlistMap = [];
+    if (Auth::guard('customer')->check()) {
+      $wishlistMap = array_flip(
+        DB::table('wishlists')
+          ->where('customer_id', Auth::guard('customer')->user()->id)
+          ->pluck('event_id')
+          ->toArray()
+      );
+    }
+    $queryResult['wishlistMap'] = $wishlistMap;
+
+    // ── Subquery de tickets reutilizable ──
+    $ticketSub = DB::raw("(SELECT event_id,
+      COUNT(*) as ticket_count,
+      MIN(CASE WHEN pricing_type != 'free' AND price > 0 THEN CAST(price AS DECIMAL(10,2)) END) as min_price,
+      MAX(CASE WHEN pricing_type = 'free' THEN 1 ELSE 0 END) as has_free,
+      MAX(CASE WHEN pricing_type = 'variation' OR (pricing_type != 'free' AND price > 0) THEN 1 ELSE 0 END) as has_paid
+      FROM tickets GROUP BY event_id) as tk");
+
+    // ── Eventos destacados "todos" ──
+    $featuredEventsAll = DB::table('event_contents')
+      ->join('events', 'events.id', '=', 'event_contents.event_id')
+      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
+      ->where([
+        ['event_contents.language_id', '=', $language->id],
+        ['events.status', 1],
+        ['events.end_date_time', '>=', $this->now_date_time],
+        ['events.is_featured', '=', 'yes'],
+      ])
+      ->orderBy('events.created_at', 'desc')
+      ->select('event_contents.*', 'events.*',
+        'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+        'organizers.id as org_id', 'organizers.username as org_username')
+      ->get();
+    $queryResult['featuredEventsAll'] = $featuredEventsAll;
+
+    // ── Eventos destacados por categoría ──
+    $categoryIds = $categories->pluck('id')->toArray();
+    $allFeatured = DB::table('event_contents')
+      ->join('events', 'events.id', '=', 'event_contents.event_id')
+      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
+      ->whereIn('event_contents.event_category_id', $categoryIds)
+      ->where('event_contents.language_id', $language->id)
+      ->where('events.status', 1)
+      ->where('events.end_date_time', '>=', $this->now_date_time)
+      ->where('events.is_featured', 'yes')
+      ->orderBy('events.created_at', 'desc')
+      ->select('event_contents.*', 'events.*',
+        'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+        'organizers.id as org_id', 'organizers.username as org_username',
+        'event_contents.event_category_id as cat_id')
+      ->get();
+    $featuredEventsByCategory = $allFeatured->groupBy('cat_id');
+    $queryResult['featuredEventsByCategory'] = $featuredEventsByCategory;
+
+    // Pre-calcular badges para todos los eventos de la home (3 queries en vez de N×3)
+    $allEventsForBadges = collect();
+    if (!empty($queryResult['featuredEventsAll'])) {
+        $allEventsForBadges = $allEventsForBadges->merge($queryResult['featuredEventsAll']);
+    }
+    if (!empty($queryResult['featuredEventsByCategory'])) {
+        foreach ($queryResult['featuredEventsByCategory'] as $catEvents) {
+            $allEventsForBadges = $allEventsForBadges->merge($catEvents);
+        }
+    }
+    if (!empty($queryResult['marqueeEvents'])) {
+        $allEventsForBadges = $allEventsForBadges->merge($queryResult['marqueeEvents']);
+    }
+    $queryResult['badgeMap'] = \App\Services\EventBadgeService::getBadgesForEvents($allEventsForBadges->unique('id')->values());
 
     return view('frontend.home.index-v1', $queryResult);
   }

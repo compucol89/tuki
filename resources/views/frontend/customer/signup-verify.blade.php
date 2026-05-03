@@ -46,7 +46,7 @@
       font-size: 34px;
       color: #ffffff;
       background: {{ $status === 'success' ? 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)' : 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)' }};
-      box-shadow: 0 18px 35px {{ $status === 'success' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(249, 115, 22, 0.24)' }};
+      box-shadow: 0 18px 35px {{ $status === 'success' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(15, 23, 42, 0.08)' }};
     }
 
     .verify-email-eyebrow {
@@ -100,7 +100,6 @@
     .verify-email-btn--primary {
       color: #ffffff;
       background: #f97316;
-      box-shadow: 0 14px 30px rgba(249, 115, 22, 0.24);
     }
 
     .verify-email-btn--primary:hover {

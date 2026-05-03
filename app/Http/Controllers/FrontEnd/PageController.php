@@ -21,7 +21,15 @@ class PageController extends Controller
       ->where('pages.status', '=', 1)
       ->where('page_contents.language_id', '=', $language->id)
       ->where('page_contents.page_id', '=', $pageId)
-      ->firstOrFail();
+      ->first();
+
+    if (!$queryResult['pageInfo']) {
+      $queryResult['pageInfo'] = Page::join('page_contents', 'pages.id', '=', 'page_contents.page_id')
+        ->where('pages.status', '=', 1)
+        ->where('page_contents.page_id', '=', $pageId)
+        ->orderBy('page_contents.id')
+        ->firstOrFail();
+    }
 
     return view('frontend.custom-page', $queryResult);
   }

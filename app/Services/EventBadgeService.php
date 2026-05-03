@@ -156,4 +156,92 @@ class EventBadgeService
             return null;
         }
     }
+
+    /**
+     * Pre-calcular badges para múltiples eventos en 3 queries (evita N+1).
+     * @param \Illuminate\Support\Collection $events
+     * @return array ['event_id' => badge_array|null]
+     */
+    public static function getBadgesForEvents($events): array
+    {
+        $eventIds = $events->pluck('id')->toArray();
+        if (empty($eventIds)) {
+            return [];
+        }
+        // 1 query: stock de tickets limitados por evento
+        $ticketStock = \App\Models\Event\Ticket::whereIn('event_id', $eventIds)
+            ->where('ticket_available_type', 'limited')
+            ->select('event_id', 'ticket_available')
+            ->get()
+            ->groupBy('event_id');
+        // 1 query: ventas pagadas totales por evento
+        $soldByEvent = Booking::whereIn('event_id', $eventIds)
+            ->where('paymentStatus', 'paid')
+            ->select('event_id', \DB::raw('SUM(CAST(quantity AS UNSIGNED)) as total_sold'))
+            ->groupBy('event_id')
+            ->pluck('total_sold', 'event_id');
+        // 1 query: ventas recientes (48h) por evento
+        $recentSalesByEvent = Booking::whereIn('event_id', $eventIds)
+            ->where('paymentStatus', 'paid')
+            ->where('created_at', '>=', Carbon::now()->subHours(48))
+            ->select('event_id', \DB::raw('SUM(CAST(quantity AS UNSIGNED)) as recent_sold'))
+            ->groupBy('event_id')
+            ->pluck('recent_sold', 'event_id');
+        $badges = [];
+        foreach ($events as $event) {
+            $eid = $event->id;
+            $badge = self::getBadgeWithData(
+                $event,
+                $ticketStock->get($eid, collect()),
+                $soldByEvent->get($eid, 0),
+                $recentSalesByEvent->get($eid, 0)
+            );
+            $badges[$eid] = $badge;
+        }
+        return $badges;
+    }
+
+    private static function getBadgeWithData($event, $ticketStock, $totalSold, $recentSales): ?array
+    {
+        // --- BADGES MANUALES (máxima prioridad) ---
+        if ($event->manual_badge === 'imperdible') {
+            return ['label' => 'Imperdible', 'icon' => '🎪', 'class' => 'ev-badge--imperdible'];
+        }
+        if ($event->manual_badge === 'destacado') {
+            return ['label' => 'Destacado', 'icon' => '⭐', 'class' => 'ev-badge--destacado'];
+        }
+        // Últimas entradas: stock ≤ 15%
+        $total = $ticketStock->sum('ticket_available');
+        if ($total > 0) {
+            $remaining = max(0, $total - (int)($totalSold ?? 0));
+            $stockPercent = ($remaining / $total) * 100;
+            if ($stockPercent <= 15 && $stockPercent > 0) {
+                return ['label' => 'Últimas entradas', 'icon' => '⚡', 'class' => 'ev-badge--agota'];
+            }
+        }
+        // Furor: ≥ 20 ventas en últimas 48h
+        if (($recentSales ?? 0) >= 20) {
+            return ['label' => 'Furor', 'icon' => '🔥', 'class' => 'ev-badge--furor'];
+        }
+        // Últimas horas: evento en próximas 48h
+        $eventDate = $event->start_date ?? null;
+        if ($eventDate) {
+            try {
+                $date = Carbon::parse($eventDate);
+                if ($date->isBetween(Carbon::now(), Carbon::now()->addHours(48))) {
+                    return ['label' => 'Últimas horas', 'icon' => '🎯', 'class' => 'ev-badge--ultimas'];
+                }
+            } catch (\Exception $e) {}
+        }
+        // Trending: ≥ 100 visitas
+        $views = $event->views_last_24h ?? $event->views_count ?? 0;
+        if ($views >= 100) {
+            return ['label' => 'Trending', 'icon' => '📈', 'class' => 'ev-badge--trending'];
+        }
+        // Nuevo: creado hace menos de 72h
+        if (!empty($event->created_at) && Carbon::parse($event->created_at)->isAfter(Carbon::now()->subHours(72))) {
+            return ['label' => 'Nuevo', 'icon' => '🆕', 'class' => 'ev-badge--nuevo'];
+        }
+        return null;
+    }
 }

@@ -108,6 +108,8 @@ class SitemapController extends Controller
       'check-out2',
       'cart',
       'login',
+      'registro',
+      'recuperar-contrasena',
       'register',
       'sitemap.xml',
       'sitemap',

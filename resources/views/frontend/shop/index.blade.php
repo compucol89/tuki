@@ -46,6 +46,14 @@
   </section>
   <!-- Page Banner End -->
 @endsection
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}">
+@endpush
+
+@push('scripts')
+  <script src="{{ asset('assets/front/js/cart.js') }}" defer></script>
+@endpush
 @section('content')
   <!-- Event Page Start -->
   <section class="event-page-section py-120 rpy-100">

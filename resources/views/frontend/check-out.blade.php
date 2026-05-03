@@ -138,7 +138,12 @@
                            aria-describedby="{{ $errors->has('email') ? 'email-error email-hint' : 'email-hint' }}"
                            @if ($errors->has('email')) aria-invalid="true" @endif>
                     @error('email')<p id="email-error" class="co-field__error" role="alert">{{ $message }}</p>@enderror
-                    <p class="co-helper-text" id="email-hint">{{ __('Usá un email al que tengas acceso: ahí vas a recibir tu entrada digital.') }}</p>
+                    <div class="co-trust co-trust--field" id="email-hint">
+                      <div class="co-trust__icon-wrap" aria-hidden="true">
+                        <svg class="co-trust__icon co-trust__icon--attention" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                      </div>
+                      <span class="co-trust__text">{{ __('Usá un email al que tengas acceso: ahí vas a recibir tu entrada digital.') }}</span>
+                    </div>
                   </div>
                 </div>
                 <div class="col-sm-6">
@@ -303,8 +308,9 @@
 
         </div>
 
-        {{-- ===== RIGHT: Resumen del pedido (sticky) ===== --}}
+        {{-- ===== RIGHT: Resumen del pedido (sticky en wrap: evita hueco con columnas flex) ===== --}}
         <div class="col-lg-5">
+          <div class="co-summary-wrap">
           <div class="co-summary">
 
             {{-- Info del evento --}}
@@ -419,7 +425,7 @@
 
             {{-- Cupón --}}
             @if ($total != 0 || Session::get('sub_total') != 0)
-              <div class="co-coupon mt-3">
+              <div class="co-coupon">
                 <button type="button" class="co-coupon__toggle" id="couponToggle" aria-expanded="false" aria-controls="couponBody">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
                   Tengo un cupón de descuento
@@ -439,16 +445,13 @@
               @if ($total != 0 || Session::get('sub_total') != 0)
                 <button type="submit" class="co-pay-btn">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                  {{ __('Pagar y recibir mi entrada') }} — {{ symbolPrice($grand_total) }}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  {{ __('Pagar') }}
                 </button>
-                <p class="co-cta-microcopy">{{ __('Al confirmar, procesamos el pago de forma segura y te enviamos la entrada digital al email que ingresaste apenas se confirme el pago.') }}</p>
               @else
                 <button type="submit" class="co-pay-btn">
                   Confirmar reserva gratis
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
-                <p class="co-cta-microcopy">{{ __('Al confirmar, te enviamos la confirmación al email que ingresaste.') }}</p>
               @endif
             </div>
 
@@ -459,7 +462,7 @@
               </div>
               <span class="co-trust__text">
                 @if ($isGuestCheckout)
-                  {{ __('Pago seguro · Te enviamos la entrada digital al email apenas se confirme el pago') }}
+                  {{ __('Pago seguro · Tu entrada digital en el email que indicaste') }}
                 @else
                   Pago 100% seguro · Tu ticket llega al email en segundos
                 @endif
@@ -498,6 +501,7 @@
               </svg>
             </div>
 
+          </div>
           </div>
         </div>
         {{-- / RIGHT --}}

@@ -22,24 +22,15 @@
   <link rel="stylesheet" href="{{ asset('assets/front/css/common-style.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection
-@section('hero-section')
-  <!-- Page Banner Start -->
-  <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"
-    data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
-    <div class="container">
-      <div class="banner-inner">
-        <h2 class="page-title">{{ __('Tienda') }}</h2>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
-            <li class="breadcrumb-item active">{{ __('Product Details') }}</li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-  </section>
-  <!-- Page Banner End -->
-@endsection
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/slick.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/magnific-popup.min.css') }}">
+@endpush
+
+@push('scripts')
+  <script src="{{ asset('assets/front/js/cart.js') }}" defer></script>
+@endpush
 @section('content')
 
   <!-- Shop Details Start -->

@@ -62,6 +62,105 @@
             }
         });
 
+        (function () {
+            var $wrap = $('.main-header--premium .main-menu');
+            if (!$wrap.length) {
+                return;
+            }
+            var mq = window.matchMedia('(max-width: 1199.98px)');
+            var $btn = $wrap.find('.navbar-toggle');
+            var $menu = $wrap.find('#main-menu');
+            var $overlay = $wrap.find('.mobile-menu-overlay');
+
+            function premiumDrawerOpen() {
+                return $menu.hasClass('show');
+            }
+
+            function syncPremiumDrawerAria() {
+                if (!mq.matches) {
+                    $menu.removeAttr('aria-hidden');
+                    $overlay.attr('aria-hidden', 'true');
+                    $btn.attr('aria-expanded', 'false');
+                    return;
+                }
+                var open = premiumDrawerOpen();
+                $menu.attr('aria-hidden', open ? 'false' : 'true');
+                $overlay.attr('aria-hidden', open ? 'false' : 'true');
+                $btn.attr('aria-expanded', open ? 'true' : 'false');
+            }
+
+            function scrollbarGapPx() {
+                return Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+            }
+
+            function setDrawerScrollbarGap(px) {
+                if (px > 0) {
+                    document.documentElement.style.setProperty('--drawer-scrollbar-gap', px + 'px');
+                } else {
+                    document.documentElement.style.removeProperty('--drawer-scrollbar-gap');
+                }
+            }
+
+            function setPremiumDrawer(open) {
+                if (!mq.matches) {
+                    return;
+                }
+                if (open) {
+                    setDrawerScrollbarGap(scrollbarGapPx());
+                    $menu.addClass('show');
+                    $btn.attr('aria-expanded', 'true');
+                    $('body').addClass('mobile-drawer-open');
+                } else {
+                    $menu.removeClass('show');
+                    $btn.attr('aria-expanded', 'false');
+                    $('body').removeClass('mobile-drawer-open');
+                    setDrawerScrollbarGap(0);
+                }
+                syncPremiumDrawerAria();
+            }
+
+            syncPremiumDrawerAria();
+
+            $btn.on('click', function (e) {
+                if (!mq.matches) {
+                    return;
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                setPremiumDrawer(!premiumDrawerOpen());
+            });
+
+            $overlay.on('click', function () {
+                if (mq.matches && premiumDrawerOpen()) {
+                    setPremiumDrawer(false);
+                }
+            });
+
+            $(document).on('keydown.premiumMobileDrawer', function (e) {
+                if (e.key !== 'Escape' || !mq.matches || !premiumDrawerOpen()) {
+                    return;
+                }
+                setPremiumDrawer(false);
+                $btn.trigger('focus');
+            });
+
+            $(window).on('resize', function () {
+                if (!mq.matches) {
+                    if (premiumDrawerOpen()) {
+                        $menu.removeClass('show');
+                        $('body').removeClass('mobile-drawer-open');
+                    }
+                    setDrawerScrollbarGap(0);
+                    syncPremiumDrawerAria();
+                    return;
+                }
+                if (premiumDrawerOpen()) {
+                    setDrawerScrollbarGap(scrollbarGapPx());
+                }
+                syncPremiumDrawerAria();
+            });
+        }());
+
         // 03. Submenu Dropdown Toggle
         if ($('.main-header .navigation li.dropdown ul').length) {
             $('.main-header .navigation li.dropdown').append('<div class="dropdown-btn"><span class="fa fa-angle-down"></span></div>');
@@ -78,9 +177,8 @@
             });
         }
 
-        //Submenu Dropdown Toggle
-        if ($('.main-header .main-menu').length) {
-            $('.main-header .main-menu .navbar-toggle').click(function () {
+        if ($('.main-header:not(.main-header--premium) .main-menu').length) {
+            $('.main-header:not(.main-header--premium) .main-menu .navbar-toggle').on('click', function () {
                 $(this).prev().prev().next().next().children('li.dropdown').hide();
             });
         }
@@ -132,39 +230,6 @@
 
 
 
-
-
-        // 07. Events Filtering
-        $(".events-filter li").on('click', function () {
-            $(".events-filter li").removeClass("current");
-            $(this).addClass("current");
-
-            var selector = $(this).attr('data-filter');
-            $('.events-active').imagesLoaded(function () {
-                $(".events-active").isotope({
-                    itemSelector: '.item',
-                    filter: selector,
-                });
-            });
-
-        });
-
-
-
-        // 08. Gallery Filtering
-        $(".gallery-filter li").on('click', function () {
-            $(".gallery-filter li").removeClass("current");
-            $(this).addClass("current");
-
-            var selector = $(this).attr('data-filter');
-            $('.gallery-active').imagesLoaded(function () {
-                $(".gallery-active").isotope({
-                    itemSelector: '.item',
-                    filter: selector,
-                });
-            });
-
-        });
 
 
         // 09. Product Gallery
@@ -263,33 +328,39 @@
 
 
         // 13. Event Details Gallery Popup
-        $('.event-details-images a').magnificPopup({
-            type: 'image',
-            gallery: {
-                enabled: true,
-                navigateByImgClick: true,
-            },
-        });
+        if ($('.event-details-images a').length && $.fn.magnificPopup) {
+            $('.event-details-images a').magnificPopup({
+                type: 'image',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                },
+            });
+        }
 
 
         // 14. Product Gallery Popup
-        $('.product-gallery a').magnificPopup({
-            type: 'image',
-            gallery: {
-                enabled: true,
-                navigateByImgClick: true,
-            },
-        });
+        if ($('.product-gallery a').length && $.fn.magnificPopup) {
+            $('.product-gallery a').magnificPopup({
+                type: 'image',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                },
+            });
+        }
 
 
         // 15. Image Gallery Popup
-        $('.gallery-item').magnificPopup({
-            type: 'image',
-            gallery: {
-                enabled: true,
-                navigateByImgClick: true,
-            },
-        });
+        if ($('.gallery-item').length && $.fn.magnificPopup) {
+            $('.gallery-item').magnificPopup({
+                type: 'image',
+                gallery: {
+                    enabled: true,
+                    navigateByImgClick: true,
+                },
+            });
+        }
 
         // Event card click delegation
         $(document).on('click', '.ev-card[data-event-url]', function (e) {
@@ -374,30 +445,6 @@
 
     $(window).on('load', function () {
 
-        // 18. Preloader
-        function handlePreloader() {
-            if ($('.preloader').length) {
-                $('.preloader').delay(200).fadeOut(500);
-            }
-        }
-        handlePreloader();
-
-
-        // 07. Events Filtering
-        if ($('.events-active').length) {
-            $(".events-active").isotope({
-                itemSelector: '.item',
-            });
-        }
-
-
-        // 08. Gallery Filtering
-        if ($('.gallery-active').length) {
-            $(".gallery-active").isotope({
-                itemSelector: '.item',
-            });
-        }
-
         if ($(".popup-wrapper").length > 0) {
             let $firstPopup = $(".popup-wrapper").eq(0);
             popupAnnouncement($firstPopup);
@@ -439,22 +486,24 @@ function popupAnnouncement($this) {
         let popupDelay = $this.data('popup_delay');
 
         setTimeout(function () {
-            jQuery.magnificPopup.open({
-                items: { src: '#' + $this.attr('id') },
-                type: 'inline',
-                callbacks: {
-                    afterClose: function () {
-                        // after the popup is closed, store it in the sessionStorage & show next popup
-                        closedPopups.push($this.data('popup_id'));
-                        sessionStorage.setItem('closedPopups', JSON.stringify(closedPopups));
+            if (jQuery.magnificPopup) {
+                jQuery.magnificPopup.open({
+                    items: { src: '#' + $this.attr('id') },
+                    type: 'inline',
+                    callbacks: {
+                        afterClose: function () {
+                            // after the popup is closed, store it in the sessionStorage & show next popup
+                            closedPopups.push($this.data('popup_id'));
+                            sessionStorage.setItem('closedPopups', JSON.stringify(closedPopups));
 
 
-                        if ($this.next('.popup-wrapper').length > 0) {
-                            popupAnnouncement($this.next('.popup-wrapper'));
+                            if ($this.next('.popup-wrapper').length > 0) {
+                                popupAnnouncement($this.next('.popup-wrapper'));
+                            }
                         }
                     }
-                }
-            }, 0);
+                }, 0);
+            }
         }, popupDelay);
     } else {
         if ($this.next('.popup-wrapper').length > 0) {
@@ -663,11 +712,6 @@ $('.event-countdown').each(function () {
     setTimeout(updateCountdownMessage, 100);
     setInterval(updateCountdownMessage, 60000);
 });
-
-$('.showLoader').on('click', function () {
-    $('.preloader').show();
-});
-
 
 $(".event-countdown").find(".syotimer-cell").each(function () {
     var cell = $(this).find(".syotimer-cell__value")[0];

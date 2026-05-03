@@ -59,7 +59,7 @@
     @endphp
 
     <div class="row justify-content-between footer-main-grid">
-      <div class="col-lg-4 col-sm-6">
+      <div class="col-lg-4 col-sm-6 footer-col footer-col--brand">
         <div class="footer-widget about-widget footer-brand">
           <div class="footer-logo mb-30">
             <a href="{{ route('index') }}"><img
@@ -93,7 +93,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-3 col-sm-6">
+      <div class="col-lg-3 col-sm-6 footer-col footer-col--quick">
         <nav class="footer-widget link-widget ml-sm-auto" aria-labelledby="footer-quick-links-title">
           <h5 class="footer-title" id="footer-quick-links-title">{{ __('Accesos rápidos') }}</h5>
           <ul>
@@ -103,7 +103,7 @@
           </ul>
         </nav>
       </div>
-      <div class="col-lg-2 col-sm-6">
+      <div class="col-lg-2 col-sm-6 footer-col footer-col--legal">
         <nav class="footer-widget link-widget" aria-labelledby="footer-legal-title">
           <h5 class="footer-title" id="footer-legal-title">{{ __('Legal') }}</h5>
           <ul>
@@ -116,9 +116,9 @@
           </ul>
         </nav>
       </div>
-      <div class="col-lg-3 col-sm-6">
-        <div class="footer-widget about-widget footer-contact ml-sm-auto">
-          <h5 class="footer-title">{{ __('Contacto') }}</h5>
+      <div class="col-lg-3 col-sm-6 footer-col footer-col--contact">
+        <div class="footer-widget about-widget footer-contact ml-sm-auto" aria-labelledby="footer-contact-title">
+          <h5 class="footer-title" id="footer-contact-title">{{ __('Contacto') }}</h5>
           @if (!is_null($bex) && (!empty($addresses) || !empty($mails) || !empty($phones)))
             <ul class="footer-contact-list">
               @if (!empty($addresses))
@@ -157,6 +157,10 @@
                 </li>
               @endif
             </ul>
+          @else
+            <p class="footer-contact-fallback">
+              <a href="{{ route('contact') }}">{{ __('Escribinos o consultá por tu compra') }}</a>
+            </p>
           @endif
         </div>
       </div>
@@ -178,11 +182,29 @@
         <span class="footer-trust__label">
           <i class="fas fa-lock" aria-hidden="true"></i> {{ __('Pagos seguros') }}
         </span>
-        <div class="footer-trust__icons">
-          <i class="fab fa-cc-visa" title="Visa" aria-hidden="true"></i>
-          <i class="fab fa-cc-mastercard" title="Mastercard" aria-hidden="true"></i>
-          <i class="fab fa-cc-paypal" title="PayPal" aria-hidden="true"></i>
-          <span class="footer-trust__mp" aria-label="MercadoPago">MP</span>
+        <div class="footer-trust__icons co-trust-logos footer-trust-logos--mono" aria-hidden="true">
+          <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30" focusable="false" class="footer-trust-logo-svg">
+            <rect width="56" height="36" rx="5" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1"/>
+            <text x="28" y="24" font-family="Arial,sans-serif" font-size="16" font-weight="900" font-style="italic" fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="1">VISA</text>
+          </svg>
+          <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30" focusable="false" class="footer-trust-logo-svg">
+            <rect width="56" height="36" rx="5" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1"/>
+            <circle cx="22" cy="18" r="8" fill="none" stroke="rgba(255,255,255,0.78)" stroke-width="1.2"/>
+            <circle cx="34" cy="18" r="8" fill="none" stroke="rgba(255,255,255,0.78)" stroke-width="1.2"/>
+          </svg>
+          <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30" focusable="false" class="footer-trust-logo-svg">
+            <rect width="56" height="36" rx="5" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1"/>
+            <text x="28" y="23" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="1">AMEX</text>
+          </svg>
+          <img class="footer-trust-logo-mp" src="{{ asset('assets/front/images/mercadopago_logo.svg') }}" alt="" width="46" height="30" loading="lazy" decoding="async">
+          <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30" focusable="false" class="footer-trust-logo-svg">
+            <rect width="56" height="36" rx="5" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1"/>
+            <text x="28" y="23" font-family="Arial,sans-serif" font-size="11" font-weight="700" fill="rgba(255,255,255,0.9)" text-anchor="middle">Cabal</text>
+          </svg>
+          <svg viewBox="0 0 56 36" xmlns="http://www.w3.org/2000/svg" width="46" height="30" focusable="false" class="footer-trust-logo-svg">
+            <rect width="56" height="36" rx="5" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1"/>
+            <text x="28" y="23" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="rgba(255,255,255,0.9)" text-anchor="middle">Naranja</text>
+          </svg>
         </div>
       </div>
       <div class="footer-bottom__group footer-bottom__group--meta">

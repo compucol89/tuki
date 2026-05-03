@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
 
 class LegalPagesContentSeeder extends Seeder
 {
@@ -326,16 +325,15 @@ HTML
     DB::transaction(function () use ($pages) {
       $defaultLanguageId = DB::table('page_contents')
         ->whereRaw('BINARY slug = ?', ['politica-de-privacidad'])
-        ->value('language_id') ?? 8;
+        ->value('language_id')
+        ?? DB::table('languages')->where('code', 'es')->value('id')
+        ?? DB::table('languages')->where('is_default', 1)->value('id')
+        ?? 8;
 
       foreach ($pages as $slug => $data) {
         $pageContent = DB::table('page_contents')
           ->whereRaw('BINARY slug = ?', [$slug])
           ->first();
-
-        if (!$pageContent && $slug !== 'defensa-al-consumidor') {
-          throw new RuntimeException("Legal page for slug {$slug} was not found.");
-        }
 
         if (!$pageContent) {
           $pageId = DB::table('pages')->insertGetId([

@@ -13,6 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
+        if (! Schema::hasTable('basic_settings') || Schema::hasColumn('basic_settings', 'how_ticket_will_be_send')) {
+            return;
+        }
+
         Schema::table('basic_settings', function (Blueprint $table) {
             $table->string('how_ticket_will_be_send')->default('instant')->nullable();
         });
@@ -25,6 +29,10 @@ return new class extends Migration
      */
     public function down()
     {
+        if (! Schema::hasTable('basic_settings') || ! Schema::hasColumn('basic_settings', 'how_ticket_will_be_send')) {
+            return;
+        }
+
         Schema::table('basic_settings', function (Blueprint $table) {
             $table->dropColumn('how_ticket_will_be_send');
         });

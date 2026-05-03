@@ -204,45 +204,12 @@
           <p class="text-center">{{ __('Por ahora no encontramos eventos destacados.') }}</p>
         @else
           @php
-            // ── Pre-cargar wishlist: UNA query para todos los eventos ──
-            $ev_wishlist_map = [];
-            if (Auth::guard('customer')->check()) {
-              $ev_wishlist_map = array_flip(
-                DB::table('wishlists')
-                  ->where('customer_id', Auth::guard('customer')->user()->id)
-                  ->pluck('event_id')
-                  ->toArray()
-              );
-            }
-            // ── Subquery de tickets reutilizable ──
-            $ticketSub = DB::raw("(SELECT event_id,
-              COUNT(*) as ticket_count,
-              MIN(CASE WHEN pricing_type != 'free' AND price > 0 THEN CAST(price AS DECIMAL(10,2)) END) as min_price,
-              MAX(CASE WHEN pricing_type = 'free' THEN 1 ELSE 0 END) as has_free,
-              MAX(CASE WHEN pricing_type = 'variation' OR (pricing_type != 'free' AND price > 0) THEN 1 ELSE 0 END) as has_paid
-              FROM tickets GROUP BY event_id) as tk");
+            $ev_wishlist_map = $wishlistMap ?? [];
+            $eventsall = $featuredEventsAll ?? collect();
           @endphp
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
               <div class="row">
-                @php
-                  $now_time = \Carbon\Carbon::now();
-                  $eventsall = DB::table('event_contents')
-                      ->join('events', 'events.id', '=', 'event_contents.event_id')
-                      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
-                      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
-                      ->where([
-                          ['event_contents.language_id', '=', $currentLanguageInfo->id],
-                          ['events.status', 1],
-                          ['events.end_date_time', '>=', $now_time],
-                          ['events.is_featured', '=', 'yes'],
-                      ])
-                      ->orderBy('events.created_at', 'desc')
-                      ->select('event_contents.*', 'events.*',
-                               'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
-                               'organizers.id as org_id', 'organizers.username as org_username')
-                      ->get();
-                @endphp
                 @foreach ($eventsall as $evLoop => $event)
                   <div class="col-lg-4 col-md-6 ev-card-col item motivational{{ $evLoop === 0 ? ' ev-card-col--featured' : '' }}">
                     @include('frontend.partials.event-card')
@@ -252,23 +219,7 @@
             </div>
             @foreach ($eventCategories as $item)
               @php
-                $now_time = \Carbon\Carbon::now();
-                $events = DB::table('event_contents')
-                    ->join('events', 'events.id', '=', 'event_contents.event_id')
-                    ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
-                    ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
-                    ->where([
-                        ['event_contents.event_category_id', '=', $item->id],
-                        ['event_contents.language_id', '=', $currentLanguageInfo->id],
-                        ['events.status', 1],
-                        ['events.end_date_time', '>=', $now_time],
-                        ['events.is_featured', '=', 'yes'],
-                    ])
-                    ->orderBy('events.created_at', 'desc')
-                    ->select('event_contents.*', 'events.*',
-                             'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
-                             'organizers.id as org_id', 'organizers.username as org_username')
-                    ->get();
+                $events = $featuredEventsByCategory[$item->id] ?? collect();
               @endphp
               <div class="tab-pane fade" id="nav-{{ $item->id }}" role="tabpanel"
                 aria-labelledby="nav-{{ $item->id }}-tab">

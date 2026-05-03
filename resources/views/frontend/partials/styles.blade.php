@@ -6,25 +6,15 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/fontawesome.5.9.0.min.css') }}">
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}">
-<!-- Magnific Popup -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/magnific-popup.min.css') }}">
-<!-- Slick Slider -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/slick.css') }}">
-<!-- jQuery UI CSS -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/jquery-ui.min.css') }}">
 <!-- Padding Margin -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/menu.css') }}">
-<!-- dashboard css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/dashboard.css') }}">
 <!-- Main css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
 <!-- Responsive css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/responsive.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
 @if ($currentLanguageInfo->direction == 1)
   {{-- right-to-left css --}}
   <link rel="stylesheet" href="{{ asset('assets/front/css/rtl-style.css') }}">

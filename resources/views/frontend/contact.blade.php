@@ -15,35 +15,29 @@
 
 @push('styles')
 <style>
-/**
- * Contacto — premium (Apple: vidrio / tipografía / foco · Airbnb: cards / sombras cálidas)
- * Solo aplica con body.contact-page-premium
- */
+/* Contacto — fondo plano (sin degradados ni textura). body.contact-page-premium */
 .contact-page-premium .ctp-premium {
-  --ctp-ink: #0f172a;
+  --ctp-ink: #1e2532;
   --ctp-ink-soft: #475569;
-  --ctp-line: rgba(15, 23, 42, 0.07);
-  --ctp-accent: #ea580c;
-  --ctp-accent-soft: rgba(234, 88, 12, 0.12);
-  --ctp-surface: rgba(255, 255, 255, 0.82);
+  --ctp-muted: #6b7280;
+  --ctp-line: #eaecf0;
+  --ctp-accent: #f97316;
+  --ctp-accent-hover: #ea580c;
+  --ctp-accent-soft: rgba(249, 115, 22, 0.12);
+  --ctp-surface: #ffffff;
+  --ctp-sec-pt: 48px;
+  --ctp-sec-pb: 72px;
   position: relative;
   z-index: 0;
-  padding: clamp(56px, 8vw, 96px) 0 clamp(64px, 9vw, 104px);
-  background:
-    radial-gradient(ellipse 100% 70% at 0% -18%, rgba(249, 115, 22, 0.07) 0%, transparent 52%),
-    radial-gradient(ellipse 80% 55% at 100% 0%, rgba(59, 130, 246, 0.05) 0%, transparent 48%),
-    linear-gradient(180deg, #fbfcfd 0%, #f1f5f9 42%, #eef2f7 100%);
+  padding: var(--ctp-sec-pt) 0 var(--ctp-sec-pb);
+  background: #f8fafc;
 }
 
-.contact-page-premium .ctp-premium::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.45;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.35'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
+@media (min-width: 768px) {
+  .contact-page-premium .ctp-premium {
+    --ctp-sec-pt: 72px;
+    --ctp-sec-pb: 72px;
+  }
 }
 
 .contact-page-premium .ctp-grid {
@@ -63,30 +57,30 @@
 /* —— Columna info —— */
 .contact-page-premium .ctp-info__label {
   margin: 0 0 10px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--ctp-muted);
 }
 
 .contact-page-premium .ctp-info__heading {
   margin: 0 0 12px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
   font-size: clamp(1.75rem, 1.4vw + 1.1rem, 2.35rem);
   font-weight: 800;
   letter-spacing: -0.045em;
   line-height: 1.1;
-  color: var(--ctp-ink);
+  color: var(--heading-color, var(--ctp-ink));
 }
 
 .contact-page-premium .ctp-info__desc {
   margin: 0 0 36px;
-  max-width: 36ch;
+  max-width: 42ch;
   font-size: 15px;
   line-height: 1.65;
-  color: var(--ctp-ink-soft);
+  color: var(--ctp-muted);
 }
 
 .contact-page-premium .ctp-cards {
@@ -139,12 +133,12 @@
 
 .contact-page-premium .ctp-card__label {
   margin: 0 0 5px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--ctp-muted);
 }
 
 .contact-page-premium .ctp-card__value {
@@ -164,8 +158,8 @@
 }
 
 .contact-page-premium .ctp-card__value a:hover {
-  color: var(--ctp-accent);
-  border-bottom-color: rgba(234, 88, 12, 0.35);
+  color: var(--primary-color, var(--ctp-accent));
+  border-bottom-color: rgba(249, 115, 22, 0.35);
 }
 
 .contact-page-premium .ctp-divider {
@@ -176,12 +170,12 @@
 
 .contact-page-premium .ctp-social__label {
   margin: 0 0 14px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--ctp-muted);
 }
 
 .contact-page-premium .ctp-social {
@@ -201,17 +195,17 @@
   color: var(--ctp-ink-soft);
   text-decoration: none;
   background: rgba(255, 255, 255, 0.65);
-  border: 1px solid var(--ctp-line);
+  border: 1px solid rgba(30, 37, 50, 0.08);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 1) inset, 0 8px 20px rgba(15, 23, 42, 0.05);
   transition: transform 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
 .contact-page-premium .ctp-social a:hover {
   color: #fff;
-  background: linear-gradient(135deg, #f97316 0%, var(--ctp-accent) 100%);
+  background: linear-gradient(135deg, var(--ctp-accent) 0%, var(--ctp-accent-hover) 100%);
   border-color: transparent;
   transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(234, 88, 12, 0.35);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
 }
 
 .contact-page-premium .ctp-social a:focus-visible {
@@ -223,48 +217,31 @@
 .contact-page-premium .ctp-form-wrap {
   position: relative;
   padding: clamp(28px, 4vw, 44px) clamp(24px, 3.5vw, 44px) clamp(26px, 3.5vw, 40px);
-  border-radius: clamp(22px, 2.5vw, 30px);
-  background: var(--ctp-surface);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 1) inset,
-    0 0 0 1px rgba(15, 23, 42, 0.04),
-    0 28px 64px rgba(15, 23, 42, 0.1),
-    0 10px 24px rgba(15, 23, 42, 0.05);
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid var(--ctp-line);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
   animation: ctp-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
-}
-
-.contact-page-premium .ctp-form-wrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(ellipse 90% 45% at 50% -10%, var(--ctp-accent-soft) 0%, transparent 55%);
-  z-index: 0;
 }
 
 .contact-page-premium .ctp-form-wrap > * {
   position: relative;
-  z-index: 1;
 }
 
 .contact-page-premium .ctp-form-wrap__title {
   margin: 0 0 8px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
   font-size: clamp(1.2rem, 0.6vw + 1rem, 1.45rem);
   font-weight: 800;
   letter-spacing: -0.035em;
-  color: var(--ctp-ink);
+  color: var(--heading-color, var(--ctp-ink));
 }
 
 .contact-page-premium .ctp-form-wrap__sub {
   margin: 0 0 28px;
   font-size: 14px;
   line-height: 1.5;
-  color: #64748b;
+  color: var(--ctp-muted);
 }
 
 .contact-page-premium .ctp-form-grid {
@@ -286,12 +263,12 @@
 .contact-page-premium .ctp-field label {
   display: block;
   margin-bottom: 7px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--ctp-muted);
 }
 
 .contact-page-premium .ctp-field input,
@@ -329,7 +306,8 @@
     0 1px 0 rgba(255, 255, 255, 1) inset;
 }
 
-.contact-page-premium .ctp-field .ctp-error {
+.contact-page-premium .ctp-field .ctp-error,
+.contact-page-premium .ctp-recaptcha .ctp-error {
   margin: 6px 0 0;
   font-size: 12px;
   font-weight: 600;
@@ -356,44 +334,23 @@
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--ctp-muted);
 }
 
-.contact-page-premium .ctp-btn {
+.contact-page-premium .ctp-submit .theme-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 14px 26px;
-  font-family: var(--heading-font), system-ui, sans-serif;
+  min-height: 52px;
+  padding-inline: 26px;
+  border-radius: 15px;
   font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #fff;
-  cursor: pointer;
-  border: none;
-  border-radius: 14px;
-  text-decoration: none;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.18) inset,
-    0 14px 32px rgba(15, 23, 42, 0.25);
-  transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
-.contact-page-premium .ctp-btn:hover {
-  filter: brightness(1.06);
-  transform: translateY(-2px);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.22) inset,
-    0 18px 40px rgba(15, 23, 42, 0.28);
-}
-
-.contact-page-premium .ctp-btn:focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.65);
-  outline-offset: 3px;
-}
-
-.contact-page-premium .ctp-btn svg {
+.contact-page-premium .ctp-submit .theme-btn svg {
   flex-shrink: 0;
 }
 
@@ -460,7 +417,7 @@
   }
   .contact-page-premium .ctp-card:hover,
   .contact-page-premium .ctp-social a:hover,
-  .contact-page-premium .ctp-btn:hover {
+  .contact-page-premium .ctp-submit .theme-btn:hover {
     transform: none;
   }
 }
@@ -486,8 +443,8 @@
       {{-- ── COLUMNA INFO ── --}}
       <div class="ctp-info">
         <p class="ctp-info__label">Información de contacto</p>
-        <h2 class="ctp-info__heading">Hablemos</h2>
-        <p class="ctp-info__desc">Si necesitás ayuda con una compra, una entrada o tu evento, escribinos y te respondemos a la brevedad.</p>
+        <h2 class="ctp-info__heading">Contactanos</h2>
+        <p class="ctp-info__desc">¿Tenés una consulta? Escribinos y te respondemos lo antes posible.</p>
 
         <div class="ctp-cards">
           @if(!empty($contactAddresses))
@@ -550,7 +507,7 @@
       {{-- ── COLUMNA FORMULARIO ── --}}
       <div class="ctp-form-wrap">
         <h3 class="ctp-form-wrap__title">Envianos un mensaje</h3>
-        <p class="ctp-form-wrap__sub">Te respondemos a la brevedad.</p>
+        <p class="ctp-form-wrap__sub">Completá el formulario y te escribimos en cuanto podamos.</p>
 
         @if(Session::has('success'))
           <div class="ctp-alert ctp-alert--success">
@@ -614,7 +571,7 @@
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 Tus datos están seguros
               </span>
-              <button type="submit" class="ctp-btn showLoader">
+              <button type="submit" class="theme-btn showLoader">
                 Enviar mensaje
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               </button>

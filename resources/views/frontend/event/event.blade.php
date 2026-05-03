@@ -16,6 +16,10 @@
 @section('canonical',      url()->current())
 @section('og-url',         url()->current())
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}">
+@endpush
+
 {{-- ─── HERO — premium (collage + capas editoriales) ─── --}}
 @section('hero-section')
 <section class="hero-section hero-collage-section hero-collage-section--premium" id="heroSection" aria-labelledby="heroHeading">
@@ -187,8 +191,8 @@
     @if (count($information['events']) > 0)
       <div class="row">
         @foreach ($information['events'] as $event)
-          <div class="col-md-6 col-lg-4 ev-card-col">
-            @include('frontend.partials.event-card')
+          <div class="col-lg-4 col-md-6 ev-card-col item motivational">
+            @include('frontend.partials.event-card', ['badgeMap' => $information['badgeMap'] ?? []])
           </div>
         @endforeach
       </div>

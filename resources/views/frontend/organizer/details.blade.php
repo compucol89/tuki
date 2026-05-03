@@ -6,6 +6,10 @@
 @section('meta-keywords', "{{ $organizer->username }}")
 @section('meta-description', "$organizer->details")
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
+@endpush
+
 @section('hero-section')
   <!-- Page Banner Start -->
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy org-hero-premium"

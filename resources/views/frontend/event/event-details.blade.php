@@ -1079,9 +1079,8 @@ ttq.page();
 })();
 
 /**
- * Alinea el padding superior del sidebar (#main-content) con el borde inferior real
- * de #event-booking-card (hero, position absolute). Evita countdown "pegado" o huecos
- * cuando la altura de la tarjeta no coincide con valores fijos en CSS.
+ * Ajusta --ed-sidebar-reserve en body: padding-top del .sidebar-sticky bajo la tarjeta
+ * absoluta #event-booking-card. reserve = max(baseline 168|188px, overlap + 20px).
  */
 (function syncEventDetailSidebarReserve() {
   var body = document.body;
@@ -1100,11 +1099,10 @@ ttq.page();
     var sidebar = document.querySelector('.ed-body .col-lg-4 .sidebar-sticky');
     if (!card || !sidebar) return;
 
+    var baseline = window.matchMedia('(min-width: 1200px)').matches ? 188 : 168;
     var overlap = Math.round(card.getBoundingClientRect().bottom - sidebar.getBoundingClientRect().top);
     var gap = 20;
-    var reserve = overlap > 0 ? overlap + gap : 0;
-    var cap = Math.round(window.innerHeight * 0.92);
-    if (reserve > cap) reserve = cap;
+    var reserve = Math.max(baseline, overlap + gap);
 
     body.style.setProperty('--ed-sidebar-reserve', reserve + 'px');
   }
@@ -1123,6 +1121,7 @@ ttq.page();
 
   window.addEventListener('resize', schedule);
   window.addEventListener('orientationchange', schedule);
+  window.addEventListener('load', schedule);
 
   if (typeof ResizeObserver !== 'undefined') {
     var card = document.getElementById('event-booking-card');

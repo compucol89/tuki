@@ -354,7 +354,6 @@
 .menu-right .menu-btn:focus {
     background: var(--secondary-color);
     border-color: var(--secondary-color);
-    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
     transform: translateY(-1px);
     color: white;
 }
@@ -386,7 +385,6 @@
 .menu-right .dropdown:last-child .menu-btn:focus {
     background: var(--primary-color) !important;
     color: white !important;
-    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.30);
     transform: translateY(-1px);
 }
 

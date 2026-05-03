@@ -168,9 +168,14 @@
             </div>
             <div class="cd-info-list">
               @php
+                $fiscalProfile = $booking->fiscalProfile;
+                $dni = $fiscalProfile && $fiscalProfile->document_number
+                    ? trim(($fiscalProfile->document_type ?? '') . ' ' . $fiscalProfile->document_number)
+                    : null;
                 $billingFields = [
                   'Nombre'        => trim($booking->fname . ' ' . $booking->lname),
                   'Email'         => $booking->email,
+                  'Documento'     => $dni,
                   'Teléfono'      => $booking->phone,
                   'País'          => $booking->country,
                   'Provincia'     => $booking->state,

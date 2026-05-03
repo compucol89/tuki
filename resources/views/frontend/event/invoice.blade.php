@@ -49,9 +49,7 @@
 @endphp
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Entrada — {{ $eventInfo->title ?? config('app.name') }}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     @page { 
       size: A4; 
@@ -61,7 +59,10 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
     body { 
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #1a1a1a;
       background: #ffffff;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -77,294 +78,170 @@
 
     .ticket {
       background: #ffffff;
-      border-radius: 20px;
+      border: 2px solid #F97316;
+      border-radius: 15px;
       overflow: hidden;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
       page-break-inside: avoid;
       margin-bottom: 20px;
     }
 
-    /* Header con gradiente naranja */
+    /* Header */
     .ticket-header {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%);
+      background: #F97316;
       color: #ffffff;
-      padding: 30px 20px 25px;
+      padding: 25px 20px;
       text-align: center;
-      position: relative;
-    }
-
-    .ticket-header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-      pointer-events: none;
     }
 
     .event-type {
       font-size: 10px;
-      font-weight: 600;
+      font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 2px;
-      opacity: 0.9;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .event-title {
-      font-size: 22px;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: bold;
       line-height: 1.2;
       margin-bottom: 8px;
     }
 
     .event-date {
-      font-size: 13px;
-      font-weight: 500;
-      opacity: 0.95;
+      font-size: 12px;
+      font-weight: bold;
     }
 
     .event-location {
-      font-size: 12px;
-      font-weight: 400;
-      opacity: 0.85;
+      font-size: 11px;
       margin-top: 5px;
     }
 
     /* Logo Section */
     .logo-section {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%);
-      padding: 15px 20px;
+      background: #F97316;
+      padding: 15px;
       text-align: center;
     }
 
     .logo-container {
       background: #ffffff;
-      border-radius: 12px;
-      padding: 12px 25px;
+      border-radius: 10px;
+      padding: 10px 20px;
       display: inline-block;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
 
     .logo-container img {
-      height: 35px;
-      display: block;
+      height: 30px;
     }
 
     /* QR Section */
     .qr-section {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #C2410C 100%);
+      background: #F97316;
       padding: 20px;
       text-align: center;
-      position: relative;
     }
 
     .qr-container {
       background: #ffffff;
-      border-radius: 16px;
-      padding: 20px;
+      border-radius: 10px;
+      padding: 15px;
       display: inline-block;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
 
     .qr-container img {
-      width: 140px;
-      height: 140px;
-      display: block;
+      width: 130px;
+      height: 130px;
     }
 
     .qr-label {
       font-size: 10px;
       color: #666;
-      margin-top: 10px;
-      font-weight: 600;
+      margin-top: 8px;
+      font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    /* Perforation line */
+    /* Perforation */
     .perforation {
-      height: 14px;
+      height: 15px;
       background: #ffffff;
       position: relative;
-      overflow: hidden;
-    }
-
-    .perforation::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 20px;
-      right: 20px;
       border-top: 2px dashed #ddd;
-      transform: translateY(-50%);
+      border-bottom: 2px dashed #ddd;
     }
-
-    .perforation-circle {
-      position: absolute;
-      top: 50%;
-      width: 24px;
-      height: 24px;
-      background: #f5f5f5;
-      border-radius: 50%;
-      transform: translateY(-50%);
-    }
-
-    .perforation-circle.left { left: -12px; }
-    .perforation-circle.right { right: -12px; }
 
     /* Ticket Details */
     .ticket-details {
-      padding: 25px 20px;
+      padding: 20px;
       background: #ffffff;
     }
 
     .ticket-type {
       text-align: center;
       margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
     }
 
     .ticket-type-label {
-      font-size: 10px;
+      font-size: 9px;
       color: #F97316;
-      font-weight: 600;
+      font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     .ticket-type-name {
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 18px;
+      font-weight: bold;
       color: #1a1a1a;
       margin-top: 5px;
     }
 
-    /* Info Grid */
-    .info-grid {
-      display: table;
+    /* Info Grid - usando tablas para DomPDF */
+    .info-table {
       width: 100%;
-      margin-bottom: 20px;
+      border-collapse: collapse;
+      margin-bottom: 15px;
     }
 
-    .info-row-table {
-      display: table-row;
-    }
-
-    .info-cell {
-      display: table-cell;
-      width: 50%;
-      padding: 10px 5px;
+    .info-table td {
+      padding: 8px 5px;
       border-bottom: 1px solid #f0f0f0;
-    }
-
-    .info-cell.full {
-      width: 100%;
+      width: 50%;
     }
 
     .info-label-small {
-      font-size: 9px;
+      font-size: 8px;
       color: #999;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 3px;
-      font-weight: 500;
     }
 
     .info-value-small {
-      font-size: 12px;
-      font-weight: 600;
-      color: #333;
-    }
-
-    /* Payment Summary */
-    .payment-section {
-      background: #fafafa;
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 20px;
-    }
-
-    .payment-title {
-      font-size: 10px;
-      color: #F97316;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-      text-align: center;
-    }
-
-    .payment-row {
-      display: table;
-      width: 100%;
-      margin-bottom: 6px;
-    }
-
-    .payment-label {
-      display: table-cell;
       font-size: 11px;
-      color: #666;
-      font-weight: 400;
-    }
-
-    .payment-value {
-      display: table-cell;
-      text-align: right;
-      font-size: 11px;
-      font-weight: 600;
+      font-weight: bold;
       color: #333;
-    }
-
-    .payment-value.discount {
-      color: #16a34a;
-    }
-
-    .payment-total {
-      display: table;
-      width: 100%;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 2px solid #F97316;
-    }
-
-    .payment-total-label {
-      display: table-cell;
-      font-size: 12px;
-      font-weight: 700;
-      color: #1a1a1a;
-    }
-
-    .payment-total-value {
-      display: table-cell;
-      text-align: right;
-      font-size: 18px;
-      font-weight: 800;
-      color: #F97316;
     }
 
     /* Attendee */
     .attendee-section {
       text-align: center;
-      padding: 18px 0;
+      padding: 15px 0;
       border-top: 1px dashed #ddd;
       border-bottom: 1px dashed #ddd;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .attendee-label {
       font-size: 9px;
       color: #999;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 5px;
-      font-weight: 500;
     }
 
     .attendee-name {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 16px;
+      font-weight: bold;
       color: #1a1a1a;
     }
 
@@ -372,51 +249,107 @@
       font-size: 10px;
       color: #666;
       margin-top: 3px;
-      font-weight: 400;
+    }
+
+    /* Payment Summary */
+    .payment-section {
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .payment-title {
+      font-size: 10px;
+      color: #F97316;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .payment-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .payment-table td {
+      padding: 5px 0;
+      font-size: 10px;
+    }
+
+    .payment-table td:first-child {
+      color: #666;
+    }
+
+    .payment-table td:last-child {
+      text-align: right;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .payment-table .discount td:last-child {
+      color: #16a34a;
+    }
+
+    .payment-total {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 2px solid #F97316;
+    }
+
+    .payment-total td {
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .payment-total td:last-child {
+      font-size: 16px;
+      color: #F97316;
     }
 
     /* Footer */
     .ticket-footer {
       background: #1a1a1a;
       color: #ffffff;
-      padding: 20px;
+      padding: 15px;
       text-align: center;
     }
 
     .footer-code {
-      font-size: 16px;
-      font-weight: 800;
+      font-size: 14px;
+      font-weight: bold;
       letter-spacing: 2px;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
 
     .footer-brand {
-      font-size: 11px;
-      color: rgba(255,255,255,0.7);
-      font-weight: 500;
+      font-size: 10px;
+      color: #ccc;
     }
 
     .footer-disclaimer {
-      font-size: 9px;
-      color: rgba(255,255,255,0.5);
-      margin-top: 10px;
+      font-size: 8px;
+      color: #999;
+      margin-top: 8px;
       font-style: italic;
     }
 
     /* Instructions */
     .instructions {
       background: #fffbeb;
+      border: 1px solid #F97316;
       border-left: 3px solid #F97316;
-      padding: 15px;
-      margin: 0 20px 20px;
-      border-radius: 0 10px 10px 0;
+      padding: 12px;
+      margin: 0 15px 15px;
     }
 
     .instructions-title {
       font-size: 10px;
-      font-weight: 700;
+      font-weight: bold;
       color: #1a1a1a;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .instructions ul {
@@ -427,19 +360,13 @@
     .instructions li {
       font-size: 9px;
       color: #555;
-      margin-bottom: 5px;
-      line-height: 1.5;
+      margin-bottom: 4px;
     }
 
     /* Page break */
     .page-break {
       page-break-after: always;
       height: 20px;
-    }
-
-    @media print {
-      body { background: #ffffff; padding-top: 10px; }
-      .ticket { box-shadow: none; }
     }
   </style>
 </head>
@@ -477,7 +404,7 @@
             @if($tukiLogoExists)
               <img src="{{ $tukiLogoPath }}" alt="TukiPass">
             @else
-              <span style="font-size:24px;font-weight:800;color:#F97316;">TUKIPASS</span>
+              <span style="font-size:20px;font-weight:bold;color:#F97316;">TUKIPASS</span>
             @endif
           </div>
         </div>
@@ -488,17 +415,14 @@
             @if (file_exists($qrPath))
               <img src="{{ $qrPath }}" alt="QR">
             @else
-              <div style="width:140px;height:140px;background:#f0f0f0;"></div>
+              <div style="width:130px;height:130px;background:#f0f0f0;"></div>
             @endif
             <div class="qr-label">Entrada {{ $idx + 1 }} / {{ $ticketCount }}</div>
           </div>
         </div>
 
         <!-- Perforation -->
-        <div class="perforation">
-          <div class="perforation-circle left"></div>
-          <div class="perforation-circle right"></div>
-        </div>
+        <div class="perforation"></div>
 
         <!-- Ticket Details -->
         <div class="ticket-details">
@@ -523,53 +447,55 @@
           </div>
 
           <!-- Info Grid -->
-          <div class="info-grid">
-            <div class="info-row-table">
-              <div class="info-cell">
+          <table class="info-table">
+            <tr>
+              <td>
                 <div class="info-label-small">Nº de Reserva</div>
                 <div class="info-value-small">#{{ $bookingInfo->booking_id }}</div>
-              </div>
-              <div class="info-cell">
+              </td>
+              <td>
                 <div class="info-label-small">Fecha de Reserva</div>
                 <div class="info-value-small">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</div>
-              </div>
-            </div>
+              </td>
+            </tr>
             @if ($address)
-            <div class="info-row-table">
-              <div class="info-cell full">
+            <tr>
+              <td colspan="2">
                 <div class="info-label-small">Dirección del Evento</div>
                 <div class="info-value-small">{{ $address }}</div>
-              </div>
-            </div>
+              </td>
+            </tr>
             @endif
-          </div>
+          </table>
 
           <!-- Payment -->
           @if (!$isFree)
           <div class="payment-section">
             <div class="payment-title">Detalle de Pago</div>
-            @if ($subtotal > 0)
-            <div class="payment-row">
-              <span class="payment-label">{{ $quantity }} x {{ formatMoney($unitPrice, $position, $currency) }}</span>
-              <span class="payment-value">{{ formatMoney($subtotal, $position, $currency) }}</span>
-            </div>
-            @endif
-            @if ($tax > 0)
-            <div class="payment-row">
-              <span class="payment-label">Impuestos</span>
-              <span class="payment-value">{{ formatMoney($tax, $position, $currency) }}</span>
-            </div>
-            @endif
-            @if ($discount > 0)
-            <div class="payment-row">
-              <span class="payment-label">Descuentos</span>
-              <span class="payment-value discount">− {{ formatMoney($discount, $position, $currency) }}</span>
-            </div>
-            @endif
-            <div class="payment-total">
-              <span class="payment-total-label">TOTAL</span>
-              <span class="payment-total-value">{{ formatMoney($total, $position, $currency) }}</span>
-            </div>
+            <table class="payment-table">
+              @if ($subtotal > 0)
+              <tr>
+                <td>{{ $quantity }} x {{ formatMoney($unitPrice, $position, $currency) }}</td>
+                <td>{{ formatMoney($subtotal, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($tax > 0)
+              <tr>
+                <td>Impuestos</td>
+                <td>{{ formatMoney($tax, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($discount > 0)
+              <tr class="discount">
+                <td>Descuentos</td>
+                <td>− {{ formatMoney($discount, $position, $currency) }}</td>
+              </tr>
+              @endif
+              <tr class="payment-total">
+                <td>TOTAL</td>
+                <td>{{ formatMoney($total, $position, $currency) }}</td>
+              </tr>
+            </table>
           </div>
           @else
           <div class="payment-section" style="text-align:center;">
@@ -582,12 +508,12 @@
             <div class="info-label-small" style="margin-bottom:6px;">Método de Pago</div>
             @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
               @if($mpLogoExists)
-                <img src="{{ $mpLogoPath }}" height="22" alt="Mercado Pago">
+                <img src="{{ $mpLogoPath }}" height="20" alt="Mercado Pago">
               @else
-                <span style="font-weight:700;color:#009EE3;font-size:14px;">Mercado Pago</span>
+                <span style="font-weight:bold;color:#009EE3;font-size:14px;">Mercado Pago</span>
               @endif
             @else
-              <span style="font-weight:600;font-size:14px;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
+              <span style="font-weight:bold;font-size:14px;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
             @endif
           </div>
 
@@ -646,7 +572,7 @@
             @if($tukiLogoExists)
               <img src="{{ $tukiLogoPath }}" alt="TukiPass">
             @else
-              <span style="font-size:24px;font-weight:800;color:#F97316;">TUKIPASS</span>
+              <span style="font-size:20px;font-weight:bold;color:#F97316;">TUKIPASS</span>
             @endif
           </div>
         </div>
@@ -657,17 +583,14 @@
             @if (file_exists($qrPath))
               <img src="{{ $qrPath }}" alt="QR">
             @else
-              <div style="width:140px;height:140px;background:#f0f0f0;"></div>
+              <div style="width:130px;height:130px;background:#f0f0f0;"></div>
             @endif
             <div class="qr-label">Entrada {{ $i }} / {{ $bookingInfo->quantity }}</div>
           </div>
         </div>
 
         <!-- Perforation -->
-        <div class="perforation">
-          <div class="perforation-circle left"></div>
-          <div class="perforation-circle right"></div>
-        </div>
+        <div class="perforation"></div>
 
         <!-- Ticket Details -->
         <div class="ticket-details">
@@ -686,53 +609,55 @@
           </div>
 
           <!-- Info Grid -->
-          <div class="info-grid">
-            <div class="info-row-table">
-              <div class="info-cell">
+          <table class="info-table">
+            <tr>
+              <td>
                 <div class="info-label-small">Nº de Reserva</div>
                 <div class="info-value-small">#{{ $bookingInfo->booking_id }}</div>
-              </div>
-              <div class="info-cell">
+              </td>
+              <td>
                 <div class="info-label-small">Fecha de Reserva</div>
                 <div class="info-value-small">{{ date_format($bookingInfo->created_at, 'd/m/Y') }}</div>
-              </div>
-            </div>
+              </td>
+            </tr>
             @if ($address)
-            <div class="info-row-table">
-              <div class="info-cell full">
+            <tr>
+              <td colspan="2">
                 <div class="info-label-small">Dirección del Evento</div>
                 <div class="info-value-small">{{ $address }}</div>
-              </div>
-            </div>
+              </td>
+            </tr>
             @endif
-          </div>
+          </table>
 
           <!-- Payment -->
           @if (!$isFree)
           <div class="payment-section">
             <div class="payment-title">Detalle de Pago</div>
-            @if ($subtotal > 0)
-            <div class="payment-row">
-              <span class="payment-label">{{ $quantity }} x {{ formatMoney($unitPrice, $position, $currency) }}</span>
-              <span class="payment-value">{{ formatMoney($subtotal, $position, $currency) }}</span>
-            </div>
-            @endif
-            @if ($tax > 0)
-            <div class="payment-row">
-              <span class="payment-label">Impuestos</span>
-              <span class="payment-value">{{ formatMoney($tax, $position, $currency) }}</span>
-            </div>
-            @endif
-            @if ($discount > 0)
-            <div class="payment-row">
-              <span class="payment-label">Descuentos</span>
-              <span class="payment-value discount">− {{ formatMoney($discount, $position, $currency) }}</span>
-            </div>
-            @endif
-            <div class="payment-total">
-              <span class="payment-total-label">TOTAL</span>
-              <span class="payment-total-value">{{ formatMoney($total, $position, $currency) }}</span>
-            </div>
+            <table class="payment-table">
+              @if ($subtotal > 0)
+              <tr>
+                <td>{{ $quantity }} x {{ formatMoney($unitPrice, $position, $currency) }}</td>
+                <td>{{ formatMoney($subtotal, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($tax > 0)
+              <tr>
+                <td>Impuestos</td>
+                <td>{{ formatMoney($tax, $position, $currency) }}</td>
+              </tr>
+              @endif
+              @if ($discount > 0)
+              <tr class="discount">
+                <td>Descuentos</td>
+                <td>− {{ formatMoney($discount, $position, $currency) }}</td>
+              </tr>
+              @endif
+              <tr class="payment-total">
+                <td>TOTAL</td>
+                <td>{{ formatMoney($total, $position, $currency) }}</td>
+              </tr>
+            </table>
           </div>
           @else
           <div class="payment-section" style="text-align:center;">
@@ -745,12 +670,12 @@
             <div class="info-label-small" style="margin-bottom:6px;">Método de Pago</div>
             @if(strtolower($bookingInfo->paymentMethod ?? '') == 'mercadopago' || strtolower($bookingInfo->paymentMethod ?? '') == 'mercado pago')
               @if($mpLogoExists)
-                <img src="{{ $mpLogoPath }}" height="22" alt="Mercado Pago">
+                <img src="{{ $mpLogoPath }}" height="20" alt="Mercado Pago">
               @else
-                <span style="font-weight:700;color:#009EE3;font-size:14px;">Mercado Pago</span>
+                <span style="font-weight:bold;color:#009EE3;font-size:14px;">Mercado Pago</span>
               @endif
             @else
-              <span style="font-weight:600;font-size:14px;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
+              <span style="font-weight:bold;font-size:14px;">{{ $bookingInfo->paymentMethod ?? 'No especificado' }}</span>
             @endif
           </div>
 

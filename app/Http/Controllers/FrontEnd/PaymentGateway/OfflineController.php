@@ -4,9 +4,15 @@ namespace App\Http\Controllers\FrontEnd\PaymentGateway;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\Event\BookingController;
+use App\Jobs\ArcaInvoiceIssuingJob;
+use App\Jobs\BookingInvoiceJob;
 use App\Models\BasicSettings\Basic;
+use App\Models\BillingSetting;
+use App\Models\Earning;
 use App\Models\PaymentGateway\OfflineGateway;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -95,6 +101,54 @@ class OfflineController extends Controller
     }
     // store the course enrolment information in database
     $bookingInfo = $booking->storeData($arrData);
+
+    // Billing: Arca (si está habilitado)
+    if (BillingSetting::current()->enabled) {
+      ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));
+    }
+
+    // Invoice PDF: intentar inline, fallback a job
+    $ticket = DB::table('basic_settings')->select('how_ticket_will_be_send')->first();
+    if ($ticket->how_ticket_will_be_send == 'instant') {
+      try {
+        $invoice = $booking->generateInvoice($bookingInfo, $bookingInfo->event_id);
+        if ($invoice && substr($invoice, -4) === '.pdf') {
+          // Unlink QR codes temporales
+          if ($bookingInfo->variation != null) {
+            $variations = json_decode($bookingInfo->variation, true);
+            foreach ($variations as $variation) {
+              @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+            }
+          } else {
+            for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
+              @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
+            }
+          }
+          // Guardar referencia de invoice en booking
+          $bookingInfo->invoice = $invoice;
+          $bookingInfo->save();
+          // Enviar email con factura adjunta
+          $booking->sendMail($bookingInfo);
+        } else {
+          Log::error('Offline: generateInvoice retornó valor inválido: ' . $invoice);
+          BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(5));
+        }
+      } catch (\Exception $e) {
+        Log::error('Offline: Error generando invoice: ' . $e->getMessage());
+        Log::error($e->getTraceAsString());
+        BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(5));
+      }
+    } else {
+      // No instant: generar en background
+      BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
+    }
+
+    // Add balance to admin revenue
+    $earning = Earning::first();
+    if ($earning) {
+      $earning->total_revenue = $earning->total_revenue + $arrData['price'] + $bookingInfo->tax;
+      $earning->save();
+    }
 
     $request->session()->forget('event_id');
     $request->session()->forget('selTickets');

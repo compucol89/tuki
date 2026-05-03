@@ -54,7 +54,7 @@
   <style>
     @page { 
       size: A4; 
-      margin: 25mm 20mm;
+      margin: 45mm 20mm;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -73,7 +73,7 @@
       width: 100%;
       max-width: 400px;
       margin: 0 auto;
-      padding-top: 30px;
+      padding-top: 0;
     }
 
     /* Ticket con forma de ticket real */
@@ -134,6 +134,7 @@
       font-weight: bold;
       line-height: 1.2;
       margin-bottom: 6px;
+      color: #ffffff;
     }
 
     .event-date {
@@ -245,6 +246,7 @@
       border-bottom: 1px solid #f0f0f0;
       width: 33.33%;
       vertical-align: top;
+      text-align: center;
     }
 
     .info-label-small {

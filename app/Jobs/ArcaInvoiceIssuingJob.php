@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Mail\ArcaInvoiceMail;
 use App\Models\Arca\ArcaInvoice;
 use App\Models\Arca\ArcaInvoiceItem;
 use App\Models\Event\Booking;
@@ -17,6 +18,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class ArcaInvoiceIssuingJob implements ShouldQueue
@@ -82,7 +84,7 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
             $preview = $builder->buildPreview($calculation);
             $payload = $this->payloadFromInvoice($preview);
 
-            DB::transaction(function () use ($preview, $payload, $issuer): void {
+            DB::transaction(function () use ($preview, $payload, $issuer, $booking): void {
                 $invoice = $this->findInvoiceForUpdate((int) $preview->booking_id);
 
                 if ($invoice?->isApproved()) {
@@ -124,6 +126,20 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
                 ]);
                 $invoice->save();
                 $this->syncItems($invoice, $preview);
+
+                // Enviar email con factura fiscal al comprador
+                if (!empty($booking->email)) {
+                    Mail::to($booking->email)->queue(new ArcaInvoiceMail($invoice, $booking));
+                    Log::info('ARCA invoice email queued.', [
+                        'booking_id' => $booking->id,
+                        'email' => $booking->email,
+                        'arca_invoice_id' => $invoice->id,
+                    ]);
+                } else {
+                    Log::warning('ARCA invoice email skipped: booking has no email.', [
+                        'booking_id' => $booking->id,
+                    ]);
+                }
             });
         } catch (Throwable $exception) {
             DB::transaction(function () use ($booking, $exception): void {

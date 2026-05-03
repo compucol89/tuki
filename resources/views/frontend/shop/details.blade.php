@@ -21,7 +21,6 @@
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/front/css/common-style.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
-  <link rel="stylesheet" href="{{ mix('css/shop.css') }}">
 @endsection
 
 @push('styles')

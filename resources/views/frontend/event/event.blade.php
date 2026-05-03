@@ -18,7 +18,6 @@
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}">
-  <link rel="stylesheet" href="{{ mix('css/events.css') }}">
 @endpush
 
 {{-- ─── HERO — premium (collage + capas editoriales) ─── --}}

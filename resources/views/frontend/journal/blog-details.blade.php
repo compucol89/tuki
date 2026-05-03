@@ -24,7 +24,6 @@
 @section('og-type', 'article')
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
-  <link rel="stylesheet" href="{{ mix('css/blog.css') }}">
 @endsection
 
 @section('content')

@@ -1,11 +1,4 @@
 {
     "/js/app.js": "/js/app.js?id=25366ebd8f4c8f83d9fb0527508a5b3a",
-    "/css/app.css": "/css/app.css?id=5c2c1a5873617b1f13c0805a4068092c",
-    "/css/style-base.css": "/css/style-base.css?id=e5df8fefc26d24d491dcf6073e842845",
-    "/css/home.css": "/css/home.css?id=21e4595b57a65d8bd85e9a65b749b935",
-    "/css/events.css": "/css/events.css?id=092e7404194bf876df04ea87f5d7df04",
-    "/css/detail-event.css": "/css/detail-event.css?id=55ef3f63f6774381960d7d3f386b59c7",
-    "/css/shop.css": "/css/shop.css?id=33ca528ad51118bbf8af0d84373c5c60",
-    "/css/blog.css": "/css/blog.css?id=7a31aad408cc87848eafe73906f4bdc0",
-    "/css/checkout.css": "/css/checkout.css?id=750ba94e69328ca9b80c8a24e9fa1c62"
+    "/css/app.css": "/css/app.css?id=5c2c1a5873617b1f13c0805a4068092c"
 }

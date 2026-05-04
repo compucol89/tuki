@@ -402,8 +402,16 @@ class BookingController extends Controller
     if ($bookingInfo->access_token) {
       $guestLink = route('booking.guest_view', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
       $mailBody = str_replace('{booking_link}', '<a href="' . $guestLink . '">' . __('Ver mi reserva') . '</a>', $mailBody);
+
+      $signedDownloadLink = URL::temporarySignedRoute(
+        'booking.ticket.download.signed',
+        now()->addHours(24),
+        ['id' => $bookingInfo->id]
+      );
+      $mailBody = str_replace('{ticket_download_link}', '<a href="' . $signedDownloadLink . '">' . __('Descargar mi entrada') . '</a>', $mailBody);
     } else {
       $mailBody = str_replace('{booking_link}', '', $mailBody);
+      $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
     }
 
 

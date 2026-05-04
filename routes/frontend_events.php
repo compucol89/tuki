@@ -8,6 +8,9 @@ Route::middleware('change.lang')->group(function () {
   Route::get('/event-booking-complete', 'FrontEnd\Event\BookingController@complete')->name('event_booking.complete');
   Route::get('/booking/view/{id}', 'FrontEnd\Event\CustomerBookingController@guestDetails')->name('booking.guest_view');
   Route::get('/booking/{id}/ticket/download', 'FrontEnd\Event\BookingTicketDownloadController@download')->name('booking.ticket.download');
+  Route::get('/booking/{id}/ticket/download/signed', 'FrontEnd\Event\BookingTicketDownloadController@downloadSigned')
+    ->name('booking.ticket.download.signed')
+    ->middleware('signed');
 });
 
 Route::middleware('change.lang')->group(function () {

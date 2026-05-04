@@ -49,6 +49,34 @@ class BookingTicketDownloadController extends Controller
   }
 
   /**
+   * Descarga de PDF vía Signed URL para guests (no requiere auth adicional,
+   * el middleware 'signed' ya valida firma y expiración).
+   */
+  public function downloadSigned($id)
+  {
+    $booking = Booking::where('id', $id)->firstOrFail();
+
+    if (empty($booking->invoice)) {
+      abort(404, 'Entrada no disponible todavía.');
+    }
+
+    $filePath = storage_path('app/invoices/' . $booking->invoice);
+
+    if (!file_exists($filePath)) {
+      $filePath = public_path('assets/admin/file/invoices/' . $booking->invoice);
+      if (!file_exists($filePath)) {
+        abort(404, 'Archivo no encontrado.');
+      }
+    }
+
+    return response()->download(
+      $filePath,
+      'entrada-' . $booking->booking_id . '.pdf',
+      ['Content-Type' => 'application/pdf']
+    );
+  }
+
+  /**
    * Valida si el request tiene autorización para descargar el booking.
    */
   private function isAuthorized(Booking $booking, Request $request): bool

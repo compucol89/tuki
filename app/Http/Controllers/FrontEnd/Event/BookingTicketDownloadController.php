@@ -31,10 +31,14 @@ class BookingTicketDownloadController extends Controller
       abort(404, 'Entrada no disponible todavía.');
     }
 
-    $filePath = public_path('assets/admin/file/invoices/' . $booking->invoice);
+    $filePath = storage_path('app/invoices/' . $booking->invoice);
 
     if (!file_exists($filePath)) {
-      abort(404, 'Archivo no encontrado.');
+      // Fallback a legacy public path para PDFs históricos
+      $filePath = public_path('assets/admin/file/invoices/' . $booking->invoice);
+      if (!file_exists($filePath)) {
+        abort(404, 'Archivo no encontrado.');
+      }
     }
 
     return response()->download(

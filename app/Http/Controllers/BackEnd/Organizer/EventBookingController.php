@@ -106,7 +106,7 @@ class EventBookingController extends Controller
   public function generateInvoice($bookingInfo)
   {
     $fileName = $bookingInfo->booking_id . '.pdf';
-    $directory = public_path('assets/admin/file/invoices/');
+    $directory = storage_path('app/invoices/');
 
     @mkdir($directory, 0775, true);
 
@@ -187,7 +187,7 @@ class EventBookingController extends Controller
 
       // Attachments (Invoice)
       if (!is_null($booking->invoice)) {
-        $mail->addAttachment(public_path('assets/admin/file/invoices/') . $booking->invoice);
+        $mail->addAttachment(storage_path('app/invoices/') . $booking->invoice);
       }
 
       // Content
@@ -227,7 +227,7 @@ class EventBookingController extends Controller
     @unlink(public_path('assets/admin/file/attachments/') . $Booking->attachment);
 
     // second, delete the invoice
-    @unlink(public_path('assets/admin/file/invoices/') . $Booking->invoice);
+    @unlink(storage_path('app/invoices/') . $Booking->invoice);
 
     $Booking->delete();
 
@@ -245,7 +245,7 @@ class EventBookingController extends Controller
       @unlink(public_path('assets/admin/file/attachments/') . $booking->attachment);
 
       // second, delete the invoice
-      @unlink(public_path('assets/admin/file/invoices/') . $booking->invoice);
+      @unlink(storage_path('app/invoices/') . $booking->invoice);
 
       $booking->delete();
     }

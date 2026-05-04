@@ -434,7 +434,7 @@ class BookingController extends Controller
       $mail->addAddress($bookingInfo->email);
 
       // Attachments (Invoice)
-      $mail->addAttachment(public_path('assets/admin/file/invoices/') . $bookingInfo->invoice);
+      $mail->addAttachment(storage_path('app/invoices/') . $bookingInfo->invoice);
 
       // Content
       $mail->isHTML(true);
@@ -452,7 +452,7 @@ class BookingController extends Controller
   {
     try {
       $fileName = $bookingInfo->booking_id . '.pdf';
-      $directory = public_path('assets/admin/file/invoices/');
+      $directory = storage_path('app/invoices/');
 
       @mkdir($directory, 0775, true);
 

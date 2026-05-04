@@ -492,7 +492,7 @@ class EventController extends Controller
       @unlink(public_path('assets/admin/file/attachments/') . $booking->attachment);
 
       // second, delete the invoice
-      @unlink(public_path('assets/admin/file/invoices/') . $booking->invoice);
+      @unlink(storage_path('app/invoices/') . $booking->invoice);
 
       $booking->delete();
     }
@@ -544,7 +544,7 @@ class EventController extends Controller
         @unlink(public_path('assets/admin/file/attachments/') . $booking->attachment);
 
         // second, delete the invoice
-        @unlink(public_path('assets/admin/file/invoices/') . $booking->invoice);
+      @unlink(storage_path('app/invoices/') . $booking->invoice);
 
         $booking->delete();
       }

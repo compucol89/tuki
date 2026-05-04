@@ -185,7 +185,7 @@
                                 </button>
                               </div>
                               <div class="modal-body">
-                                <iframe src="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}"
+                                <iframe src="{{ route('booking.ticket.download', $booking->id) }}"
                                   class="receipt"></iframe>
 
                               </div>

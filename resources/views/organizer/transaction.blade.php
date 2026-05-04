@@ -125,8 +125,8 @@
                                 $t_invoice = $transcation->event_booking()->first();
                               @endphp
                               @if ($t_invoice)
-                                <a target="_blank" class="btn btn-secondary btn-sm mr-1"
-                                  href="{{ asset('assets/admin/file/invoices/' . $t_invoice->invoice) }}">
+                                  <a target="_blank" class="btn btn-secondary btn-sm mr-1"
+                                  href="{{ route('booking.ticket.download', $t_invoice->id) }}">
                                   <i class="fas fa-eye"></i>
                                 </a>
                               @endif

@@ -247,7 +247,7 @@
                                   </a>
                                 @endif
 
-                                <a href="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}"
+                                <a href="{{ route('booking.ticket.download', $booking->id) }}"
                                   class="dropdown-item" target="_blank">
                                   {{ __('Invoice') }}
                                 </a>

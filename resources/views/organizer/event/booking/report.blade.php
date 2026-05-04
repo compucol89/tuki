@@ -181,7 +181,7 @@
                           <td>
                             <button type="button" class="btn btn-info btn-sm receiptPreviewBtn"
                               data-toggle="modal" data-target="#receiptPreviewModal"
-                              data-receipt="{{ asset('assets/admin/file/invoices/' . $booking->invoice) }}">
+                               data-receipt="{{ route('booking.ticket.download', $booking->id) }}">
                               {{ __('View') }}
                             </button>
                           </td>

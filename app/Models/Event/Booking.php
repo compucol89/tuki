@@ -48,7 +48,8 @@ class Booking extends Model
     'event_date',
     'scan_status',
     'conversation_id',
-    'access_token'
+    'access_token',
+    'token_legacy_expires_at'
   ];
 
   public function event()

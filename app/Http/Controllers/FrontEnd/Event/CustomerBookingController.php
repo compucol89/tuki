@@ -33,6 +33,9 @@ class CustomerBookingController extends Controller
       abort(403);
     }
     $booking = Booking::where('id', $id)->where('access_token', $token)->firstOrFail();
+    if ($booking->token_legacy_expires_at && now()->gt($booking->token_legacy_expires_at)) {
+      abort(403, 'El link de acceso ha expirado.');
+    }
     $isGuest = true;
     return view('frontend.customer.dashboard.booking.details', compact('booking', 'isGuest'));
   }

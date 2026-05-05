@@ -280,6 +280,7 @@ class BookingController extends Controller
         'event_date' => Session::get('event_date'),
         'conversation_id' => array_key_exists('conversation_id', $info) ? $info['conversation_id'] : null,
         'access_token' => Auth::guard('customer')->check() ? null : Str::random(40),
+        'token_legacy_expires_at' => Auth::guard('customer')->check() ? null : now()->addDays(30),
       ]);
 
       if (!empty($info['dni'])) {

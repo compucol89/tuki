@@ -105,6 +105,9 @@ class BookingTicketDownloadController extends Controller
     // Guest con token válido (mismo patrón que booking.guest_view)
     $token = $request->query('token');
     if (!empty($token) && !empty($booking->access_token) && hash_equals($booking->access_token, $token)) {
+      if ($booking->token_legacy_expires_at && now()->gt($booking->token_legacy_expires_at)) {
+        return false;
+      }
       return true;
     }
 

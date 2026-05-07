@@ -4,6 +4,7 @@ namespace App\Http\Controllers\BackEnd\Organizer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Helpers\UploadFile;
 use App\Http\Requests\Event\StoreRequest;
 use App\Http\Requests\Event\UpdateRequest;
 use App\Http\Requests\TicketSettingRequest;
@@ -165,8 +166,7 @@ class EventController extends Controller
       $validator->getMessageBag()->add('error', 'true');
       return response()->json($validator->errors());
     }
-    $filename = uniqid() . '.jpg';
-    $img->move(public_path('assets/admin/img/event-gallery/'), $filename);
+    $filename = UploadFile::store(public_path('assets/admin/img/event-gallery/'), $img);
     $pi = new EventImage;
     if (!empty($request->event_id)) {
       $pi->event_id = $request->event_id;
@@ -204,15 +204,9 @@ class EventController extends Controller
       $in = $request->all();
       $in['duration'] = $request->date_type == 'single' ? $diffent : '';
 
-      $img = $request->file('thumbnail');
-
       $in['organizer_id'] = Auth::guard('organizer')->user()->id;
       if ($request->hasFile('thumbnail')) {
-        $filename = time() . '.' . $img->getClientOriginalExtension();
-        $directory = public_path('assets/admin/img/event/thumbnail/');
-        @mkdir($directory, 0775, true);
-        $request->file('thumbnail')->move($directory, $filename);
-        $in['thumbnail'] = $filename;
+        $in['thumbnail'] = UploadFile::store(public_path('assets/admin/img/event/thumbnail/'), $request->file('thumbnail'));
       }
       $in['f_price'] = $request->price;
       $in['end_date_time'] = Carbon::parse($request->end_date . ' ' . $request->end_time);
@@ -404,17 +398,11 @@ class EventController extends Controller
       $diffent = DurationCalulate($start, $end);
     }
     //calculate duration end
-    $img = $request->file('thumbnail');
-
     $in = $request->all();
 
     $event = $this->getOwnedEventOrFail($request->event_id);
     if ($request->hasFile('thumbnail')) {
-      @unlink(public_path('assets/admin/img/event/thumbnail/') . $event->thumbnail);
-      $filename = time() . '.' . $img->getClientOriginalExtension();
-      @mkdir(public_path('assets/admin/img/event/thumbnail/'), 0775, true);
-      $request->file('thumbnail')->move(public_path('assets/admin/img/event/thumbnail/'), $filename);
-      $in['thumbnail'] = $filename;
+      $in['thumbnail'] = UploadFile::update(public_path('assets/admin/img/event/thumbnail/'), $request->file('thumbnail'), $event->thumbnail);
     }
 
     $languages = Language::all();
@@ -633,24 +621,14 @@ class EventController extends Controller
   public function updateTicketSetting(TicketSettingRequest $request)
   {
 
-    $ticket_image = $request->file('ticket_image');
-    $ticket_logo = $request->file('ticket_logo');
     $in = $request->all();
     $instructions = Purifier::clean($request->instructions);
     $event = $this->getOwnedEventOrFail($request->event_id);
     if ($request->hasFile('ticket_image')) {
-      @unlink(public_path('assets/admin/img/event_ticket/') . $event->ticket_image);
-      $filename = time() . rand(111, 999) . '.' . $ticket_image->getClientOriginalExtension();
-      @mkdir(public_path('assets/admin/img/event_ticket/'), 0775, true);
-      $request->file('ticket_image')->move(public_path('assets/admin/img/event_ticket/'), $filename);
-      $in['ticket_image'] = $filename;
+      $in['ticket_image'] = UploadFile::update(public_path('assets/admin/img/event_ticket/'), $request->file('ticket_image'), $event->ticket_image);
     }
     if ($request->hasFile('ticket_logo')) {
-      @unlink(public_path('assets/admin/img/event_ticket_logo/') . $event->ticket_logo);
-      $filename = time() . rand(111, 999) . '.' . $ticket_logo->getClientOriginalExtension();
-      @mkdir(public_path('assets/admin/img/event_ticket_logo/'), 0775, true);
-      $request->file('ticket_logo')->move(public_path('assets/admin/img/event_ticket_logo/'), $filename);
-      $in['ticket_logo'] = $filename;
+      $in['ticket_logo'] = UploadFile::update(public_path('assets/admin/img/event_ticket_logo/'), $request->file('ticket_logo'), $event->ticket_logo);
     }
     $in['instructions'] = $instructions;
 

@@ -120,12 +120,12 @@ class EventBookingController extends Controller
           $variations = json_decode($bookingInfo->variation, true);
           foreach ($variations as $variation) {
 
-            @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+            @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
           }
         } else {
           //generate qr code for without wise ticket
           for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-            @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i .  '.svg');
+            @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $i .  '.svg');
           }
         }
         //end unlink qr code
@@ -216,12 +216,12 @@ class EventBookingController extends Controller
         $variations = json_decode($bookingInfo->variation, true);
         foreach ($variations as $variation) {
 
-          @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+          @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
         }
       } else {
         //generate qr code for without wise ticket
         for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-          @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i .  '.svg');
+          @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $i .  '.svg');
         }
       }
       //end unlink qr code
@@ -254,17 +254,17 @@ class EventBookingController extends Controller
       $fileLocated = $directory . $fileName;
 
       //generate qr code
-      @mkdir(public_path('assets/admin/qrcodes/'), 0775, true);
+      @mkdir(storage_path('app/qrcodes/tmp/'), 0775, true);
       if ($bookingInfo->variation != null) {
         //generate qr code for without wise ticket
         $variations = json_decode($bookingInfo->variation, true);
         foreach ($variations as $variation) {
-          QrCode::size(200)->generate($bookingInfo->booking_id . '__' . $variation['unique_id'], public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+          QrCode::size(200)->generate($bookingInfo->booking_id . '__' . $variation['unique_id'], storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
         }
       } else {
         //generate qr code for without wise ticket
         for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-          QrCode::size(200)->generate($bookingInfo->booking_id . '__' . $i, public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
+          QrCode::size(200)->generate($bookingInfo->booking_id . '__' . $i, storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $i . '.svg');
         }
       }
 

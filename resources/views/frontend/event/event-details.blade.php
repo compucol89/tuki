@@ -1196,11 +1196,11 @@ ttq.page();
     $heroSlides = [];
     if ($images->count() > 0) {
       foreach ($images as $img) {
-        $heroSlides[] = asset('assets/admin/img/event-gallery/' . $img->image);
+        $heroSlides[] = \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $img->image);
       }
     }
     if (empty($heroSlides)) {
-      $heroSlides[] = asset('assets/admin/img/event/thumbnail/' . $content->thumbnail);
+      $heroSlides[] = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail);
     }
   @endphp
 
@@ -2002,8 +2002,8 @@ ttq.page();
             <div class="ed-gallery-wrap">
               <div class="ed-gallery-main">
                 <button type="button" class="ed-gallery-main__link" id="edMainLink" aria-label="{{ __('Abrir galería del evento') }}">
-                  <img id="edMainImg"
-                       src="{{ asset('assets/admin/img/event-gallery/' . $images->first()->image) }}"
+                   <img id="edMainImg"
+                       src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image) }}"
                        alt="{{ $content->title }}"
                        class="ed-gallery-main__img"
                        width="800" height="533">
@@ -2020,9 +2020,9 @@ ttq.page();
                 @foreach($images as $i => $item)
                 <button type="button"
                         class="ed-gallery-thumb {{ $i === 0 ? 'ed-gallery-thumb--active' : '' }}"
-                        data-src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
-                        data-action="thumb-switch">
-                  <img src="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
+                         data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
+                         data-action="thumb-switch">
+                   <img src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
                        alt="{{ $content->title }} — foto {{ $i + 1 }}"
                        width="150" height="100">
                 </button>
@@ -2031,8 +2031,8 @@ ttq.page();
               @endif
               <div id="edGalleryLinks" style="display:none">
                 @foreach($images as $item)
-                <a href="{{ asset('assets/admin/img/event-gallery/' . $item->image) }}"
-                   class="ed-gallery-popup-link"
+                 <a href="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
+                    class="ed-gallery-popup-link"
                    aria-label="{{ $content->title }} — abrir imagen de galería">
                   <span class="sr-only">{{ $content->title }} — abrir imagen de galería</span>
                 </a>
@@ -2306,7 +2306,7 @@ ttq.page();
                 @endphp
                 <a href="{{ route('event.details', ['slug' => $item->slug, 'id' => $item->id]) }}" class="ed-related__card">
                   <img
-                    src="{{ asset('assets/admin/img/event/thumbnail/' . $item->thumbnail) }}"
+                    src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $item->thumbnail) }}"
                     alt="{{ $item->title }}"
                     class="ed-related__thumb">
                   <div class="ed-related__body">

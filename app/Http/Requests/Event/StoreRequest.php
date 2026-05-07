@@ -33,7 +33,8 @@ class StoreRequest extends FormRequest
       'slider_images' => 'required',
       'thumbnail' => [
         'required',
-        new ImageMimeTypeRule()
+        new ImageMimeTypeRule(),
+        'max:2048'
       ],
       'status' => 'required',
       'is_featured' => 'required'

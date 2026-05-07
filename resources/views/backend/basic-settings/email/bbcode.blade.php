@@ -83,6 +83,14 @@
           <td>{meeting_url}</td>
           <td>{{ __('Meeting Link') }}</td>
         </tr>
+        <tr>
+          <td>{booking_link}</td>
+          <td scope="row">{{ __('Enlace de reserva para invitados') }}</td>
+        </tr>
+        <tr>
+          <td>{ticket_download_link}</td>
+          <td scope="row">{{ __('Enlace de descarga de entrada firmado (24h)') }}</td>
+        </tr>
       @endif
 
       @if ($templateInfo->mail_type == 'withdraw_approve')

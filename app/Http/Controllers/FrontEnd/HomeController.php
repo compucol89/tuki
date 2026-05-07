@@ -12,6 +12,7 @@ use App\Models\Event;
 use App\Models\Event\Booking;
 use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
+use App\Models\Event\EventDates;
 use App\Models\Footer\FooterContent;
 use App\Models\Footer\QuickLink;
 use App\Models\HomePage\AboutUsSection;
@@ -29,6 +30,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\HeroSlideUrlsService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -79,7 +81,7 @@ class HomeController extends Controller
     $queryResult['featureEventSection'] = EventFeatureSection::where('language_id', $language->id)->first();
     $queryResult['featureEventItems'] = EventFeature::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
 
-    $queryResult['howWork'] = HowWork::where('language_id', $language->id)->first();
+    $queryResult['howWork'] = Cache::remember('how_work_' . $language->id, 3600, fn () => HowWork::where('language_id', $language->id)->first());
     $queryResult['howWorkItems'] = HowWorkItem::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
 
     if ($sectionInfo->testimonials_section_status == 1) {
@@ -177,6 +179,32 @@ class HomeController extends Controller
     $featuredEventsByCategory = $allFeatured->groupBy('cat_id');
     $queryResult['featuredEventsByCategory'] = $featuredEventsByCategory;
 
+    // Pre-calcular fechas latest para eventos de tipo 'multiple' (1 query en vez de N)
+    $multipleEventIds = collect();
+    if (!empty($queryResult['featuredEventsAll'])) {
+      $multipleEventIds = $multipleEventIds->merge(
+        $queryResult['featuredEventsAll']->where('date_type', 'multiple')->pluck('id')
+      );
+    }
+    if (!empty($queryResult['featuredEventsByCategory'])) {
+      foreach ($queryResult['featuredEventsByCategory'] as $catEvents) {
+        $multipleEventIds = $multipleEventIds->merge(
+          $catEvents->where('date_type', 'multiple')->pluck('id')
+        );
+      }
+    }
+    $multipleEventIds = $multipleEventIds->unique()->values();
+    if ($multipleEventIds->isNotEmpty()) {
+      $latestDatesMap = EventDates::whereIn('event_id', $multipleEventIds)
+        ->where('start_date_time', '>=', now())
+        ->orderBy('start_date_time')
+        ->get()
+        ->keyBy('event_id');
+    } else {
+      $latestDatesMap = collect();
+    }
+    $queryResult['latestDatesMap'] = $latestDatesMap;
+
     // Pre-calcular badges para todos los eventos de la home (3 queries en vez de N×3)
     $allEventsForBadges = collect();
     if (!empty($queryResult['featuredEventsAll'])) {
@@ -208,7 +236,7 @@ class HomeController extends Controller
       $queryResult['seoInfo'] = $language->seoInfo()->select('meta_keyword_home', 'meta_description_home')->first();
 
       // get the sections of selected home version
-      $sectionInfo = Section::first();
+    $sectionInfo = Cache::remember('home_section', 3600, fn () => Section::first());
       $queryResult['secInfo'] = $sectionInfo;
 
       $queryResult['secTitleInfo'] = $language->sectionTitle()->first();
@@ -219,21 +247,21 @@ class HomeController extends Controller
       if ($sectionInfo->about_us_section_status == 1) {
         $queryResult['aboutUsInfo'] = $language->aboutUsSec()->first();
       }
-      $queryResult['heroSection'] = HeroSection::where('language_id', $language->id)->first();
+    $queryResult['heroSection'] = Cache::remember('hero_section_' . $language->id, 3600, fn () => HeroSection::where('language_id', $language->id)->first());
 
-      $queryResult['aboutUsSection'] = AboutUsSection::where('language_id', $language->id)->first();
+    $queryResult['aboutUsSection'] = Cache::remember('about_us_section_' . $language->id, 3600, fn () => AboutUsSection::where('language_id', $language->id)->first());
       $queryResult['aboutMetrics'] = config('about_metrics');
 
       if ($sectionInfo->testimonials_section_status == 1) {
-        $queryResult['testimonialData'] = TestimonialSection::where('language_id', $language->id)->first();
+      $queryResult['testimonialData'] = Cache::remember('testimonial_section_' . $language->id, 3600, fn () => TestimonialSection::where('language_id', $language->id)->first());
 
         $queryResult['testimonials'] = Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
       }
 
-      $queryResult['featureEventSection'] = EventFeatureSection::where('language_id', $language->id)->first();
+    $queryResult['featureEventSection'] = Cache::remember('feature_event_section_' . $language->id, 3600, fn () => EventFeatureSection::where('language_id', $language->id)->first());
       $queryResult['featureEventItems'] = EventFeature::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
 
-      $queryResult['partnerInfo'] = PartnerSection::where('language_id', $language->id)->first();
+    $queryResult['partnerInfo'] = Cache::remember('partner_section_' . $language->id, 3600, fn () => PartnerSection::where('language_id', $language->id)->first());
       $queryResult['partners'] = Partner::orderBy('serial_number', 'asc')->get();
       $queryResult['footerInfo'] = FooterContent::where('language_id', $language->id)->first();
       $queryResult['quickLinkInfos'] = QuickLink::orderBy('serial_number', 'asc')->get();

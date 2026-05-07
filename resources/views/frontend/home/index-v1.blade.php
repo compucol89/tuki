@@ -61,14 +61,14 @@
     @php
       $mq_items = $marqueeEvents->take(10)->map(function ($ev) use ($marqueeGallery) {
         $galleryImage = isset($marqueeGallery[$ev->id]) && $marqueeGallery[$ev->id]->isNotEmpty()
-          ? asset('assets/admin/img/event-gallery/' . $marqueeGallery[$ev->id]->first()->image)
-          : asset('assets/admin/img/event/thumbnail/' . $ev->thumbnail);
+          ? \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $marqueeGallery[$ev->id]->first()->image)
+          : \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $ev->thumbnail);
 
         return [
           'event'  => $ev,
           'src'    => $galleryImage,
           'url'    => route('event.details', [$ev->slug, $ev->id]),
-          'badge'  => \App\Services\EventBadgeService::getBadge($ev),
+          'badge'  => $badgeMap[$ev->id] ?? null,
           'carbon' => \Carbon\Carbon::parse($ev->start_date)->locale('es'),
           'time'   => $ev->start_time ? \Carbon\Carbon::parse($ev->start_time)->format('H:i') : null,
         ];

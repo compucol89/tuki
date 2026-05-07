@@ -11,8 +11,8 @@
 @php
   // ── Fecha ──
   if ($event->date_type == 'multiple') {
-    $ev_date_obj = eventLatestDates($event->id);
-    $ev_ts = strtotime(@$ev_date_obj->start_date);
+    $ev_date_obj = $latestDatesMap[$event->id] ?? null;
+    $ev_ts = $ev_date_obj ? strtotime($ev_date_obj->start_date) : null;
   } else {
     $ev_ts = strtotime($event->start_date);
   }
@@ -66,7 +66,7 @@
 
     <div class="ev-card__img">
       <img class="lazy"
-           data-src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}"
+           data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $event->thumbnail) }}"
            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
            alt="{{ $event->title }}"
            loading="lazy"

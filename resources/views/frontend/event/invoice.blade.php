@@ -405,7 +405,7 @@
         ['language_id', $language->id],
       ])->first();
       $ticket  = App\Models\Event\Ticket::where('id', $variation['ticket_id'])->select('pricing_type')->first();
-      $qrPath  = public_path('assets/admin/qrcodes/' . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+      $qrPath  = storage_path('app/qrcodes/tmp/' . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
       $isPaid  = in_array($bookingInfo->paymentStatus, ['completed', 'paid']);
       $isFree  = $bookingInfo->paymentStatus == 'free';
     @endphp
@@ -565,7 +565,7 @@
 @else
   @for ($i = 1; $i <= $bookingInfo->quantity; $i++)
     @php
-      $qrPath   = public_path('assets/admin/qrcodes/' . $bookingInfo->booking_id . '__' . $i . '.svg');
+      $qrPath   = storage_path('app/qrcodes/tmp/' . $bookingInfo->booking_id . '__' . $i . '.svg');
       $isPaid   = in_array($bookingInfo->paymentStatus, ['completed', 'paid']);
       $isFree   = $bookingInfo->paymentStatus == 'free';
     @endphp

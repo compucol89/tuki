@@ -163,12 +163,12 @@ class MyFatoorahController extends Controller
                         $variations = json_decode($bookingInfo->variation, true);
                         foreach ($variations as $variation) {
 
-                            @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+                            @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
                         }
                     } else {
                         //generate qr code for without wise ticket
                         for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-                            @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i .  '.svg');
+                            @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $i .  '.svg');
                         }
                     }
 
@@ -177,7 +177,7 @@ class MyFatoorahController extends Controller
                     $bookingInfo->save();
 
                     // send a mail to the customer with the invoice
-                    $bookingInfo->sendMail($bookingInfo);
+                    $booking->sendMail($bookingInfo);
                 } else {
                     BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
                 }

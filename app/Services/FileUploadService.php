@@ -9,7 +9,7 @@ class FileUploadService
 {
   public function store(string $directory, UploadedFile $file)
   {
-    $extension = $file->getClientOriginalExtension();
+    $extension = strtolower($file->getClientOriginalExtension());
     $originalName = null;
 
     if (
@@ -22,6 +22,10 @@ class FileUploadService
     $fileName = uniqid() . '.' . $extension;
     @mkdir($directory, 0775, true);
     $file->move($directory, $fileName);
+
+    if (in_array($extension, ['jpg', 'jpeg', 'png'])) {
+      $this->optimizeImage($directory . $fileName, $extension);
+    }
 
     if (Route::is('admin.course_management.lesson.upload_video')) {
       $getID3 = new \getID3();
@@ -49,6 +53,63 @@ class FileUploadService
   {
     @unlink($directory . $oldFile);
 
+    $webpOld = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $oldFile);
+    if ($webpOld !== $oldFile) {
+      @unlink($directory . $webpOld);
+    }
+
     return $this->store($directory, $newFile);
+  }
+
+  private function optimizeImage(string $path, string $extension): void
+  {
+    $src = match ($extension) {
+      'png' => @imagecreatefrompng($path),
+      'jpg', 'jpeg' => @imagecreatefromjpeg($path),
+      default => null,
+    };
+
+    if (!$src) {
+      return;
+    }
+
+    $width = imagesx($src);
+    $height = imagesy($src);
+    $maxWidth = 1200;
+
+    if ($width > $maxWidth) {
+      $newWidth = $maxWidth;
+      $newHeight = (int) round($height * ($maxWidth / $width));
+      $dst = imagecreatetruecolor($newWidth, $newHeight);
+      if ($extension === 'png') {
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+      }
+      imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+      imagedestroy($src);
+      $src = $dst;
+    }
+
+    if ($extension === 'png') {
+      imagepng($src, $path, 6);
+    } else {
+      imagejpeg($src, $path, 85);
+    }
+
+    if (function_exists('imagewebp')) {
+      $webpPath = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $path);
+      imagewebp($src, $webpPath, 80);
+    }
+
+    imagedestroy($src);
+  }
+
+  public static function imageUrl(string $relativeDir, string $filename): string
+  {
+    $webp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filename);
+    if ($webp !== $filename && file_exists(public_path($relativeDir . $webp))) {
+      return asset($relativeDir . $webp);
+    }
+    return asset($relativeDir . $filename);
   }
 }

@@ -111,39 +111,41 @@ if (!function_exists('setEnvironmentValue')) {
 if (!function_exists('showAd')) {
   function showAd($resolutionType)
   {
-    $ad = Advertisement::where('resolution_type', $resolutionType)->inRandomOrder()->first();
-    $adsenseInfo = Basic::query()->select('google_adsense_publisher_id')->first();
+    return \Illuminate\Support\Facades\Cache::remember('ad_' . $resolutionType, 300, function () use ($resolutionType) {
+      $ad = Advertisement::where('resolution_type', $resolutionType)->inRandomOrder()->first();
+      $adsenseInfo = Basic::query()->select('google_adsense_publisher_id')->first();
 
-    if (!is_null($ad)) {
-      if ($resolutionType == 1) {
-        $maxWidth = '300px';
-        $maxHeight = '250px';
-      } else if ($resolutionType == 2) {
-        $maxWidth = '300px';
-        $maxHeight = '600px';
+      if (!is_null($ad)) {
+        if ($resolutionType == 1) {
+          $maxWidth = '300px';
+          $maxHeight = '250px';
+        } else if ($resolutionType == 2) {
+          $maxWidth = '300px';
+          $maxHeight = '600px';
+        } else {
+          $maxWidth = '728px';
+          $maxHeight = '90px';
+        }
+
+        if ($ad->ad_type == 'banner') {
+          $markUp = '<a href="' . url($ad->url) . '" target="_blank" onclick="adView(' . $ad->id . ')">
+            <img data-src="' . asset('assets/admin/img/advertisements/' . $ad->image) . '" src="' . asset('assets/admin/img/advertisements/' . $ad->image) . '" class="lazy" alt="advertisement" style="width: ' . $maxWidth . ';' . ' ' . 'max-height: ' . $maxHeight . ';max-width: 100%;">
+          </a>';
+
+          return $markUp;
+        } else {
+          $markUp = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' . $adsenseInfo->google_adsense_publisher_id . '" crossorigin="anonymous"></script>
+          <ins class="adsbygoogle" style="display: block;" data-ad-client="' . $adsenseInfo->google_adsense_publisher_id . '" data-ad-slot="' . $ad->slot . '" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>';
+
+          return $markUp;
+        }
       } else {
-        $maxWidth = '728px';
-        $maxHeight = '90px';
+        return null;
       }
-
-      if ($ad->ad_type == 'banner') {
-        $markUp = '<a href="' . url($ad->url) . '" target="_blank" onclick="adView(' . $ad->id . ')">
-          <img data-src="' . asset('assets/admin/img/advertisements/' . $ad->image) . '" src="' . asset('assets/admin/img/advertisements/' . $ad->image) . '" class="lazy" alt="advertisement" style="width: ' . $maxWidth . ';' . ' ' . 'max-height: ' . $maxHeight . ';max-width: 100%;">
-        </a>';
-
-        return $markUp;
-      } else {
-        $markUp = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' . $adsenseInfo->google_adsense_publisher_id . '" crossorigin="anonymous"></script>
-        <ins class="adsbygoogle" style="display: block;" data-ad-client="' . $adsenseInfo->google_adsense_publisher_id . '" data-ad-slot="' . $ad->slot . '" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>';
-
-        return $markUp;
-      }
-    } else {
-      return;
-    }
+    });
   }
 }
 

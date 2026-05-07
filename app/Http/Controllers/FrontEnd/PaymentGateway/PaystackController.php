@@ -196,11 +196,11 @@ class PaystackController extends Controller
       if ($bookingInfo->variation != null) {
         $variations = json_decode($bookingInfo->variation, true);
         foreach ($variations as $variation) {
-          @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
+          @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
         }
       } else {
         for ($i = 1; $i <= $bookingInfo->quantity; $i++) {
-          @unlink(public_path('assets/admin/qrcodes/') . $bookingInfo->booking_id . '__' . $i . '.svg');
+          @unlink(storage_path('app/qrcodes/tmp/') . $bookingInfo->booking_id . '__' . $i . '.svg');
         }
       }
 

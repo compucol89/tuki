@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\PHPMailer;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -404,13 +403,7 @@ class BookingController extends Controller
     if ($bookingInfo->access_token) {
       $guestLink = route('booking.guest_view', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
       $mailBody = str_replace('{booking_link}', '<a href="' . $guestLink . '">' . __('Ver mi reserva') . '</a>', $mailBody);
-
-      $signedDownloadLink = URL::temporarySignedRoute(
-        'booking.ticket.download.signed',
-        now()->addHours(24),
-        ['id' => $bookingInfo->id]
-      );
-      $mailBody = str_replace('{ticket_download_link}', '<a href="' . $signedDownloadLink . '">' . __('Descargar mi entrada') . '</a>', $mailBody);
+      $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
     } else {
       $mailBody = str_replace('{booking_link}', '', $mailBody);
       $mailBody = str_replace('{ticket_download_link}', '', $mailBody);

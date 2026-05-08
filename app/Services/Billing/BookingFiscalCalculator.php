@@ -6,6 +6,7 @@ namespace App\Services\Billing;
 
 use App\Models\BillingSetting;
 use App\Models\Event\Booking;
+use App\Models\Event\EventContent;
 use App\Models\CustomerFiscalProfile;
 
 class BookingFiscalCalculator
@@ -61,9 +62,12 @@ class BookingFiscalCalculator
             $blockedReasons[] = $missingReason;
         }
 
+        $eventName = EventContent::where('event_id', $booking->event_id)->value('title') ?? '';
+
         return [
             'booking_id' => $booking->id,
             'event_id' => $booking->event_id,
+            'event_name' => $eventName,
             'organizer_id' => $booking->organizer_id,
             'customer_id' => $booking->customer_id,
             'payment_status' => $booking->paymentStatus,

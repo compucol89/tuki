@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 class FileUploadService
@@ -23,7 +24,7 @@ class FileUploadService
     @mkdir($directory, 0775, true);
     $file->move($directory, $fileName);
 
-    if (in_array($extension, ['jpg', 'jpeg', 'png'])) {
+    if (in_array($extension, ['jpg', 'jpeg', 'png', 'webp'])) {
       $this->optimizeImage($directory . $fileName, $extension);
     }
 
@@ -66,10 +67,12 @@ class FileUploadService
     $src = match ($extension) {
       'png' => @imagecreatefrompng($path),
       'jpg', 'jpeg' => @imagecreatefromjpeg($path),
+      'webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($path) : null,
       default => null,
     };
 
     if (!$src) {
+      Log::warning('FileUploadService: could not read image for optimization.', ['path' => $path, 'extension' => $extension]);
       return;
     }
 
@@ -92,11 +95,13 @@ class FileUploadService
 
     if ($extension === 'png') {
       imagepng($src, $path, 6);
+    } elseif ($extension === 'webp' && function_exists('imagewebp')) {
+      imagewebp($src, $path, 82);
     } else {
       imagejpeg($src, $path, 85);
     }
 
-    if (function_exists('imagewebp')) {
+    if (function_exists('imagewebp') && $extension !== 'webp') {
       $webpPath = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $path);
       imagewebp($src, $webpPath, 80);
     }

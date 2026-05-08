@@ -402,11 +402,14 @@ class BookingController extends Controller
 
     if ($bookingInfo->access_token) {
       $guestLink = route('booking.guest_view', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
+      $invoiceLink = route('booking.invoice.status', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
       $mailBody = str_replace('{booking_link}', '<a href="' . $guestLink . '">' . __('Ver mi reserva') . '</a>', $mailBody);
       $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
+      $mailBody = str_replace('{invoice_link}', '<a href="' . $invoiceLink . '">' . __('Ver mi factura electrónica') . '</a>', $mailBody);
     } else {
       $mailBody = str_replace('{booking_link}', '', $mailBody);
       $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
+      $mailBody = str_replace('{invoice_link}', '', $mailBody);
     }
 
 

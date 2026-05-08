@@ -91,6 +91,10 @@
           <td>{ticket_download_link}</td>
           <td scope="row">{{ __('Enlace de descarga de entrada firmado (24h)') }}</td>
         </tr>
+        <tr>
+          <td>{invoice_link}</td>
+          <td scope="row">{{ __('Enlace para ver estado de factura electrónica') }}</td>
+        </tr>
       @endif
 
       @if ($templateInfo->mail_type == 'withdraw_approve')

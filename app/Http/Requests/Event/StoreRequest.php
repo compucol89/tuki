@@ -34,7 +34,7 @@ class StoreRequest extends FormRequest
       'thumbnail' => [
         'required',
         new ImageMimeTypeRule(),
-        'max:2048'
+        'max:5120'
       ],
       'status' => 'required',
       'is_featured' => 'required'

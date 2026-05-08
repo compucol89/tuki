@@ -169,7 +169,6 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
                 'error' => $exception->getMessage(),
             ]);
 
-            throw $exception;
         }
     }
 

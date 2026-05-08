@@ -51,7 +51,9 @@ class CommissionInvoiceBuilder
         ]);
 
         $item = new ArcaInvoiceItem([
-            'description' => 'Comisión TukiPass por venta de entradas',
+            'description' => 'Cargo de servicio TukiPass'
+                . (!empty($calculation['event_name']) ? ' — ' . $calculation['event_name'] : '')
+                . ' (Reserva #' . ($calculation['booking_id'] ?? '') . ')',
             'quantity' => 1,
             'unit_price' => $calculation['taxable_amount_for_tukipass'] ?? 0,
             'net_amount' => $calculation['taxable_amount_for_tukipass'] ?? 0,

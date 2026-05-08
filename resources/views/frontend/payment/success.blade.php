@@ -74,7 +74,7 @@
           <div class="ps-event-row">
             @if($event->thumbnail)
               <img class="ps-event-row__thumb lazy"
-                   data-src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}"
+                   data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $event->thumbnail) }}"
                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
                    alt="{{ $eventTitle }}">
             @endif

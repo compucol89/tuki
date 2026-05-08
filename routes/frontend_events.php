@@ -11,6 +11,8 @@ Route::middleware('change.lang')->group(function () {
   Route::get('/booking/{id}/ticket/download/signed', 'FrontEnd\Event\BookingTicketDownloadController@downloadSigned')
     ->name('booking.ticket.download.signed')
     ->middleware('signed');
+  Route::get('/booking/{id}/factura', 'FrontEnd\Event\BookingInvoiceStatusController@show')
+    ->name('booking.invoice.status');
 });
 
 Route::middleware('change.lang')->group(function () {

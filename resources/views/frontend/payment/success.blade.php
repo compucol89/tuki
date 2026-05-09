@@ -162,6 +162,9 @@
             @if($booking->phone)
               <div class="ps-info-item"><span class="ps-info-item__label">Teléfono</span><span class="ps-info-item__val">{{ $booking->phone }}</span></div>
             @endif
+            @if(!empty($fiscalProfile) && $fiscalProfile->document_number)
+              <div class="ps-info-item"><span class="ps-info-item__label">Documento</span><span class="ps-info-item__val">{{ $fiscalProfile->document_number }}</span></div>
+            @endif
             @if($booking->country || $booking->city)
               <div class="ps-info-item"><span class="ps-info-item__label">Ubicación</span><span class="ps-info-item__val">{{ implode(', ', array_filter([$booking->city, $booking->state, $booking->country])) }}</span></div>
             @endif

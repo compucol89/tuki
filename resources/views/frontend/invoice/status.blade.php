@@ -66,6 +66,18 @@
           </td>
         </tr>
         <tr>
+          <td style="padding:10px 0; border-bottom:1px solid #f1f5f9; color:#64748b;">Período facturado</td>
+          <td style="padding:10px 0; border-bottom:1px solid #f1f5f9; font-weight:600;">
+            {{ $invoice->service_from?->format('d/m/Y') ?? '—' }} al {{ $invoice->service_to?->format('d/m/Y') ?? '—' }}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:10px 0; border-bottom:1px solid #f1f5f9; color:#64748b;">Vencimiento de pago</td>
+          <td style="padding:10px 0; border-bottom:1px solid #f1f5f9; font-weight:600;">
+            {{ $invoice->due_date?->format('d/m/Y') ?? '—' }}
+          </td>
+        </tr>
+        <tr>
           <td style="padding:10px 0; border-bottom:1px solid #f1f5f9; color:#64748b;">CAE</td>
           <td style="padding:10px 0; border-bottom:1px solid #f1f5f9; font-weight:600; font-family:monospace;">{{ $invoice->cae ?? '—' }}</td>
         </tr>

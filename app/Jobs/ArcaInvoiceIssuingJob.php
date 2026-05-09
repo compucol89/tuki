@@ -198,8 +198,9 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
         $netAmount = (float) ($invoice->net_amount ?? 0);
 
         $today = now()->format('Ymd');
-        $serviceFrom = now()->startOfMonth()->format('Ymd');
-        $serviceTo   = now()->endOfMonth()->format('Ymd');
+        $serviceFrom = $invoice->service_from?->format('Ymd') ?? $today;
+        $serviceTo   = $invoice->service_to?->format('Ymd') ?? $today;
+        $dueDate     = $invoice->due_date?->format('Ymd') ?? $today;
 
         $concepto = $invoice->concept ?? config('arca.concepto');
 
@@ -222,7 +223,7 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
         if ((int) $concepto === 2 || (int) $concepto === 3) {
             $payload['fch_serv_desde'] = $serviceFrom;
             $payload['fch_serv_hasta'] = $serviceTo;
-            $payload['fch_vto_pago']   = $today;
+            $payload['fch_vto_pago']   = $dueDate;
         }
 
         if ($vatAmount > 0) {

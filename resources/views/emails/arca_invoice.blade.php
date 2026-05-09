@@ -158,6 +158,14 @@
           <strong>Concepto:</strong>
           <span>Servicios</span>
         </div>
+        <div class="row">
+          <strong>Período facturado:</strong>
+          <span>{{ $invoice->service_from ? $invoice->service_from->format('d/m/Y') : 'N/A' }} al {{ $invoice->service_to ? $invoice->service_to->format('d/m/Y') : 'N/A' }}</span>
+        </div>
+        <div class="row">
+          <strong>Vencimiento de pago:</strong>
+          <span>{{ $invoice->due_date ? $invoice->due_date->format('d/m/Y') : 'N/A' }}</span>
+        </div>
       </div>
 
       <div class="cae-box">

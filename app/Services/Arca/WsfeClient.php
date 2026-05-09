@@ -287,6 +287,13 @@ class WsfeClient
             ],
         ];
 
+        if (in_array((int) ($data['concepto'] ?? $config['concepto']), [2, 3], true)) {
+            $fecha = $data['fecha'] ?? date('Ymd');
+            $req['FeCAEReq']['FeDetReq']['FECAEDetRequest']['FchServDesde'] = $data['fch_serv_desde'] ?? $fecha;
+            $req['FeCAEReq']['FeDetReq']['FECAEDetRequest']['FchServHasta'] = $data['fch_serv_hasta'] ?? $fecha;
+            $req['FeCAEReq']['FeDetReq']['FECAEDetRequest']['FchVtoPago'] = $data['fch_vto_pago'] ?? $fecha;
+        }
+
         // Agregar IVA si existe
         if (!empty($data['iva'])) {
             $req['FeCAEReq']['FeDetReq']['FECAEDetRequest']['Iva'] = [];

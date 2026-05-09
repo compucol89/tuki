@@ -15,6 +15,7 @@ class CommissionInvoiceBuilder
     {
         $blockedReasons = $calculation['blocked_reasons'] ?? [];
         $billing = BillingSetting::current();
+        $serviceDate = now()->toDateString();
 
         $invoice = new ArcaInvoice([
             'booking_id' => $calculation['booking_id'] ?? null,
@@ -33,6 +34,9 @@ class CommissionInvoiceBuilder
             'recipient_tax_condition' => $calculation['recipient']['tax_condition'] ?? null,
             'recipient_tax_id' => $calculation['recipient']['tax_id'] ?? null,
             'recipient_address' => $calculation['recipient']['address'] ?? null,
+            'service_from' => $serviceDate,
+            'service_to' => $serviceDate,
+            'due_date' => $serviceDate,
             'net_amount' => $calculation['taxable_amount_for_tukipass'] ?? 0,
             'vat_amount' => $calculation['vat_amount'] ?? 0,
             'exempt_amount' => 0,
@@ -51,7 +55,7 @@ class CommissionInvoiceBuilder
         ]);
 
         $item = new ArcaInvoiceItem([
-            'description' => 'Cargo de servicio TukiPass'
+            'description' => 'Comisión por servicio de gestión de compra de entradas TukiPass'
                 . (!empty($calculation['event_name']) ? ' — ' . $calculation['event_name'] : '')
                 . ' (Reserva #' . ($calculation['booking_id'] ?? '') . ')',
             'quantity' => 1,

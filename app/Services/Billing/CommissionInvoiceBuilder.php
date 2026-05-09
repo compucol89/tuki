@@ -27,8 +27,8 @@ class CommissionInvoiceBuilder
             'point_of_sale' => config('arca.punto_venta'),
             'cbte_tipo' => config('arca.tipo_comprobante'),
             'concept' => config('arca.concepto'),
-            'doc_tipo' => $this->documentTypeCode($calculation['recipient']['document_type'] ?? null),
-            'doc_nro' => $calculation['recipient']['tax_id'] ?? null,
+            'doc_tipo' => $this->resolveDocTipo($calculation['recipient']),
+            'doc_nro' => $this->resolveDocNro($calculation['recipient']),
             'recipient_name' => $calculation['recipient']['name'] ?? null,
             'recipient_tax_condition' => $calculation['recipient']['tax_condition'] ?? null,
             'recipient_tax_id' => $calculation['recipient']['tax_id'] ?? null,
@@ -80,5 +80,25 @@ class CommissionInvoiceBuilder
             'PASAPORTE' => 94,
             default => 96,
         };
+    }
+
+    private function resolveDocTipo(array $recipient): int
+    {
+        $taxId = (string) ($recipient['tax_id'] ?? '');
+        $taxId = preg_replace('/\D/', '', $taxId);
+        if (empty($taxId) || (int) $taxId === 0) {
+            return 99;
+        }
+        return $this->documentTypeCode($recipient['document_type'] ?? null);
+    }
+
+    private function resolveDocNro(array $recipient): ?string
+    {
+        $taxId = (string) ($recipient['tax_id'] ?? '');
+        $taxId = preg_replace('/\D/', '', $taxId);
+        if (empty($taxId) || (int) $taxId === 0) {
+            return '0';
+        }
+        return $taxId;
     }
 }

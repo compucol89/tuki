@@ -313,17 +313,16 @@ class WsfeClient
 
         $this->checkErrors($result);
 
-        $caeDet = $result->FECAESolicitarResult->FeCabResp;
         $detalle = $result->FECAESolicitarResult->FeDetReq->FECAEDetResponse ?? $result->FECAESolicitarResult->FeDetResp->FECAEDetResponse;
 
         return [
             'cae' => (string) $detalle->CAE,
             'cae_vencimiento' => (string) $detalle->CAEFchVto,
             'resultado' => (string) $detalle->Resultado,
-            'cbte_tipo' => (int) $detalle->CbteTipo,
+            'cbte_tipo' => (int) $config['tipo_comprobante'],
             'cbte_desde' => (int) $detalle->CbteDesde,
             'cbte_hasta' => (int) $detalle->CbteHasta,
-            'cbte_nro' => (int) $detalle->CbteNro,
+            'cbte_nro' => (int) $detalle->CbteDesde,
             'punto_venta' => $this->puntoVenta,
             'observaciones' => $this->extractObservaciones($detalle),
         ];

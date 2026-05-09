@@ -218,6 +218,7 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
             'imp_autop' => 0,
             'moneda' => config('arca.moneda', 'PES'),
             'moneda_ctz' => config('arca.moneda_ctz', 1),
+            'condicion_iva_receptor_id' => $this->condicionIvaReceptorId($invoice->recipient_tax_condition),
         ];
 
         if ((int) $concepto === 2 || (int) $concepto === 3) {
@@ -256,6 +257,17 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
         }
 
         return substr($normalized, 0, 4) . '-' . substr($normalized, 4, 2) . '-' . substr($normalized, 6, 2);
+    }
+
+    private function condicionIvaReceptorId(?string $condition): int
+    {
+        return match ($condition) {
+            'responsable_inscripto' => 1,
+            'exento' => 4,
+            'monotributo' => 6,
+            'no_responsable' => 15,
+            default => 5,
+        };
     }
 
     private function isPaid(string $status): bool

@@ -282,6 +282,7 @@ class WsfeClient
                         'ImpAutop' => round($data['imp_autop'] ?? 0, 2),
                         'MonId' => $data['moneda'] ?? $config['moneda'],
                         'MonCotiz' => $data['moneda_ctz'] ?? $config['moneda_ctz'],
+                        'CondicionIVAReceptorId' => $data['condicion_iva_receptor_id'] ?? 5,
                     ],
                 ],
             ],

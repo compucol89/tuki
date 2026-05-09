@@ -197,11 +197,17 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
         $vatAmount = (float) ($invoice->vat_amount ?? 0);
         $netAmount = (float) ($invoice->net_amount ?? 0);
 
+        $today = now()->format('Ymd');
+        $serviceFrom = now()->startOfMonth()->format('Ymd');
+        $serviceTo   = now()->endOfMonth()->format('Ymd');
+
+        $concepto = $invoice->concept ?? config('arca.concepto');
+
         $payload = [
-            'concepto' => $invoice->concept ?? config('arca.concepto'),
+            'concepto' => $concepto,
             'doc_tipo' => $invoice->doc_tipo ?? config('arca.tipo_documento'),
             'doc_nro' => $invoice->doc_nro ?? '0',
-            'fecha' => now()->format('Ymd'),
+            'fecha' => $today,
             'imp_total' => (float) ($invoice->total_amount ?? 0),
             'imp_tot_conc' => (float) ($invoice->non_taxed_amount ?? 0),
             'imp_neto' => $netAmount,
@@ -213,11 +219,23 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
             'moneda_ctz' => config('arca.moneda_ctz', 1),
         ];
 
+        if ((int) $concepto === 2 || (int) $concepto === 3) {
+            $payload['fch_serv_desde'] = $serviceFrom;
+            $payload['fch_serv_hasta'] = $serviceTo;
+            $payload['fch_vto_pago']   = $today;
+        }
+
         if ($vatAmount > 0) {
             $payload['iva'] = [[
                 'id' => config('arca.iva_id'),
                 'base' => $netAmount,
                 'importe' => $vatAmount,
+            ]];
+        } elseif ($netAmount > 0) {
+            $payload['iva'] = [[
+                'id' => 3,
+                'base' => $netAmount,
+                'importe' => 0,
             ]];
         }
 

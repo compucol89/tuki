@@ -337,6 +337,7 @@ class BookingController extends Controller
     $booking_id = $request->booking_id;
 
     $booking = Booking::where('id', $booking_id)->firstOrFail();
+    $fiscalProfile = CustomerFiscalProfile::where('booking_id', $booking_id)->first();
     $information['booking'] = $booking;
     $event = Event::where('id', $id)->with([
       'information' => function ($query) use ($language) {
@@ -352,6 +353,7 @@ class BookingController extends Controller
 
       $information['event_date'] = $event_date;
     }
+    $information['fiscalProfile'] = $fiscalProfile;
     return view('frontend.payment.success', $information);
   }
 

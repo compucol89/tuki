@@ -281,6 +281,7 @@ class BookingController extends Controller
         'conversation_id' => array_key_exists('conversation_id', $info) ? $info['conversation_id'] : null,
         'access_token' => Auth::guard('customer')->check() ? null : Str::random(40),
         'token_legacy_expires_at' => Auth::guard('customer')->check() ? null : now()->addDays(30),
+        'fiscal_invoice_token' => Str::random(64),
       ]);
 
       if (!empty($info['dni'])) {
@@ -404,13 +405,15 @@ class BookingController extends Controller
 
     if ($bookingInfo->access_token) {
       $guestLink = route('booking.guest_view', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
-      $invoiceLink = route('booking.invoice.status', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
       $mailBody = str_replace('{booking_link}', '<a href="' . $guestLink . '">' . __('Ver mi reserva') . '</a>', $mailBody);
-      $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
-      $mailBody = str_replace('{invoice_link}', '<a href="' . $invoiceLink . '">' . __('Ver mi factura electrónica') . '</a>', $mailBody);
     } else {
       $mailBody = str_replace('{booking_link}', '', $mailBody);
-      $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
+    }
+    $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
+    if ($bookingInfo->fiscal_invoice_token) {
+      $invoiceLink = route('booking.fiscal_invoice.show', [$bookingInfo->fiscal_invoice_token]);
+      $mailBody = str_replace('{invoice_link}', '<a href="' . $invoiceLink . '">' . __('Ver mi factura electrónica') . '</a>', $mailBody);
+    } else {
       $mailBody = str_replace('{invoice_link}', '', $mailBody);
     }
 

@@ -11,6 +11,7 @@ class BillingSetting extends Model
 
   protected $fillable = [
     'enabled',
+    'send_arca_invoice_email',
     'issuer_cuit',
     'issuer_iva_condition',
     'point_of_sale',
@@ -23,6 +24,7 @@ class BillingSetting extends Model
 
   protected $casts = [
     'enabled' => 'boolean',
+    'send_arca_invoice_email' => 'boolean',
     'point_of_sale' => 'integer',
     'service_fee_percentage' => 'decimal:4',
     'vat_percentage' => 'decimal:4',

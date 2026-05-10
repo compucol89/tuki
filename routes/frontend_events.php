@@ -13,6 +13,8 @@ Route::middleware('change.lang')->group(function () {
     ->middleware('signed');
   Route::get('/booking/{id}/factura', 'FrontEnd\Event\BookingInvoiceStatusController@show')
     ->name('booking.invoice.status');
+  Route::get('/factura/{token}', 'FrontEnd\Event\FiscalInvoiceController@showByToken')
+    ->name('booking.fiscal_invoice.show');
 });
 
 Route::middleware('change.lang')->group(function () {

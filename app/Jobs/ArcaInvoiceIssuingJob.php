@@ -10,6 +10,7 @@ use App\Models\Arca\ArcaInvoiceItem;
 use App\Models\Event\Booking;
 use App\Services\Arca\ArcaInvoiceIssuer;
 use App\Services\Billing\BookingFiscalCalculator;
+use App\Models\BillingSetting;
 use App\Services\Billing\CommissionInvoiceBuilder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -128,16 +129,20 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
                 $this->syncItems($invoice, $preview);
 
                 // Enviar email con factura fiscal al comprador
-                if (!empty($booking->email)) {
+                if (empty($booking->email)) {
+                    Log::warning('ARCA invoice email skipped: booking has no email.', [
+                        'booking_id' => $booking->id,
+                    ]);
+                } elseif (!BillingSetting::current()->send_arca_invoice_email) {
+                    Log::info('ARCA invoice email skipped: disabled by settings.', [
+                        'booking_id' => $booking->id,
+                    ]);
+                } else {
                     Mail::to($booking->email)->queue(new ArcaInvoiceMail($invoice, $booking));
                     Log::info('ARCA invoice email queued.', [
                         'booking_id' => $booking->id,
                         'email' => $booking->email,
                         'arca_invoice_id' => $invoice->id,
-                    ]);
-                } else {
-                    Log::warning('ARCA invoice email skipped: booking has no email.', [
-                        'booking_id' => $booking->id,
                     ]);
                 }
             });

@@ -98,6 +98,9 @@ class MercadoPagoController extends Controller
       'paymentStatus' => 'completed',
     );
 
+    // Persistir selTickets para fallback DB/webhook (stock y variaciones)
+    $arrData['selTickets'] = Session::get('selTickets');
+
     $sessionEvent = Session::get('event');
     $eventTitle = $sessionEvent ? $sessionEvent->title : 'Event Booking';
     $completeURL = route('event_booking.mercadopago.notify');
@@ -266,6 +269,11 @@ class MercadoPagoController extends Controller
           $arrData = $pending->data;
           $paymentToken = $pending->token;
           $expectedAmount = (float)$pending->amount;
+
+          // Restaurar selTickets para storeData()
+          if (!empty($arrData['selTickets'])) {
+            $request->session()->put('selTickets', $arrData['selTickets']);
+          }
         } else {
           Log::error('MercadoPago notify: sin sesión ni registro en DB', [
             'payment_id' => $paymentId,
@@ -474,6 +482,11 @@ class MercadoPagoController extends Controller
           'paid' => $paidAmount,
         ]);
         return response('OK', 200);
+      }
+
+      // Restaurar selTickets para storeData()
+      if (!empty($pending->data['selTickets'])) {
+        session(['selTickets' => $pending->data['selTickets']]);
       }
 
       // Crear booking

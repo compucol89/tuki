@@ -110,4 +110,47 @@ return [
         'footer_has_account' => '¿Ya tenés cuenta de organizador?',
         'footer_login' => 'Ingresá acá',
     ],
+
+    'flash' => [
+        'verification_mail_sent' => 'Te mandamos un correo de verificación. Revisá tu bandeja de entrada y, por las dudas, también la carpeta de spam o correo no deseado.',
+        'mail_not_sent' => 'No se pudo enviar el correo.',
+        'signup_success' => 'Registro completado exitosamente. Por favor, iniciá sesión.',
+        'mail_sent' => 'Se envió un correo a tu dirección de email.',
+        'password_reset' => 'Tu contraseña fue restablecida.',
+        'password_updated' => 'Contraseña actualizada correctamente.',
+        'profile_updated' => 'Perfil actualizado correctamente.',
+        'added_successfully' => 'Agregado correctamente.',
+        'updated_successfully' => 'Actualizado correctamente.',
+        'deleted_successfully' => 'Eliminado correctamente.',
+        'email_verification_status_updated' => 'Estado de verificación de email actualizado correctamente.',
+        'payment_status_updated_mail_sent' => 'Estado de pago actualizado y correo enviado correctamente.',
+        'booking_deleted_successfully' => 'Reserva eliminada correctamente.',
+        'ticket_updated_successfully' => 'Entrada del evento actualizada correctamente.',
+        'message_sent_successfully' => 'Mensaje enviado correctamente.',
+        'withdraw_request_sent' => 'Solicitud de retiro enviada correctamente.',
+        'withdraw_request_deleted' => 'Solicitud de retiro eliminada correctamente.',
+
+        'verify_email_alert' => 'Por favor, verificá tu dirección de email.',
+        'login_error' => 'Ups, el usuario o la contraseña no coinciden.',
+    ],
+
+    'captcha' => [
+        'required' => 'Por favor, verificá que no sos un robot.',
+        'error' => 'Error de captcha. Intentá de nuevo más tarde o contactá al administrador del sitio.',
+    ],
+
+    'validation' => [
+        'password_confirmation' => 'La confirmación de contraseña no coincide.',
+        'confirm_new_password_required' => 'El campo de confirmación de contraseña es obligatorio.',
+        'name_required_for_language' => 'El campo nombre es obligatorio para el idioma :language.',
+    ],
+
+    'qrcode' => [
+        'verified' => 'Verificado',
+        'already_scanned' => 'Ya escaneado',
+        'payment_incomplete' => 'Pago incompleto',
+        'payment_rejected' => 'Pago rechazado',
+        'no_permission' => 'No tenés permiso',
+        'unverified' => 'No verificado',
+    ],
 ];

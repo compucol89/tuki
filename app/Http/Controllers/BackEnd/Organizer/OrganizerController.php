@@ -150,8 +150,8 @@ class OrganizerController extends Controller
     $messages = [];
 
     if ($info->google_recaptcha_status == 1) {
-      $messages['g-recaptcha-response.required'] = 'Please verify that you are not a robot.';
-      $messages['g-recaptcha-response.captcha'] = 'Captcha error! try again later or contact site admin.';
+      $messages['g-recaptcha-response.required'] = __('organizer.captcha.required');
+      $messages['g-recaptcha-response.captcha'] = __('organizer.captcha.error');
     }
 
     $validator = Validator::make($request->all(), $rules, $messages);
@@ -171,6 +171,12 @@ class OrganizerController extends Controller
       // first, get the mail template information from db
       $mailTemplate = MailTemplate::where('mail_type', 'verify_email')->first();
 
+      if (!$mailTemplate) {
+        Log::error('Organizer signup: verify_email MailTemplate not found');
+        Session::flash('error', __('Error de configuración. Contactá al administrador.'));
+        return redirect()->back();
+      }
+
       $mailSubject = $mailTemplate->mail_subject;
       $mailBody = $mailTemplate->mail_body;
 
@@ -182,7 +188,7 @@ class OrganizerController extends Controller
       $name = $request->username;
       $token =  $request->email;
 
-      $link = '<a href=' . url("organizers/email/verify?token=" . $token) . '>Click Here</a>';
+      $link = '<a href="' . url("organizers/email/verify?token=" . urlencode($token)) . '">Verificar cuenta</a>';
 
       $mailBody = str_replace('{username}', $name, $mailBody);
       $mailBody = str_replace('{verification_link}', $link, $mailBody);
@@ -198,9 +204,12 @@ class OrganizerController extends Controller
 
         $mail->isSMTP();
         $mail->Host       = $info->smtp_host;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $info->smtp_username;
-        $mail->Password   = $info->smtp_password;
+
+        if (!empty($info->smtp_username)) {
+          $mail->SMTPAuth   = true;
+          $mail->Username   = $info->smtp_username;
+          $mail->Password   = $info->smtp_password;
+        }
 
         if ($info->encryption == 'TLS') {
           $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -220,15 +229,16 @@ class OrganizerController extends Controller
 
         $mail = $mail->send();
 
-        Session::flash('success', ' Verification mail has been sent to your email address!');
+        Session::flash('success', __('organizer.flash.verification_mail_sent'));
       } catch (\Exception $e) {
-        Session::flash('error', 'Mail could not be sent!');
+        Log::error('Organizer verification mail failed: ' . $e->getMessage());
+        Session::flash('error', __('organizer.flash.mail_not_sent'));
         return redirect()->back();
       }
 
       $in['status'] = 0;
     } else {
-      Session::flash('success', 'Sign up successfully completed.Please Login Now');
+      Session::flash('success', __('organizer.flash.signup_success'));
     }
     if ($setting->organizer_admin_approval == 1) {
       $in['status'] = 0;
@@ -263,8 +273,8 @@ class OrganizerController extends Controller
     $messages = [];
 
     if ($info->google_recaptcha_status == 1) {
-      $messages['g-recaptcha-response.required'] = 'Please verify that you are not a robot.';
-      $messages['g-recaptcha-response.captcha'] = 'Captcha error! try again later or contact site admin.';
+      $messages['g-recaptcha-response.required'] = __('organizer.captcha.required');
+      $messages['g-recaptcha-response.captcha'] = __('organizer.captcha.error');
     }
 
     $validator = Validator::make($request->all(), $rules, $messages);
@@ -285,7 +295,7 @@ class OrganizerController extends Controller
 
       // check whether the admin's account is active or not
       if ($setting->organizer_email_verification == 1 && $authAdmin->email_verified_at == NULL && $authAdmin->status == 0) {
-        Session::flash('alert', 'Please Verify Your Email Address!');
+        Session::flash('alert', __('organizer.flash.verify_email_alert'));
 
         // logout auth admin as condition not satisfied
         Auth::guard('organizer')->logout();
@@ -299,7 +309,7 @@ class OrganizerController extends Controller
         return redirect()->route('organizer.dashboard');
       }
     } else {
-      return redirect()->back()->with('alert', __('Oops, Username or password does not match!'));
+      return redirect()->back()->with('alert', __('organizer.flash.login_error'));
     }
   }
   //forget_passord
@@ -380,9 +390,9 @@ class OrganizerController extends Controller
 
       $mail->send();
 
-      Session::flash('success', 'A mail has been sent to your email address.');
+      Session::flash('success', __('organizer.flash.mail_sent'));
     } catch (\Exception $e) {
-      Session::flash('error', 'Mail could not be sent!');
+      Session::flash('error', __('organizer.flash.mail_not_sent'));
     }
 
     // store user email in session to use it later
@@ -407,7 +417,7 @@ class OrganizerController extends Controller
     $organizer = Organizer::where('email',  $email)->first();
     $organizer->password = Hash::make($request->password);
     $organizer->save();
-    Session::flash('success', 'Your password has been reset.');
+    Session::flash('success', __('organizer.flash.password_reset'));
 
     return redirect()->route('organizer.login');
   }
@@ -437,8 +447,8 @@ class OrganizerController extends Controller
     ];
 
     $messages = [
-      'new_password.confirmed' => 'Password confirmation does not match.',
-      'new_password_confirmation.required' => 'The confirm new password field is required.'
+      'new_password.confirmed' => __('organizer.validation.password_confirmation'),
+      'new_password_confirmation.required' => __('organizer.validation.confirm_new_password_required')
     ];
 
     $validator = Validator::make($request->all(), $rules, $messages);
@@ -455,7 +465,7 @@ class OrganizerController extends Controller
       'password' => Hash::make($request->new_password)
     ]);
 
-    Session::flash('success', 'Password updated successfully!');
+    Session::flash('success', __('organizer.flash.password_updated'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -489,7 +499,7 @@ class OrganizerController extends Controller
 
     foreach ($languages as $language) {
       $rules[$language->code . '_name'] = 'required';
-      $messages[$language->code . '_name'] = 'The name field is required for ' . $language->name . ' language.';
+      $messages[$language->code . '_name'] = __('organizer.validation.name_required_for_language', ['language' => $language->name]);
     }
 
     if ($request->hasFile('photo')) {
@@ -540,7 +550,7 @@ class OrganizerController extends Controller
       $organizer_info->save();
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.profile_updated'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -568,9 +578,9 @@ class OrganizerController extends Controller
       ->first();
 
     $name = $user->name;
-    $token =  $user->id;
+    $token =  $user->email;
 
-    $link = '<a href=' . url("organizers/email/verify?token=" . $token) . '>Click Here</a>';
+    $link = '<a href="' . url("organizers/email/verify?token=" . urlencode($token)) . '">Verificar cuenta</a>';
 
     $mailBody = str_replace('{username}', $user->name, $mailBody);
     $mailBody = str_replace('{verification_link}', $link, $mailBody);
@@ -586,9 +596,12 @@ class OrganizerController extends Controller
 
       $mail->isSMTP();
       $mail->Host       = $info->smtp_host;
-      $mail->SMTPAuth   = true;
-      $mail->Username   = $info->smtp_username;
-      $mail->Password   = $info->smtp_password;
+
+      if (!empty($info->smtp_username)) {
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $info->smtp_username;
+        $mail->Password   = $info->smtp_password;
+      }
 
       if ($info->encryption == 'TLS') {
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -608,10 +621,11 @@ class OrganizerController extends Controller
 
       $mail = $mail->send();
 
-      Session::flash('success', ' Verification mail has been send your email address!');
+      Session::flash('success', __('organizer.flash.verification_mail_sent'));
       return response()->json(['status' => 'success'], 200);
     } catch (\Exception $e) {
-      Session::flash('error', 'Mail could not be sent!');
+      Log::error('Organizer verification mail resend failed: ' . $e->getMessage());
+      Session::flash('error', __('organizer.flash.mail_not_sent'));
       return redirect()->back();
     }
   }
@@ -620,6 +634,12 @@ class OrganizerController extends Controller
   {
     $email = request()->input('token');
     $user = Organizer::where('email', $email)->first();
+
+    if (!$user) {
+      Session::flash('error', __('Link de verificación inválido.'));
+      return redirect()->route('organizer.login');
+    }
+
     $user->email_verified_at = now();
     $setting = DB::table('basic_settings')->where('uniqid', 12345)->select('organizer_admin_approval')->first();
     if ($setting->organizer_admin_approval != 1) {
@@ -661,7 +681,7 @@ class OrganizerController extends Controller
               ];
               $check->scanned_tickets = json_encode($scannedTicketArr);
               $check->save();
-              return response()->json(['alert_type' => 'success', 'message' => 'Verified', 'booking_id' => $request->booking_id]);
+                return response()->json(['alert_type' => 'success', 'message' => __('organizer.qrcode.verified'), 'booking_id' => $request->booking_id]);
             } else {
               //ticket random id will be insert
               $scannedTicketArr = json_decode($check->scanned_tickets, true);
@@ -669,25 +689,25 @@ class OrganizerController extends Controller
                 array_push($scannedTicketArr, $unique_id);
                 $check->scanned_tickets = json_encode($scannedTicketArr);
                 $check->save();
-                return response()->json(['alert_type' => 'success', 'message' => 'Verified', 'booking_id' => $request->booking_id]);
+              return response()->json(['alert_type' => 'success', 'message' => __('organizer.qrcode.verified'), 'booking_id' => $request->booking_id]);
               } else {
 
-                return response()->json(['alert_type' => 'error', 'message' => 'Already Scanned', 'booking_id' => $request->booking_id]);
+                return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.already_scanned'), 'booking_id' => $request->booking_id]);
               }
             }
           } elseif ($check->paymentStatus == 'pending') {
-            return response()->json(['alert_type' => 'error', 'message' => 'Payment incomplete', 'booking_id' => $request->booking_id]);
+            return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.payment_incomplete'), 'booking_id' => $request->booking_id]);
           } elseif ($check->paymentStatus == 'rejected') {
-            return response()->json(['alert_type' => 'error', 'message' => 'Payment Rejected', 'booking_id' => $request->booking_id]);
+            return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.payment_rejected'), 'booking_id' => $request->booking_id]);
           }
         } else {
-          return response()->json(['alert_type' => 'error', 'message' => 'you do not have permission']);
+          return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.no_permission')]);
         }
       } else {
-        return response()->json(['alert_type' => 'error', 'message' => 'Unverified']);
+        return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified')]);
       }
     } else {
-      return response()->json(['alert_type' => 'error', 'message' => 'Unverified']);
+      return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified')]);
     }
   }
 

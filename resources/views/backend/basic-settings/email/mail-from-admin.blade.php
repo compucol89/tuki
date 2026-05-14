@@ -50,6 +50,16 @@
                   <strong class="text-dark">{{ __('This mail address will be used to send all mails from this website') }}</strong>
                 </div>
 
+                <div class="alert alert-info" role="alert">
+                  <h5 class="alert-heading"><i class="fas fa-info-circle"></i> {{ __('Guía de configuración SMTP') }}</h5>
+                  <ul class="mb-0">
+                    <li><strong>{{ __('Autenticación condicional:') }}</strong> {{ __('El sistema solo activa SMTPAuth si completás SMTP Username y SMTP Password. Si tu servidor no requiere auth (ej. Mailpit en local), dejá ambos campos vacíos.') }}</li>
+                    <li><strong>{{ __('Ejemplo Postmark:') }}</strong> {{ __('Server: smtp.postmarkapp.com | Puertos: 25, 2525 o 587 | Auth: TLS / CRAM-MD5 / Plain text | Username & Password: tu Server API Token') }}</li>
+                    <li><strong>{{ __('Entorno Docker:') }}</strong> {{ __('Si usás Mailpit o similar en el host, el SMTP Host debe ser host.docker.internal en lugar de 127.0.0.1. Si cambiás el host, reiniciá el contenedor:') }} <code>docker restart tuki-app-1</code></li>
+                    <li><strong>{{ __('Stream Header (Postmark):') }}</strong> {{ __('Si tu proveedor requiere un header de stream (ej. X-PM-Message-Stream), contactá al desarrollador para agregarlo.') }}</li>
+                  </ul>
+                </div>
+
                 <div class="form-group">
                   <label>{{ __('SMTP Status')."*" }}</label>
                   <div class="selectgroup w-100">

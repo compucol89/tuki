@@ -26,7 +26,7 @@ class SettingController extends Controller
   {
     $in = $request->all();
     $store = ShippingCharge::create($in);
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //delete
@@ -34,7 +34,7 @@ class SettingController extends Controller
   {
     $delete = ShippingCharge::where('id', $request->id)->first();
     $delete->delete();
-    Session::flash('warning', 'Deleted Successfully');
+    Session::flash('warning', __('admin.flash.deleted_successfully'));
     return back();
   }
   //bulkdelete
@@ -44,7 +44,7 @@ class SettingController extends Controller
       $delete = ShippingCharge::where('id', $id)->first();
       $delete->delete();
     }
-    Session::flash('warning', 'Deleted Successfully');
+    Session::flash('warning', __('admin.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //update
@@ -53,7 +53,7 @@ class SettingController extends Controller
     $in = $request->all();
     $update = ShippingCharge::where('id', $request->id)->first();
     $update->update($in);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

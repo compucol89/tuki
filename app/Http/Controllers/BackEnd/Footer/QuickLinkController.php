@@ -52,7 +52,7 @@ class QuickLinkController extends Controller
 
     QuickLink::create($request->all());
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -75,7 +75,7 @@ class QuickLinkController extends Controller
 
     QuickLink::where('id', $request->id)->first()->update($request->all());
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -84,6 +84,6 @@ class QuickLinkController extends Controller
   {
     QuickLink::where('id', $id)->first()->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 }

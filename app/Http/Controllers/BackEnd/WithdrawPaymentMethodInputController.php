@@ -74,7 +74,7 @@ class WithdrawPaymentMethodInputController extends Controller
       }
     }
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -166,7 +166,7 @@ class WithdrawPaymentMethodInputController extends Controller
       }
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -199,7 +199,7 @@ class WithdrawPaymentMethodInputController extends Controller
       $option->delete();
     }
     $input->delete();
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return back();
   }

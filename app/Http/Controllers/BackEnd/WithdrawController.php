@@ -59,7 +59,7 @@ class WithdrawController extends Controller
       $withdraw->delete();
     });
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   //approve
@@ -146,7 +146,7 @@ class WithdrawController extends Controller
       $mail->Body = $mailData['body'];
 
       $mail->send();
-      Session::flash('success', 'Withdraw Request Approved Successfully!');
+      Session::flash('success', __('admin.flash.withdraw_request_approved'));
     } catch (Exception $e) {
       Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
     }

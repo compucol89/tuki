@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 
-<head lang="{{ $currentLanguageInfo->code }}" @if ($currentLanguageInfo->direction == 1) dir="rtl" @endif>
+<head lang="es-AR">
   {{-- required meta tags --}}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">

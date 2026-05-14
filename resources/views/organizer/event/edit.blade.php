@@ -776,7 +776,7 @@
                         <div class="version-body">
                           <div class="row">
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Event Title') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
                                   value="{{ @$event_content->title }}" placeholder="{{ __('Enter Event Name') }}">
@@ -784,7 +784,7 @@
                             </div>
 
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 @php
                                   $categories = DB::table('event_categories')
                                       ->where('language_id', $language->id)
@@ -814,7 +814,7 @@
                                 <div class="form-group">
                                   <label for="">{{ __('Address') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_address"
-                                    class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                                    class="form-control"
                                     placeholder="{{ __('Enter Address') }}" value="{{ @$event_content->address }}">
                                 </div>
                               </div>
@@ -823,7 +823,7 @@
                                   <label for="">{{ __('County') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_country"
                                     placeholder="{{ __('Enter Country') }}"
-                                    class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                                    class="form-control"
                                     value="{{ @$event_content->country }}">
                                 </div>
                               </div>
@@ -831,7 +831,7 @@
                                 <div class="form-group">
                                   <label for="">{{ __('State') }}</label>
                                   <input type="text" name="{{ $language->code }}_state"
-                                    class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                                    class="form-control"
                                     placeholder="{{ __('Enter State') }}" value="{{ @$event_content->state }}">
                                 </div>
                               </div>
@@ -839,7 +839,7 @@
                                 <div class="form-group">
                                   <label for="">{{ __('City') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_city"
-                                    class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                                    class="form-control"
                                     placeholder="{{ __('Enter City') }}" value="{{ @$event_content->city }}">
                                 </div>
                               </div>
@@ -848,7 +848,7 @@
                                   <label for="">{{ __('Zip/Post Code ') }}</label>
                                   <input type="text" placeholder="{{ __('Enter Zip/Post Code') }}"
                                     name="{{ $language->code }}_zip_code"
-                                    class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                                    class="form-control"
                                     value="{{ @$event_content->zip_code }}">
                                 </div>
                               </div>
@@ -857,7 +857,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Description') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
                                   name="{{ $language->code }}_description" placeholder="{{ __('Cuenta de que se trata el evento, que incluye la entrada y cualquier dato importante.') }}" data-height="300">{!! @$event_content->description !!}</textarea>
@@ -867,7 +867,7 @@
 
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Politica de reembolso') }} *</label>
                                 <textarea class="form-control" name="{{ $language->code }}_refund_policy" rows="5"
                                   placeholder="{{ __('Explica que pasa si alguien no puede asistir, pide un cambio o solicita devolucion.') }}">{{ @$event_content->refund_policy }}</textarea>
@@ -877,7 +877,7 @@
 
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Palabras clave para Google') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords"
                                   value="{{ @$event_content->meta_keywords }}"
@@ -888,7 +888,7 @@
 
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Descripcion corta para Google') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
                                   placeholder="{{ __('Una descripcion breve y clara para buscadores y enlaces compartidos.') }}">{{ @$event_content->meta_description }}</textarea>

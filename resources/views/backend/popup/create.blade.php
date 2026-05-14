@@ -66,20 +66,7 @@
                                     <p id="err_image" class="mt-2 mb-0 text-danger em"></p>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>{{ __('Language') . '*' }}</label>
-                                            <select name="language_id" class="form-control">
-                                                <option selected disabled>{{ __('Select a Language') }}</option>
-                                                @foreach ($languages as $language)
-                                                    <option value="{{ $language->id }}">{{ $language->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <p id="err_language_id" class="mt-2 mb-0 text-danger em"></p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <input type="hidden" name="language_id" value="{{ $defaultLang->id ?? 1 }}">
 
                                 <div class="row">
                                     <div class="col">
@@ -247,50 +234,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('script')
-    <script>
-        $(document).ready(function() {
-            "use strict";
-            $('select[name="language_id"]').on('change', function() {
-                $('.request-loader').addClass('show');
-
-                let rtlURL = "{{ url('/') }}" + "/admin/language-management/" + $(this).val() +
-                    "/check-rtl";
-
-                // send ajax request to check whether the selected language is 'rtl' or not
-                $.get(rtlURL, function(response) {
-                    $('.request-loader').removeClass('show');
-
-                    if ('successData' in response) {
-                        if (response.successData == 1) {
-                            $('form.create input').each(function() {
-                                if (!$(this).hasClass('ltr')) {
-                                    $(this).addClass('rtl');
-                                }
-                            });
-
-                            $('form.create select').each(function() {
-                                if (!$(this).hasClass('ltr')) {
-                                    $(this).addClass('rtl');
-                                }
-                            });
-
-                            $('form.create textarea').each(function() {
-                                if (!$(this).hasClass('ltr')) {
-                                    $(this).addClass('rtl');
-                                }
-                            });
-                        } else {
-                            $('form.create input, form.create select, form.create textarea')
-                                .removeClass('rtl');
-                        }
-                    } else {
-                        alert(response.errorData);
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

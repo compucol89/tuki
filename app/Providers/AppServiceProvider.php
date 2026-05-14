@@ -27,7 +27,9 @@ class AppServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    //
+    if ($this->app->environment('local') && class_exists(\Fruitcake\LaravelDebugbar\ServiceProvider::class)) {
+      $this->app->register(\Fruitcake\LaravelDebugbar\ServiceProvider::class);
+    }
   }
 
   /**
@@ -45,7 +47,9 @@ class AppServiceProvider extends ServiceProvider
       # code...
       Paginator::useBootstrap();
 
-      $data = DB::table('basic_settings')->select('favicon', 'website_title', 'logo', 'timezone', 'preloader', 'event_guest_checkout_status', 'primary_color')->first();
+      $data = Cache::remember('global_basic_settings', now()->addHours(6), function () {
+        return DB::table('basic_settings')->select('favicon', 'website_title', 'logo', 'timezone', 'preloader', 'event_guest_checkout_status', 'primary_color')->first();
+      });
 
       if ($data === null) {
         $data = (object) [
@@ -78,7 +82,7 @@ class AppServiceProvider extends ServiceProvider
           }
         }
 
-        $language = Language::where('is_default', 1)->first();
+        $language = Language::where('code', 'es')->first();
 
         $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol_position', 'base_currency_symbol', 'base_currency_text')->first();
 
@@ -97,7 +101,7 @@ class AppServiceProvider extends ServiceProvider
       View::composer('organizer.*', function ($view) {
 
 
-        $language = Language::where('is_default', 1)->first();
+        $language = Language::where('code', 'es')->first();
 
         //$websiteSettings = DB::table('basic_settings')->select('admin_theme_version')->first();
         $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate', 'organizer_email_verification')->first();
@@ -144,29 +148,11 @@ class AppServiceProvider extends ServiceProvider
           ];
         }
 
-        $cachedAllLanguages = Cache::remember('frontend_all_languages', $cacheTTL, function () {
-          return Language::all();
-        });
-
         $cachedLanguageEs = Cache::remember('frontend_language_es', $cacheTTL, function () {
           return Language::where('code', 'es')->first();
         });
 
         $language = $cachedLanguageEs;
-        if (!$language) {
-          $locale = null;
-          if (Session::has('lang')) {
-            $locale = Session::get('lang');
-          }
-          if (empty($locale)) {
-            $language = Language::where('is_default', 1)->first();
-          } else {
-            $language = Language::where('code', $locale)->first();
-            if (empty($language)) {
-              $language = Language::where('is_default', 1)->first();
-            }
-          }
-        }
 
         $cachedSocialMedias = Cache::remember('frontend_social_medias', $cacheTTL, function () {
           return SocialMedia::orderBy('serial_number', 'asc')->get();
@@ -230,7 +216,6 @@ class AppServiceProvider extends ServiceProvider
         $view->with('basicInfo', $cachedBasicData);
         $view->with('seo', $cachedSeo);
         $view->with('bex', $bex);
-        $view->with('allLanguageInfos', $cachedAllLanguages);
         $view->with('currentLanguageInfo', $language);
         $view->with('socialMediaInfos', $cachedSocialMedias);
         $view->with('menuInfos', $menus);

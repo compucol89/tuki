@@ -67,7 +67,7 @@ class TestimonialController extends Controller
       } else {
         $data->update($datas);
       }
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     } else {
       $datas['language_id'] = $language->id;
       $datas['title'] = $request->title;
@@ -78,7 +78,7 @@ class TestimonialController extends Controller
       } else {
         $data->update($datas);
       }
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -93,7 +93,7 @@ class TestimonialController extends Controller
       'image' => $imageName
     ]);
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -110,7 +110,7 @@ class TestimonialController extends Controller
       'image' => $request->hasFile('image') ? $imageName : $testimonial->image
     ]);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -124,7 +124,7 @@ class TestimonialController extends Controller
 
     $testimonial->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -140,7 +140,7 @@ class TestimonialController extends Controller
       $testimonial->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

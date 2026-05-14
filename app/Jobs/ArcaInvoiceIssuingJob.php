@@ -9,6 +9,7 @@ use App\Models\Arca\ArcaInvoice;
 use App\Models\Arca\ArcaInvoiceItem;
 use App\Models\Event\Booking;
 use App\Services\Arca\ArcaInvoiceIssuer;
+use App\Services\Arca\WsfeClient;
 use App\Services\Billing\BookingFiscalCalculator;
 use App\Models\BillingSetting;
 use App\Services\Billing\CommissionInvoiceBuilder;
@@ -37,7 +38,8 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
     public function handle(
         BookingFiscalCalculator $calculator,
         CommissionInvoiceBuilder $builder,
-        ArcaInvoiceIssuer $issuer
+        ArcaInvoiceIssuer $issuer,
+        WsfeClient $wsfe,
     ): void {
         $booking = Booking::with(['evnt.information', 'organizer.organizer_info', 'customerInfo.fiscalProfile', 'fiscalProfile'])
             ->find($this->bookingId);
@@ -60,20 +62,20 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
 
                 $invoice ??= new ArcaInvoice(['booking_id' => $booking->id]);
                 $invoice->fill([
-                    'booking_id' => $booking->id,
-                    'organizer_id' => $booking->organizer_id,
-                    'customer_id' => $booking->customer_id,
-                    'environment' => config('arca.environment', 'homologation'),
-                    'status' => 'blocked',
-                    'invoice_model' => config('arca.invoice_model', 'customer_service_fee_invoice'),
-                    'currency' => 'ARS',
-                    'error_message' => 'La reserva no está pagada',
+                    'booking_id'     => $booking->id,
+                    'organizer_id'   => $booking->organizer_id,
+                    'customer_id'    => $booking->customer_id,
+                    'environment'    => config('arca.environment', 'homologation'),
+                    'status'         => 'blocked',
+                    'invoice_model'  => config('arca.invoice_model', 'customer_service_fee_invoice'),
+                    'currency'       => 'ARS',
+                    'error_message'  => 'La reserva no está pagada',
                 ]);
                 $invoice->save();
             });
 
             Log::info('ARCA invoice issuing skipped: booking is not paid.', [
-                'booking_id' => $booking->id,
+                'booking_id'     => $booking->id,
                 'payment_status' => $booking->paymentStatus,
             ]);
 
@@ -82,53 +84,141 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
 
         try {
             $calculation = $calculator->calculate($booking);
-            $preview = $builder->buildPreview($calculation);
-            $payload = $this->payloadFromInvoice($preview);
+            $preview     = $builder->buildPreview($calculation);
+            $payload     = $this->payloadFromInvoice($preview);
 
-            DB::transaction(function () use ($preview, $payload, $issuer, $booking): void {
-                $invoice = $this->findInvoiceForUpdate((int) $preview->booking_id);
+            // FASE A — transacción corta: persiste estado previo a llamar ARCA.
+            // Reserva cbte_nro antes de la emisión para poder recuperarlo en reintentos.
+            // getLastComprobante() se calcula ANTES de la transacción para no mantener
+            // el row lock activo durante una llamada SOAP (puede tardar 2-10 segundos).
+            $nextCbteNro = config('arca.enable_issuing')
+                ? ($wsfe->getLastComprobante((int) config('arca.tipo_comprobante')) + 1)
+                : null;
 
-                if ($invoice?->isApproved()) {
+            $invoice     = null;
+            $shouldIssue = false;
+
+            DB::transaction(function () use ($preview, $payload, $nextCbteNro, &$invoice, &$shouldIssue): void {
+                $inv = $this->findInvoiceForUpdate((int) $preview->booking_id);
+
+                if ($inv?->isApproved()) {
+                    $invoice = $inv;
+
                     return;
                 }
 
-                $invoice ??= new ArcaInvoice(['booking_id' => $preview->booking_id]);
-                $invoice->fill($preview->getAttributes());
-                $invoice->arca_request = $payload;
+                // Preserva cbte_nro de un intento anterior antes del fill()
+                $reservedCbteNro = $inv?->cbte_nro;
+
+                $inv ??= new ArcaInvoice(['booking_id' => $preview->booking_id]);
+                $inv->fill($preview->getAttributes());
+                $inv->arca_request = $payload;
 
                 if ($preview->isBlocked()) {
-                    $invoice->save();
-                    $this->syncItems($invoice, $preview);
+                    $inv->save();
+                    $this->syncItems($inv, $preview);
+                    $invoice = $inv;
 
                     return;
                 }
 
                 if (!config('arca.enable_issuing')) {
-                    $invoice->status = 'ready';
-                    $invoice->save();
-                    $this->syncItems($invoice, $preview);
+                    $inv->status = 'ready';
+                    $inv->save();
+                    $this->syncItems($inv, $preview);
+                    $invoice = $inv;
 
                     return;
                 }
 
-                $response = $issuer->issue($payload);
+                // Restaura cbte_nro de un intento anterior, o usa el pre-calculado
+                $inv->cbte_nro = $reservedCbteNro ?: $nextCbteNro;
+                $inv->status   = 'issuing';
+                $inv->save();
 
-                $invoice->fill([
-                    'status' => 'approved',
+                $invoice     = $inv;
+                $shouldIssue = true;
+            });
+
+            if (!$invoice || !$shouldIssue || $invoice->isApproved()) {
+                return;
+            }
+
+            // FASE B — llamada a ARCA fuera de transacción (evita lock durante I/O de red).
+            // En reintento: verifica si ARCA ya autorizó el número reservado antes de re-emitir.
+            $tipoCbte = (int) config('arca.tipo_comprobante');
+            $cbteNro  = (int) $invoice->cbte_nro;
+
+            $response = $wsfe->recuperarSiYaEmitido($tipoCbte, $cbteNro);
+
+            if ($response === null) {
+                $payload['cbte_desde'] = $cbteNro;
+                $payload['cbte_hasta'] = $cbteNro;
+                $response = $issuer->issue($payload);
+            } elseif (empty($response['cae']) && ($response['authorized_without_cae'] ?? false)) {
+                // ARCA autorizó pero no tenemos CAE → buscar en histórico
+                $historicalCae = $invoice->arca_response['cae'] ?? null;
+
+                if ($historicalCae) {
+                    $response['cae'] = $historicalCae;
+                    Log::info('ARCA CAE recovered from historical response.', [
+                        'booking_id' => $invoice->booking_id,
+                        'cbte_nro'   => $cbteNro,
+                        'cae'        => $historicalCae,
+                    ]);
+                } else {
+                    Log::error('ARCA comprobante autorizado sin CAE disponible.', [
+                        'booking_id' => $invoice->booking_id,
+                        'cbte_nro'   => $cbteNro,
+                    ]);
+                }
+            } else {
+                Log::info('ARCA invoice recovered from previous emission.', [
+                    'booking_id' => $invoice->booking_id,
+                    'cbte_nro'   => $cbteNro,
+                    'cae'        => $response['cae'],
+                ]);
+            }
+
+            // FASE C — transacción corta: persiste CAE y encola email.
+            DB::transaction(function () use ($invoice, $response, $preview, $booking): void {
+                $inv = $this->findInvoiceForUpdate((int) $invoice->booking_id);
+
+                if ($inv?->isApproved()) {
+                    return;
+                }
+
+                $inv ??= $invoice;
+
+                // Si no hay CAE, no marcar como approved → marcar como error para revisión manual
+                if (empty($response['cae'])) {
+                    $inv->fill([
+                        'status'        => 'error',
+                        'arca_response' => $response,
+                        'error_code'    => 'CAE_MISSING',
+                        'error_message' => 'ARCA autorizó el comprobante pero el CAE no está disponible. Requiere revisión manual.',
+                    ]);
+                    $inv->save();
+                    $this->syncItems($inv, $preview);
+
+                    return;
+                }
+
+                $inv->fill([
+                    'status'        => 'approved',
                     'arca_response' => $response,
-                    'cae' => $response['cae'] ?? null,
-                    'cae_due_date' => $this->normalizeArcaDate($response['cae_vencimiento'] ?? null),
-                    'cbte_tipo' => $response['cbte_tipo'] ?? $invoice->cbte_tipo,
-                    'cbte_nro' => $response['cbte_nro'] ?? $invoice->cbte_nro,
-                    'point_of_sale' => $response['punto_venta'] ?? $invoice->point_of_sale,
-                    'issued_at' => now(),
-                    'error_code' => null,
+                    'cae'           => $response['cae'],
+                    'cae_due_date'  => $this->normalizeArcaDate($response['cae_vencimiento'] ?? null),
+                    'cbte_tipo'     => $response['cbte_tipo'] ?? $inv->cbte_tipo,
+                    'cbte_nro'      => $response['cbte_nro'] ?? $inv->cbte_nro,
+                    'point_of_sale' => $response['punto_venta'] ?? $inv->point_of_sale,
+                    'issued_at'     => now(),
+                    'error_code'    => null,
                     'error_message' => null,
                 ]);
-                $invoice->save();
-                $this->syncItems($invoice, $preview);
+                $inv->save();
+                $this->syncItems($inv, $preview);
 
-                // Enviar email con factura fiscal al comprador
                 if (empty($booking->email)) {
                     Log::warning('ARCA invoice email skipped: booking has no email.', [
                         'booking_id' => $booking->id,
@@ -138,14 +228,15 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
                         'booking_id' => $booking->id,
                     ]);
                 } else {
-                    Mail::to($booking->email)->queue(new ArcaInvoiceMail($invoice, $booking));
+                    Mail::to($booking->email)->queue(new ArcaInvoiceMail($inv, $booking));
                     Log::info('ARCA invoice email queued.', [
-                        'booking_id' => $booking->id,
-                        'email' => $booking->email,
-                        'arca_invoice_id' => $invoice->id,
+                        'booking_id'      => $booking->id,
+                        'email'           => $booking->email,
+                        'arca_invoice_id' => $inv->id,
                     ]);
                 }
             });
+
         } catch (Throwable $exception) {
             DB::transaction(function () use ($booking, $exception): void {
                 $invoice = $this->findInvoiceForUpdate($booking->id);
@@ -156,14 +247,14 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
 
                 $invoice ??= new ArcaInvoice(['booking_id' => $booking->id]);
                 $invoice->fill([
-                    'booking_id' => $booking->id,
-                    'organizer_id' => $booking->organizer_id,
-                    'customer_id' => $booking->customer_id,
-                    'environment' => config('arca.environment', 'homologation'),
-                    'status' => 'error',
+                    'booking_id'    => $booking->id,
+                    'organizer_id'  => $booking->organizer_id,
+                    'customer_id'   => $booking->customer_id,
+                    'environment'   => config('arca.environment', 'homologation'),
+                    'status'        => 'error',
                     'invoice_model' => config('arca.invoice_model', 'customer_service_fee_invoice'),
-                    'currency' => 'ARS',
-                    'error_code' => (string) $exception->getCode(),
+                    'currency'      => 'ARS',
+                    'error_code'    => (string) $exception->getCode(),
                     'error_message' => $exception->getMessage(),
                 ]);
                 $invoice->save();
@@ -171,9 +262,8 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
 
             Log::error('ARCA invoice issuing failed.', [
                 'booking_id' => $booking->id,
-                'error' => $exception->getMessage(),
+                'error'      => $exception->getMessage(),
             ]);
-
         }
     }
 

@@ -142,7 +142,7 @@ class TicketController extends Controller
     }
 
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('organizer.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -246,7 +246,7 @@ class TicketController extends Controller
       $ticket_content->save();
     }
 
-    Session::flash('success', 'Event Ticket Update successfully!');
+    Session::flash('success', __('organizer.flash.ticket_updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -255,7 +255,7 @@ class TicketController extends Controller
   {
     $ticket = $this->getOwnedTicketOrFail($request->id);
     $ticket->delete();
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('organizer.flash.deleted_successfully'));
   }
   //delete_variation
   public function delete_variation($id)
@@ -280,7 +280,7 @@ class TicketController extends Controller
       $ticket = $this->getOwnedTicketOrFail($id);
       $ticket->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('organizer.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

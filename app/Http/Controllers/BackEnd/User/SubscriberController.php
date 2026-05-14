@@ -36,7 +36,7 @@ class SubscriberController extends Controller
     try {
       Subscriber::where('id', $id)->first()->delete();
 
-      return redirect()->back()->with('success', 'Deleted Successfully');
+      return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
     } catch (ModelNotFoundException $e) {
       return redirect()->back()->with('warning', 'Something went wrong');
     }
@@ -51,7 +51,7 @@ class SubscriberController extends Controller
         Subscriber::where('id', $id)->first()->delete();
       }
 
-      Session::flash('success', 'Deleted Successfully');
+      Session::flash('success', __('admin.flash.deleted_successfully'));
 
       return response()->json(['status' => 'success'], 200);
     } catch (ModelNotFoundException $e) {

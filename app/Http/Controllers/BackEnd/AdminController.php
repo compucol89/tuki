@@ -416,7 +416,7 @@ class AdminController extends Controller
       'password' => Hash::make($request->new_password)
     ]);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -447,7 +447,7 @@ class AdminController extends Controller
   {
     $transcation = Transaction::where('id', $request->id)->first();
     $transcation->delete();
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return back();
   }
@@ -460,7 +460,7 @@ class AdminController extends Controller
       $transcation = Transaction::where('id', $id)->first();
       $transcation->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

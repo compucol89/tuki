@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Mews\Purifier\Facades\Purifier;
@@ -59,7 +60,8 @@ class BasicController extends Controller
           'timezone' => $request->timezone
         ]
       );
-      Session::flash('success', 'Updated Successfully');
+      Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
       return back();
     } catch (\Exception $th) {
     }
@@ -90,7 +92,8 @@ class BasicController extends Controller
       ['theme_version' => $request->theme_version]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -118,7 +121,8 @@ class BasicController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -158,7 +162,8 @@ class BasicController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -192,7 +197,8 @@ class BasicController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -225,7 +231,8 @@ class BasicController extends Controller
       ['to_mail' => $request->to_mail]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -266,7 +273,8 @@ class BasicController extends Controller
         ['breadcrumb' => $breadcrumbName]
       );
 
-      Session::flash('success', 'Updated Successfully');
+      Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -319,7 +327,8 @@ class BasicController extends Controller
     setEnvironmentValue($array);
     Artisan::call('config:clear');
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -345,7 +354,8 @@ class BasicController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -377,7 +387,8 @@ class BasicController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -420,7 +431,7 @@ class BasicController extends Controller
     setEnvironmentValue($array);
     Artisan::call('config:clear');
 
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -463,7 +474,7 @@ class BasicController extends Controller
     setEnvironmentValue($array);
     Artisan::call('config:clear');
 
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -526,7 +537,8 @@ class BasicController extends Controller
       Artisan::call('up');
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -567,7 +579,8 @@ class BasicController extends Controller
         ['footer_logo' => $logoName]
       );
 
-      Session::flash('success', 'Updated Successfully');
+      Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -598,7 +611,8 @@ class BasicController extends Controller
       ['google_adsense_publisher_id' => $request->google_adsense_publisher_id]
     );
 
-    Session::flash('success', 'Advertise settings updated successfully!');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', 'Advertise settings updated successfully!');
 
     return redirect()->back();
   }
@@ -735,7 +749,7 @@ class BasicController extends Controller
     $content = json_encode($content);
     file_put_contents(public_path('manifest.json'), $content);
 
-    return back()->with('success', 'Updated Successfully');
+    return back()->with('success', __('admin.flash.updated_successfully'));
   }
   public function pwa_scanner(Request $request)
   {
@@ -866,7 +880,7 @@ class BasicController extends Controller
     $content = json_encode($content);
     file_put_contents(public_path('pwa_manifest.json'), $content);
 
-    return back()->with('success', 'Updated Successfully');
+    return back()->with('success', __('admin.flash.updated_successfully'));
   }
 
   // /taxCommission
@@ -896,7 +910,7 @@ class BasicController extends Controller
         'how_ticket_will_be_send' => $request->how_ticket_will_be_send,
       ]
     );
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -926,7 +940,7 @@ class BasicController extends Controller
         'commission' => $request->commission
       ]
     );
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -1030,7 +1044,8 @@ class BasicController extends Controller
 
     setEnvironmentValue($array);
 
-    Session::flash('success', 'Updated Successfully!');
+    Cache::forget('global_basic_settings');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }

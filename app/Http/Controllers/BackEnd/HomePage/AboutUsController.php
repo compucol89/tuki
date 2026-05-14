@@ -55,7 +55,7 @@ class AboutUsController extends Controller
         'image' => $imageName
       ]);
 
-      Session::flash('success', 'Added Successfully');
+      Session::flash('success', __('admin.flash.added_successfully'));
 
       return redirect()->back();
     } else {
@@ -67,7 +67,7 @@ class AboutUsController extends Controller
         'image' => isset($imageName) ? $imageName : $aboutUsInfo->image
       ]);
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
       return redirect()->back();
     }

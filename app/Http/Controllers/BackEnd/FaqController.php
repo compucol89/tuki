@@ -52,7 +52,7 @@ class FaqController extends Controller
 
     FAQ::create($request->all());
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -75,7 +75,7 @@ class FaqController extends Controller
 
     FAQ::find($request->id)->update($request->all());
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -84,7 +84,7 @@ class FaqController extends Controller
   {
     FAQ::find($id)->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -95,7 +95,7 @@ class FaqController extends Controller
       FAQ::find($id)->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

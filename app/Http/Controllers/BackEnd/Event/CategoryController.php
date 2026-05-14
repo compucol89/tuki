@@ -10,6 +10,7 @@ use App\Models\Event\EventCategory;
 use App\Models\Language;
 use App\Http\Helpers\UploadFile;
 use App\Models\Event\EventContent;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -45,7 +46,8 @@ class CategoryController extends Controller
     $ins['slug'] = createSlug($request->name);
     $ins['image'] = $fileName;
     EventCategory::create($ins);
-    Session::flash('success', 'Added Successfully');
+    Cache::forget('event_categories_' . $ins['language_id']);
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -56,12 +58,12 @@ class CategoryController extends Controller
 
     if ($request['is_featured'] == 'yes') {
       $category->update(['is_featured' => 'yes']);
-
-      Session::flash('success', 'Updated Successfully!');
+      Cache::forget('event_categories_' . $category->language_id);
+      Session::flash('success', __('admin.flash.updated_successfully'));
     } else {
       $category->update(['is_featured' => 'no']);
-
-      Session::flash('success', 'Updated Successfully!');
+      Cache::forget('event_categories_' . $category->language_id);
+      Session::flash('success', __('admin.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -84,9 +86,10 @@ class CategoryController extends Controller
       @unlink(public_path('assets/admin/img/event-category/') . $find->image);
       $ins['image'] = $fileName;
     }
-    EventCategory::find($request->id)->update($ins);
-
-    Session::flash('success', 'Updated Successfully!');
+    $category = EventCategory::find($request->id);
+    $category->update($ins);
+    Cache::forget('event_categories_' . $category->language_id);
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -94,6 +97,7 @@ class CategoryController extends Controller
   public function destroy($id)
   {
     $category = EventCategory::where('id', $id)->first();
+    $languageId = $category->language_id;
     @unlink(public_path('assets/admin/img/event-category/') . $category->image);
 
     //events
@@ -103,7 +107,8 @@ class CategoryController extends Controller
     }
 
     $category->delete();
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    Cache::forget('event_categories_' . $languageId);
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -112,6 +117,7 @@ class CategoryController extends Controller
 
     foreach ($ids as $id) {
       $category = EventCategory::where('id', $id)->first();
+      $languageId = $category->language_id;
       @unlink(public_path('assets/admin/img/event-category/') . $category->image);
 
       //events
@@ -121,8 +127,9 @@ class CategoryController extends Controller
       }
 
       $category->delete();
+      Cache::forget('event_categories_' . $languageId);
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

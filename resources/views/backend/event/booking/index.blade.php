@@ -171,7 +171,7 @@
                               <a target="_blank"
                                 href="{{ route('admin.organizer_management.organizer_details', ['id' => $booking->organizer_id, 'language' => $defaultLang->code]) }}">{{ strlen($booking->organizer->username) > 20 ? mb_substr($booking->organizer->username, 0, 20, 'UTF-8') . '....' : $booking->organizer->username }}</a>
                             @else
-                              <span class="badge badge-success">{{ __('Admin') }}</span>
+                              <span class="badge badge-success">{{ 'Admin' }}</span>
                             @endif
                           </td>
 

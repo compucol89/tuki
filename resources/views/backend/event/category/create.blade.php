@@ -18,20 +18,7 @@
             <p class="category-modal-intro__text">{{ __('Define una categoria clara y facil de reconocer para que despues sea simple elegirla al crear cada evento.') }}</p>
           </div>
 
-          @if (!empty($langs) && count($langs) > 1)
-            <div class="form-group category-form-group">
-              <label for="">{{ __('Idioma') . '*' }}</label>
-              <select name="language_id" class="form-control">
-                <option selected disabled>{{ __('Selecciona un idioma') }}</option>
-                @foreach ($langs as $lang)
-                  <option value="{{ $lang->id }}">{{ $lang->name }}</option>
-                @endforeach
-              </select>
-              <p id="err_language_id" class="mt-1 mb-0 text-danger em"></p>
-            </div>
-          @else
-            <input type="hidden" name="language_id" value="{{ $language->id }}">
-          @endif
+          <input type="hidden" name="language_id" value="{{ $defaultLang->id ?? 1 }}">
 
           <div class="form-group category-form-group">
             <div class="category-image-box">

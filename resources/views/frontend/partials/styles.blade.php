@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/fontawesome.5.9.0.min.css') }}">
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}">
 <!-- Padding Margin -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->
@@ -15,13 +16,6 @@
 <!-- Responsive css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/responsive.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}">
-@if ($currentLanguageInfo->direction == 1)
-  {{-- right-to-left css --}}
-  <link rel="stylesheet" href="{{ asset('assets/front/css/rtl-style.css') }}">
-
-  {{-- right-to-left-responsive css --}}
-  <link rel="stylesheet" href="{{ asset('assets/front/css/rtl-responsive.css') }}">
-@endif
 <style>
   :root {
     scroll-behavior: auto;

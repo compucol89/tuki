@@ -21,7 +21,7 @@ class ShopCouponController extends Controller
   {
 
     ShopCoupon::create($request->all());
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //update
@@ -31,7 +31,7 @@ class ShopCouponController extends Controller
     $in = $request->all();
     $update = ShopCoupon::where('id', $request->id)->first();
     $update->update($in);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //destroy
@@ -39,7 +39,7 @@ class ShopCouponController extends Controller
   {
     $delete = ShopCoupon::where('id', $request->id)->first();
     $delete->delete();
-    Session::flash('warning', 'Updated Successfully');
+    Session::flash('warning', __('admin.flash.updated_successfully'));
     return back();
   }
   //bulk_destroy
@@ -50,7 +50,7 @@ class ShopCouponController extends Controller
       $delete = ShopCoupon::where('id', $id)->first();
       $delete->delete();
     }
-    Session::flash('warning', 'Deleted Successfully');
+    Session::flash('warning', __('admin.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

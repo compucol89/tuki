@@ -19,6 +19,7 @@ use App\Models\Language;
 use App\Rules\MatchOldPasswordRule;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -74,32 +75,46 @@ class CustomerController extends Controller
     ];
 
     if ($info->google_recaptcha_status == 1) {
-      $messages['g-recaptcha-response.required'] = 'Please verify that you are not a robot.';
-      $messages['g-recaptcha-response.captcha'] = 'Captcha error! try again later or contact site admin.';
+      $messages['g-recaptcha-response.required'] = __('Por favor, verificá que no sos un robot.');
+      $messages['g-recaptcha-response.captcha'] = __('Error de verificación. Intentalo de nuevo.');
     }
 
     $request->validate($rules, $messages);
 
+    // Validar que existe el template de email antes de crear la cuenta
+    $mailTemplate = MailTemplate::where('mail_type', 'verify_email')->first();
+    if (!$mailTemplate) {
+      Log::error('Customer signup: verify_email MailTemplate not found');
+      Session::flash('error', __('Error de configuración. Contactá al administrador.'));
+      return redirect()->back();
+    }
+
     $in = $request->all();
     $in['password'] = Hash::make($request->password);
     $token = Str::random(32);
-
     $in['verification_token'] = $token;
 
-    // send a mail to user for verify his/her email address
-    $this->sendVerificationMail($request, $token);
-    Customer::create($in);
+    // Crear customer PRIMERO, luego enviar mail
+    $customer = Customer::create($in);
 
+    $mailSent = $this->sendVerificationMail($request, $token, $mailTemplate);
+
+    if (!$mailSent) {
+      // Si el mail falla, eliminar la cuenta para evitar cuentas huérfanas
+      $customer->delete();
+      Session::flash('error', __('No pudimos enviar el correo de verificación. Intentalo de nuevo más tarde.'));
+      return redirect()->back();
+    }
+
+    Session::flash('success', '¡Listo! Te mandamos un mail de verificación. Revisá tu bandeja de entrada y, por las dudas, también la carpeta de spam o correo no deseado.');
     return redirect()->route('customer.login');
   }
-  public function sendVerificationMail(Request $request, $token)
+  public function sendVerificationMail(Request $request, $token, $mailTemplate): bool
   {
-    // first get the mail template information from db
-    $mailTemplate = MailTemplate::where('mail_type', 'verify_email')->first();
     $mailSubject = $mailTemplate->mail_subject;
     $mailBody = $mailTemplate->mail_body;
 
-    // second get the website title & mail's smtp information from db
+    // get the website title & mail's smtp information from db
     $info = DB::table('basic_settings')
       ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
       ->first();
@@ -141,12 +156,11 @@ class CustomerController extends Controller
 
       $mail->send();
 
-      Session::flash('success', '¡Listo! Te mandamos un mail de verificación. Revisá tu bandeja de entrada y, por las dudas, también la carpeta de spam o correo no deseado.');
+      return true;
     } catch (Exception $e) {
-      Session::flash('error', 'Mail could not be sent!');
+      Log::error('Customer verification mail failed: ' . $e->getMessage());
+      return false;
     }
-
-    return;
   }
   public function signupVerify(Request $request, $token)
   {
@@ -340,9 +354,9 @@ class CustomerController extends Controller
 
       $mail->send();
 
-      Session::flash('success', 'A mail has been sent to your email address.');
+      Session::flash('success', __('customer.flash.mail_sent'));
     } catch (\Exception $e) {
-      Session::flash('error', 'Mail could not be sent!');
+      Session::flash('error', __('customer.flash.mail_not_sent'));
     }
 
     // store user email in session to use it later
@@ -367,7 +381,7 @@ class CustomerController extends Controller
     $customer = Customer::where('email',  $email)->first();
     $customer->password = Hash::make($request->password);
     $customer->save();
-    Session::flash('success', 'Your password has been reset.');
+    Session::flash('success', __('customer.flash.password_reset'));
 
     return redirect()->route('customer.login');
   }
@@ -412,7 +426,7 @@ class CustomerController extends Controller
       'password' => Hash::make($request->new_password)
     ]);
 
-    Session::flash('success', 'Password updated successfully!');
+    Session::flash('success', __('customer.flash.password_updated'));
 
     return back();
   }
@@ -453,7 +467,7 @@ class CustomerController extends Controller
     }
     $id = Auth::guard('customer')->user()->id;
     $update = Customer::find($id)->update($in);
-    Session::flash('success', 'Your profile has been successfully updated!');
+    Session::flash('success', __('customer.flash.profile_updated'));
 
     return back();
   }

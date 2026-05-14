@@ -37,7 +37,7 @@ class ProductController extends Controller
     $bex = Basic::where('uniqid', 12345)->first();
     $bex->update($in);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //create
@@ -135,7 +135,7 @@ class ProductController extends Controller
       }
     }
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //show
@@ -164,7 +164,7 @@ class ProductController extends Controller
     $product->update([
       'status' => $request['status']
     ]);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -177,12 +177,12 @@ class ProductController extends Controller
       $product->is_feature = 'yes';
       $product->save();
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     } else {
       $product->is_feature = 'no';
       $product->save();
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -269,7 +269,7 @@ class ProductController extends Controller
     }
 
     $product = $product->update($in);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //destroy
@@ -304,7 +304,7 @@ class ProductController extends Controller
     // finally delete the course
     $product->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
   //bulk_destroy
   public function bulk_destroy(Request $request)
@@ -339,7 +339,7 @@ class ProductController extends Controller
       // finally delete the course
       $product->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

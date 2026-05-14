@@ -44,7 +44,7 @@ class PageHeadingController extends Controller
       $heading->update($request->all());
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }

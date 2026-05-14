@@ -95,11 +95,11 @@ class PopupController extends Controller
     if ($request->status == 1) {
       $popup->update(['status' => 1]);
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     } else {
       $popup->update(['status' => 0]);
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -139,7 +139,7 @@ class PopupController extends Controller
       'end_time' => $request->has('end_time') ? date('h:i', strtotime($request['end_time'])) : null
     ]);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -158,7 +158,7 @@ class PopupController extends Controller
 
     $popup->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   /**
@@ -179,7 +179,7 @@ class PopupController extends Controller
       $popup->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

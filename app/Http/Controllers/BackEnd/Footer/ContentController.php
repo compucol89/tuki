@@ -84,7 +84,7 @@ class ContentController extends Controller
       ]);
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

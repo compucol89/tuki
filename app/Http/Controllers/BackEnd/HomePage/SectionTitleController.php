@@ -36,13 +36,13 @@ class SectionTitleController extends Controller
         'language_id' => $language->id
       ]);
 
-      Session::flash('success', 'Added Successfully');
+      Session::flash('success', __('admin.flash.added_successfully'));
 
       return redirect()->back();
     } else {
       $titleInfo->update($request->all());
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
 
       return redirect()->back();
     }

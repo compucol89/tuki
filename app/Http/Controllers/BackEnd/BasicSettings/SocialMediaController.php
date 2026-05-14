@@ -21,7 +21,7 @@ class SocialMediaController extends Controller
   {
     SocialMedia::create($request->all());
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -39,6 +39,6 @@ class SocialMediaController extends Controller
   {
     SocialMedia::find($id)->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 }

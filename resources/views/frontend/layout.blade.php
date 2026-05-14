@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ $currentLanguageInfo->code == 'es' ? 'es-AR' : ($currentLanguageInfo->code ?? 'es-AR') }}" dir="{{ $currentLanguageInfo->direction == 1 ? 'rtl' : 'ltr' }}">
+<html lang="es-AR" dir="ltr">
 
 <head>
   @php
@@ -37,7 +37,6 @@
   <meta property="og:type" content="{{ $ogType }}" />
   <meta property="og:site_name" content="{{ $websiteInfo->website_title }}" />
   <meta property="og:locale" content="es_AR" />
-  <meta property="og:locale:alternate" content="es_ES" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ $ogTitle }}" />
   <meta name="twitter:description" content="{{ $ogDescription }}" />
@@ -195,7 +194,7 @@
   {{-- include scripts --}}
   <script>
     "use strict";
-    var rtl = {{ $currentLanguageInfo->direction }};
+    var rtl = 0;
   </script>
   @includeIf('frontend.partials.scripts')
 

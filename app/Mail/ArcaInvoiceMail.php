@@ -6,6 +6,7 @@ namespace App\Mail;
 
 use App\Models\Arca\ArcaInvoice;
 use App\Models\Event\Booking;
+use App\Services\Billing\ArcaInvoicePdfGenerator;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -26,9 +27,15 @@ class ArcaInvoiceMail extends Mailable implements ShouldQueue
         $invoiceNumber = $this->formatInvoiceNumber($this->arcaInvoice);
         $subject = 'Factura electrónica ' . $invoiceNumber . ' — TukiPass';
 
+        $pdfPath = app(ArcaInvoicePdfGenerator::class)->generate($this->arcaInvoice, $this->booking);
+
         return $this
             ->subject($subject)
             ->view('emails.arca_invoice')
+            ->attach($pdfPath, [
+                'as' => 'Factura_' . $invoiceNumber . '.pdf',
+                'mime' => 'application/pdf',
+            ])
             ->with([
                 'invoice' => $this->arcaInvoice,
                 'booking' => $this->booking,

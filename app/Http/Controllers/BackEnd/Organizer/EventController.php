@@ -292,7 +292,7 @@ class EventController extends Controller
       }
     });
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('organizer.flash.added_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   /**
@@ -309,7 +309,7 @@ class EventController extends Controller
     $event->update([
       'status' => $request['status']
     ]);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -328,12 +328,12 @@ class EventController extends Controller
       $event->is_featured = 'yes';
       $event->save();
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('organizer.flash.updated_successfully'));
     } else {
       $event->is_featured = 'no';
       $event->save();
 
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('organizer.flash.updated_successfully'));
     }
 
     return redirect()->back();
@@ -507,7 +507,7 @@ class EventController extends Controller
 
     $event->update($in);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 
@@ -560,7 +560,7 @@ class EventController extends Controller
     // finally delete the course
     $event->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('organizer.flash.deleted_successfully'));
   }
   //bulk_delete
   public function bulk_delete(Request $request)
@@ -606,7 +606,7 @@ class EventController extends Controller
       // finally delete the course
       $event->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('organizer.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   public function editTicketSetting($id)
@@ -633,7 +633,7 @@ class EventController extends Controller
     $in['instructions'] = $instructions;
 
     $event->update($in);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

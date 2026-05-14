@@ -197,7 +197,7 @@ class EventBookingController extends Controller
 
       $mail->send();
 
-      Session::flash('success', 'Payment status updated & mail has been sent successfully!');
+      Session::flash('success', __('organizer.flash.payment_status_updated_mail_sent'));
     } catch (Exception $e) {
       Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
     }
@@ -231,7 +231,7 @@ class EventBookingController extends Controller
 
     $Booking->delete();
 
-    return redirect()->back()->with('success', 'Booking deleted successfully!');
+    return redirect()->back()->with('success', __('organizer.flash.booking_deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -250,7 +250,7 @@ class EventBookingController extends Controller
       $booking->delete();
     }
 
-    Session::flash('success', 'Booking deleted successfully!');
+    Session::flash('success', __('organizer.flash.booking_deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

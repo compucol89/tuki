@@ -37,7 +37,7 @@
               <ul class="navigation navigation--premium clearfix">
                 @foreach ($links as $link)
                   @php
-                    $href = get_href($link, $currentLanguageInfo->id);
+                    $href = get_href($link);
                     $isActive = ($currentUrl === $href);
                     $relAttr = ($link['target'] === '_blank') ? 'noopener noreferrer' : '';
                   @endphp
@@ -52,7 +52,7 @@
                       <ul>
                         @foreach ($link['children'] as $level2)
                           @php
-                            $l2Href = get_href($level2, $currentLanguageInfo->id);
+                            $l2Href = get_href($level2);
                             $l2Rel = ($level2['target'] === '_blank') ? 'noopener noreferrer' : '';
                           @endphp
                           <li>

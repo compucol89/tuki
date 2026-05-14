@@ -45,7 +45,7 @@ class ContactController extends Controller
     $bs->language_id = $lang->id;
     $bs->save();
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

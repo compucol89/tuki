@@ -303,14 +303,16 @@
     observer.observe(hero);
   })();
 
-  // Daterangepicker
-  $('#evf-dates').daterangepicker({
-    autoUpdateInput: false,
-    locale: { cancelLabel: 'Limpiar', applyLabel: 'Aplicar', format: 'YYYY-MM-DD', separator: ' a ' }
+  document.addEventListener('DOMContentLoaded', function() {
+    // Daterangepicker
+    $('#evf-dates').daterangepicker({
+      autoUpdateInput: false,
+      locale: { cancelLabel: 'Limpiar', applyLabel: 'Aplicar', format: 'YYYY-MM-DD', separator: ' a ' }
+    });
+    $('#evf-dates').on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('YYYY-MM-DD') + ' a ' + picker.endDate.format('YYYY-MM-DD'));
+    });
+    $('#evf-dates').on('cancel.daterangepicker', function() { $(this).val(''); });
   });
-  $('#evf-dates').on('apply.daterangepicker', function(ev, picker) {
-    $(this).val(picker.startDate.format('YYYY-MM-DD') + ' a ' + picker.endDate.format('YYYY-MM-DD'));
-  });
-  $('#evf-dates').on('cancel.daterangepicker', function() { $(this).val(''); });
 </script>
 @endsection

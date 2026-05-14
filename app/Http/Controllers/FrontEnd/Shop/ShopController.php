@@ -671,7 +671,7 @@ class ShopController extends Controller
             'comment' => $request->comment,
           ]);
         }
-        Session::flash('success', 'Review update successfully');
+        Session::flash('success', __('customer.flash.review_updated'));
         return back();
       } else {
         $input = $request->all();
@@ -679,11 +679,11 @@ class ShopController extends Controller
         $data = new ProductReview;
         $data->create($input);
         $avgreview = ProductReview::where('product_id', $request->product_id)->avg('review');
-        Session::flash('success', 'Review submit successfully');
+        Session::flash('success', __('customer.flash.review_submitted'));
         return back();
       }
     } else {
-      Session::flash('error', 'Review submit not succesfull');
+      Session::flash('error', __('customer.flash.review_not_submitted'));
       return back();
     }
   }

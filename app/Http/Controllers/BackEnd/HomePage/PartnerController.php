@@ -56,7 +56,7 @@ class PartnerController extends Controller
     } else {
       $data->update($datas);
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -70,7 +70,7 @@ class PartnerController extends Controller
       'serial_number' => $request->serial_number,
     ]);
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -85,7 +85,7 @@ class PartnerController extends Controller
     }
     $partner->update($in);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -99,7 +99,7 @@ class PartnerController extends Controller
 
     $partner->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
   public function bulk_delete(Request $request)
   {
@@ -114,7 +114,7 @@ class PartnerController extends Controller
       $partner->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

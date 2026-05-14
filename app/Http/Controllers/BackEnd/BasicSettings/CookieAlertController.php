@@ -64,7 +64,7 @@ class CookieAlertController extends Controller
       $data->update($request->all());
     }
 
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

@@ -233,7 +233,7 @@
                         <div class="version-body">
                           <div class="row">
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Title') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
                                   value="{{ @$product_content->title }}" placeholder="Enter  title">
@@ -241,7 +241,7 @@
                             </div>
 
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 @php
                                   $categories = DB::table('product_categories')
                                       ->where('language_id', $language->id)
@@ -266,7 +266,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label for="summary">{{ __('Summary') }} </label>
                                 <textarea name="{{ $language->code }}_summary" id="summary" class="form-control" rows="4"
                                   placeholder="{{ __('Enter Product Summary') }}">{{ @$product_content->summary }}</textarea>
@@ -276,7 +276,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Description') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
                                   name="{{ $language->code }}_description" placeholder="{{ __('Enter Product Description') }}" data-height="300">{!! @$product_content->description !!}</textarea>
@@ -286,7 +286,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label for="">{{ __('Tags') }} </label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_tags"
                                   value="{{ @$product_content->tags }}" data-role="tagsinput"
@@ -297,7 +297,7 @@
                           </div>
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Keywords') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords"
                                   value="{{ @$product_content->meta_keywords }}"
@@ -307,7 +307,7 @@
                           </div>
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Description') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
                                   placeholder="{{ __('Enter Meta Description') }}">{{ @$product_content->meta_description }}</textarea>

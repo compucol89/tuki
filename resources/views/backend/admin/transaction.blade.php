@@ -69,7 +69,7 @@
                               <a target="_blank"
                                 href="{{ route('admin.organizer_management.organizer_details', ['id' => $organizer->id, 'language' => $defaultLang->code]) }}">{{ $organizer->username }}</a>
                             @else
-                              <span class="badge badge-success">{{ __('Admin') }}</span>
+                              <span class="badge badge-success">{{ 'Admin' }}</span>
                             @endif
                           </td>
                           <td>

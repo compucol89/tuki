@@ -47,7 +47,7 @@ class SupportTicketController extends Controller
       $in['attachment'] = $fileName;
     }
     $save = SupportTicket::create($in);
-    Session::flash('success', 'Ticket has been submitted successfully..!');
+    Session::flash('success', __('customer.flash.ticket_submitted'));
     return back();
   }
   //message
@@ -107,7 +107,7 @@ class SupportTicketController extends Controller
       'last_message' => Carbon::now()
     ]);
 
-    Session::flash('success', 'Message Sent Successfully');
+    Session::flash('success', __('customer.flash.message_sent'));
     return back();
   }
 }

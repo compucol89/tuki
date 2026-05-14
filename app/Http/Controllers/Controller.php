@@ -35,26 +35,7 @@ class Controller extends BaseController
 
   public function getLanguage()
   {
-    // Site is configured to always use Spanish
-    $spanishLanguage = Language::where('code', 'es')->first();
-    if ($spanishLanguage) {
-      return $spanishLanguage;
-    }
-
-    // Fallback if Spanish is not configured
-    if (Session::has('lang')) {
-      $locale = Session::get('lang');
-    }
-    if (empty($locale)) {
-      $language = Language::where('is_default', 1)->first();
-    } else {
-      $language = Language::where('code', $locale)->first();
-      if (empty($language)) {
-        $language = Language::where('is_default', 1)->first();
-      }
-    }
-
-    return $language;
+    return Language::where('code', 'es')->first();
   }
 
 
@@ -91,17 +72,6 @@ class Controller extends BaseController
     $breadcrumb = Basic::select('breadcrumb')->first();
 
     return $breadcrumb;
-  }
-
-
-  public function changeLanguage(Request $request)
-  {
-    // put the selected language in session
-    $langCode = $request['lang_code'];
-
-    $request->session()->put('lang', $langCode);
-
-    return redirect()->back();
   }
 
 

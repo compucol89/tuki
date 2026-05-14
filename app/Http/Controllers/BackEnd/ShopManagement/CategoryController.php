@@ -37,7 +37,7 @@ class CategoryController extends Controller
     $ins = $request->all();
     $ins['slug'] = createSlug($request->name);
     ProductCategory::create($ins);
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -48,9 +48,9 @@ class CategoryController extends Controller
     $feature->is_feature = $request->is_feature;
     $feature->save();
     if ($request->is_feature == 1) {
-      Session::flash('success', 'Updated Successfully');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     } else {
-      Session::flash('warning', 'Updated Successfully');
+      Session::flash('warning', __('admin.flash.updated_successfully'));
     }
 
     return back();
@@ -64,7 +64,7 @@ class CategoryController extends Controller
 
     ProductCategory::find($request->id)->update($ins);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -77,7 +77,7 @@ class CategoryController extends Controller
       $product_content->delete();
     }
     $category->delete();
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
   //bulk_delete
   public function bulk_delete(Request $request)
@@ -91,7 +91,7 @@ class CategoryController extends Controller
       }
       $category->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

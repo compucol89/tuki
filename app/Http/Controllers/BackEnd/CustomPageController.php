@@ -116,7 +116,7 @@ class CustomPageController extends Controller
       $pageContent->save();
     }
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -207,7 +207,7 @@ class CustomPageController extends Controller
       $pageContent->save();
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return Response::json(['status' => 'success'], 200);
   }
 
@@ -221,7 +221,7 @@ class CustomPageController extends Controller
   {
     Page::where('id', $id)->first()->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   /**
@@ -238,7 +238,7 @@ class CustomPageController extends Controller
       Page::where('id', $id)->first()->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

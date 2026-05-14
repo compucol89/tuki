@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Log;
 
 class WsfeClient
 {
-    protected string $endpoint;
-    protected string $cuit;
-    protected int $puntoVenta;
+    protected string $endpoint = '';
+    protected string $cuit = '';
+    protected int $puntoVenta = 0;
     protected WsaaClient $wsaa;
     protected ?\SoapClient $soapClient = null;
     protected array $informationalEvents = [];
@@ -355,6 +355,59 @@ class WsfeClient
             'fecha' => (string) $detalle->CbteFch,
             'imp_total' => (float) $detalle->ImpTotal,
         ];
+    }
+
+    /**
+     * Intenta recuperar un comprobante que ARCA autorizó pero no llegó a persistirse en DB.
+     * Retorna el mismo formato que autorizarComprobante(), o null si no existe o no tiene CAE.
+     */
+    public function recuperarSiYaEmitido(int $cbteTipo, int $cbteNro): ?array
+    {
+        try {
+            $result = $this->verificarComprobante($cbteTipo, $cbteNro);
+
+            // Caso 1: ARCA tiene CAE → recuperación directa
+            if (!empty($result['cae'])) {
+                return [
+                    'cae'             => $result['cae'],
+                    'cae_vencimiento' => $result['cae_vencimiento'],
+                    'resultado'       => $result['resultado'],
+                    'cbte_tipo'       => $cbteTipo,
+                    'cbte_desde'      => $cbteNro,
+                    'cbte_hasta'      => $cbteNro,
+                    'cbte_nro'        => $cbteNro,
+                    'punto_venta'     => $this->puntoVenta,
+                    'observaciones'   => [],
+                    'recovered'       => true,
+                ];
+            }
+
+            // Caso 2: ARCA dice autorizado pero sin CAE → señal de comprobante consumido
+            if (($result['resultado'] ?? '') === 'A') {
+                Log::warning('ARCA comprobante autorizado sin CAE.', [
+                    'cbte_tipo' => $cbteTipo,
+                    'cbte_nro'  => $cbteNro,
+                ]);
+
+                return [
+                    'cae'                    => null,
+                    'cae_vencimiento'        => null,
+                    'resultado'              => 'A',
+                    'cbte_tipo'              => $cbteTipo,
+                    'cbte_desde'             => $cbteNro,
+                    'cbte_hasta'             => $cbteNro,
+                    'cbte_nro'               => $cbteNro,
+                    'punto_venta'            => $this->puntoVenta,
+                    'observaciones'          => [],
+                    'recovered'              => true,
+                    'authorized_without_cae' => true,
+                ];
+            }
+        } catch (\Throwable) {
+            // Comprobante no encontrado o error ARCA → se emitirá uno nuevo
+        }
+
+        return null;
     }
 
     /*

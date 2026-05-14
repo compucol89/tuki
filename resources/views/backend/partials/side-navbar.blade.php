@@ -983,6 +983,17 @@
           </li>
         @endif
 
+        {{-- arca invoices --}}
+        @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Basic Settings', $rolePermissions)))
+          <li class="nav-item @if (request()->routeIs('admin.arca_invoices.index')) active
+              @elseif (request()->routeIs('admin.arca_invoices.show')) active @endif">
+            <a href="{{ route('admin.arca_invoices.index') }}">
+              <i class="fal fa-file-invoice"></i>
+              <p>{{ __('Facturas ARCA') }}</p>
+            </a>
+          </li>
+        @endif
+
         {{-- basic settings --}}
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Basic Settings', $rolePermissions)))
           <li

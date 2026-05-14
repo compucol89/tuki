@@ -141,7 +141,7 @@ class SupportTicketController extends Controller
       'status' => 2,
     ]);
 
-    Session::flash('success', 'Message Sent Successfully');
+    Session::flash('success', __('admin.flash.message_sent_successfully'));
     return back();
   }
   //ticket_closed
@@ -180,7 +180,7 @@ class SupportTicketController extends Controller
     $status = SupportTicketStatus::where('id', 1)->first();
     $status->support_ticket_status = $request->support_ticket_status;
     $status->save();
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
   //assign_stuff.supoort.ticket
@@ -209,7 +209,7 @@ class SupportTicketController extends Controller
       @unlink(public_path('assets/admin/img/support-ticket/attachment/') . $support_ticket->attachment);
       $support_ticket->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
     return back();
   }
 
@@ -229,7 +229,7 @@ class SupportTicketController extends Controller
         $support_ticket->delete();
       }
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
     return Response::json(['status' => 'success'], 200);
   }
 }

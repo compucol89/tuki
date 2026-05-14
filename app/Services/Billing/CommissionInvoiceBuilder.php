@@ -26,7 +26,7 @@ class CommissionInvoiceBuilder
             'invoice_model' => config('arca.invoice_model', 'customer_service_fee_invoice'),
             'currency' => 'ARS',
             'point_of_sale' => config('arca.punto_venta'),
-            'cbte_tipo' => config('arca.tipo_comprobante'),
+            'cbte_tipo' => $billing->default_invoice_type ?: config('arca.tipo_comprobante'),
             'concept' => config('arca.concepto'),
             'doc_tipo' => $this->resolveDocTipo($calculation['recipient']),
             'doc_nro' => $this->resolveDocNro($calculation['recipient']),
@@ -55,9 +55,7 @@ class CommissionInvoiceBuilder
         ]);
 
         $item = new ArcaInvoiceItem([
-            'description' => 'Comisión por servicio de gestión de compra de entradas TukiPass'
-                . (!empty($calculation['event_name']) ? ' — ' . $calculation['event_name'] : '')
-                . ' (Reserva #' . ($calculation['booking_id'] ?? '') . ')',
+            'description' => $this->buildItemDescription($billing, $calculation),
             'quantity' => 1,
             'unit_price' => $calculation['taxable_amount_for_tukipass'] ?? 0,
             'net_amount' => $calculation['taxable_amount_for_tukipass'] ?? 0,
@@ -104,5 +102,38 @@ class CommissionInvoiceBuilder
             return '0';
         }
         return $taxId;
+    }
+
+    private function buildItemDescription(BillingSetting $billing, array $calculation): string
+    {
+        $template = $billing->invoice_item_description
+            ?: 'Comisión por servicio de gestión de compra de entradas TukiPass';
+
+        $eventName = $calculation['event_name'] ?? '';
+        $bookingId = $calculation['booking_id'] ?? '';
+
+        $replacements = [];
+        if ($billing->invoice_item_include_event && $eventName) {
+            $replacements['{evento}'] = $eventName;
+        } else {
+            $replacements['{evento}'] = '';
+        }
+
+        if ($billing->invoice_item_include_booking && $bookingId) {
+            $replacements['{reserva}'] = (string) $bookingId;
+        } else {
+            $replacements['{reserva}'] = '';
+        }
+
+        $description = strtr($template, $replacements);
+
+        if ($billing->invoice_item_include_event && $eventName && strpos($description, $eventName) === false) {
+            $description .= ' — ' . $eventName;
+        }
+        if ($billing->invoice_item_include_booking && $bookingId && strpos($description, (string) $bookingId) === false) {
+            $description .= ' (Reserva #' . $bookingId . ')';
+        }
+
+        return trim($description);
     }
 }

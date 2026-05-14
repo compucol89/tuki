@@ -98,7 +98,7 @@
                         <div class="version-body">
                           <div class="row">
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Title') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
                                   placeholder="{{ __('Enter Title') }}">
@@ -106,7 +106,7 @@
                             </div>
 
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 @php
                                   $categories = DB::table('blog_categories')
                                       ->where('language_id', $language->id)
@@ -129,7 +129,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Author') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_author"
                                   placeholder="{{ __('Enter Author Name') }}">
@@ -139,7 +139,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Content') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote" name="{{ $language->code }}_content" placeholder="{{ __('Enter Blog Content') }}"
                                   data-height="300"></textarea>
@@ -149,7 +149,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Keywords') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords"
                                   placeholder="{{ __('Enter Meta Keywords') }}" data-role="tagsinput">
@@ -159,7 +159,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Description') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
                                   placeholder="{{ __('Enter Meta Description') }}"></textarea>

@@ -81,7 +81,7 @@
                         <div class="version-body">
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Title')."*" }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
                                   placeholder="{{ __('Enter Title') }}">
@@ -91,7 +91,7 @@
 
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Content')."*" }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote" name="{{ $language->code }}_content"
                                   data-height="300"></textarea>
@@ -101,7 +101,7 @@
 
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Keywords') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords"
                                   placeholder="{{ __('Enter Meta Keywords') }}" data-role="tagsinput">
@@ -111,7 +111,7 @@
 
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Description') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
                                   placeholder="{{ __('Enter Meta Description') }}"></textarea>

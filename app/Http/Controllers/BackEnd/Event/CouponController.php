@@ -37,7 +37,7 @@ class CouponController extends Controller
       'end_date' => date_format($endDate, 'Y-m-d')
     ]);
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -56,7 +56,7 @@ class CouponController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -65,6 +65,6 @@ class CouponController extends Controller
   {
     Coupon::where('id', $id)->first()->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 }

@@ -10,34 +10,41 @@ $(document).ready(function () {
     $('#submitBtn').trigger('click');
   }
 
-
-  $("#category").selectmenu({
-    change: function (event, ui) {
-      if ($(this).val().length == 0) {
-        $(this).remove();
+  if ($("#category").length) {
+    $("#category").selectmenu({
+      change: function (event, ui) {
+        if ($(this).val().length == 0) {
+          $(this).remove();
+        }
+        $('#catForm').submit();
       }
-      $('#catForm').submit();
-    }
-  });
+    });
+  }
 
-  $("#country").selectmenu({
-    change: function (event, ui) {
-      $('#country-id').val($(this).val());
-      clickSubmit();
-    }
-  });
-  $("#state").selectmenu({
-    change: function (event, ui) {
-      $('#state-id').val($(this).val());
-      clickSubmit();
-    }
-  });
-  $("#city").selectmenu({
-    change: function (event, ui) {
-      $('#city-id').val($(this).val());
-      clickSubmit();
-    }
-  });
+  if ($("#country").length) {
+    $("#country").selectmenu({
+      change: function (event, ui) {
+        $('#country-id').val($(this).val());
+        clickSubmit();
+      }
+    });
+  }
+  if ($("#state").length) {
+    $("#state").selectmenu({
+      change: function (event, ui) {
+        $('#state-id').val($(this).val());
+        clickSubmit();
+      }
+    });
+  }
+  if ($("#city").length) {
+    $("#city").selectmenu({
+      change: function (event, ui) {
+        $('#city-id').val($(this).val());
+        clickSubmit();
+      }
+    });
+  }
 
   // search course by category
   $('input:radio[name="event"]').on('change', function () {
@@ -80,13 +87,15 @@ $(document).ready(function () {
     }
   });
 
-  $(".product_short").selectmenu({
-    change: function (event, ui) {
-      if ($(this).val().length == 0) {
-        $(this).remove();
+  if ($(".product_short").length) {
+    $(".product_short").selectmenu({
+      change: function (event, ui) {
+        if ($(this).val().length == 0) {
+          $(this).remove();
+        }
+        $('#shortForm').submit();
       }
-      $('#shortForm').submit();
-    }
-  });
+    });
+  }
 
 });

@@ -84,7 +84,7 @@ class SupportTicketController extends Controller
         $in['user_type'] = 'organizer';
         SupportTicket::create($in);
 
-        Session::flash('success', 'Added Successfully');
+        Session::flash('success', __('organizer.flash.added_successfully'));
         return back();
     }
     //message
@@ -177,7 +177,7 @@ class SupportTicketController extends Controller
             'user_id' => Auth::guard('organizer')->user()->id
         ]);
 
-        Session::flash('success', 'Message Sent Successfully');
+        Session::flash('success', __('organizer.flash.message_sent_successfully'));
         return back();
     }
 
@@ -196,7 +196,7 @@ class SupportTicketController extends Controller
             @unlink(public_path('assets/admin/img/support-ticket/attachment/') . $support_ticket->attachment);
             $support_ticket->delete();
         }
-        Session::flash('success', 'Deleted Successfully');
+        Session::flash('success', __('organizer.flash.deleted_successfully'));
         return back();
     }
 
@@ -216,7 +216,7 @@ class SupportTicketController extends Controller
                 $support_ticket->delete();
             }
         }
-        Session::flash('success', 'Deleted Successfully');
+        Session::flash('success', __('organizer.flash.deleted_successfully'));
         return Response::json(['status' => 'success'], 200);
     }
 }

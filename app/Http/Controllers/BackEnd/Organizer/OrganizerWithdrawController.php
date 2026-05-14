@@ -200,7 +200,7 @@ class OrganizerWithdrawController extends Controller
       );
     }
 
-    Session::flash('success', 'Withdraw Request Send Successfully!');
+    Session::flash('success', __('organizer.flash.withdraw_request_sent'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -209,7 +209,7 @@ class OrganizerWithdrawController extends Controller
   public function Delete(Request $request)
   {
     $this->cancelPendingWithdrawOrFail($request->id);
-    return redirect()->back()->with('success', 'Withdraw Request Deleted Successfully!');
+    return redirect()->back()->with('success', __('organizer.flash.withdraw_request_deleted'));
   }
 
   //bulkDelete
@@ -219,7 +219,7 @@ class OrganizerWithdrawController extends Controller
     foreach ($ids as $id) {
       $this->cancelPendingWithdrawOrFail($id);
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('organizer.flash.deleted_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

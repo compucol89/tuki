@@ -31,7 +31,7 @@ class CategoryController extends Controller
     $ins['slug'] = createSlug($request->name);
     BlogCategory::create($ins);
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -42,7 +42,7 @@ class CategoryController extends Controller
     $ins['slug'] = createSlug($request->name);
     BlogCategory::find($request->id)->update($ins);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -56,7 +56,7 @@ class CategoryController extends Controller
     } else {
       $category->delete();
 
-      return redirect()->back()->with('success', 'Deleted Successfully');
+      return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
     }
   }
 
@@ -73,7 +73,7 @@ class CategoryController extends Controller
       } else {
         $category->delete();
 
-        Session::flash('success', 'Deleted Successfully');
+        Session::flash('success', __('admin.flash.deleted_successfully'));
       }
     }
 

@@ -30,7 +30,7 @@ class AdvertisementController extends Controller
       'image' => $request->hasFile('image') ? $imageName : null
     ]);
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -52,7 +52,7 @@ class AdvertisementController extends Controller
       'image' => $request->hasFile('image') ? $imageName : $ad->image
     ]);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -67,7 +67,7 @@ class AdvertisementController extends Controller
 
     $ad->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -84,7 +84,7 @@ class AdvertisementController extends Controller
       $ad->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

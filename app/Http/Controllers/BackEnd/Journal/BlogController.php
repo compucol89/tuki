@@ -84,7 +84,7 @@ class BlogController extends Controller
       $blogInformation->save();
     }
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -144,7 +144,7 @@ class BlogController extends Controller
       ]);
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -170,7 +170,7 @@ class BlogController extends Controller
 
     $blog->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   /**
@@ -198,7 +198,7 @@ class BlogController extends Controller
       $blog->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

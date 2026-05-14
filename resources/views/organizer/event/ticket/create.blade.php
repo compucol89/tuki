@@ -422,7 +422,7 @@
                         <div class="version-body">
                           <div class="row">
                             <div class="col-lg-12">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Ticket Name') . '*' }}</label>
                                 <input type="text" name="{{ $language->code }}_title"
                                   placeholder="{{ __('Enter Ticket Name') }}" class="form-control">
@@ -432,7 +432,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Description') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_description"
                                   placeholder="{{ __('Enter Description') }}"></textarea>

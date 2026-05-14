@@ -42,7 +42,7 @@ class SEOController extends Controller
       $seoInfo->update($request->all());
     }
 
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }

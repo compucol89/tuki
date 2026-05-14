@@ -123,7 +123,7 @@ class CustomerManagementController extends Controller
     $in['password'] = Hash::make($request->password);
 
     Customer::create($in);
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -137,7 +137,7 @@ class CustomerManagementController extends Controller
     } else {
       $user->update(['status' => 0]);
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -149,7 +149,7 @@ class CustomerManagementController extends Controller
     } else {
       $user->update(['email_verified_at' => null]);
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -185,7 +185,7 @@ class CustomerManagementController extends Controller
       'password' => Hash::make($request->new_password)
     ]);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -240,7 +240,7 @@ class CustomerManagementController extends Controller
     @unlink(public_path('assets/admin/img/customer-profile/') . $customer->photo);
 
     $customer->update($in);
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -279,7 +279,7 @@ class CustomerManagementController extends Controller
     @unlink(public_path('assets/admin/img/customer-profile/') . $customer->photo);
     $customer->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -313,7 +313,7 @@ class CustomerManagementController extends Controller
       $customer->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

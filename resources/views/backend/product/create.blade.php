@@ -191,7 +191,7 @@
                         <div class="version-body">
                           <div class="row">
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Title') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
                                   placeholder="{{ __('Enter Title') }}">
@@ -199,7 +199,7 @@
                             </div>
 
                             <div class="col-lg-6">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 @php
                                   $categories = DB::table('product_categories')
                                       ->where('language_id', $language->id)
@@ -224,7 +224,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label for="summary">{{ __('Summary') }} </label>
                                 <textarea name="{{ $language->code }}_summary" id="summary" class="form-control" rows="4"
                                   placeholder="{{ __('Enter Product Summary') }}"></textarea>
@@ -234,7 +234,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Description') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
                                   name="{{ $language->code }}_description" placeholder="{{ __('Enter Product Description') }}" data-height="300"></textarea>
@@ -244,7 +244,7 @@
 
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label for="">{{ __('Tags') }} </label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_tags"
                                   value="" data-role="tagsinput" placeholder="{{ __('Enter Tags') }}">
@@ -254,7 +254,7 @@
                           </div>
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Keywords') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords" value=""
                                   placeholder="{{ __('Enter Meta Keywords') }}" data-role="tagsinput">
@@ -263,7 +263,7 @@
                           </div>
                           <div class="row">
                             <div class="col">
-                              <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                              <div class="form-group">
                                 <label>{{ __('Meta Description') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
                                   placeholder="{{ __('Enter Meta Description') }}"></textarea>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\BackEnd\Event;
 
 use App\Exports\BookingExport;
 use App\Http\Controllers\Controller;
+use App\Jobs\ArcaInvoiceIssuingJob;
 use App\Jobs\BookingBackendInvoiceJob;
 use App\Jobs\TestJob;
 use App\Models\BasicSettings\Basic;
@@ -74,6 +75,8 @@ class EventBookingController extends Controller
       $booking->update([
         'paymentStatus' => 'completed'
       ]);
+
+      ArcaInvoiceIssuingJob::dispatch($id)->delay(now()->addSeconds(30));
 
       $earning = Earning::first();
       $earning->total_revenue = $earning->total_revenue + ($booking->price + $booking->tax);
@@ -360,7 +363,7 @@ class EventBookingController extends Controller
 
       $mail->send();
 
-      Session::flash('success', 'Updated Successfully!');
+      Session::flash('success', __('admin.flash.updated_successfully'));
     } catch (Exception $e) {
       Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
     }
@@ -410,7 +413,7 @@ class EventBookingController extends Controller
       $booking->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

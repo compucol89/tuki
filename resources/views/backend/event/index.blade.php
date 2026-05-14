@@ -175,7 +175,7 @@
                                 href="{{ route('admin.organizer_management.organizer_details', ['id' => $event->organizer_id, 'language' => $defaultLang->code]) }}">
                                 {{ strlen($event->organizer->username) > 20 ? mb_substr($event->organizer->username, 0, 20, 'UTF-8') . '....' : $event->organizer->username }}</a>
                             @else
-                              <span class="badge badge-success">{{ __('Admin') }}</span>
+                              <span class="badge badge-success">{{ 'Admin' }}</span>
                             @endif
                           </td>
                           <td>

@@ -7,6 +7,7 @@
     <script src="{{ asset('assets/front/js/popper.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/bootstrap.4.5.3.min.js') }}" defer></script>
     <!-- jQuery plugins (defer) -->
+    <script src="{{ asset('assets/front/js/jquery-ui.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/jquery.magnific-popup.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/imagesloaded.pkgd.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/slick.min.js') }}" defer></script>
@@ -14,7 +15,6 @@
     <script src="{{ asset('assets/front/js/jquery-syotimer.min.js') }}" defer></script>
     <!-- App scripts (defer) -->
     <script src="{{ asset('assets/front/js/script.js') }}" defer></script>
-    <script src="{{ asset('assets/admin/js/event.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/toastr.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/pwa.js') }}" defer></script>
 

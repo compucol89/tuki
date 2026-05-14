@@ -41,7 +41,7 @@ class MailTemplateController extends Controller
       'mail_body' => Purifier::clean($request->mail_body, 'youtube')
     ]);
 
-    $request->session()->flash('success', 'Updated Successfully');
+    $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }

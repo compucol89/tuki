@@ -14,7 +14,7 @@ Route::post('admin/check-qrcode/', 'BackEnd\AdminController@check_qrcode')->midd
 
 Route::get('admin/get-state-city/{id}', 'BackEnd\Event\EventController@city_state')->name('get.city.state');
 
-Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function () {
+Route::prefix('/admin')->middleware(['auth:admin'])->group(function () {
   // admin redirect to dashboard route
   Route::get('/dashboard', 'BackEnd\AdminController@redirectToDashboard')->name('admin.dashboard');
   Route::group(['middleware' => 'permission:Transaction'], function () {
@@ -351,34 +351,6 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
     Route::get('/product-order/report', 'BackEnd\ShopManagement\ProductOrderController@report')->name('admin.product_order.report');
     Route::get('/product-order/export', 'BackEnd\ShopManagement\ProductOrderController@export')->name('admin.product_order.export');
   });
-
-
-
-  // language management route start
-  Route::get('/edit-keywords', 'BackEnd\LanguageController@adminKeywordsEdit')->name('admin.edit_admin_keywords');
-  Route::post('/update-keywords', 'BackEnd\LanguageController@adminKeywordsUpdate')->name('admin.update_admin_keywords');
-
-  Route::prefix('/language-management')->middleware('permission:Language Management')->group(function () {
-    Route::get('', 'BackEnd\LanguageController@index')->name('admin.language_management');
-
-    Route::post('/store-language', 'BackEnd\LanguageController@store')->name('admin.language_management.store_language');
-
-    Route::post('/{id}/make-default-language', 'BackEnd\LanguageController@makeDefault')->name('admin.language_management.make_default_language');
-
-    Route::post('/update-language', 'BackEnd\LanguageController@update')->name('admin.language_management.update_language');
-
-    Route::get('/{id}/edit-keyword', 'BackEnd\LanguageController@editKeyword')->name('admin.language_management.edit_keyword');
-
-    Route::post('add-keyword', 'BackEnd\LanguageController@addKeyword')->name('admin.language_management.add_keyword');
-
-    Route::post('/{id}/update-keyword', 'BackEnd\LanguageController@updateKeyword')->name('admin.language_management.update_keyword');
-
-    Route::post('/{id}/delete-language', 'BackEnd\LanguageController@destroy')->name('admin.language_management.delete_language');
-
-    Route::get('/{id}/check-rtl', 'BackEnd\LanguageController@checkRTL');
-  });
-  // language management route end
-
 
   Route::prefix('/basic-settings')->middleware('permission:Basic Settings')->group(function () {
     // basic settings favicon route
@@ -785,4 +757,10 @@ Route::prefix('/admin')->middleware(['auth:admin', 'adminLang'])->group(function
 
     Route::post('/remove-image', 'BackEnd\SummernoteController@remove');
   });
+
+  // arca invoice audit routes
+  Route::get('/arca-invoices', 'BackEnd\ArcaInvoiceAuditController@index')->name('admin.arca_invoices.index');
+  Route::get('/arca-invoices/{id}', 'BackEnd\ArcaInvoiceAuditController@show')->name('admin.arca_invoices.show');
+  Route::post('/arca-invoices/{id}/retry', 'BackEnd\ArcaInvoiceAuditController@retry')->name('admin.arca_invoices.retry');
+  Route::get('/arca-invoices/{id}/pdf', 'BackEnd\ArcaInvoiceAuditController@downloadPdf')->name('admin.arca_invoices.pdf');
 });

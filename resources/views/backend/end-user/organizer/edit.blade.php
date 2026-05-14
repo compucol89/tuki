@@ -174,7 +174,7 @@
                             <div class="version-body">
                               <div class="row">
                                 <div class="col-lg-6">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('Name') . '*' }}</label>
                                     <input type="text" class="form-control" name="{{ $language->code }}_name"
                                       placeholder="Enter Your Full Name"
@@ -184,7 +184,7 @@
                                 </div>
 
                                 <div class="col-lg-6">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('Designation') }}</label>
                                     <input type="text" class="form-control"
                                       name="{{ $language->code }}_designation"
@@ -194,41 +194,41 @@
                                 </div>
 
                                 <div class="col-lg-6">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('Country') }}</label>
                                     <input type="text" class="form-control" name="{{ $language->code }}_country"
                                       value="{{ $organizer_info ? $organizer_info->country : '' }}">
                                   </div>
                                 </div>
                                 <div class="col-lg-6">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('City') }}</label>
                                     <input type="text" class="form-control" name="{{ $language->code }}_city"
                                       value="{{ $organizer_info ? $organizer_info->city : '' }}">
                                   </div>
                                 </div>
                                 <div class="col-lg-6 ">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('State') }}</label>
                                     <input type="text" class="form-control" name="{{ $language->code }}_state"
                                       value="{{ $organizer_info ? $organizer_info->state : '' }}">
                                   </div>
                                 </div>
                                 <div class="col-lg-6">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('Zip Code') }}</label>
                                     <input type="text" class="form-control" name="{{ $language->code }}_zip_code"
                                       value="{{ $organizer_info ? $organizer_info->zip_code : '' }}">
                                   </div>
                                 </div>
                                 <div class="col-lg-12">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('Address') }}</label>
                                     <textarea name="{{ $language->code }}_address" class="form-control">{{ $organizer_info ? $organizer_info->address : '' }}</textarea>
                                   </div>
                                 </div>
                                 <div class="col-lg-12">
-                                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                  <div class="form-group">
                                     <label>{{ __('Details') }}</label>
                                     <textarea name="{{ $language->code }}_details" rows="5" class="form-control">{{ $organizer_info ? $organizer_info->details : '' }}</textarea>
                                   </div>

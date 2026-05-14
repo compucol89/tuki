@@ -18,7 +18,7 @@ class MenuBuilderController extends Controller
     $information['language'] = $language;
 
     // set the selected language as locale
-    App::setLocale($language->code);
+    App::setLocale('es');
 
     // now, get the custom pages of that language from db
     $information['customPages'] = DB::table('pages')
@@ -48,6 +48,6 @@ class MenuBuilderController extends Controller
       ['language_id' => $request['languageId'], 'menus' => $request['str']]
     );
 
-    return response()->json(['message' => 'Updated Successfully'], 200);
+    return response()->json(['message' => __('admin.flash.updated_successfully')], 200);
   }
 }

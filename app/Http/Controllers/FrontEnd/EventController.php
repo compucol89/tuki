@@ -35,9 +35,13 @@ class EventController extends Controller
   {
     $language = $this->getLanguage();
     $information  = [];
-    $categories = EventCategory::where([['language_id', $language->id], ['status', 1]])->orderBy('serial_number', 'asc')->get();
+    $categories = Cache::remember('event_categories_' . $language->id, now()->addHours(6), function () use ($language) {
+      return EventCategory::where([['language_id', $language->id], ['status', 1]])->orderBy('serial_number', 'asc')->get();
+    });
     $information['categories'] = $categories;
-    $countries = Country::get();
+    $countries = Cache::remember('event_countries', now()->addHours(6), function () {
+      return Country::get();
+    });
     $information['countries'] = $countries;
     $information['heroSection'] = HeroSection::where('language_id', $language->id)->first();
 
@@ -135,7 +139,7 @@ class EventController extends Controller
         return $query->where('event_contents.title', 'like', '%' . $keyword . '%');
       })
       ->where('events.status', 1)
-      ->whereDate('events.end_date_time', '>=', $this->now_date_time)
+      ->where('events.end_date_time', '>=', $this->now_date_time)
       ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.address', 'event_contents.zip_code', 'event_contents.slug',
         'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
         'organizers.id as org_id', 'organizers.username as org_username')
@@ -303,7 +307,7 @@ class EventController extends Controller
           ->where('events.organizer_id', $currentOrganizerId)
           ->where('events.id', '!=', $event_id)
           ->where('events.status', 1)
-          ->whereDate('events.end_date_time', '>=', $this->now_date_time)
+      ->where('events.end_date_time', '>=', $this->now_date_time)
           ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
           ->orderBy('events.start_date', 'asc')
           ->orderBy('events.start_time', 'asc')
@@ -319,7 +323,7 @@ class EventController extends Controller
             ->where('events.organizer_id', $currentOrganizerId)
             ->where('events.id', '!=', $event_id)
             ->where('events.status', 1)
-            ->whereDate('events.end_date_time', '<', $this->now_date_time)
+            ->where('events.end_date_time', '<', $this->now_date_time)
             ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
             ->orderBy('events.end_date_time', 'desc')
             ->limit(6)

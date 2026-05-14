@@ -27,7 +27,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <form action="{{ route('admin.basic_settings.billing_settings.update') }}" method="post">
+        <form action="{{ route('admin.basic_settings.billing_settings.update') }}" method="post" enctype="multipart/form-data">
           @csrf
           <div class="card-header">
             <div class="card-title">{{ __('Facturación ARCA') }}</div>
@@ -152,6 +152,96 @@
                   </select>
                   @if ($errors->has('default_invoice_type'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('default_invoice_type') }}</p>
+                  @endif
+                </div>
+
+                <hr>
+                <h5 class="mb-3">{{ __('Plantilla de factura') }}</h5>
+
+                <div class="form-group">
+                  <label>{{ __('Descripción del item de factura') }}</label>
+                  <input type="text" name="invoice_item_description" class="form-control"
+                    value="{{ old('invoice_item_description', $billingSettings->invoice_item_description) }}"
+                    placeholder="Comisión por servicio de gestión de compra de entradas TukiPass">
+                  <small class="form-text text-muted">{{ __('Podés usar las variables {evento} y {reserva} que se reemplazarán automáticamente.') }}</small>
+                  @if ($errors->has('invoice_item_description'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('invoice_item_description') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" name="invoice_item_include_event" class="custom-control-input"
+                      id="invoice_item_include_event" value="1"
+                      {{ old('invoice_item_include_event', $billingSettings->invoice_item_include_event) ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="invoice_item_include_event">{{ __('Incluir nombre del evento') }}</label>
+                  </div>
+                  @if ($errors->has('invoice_item_include_event'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('invoice_item_include_event') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" name="invoice_item_include_booking" class="custom-control-input"
+                      id="invoice_item_include_booking" value="1"
+                      {{ old('invoice_item_include_booking', $billingSettings->invoice_item_include_booking) ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="invoice_item_include_booking">{{ __('Incluir número de reserva') }}</label>
+                  </div>
+                  @if ($errors->has('invoice_item_include_booking'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('invoice_item_include_booking') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <label>{{ __('Nombre del emisor') }}</label>
+                  <input type="text" name="issuer_name" class="form-control"
+                    value="{{ old('issuer_name', $billingSettings->issuer_name) }}">
+                  @if ($errors->has('issuer_name'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('issuer_name') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <label>{{ __('Dirección fiscal del emisor') }}</label>
+                  <input type="text" name="issuer_address" class="form-control"
+                    value="{{ old('issuer_address', $billingSettings->issuer_address) }}">
+                  @if ($errors->has('issuer_address'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('issuer_address') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <label>{{ __('Texto condición IVA del emisor') }}</label>
+                  <input type="text" name="issuer_iva_condition_text" class="form-control"
+                    value="{{ old('issuer_iva_condition_text', $billingSettings->issuer_iva_condition_text) }}">
+                  @if ($errors->has('issuer_iva_condition_text'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('issuer_iva_condition_text') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <label>{{ __('Logo para PDF fiscal') }}</label>
+                  <input type="file" name="pdf_logo" class="form-control-file" accept="image/png,image/jpeg">
+                  @if ($billingSettings->pdf_logo_path)
+                    <p class="mt-2 mb-0">
+                      <img src="{{ asset('storage/' . $billingSettings->pdf_logo_path) }}" alt="Logo" style="max-height: 60px;">
+                    </p>
+                  @endif
+                  @if ($errors->has('pdf_logo'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('pdf_logo') }}</p>
+                  @endif
+                </div>
+
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" name="send_arca_invoice_email" class="custom-control-input"
+                      id="send_arca_invoice_email" value="1"
+                      {{ old('send_arca_invoice_email', $billingSettings->send_arca_invoice_email) ? 'checked' : '' }}>
+                    <label class="custom-control-label" for="send_arca_invoice_email">{{ __('Enviar email de factura fiscal') }}</label>
+                  </div>
+                  @if ($errors->has('send_arca_invoice_email'))
+                    <p class="mt-2 mb-0 text-danger">{{ $errors->first('send_arca_invoice_email') }}</p>
                   @endif
                 </div>
               </div>

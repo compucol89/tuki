@@ -53,14 +53,14 @@ class EventFeatureController extends Controller
     }else{
       $data->update($datas);
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
   public function store(EventFeatureRequest $request){
     EventFeature::create($request->all());
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -68,14 +68,14 @@ class EventFeatureController extends Controller
   {
     EventFeature::find($request->id)->update($request->all());
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
   //delete
   public function delete($id){
     EventFeature::find($id)->delete();
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
   public function bulk_delete(Request $request){
     $ids = $request->ids;
@@ -84,7 +84,7 @@ class EventFeatureController extends Controller
       EventFeature::find($id)->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

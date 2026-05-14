@@ -11,7 +11,7 @@
       <div class="instagram-item">
         @foreach ($latestBlogInfos as $latestBlogInfo)
           <div class="item mt-20 d-flex align-items-center">
-            <div class="blog-img {{ $currentLanguageInfo->direction == 0 ? 'mr-4' : 'ml-4' }}">
+            <div class="blog-img mr-4">
               <img data-src="{{ asset('assets/admin/img/blogs/' . $latestBlogInfo->image) }}" class="lazy" alt="{{ __('Imagen del artículo') }}">
             </div>
 

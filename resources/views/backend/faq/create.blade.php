@@ -11,16 +11,7 @@
       <div class="modal-body">
         <form id="ajaxForm" class="modal-form create" action="{{ route('admin.faq_management.store_faq') }}" method="post">
           @csrf
-          <div class="form-group">
-            <label for="">{{ __('Language').' *' }}</label>
-            <select name="language_id" class="form-control">
-              <option selected disabled>{{ __('Select a Language') }}</option>
-              @foreach ($langs as $lang)
-                <option value="{{ $lang->id }}">{{ $lang->name }}</option>
-              @endforeach
-            </select>
-            <p id="err_language_id" class="mt-1 mb-0 text-danger em"></p>
-          </div>
+          <input type="hidden" name="language_id" value="{{ $defaultLang->id ?? 1 }}">
 
           <div class="form-group">
             <label for="">{{ __('Question').' *' }}</label>

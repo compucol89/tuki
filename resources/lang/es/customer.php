@@ -132,4 +132,17 @@ return [
         'footer_has_account' => '¿Ya tenés cuenta?',
         'footer_login' => 'Ingresá acá',
     ],
+
+    'flash' => [
+        'mail_not_sent' => 'No se pudo enviar el correo.',
+        'mail_sent' => 'Se envió un correo a tu dirección de email.',
+        'password_reset' => 'Tu contraseña fue restablecida.',
+        'password_updated' => 'Contraseña actualizada correctamente.',
+        'profile_updated' => 'Perfil actualizado correctamente.',
+        'ticket_submitted' => 'Tu consulta fue enviada correctamente.',
+        'message_sent' => 'Mensaje enviado correctamente.',
+        'review_updated' => 'Reseña actualizada correctamente.',
+        'review_submitted' => 'Reseña enviada correctamente.',
+        'review_not_submitted' => 'No se pudo enviar la reseña.',
+    ],
 ];

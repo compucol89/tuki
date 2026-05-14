@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/change-language', 'Controller@changeLanguage')->name('change_language');
 Route::post('/store-subscriber', 'Controller@storeSubscriber')->name('store_subscriber');
 
 Route::middleware('change.lang')->group(function () {

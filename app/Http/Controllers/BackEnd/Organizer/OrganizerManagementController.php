@@ -62,7 +62,7 @@ class OrganizerManagementController extends Controller
       ]
     );
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
     return back();
   }
 
@@ -152,7 +152,7 @@ class OrganizerManagementController extends Controller
       $organizer_info->details = $request[$language->code . '_details'];
       $organizer_info->save();
     }
-    Session::flash('success', 'Added Successfully!');
+    Session::flash('success', __('organizer.flash.added_successfully'));
     return Response::json(['status' => 'success'], 200);
   }
 
@@ -164,7 +164,7 @@ class OrganizerManagementController extends Controller
     } else {
       $organizer->update(['email_verified_at' => null]);
     }
-    Session::flash('success', 'Update Email Verification Status Successfully!');
+    Session::flash('success', __('organizer.flash.email_verification_status_updated'));
 
     return redirect()->back();
   }
@@ -207,7 +207,7 @@ class OrganizerManagementController extends Controller
     } else {
       $user->update(['status' => 0]);
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -243,7 +243,7 @@ class OrganizerManagementController extends Controller
       'password' => Hash::make($request->new_password)
     ]);
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -334,7 +334,7 @@ class OrganizerManagementController extends Controller
       }
     } catch (\Exception $th) {
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('organizer.flash.updated_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }
@@ -519,7 +519,7 @@ class OrganizerManagementController extends Controller
 
     $organizer->delete();
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('organizer.flash.deleted_successfully'));
   }
 
   public function bulkDestroy(Request $request)
@@ -572,7 +572,7 @@ class OrganizerManagementController extends Controller
       $organizer->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('organizer.flash.deleted_successfully'));
 
     return Response::json(['status' => 'success'], 200);
   }

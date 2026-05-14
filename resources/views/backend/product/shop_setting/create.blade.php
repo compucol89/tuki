@@ -14,16 +14,7 @@
                     action="{{ route('admin.shop_management.store_shipping') }}" method="post"
                     enctype="multipart/form-data">
                     @csrf
-                    <div class="form-group">
-                        <label for="">{{ __('Language') . '*' }}</label>
-                        <select name="language_id" class="form-control">
-                            <option selected disabled>{{ __('Select a Language') }}</option>
-                            @foreach ($langs as $lang)
-                                <option value="{{ $lang->id }}">{{ $lang->name }}</option>
-                            @endforeach
-                        </select>
-                        <p id="err_language_id" class="mt-1 mb-0 text-danger em"></p>
-                    </div>
+          <input type="hidden" name="language_id" value="{{ $defaultLang->id ?? 1 }}">
 
 
                     <div class="form-group">

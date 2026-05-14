@@ -147,7 +147,7 @@
                                                             <div class="row">
                                                                 <div class="col-lg-4">
                                                                     <div
-                                                                        class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                                                                        class="form-group">
                                                                         <label>{{ __('Name') . '*' }}</label>
                                                                         <input type="text" class="form-control"
                                                                             name="{{ $language->code }}_name"

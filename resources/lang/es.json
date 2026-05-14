@@ -1178,5 +1178,12 @@
   "checkout": "finalizar compra",
   "Checkout": "Finalizar compra",
   "Email": "Email",
-  "Country": "País"
+  "Country": "País",
+  "Tu mensaje fue enviado correctamente.": "Tu mensaje fue enviado correctamente.",
+  "No pudimos enviar tu mensaje. Intentalo de nuevo más tarde.": "No pudimos enviar tu mensaje. Intentalo de nuevo más tarde.",
+  "Error de configuración. Contactá al administrador.": "Error de configuración. Contactá al administrador.",
+  "Por favor, verificá que no sos un robot.": "Por favor, verificá que no sos un robot.",
+  "Error de verificación. Intentalo de nuevo.": "Error de verificación. Intentalo de nuevo.",
+  "No pudimos enviar el correo de verificación. Intentalo de nuevo más tarde.": "No pudimos enviar el correo de verificación. Intentalo de nuevo más tarde.",
+  "Error de configuración. Contactá al administrador.": "Error de configuración. Contactá al administrador."
 }

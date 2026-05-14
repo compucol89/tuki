@@ -4,10 +4,8 @@ namespace App\Http\Controllers\FrontEnd\PaymentGateway;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\Event\BookingController;
-use App\Jobs\ArcaInvoiceIssuingJob;
 use App\Jobs\BookingInvoiceJob;
 use App\Models\BasicSettings\Basic;
-use App\Models\BillingSetting;
 use App\Models\Earning;
 use App\Models\PaymentGateway\OfflineGateway;
 use Illuminate\Http\Request;
@@ -101,11 +99,6 @@ class OfflineController extends Controller
     }
     // store the course enrolment information in database
     $bookingInfo = $booking->storeData($arrData);
-
-    // Billing: Arca (si está habilitado)
-    if (BillingSetting::current()->enabled) {
-      ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));
-    }
 
     // Invoice PDF: intentar inline, fallback a job
     $ticket = DB::table('basic_settings')->select('how_ticket_will_be_send')->first();

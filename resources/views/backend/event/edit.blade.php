@@ -57,7 +57,7 @@
             ['done' => $hasTitle, 'label' => __('Titulo claro'), 'help' => __('Intenta usar nombre del evento, artista o ciudad si aplica.')],
             ['done' => $hasDescription, 'label' => __('Descripcion util'), 'help' => __('Explica que incluye la entrada, horarios, acceso y detalles importantes.')],
             ['done' => $hasSalesSetup, 'label' => __('Venta configurada'), 'help' => __('Revisa precio, disponibilidad o tickets antes de publicar.')],
-            ['done' => $hasRefundPolicy, 'label' => __('Politica de reembolso'), 'help' => __('Aclara que pasa si alguien no puede asistir o necesita cambios.')],
+            ['done' => $hasRefundPolicy, 'label' => __('Política de reembolsos'), 'help' => __('Aclará qué pasa si alguien no puede asistir o necesita cambios.')],
             ['done' => $isPublishedReady, 'label' => __('Estado activo'), 'help' => __('Cuando todo este listo, activa el evento para que pueda verse.')],
         ];
 
@@ -602,14 +602,14 @@
 
                   <div class="row">
                     <div class="col-lg-6">
-                      <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                      <div class="form-group">
                         <label>{{ __('Event Title') }}*</label>
                         <input type="text" class="form-control" name="{{ $language->code }}_title"
                           value="{{ @$event_content->title }}" placeholder="Enter Event Name">
                       </div>
                     </div>
                     <div class="col-lg-6">
-                      <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                      <div class="form-group">
                         @php
                           $categories = DB::table('event_categories')
                               ->where('language_id', $language->id)
@@ -634,7 +634,7 @@
                         <div class="form-group">
                           <label>{{ __('Address') }}*</label>
                           <input type="text" name="{{ $language->code }}_address"
-                            class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                            class="form-control"
                             placeholder="Enter Address" value="{{ @$event_content->address }}">
                         </div>
                       </div>
@@ -642,7 +642,7 @@
                         <div class="form-group">
                           <label>{{ __('County') }}*</label>
                           <input type="text" name="{{ $language->code }}_country"
-                            class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                            class="form-control"
                             placeholder="Enter Country" value="{{ @$event_content->country }}">
                         </div>
                       </div>
@@ -650,7 +650,7 @@
                         <div class="form-group">
                           <label>{{ __('Sate') }}</label>
                           <input type="text" name="{{ $language->code }}_state"
-                            class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                            class="form-control"
                             placeholder="Enter State" value="{{ @$event_content->state }}">
                         </div>
                       </div>
@@ -658,7 +658,7 @@
                         <div class="form-group">
                           <label>{{ __('City') }}*</label>
                           <input type="text" name="{{ $language->code }}_city"
-                            class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                            class="form-control"
                             placeholder="Enter City" value="{{ @$event_content->city }}">
                         </div>
                       </div>
@@ -666,34 +666,34 @@
                         <div class="form-group">
                           <label>{{ __('Zip/Post Code') }}</label>
                           <input type="text" placeholder="Enter Zip/Post Code" name="{{ $language->code }}_zip_code"
-                            class="form-control {{ $language->direction == 1 ? 'rtl text-right' : '' }}"
+                            class="form-control"
                             value="{{ @$event_content->zip_code }}">
                         </div>
                       </div>
                     </div>
                   @endif
 
-                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                  <div class="form-group">
                     <label>{{ __('Description') }}*</label>
                     <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
                       name="{{ $language->code }}_description" placeholder="Enter Event Description"
                       data-height="300">{!! @$event_content->description !!}</textarea>
                   </div>
 
-                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
-                    <label>{{ __('Refund Policy') }}*</label>
+                  <div class="form-group">
+                    <label>{{ __('Política de reembolsos') }}*</label>
                     <textarea class="form-control" name="{{ $language->code }}_refund_policy" rows="4"
-                      placeholder="Enter Refund Policy">{{ @$event_content->refund_policy }}</textarea>
+                      placeholder="{{ __('Explicá qué pasa si alguien no puede asistir, pide un cambio o solicita devolución.') }}">{{ @$event_content->refund_policy }}</textarea>
                   </div>
 
-                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                  <div class="form-group">
                     <label>{{ __('Event Meta Keywords') }}</label>
                     <input class="form-control" name="{{ $language->code }}_meta_keywords"
                       value="{{ @$event_content->meta_keywords }}" placeholder="Enter Meta Keywords"
                       data-role="tagsinput">
                   </div>
 
-                  <div class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
+                  <div class="form-group">
                     <label>{{ __('Event Meta Description') }}</label>
                     <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="4"
                       placeholder="Enter Meta Description">{{ @$event_content->meta_description }}</textarea>

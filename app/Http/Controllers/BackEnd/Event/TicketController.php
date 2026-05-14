@@ -119,7 +119,7 @@ class TicketController extends Controller
     }
 
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -219,7 +219,7 @@ class TicketController extends Controller
       $ticket_content->save();
     }
 
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -259,7 +259,7 @@ class TicketController extends Controller
 
       $ticket->delete();
     }
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
     return response()->json(['status' => 'success'], 200);
   }
 }

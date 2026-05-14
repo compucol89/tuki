@@ -53,7 +53,7 @@ class HowWorkController extends Controller
     } else {
       $data->update($datas);
     }
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
   }
@@ -61,7 +61,7 @@ class HowWorkController extends Controller
   {
     HowWorkItem::create($request->all());
 
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -69,7 +69,7 @@ class HowWorkController extends Controller
   {
     HowWorkItem::find($request->id)->update($request->all());
 
-    Session::flash('success', 'Updated Successfully!');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -77,7 +77,7 @@ class HowWorkController extends Controller
   public function delete($id)
   {
     HowWorkItem::find($id)->delete();
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
   public function bulk_delete(Request $request)
   {
@@ -87,7 +87,7 @@ class HowWorkController extends Controller
       HowWorkItem::find($id)->delete();
     }
 
-    Session::flash('success', 'Deleted Successfully');
+    Session::flash('success', __('admin.flash.deleted_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }

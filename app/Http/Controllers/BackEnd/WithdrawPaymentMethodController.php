@@ -21,7 +21,7 @@ class WithdrawPaymentMethodController extends Controller
   public function store(WithdrawPaymentMethodRequest $request)
   {
     WithdrawPaymentMethod::create($request->all());
-    Session::flash('success', 'Added Successfully');
+    Session::flash('success', __('admin.flash.added_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -35,7 +35,7 @@ class WithdrawPaymentMethodController extends Controller
       'status' => 'required'
     ]);
     WithdrawPaymentMethod::where('id', $request->id)->first()->update($request->all());
-    Session::flash('success', 'Updated Successfully');
+    Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
   }
@@ -61,6 +61,6 @@ class WithdrawPaymentMethodController extends Controller
     $method->delete();
     //finally delete
 
-    return redirect()->back()->with('success', 'Deleted Successfully');
+    return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
 }

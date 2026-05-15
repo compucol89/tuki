@@ -2026,9 +2026,10 @@ ttq.page();
                         class="ed-gallery-thumb {{ $i === 0 ? 'ed-gallery-thumb--active' : '' }}"
                          data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
                          data-action="thumb-switch">
-                   <img src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
+                    <img {{ $i === 0 ? 'src' : 'data-src' }}="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
                        alt="{{ $content->title }} — foto {{ $i + 1 }}"
-                       width="150" height="100">
+                        width="150" height="100"
+                        {{ $i > 0 ? 'class="lazy"' : '' }}>
                 </button>
                 @endforeach
               </div>

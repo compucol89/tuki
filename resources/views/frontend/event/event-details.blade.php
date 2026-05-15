@@ -1,5 +1,9 @@
 @extends('frontend.layout')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/event-detail.css') }}">
+@endpush
+
 @section('body-class', 'page-event-detail')
 
 @php

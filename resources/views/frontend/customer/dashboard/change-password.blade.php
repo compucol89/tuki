@@ -1,4 +1,9 @@
 @extends('frontend.layout')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/customer.css') }}">
+@endpush
+
 @section('pageHeading', 'Cambiar contraseña')
 @section('hero-section')
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"

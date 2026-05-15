@@ -1,4 +1,9 @@
 @extends('frontend.layout')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/auth.css') }}">
+@endpush
+
 @section('pageHeading', 'Olvidé mi contraseña')
 @php
   $metaKeywords = !empty($seo->meta_keyword_customer_forget_password) ? $seo->meta_keyword_customer_forget_password : '';

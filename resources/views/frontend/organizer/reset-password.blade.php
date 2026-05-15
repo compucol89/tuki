@@ -1,4 +1,9 @@
 @extends('frontend.layout')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
+@endpush
+
 @section('pageHeading')
   {{ __('Reset Password') }}
 @endsection

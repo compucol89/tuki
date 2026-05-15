@@ -1,5 +1,9 @@
 @extends('frontend.layout')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/blog.css') }}">
+@endpush
+
 @section('body-class', 'blog-site blog-detail')
 
 @section('pageHeading')

@@ -1,4 +1,9 @@
 @extends('frontend.layout')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
+@endpush
+
 @section('pageHeading')
   @if (!empty($pageHeading))
     {{ $pageHeading->organizer_forget_password_page_title ?? __('Forget Password') }}

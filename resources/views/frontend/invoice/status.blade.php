@@ -1,5 +1,9 @@
 @extends('frontend.layout')
 
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/payment.css') }}">
+@endpush
+
 @section('title', 'Factura electrónica — TukiPass')
 
 @section('content')

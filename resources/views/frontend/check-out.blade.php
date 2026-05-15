@@ -1,6 +1,11 @@
 @extends('frontend.layout')
 @section('pageHeading', 'Checkout de eventos')
 @section('body-class', 'checkout-page')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/checkout.css') }}">
+@endpush
+
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection

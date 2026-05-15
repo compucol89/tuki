@@ -1,4 +1,9 @@
 @extends('frontend.layout')
+
+@push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/home.css') }}">
+@endpush
+
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
 @section('body-class', 'home-page')
 

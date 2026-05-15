@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/fontawesome.5.9.0.min.css') }}">
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}">
 <!-- Padding Margin -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->

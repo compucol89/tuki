@@ -48,6 +48,7 @@
 @endsection
 
 @push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}">
 @endpush
 
@@ -266,6 +267,7 @@
 @section('custom-script')
   <script type="text/javascript" src="{{ asset('assets/front/js/moment.min.js') }}"></script>
   <script type="text/javascript" src="{{ asset('assets/front/js/daterangepicker.min.js') }}"></script>
+  <script src="{{ asset('assets/front/js/jquery-ui.min.js') }}"></script>
   <script>
     let min_price = {!! htmlspecialchars($min) !!};
     let max_price = {!! htmlspecialchars($max) !!};

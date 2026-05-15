@@ -148,11 +148,11 @@ class AppServiceProvider extends ServiceProvider
           ];
         }
 
-        $cachedLanguageEs = Cache::remember('frontend_language_es', $cacheTTL, function () {
+        $cachedLanguage = Cache::remember('frontend_language', $cacheTTL, function () {
           return Language::where('code', 'es')->first();
         });
 
-        $language = $cachedLanguageEs;
+        $language = $cachedLanguage;
 
         $cachedSocialMedias = Cache::remember('frontend_social_medias', $cacheTTL, function () {
           return SocialMedia::orderBy('serial_number', 'asc')->get();

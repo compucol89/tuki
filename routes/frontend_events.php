@@ -2,29 +2,25 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('change.lang')->group(function () {
-  Route::post('/ticket-booking/{id}', 'FrontEnd\Event\BookingController@index')->name('ticket.booking');
-  Route::get('/event-booking/{id}/cancel', 'FrontEnd\Event\BookingController@cancel')->name('event_booking.cancel');
-  Route::get('/event-booking-complete', 'FrontEnd\Event\BookingController@complete')->name('event_booking.complete');
-  Route::get('/booking/view/{id}', 'FrontEnd\Event\CustomerBookingController@guestDetails')->name('booking.guest_view');
-  Route::get('/booking/{id}/ticket/download', 'FrontEnd\Event\BookingTicketDownloadController@download')->name('booking.ticket.download');
-  Route::get('/booking/{id}/ticket/download/signed', 'FrontEnd\Event\BookingTicketDownloadController@downloadSigned')
-    ->name('booking.ticket.download.signed')
-    ->middleware('signed');
-  Route::get('/booking/{id}/factura', 'FrontEnd\Event\BookingInvoiceStatusController@show')
-    ->name('booking.invoice.status');
-  Route::get('/factura/{token}', 'FrontEnd\Event\FiscalInvoiceController@showByToken')
-    ->name('booking.fiscal_invoice.show');
-});
+Route::post('/ticket-booking/{id}', 'FrontEnd\Event\BookingController@index')->name('ticket.booking');
+Route::get('/event-booking/{id}/cancel', 'FrontEnd\Event\BookingController@cancel')->name('event_booking.cancel');
+Route::get('/event-booking-complete', 'FrontEnd\Event\BookingController@complete')->name('event_booking.complete');
+Route::get('/booking/view/{id}', 'FrontEnd\Event\CustomerBookingController@guestDetails')->name('booking.guest_view');
+Route::get('/booking/{id}/ticket/download', 'FrontEnd\Event\BookingTicketDownloadController@download')->name('booking.ticket.download');
+Route::get('/booking/{id}/ticket/download/signed', 'FrontEnd\Event\BookingTicketDownloadController@downloadSigned')
+  ->name('booking.ticket.download.signed')
+  ->middleware('signed');
+Route::get('/booking/{id}/factura', 'FrontEnd\Event\BookingInvoiceStatusController@show')
+  ->name('booking.invoice.status');
+Route::get('/factura/{token}', 'FrontEnd\Event\FiscalInvoiceController@showByToken')
+  ->name('booking.fiscal_invoice.show');
 
-Route::middleware('change.lang')->group(function () {
-  Route::get('/', 'FrontEnd\HomeController@index')->name('index');
-  Route::get('eventos', 'FrontEnd\EventController@index')->name('events');
-  Route::get('event/{slug}/{id}', 'FrontEnd\EventController@details')->name('event.details');
-  Route::get('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
-  Route::get('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');
-  Route::get('organizer/details/{id}/{name}', 'FrontEnd\OrganizerController@details')->name('frontend.organizer.details');
-  Route::redirect('organizers/', '/organizadores', 301);
-  Route::get('organizadores', 'FrontEnd\OrganizerController@index')->name('frontend.all.organizer');
-  Route::post('organizers/contact/send-mail', 'FrontEnd\OrganizerController@sendMail')->name('organizer.contact.send_mail');
-});
+Route::get('/', 'FrontEnd\HomeController@index')->name('index');
+Route::get('eventos', 'FrontEnd\EventController@index')->name('events');
+Route::get('event/{slug}/{id}', 'FrontEnd\EventController@details')->name('event.details');
+Route::get('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
+Route::get('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');
+Route::get('organizer/details/{id}/{name}', 'FrontEnd\OrganizerController@details')->name('frontend.organizer.details');
+Route::redirect('organizers/', '/organizadores', 301);
+Route::get('organizadores', 'FrontEnd\OrganizerController@index')->name('frontend.all.organizer');
+Route::post('organizers/contact/send-mail', 'FrontEnd\OrganizerController@sendMail')->name('organizer.contact.send_mail');

@@ -44,6 +44,7 @@ class HomeController extends Controller
   public function index()
   {
     $language = $this->getLanguage();
+    $cacheTTL = now()->addHours(6);
 
     $queryResult['seoInfo'] = $language->seoInfo()->select('meta_keyword_home', 'meta_description_home')->first();
 
@@ -96,25 +97,29 @@ class HomeController extends Controller
     $queryResult['quickLinkInfos'] = QuickLink::orderBy('serial_number', 'asc')->get();
 
     // Event images for marquee slider
-    $marqueeEvents = DB::table('events')
-      ->join('event_contents', function ($join) use ($language) {
-        $join->on('events.id', '=', 'event_contents.event_id')
-          ->where('event_contents.language_id', '=', $language->id);
-      })
-      ->leftJoin(DB::raw('(SELECT event_id, MIN(CAST(price AS DECIMAL(10,2))) as min_price, MIN(pricing_type) as pricing_type FROM tickets GROUP BY event_id) as t'), 't.event_id', '=', 'events.id')
-      ->where('events.status', 1)
-      ->where('events.end_date_time', '>=', $this->now_date_time)
-      ->whereNotNull('events.thumbnail')
-      ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title', 'events.start_date', 'events.start_time', 'events.manual_badge', 'events.views_count', 'events.views_last_24h', 'events.created_at', 't.min_price', 't.pricing_type')
-      ->orderBy('events.created_at', 'desc')
-      ->limit(20)
-      ->get();
+    $marqueeEvents = Cache::remember('home_marquee_events_' . $language->id, $cacheTTL, function () use ($language) {
+      return DB::table('events')
+        ->join('event_contents', function ($join) use ($language) {
+          $join->on('events.id', '=', 'event_contents.event_id')
+            ->where('event_contents.language_id', '=', $language->id);
+        })
+        ->leftJoin(DB::raw('(SELECT event_id, MIN(CAST(price AS DECIMAL(10,2))) as min_price, MIN(pricing_type) as pricing_type FROM tickets GROUP BY event_id) as t'), 't.event_id', '=', 'events.id')
+        ->where('events.status', 1)
+        ->where('events.end_date_time', '>=', $this->now_date_time)
+        ->whereNotNull('events.thumbnail')
+        ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title', 'events.start_date', 'events.start_time', 'events.manual_badge', 'events.views_count', 'events.views_last_24h', 'events.created_at', 't.min_price', 't.pricing_type')
+        ->orderBy('events.created_at', 'desc')
+        ->limit(20)
+        ->get();
+    });
     $queryResult['marqueeEvents'] = $marqueeEvents;
 
     // Gallery images para el marquee (agrupadas por event_id)
     $marqueeEventIds = $marqueeEvents->pluck('id')->toArray();
-    $queryResult['marqueeGallery'] = \App\Models\Event\EventImage::whereIn('event_id', $marqueeEventIds)
+    $queryResult['marqueeGallery'] = Cache::remember('home_marquee_gallery_' . $language->id, $cacheTTL, function () use ($marqueeEventIds) {
+      return \App\Models\Event\EventImage::whereIn('event_id', $marqueeEventIds)
         ->get()->groupBy('event_id');
+    });
 
     // Hero: intercala imágenes de campaña (hero-campaign) con fotos reales de eventos
     $heroSlideUrls = HeroSlideUrlsService::build();
@@ -142,40 +147,44 @@ class HomeController extends Controller
       FROM tickets GROUP BY event_id) as tk");
 
     // ── Eventos destacados "todos" ──
-    $featuredEventsAll = DB::table('event_contents')
-      ->join('events', 'events.id', '=', 'event_contents.event_id')
-      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
-      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
-      ->where([
-        ['event_contents.language_id', '=', $language->id],
-        ['events.status', 1],
-        ['events.end_date_time', '>=', $this->now_date_time],
-        ['events.is_featured', '=', 'yes'],
-      ])
-      ->orderBy('events.created_at', 'desc')
-      ->select('event_contents.*', 'events.*',
-        'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
-        'organizers.id as org_id', 'organizers.username as org_username')
-      ->get();
+    $featuredEventsAll = Cache::remember('home_featured_events_all_' . $language->id, $cacheTTL, function () use ($language, $ticketSub) {
+      return DB::table('event_contents')
+        ->join('events', 'events.id', '=', 'event_contents.event_id')
+        ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+        ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
+        ->where([
+          ['event_contents.language_id', '=', $language->id],
+          ['events.status', 1],
+          ['events.end_date_time', '>=', $this->now_date_time],
+          ['events.is_featured', '=', 'yes'],
+        ])
+        ->orderBy('events.created_at', 'desc')
+        ->select('event_contents.*', 'events.*',
+          'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+          'organizers.id as org_id', 'organizers.username as org_username')
+        ->get();
+    });
     $queryResult['featuredEventsAll'] = $featuredEventsAll;
 
     // ── Eventos destacados por categoría ──
     $categoryIds = $categories->pluck('id')->toArray();
-    $allFeatured = DB::table('event_contents')
-      ->join('events', 'events.id', '=', 'event_contents.event_id')
-      ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
-      ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
-      ->whereIn('event_contents.event_category_id', $categoryIds)
-      ->where('event_contents.language_id', $language->id)
-      ->where('events.status', 1)
-      ->where('events.end_date_time', '>=', $this->now_date_time)
-      ->where('events.is_featured', 'yes')
-      ->orderBy('events.created_at', 'desc')
-      ->select('event_contents.*', 'events.*',
-        'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
-        'organizers.id as org_id', 'organizers.username as org_username',
-        'event_contents.event_category_id as cat_id')
-      ->get();
+    $allFeatured = Cache::remember('home_featured_events_by_category_' . $language->id, $cacheTTL, function () use ($language, $categoryIds, $ticketSub) {
+      return DB::table('event_contents')
+        ->join('events', 'events.id', '=', 'event_contents.event_id')
+        ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+        ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
+        ->whereIn('event_contents.event_category_id', $categoryIds)
+        ->where('event_contents.language_id', $language->id)
+        ->where('events.status', 1)
+        ->where('events.end_date_time', '>=', $this->now_date_time)
+        ->where('events.is_featured', 'yes')
+        ->orderBy('events.created_at', 'desc')
+        ->select('event_contents.*', 'events.*',
+          'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
+          'organizers.id as org_id', 'organizers.username as org_username',
+          'event_contents.event_category_id as cat_id')
+        ->get();
+    });
     $featuredEventsByCategory = $allFeatured->groupBy('cat_id');
     $queryResult['featuredEventsByCategory'] = $featuredEventsByCategory;
 

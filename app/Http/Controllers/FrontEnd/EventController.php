@@ -100,8 +100,8 @@ class EventController extends Controller
       $date1 = $dateArray[0];
       $date2 = $dateArray[2];
 
-      $eventIdsFromDates = EventDates::whereDate('start_date', '<=', $date1)->whereDate('end_date', '>=', $date2)->pluck('event_id')->toArray();
-      $eventIdsFromEvents = Event::whereDate('start_date', '<=', $date1)->whereDate('end_date', '>=', $date2)->pluck('id')->toArray();
+      $eventIdsFromDates = EventDates::whereDate('start_date', '<=', $date2)->whereDate('end_date', '>=', $date1)->pluck('event_id')->toArray();
+      $eventIdsFromEvents = Event::whereDate('start_date', '<=', $date2)->whereDate('end_date', '>=', $date1)->pluck('id')->toArray();
       $eventIds2 = array_unique(array_merge($eventIdsFromDates, $eventIdsFromEvents));
     }
 

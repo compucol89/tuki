@@ -211,7 +211,9 @@ class AppServiceProvider extends ServiceProvider
           }
         }
 
-        $bex = ContactPage::where('language_id', $language->id)->first();
+        $bex = Cache::remember('frontend_contact_page_' . $language->id, $cacheTTL, function () use ($language) {
+          return ContactPage::where('language_id', $language->id)->first();
+        });
 
         $view->with('basicInfo', $cachedBasicData);
         $view->with('seo', $cachedSeo);

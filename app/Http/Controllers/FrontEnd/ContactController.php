@@ -69,7 +69,7 @@ class ContactController extends Controller
     // Validar destinatario antes de intentar enviar
     if (empty($to)) {
       Log::error('Contact form: to_mail is empty in basic_settings');
-      Session::flash('error', __('Error de configuración. Contactá al administrador.'));
+      Session::flash('error', __('El destinatario de contactos no está configurado. Avisá al administrador.'));
       return redirect()->back();
     }
 

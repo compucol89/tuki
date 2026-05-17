@@ -2,6 +2,7 @@
 @section('body-class', 'auth-page')
 
 @push('styles')
+  <link rel="stylesheet" href="{{ asset('assets/front/css/auth.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
 @endpush
 

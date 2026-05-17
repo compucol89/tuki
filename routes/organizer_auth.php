@@ -7,7 +7,7 @@ Route::post('organizer/check-qrcode/', 'BackEnd\Organizer\OrganizerController@ch
 Route::get('organizers/email/verify', 'BackEnd\Organizer\OrganizerController@confirm_email');
 
 Route::prefix('/organizer')->group(function () {
-  Route::middleware('guest:organizer', 'change.lang')->group(function () {
+  Route::middleware('guest:organizer')->group(function () {
     Route::get('/login', 'BackEnd\Organizer\OrganizerController@login')->name('organizer.login');
     Route::get('/signup', 'BackEnd\Organizer\OrganizerController@signup')->name('organizer.signup');
     Route::post('/create', 'BackEnd\Organizer\OrganizerController@create')->name('organizer.create');
@@ -20,7 +20,7 @@ Route::prefix('/organizer')->group(function () {
 });
 
 Route::prefix('/organizador')->group(function () {
-  Route::middleware('guest:organizer', 'change.lang')->group(function () {
+  Route::middleware('guest:organizer')->group(function () {
     Route::get('/login', 'BackEnd\Organizer\OrganizerController@login')->name('organizador.login');
     Route::get('/registro', 'BackEnd\Organizer\OrganizerController@signup')->name('organizador.registro');
     Route::get('/olvide-contrasena', 'BackEnd\Organizer\OrganizerController@forget_passord')->name('organizador.olvide-contrasena');

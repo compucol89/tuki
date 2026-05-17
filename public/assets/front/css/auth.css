@@ -717,3 +717,75 @@
 .cp-strength-label { font-size:12px; font-weight:600; min-width:72px; }
 
 /* ─── BOOKING DETAILS ─── */
+
+/* ─── ORGANIZER SIGNUP FORM MODERN INPUTS ─── */
+.ep-field { margin-bottom: 16px; }
+.ep-field--full { grid-column: 1 / -1; }
+.ep-field__label {
+  display: block;
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 6px;
+  letter-spacing: 0.01em;
+}
+.ep-field__req { color: #ef4444; margin-left: 2px; }
+.ep-field__input {
+  font-family: var(--tuki-font-sans, 'Inter', system-ui, sans-serif);
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  font-size: 15px;
+  color: #1e2532;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.ep-field__input:hover { border-color: #d1d5db; }
+.ep-field__input:focus {
+  background: #fff;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+.ep-field__input::placeholder { color: #9ca3af; }
+.ep-field__input.is-invalid { border-color: #ef4444; background: #fef2f2; }
+.ep-field__input.is-invalid:focus { box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
+.ep-field__error {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #dc2626;
+}
+.cp-input-wrap .ep-field__input { padding-left: 38px; }
+.cp-input-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+}
+.cp-eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+.cp-eye-btn:hover { color: #4b5563; }
+.cp-strength-wrap { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.cp-strength-bar { flex: 1; height: 5px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+.cp-strength-fill { height: 100%; border-radius: 999px; transition: width 0.3s, background 0.3s; }
+.cp-strength-label { font-size: 12px; font-weight: 600; min-width: 72px; }

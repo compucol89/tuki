@@ -285,24 +285,16 @@
             <span class="info-value">Online — <a href="{{ $event->meeting_url }}" style="color:#F97316;">Acceder al evento</a></span>
           </div>
           @elseif($event && $event->event_type !== 'online')
-          @php
-            $locationParts = array_filter([
-              trim($booking->city ?? ''),
-              trim($booking->state ?? ''),
-            ]);
-            $location = implode(', ', $locationParts);
-            $address = trim($booking->address ?? '');
-          @endphp
-          @if($location)
+          @if($eventLocation)
           <div class="info-row">
             <span class="info-label">Ubicación</span>
-            <span class="info-value">{{ $location }}</span>
+            <span class="info-value">{{ $eventLocation }}</span>
           </div>
           @endif
-          @if($address && strtoupper($address) !== 'N/A')
+          @if($eventAddress)
           <div class="info-row">
             <span class="info-label">Dirección</span>
-            <span class="info-value">{{ $address }}</span>
+            <span class="info-value">{{ $eventAddress }}</span>
           </div>
           @endif
           @endif

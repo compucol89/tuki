@@ -82,19 +82,29 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
             $invoiceLink = route('booking.fiscal_invoice.show', [$this->booking->fiscal_invoice_token]);
         }
 
+        // Dirección del evento (del eventContent, no del booking)
+        $eventLocation = collect([$eventContent?->city, $eventContent?->state])
+            ->filter(fn($v) => !empty($v) && strtoupper($v) !== 'N/A')
+            ->implode(', ');
+        $eventAddress = collect([$eventContent?->address, $eventContent?->zip_code, $eventContent?->country])
+            ->filter(fn($v) => !empty($v) && strtoupper($v) !== 'N/A')
+            ->implode(', ');
+
         $mail = $this->subject($subject)
             ->view('emails.event_confirmation')
             ->with([
-                'booking'      => $this->booking,
-                'event'        => $event,
-                'eventContent' => $eventContent,
-                'eventTitle'   => $eventTitle,
-                'eventDate'    => $eventDate,
-                'eventTime'    => $eventTime,
-                'tickets'      => $tickets,
-                'qrImages'     => $qrImages,
-                'guestLink'    => $guestLink,
-                'invoiceLink'  => $invoiceLink,
+                'booking'       => $this->booking,
+                'event'         => $event,
+                'eventContent'  => $eventContent,
+                'eventTitle'    => $eventTitle,
+                'eventDate'     => $eventDate,
+                'eventTime'     => $eventTime,
+                'eventLocation' => $eventLocation,
+                'eventAddress'  => $eventAddress,
+                'tickets'       => $tickets,
+                'qrImages'      => $qrImages,
+                'guestLink'     => $guestLink,
+                'invoiceLink'   => $invoiceLink,
             ]);
 
         foreach ($attachments as $att) {

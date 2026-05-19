@@ -613,6 +613,14 @@ Route::prefix('/admin')->middleware(['auth:admin'])->group(function () {
   });
   // payment-gateway route end
 
+  // mercadopago diagnostico route start
+  Route::prefix('/mercadopago')->group(function () {
+    Route::get('/diagnostico', 'BackEnd\MercadoPagoDiagnosticoController@index')->name('admin.mercadopago.diagnostico');
+    Route::get('/test-connection', 'BackEnd\MercadoPagoDiagnosticoController@testConnection')->name('admin.mercadopago.test_connection');
+    Route::get('/test-preference', 'BackEnd\MercadoPagoDiagnosticoController@testPreference')->name('admin.mercadopago.test_preference');
+  });
+  // mercadopago diagnostico route end
+
 
   // blog route start
   Route::prefix('/blog-management')->middleware('permission:Blog Management')->group(function () {

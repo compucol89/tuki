@@ -223,32 +223,28 @@
 
           {{-- Guest QR orientation --}}
           @if($booking->access_token)
-          <div class="cd-guest-info" style="border-radius:0;border-left:none;border-right:none;border-bottom:none;">
-            <div class="cd-guest-info__icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2-2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div class="cd-guest-info">
+            <div class="cd-guest-info__head">
+              <div class="cd-guest-info__icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <p class="cd-guest-info__title">Revisá tu correo</p>
             </div>
             <div class="cd-guest-info__body">
-              <p class="cd-guest-info__title">Revisá tu correo — tus entradas están en camino</p>
+              <p class="cd-guest-info__lead">Te enviamos la entrada digital a <strong>{{ $booking->email }}</strong></p>
               <ul class="cd-guest-info__list">
-                <li>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  Los <strong>códigos QR</strong> se envían por email por seguridad.
-                </li>
-                <li>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  Revisá tu carpeta de <strong>spam</strong> si no lo ves pronto.
-                </li>
-                <li>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                  Guardá tu reserva: <strong class="cd-guest-info__id">#{{ $booking->booking_id }}</strong>
-                </li>
+                <li>Cada entrada tiene un <strong>código QR único</strong></li>
+                <li>Si no lo ves, revisá tu carpeta de <strong>spam</strong></li>
+                <li>Guardá tu reserva: <span class="cd-guest-info__id">#{{ $booking->booking_id }}</span></li>
               </ul>
-              <div class="cd-guest-info__cta">
-                <a href="{{ route('customer.signup') }}" class="cd-guest-info__link">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                  Crear cuenta para gestionar tus reservas futuras
-                </a>
+              <div class="cd-guest-info__alert">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>El comprobante de esta página <strong>caduca pronto</strong>. Descargá las entradas desde el email.</span>
               </div>
+            </div>
+            <div class="cd-guest-info__foot">
+              <a href="{{ route('customer.signup') }}" class="cd-guest-info__btn">Crear cuenta</a>
+              <span class="cd-guest-info__hint">Gestioná tus reservas en un solo lugar</span>
             </div>
           </div>
           @endif

@@ -232,7 +232,8 @@ class SystemHealthCheck extends Command
                     $data = $response->json();
                     $this->ok[] = "Postmark API conectada";
                     $this->line("  ✅ API: Conectado (Server: {$data['Name']})");
-                    $this->line("  ℹ️  Estado: {$data['Status']}");
+                    $this->line("  ℹ️  Estado: " . ($data['Status'] ?? 'N/A'));
+                    $this->line("  ℹ️  ID: " . ($data['ID'] ?? 'N/A'));
                 } else {
                     $this->issues[] = "Postmark responde con error: " . $response->status();
                     $this->error("  ❌ API: Error {$response->status()}");

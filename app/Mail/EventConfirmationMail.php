@@ -41,7 +41,6 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
 
         // Preparar datos de entradas
         $tickets = $this->prepareTickets();
-        $qrImages = $this->generateQrImages($tickets);
 
         // Adjuntar PDF de entradas si existe
         $pdfPath = storage_path('app/invoices/') . $this->booking->invoice;
@@ -102,7 +101,6 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
                 'eventLocation' => $eventLocation,
                 'eventAddress'  => $eventAddress,
                 'tickets'       => $tickets,
-                'qrImages'      => $qrImages,
                 'guestLink'     => $guestLink,
                 'invoiceLink'   => $invoiceLink,
             ]);

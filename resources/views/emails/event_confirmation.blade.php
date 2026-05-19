@@ -330,25 +330,20 @@
         </table>
       </div>
 
-      {{-- Códigos QR --}}
-      @if(count($qrImages) > 0)
-      <div class="section">
-        <div class="section-title">Códigos de acceso</div>
-        <div class="warning-box">
-          <strong>⚠️ Importante</strong>
-          Presentá estos códigos QR al ingresar al evento. Cada código corresponde a una entrada.
-        </div>
-        <div class="qr-grid">
-          @foreach($qrImages as $qr)
-          <div class="qr-card">
-            <img src="data:{{ $qr['mime'] }};base64,{{ $qr['base64'] }}" alt="QR {{ $qr['index'] }}" width="200" height="200">
-            <p class="qr-label">Entrada #{{ $qr['index'] }} — {{ $qr['name'] }}</p>
-            <p class="qr-sub">ID: {{ $qr['unique_id'] }}</p>
+      {{-- Entradas adjuntas --}}
+      <div class="section" style="text-align:center; margin: 32px 0;">
+        <div style="background: #fff7ed; border: 2px solid #F97316; border-radius: 12px; padding: 28px 24px;">
+          <div style="font-size: 32px; margin-bottom: 12px;">🎟️</div>
+          <h3 style="margin: 0 0 8px; font-size: 18px; color: #1e2532;">Tus entradas están en el PDF adjunto</h3>
+          <p style="margin: 0 0 16px; font-size: 14px; color: #666;">
+            Descargá el archivo <strong>"Entradas_{{ $booking->booking_id }}.pdf"</strong> que viene con este email.<br>
+            Presentalo al ingresar al evento — cada entrada tiene su código QR único.
+          </p>
+          <div style="background: #F97316; color: #fff; display: inline-block; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px;">
+            📎 Ver adjunto en este email
           </div>
-          @endforeach
         </div>
       </div>
-      @endif
 
       {{-- Datos del comprador --}}
       <div class="section">

@@ -75,6 +75,61 @@
   margin: 0;
 }
 
+.co-page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.co-page-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.5;
+  max-width: 560px;
+  margin: 0;
+}
+
+/* Guest checkout note */
+.co-guest-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.co-guest-note__icon {
+  flex-shrink: 0;
+  color: #3b82f6;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.co-guest-note__text strong {
+  font-weight: 700;
+  color: #1e40af;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.co-guest-note__text span {
+  font-size: 13px;
+  color: #3b82f6;
+  line-height: 1.5;
+}
+
+/* Guest mode header layout */
+.checkout-v2--guest .co-page-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 /* ─── Cards ─── */
 .co-card {
   background: #fff;
@@ -520,3 +575,25 @@
 }
 
 /* ─── Responsive ─── */
+@media (max-width: 480px) {
+  .co-page-title {
+    font-size: 20px;
+  }
+
+  .co-page-subtitle {
+    font-size: 13px;
+  }
+
+  .co-guest-note {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .co-guest-note__text strong {
+    font-size: 13px;
+  }
+
+  .co-guest-note__text span {
+    font-size: 12px;
+  }
+}

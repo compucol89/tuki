@@ -9,6 +9,7 @@ use App\Jobs\ArcaInvoiceIssuingJob;
 use App\Jobs\BookingInvoiceJob;
 use App\Models\BillingSetting;
 use App\Models\BasicSettings\Basic;
+use App\Mail\EventConfirmationMail;
 use App\Models\BasicSettings\MailTemplate;
 use App\Models\CustomerFiscalProfile;
 use App\Models\Event;
@@ -22,6 +23,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -365,104 +367,7 @@ class BookingController extends Controller
 
   public function sendMail($bookingInfo)
   {
-    // first get the mail template info from db
-    $mailTemplate = MailTemplate::where('mail_type', 'event_booking')->first();
-    $mailSubject = $mailTemplate->mail_subject;
-    $mailBody = $mailTemplate->mail_body;
-
-    // second get the website title & mail's smtp info from db
-    $info = DB::table('basic_settings')
-      ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
-      ->first();
-
-    $customerName = $bookingInfo->fname . ' ' . $bookingInfo->lname;
-    $orderId = $bookingInfo->booking_id;
-
-    $language = $this->getLanguage();
-    $eventContent = EventContent::where('event_id', $bookingInfo->event_id)->where('language_id', $language->id)->first();
-    if (!$eventContent) {
-      $defLang = Language::where('is_default', 1)->first();
-      $eventContent = EventContent::where('event_id', $bookingInfo->event_id)->where('language_id', $defLang->id)->first();
-    }
-    $event = Event::where('id', $bookingInfo->event_id)->first();
-    $eventTitle = $eventContent ? $eventContent->title : '';
-
-    $websiteTitle = $info->website_title;
-
-    $mailBody = str_replace('{customer_name}', $customerName, $mailBody);
-    $mailBody = str_replace('{order_id}', $orderId, $mailBody);
-    if ($eventContent) {
-      $mailBody = str_replace('{title}', '<a href="' . route('event.details', [$eventContent->slug, $eventContent->event_id]) . '">' . $eventTitle . '</a>', $mailBody);
-    } else {
-      $mailBody = str_replace('{title}', $eventTitle, $mailBody);
-    }
-    $mailBody = str_replace('{website_title}', $websiteTitle, $mailBody);
-    if($event->event_type == 'online'){
-      $mailBody = str_replace('{meeting_url}', $event->meeting_url, $mailBody);
-    }else{
-      $mailBody = str_replace('{meeting_url}', '', $mailBody);
-    }
-
-    if ($bookingInfo->access_token) {
-      $guestLink = route('booking.guest_view', [$bookingInfo->id]) . '?token=' . $bookingInfo->access_token;
-      $mailBody = str_replace('{booking_link}', '<a href="' . $guestLink . '">' . __('Ver mi reserva') . '</a>', $mailBody);
-    } else {
-      $mailBody = str_replace('{booking_link}', '', $mailBody);
-    }
-    $mailBody = str_replace('{ticket_download_link}', '', $mailBody);
-    if ($bookingInfo->fiscal_invoice_token) {
-      $invoiceLink = route('booking.fiscal_invoice.show', [$bookingInfo->fiscal_invoice_token]);
-      $mailBody = str_replace('{invoice_link}', '<a href="' . $invoiceLink . '">' . __('Ver mi factura electrónica') . '</a>', $mailBody);
-    } else {
-      $mailBody = str_replace('{invoice_link}', '', $mailBody);
-    }
-
-
-    // initialize a new mail
-    $mail = new PHPMailer(true);
-    $mail->CharSet = 'UTF-8';
-    $mail->Encoding = 'base64';
-
-    // if smtp status == 1, then set some value for PHPMailer
-    if ($info->smtp_status == 1) {
-      $mail->isSMTP();
-      $mail->Host       = $info->smtp_host;
-      $mail->SMTPAuth   = true;
-      $mail->Username   = $info->smtp_username;
-      $mail->Password   = $info->smtp_password;
-
-      if ($info->encryption == 'TLS') {
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-      }
-
-      $mail->Port       = $info->smtp_port;
-    }
-
-    // finally add other informations and send the mail
-    try {
-      // Recipients
-      $mail->setFrom($info->from_mail, $info->from_name);
-      $mail->addAddress($bookingInfo->email);
-
-      // Attachments (Invoice)
-      $invoicePath = storage_path('app/invoices/') . $bookingInfo->invoice;
-      if (!empty($bookingInfo->invoice) && file_exists($invoicePath)) {
-        $mail->addAttachment($invoicePath);
-      } else {
-        Log::warning('PDF de entrada no encontrado para adjuntar al email', ['booking_id' => $bookingInfo->booking_id]);
-      }
-
-      // Content
-      $mail->isHTML(true);
-      $mail->Subject = $mailSubject;
-      $mail->Body    = $mailBody;
-
-      $mail->send();
-
-      return;
-    } catch (\Exception $e) {
-      return session()->flash('error', 'Mail could not be sent! Mailer Error: ' . $e);
-    }
+    Mail::to($bookingInfo->email)->queue(new EventConfirmationMail($bookingInfo));
   }
   public function generateInvoice($bookingInfo, $eventId)
   {

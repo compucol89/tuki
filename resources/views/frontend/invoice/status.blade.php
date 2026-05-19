@@ -9,10 +9,6 @@
 @section('content')
 <div class="container" style="max-width:680px; margin:60px auto; padding:0 16px 60px;">
 
-  <div style="text-align:center; margin-bottom:32px;">
-    <img src="{{ asset('assets/front/img/logo.png') }}" alt="TukiPass" style="height:40px;">
-  </div>
-
   {{-- Encabezado --}}
   <div style="background:#1e2532; border-radius:12px 12px 0 0; padding:28px 32px; color:#fff;">
     <p style="margin:0 0 4px; font-size:13px; color:#94a3b8; letter-spacing:.05em; text-transform:uppercase;">Factura electrónica</p>

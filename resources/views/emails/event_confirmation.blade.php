@@ -255,7 +255,7 @@
   <div class="container">
     {{-- Header --}}
     <div class="header">
-      <img src="{{ asset('assets/front/images/logos/logo-white.png') }}" alt="TukiPass" class="logo" style="max-width:140px; margin-bottom:16px;">
+      <img src="{{ asset('assets/admin/img/logo-white.png') }}" alt="TukiPass" class="logo" style="max-width:140px; margin-bottom:16px;">
       <h1>¡Tu compra está confirmada!</h1>
       <p>Entradas para <strong>{{ $eventTitle }}</strong></p>
       <div class="badge">Entrada(s) confirmada(s)</div>

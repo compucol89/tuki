@@ -149,16 +149,24 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
 
         foreach ($tickets as $ticket) {
             try {
-                $qrPng = QrCode::format('png')
-                    ->size(200)
-                    ->errorCorrection('H')
-                    ->generate($ticket['unique_id']);
+                // Intentar PNG (requiere GD); si falla, usar SVG (sin dependencias)
+                try {
+                    $data   = QrCode::format('png')->size(200)->errorCorrection('H')->generate($ticket['unique_id']);
+                    $mime   = 'image/png';
+                } catch (\Exception) {
+                    $data   = QrCode::size(200)->generate($ticket['unique_id']);
+                    $mime   = 'image/svg+xml';
+                    Log::info('EventConfirmationMail: QR generado con SVG (GD no disponible)', [
+                        'unique_id' => $ticket['unique_id'],
+                    ]);
+                }
 
                 $qrImages[] = [
                     'unique_id' => $ticket['unique_id'],
                     'name'      => $ticket['name'],
                     'index'     => $ticket['index'],
-                    'base64'    => base64_encode($qrPng),
+                    'base64'    => base64_encode($data),
+                    'mime'      => $mime,
                 ];
             } catch (\Exception $e) {
                 Log::error('EventConfirmationMail: Error generando QR', [

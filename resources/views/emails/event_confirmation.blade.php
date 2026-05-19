@@ -255,7 +255,7 @@
   <div class="container">
     {{-- Header --}}
     <div class="header">
-      <img src="{{ asset('assets/admin/img/logo-white.png') }}" alt="TukiPass" class="logo" style="max-width:140px; margin-bottom:16px;">
+      <img src="{{ asset('assets/front/images/logos/logo-white.png') }}" alt="TukiPass" class="logo" style="max-width:140px; margin-bottom:16px;">
       <h1>¡Tu compra está confirmada!</h1>
       <p>Entradas para <strong>{{ $eventTitle }}</strong></p>
       <div class="badge">Entrada(s) confirmada(s)</div>
@@ -349,7 +349,7 @@
         <div class="qr-grid">
           @foreach($qrImages as $qr)
           <div class="qr-card">
-            <img src="data:image/png;base64,{{ $qr['base64'] }}" alt="QR {{ $qr['index'] }}" width="200" height="200">
+            <img src="data:{{ $qr['mime'] }};base64,{{ $qr['base64'] }}" alt="QR {{ $qr['index'] }}" width="200" height="200">
             <p class="qr-label">Entrada #{{ $qr['index'] }} — {{ $qr['name'] }}</p>
             <p class="qr-sub">ID: {{ $qr['unique_id'] }}</p>
           </div>

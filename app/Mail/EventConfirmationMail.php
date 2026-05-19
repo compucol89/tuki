@@ -165,7 +165,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
                     'unique_id' => $ticket['unique_id'],
                     'name'      => $ticket['name'],
                     'index'     => $ticket['index'],
-                    'base64'    => base64_encode($data),
+                    'base64'    => base64_encode((string) $data),
                     'mime'      => $mime,
                 ];
             } catch (\Exception $e) {

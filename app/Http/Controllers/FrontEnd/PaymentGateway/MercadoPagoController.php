@@ -10,6 +10,7 @@ use App\Models\BillingSetting;
 use App\Models\BasicSettings\Basic;
 use App\Models\Earning;
 use App\Models\Event;
+use App\Models\Event\Booking;
 use App\Models\PaymentGateway\OnlineGateway;
 use App\Models\PendingBooking;
 use Illuminate\Http\Request;
@@ -303,6 +304,24 @@ class MercadoPagoController extends Controller
         ]);
         $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
         return redirect()->route('event_booking.cancel', ['id' => $eventId]);
+      }
+
+      // Idempotencia: si el webhook ya procesó este pago, evitar booking duplicado
+      $pendingCheck = PendingBooking::where('token', $paymentToken ?: $mpExternalRef)->first();
+      if ($pendingCheck && $pendingCheck->status === 'completed') {
+        Log::info('MercadoPago notify: pago ya procesado por webhook, evitando booking duplicado', [
+          'payment_id' => $paymentId,
+          'token'      => $paymentToken,
+        ]);
+        $existingBooking = Booking::where('paymentMethod', 'Mercadopago')
+          ->where('event_id', $eventId)
+          ->latest()
+          ->first();
+        $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
+        return redirect()->route('event_booking.complete', [
+          'id'         => $eventId,
+          'booking_id' => $existingBooking?->id ?? 0,
+        ]);
       }
 
       // Pago verificado — proceder con el booking

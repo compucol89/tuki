@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class BookingInvoiceJob implements ShouldQueue
 {
@@ -67,7 +68,11 @@ class BookingInvoiceJob implements ShouldQueue
             // send a mail to the customer with the invoice
             $enrol->sendMail($bookingInfo);
         } catch (\Exception $e) {
-            throw $e;  
+            Log::error('BookingInvoiceJob falló para booking_id=' . $this->booking_id, [
+                'error'   => $e->getMessage(),
+                'attempt' => $this->attempts(),
+            ]);
+            throw $e;
         }
     }
 }

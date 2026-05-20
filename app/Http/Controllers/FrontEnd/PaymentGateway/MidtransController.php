@@ -44,7 +44,7 @@ class MidtransController extends Controller
 
         $booking = new BookingController();
 
-        $total = Session::get('grand_total');
+        $total = Session::get('sub_total');
         $quantity = Session::get('quantity');
         $discount = Session::get('discount');
 

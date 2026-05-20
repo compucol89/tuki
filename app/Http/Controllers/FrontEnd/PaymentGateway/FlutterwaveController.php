@@ -47,7 +47,7 @@ class FlutterwaveController extends Controller
 
     $booking = new BookingController();
 
-    $total = Session::get('grand_total');
+    $total = Session::get('sub_total');
 
     //tax and commission end
     $basicSetting = Basic::select('commission')->first();

@@ -47,7 +47,7 @@ class StripeController extends Controller
 
 
     $currencyInfo = $this->getCurrencyInfo();
-    $total = Session::get('grand_total');
+    $total = Session::get('sub_total');
     $quantity = Session::get('quantity');
     $discount = Session::get('discount');
     $total_early_bird_dicount = Session::get('total_early_bird_dicount');

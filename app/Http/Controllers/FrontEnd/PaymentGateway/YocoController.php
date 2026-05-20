@@ -43,7 +43,7 @@ class YocoController extends Controller
         $message['gateway.required'] = 'The payment gateway feild is required';
         $request->validate($rules, $message);
 
-        $total = Session::get('grand_total');
+        $total = Session::get('sub_total');
         $quantity = Session::get('quantity');
         $discount = Session::get('discount');
 

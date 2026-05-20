@@ -35,7 +35,7 @@ class MollieController extends Controller
 
     $booking = new BookingController();
     $allowedCurrencies = array('AED', 'AUD', 'BGN', 'BRL', 'CAD', 'CHF', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HRK', 'HUF', 'ILS', 'ISK', 'JPY', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PLN', 'RON', 'RUB', 'SEK', 'SGD', 'THB', 'TWD', 'USD', 'ZAR');
-    $total = Session::get('grand_total');
+    $total = Session::get('sub_total');
     $quantity = Session::get('quantity');
     $discount = Session::get('discount');
     $total_early_bird_dicount = Session::get('total_early_bird_dicount');

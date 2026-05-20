@@ -44,7 +44,7 @@ class IyzipayController extends Controller
             return back()->with(['alert-type' => 'error', 'message' => 'Invalid Currency.']);
         }
 
-        $total = Session::get('grand_total');
+        $total = Session::get('sub_total');
         $quantity = Session::get('quantity');
         $discount = Session::get('discount');
 

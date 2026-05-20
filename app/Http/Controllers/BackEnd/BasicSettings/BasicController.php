@@ -924,7 +924,8 @@ class BasicController extends Controller
   public function updateEventTaxCommission(Request $request)
   {
     $rules = [
-      'tax' => 'required|numeric'
+      'tax' => 'required|numeric|min:0|max:100',
+      'commission' => 'nullable|numeric|min:0|max:15'
     ];
 
     $validator = Validator::make($request->all(), $rules);

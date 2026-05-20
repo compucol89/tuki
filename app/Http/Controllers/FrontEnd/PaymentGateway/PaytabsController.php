@@ -35,7 +35,7 @@ class PaytabsController extends Controller
 
         $currencyInfo = $this->getCurrencyInfo();
 
-        $total = Session::get('grand_total');
+        $total = Session::get('sub_total');
         $quantity = Session::get('quantity');
         $discount = Session::get('discount');
 

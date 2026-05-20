@@ -154,7 +154,7 @@
             <div class="cd-guest-info__cta">
               <a href="{{ route('customer.signup') }}" class="cd-guest-info__link">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-                Crear cuenta en Tukipass para gestionar tus reservas
+                Crear cuenta para gestionar tus reservas
               </a>
             </div>
           </div>
@@ -200,7 +200,7 @@
               @endif
               @if($eventData->instructions)
                 <div class="cd-info-row" style="align-items:flex-start">
-                  <span class="cd-info-row__label">Instrucciones</span>
+                  <span class="cd-info-row__label">Instrucciones <small class="text-muted" style="font-weight:400;font-size:11px">(del organizador)</small></span>
                   <span class="cd-info-row__val" style="white-space:pre-line;text-align:left">{{ Str::limit(strip_tags($eventData->instructions), 200) }}</span>
                 </div>
               @endif

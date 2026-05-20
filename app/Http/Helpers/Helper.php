@@ -233,6 +233,14 @@ if (!function_exists('storeTranscation')) {
   }
 }
 
+// Alias con ortografía corregida — mantiene compatibilidad con 18+ call sites existentes
+if (!function_exists('storeTransaction')) {
+  function storeTransaction($booking)
+  {
+    return storeTranscation($booking);
+  }
+}
+
 if (!function_exists('storeProductTranscation')) {
   function storeProductTranscation($orderInfo)
   {

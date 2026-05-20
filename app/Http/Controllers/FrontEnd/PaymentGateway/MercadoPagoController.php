@@ -378,15 +378,15 @@ class MercadoPagoController extends Controller
         BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
       }
 
-      //add blance to admin revinue
-      $earning = Earning::first();
-      $earning->total_revenue = $earning->total_revenue + $arrData['price'] + $bookingInfo->tax;
-      if ($bookingInfo['organizer_id'] != null) {
-        $earning->total_earning = $earning->total_earning + ($bookingInfo->tax + $bookingInfo->commission);
-      } else {
-        $earning->total_earning = $earning->total_earning + $arrData['price'] + $bookingInfo->tax;
-      }
-      $earning->save();
+      // Actualización atómica de earnings — evita condición de carrera en pagos simultáneos
+      $revenueInc = round((float)($arrData['price'] + $bookingInfo->tax), 2);
+      $earningInc = $bookingInfo['organizer_id'] != null
+        ? round((float)($bookingInfo->tax + $bookingInfo->commission), 2)
+        : round((float)($arrData['price'] + $bookingInfo->tax), 2);
+      Earning::query()->limit(1)->update([
+        'total_revenue' => DB::raw("total_revenue + {$revenueInc}"),
+        'total_earning' => DB::raw("total_earning + {$earningInc}"),
+      ]);
 
       //storeTransaction
       $bookingInfo['paymentStatus'] = 1;
@@ -547,14 +547,15 @@ class MercadoPagoController extends Controller
         BookingInvoiceJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(10));
       }
 
-      $earning = Earning::first();
-      $earning->total_revenue = $earning->total_revenue + $arrData['price'] + $bookingInfo->tax;
-      if ($bookingInfo['organizer_id'] != null) {
-        $earning->total_earning = $earning->total_earning + ($bookingInfo->tax + $bookingInfo->commission);
-      } else {
-        $earning->total_earning = $earning->total_earning + $arrData['price'] + $bookingInfo->tax;
-      }
-      $earning->save();
+      // Actualización atómica de earnings — evita condición de carrera en pagos simultáneos
+      $revenueInc = round((float)($arrData['price'] + $bookingInfo->tax), 2);
+      $earningInc = $bookingInfo['organizer_id'] != null
+        ? round((float)($bookingInfo->tax + $bookingInfo->commission), 2)
+        : round((float)($arrData['price'] + $bookingInfo->tax), 2);
+      Earning::query()->limit(1)->update([
+        'total_revenue' => DB::raw("total_revenue + {$revenueInc}"),
+        'total_earning' => DB::raw("total_earning + {$earningInc}"),
+      ]);
 
       $bookingInfo['paymentStatus'] = 1;
       $bookingInfo['transcation_type'] = 1;

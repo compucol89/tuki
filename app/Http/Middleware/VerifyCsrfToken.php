@@ -14,12 +14,14 @@ class VerifyCsrfToken extends Middleware
   protected $except = [
     '*/flutterwave/notify',
     '*/razorpay/notify',
-    '*/mercadopago/notify',
-    '*/mercadopago/webhook',
+    // Paths exactos — evita wildcard */ que cubriría rutas no intencionadas
+    'event-booking/mercadopago/notify',
+    'event-booking/mercadopago/webhook',
+    'product-order/mercadopago/notify',
     '*/paytm/notify',
     '*/iyzico/notify',
     '*/paytabs/notify/',
     '*/phonepe/notify',
-    '/xendit/callback'
+    '/xendit/callback',
   ];
 }

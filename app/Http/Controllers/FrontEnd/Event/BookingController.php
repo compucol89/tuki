@@ -172,54 +172,53 @@ class BookingController extends Controller
 
       if ($variations) {
         foreach ($variations as $variation) {
-
-          $ticket = Ticket::where('id', $variation['ticket_id'])->first();
-          if ($ticket->pricing_type == 'normal' && $ticket->ticket_available_type == 'limited') {
-            if ($ticket->ticket_available - $variation['qty'] >= 0) {
-              $ticket->ticket_available = $ticket->ticket_available - $variation['qty'];
-              $ticket->save();
-            }
-          } elseif ($ticket->pricing_type == 'variation') {
-            $ticket_variations =  json_decode($ticket->variations, true);
-            $update_variation = [];
-            foreach ($ticket_variations as $ticket_variation) {
-              if ($ticket_variation['name']  == $variation['name']) {
-
-                if ($ticket_variation['ticket_available_type'] == 'limited') {
-                  $ticket_available = intval($ticket_variation['ticket_available']) - intval($variation['qty']);
+          // Transacción por ticket — lockForUpdate evita overselling en pagos simultáneos
+          DB::transaction(function () use ($variation) {
+            $ticket = Ticket::where('id', $variation['ticket_id'])->lockForUpdate()->first();
+            if (!$ticket) return;
+            if ($ticket->pricing_type == 'normal' && $ticket->ticket_available_type == 'limited') {
+              if ($ticket->ticket_available - $variation['qty'] >= 0) {
+                $ticket->ticket_available = $ticket->ticket_available - $variation['qty'];
+                $ticket->save();
+              }
+            } elseif ($ticket->pricing_type == 'variation') {
+              $ticket_variations = json_decode($ticket->variations, true);
+              $update_variation = [];
+              foreach ($ticket_variations as $ticket_variation) {
+                if ($ticket_variation['name'] == $variation['name']) {
+                  if ($ticket_variation['ticket_available_type'] == 'limited') {
+                    $ticket_available = intval($ticket_variation['ticket_available']) - intval($variation['qty']);
+                  } else {
+                    $ticket_available = $ticket_variation['ticket_available'];
+                  }
+                  $update_variation[] = [
+                    'name' => $ticket_variation['name'],
+                    'price' => round($ticket_variation['price'], 2),
+                    'ticket_available_type' => $ticket_variation['ticket_available_type'],
+                    'ticket_available' => $ticket_available,
+                    'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
+                    'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
+                  ];
                 } else {
-                  $ticket_available = $ticket_variation['ticket_available'];
+                  $update_variation[] = [
+                    'name' => $ticket_variation['name'],
+                    'price' => round($ticket_variation['price'], 2),
+                    'ticket_available_type' => $ticket_variation['ticket_available_type'],
+                    'ticket_available' => $ticket_variation['ticket_available'],
+                    'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
+                    'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
+                  ];
                 }
-
-                $update_variation[] = [
-                  'name' => $ticket_variation['name'],
-                  'price' => round($ticket_variation['price'], 2),
-                  'ticket_available_type' => $ticket_variation['ticket_available_type'],
-                  'ticket_available' => $ticket_available,
-                  'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
-                  'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
-                ];
-              } else {
-                $update_variation[] = [
-                  'name' => $ticket_variation['name'],
-                  'price' => round($ticket_variation['price'], 2),
-                  'ticket_available_type' => $ticket_variation['ticket_available_type'],
-                  'ticket_available' => $ticket_variation['ticket_available'],
-                  'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
-                  'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
-                ];
+              }
+              $ticket->variations = json_encode($update_variation, true);
+              $ticket->save();
+            } elseif ($ticket->pricing_type == 'free' && $ticket->ticket_available_type == 'limited') {
+              if ($ticket->ticket_available - $variation['qty'] >= 0) {
+                $ticket->ticket_available = $ticket->ticket_available - $variation['qty'];
+                $ticket->save();
               }
             }
-            $ticket->variations = json_encode($update_variation, true);
-
-
-            $ticket->save();
-          } elseif ($ticket->pricing_type == 'free' && $ticket->ticket_available_type == 'limited') {
-            if ($ticket->ticket_available - $variation['qty'] >= 0) {
-              $ticket->ticket_available = $ticket->ticket_available - $variation['qty'];
-              $ticket->save();
-            }
-          }
+          });
         }
         $variations = Session::get('selTickets');
         $c_variations = [];
@@ -232,16 +231,20 @@ class BookingController extends Controller
               'qty' => 1,
               'price' => $variation['price'],
               'scan_status' => 0,
-              'unique_id' => uniqid(),
+              'unique_id' => (string) Str::uuid(),
             ];
           }
         }
         $variations = json_encode($c_variations, true);
       } else {
-        $ticket = $event ? $event->ticket()->first() : null;
-        if ($ticket && $ticket->ticket_available_type == 'limited') {
-          $ticket->ticket_available = max(0, $ticket->ticket_available - (int)$info['quantity']);
-          $ticket->save();
+        if ($event) {
+          DB::transaction(function () use ($event, $info) {
+            $ticket = $event->ticket()->lockForUpdate()->first();
+            if ($ticket && $ticket->ticket_available_type == 'limited') {
+              $ticket->ticket_available = max(0, $ticket->ticket_available - (int)$info['quantity']);
+              $ticket->save();
+            }
+          });
         }
       }
 
@@ -249,7 +252,7 @@ class BookingController extends Controller
 
       $booking = Booking::create([
         'customer_id' => Auth::guard('customer')->user() ? Auth::guard('customer')->user()->id : null,
-        'booking_id' => uniqid(),
+        'booking_id' => (string) Str::uuid(),
         'fname' => $info['fname'],
         'lname' => $info['lname'],
         'email' => $info['email'],

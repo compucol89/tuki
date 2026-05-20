@@ -21,7 +21,7 @@ Route::middleware('guest:customer')->group(function () {
   Route::get('/recuperar-contrasena', 'FrontEnd\CustomerController@forget_passord')->name('customer.forget.password');
 });
 
-Route::middleware('guest:customer')->prefix('customer')->group(function () {
+Route::middleware('guest:customer')->prefix('usuario')->group(function () {
   Route::post('/create', 'FrontEnd\CustomerController@create')->name('customer.create');
   Route::post('/store', 'FrontEnd\CustomerController@authentication')->middleware('throttle:5,1')->name('customer.authentication');
   Route::get('auth/facebook', 'FrontEnd\CustomerController@facebookRedirect')->name('auth.facebook');
@@ -53,13 +53,13 @@ Route::get('/cliente/restablecer-contrasena', function () {
   return redirect()->route('customer.reset.password', request()->query(), 301);
 })->name('cliente.restablecer-contrasena');
 
-Route::middleware('auth:customer')->prefix('/customer')->group(function () {
+Route::middleware('auth:customer')->prefix('/usuario')->group(function () {
   Route::get('/logout', 'FrontEnd\CustomerController@logout')->name('customer.logout');
   Route::get('/change-password', 'FrontEnd\CustomerController@change_password')->name('customer.change.password');
   Route::post('/update-password', 'FrontEnd\CustomerController@updated_password')->name('customer.password.update');
 });
 
-Route::get('customer/signup-verify/{token}', 'FrontEnd\CustomerController@signupVerify');
+Route::get('usuario/signup-verify/{token}', 'FrontEnd\CustomerController@signupVerify')->name('customer.signup.verify');
 
 Route::prefix('/admin')->middleware('guest:admin')->group(function () {
   Route::get('/', 'BackEnd\AdminController@login')->name('admin.login');

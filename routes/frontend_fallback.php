@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Route;
 Route::permanentRedirect('/about-us', '/sobre-nosotros');
 Route::get('/sobre-nosotros', 'FrontEnd\HomeController@about')->name('about');
 
+Route::get('/event/{slug}/{id}', function ($slug, $id) {
+  return redirect()->route('event.details', ['slug' => $slug, 'id' => $id], 301);
+})->where('id', '[0-9]+');
+
 Route::get('/{slug}', 'FrontEnd\PageController@page')
   ->name('dynamic_page')
   ->where('slug', '^(?!sobre-nosotros$)[^/]+$');

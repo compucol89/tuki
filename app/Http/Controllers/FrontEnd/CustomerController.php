@@ -119,7 +119,7 @@ class CustomerController extends Controller
       ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
       ->first();
 
-    $link = url("customer/signup-verify/" . $token);
+    $link = route('customer.signup.verify', ['token' => $token], true);
 
     $mailBody = str_replace('{username}', $request->fname . ' ' . $request->lname, $mailBody);
     $mailBody = str_replace('{verification_link}', $link, $mailBody);
@@ -317,7 +317,7 @@ class CustomerController extends Controller
       'token' => $token,
     ]);
 
-    $link = '<a href=' . url("customer/reset-password?token=" . $token) . '>Click Here</a>';
+    $link = '<a href="' . route('customer.reset.password', ['token' => $token], true) . '">Restablecer contraseña</a>';
 
     $mailBody = str_replace('{customer_name}', $name, $mailBody);
     $mailBody = str_replace('{password_reset_link}', $link, $mailBody);

@@ -70,5 +70,7 @@ class Basic extends Model
     'is_shop_rating',
     'shop_guest_checkout',
     'shop_tax',
+    'tax',
+    'commission',
   ];
 }

@@ -422,7 +422,7 @@
               <span style="font-size:20px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
             @endif
           </div>
-          <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
+          <div class="event-title" style="color:#1a1a1a; background:rgba(255,255,255,0.9); padding:4px 8px; border-radius:4px;">{{ $eventInfo->title ?? '' }}</div>
           <div class="event-date">{{ ucfirst($eventDate) }} · {{ $eventTime }} hs</div>
           @if($location)
             <div class="event-location">{{ $location }}</div>
@@ -551,6 +551,19 @@
         <div class="ticket-footer">
           <div class="footer-code">#{{ $bookingInfo->booking_id }}</div>
           <div class="footer-brand">{{ config('app.name') }} · Gracias por tu compra</div>
+          @php
+            $billing = \App\Models\BillingSetting::current();
+          @endphp
+          <div style="font-size:8px; color:rgba(255,255,255,0.6); margin-top:8px; line-height:1.5;">
+            @if($billing->issuer_name || $billing->issuer_cuit)
+              {{ $billing->issuer_name ?? 'TAYRONA GROUP SAS' }}
+              @if($billing->issuer_cuit) · CUIT {{ $billing->issuer_cuit }}@endif
+              @if($billing->issuer_address)<br>{{ $billing->issuer_address }}@endif
+              @if($billing->issuer_iva_condition_text)<br>{{ $billing->issuer_iva_condition_text }}@endif
+            @else
+              TAYRONA GROUP SAS · CUIT 30-71885087-4
+            @endif
+          </div>
           <div class="footer-disclaimer">Comprobante interno - No es factura fiscal</div>
         </div>
 
@@ -582,7 +595,7 @@
               <span style="font-size:20px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
             @endif
           </div>
-          <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
+          <div class="event-title" style="color:#1a1a1a; background:rgba(255,255,255,0.9); padding:4px 8px; border-radius:4px;">{{ $eventInfo->title ?? '' }}</div>
           <div class="event-date">{{ ucfirst($eventDate) }} · {{ $eventTime }} hs</div>
           @if($location)
             <div class="event-location">{{ $location }}</div>
@@ -705,6 +718,19 @@
         <div class="ticket-footer">
           <div class="footer-code">#{{ $bookingInfo->booking_id }}</div>
           <div class="footer-brand">{{ config('app.name') }} · Gracias por tu compra</div>
+          @php
+            $billing = \App\Models\BillingSetting::current();
+          @endphp
+          <div style="font-size:8px; color:rgba(255,255,255,0.6); margin-top:8px; line-height:1.5;">
+            @if($billing->issuer_name || $billing->issuer_cuit)
+              {{ $billing->issuer_name ?? 'TAYRONA GROUP SAS' }}
+              @if($billing->issuer_cuit) · CUIT {{ $billing->issuer_cuit }}@endif
+              @if($billing->issuer_address)<br>{{ $billing->issuer_address }}@endif
+              @if($billing->issuer_iva_condition_text)<br>{{ $billing->issuer_iva_condition_text }}@endif
+            @else
+              TAYRONA GROUP SAS · CUIT 30-71885087-4
+            @endif
+          </div>
           <div class="footer-disclaimer">Comprobante interno - No es factura fiscal</div>
         </div>
 

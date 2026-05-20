@@ -2030,7 +2030,7 @@ ttq.page();
                     <img {{ $i === 0 ? 'src' : 'data-src' }}="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
                        alt="{{ $content->title }} — foto {{ $i + 1 }}"
                         width="150" height="100"
-                        {{ $i > 0 ? 'class="lazy"' : '' }}>
+                        @if($i > 0) class="lazy" @endif>
                 </button>
                 @endforeach
               </div>

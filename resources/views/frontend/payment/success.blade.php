@@ -204,11 +204,26 @@
             @if($booking->phone)
               <div class="ps-info-item"><span class="ps-info-item__label">Teléfono</span><span class="ps-info-item__val">{{ $booking->phone }}</span></div>
             @endif
+            @if(!empty($fiscalProfile) && $fiscalProfile->document_type)
+              <div class="ps-info-item"><span class="ps-info-item__label">Tipo de documento</span><span class="ps-info-item__val">{{ strtoupper($fiscalProfile->document_type) }}</span></div>
+            @endif
             @if(!empty($fiscalProfile) && $fiscalProfile->document_number)
               <div class="ps-info-item"><span class="ps-info-item__label">Documento</span><span class="ps-info-item__val">{{ $fiscalProfile->document_number }}</span></div>
             @endif
-            @if($booking->country || $booking->city)
-              <div class="ps-info-item"><span class="ps-info-item__label">Datos del comprador</span><span class="ps-info-item__val">{{ implode(', ', array_filter([$booking->city, $booking->state, $booking->country])) }}</span></div>
+            @if(!empty($fiscalProfile) && $fiscalProfile->iva_condition)
+              <div class="ps-info-item"><span class="ps-info-item__label">Condición IVA</span><span class="ps-info-item__val">{{ ucwords(str_replace('_', ' ', $fiscalProfile->iva_condition)) }}</span></div>
+            @endif
+            @if(!empty($fiscalProfile) && $fiscalProfile->fiscal_address)
+              <div class="ps-info-item"><span class="ps-info-item__label">Domicilio fiscal</span><span class="ps-info-item__val">{{ $fiscalProfile->fiscal_address }}</span></div>
+            @endif
+            @php
+              $buyerLocation = array_filter(
+                [$booking->city, $booking->state, $booking->country],
+                fn($v) => !empty($v) && strtoupper(trim($v)) !== 'N/A' && strtoupper(trim($v)) !== 'NA' && trim($v) !== '-'
+              );
+            @endphp
+            @if(count($buyerLocation) > 0)
+              <div class="ps-info-item"><span class="ps-info-item__label">Datos del comprador</span><span class="ps-info-item__val">{{ implode(', ', $buyerLocation) }}</span></div>
             @endif
           </div>
         </div>
@@ -294,7 +309,7 @@
                 <a href="{{ route('booking.ticket.download', $booking->id) }}" download class="ps-btn ps-btn--primary">
               @endif
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Descargar comprobante de reserva
+                Descargar Entradas
               </a>
               <p class="mt-2 mb-0" style="font-size: 0.875rem; color: #6c757d;">
                 <small>Este comprobante es interno y no reemplaza una factura fiscal. La factura fiscal, si corresponde, se emitirá por separado.</small>

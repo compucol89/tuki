@@ -1149,7 +1149,7 @@ ttq.page();
     $map_address = str_replace('/', ' ', $map_address);
     $map_address = str_replace('?', ' ', $map_address);
     $map_address = str_replace(',', ' ', $map_address);
-    $eventDescriptionHtml = clean($content->description);
+    $eventDescriptionHtml = $content->description ?? '';
     $eventDescriptionHtml = preg_replace('/<\s*h1\b/i', '<h2', $eventDescriptionHtml);
     $eventDescriptionHtml = preg_replace('/<\s*\/\s*h1\s*>/i', '</h2>', $eventDescriptionHtml);
     $publicOrganizerName = trim((string) ($summaryOrganizer ?? ''));
@@ -1265,9 +1265,10 @@ ttq.page();
             <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-map-pin"/></svg>
             @if ($content->event_type == 'venue')
               <span>
+                @if ($content->address != null){{ $content->address }}, @endif
                 @if ($content->city != null){{ $content->city }}@endif
-                @if ($content->state), {{ $content->state }}@endif
-                @if ($content->country), {{ $content->country }}@endif
+                @if ($content->state != null && $content->city != null), {{ $content->state }}@elseif ($content->state != null){{ $content->state }}@endif
+                @if ($content->country != null), {{ $content->country }}@endif
               </span>
             @else
               <span>{{ __('Online') }}</span>

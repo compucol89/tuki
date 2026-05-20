@@ -381,7 +381,7 @@
         {{-- Tickets con variaciones --}}
         @if(!empty($booking->variation))
           @php $variations = json_decode($booking->variation, true); @endphp
-          <div class="cd-card">
+          <div class="cd-card cd-card--tickets">
             <div class="cd-card__head">
               <div class="cd-card__head-icon cd-card__head-icon--blue">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 010-6h20a3 3 0 010 6"/><path d="M2 15a3 3 0 000 6h20a3 3 0 000-6"/><path d="M12 3v18M8 3v18M16 3v18" opacity=".4"/></svg>
@@ -389,52 +389,77 @@
               <h3 class="cd-card__title">Entradas reservadas</h3>
               <span class="cd-count-pill">{{ collect($variations)->sum('qty') }} {{ collect($variations)->sum('qty') == 1 ? 'entrada' : 'entradas' }}</span>
             </div>
-            <div class="cd-table-wrap">
-              <table class="cd-table">
-                <thead>
-                  <tr>
-                    <th>Tipo de entrada</th>
-                    <th>Cantidad</th>
-                    <th>Precio unitario</th>
-                    <th>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($variations as $variation)
-                    @php
-                      $ticket = App\Models\Event\Ticket::find($variation['ticket_id']);
-                      $ticketContent = $ticket
-                        ? App\Models\Event\TicketContent::where([['ticket_id', $ticket->id], ['language_id', $currentLanguageInfo->id]])->first()
-                        : null;
-                      $evd = $variation['early_bird_dicount'] / max($variation['qty'], 1);
-                      $unitPrice = $variation['price'] / max($variation['qty'], 1);
-                      $finalUnit = $unitPrice - $evd;
-                    @endphp
-                    <tr>
-                      <td>
-                        <span class="cd-table__link" style="cursor:default">
-                          {{ $ticketContent ? $ticketContent->title : '—' }}
-                          @if($ticket && $ticket->pricing_type == 'variation')
-                            @php
-                              $vKey = App\Models\Event\VariationContent::where([['ticket_id', $ticket->id], ['name', $variation['name']]])->select('key')->first();
-                              $vName = $vKey ? App\Models\Event\VariationContent::where([['ticket_id', $ticket->id], ['language_id', $currentLanguageInfo->id], ['key', $vKey->key]])->first() : null;
-                            @endphp
-                            @if($vName)<small class="text-muted"> · {{ $vName->name }}</small>@endif
-                          @endif
-                        </span>
-                      </td>
-                      <td>{{ $variation['qty'] }}</td>
-                      <td>
-                        {{ symbolPrice($finalUnit) }}
-                        @if($variation['early_bird_dicount'] > 0)
-                          <del class="text-muted ms-1" style="font-size:12px">{{ symbolPrice($unitPrice) }}</del>
-                        @endif
-                      </td>
-                      <td><strong>{{ symbolPrice($variation['price'] - $variation['early_bird_dicount']) }}</strong></td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+
+            <div class="cd-tickets-list">
+
+              {{-- Headers de columnas --}}
+              <div class="cd-tickets-list__header" aria-hidden="true">
+                <span class="cd-tickets-list__col cd-tickets-list__col--type">Tipo de entrada</span>
+                <span class="cd-tickets-list__col cd-tickets-list__col--qty">Cant.</span>
+                <span class="cd-tickets-list__col cd-tickets-list__col--price">Precio unit.</span>
+                <span class="cd-tickets-list__col cd-tickets-list__col--total">Subtotal</span>
+              </div>
+
+              {{-- Items --}}
+              @foreach ($variations as $variation)
+                @php
+                  $ticket = App\Models\Event\Ticket::find($variation['ticket_id']);
+                  $ticketContent = $ticket
+                    ? App\Models\Event\TicketContent::where([['ticket_id', $ticket->id], ['language_id', $currentLanguageInfo->id]])->first()
+                    : null;
+                  $evd       = $variation['early_bird_dicount'] / max($variation['qty'], 1);
+                  $unitPrice = $variation['price'] / max($variation['qty'], 1);
+                  $finalUnit = $unitPrice - $evd;
+                  $hasDiscount = $variation['early_bird_dicount'] > 0;
+                  $subtotal  = $variation['price'] - $variation['early_bird_dicount'];
+                @endphp
+                <div class="cd-tickets-list__item{{ $hasDiscount ? ' cd-tickets-list__item--discounted' : '' }}">
+
+                  {{-- Tipo --}}
+                  <div class="cd-tickets-list__col cd-tickets-list__col--type">
+                    <span class="cd-tickets-list__name">{{ $ticketContent ? $ticketContent->title : '—' }}</span>
+                    @if($ticket && $ticket->pricing_type == 'variation')
+                      @php
+                        $vKey  = App\Models\Event\VariationContent::where([['ticket_id', $ticket->id], ['name', $variation['name']]])->select('key')->first();
+                        $vName = $vKey ? App\Models\Event\VariationContent::where([['ticket_id', $ticket->id], ['language_id', $currentLanguageInfo->id], ['key', $vKey->key]])->first() : null;
+                      @endphp
+                      @if($vName)
+                        <span class="cd-tickets-list__variant">{{ $vName->name }}</span>
+                      @endif
+                    @endif
+                    @if($hasDiscount)
+                      <span class="cd-tickets-list__discount-badge">Early Bird</span>
+                    @endif
+                  </div>
+
+                  {{-- Cantidad --}}
+                  <div class="cd-tickets-list__col cd-tickets-list__col--qty">
+                    <span class="cd-tickets-list__qty-badge">{{ $variation['qty'] }}</span>
+                  </div>
+
+                  {{-- Precio unitario --}}
+                  <div class="cd-tickets-list__col cd-tickets-list__col--price">
+                    <span class="cd-tickets-list__price">{{ symbolPrice($finalUnit) }}</span>
+                    @if($hasDiscount)
+                      <del class="cd-tickets-list__price-original">{{ symbolPrice($unitPrice) }}</del>
+                    @endif
+                  </div>
+
+                  {{-- Subtotal --}}
+                  <div class="cd-tickets-list__col cd-tickets-list__col--total">
+                    <span class="cd-tickets-list__total">{{ symbolPrice($subtotal) }}</span>
+                  </div>
+
+                </div>
+              @endforeach
+
+              {{-- Footer total --}}
+              @php $grandTotal = collect($variations)->sum(fn($v) => $v['price'] - $v['early_bird_dicount']); @endphp
+              <div class="cd-tickets-list__footer">
+                <span class="cd-tickets-list__footer-label">Total entradas</span>
+                <span class="cd-tickets-list__footer-amount">{{ symbolPrice($grandTotal) }}</span>
+              </div>
+
             </div>
           </div>
         @endif

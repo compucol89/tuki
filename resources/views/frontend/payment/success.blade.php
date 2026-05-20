@@ -127,8 +127,7 @@
                 <tbody>
                   @foreach($variations as $variation)
                     @php
-                      $ticket = App\Models\Event\Ticket::find($variation['ticket_id']);
-                      $tc     = $ticket ? App\Models\Event\TicketContent::where([['ticket_id',$ticket->id],['language_id',$currentLanguageInfo->id]])->first() : null;
+                      $tc = isset($ticketContents[$variation['ticket_id']]) ? $ticketContents[$variation['ticket_id']]->first() : null;
                       $qty       = max($variation['qty'], 1);
                       $evd       = $variation['early_bird_dicount'] / $qty;
                       $unitRaw   = $variation['price'] / $qty;
@@ -152,6 +151,44 @@
           </div>
         @endif
 
+        {{-- Organizador --}}
+        @if($event?->organizer?->organizer_info)
+          <div class="ps-card">
+            <div class="ps-card__head">
+              <h3 class="ps-card__title">Organizador</h3>
+            </div>
+            <div class="ps-info-grid">
+              <div class="ps-info-item">
+                <span class="ps-info-item__label">Nombre</span>
+                <span class="ps-info-item__val">{{ $event->organizer->organizer_info->name ?? 'Organizador' }}</span>
+              </div>
+            </div>
+          </div>
+        @endif
+
+        {{-- Información importante --}}
+        @if($event?->instructions || $event?->information?->refund_policy)
+          <div class="ps-card">
+            <div class="ps-card__head">
+              <h3 class="ps-card__title">Información importante</h3>
+            </div>
+            <div style="padding: 16px 20px;">
+              @if($event->instructions)
+                <div style="margin-bottom: 12px;">
+                  <strong style="font-size: 13px; color: #374151;">Instrucciones de acceso:</strong>
+                  <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br(e($event->instructions)) !!}</p>
+                </div>
+              @endif
+              @if($event->information?->refund_policy)
+                <div>
+                  <strong style="font-size: 13px; color: #374151;">Política de reembolso:</strong>
+                  <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br(e($event->information->refund_policy)) !!}</p>
+                </div>
+              @endif
+            </div>
+          </div>
+        @endif
+
         {{-- Datos de facturación --}}
         <div class="ps-card">
           <div class="ps-card__head">
@@ -171,7 +208,7 @@
               <div class="ps-info-item"><span class="ps-info-item__label">Documento</span><span class="ps-info-item__val">{{ $fiscalProfile->document_number }}</span></div>
             @endif
             @if($booking->country || $booking->city)
-              <div class="ps-info-item"><span class="ps-info-item__label">Ubicación</span><span class="ps-info-item__val">{{ implode(', ', array_filter([$booking->city, $booking->state, $booking->country])) }}</span></div>
+              <div class="ps-info-item"><span class="ps-info-item__label">Datos del comprador</span><span class="ps-info-item__val">{{ implode(', ', array_filter([$booking->city, $booking->state, $booking->country])) }}</span></div>
             @endif
           </div>
         </div>

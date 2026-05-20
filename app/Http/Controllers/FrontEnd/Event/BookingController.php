@@ -348,9 +348,23 @@ class BookingController extends Controller
     $event = Event::where('id', $id)->with([
       'information' => function ($query) use ($language) {
         return $query->where('language_id', $language->id)->first();
-      }
+      },
+      'organizer.organizer_info'
     ])->first();
     $information['event'] = $event;
+
+    $ticketIds = $booking->variation
+      ? collect(json_decode($booking->variation, true))->pluck('ticket_id')->unique()->toArray()
+      : [];
+    $ticketContents = [];
+    if (!empty($ticketIds)) {
+      $ticketContents = \App\Models\Event\TicketContent::whereIn('ticket_id', $ticketIds)
+        ->where('language_id', $language->id)
+        ->get()
+        ->groupBy('ticket_id');
+    }
+    $information['ticketContents'] = $ticketContents;
+
     if ($event->date_type == 'multiple') {
       $start_date_time = strtotime($booking->event_date);
       $start_date_time = date('Y-m-d H:i:s', $start_date_time);

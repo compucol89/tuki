@@ -17,7 +17,7 @@ class CustomerBookingController extends Controller
   //details
   public function details($id)
   {
-    $booking = Booking::where('id', $id)->firstOrFail();
+    $booking = Booking::with(['evnt', 'organizer', 'fiscalProfile'])->where('id', $id)->firstOrFail();
     $user = Auth::guard('customer')->user();
     if (!$user || $user->id != $booking->customer_id) {
       return back();
@@ -32,7 +32,7 @@ class CustomerBookingController extends Controller
     if (!$token) {
       abort(403);
     }
-    $booking = Booking::where('id', $id)->where('access_token', $token)->firstOrFail();
+    $booking = Booking::with(['evnt', 'organizer', 'fiscalProfile'])->where('id', $id)->where('access_token', $token)->firstOrFail();
     if ($booking->token_legacy_expires_at && now()->gt($booking->token_legacy_expires_at)) {
       abort(403, 'El link de acceso ha expirado.');
     }

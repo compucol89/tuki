@@ -158,6 +158,16 @@
 .cd-card__head-icon--blue   { background: #eff6ff; color: #3b82f6; }
 .cd-card__head-icon--green  { background: #f0fdf4; color: #10b981; }
 .cd-card__head-icon--purple { background: #f5f3ff; color: #8b5cf6; }
+.cd-card__head-icon--orange { background: #fff7ed; color: #ea580c; }
+
+/* ── BADGES ── */
+.cd-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600; border-radius: 6px; padding: 3px 9px;
+}
+.cd-badge--blue { background: #eff6ff; color: #2563eb; }
+.cd-badge--gray { background: #f3f4f6; color: #374151; }
+.cd-badge--green { background: #f0fdf4; color: #16a34a; }
 
 /* ── PAYMENT HERO (total price) ── */
 .cd-payment-hero {
@@ -194,6 +204,10 @@
 .cd-info-row__label { color: #64748b; white-space: nowrap; flex-shrink: 0; font-weight: 500; }
 .cd-info-row__val { color: #1e293b; font-weight: 600; text-align: right; }
 .cd-info-row__val--discount { color: #16a34a; }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .cd-bk-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 @media (max-width: 767px) {
   .cd-bk-hero__top    { padding: 20px 20px 24px; }

@@ -30,11 +30,12 @@
   $position = $booking->currencyTextPosition;
   $currency = $booking->currencyText;
 
-  $event = $booking->event()->where('language_id', $currentLanguageInfo->id)->select('title','slug','event_id')->first();
+  $event = $booking->event()->where('language_id', $currentLanguageInfo->id)->select('title','slug','event_id','address','city','state','country','zip_code')->first();
   if (!$event) {
     $defLang = App\Models\Language::where('is_default', 1)->first();
-    $event = $booking->event()->where('language_id', $defLang->id)->select('title','slug','event_id')->first();
+    $event = $booking->event()->where('language_id', $defLang->id)->select('title','slug','event_id','address','city','state','country','zip_code')->first();
   }
+  $eventData = $booking->evnt;
 
   $statusMap = [
     'completed' => ['label' => 'Completado', 'class' => 'cd-status--paid'],
@@ -103,7 +104,7 @@
                 <span class="cd-bk-hero__price-label">Total pagado</span>
                 <span class="cd-bk-hero__price-amount">{{ $booking->currencySymbol }}{{ number_format($booking->price + $booking->tax, 2) }}</span>
               </div>
-              @if($hasPdf && empty($isGuest))
+              @if($hasPdf)
                 <a href="{{ route('booking.ticket.download', $booking->id) }}" download class="cd-bk-hero__pdf-btn">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   Descargar PDF
@@ -160,6 +161,78 @@
         </div>
         @endif
 
+        {{-- Datos del evento --}}
+        @php
+          $isOnline = $eventData && in_array($eventData->event_type, ['online', 'virtual', 'Online', 'Virtual']);
+          $hasEventLocation = $event && ($event->address || $event->city || $event->state || $event->country);
+          $hasEventData = $eventData || $hasEventLocation;
+        @endphp
+        @if($hasEventData)
+        <div class="cd-card mb-4">
+          <div class="cd-card__head">
+            <div class="cd-card__head-icon cd-card__head-icon--orange">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h3 class="cd-card__title">Datos del evento</h3>
+          </div>
+          <div class="cd-info-list">
+            @if($eventData)
+              <div class="cd-info-row">
+                <span class="cd-info-row__label">Modalidad</span>
+                <span class="cd-info-row__val">
+                  @if($isOnline)
+                    <span class="cd-badge cd-badge--blue">Virtual / Online</span>
+                  @else
+                    <span class="cd-badge cd-badge--gray">Presencial</span>
+                  @endif
+                </span>
+              </div>
+              @if($isOnline && $eventData->meeting_url)
+                <div class="cd-info-row">
+                  <span class="cd-info-row__label">Acceso</span>
+                  <span class="cd-info-row__val">
+                    <a href="{{ $eventData->meeting_url }}" target="_blank" rel="noopener" class="cd-table__link">
+                      Ingresar al evento
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:3px"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    </a>
+                  </span>
+                </div>
+              @endif
+              @if($eventData->instructions)
+                <div class="cd-info-row" style="align-items:flex-start">
+                  <span class="cd-info-row__label">Instrucciones</span>
+                  <span class="cd-info-row__val" style="white-space:pre-line;text-align:left">{{ Str::limit(strip_tags($eventData->instructions), 200) }}</span>
+                </div>
+              @endif
+            @endif
+            @if($event && $event->address)
+              <div class="cd-info-row">
+                <span class="cd-info-row__label">Dirección</span>
+                <span class="cd-info-row__val">{{ $event->address }}</span>
+              </div>
+            @endif
+            @if($event && $event->city)
+              <div class="cd-info-row">
+                <span class="cd-info-row__label">Ciudad</span>
+                <span class="cd-info-row__val">{{ $event->city }}</span>
+              </div>
+            @endif
+            @if($event && $event->state)
+              <div class="cd-info-row">
+                <span class="cd-info-row__label">Provincia</span>
+                <span class="cd-info-row__val">{{ $event->state }}</span>
+              </div>
+            @endif
+            @if($event && $event->country)
+              <div class="cd-info-row">
+                <span class="cd-info-row__label">País</span>
+                <span class="cd-info-row__val">{{ $event->country }}</span>
+              </div>
+            @endif
+          </div>
+        </div>
+        @endif
+
         {{-- Info grid: Billing + Payment + Organizer --}}
         <div class="cd-bk-grid mb-4">
 
@@ -177,16 +250,38 @@
                 $dni = $fiscalProfile && $fiscalProfile->document_number
                     ? trim(($fiscalProfile->document_type ?? '') . ' ' . $fiscalProfile->document_number)
                     : null;
+                $ivaMap = [
+                  'consumidor_final'      => 'Consumidor Final',
+                  'responsable_inscripto' => 'Responsable Inscripto',
+                  'monotributo'           => 'Monotributo',
+                  'exento'                => 'Exento',
+                  'no_responsable'        => 'No Responsable',
+                ];
+                $ivaLabel = $fiscalProfile && $fiscalProfile->iva_condition
+                    ? ($ivaMap[$fiscalProfile->iva_condition] ?? ucwords(str_replace('_', ' ', $fiscalProfile->iva_condition)))
+                    : null;
+                $fiscalName = $fiscalProfile && $fiscalProfile->full_name
+                    && strtolower($fiscalProfile->full_name) !== strtolower(trim($booking->fname . ' ' . $booking->lname))
+                    ? $fiscalProfile->full_name : null;
+                $fiscalEmail = $fiscalProfile && $fiscalProfile->fiscal_email
+                    && $fiscalProfile->fiscal_email !== $booking->email
+                    ? $fiscalProfile->fiscal_email : null;
+                $direccion = $fiscalProfile && $fiscalProfile->fiscal_address
+                    ? $fiscalProfile->fiscal_address
+                    : $booking->address;
                 $billingFields = [
-                  'Nombre'        => trim($booking->fname . ' ' . $booking->lname),
-                  'Email'         => $booking->email,
-                  'Documento'     => $dni,
-                  'Teléfono'      => $booking->phone,
-                  'País'          => $booking->country,
-                  'Provincia'     => $booking->state,
-                  'Ciudad'        => $booking->city,
-                  'Código postal' => $booking->zip_code,
-                  'Dirección'     => $booking->address,
+                  'Nombre'           => trim($booking->fname . ' ' . $booking->lname),
+                  'Nombre fiscal'    => $fiscalName,
+                  'Email'            => $booking->email,
+                  'Email fiscal'     => $fiscalEmail,
+                  'Documento'        => $dni,
+                  'Condición fiscal' => $ivaLabel,
+                  'Teléfono'         => $booking->phone,
+                  'País'             => $booking->country,
+                  'Provincia'        => $booking->state,
+                  'Ciudad'           => $booking->city,
+                  'Código postal'    => $booking->zip_code,
+                  'Dirección'        => $direccion,
                 ];
               @endphp
               @foreach($billingFields as $label => $value)
@@ -216,13 +311,13 @@
             <div class="cd-info-list">
               @if($booking->early_bird_discount)
                 <div class="cd-info-row">
-                  <span class="cd-info-row__label">Descuento Early Bird</span>
+                  <span class="cd-info-row__label">Descuento Early Bird (incluido)</span>
                   <span class="cd-info-row__val cd-info-row__val--discount">− {{ $booking->currencySymbol }}{{ $booking->early_bird_discount }}</span>
                 </div>
               @endif
               @if($booking->discount)
                 <div class="cd-info-row">
-                  <span class="cd-info-row__label">Descuento cupón</span>
+                  <span class="cd-info-row__label">Descuento cupón (incluido)</span>
                   <span class="cd-info-row__val cd-info-row__val--discount">− {{ $booking->currencySymbol }}{{ $booking->discount }}</span>
                 </div>
               @endif
@@ -238,7 +333,7 @@
                   <span class="cd-info-row__val">{{ ucfirst($booking->paymentMethod) }}</span>
                 </div>
               @endif
-              @if(is_null($booking->variation))
+              @if(empty($booking->variation))
                 <div class="cd-info-row">
                   <span class="cd-info-row__label">Cantidad</span>
                   <span class="cd-info-row__val">{{ $booking->quantity }}</span>
@@ -284,7 +379,7 @@
         </div>
 
         {{-- Tickets con variaciones --}}
-        @if($booking->variation != null)
+        @if(!empty($booking->variation))
           @php $variations = json_decode($booking->variation, true); @endphp
           <div class="cd-card">
             <div class="cd-card__head">

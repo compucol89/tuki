@@ -1208,7 +1208,7 @@
         @endif
 
         {{-- language --}}
-        @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Language Management', $rolePermissions)))
+        {{-- @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Language Management', $rolePermissions)))
           <li
             class="nav-item @if (request()->routeIs('admin.language_management')) active
             @elseif (request()->routeIs('admin.language_management.edit_keyword')) active @endif">
@@ -1227,7 +1227,7 @@
               <p>{{ __('Admin Language Keywords') }}</p>
             </a>
           </li>
-        @endif
+        @endif --}}
 
       </ul>
     </div>

@@ -61,6 +61,21 @@ nul
 /*.png
 /*.jpg
 
+# ── Backups y copias de .env ──────────────────────────────────────────────────
+Copia de .env
+"Copia de .env"
+.env.copy
+.env.bak
+.env.save
+.env.dist
+# ── Dumps SQL sueltos en raíz ────────────────────────────────────────────────
+/*.sql
+!database/*.sql
+# ── Documentos generados ────────────────────────────────────────────────────
+docs/generated/*.sql
+# ── Worktrees de Claude ─────────────────────────────────────────────────────
+.claude/worktrees/
+
 # ── Windows artifacts ─────────────────────────────────────────────────────────
 [Tt]humbs.db
 ehthumbs.db

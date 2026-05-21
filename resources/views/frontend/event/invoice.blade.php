@@ -512,7 +512,7 @@
               @endif
               @if ($tax > 0)
               <tr>
-                <td>Impuestos</td>
+                <td>Costo de servicio</td>
                 <td>{{ formatMoney($tax, $position, $currency) }}</td>
               </tr>
               @endif
@@ -679,7 +679,7 @@
               @endif
               @if ($tax > 0)
               <tr>
-                <td>Impuestos</td>
+                <td>Costo de servicio</td>
                 <td>{{ formatMoney($tax, $position, $currency) }}</td>
               </tr>
               @endif

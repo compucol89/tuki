@@ -323,7 +323,7 @@
               @endif
               @if(!is_null($booking->tax))
                 <div class="cd-info-row">
-                  <span class="cd-info-row__label">Impuestos</span>
+                  <span class="cd-info-row__label">Costo de servicio</span>
                   <span class="cd-info-row__val" dir="ltr">{{ $position == 'left' ? $currency . ' ' : '' }}{{ $booking->tax }}{{ $position == 'right' ? ' ' . $currency : '' }}</span>
                 </div>
               @endif

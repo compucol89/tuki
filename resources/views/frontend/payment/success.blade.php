@@ -249,7 +249,7 @@
               <div class="ps-pay-row ps-pay-row--discount"><span>Descuento cupón</span><span>− {{ $booking->currencySymbol }}{{ $booking->discount }}</span></div>
             @endif
             @if(!is_null($booking->tax) && $booking->tax > 0)
-              <div class="ps-pay-row"><span>Impuestos</span><span dir="ltr">{{ $position == 'left' ? $currency . ' ' : '' }}{{ $booking->tax }}{{ $position == 'right' ? ' ' . $currency : '' }}</span></div>
+                <div class="ps-pay-row"><span>Costo de servicio</span><span dir="ltr">{{ $position == 'left' ? $currency . ' ' : '' }}{{ $booking->tax }}{{ $position == 'right' ? ' ' . $currency : '' }}</span></div>
             @endif
             <div class="ps-pay-row ps-pay-row--total">
               <span>Total</span>

@@ -415,7 +415,7 @@
 
                 @if ($basicData->tax > 0)
                   <div class="co-price-row">
-                    <span>Impuestos ({{ $basicData->tax }}%)</span>
+                    <span>Costo de servicio</span>
                     <span dir="ltr" class="text-danger">+ {{ symbolPrice($computed_tax) }}</span>
                   </div>
                 @endif

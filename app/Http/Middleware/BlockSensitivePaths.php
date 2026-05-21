@@ -9,13 +9,28 @@ use Symfony\Component\HttpFoundation\Response;
 class BlockSensitivePaths
 {
     /**
-     * Rutas y patrones de archivos bloqueados.
+     * Prefijos de rutas bloqueadas.
      */
-    private array $blockedPatterns = [
-        '/^\.git\/',
-        '/^\.env$/',
-        '/\.(sql|gz|tar|zip|bak|backup|old|dump|pem|key|crt|p12|pfx)$/i',
-        '/^(composer\.lock|package-lock\.json|yarn\.lock)$/i',
+    private array $blockedPrefixes = [
+        '.git/',
+        '.env',
+    ];
+
+    /**
+     * Extensiones de archivo bloqueadas.
+     */
+    private array $blockedExtensions = [
+        'sql', 'gz', 'tar', 'zip', 'bak', 'backup',
+        'old', 'dump', 'pem', 'key', 'crt', 'p12', 'pfx',
+    ];
+
+    /**
+     * Nombres de archivo exactos bloqueados.
+     */
+    private array $blockedFiles = [
+        'composer.lock',
+        'package-lock.json',
+        'yarn.lock',
     ];
 
     /**
@@ -33,21 +48,33 @@ class BlockSensitivePaths
     {
         $path = $request->path();
 
-        foreach ($this->blockedPatterns as $pattern) {
-            if (preg_match($pattern, $path)) {
+        // Bloquear por prefijo
+        foreach ($this->blockedPrefixes as $prefix) {
+            if (str_starts_with($path, $prefix)) {
                 abort(403, 'Acceso denegado.');
             }
         }
 
+        // Bloquear por extension
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (in_array($extension, $this->blockedExtensions, true)) {
+            abort(403, 'Acceso denegado.');
+        }
+
+        // Bloquear archivos exactos
+        if (in_array($path, $this->blockedFiles, true)) {
+            abort(403, 'Acceso denegado.');
+        }
+
         $response = $next($request);
 
-        // Solo agregar headers en respuestas HTTP (no en streams/downloads)
+        // Agregar headers de seguridad
         if (method_exists($response, 'header')) {
             foreach ($this->securityHeaders as $header => $value) {
                 $response->header($header, $value);
             }
 
-            // HSTS solo si la conexión es HTTPS
+            // HSTS solo en HTTPS
             if ($request->isSecure()) {
                 $response->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
             }

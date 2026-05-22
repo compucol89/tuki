@@ -317,7 +317,7 @@ class CustomerController extends Controller
       'token' => $token,
     ]);
 
-    $link = '<a href="' . route('customer.reset.password', ['token' => $token], true) . '">Restablecer contraseña</a>';
+    $link = route('customer.reset.password', ['token' => $token], true);
 
     $mailBody = str_replace('{customer_name}', $name, $mailBody);
     $mailBody = str_replace('{password_reset_link}', $link, $mailBody);

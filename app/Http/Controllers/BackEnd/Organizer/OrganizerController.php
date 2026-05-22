@@ -353,7 +353,7 @@ class OrganizerController extends Controller
       'token' => $token,
     ]);
 
-    $link = '<a href=' . url("organizer/reset-password?token=" . $token) . '>Click Here</a>';
+    $link = url("organizer/reset-password?token=" . $token);
 
     $mailBody = str_replace('{customer_name}', $name, $mailBody);
     $mailBody = str_replace('{password_reset_link}', $link, $mailBody);

@@ -188,7 +188,7 @@ class OrganizerController extends Controller
       $name = $request->username;
       $token =  $request->email;
 
-      $link = '<a href="' . url("organizers/email/verify?token=" . urlencode($token)) . '">Verificar cuenta</a>';
+      $link = url("organizers/email/verify?token=" . urlencode($token));
 
       $mailBody = str_replace('{username}', $name, $mailBody);
       $mailBody = str_replace('{verification_link}', $link, $mailBody);
@@ -580,7 +580,7 @@ class OrganizerController extends Controller
     $name = $user->name;
     $token =  $user->email;
 
-    $link = '<a href="' . url("organizers/email/verify?token=" . urlencode($token)) . '">Verificar cuenta</a>';
+    $link = url("organizers/email/verify?token=" . urlencode($token));
 
     $mailBody = str_replace('{username}', $user->name, $mailBody);
     $mailBody = str_replace('{verification_link}', $link, $mailBody);

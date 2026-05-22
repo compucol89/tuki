@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 4)
             ->where('mail_type', 'verify_email')
             ->update([
-                'mail_subject' => '{website_title} — Verificá tu correo electrónico',
+                'mail_subject' => 'Verificá tu correo electrónico',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

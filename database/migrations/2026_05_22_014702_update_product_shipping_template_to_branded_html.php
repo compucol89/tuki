@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 17)
             ->where('mail_type', 'product_shipping')
             ->update([
-                'mail_subject' => '{website_title} — Estado de envío actualizado',
+                'mail_subject' => 'Estado de envío actualizado',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

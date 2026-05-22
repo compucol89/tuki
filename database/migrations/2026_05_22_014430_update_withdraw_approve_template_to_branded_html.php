@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 13)
             ->where('mail_type', 'withdraw_approve')
             ->update([
-                'mail_subject' => '{website_title} — Retiro aprobado',
+                'mail_subject' => 'Retiro aprobado',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

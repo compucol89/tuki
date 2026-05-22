@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 16)
             ->where('mail_type', 'balance_subtract')
             ->update([
-                'mail_subject' => '{website_title} — Saldo debitado',
+                'mail_subject' => 'Saldo debitado',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

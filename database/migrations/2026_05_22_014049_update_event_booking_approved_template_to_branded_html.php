@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 10)
             ->where('mail_type', 'event_booking_approved')
             ->update([
-                'mail_subject' => '{website_title} — Tu reserva fue aprobada',
+                'mail_subject' => 'Tu reserva fue aprobada',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

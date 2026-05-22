@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 5)
             ->where('mail_type', 'reset_password')
             ->update([
-                'mail_subject' => '{website_title} — Restablecé tu contraseña',
+                'mail_subject' => 'Restablecé tu contraseña',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

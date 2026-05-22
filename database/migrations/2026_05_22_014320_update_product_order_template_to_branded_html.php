@@ -14,7 +14,7 @@ return new class extends Migration
             ->where('id', 12)
             ->where('mail_type', 'product_order')
             ->update([
-                'mail_subject' => '{website_title} — Confirmación de tu pedido',
+                'mail_subject' => 'Confirmación de tu pedido',
                 'mail_body' => '<!DOCTYPE html>
 <html lang="es">
 <head>

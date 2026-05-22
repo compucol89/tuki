@@ -20,7 +20,7 @@ return new class extends Migration
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirmación de tu reserva — {website_title}</title>
+  <title>Confirmación de tu reserva</title>
   <style>
     body {
       font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif;
@@ -164,27 +164,63 @@ return new class extends Migration
     <div class="body">
       <p>Hola <strong>{customer_name}</strong>,</p>
       <p>
-        Te confirmamos que tu reserva se realizó correctamente en <strong>{website_title}</strong>.
-        Acá están los detalles:
+        ¡Tu reserva se realizó correctamente! Acá tenés toda la información de tu entrada para <strong>{title}</strong>:
       </p>
       <div class="details-box">
         <p><strong>Evento:</strong> {title}</p>
         <p><strong>Número de reserva:</strong> #{order_id}</p>
       </div>
-      <p>
-        Adjuntamos la factura correspondiente a este email.
+      <p style="margin-bottom: 12px;">
+        <strong>Acciones disponibles:</strong>
       </p>
-      <p style="margin-bottom: 28px;">
-        Si el evento incluye un enlace de acceso virtual, podés ingresar desde acá:
-      </p>
-      <div style="text-align: center; margin: 28px 0;">
-        <a href="{meeting_url}" class="cta-button">Acceder al evento</a>
+      <!-- Action: Ticket Download -->
+      <div style="text-align: center; margin: 16px 0;">
+        <a href="{ticket_download_link}" class="cta-button">Descargar mi entrada</a>
       </div>
-      <div class="fallback-link">
+      <div class="fallback-link" style="margin-bottom: 24px;">
         <p style="margin: 0 0 6px; font-size: 13px; color: #888;">
           Si el botón no funciona, copiá y pegá este enlace en tu navegador:
         </p>
+        <a href="{ticket_download_link}" style="font-size: 13px; color: #F97316; word-break: break-all;">{ticket_download_link}</a>
+      </div>
+      <!-- Action: Access Event -->
+      <p style="margin-bottom: 12px;">
+        Si el evento es virtual, podés acceder desde acá:
+      </p>
+      <div style="text-align: center; margin: 16px 0;">
+        <a href="{meeting_url}" class="cta-button" style="background: #1e2532;">Acceder al evento</a>
+      </div>
+      <div class="fallback-link" style="margin-bottom: 24px;">
+        <p style="margin: 0 0 6px; font-size: 13px; color: #888;">
+          Enlace alternativo:
+        </p>
         <a href="{meeting_url}" style="font-size: 13px; color: #F97316; word-break: break-all;">{meeting_url}</a>
+      </div>
+      <!-- Action: Share Booking -->
+      <p style="margin-bottom: 12px;">
+        ¿Querés invitar a alguien? Compartí el enlace de reserva:
+      </p>
+      <div style="text-align: center; margin: 16px 0;">
+        <a href="{booking_link}" class="cta-button" style="background: #4a5568;">Compartir reserva</a>
+      </div>
+      <div class="fallback-link" style="margin-bottom: 24px;">
+        <p style="margin: 0 0 6px; font-size: 13px; color: #888;">
+          Enlace para invitados:
+        </p>
+        <a href="{booking_link}" style="font-size: 13px; color: #F97316; word-break: break-all;">{booking_link}</a>
+      </div>
+      <!-- Invoice -->
+      <p style="margin-bottom: 12px;">
+        También podés consultar el estado de tu factura electrónica:
+      </p>
+      <div style="text-align: center; margin: 16px 0;">
+        <a href="{invoice_link}" class="cta-button" style="background: #ffffff; color: #F97316; border: 2px solid #F97316;">Ver factura electrónica</a>
+      </div>
+      <div class="fallback-link">
+        <p style="margin: 0 0 6px; font-size: 13px; color: #888;">
+          Enlace de factura:
+        </p>
+        <a href="{invoice_link}" style="font-size: 13px; color: #F97316; word-break: break-all;">{invoice_link}</a>
       </div>
       <div class="disclaimer">
         <strong>Importante</strong><br>

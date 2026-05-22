@@ -20,7 +20,7 @@ return new class extends Migration
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verificá tu cuenta — {website_title}</title>
+  <title>Verificá tu cuenta</title>
   <style>
     body {
       font-family: \'Inter\', -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif;

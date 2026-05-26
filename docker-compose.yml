@@ -10,17 +10,18 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file: .env
     environment:
-      - APP_NAME=TukiPass
-      - APP_ENV=local
-      - APP_KEY=base64:E5LbTZ4Vg7ln6/3iurb51aGec4B9SD7bcicub4uHS+w=
-      - APP_DEBUG=true
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=eventos
-      - DB_USERNAME=root
-      - DB_PASSWORD=tukipass
+      - APP_NAME=${APP_NAME:-TukiPass}
+      - APP_ENV=${APP_ENV:-local}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE:-eventos}
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD}
     volumes:
       - .:/app
       - /app/vendor
@@ -32,7 +33,7 @@ services:
     ports:
       - "3311:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: tukipass
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: eventos
     volumes:
       - mysql_data:/var/lib/mysql
@@ -60,7 +61,7 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
       PMA_USER: root
-      PMA_PASSWORD: tukipass
+      PMA_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - db
     restart: unless-stopped

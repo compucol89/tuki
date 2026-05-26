@@ -1,0 +1,68 @@
+# ── Git ───────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+.gitkeep
+
+# ── Entorno ───────────────────────────────────────
+.env
+.env.*
+.env.backup
+.env.copy
+.env.bak
+.env.save
+.env.dist
+*.local
+
+# ── Node ──────────────────────────────────────────
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ── Dependencias PHP (se instalan en build) ───────
+vendor/
+
+# ── Storage (logs, cache, sesiones — no versionar) ─
+storage/logs/*
+storage/debugbar/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/app/public/*
+storage/*.key
+
+# ── Tests ───────────────────────────────────────────
+tests/
+phpunit.xml
+phpunit.xml.dist
+.phpunit.result.cache
+.phpunit.cache/
+
+# ── Editores / IDE ──────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swm
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# ── Herramientas IA ──────────────────────────────────
+.claude/
+.opencode/
+.agents/
+.agent/
+
+# ── Documentación ──────────────────────────────────
+docs/
+*.md
+!AGENTS.md
+!README_MAILPIT.md
+
+# ── Assets compilados (se generan en build) ─────────
+public/assets/admin/fonts/
+public/assets/front/fonts/
+*.css.map

@@ -15,7 +15,9 @@ Route::get('/booking/{id}/factura', 'FrontEnd\Event\BookingInvoiceStatusControll
 Route::get('/factura/{token}', 'FrontEnd\Event\FiscalInvoiceController@showByToken')
   ->name('booking.fiscal_invoice.show');
 
-Route::get('/', 'FrontEnd\HomeController@index')->name('index');
+Route::get('/', 'FrontEnd\HomeController@index')
+    ->name('index')
+    ->middleware('cache.headers:public;max_age=300;etag');
 Route::get('eventos', 'FrontEnd\EventController@index')->name('events');
 Route::get('{slug}/{id}', 'FrontEnd\EventController@details')
   ->name('event.details')

@@ -46,18 +46,26 @@ class HomeController extends Controller
     $language = $this->getLanguage();
     $cacheTTL = now()->addHours(6);
 
-    $queryResult['seoInfo'] = $language->seoInfo()->select('meta_keyword_home', 'meta_description_home')->first();
+    $queryResult['seoInfo'] = Cache::remember('home_seo_' . $language->id, 86400, fn () =>
+      $language->seoInfo()->select('meta_keyword_home', 'meta_description_home')->first()
+    );
 
     // get the sections of selected home version
-    $sectionInfo = Section::first();
+    $sectionInfo = Cache::remember('home_section', 86400, fn () => Section::first());
     $queryResult['secInfo'] = $sectionInfo;
 
-    $queryResult['heroInfo'] = $language->heroSec()->first();
+    $queryResult['heroInfo'] = Cache::remember('home_hero_info_' . $language->id, 86400, fn () =>
+      $language->heroSec()->first()
+    );
 
-    $queryResult['secTitleInfo'] = $language->sectionTitle()->first();
+    $queryResult['secTitleInfo'] = Cache::remember('home_sec_title_' . $language->id, 86400, fn () =>
+      $language->sectionTitle()->first()
+    );
 
-    $categories = $language->event_category()->where('status', 1)->where('is_featured', '=', 'yes')->orderBy('serial_number', 'asc')
-      ->get();
+    $categories = Cache::remember('home_categories_' . $language->id, 86400, fn () =>
+      $language->event_category()->where('status', 1)->where('is_featured', '=', 'yes')
+        ->orderBy('serial_number', 'asc')->get()
+    );
 
 
     $queryResult['categories'] = $categories;
@@ -65,36 +73,67 @@ class HomeController extends Controller
     $queryResult['currencyInfo'] = $this->getCurrencyInfo();
 
     if ($sectionInfo->features_section_status == 1) {
-      $queryResult['featureData'] = Basic::select('features_section_image')->first();
+      $queryResult['featureData'] = Cache::remember('home_feature_data_' . $language->id, 86400, fn () =>
+        Basic::select('features_section_image')->first()
+      );
 
-      $queryResult['features'] = $language->feature()->orderBy('serial_number', 'asc')->get();
+      $queryResult['features'] = Cache::remember('home_features_' . $language->id, 86400, fn () =>
+        $language->feature()->orderBy('serial_number', 'asc')->get()
+      );
     }
 
 
     if ($sectionInfo->about_us_section_status == 1) {
-      $queryResult['aboutUsInfo'] = $language->aboutUsSec()->first();
+      $queryResult['aboutUsInfo'] = Cache::remember('home_about_us_info_' . $language->id, 86400, fn () =>
+        $language->aboutUsSec()->first()
+      );
     }
-    $queryResult['heroSection'] = HeroSection::where('language_id', $language->id)->first();
-    $queryResult['eventCategories'] = EventCategory::where([['language_id', $language->id], ['status', 1], ['is_featured', 'yes']])->orderBy('serial_number', 'asc')->get();
+    $queryResult['heroSection'] = Cache::remember('home_hero_section_' . $language->id, 86400, fn () =>
+      HeroSection::where('language_id', $language->id)->first()
+    );
+    $queryResult['eventCategories'] = Cache::remember('home_event_categories_' . $language->id, 86400, fn () =>
+      EventCategory::where([['language_id', $language->id], ['status', 1], ['is_featured', 'yes']])
+        ->orderBy('serial_number', 'asc')->get()
+    );
 
-    $queryResult['aboutUsSection'] = AboutUsSection::where('language_id', $language->id)->first();
+    $queryResult['aboutUsSection'] = Cache::remember('home_about_us_' . $language->id, 86400, fn () =>
+      AboutUsSection::where('language_id', $language->id)->first()
+    );
 
-    $queryResult['featureEventSection'] = EventFeatureSection::where('language_id', $language->id)->first();
-    $queryResult['featureEventItems'] = EventFeature::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
+    $queryResult['featureEventSection'] = Cache::remember('home_feature_section_' . $language->id, 86400, fn () =>
+      EventFeatureSection::where('language_id', $language->id)->first()
+    );
+    $queryResult['featureEventItems'] = Cache::remember('home_feature_items_' . $language->id, 86400, fn () =>
+      EventFeature::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
+    );
 
     $queryResult['howWork'] = Cache::remember('how_work_' . $language->id, 3600, fn () => HowWork::where('language_id', $language->id)->first());
-    $queryResult['howWorkItems'] = HowWorkItem::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
+    $queryResult['howWorkItems'] = Cache::remember('home_how_work_items_' . $language->id, 86400, fn () =>
+      HowWorkItem::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
+    );
 
     if ($sectionInfo->testimonials_section_status == 1) {
-      $queryResult['testimonialData'] = TestimonialSection::where('language_id', $language->id)->first();
+      $queryResult['testimonialData'] = Cache::remember('home_testimonial_section_' . $language->id, 86400, fn () =>
+        TestimonialSection::where('language_id', $language->id)->first()
+      );
 
-      $queryResult['testimonials'] = Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
+      $queryResult['testimonials'] = Cache::remember('home_testimonials_' . $language->id, 86400, fn () =>
+        Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
+      );
     }
 
-    $queryResult['partnerInfo'] = PartnerSection::where('language_id', $language->id)->first();
-    $queryResult['partners'] = Partner::orderBy('serial_number', 'asc')->get();
-    $queryResult['footerInfo'] = FooterContent::where('language_id', $language->id)->first();
-    $queryResult['quickLinkInfos'] = QuickLink::orderBy('serial_number', 'asc')->get();
+    $queryResult['partnerInfo'] = Cache::remember('home_partner_info_' . $language->id, 86400, fn () =>
+      PartnerSection::where('language_id', $language->id)->first()
+    );
+    $queryResult['partners'] = Cache::remember('home_partners_' . $language->id, 86400, fn () =>
+      Partner::orderBy('serial_number', 'asc')->get()
+    );
+    $queryResult['footerInfo'] = Cache::remember('home_footer_' . $language->id, 86400, fn () =>
+      FooterContent::where('language_id', $language->id)->first()
+    );
+    $queryResult['quickLinkInfos'] = Cache::remember('home_quick_links_' . $language->id, 86400, fn () =>
+      QuickLink::orderBy('serial_number', 'asc')->get()
+    );
 
     // Event images for marquee slider
     $marqueeEvents = Cache::remember('home_marquee_events_' . $language->id, $cacheTTL, function () use ($language) {
@@ -122,7 +161,9 @@ class HomeController extends Controller
     });
 
     // Hero: intercala imágenes de campaña (hero-campaign) con fotos reales de eventos
-    $heroSlideUrls = HeroSlideUrlsService::build();
+    $heroSlideUrls = Cache::remember('home_hero_slide_urls', 3600, fn () =>
+      HeroSlideUrlsService::build()
+    );
     $queryResult['heroSlideUrls'] = $heroSlideUrls;
     $queryResult['firstHeroSlideUrl'] = $heroSlideUrls[0] ?? null;
 

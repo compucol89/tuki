@@ -33,9 +33,9 @@
     {{-- Slideshow de fondo --}}
     <div class="hero-slideshow" id="heroCollageBg">
       @forelse($heroSlideUrls ?? [] as $slideUrl)
-        <div class="hero-slide" style="background-image: url('{{ $slideUrl }}');"></div>
+        <div class="hero-slide" style="background-image: url('{{ $slideUrl }}'); aspect-ratio: 1920 / 800;"></div>
       @empty
-        <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}');"></div>
+        <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}'); aspect-ratio: 1920 / 800;"></div>
       @endforelse
     </div>
 
@@ -304,10 +304,10 @@
                 <div class="review-images mb-30">
                   @if (!is_null($testimonialData))
                     <img class="lazy"
-                      data-src="{{ asset('assets/admin/img/testimonial/' . $testimonialData->image) }}"
+                      data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/testimonial/', $testimonialData->image) }}"
                       alt="{{ __('Reseña destacada') }}">
                   @else
-                    <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/clients.png') }}"
+                    <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/testimonial/', 'clients.png') }}"
                       alt="{{ __('Reseña destacada') }}">
                   @endif
                   <span class="pluse"><i class="fas fa-plus"></i></span>
@@ -324,7 +324,7 @@
                     <div class="col-md-6">
                       <div class="testimonial-item">
                         <div class="author">
-                          <img class="lazy" data-src="{{ asset('assets/admin/img/clients/' . $item->image) }}"
+                          <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/clients/', $item->image) }}"
                             alt="{{ __('Foto de quien dejó la reseña') }}">
                           <div class="content">
                             <h5>{{ $item->name }}</h5>
@@ -362,12 +362,12 @@
                   @if ($partnerUrl !== '')
                     <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
                       aria-label="{{ __('Visitar sitio del aliado estratégico') }}">
-                      <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
+                      <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/partner/', $item->image) }}"
                         alt="{{ $item->name ?? $item->title ?? __('Logo de aliado estratégico') }}">
                     </a>
                   @else
                     <span aria-hidden="true">
-                      <img class="lazy" data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}"
+                      <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/partner/', $item->image) }}"
                         alt="{{ $item->name ?? $item->title ?? __('Logo de aliado estratégico') }}">
                     </span>
                   @endif

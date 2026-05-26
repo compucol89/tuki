@@ -15,7 +15,7 @@ class HeroSlideUrlsService
     /**
      * @return array<int, string> URLs absolutas para background-image
      */
-    public static function build(): array
+    public static function build(int $maxSlides = 8): array
     {
         $campaignDir = public_path('assets/front/img/hero-campaign');
         $campaignUrls = [];
@@ -32,7 +32,7 @@ class HeroSlideUrlsService
                 ->values();
 
             foreach ($campaignFiles as $file) {
-                $campaignUrls[] = asset('assets/front/img/hero-campaign/'.$file->getFilename());
+                $campaignUrls[] = FileUploadService::imageUrl('assets/front/img/hero-campaign/', $file->getFilename());
             }
         }
 
@@ -45,7 +45,7 @@ class HeroSlideUrlsService
             ->all();
 
         $eventUrls = array_map(
-            static fn (string $img) => asset('assets/admin/img/event-gallery/'.$img),
+            static fn (string $img) => FileUploadService::imageUrl('assets/admin/img/event-gallery/', $img),
             $eventFilenames
         );
 
@@ -54,12 +54,19 @@ class HeroSlideUrlsService
         $j = 0;
         $n = count($campaignUrls);
         $m = count($eventUrls);
-        while ($i < $n || $j < $m) {
-            if ($i < $n) {
+        $totalSlides = min($n + $m, $maxSlides);
+        $campaignCount = min($n, (int) ceil($totalSlides / 2));
+        $eventCount = min($m, (int) floor($totalSlides / 2));
+
+        while (count($slides) < $totalSlides && ($i < $campaignCount || $j < $eventCount)) {
+            if ($i < $campaignCount) {
                 $slides[] = $campaignUrls[$i];
                 $i++;
             }
-            if ($j < $m) {
+            if (count($slides) >= $totalSlides) {
+                break;
+            }
+            if ($j < $eventCount) {
                 $slides[] = $eventUrls[$j];
                 $j++;
             }
@@ -68,7 +75,7 @@ class HeroSlideUrlsService
         if ($slides === []) {
             $breadcrumb = Basic::query()->value('breadcrumb');
             if (! empty($breadcrumb) && file_exists(public_path('assets/admin/img/'.$breadcrumb))) {
-                $slides[] = asset('assets/admin/img/'.$breadcrumb);
+                $slides[] = FileUploadService::imageUrl('assets/admin/img/', $breadcrumb);
             }
         }
 

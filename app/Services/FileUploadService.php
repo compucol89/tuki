@@ -109,6 +109,11 @@ class FileUploadService
     imagedestroy($src);
   }
 
+  public function convertToWebp(string $path, string $extension): void
+  {
+    $this->optimizeImage($path, $extension);
+  }
+
   public static function imageUrl(string $relativeDir, string $filename): string
   {
     $webp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filename);

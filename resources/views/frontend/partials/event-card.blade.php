@@ -170,7 +170,7 @@
     </div>
 
     {{-- Organizador --}}
-    @if($ev_organizer_name)
+    @if($event->org_id && $ev_organizer_name)
       <div class="ev-card__org-row">
         <svg width="12" height="12" stroke-width="2" aria-hidden="true"><use href="#icon-user"/></svg>
         <span>{{ __('Por') }} <a href="{{ $ev_organizer_url }}" onclick="event.stopPropagation()">{{ $ev_organizer_name }}</a></span>

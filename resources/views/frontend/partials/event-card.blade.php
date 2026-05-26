@@ -38,7 +38,7 @@
     : ($ev_is_mixed ? __('Ver entradas') : __('Comprar entradas'));
 
   // ── Organizador — datos pre-cargados del controller (JOIN organizers) ──
-  $ev_organizer_name = $event->org_username ?? __('Sin organizador');
+  $ev_organizer_name = $event->org_username ?? null;
   $ev_organizer_url  = $event->org_id
     ? route('frontend.organizer.details', [$event->org_id, str_replace(' ', '-', $event->org_username ?? 'organizer')])
     : '#';

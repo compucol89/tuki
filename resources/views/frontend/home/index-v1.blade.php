@@ -95,7 +95,7 @@
               @foreach ($mq_items as $mqi)
                 @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
                 <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0) aria-hidden="true" tabindex="-1" @endif>
-                  <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" loading="{{ $copy === 0 && $loop->index < 4 ? 'eager' : 'lazy' }}">
+                  <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" width="400" height="267" loading="{{ $copy === 0 && $loop->index < 4 ? 'eager' : 'lazy' }}">
 
                   <div class="emq-date" aria-hidden="true">
                     <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>
@@ -211,6 +211,7 @@
           @php
             $ev_wishlist_map = $wishlistMap ?? [];
             $eventsall = $featuredEventsAll ?? collect();
+            $shownInAll = $eventsall->pluck('id')->toArray();
           @endphp
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
@@ -225,6 +226,7 @@
             @foreach ($eventCategories as $item)
               @php
                 $events = $featuredEventsByCategory[$item->id] ?? collect();
+                $events = $events->whereNotIn('id', $shownInAll);
               @endphp
               <div class="tab-pane fade" id="nav-{{ $item->id }}" role="tabpanel"
                 aria-labelledby="nav-{{ $item->id }}-tab">
@@ -305,9 +307,11 @@
                   @if (!is_null($testimonialData))
                     <img class="lazy"
                       data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/testimonial/', $testimonialData->image) }}"
+                      loading="lazy"
                       alt="{{ __('Reseña destacada') }}">
                   @else
                     <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/testimonial/', 'clients.png') }}"
+                      loading="lazy"
                       alt="{{ __('Reseña destacada') }}">
                   @endif
                   <span class="pluse"><i class="fas fa-plus"></i></span>
@@ -325,6 +329,7 @@
                       <div class="testimonial-item">
                         <div class="author">
                           <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/clients/', $item->image) }}"
+                            loading="lazy"
                             alt="{{ __('Foto de quien dejó la reseña') }}">
                           <div class="content">
                             <h5>{{ $item->name }}</h5>
@@ -363,11 +368,13 @@
                     <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
                       aria-label="{{ __('Visitar sitio del aliado estratégico') }}">
                       <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/partner/', $item->image) }}"
+                        loading="lazy"
                         alt="{{ $item->name ?? $item->title ?? __('Logo de aliado estratégico') }}">
                     </a>
                   @else
                     <span aria-hidden="true">
                       <img class="lazy" data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/partner/', $item->image) }}"
+                        loading="lazy"
                         alt="{{ $item->name ?? $item->title ?? __('Logo de aliado estratégico') }}">
                     </span>
                   @endif

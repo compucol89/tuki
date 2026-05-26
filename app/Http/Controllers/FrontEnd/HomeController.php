@@ -152,6 +152,7 @@ class HomeController extends Controller
         ->get();
     });
     $queryResult['marqueeEvents'] = $marqueeEvents;
+    $featuredExcludeIds = $marqueeEvents->pluck('id')->toArray();
 
     // Gallery images para el marquee (agrupadas por event_id)
     $marqueeEventIds = $marqueeEvents->pluck('id')->toArray();
@@ -162,7 +163,7 @@ class HomeController extends Controller
 
     // Hero: intercala imágenes de campaña (hero-campaign) con fotos reales de eventos
     $heroSlideUrls = Cache::remember('home_hero_slide_urls', 3600, fn () =>
-      HeroSlideUrlsService::build()
+      HeroSlideUrlsService::build(maxSlides: 3)
     );
     $queryResult['heroSlideUrls'] = $heroSlideUrls;
     $queryResult['firstHeroSlideUrl'] = $heroSlideUrls[0] ?? null;
@@ -188,7 +189,7 @@ class HomeController extends Controller
       FROM tickets GROUP BY event_id) as tk");
 
     // ── Eventos destacados "todos" ──
-    $featuredEventsAll = Cache::remember('home_featured_events_all_' . $language->id, $cacheTTL, function () use ($language, $ticketSub) {
+    $featuredEventsAll = Cache::remember('home_featured_events_all_' . $language->id, $cacheTTL, function () use ($language, $ticketSub, $featuredExcludeIds) {
       return DB::table('event_contents')
         ->join('events', 'events.id', '=', 'event_contents.event_id')
         ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
@@ -199,6 +200,7 @@ class HomeController extends Controller
           ['events.end_date_time', '>=', $this->now_date_time],
           ['events.is_featured', '=', 'yes'],
         ])
+        ->whereNotIn('events.id', $featuredExcludeIds)
         ->orderBy('events.created_at', 'desc')
         ->select('event_contents.*', 'events.*',
           'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
@@ -209,7 +211,7 @@ class HomeController extends Controller
 
     // ── Eventos destacados por categoría ──
     $categoryIds = $categories->pluck('id')->toArray();
-    $allFeatured = Cache::remember('home_featured_events_by_category_' . $language->id, $cacheTTL, function () use ($language, $categoryIds, $ticketSub) {
+    $allFeatured = Cache::remember('home_featured_events_by_category_' . $language->id, $cacheTTL, function () use ($language, $categoryIds, $ticketSub, $featuredExcludeIds) {
       return DB::table('event_contents')
         ->join('events', 'events.id', '=', 'event_contents.event_id')
         ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
@@ -219,6 +221,7 @@ class HomeController extends Controller
         ->where('events.status', 1)
         ->where('events.end_date_time', '>=', $this->now_date_time)
         ->where('events.is_featured', 'yes')
+        ->whereNotIn('events.id', $featuredExcludeIds)
         ->orderBy('events.created_at', 'desc')
         ->select('event_contents.*', 'events.*',
           'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',

@@ -76,6 +76,11 @@ class FileUploadService
       return;
     }
 
+    // Convert palette-based images (e.g. 8-bit PNG) to truecolor for WebP compatibility
+    if (function_exists('imageistruecolor') && !imageistruecolor($src)) {
+      imagepalettetotruecolor($src);
+    }
+
     $width = imagesx($src);
     $height = imagesy($src);
     $maxWidth = 1200;

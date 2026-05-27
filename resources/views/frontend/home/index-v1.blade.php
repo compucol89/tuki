@@ -211,7 +211,6 @@
           @php
             $ev_wishlist_map = $wishlistMap ?? [];
             $eventsall = $featuredEventsAll ?? collect();
-            $shownInAll = $eventsall->pluck('id')->toArray();
           @endphp
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
@@ -226,7 +225,6 @@
             @foreach ($eventCategories as $item)
               @php
                 $events = $featuredEventsByCategory[$item->id] ?? collect();
-                $events = $events->whereNotIn('id', $shownInAll);
               @endphp
               <div class="tab-pane fade" id="nav-{{ $item->id }}" role="tabpanel"
                 aria-labelledby="nav-{{ $item->id }}-tab">

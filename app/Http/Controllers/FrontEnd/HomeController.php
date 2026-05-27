@@ -190,7 +190,7 @@ class HomeController extends Controller
 
     // ── Eventos destacados "todos" ──
     $featuredEventsAll = Cache::remember('home_featured_events_all_' . $language->id, $cacheTTL, function () use ($language, $ticketSub, $featuredExcludeIds) {
-      return DB::table('event_contents')
+      $query = DB::table('event_contents')
         ->join('events', 'events.id', '=', 'event_contents.event_id')
         ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
         ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
@@ -200,19 +200,28 @@ class HomeController extends Controller
           ['events.end_date_time', '>=', $this->now_date_time],
           ['events.is_featured', '=', 'yes'],
         ])
-        ->whereNotIn('events.id', $featuredExcludeIds)
-        ->orderBy('events.created_at', 'desc')
         ->select('event_contents.*', 'events.*',
           'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
-          'organizers.id as org_id', 'organizers.username as org_username')
+          'organizers.id as org_id', 'organizers.username as org_username');
+      $results = $query->clone()
+        ->whereNotIn('events.id', $featuredExcludeIds)
+        ->orderBy('events.created_at', 'desc')
         ->get();
+
+      if ($results->isEmpty()) {
+        $results = $query->clone()
+          ->orderBy('events.created_at', 'desc')
+          ->get();
+      }
+
+      return $results;
     });
     $queryResult['featuredEventsAll'] = $featuredEventsAll;
 
     // ── Eventos destacados por categoría ──
     $categoryIds = $categories->pluck('id')->toArray();
     $allFeatured = Cache::remember('home_featured_events_by_category_' . $language->id, $cacheTTL, function () use ($language, $categoryIds, $ticketSub, $featuredExcludeIds) {
-      return DB::table('event_contents')
+      $query = DB::table('event_contents')
         ->join('events', 'events.id', '=', 'event_contents.event_id')
         ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
         ->leftJoin('organizers', 'organizers.id', '=', 'events.organizer_id')
@@ -221,13 +230,22 @@ class HomeController extends Controller
         ->where('events.status', 1)
         ->where('events.end_date_time', '>=', $this->now_date_time)
         ->where('events.is_featured', 'yes')
-        ->whereNotIn('events.id', $featuredExcludeIds)
-        ->orderBy('events.created_at', 'desc')
         ->select('event_contents.*', 'events.*',
           'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
           'organizers.id as org_id', 'organizers.username as org_username',
-          'event_contents.event_category_id as cat_id')
+          'event_contents.event_category_id as cat_id');
+      $results = $query->clone()
+        ->whereNotIn('events.id', $featuredExcludeIds)
+        ->orderBy('events.created_at', 'desc')
         ->get();
+
+      if ($results->isEmpty()) {
+        $results = $query->clone()
+          ->orderBy('events.created_at', 'desc')
+          ->get();
+      }
+
+      return $results;
     });
     $featuredEventsByCategory = $allFeatured->groupBy('cat_id');
     $queryResult['featuredEventsByCategory'] = $featuredEventsByCategory;

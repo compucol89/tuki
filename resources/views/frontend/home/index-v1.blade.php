@@ -1,6 +1,9 @@
 @extends('frontend.layout')
 
 @push('styles')
+  @if (!empty($firstHeroSlideUrl))
+    <link rel="preload" as="image" href="{{ $firstHeroSlideUrl }}" fetchpriority="high">
+  @endif
   <link rel="stylesheet" href="{{ asset('assets/front/css/home.css') }}">
 @endpush
 

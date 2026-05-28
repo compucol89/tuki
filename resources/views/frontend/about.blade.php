@@ -12,11 +12,12 @@
   $metaDescription = !empty($seo->meta_description_about) ? $seo->meta_description_about : '';
 @endphp
 
-@section('meta-keywords', "{{ $metaKeywords }}")
-@section('meta-description', "$metaDescription")
+@section('meta-keywords', $metaKeywords)
+@section('meta-description', $metaDescription)
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
+@section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">

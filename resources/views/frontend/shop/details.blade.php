@@ -288,7 +288,7 @@
             'item' => url()->current(),
         ],
     ],
-], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
 </script>
 @endpush
 
@@ -314,6 +314,6 @@ if (isset($product->current_price) && is_numeric($product->current_price)) {
 $productSchema = array_filter($productSchema, fn ($value) => !is_null($value));
 @endphp
 <script type="application/ld+json">
-{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
 </script>
 @endpush

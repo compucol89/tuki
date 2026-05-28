@@ -9,6 +9,9 @@
     $ogTitle = trim($__env->yieldContent('og-title')) ?: trim($__env->yieldContent('pageHeading'));
     $ogDescription = trim($__env->yieldContent('og-description')) ?: $metaDescription;
     $ogImage = trim($__env->yieldContent('og-image'));
+    if ($ogImage === '' && !empty($websiteInfo->logo)) {
+      $ogImage = asset('assets/admin/img/' . $websiteInfo->logo);
+    }
     $ogImageSecure = trim($__env->yieldContent('og-image-secure')) ?: $ogImage;
     $ogImageWidth = trim($__env->yieldContent('og-image-width')) ?: '1200';
     $ogImageHeight = trim($__env->yieldContent('og-image-height')) ?: '630';
@@ -51,6 +54,40 @@
 
   <!-- Title -->
   <title>@yield('pageHeading') {{ '| ' . $websiteInfo->website_title }}</title>
+  @php
+    $schemaOrganization = array_filter([
+      '@context' => 'https://schema.org',
+      '@type' => 'Organization',
+      'name' => $websiteInfo->website_title ?? 'Tukipass',
+      'url' => url('/'),
+      'logo' => !empty($websiteInfo->logo) ? asset('assets/admin/img/' . $websiteInfo->logo) : null,
+      'sameAs' => collect($socialMediaInfos ?? [])
+        ->pluck('url')
+        ->filter(fn ($url) => is_string($url) && filter_var($url, FILTER_VALIDATE_URL))
+        ->values()
+        ->all(),
+    ], fn ($value) => $value !== null && $value !== '' && $value !== []);
+
+    $eventsSearchUrl = route('events', [], true) . '?search-input={search_term_string}';
+    $schemaWebsite = [
+      '@context' => 'https://schema.org',
+      '@type' => 'WebSite',
+      'name' => $websiteInfo->website_title ?? 'Tukipass',
+      'url' => url('/'),
+      'inLanguage' => 'es-AR',
+      'potentialAction' => [
+        '@type' => 'SearchAction',
+        'target' => [
+          '@type' => 'EntryPoint',
+          'urlTemplate' => $eventsSearchUrl,
+        ],
+        'query-input' => 'required name=search_term_string',
+      ],
+    ];
+  @endphp
+  <script type="application/ld+json">{!! json_encode($schemaOrganization, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+  <script type="application/ld+json">{!! json_encode($schemaWebsite, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+  @stack('schema')
   <!-- Favicon Icon -->
   <link rel="shortcut icon" href="{{ asset('assets/admin/img/' . $websiteInfo->favicon) }}" type="image/x-icon">
   @hasSection('hero-preload')

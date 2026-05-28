@@ -21,11 +21,12 @@
   $activeCategory  = request()->input('category', '');
   $searchTitle     = request()->input('title', '');
 @endphp
-@section('meta-keywords', "{{ $metaKeywords }}")
-@section('meta-description', "$metaDescription")
+@section('meta-keywords', $metaKeywords)
+@section('meta-description', $metaDescription)
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
+@section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
 
 @section('content')
 

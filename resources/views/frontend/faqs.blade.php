@@ -16,11 +16,35 @@
   $metaKeywords = str_contains($rawMetaKeywords, '<?') ? 'preguntas frecuentes, ayuda, entradas, eventos, tukipass' : $rawMetaKeywords;
   $metaDescription = str_contains($rawMetaDescription, '<?') ? 'Respondé tus dudas sobre compras, entradas, acceso a eventos y cuentas en Tukipass.' : $rawMetaDescription;
 @endphp
-@section('meta-keywords', "{{ $metaKeywords }}")
-@section('meta-description', "$metaDescription")
+@section('meta-keywords', $metaKeywords)
+@section('meta-description', $metaDescription)
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
+@section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
+
+@push('schema')
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        [
+            '@type' => 'ListItem',
+            'position' => 1,
+            'name' => __('Inicio'),
+            'item' => url('/'),
+        ],
+        [
+            '@type' => 'ListItem',
+            'position' => 2,
+            'name' => !empty($pageHeading) ? ($pageHeading->faq_page_title ?? __('Preguntas frecuentes')) : __('Preguntas frecuentes'),
+            'item' => url()->current(),
+        ],
+    ],
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
+</script>
+@endpush
 
 @section('hero-section')
   <!-- Page Banner Start -->
@@ -418,24 +442,35 @@
 @endsection
 
 @push('scripts')
+@php
+  $faqSchemaMainEntity = [];
+  if (!empty($faqGroups) && is_iterable($faqGroups)) {
+    foreach ($faqGroups as $group) {
+      foreach ($group['items'] ?? [] as $item) {
+        $question = trim(strip_tags((string) ($item['question'] ?? '')));
+        $answer = trim(strip_tags((string) ($item['answer'] ?? '')));
+        if ($question === '' || $answer === '') {
+          continue;
+        }
+        $faqSchemaMainEntity[] = [
+          '@type' => 'Question',
+          'name' => $question,
+          'acceptedAnswer' => [
+            '@type' => 'Answer',
+            'text' => $answer,
+          ],
+        ];
+      }
+    }
+  }
+@endphp
+@if (!empty($faqSchemaMainEntity))
 <script type="application/ld+json">
 {!! json_encode([
     '@context' => 'https://schema.org',
-    '@type' => 'BreadcrumbList',
-    'itemListElement' => [
-        [
-            '@type' => 'ListItem',
-            'position' => 1,
-            'name' => __('Inicio'),
-            'item' => url('/'),
-        ],
-        [
-            '@type' => 'ListItem',
-            'position' => 2,
-            'name' => !empty($pageHeading) ? ($pageHeading->faq_page_title ?? __('Preguntas frecuentes')) : __('Preguntas frecuentes'),
-            'item' => url()->current(),
-        ],
-    ],
-], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+    '@type' => 'FAQPage',
+    'mainEntity' => $faqSchemaMainEntity,
+], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
 </script>
+@endif
 @endpush

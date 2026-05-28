@@ -1,3 +1,15 @@
+@php
+  $breadcrumbSchemaItems = [
+    ['@type' => 'ListItem', 'position' => 1, 'name' => __('Home'), 'item' => url('/')],
+    ['@type' => 'ListItem', 'position' => 2, 'name' => !empty($title) ? $title : __('Página'), 'item' => url()->current()],
+  ];
+  $breadcrumbSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => $breadcrumbSchemaItems,
+  ];
+@endphp
+<script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
 <!--====== PAGE TITLE PART START ======-->
 <div class="page-title bg_cover pt-140 pb-140 lazy" @if (!empty($breadcrumb)) data-bg="{{ asset('assets/admin/img/' . $breadcrumb) }}" @endif>
   <div class="container">

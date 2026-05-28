@@ -12,6 +12,7 @@
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
+@section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
 
 @push('styles')
 <style>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ContactPage;
 use App\Models\Language;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class ContactController extends Controller
@@ -44,6 +45,8 @@ class ContactController extends Controller
     $bs->map_zoom = $request->map_zoom;
     $bs->language_id = $lang->id;
     $bs->save();
+
+    Cache::forget('frontend_contact_page_' . $lang->id);
 
     Session::flash('success', __('admin.flash.updated_successfully'));
     return response()->json(['status' => 'success'], 200);

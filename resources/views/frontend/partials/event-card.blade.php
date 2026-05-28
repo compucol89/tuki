@@ -51,9 +51,6 @@
     : (Auth::guard('customer')->check() ? route('addto.wishlist', $event->id) : route('customer.login'));
 
   $ev_card_title_id = 'ev-card-title-' . $event->id;
-  $ev_organizer_url = !empty($event->org_id) && !empty($event->org_username)
-    ? route('frontend.organizer.details', [$event->org_id, str_replace(' ', '-', $event->org_username)])
-    : (!empty($event->org_username) ? route('frontend.all.organizer', ['username' => $event->org_username]) : null);
 @endphp
 
 <article class="ev-card"
@@ -171,29 +168,6 @@
 
     {{-- Título — 2 líneas --}}
     <h3 class="ev-card__title" id="{{ $ev_card_title_id }}">{{ $event->title }}</h3>
-
-    @if(!$ev_is_free && $ev_min_price !== null && $ev_min_price > 0)
-      <div class="ev-card__ticket-row ev-card__price-row">
-        <svg width="12" height="12" stroke-width="2.5" aria-hidden="true"><use href="#icon-ticket"/></svg>
-        <span class="ev-card__price-label">{{ __('Desde') }}</span>
-        <strong class="ev-card__price-value">
-          @if ($ev_currency_position === 'left'){{ $ev_currency_symbol }}@endif{{ number_format($ev_min_price, 2) }}@if ($ev_currency_position === 'right'){{ $ev_currency_symbol }}@endif
-        </strong>
-      </div>
-    @elseif($ev_is_free && !$ev_is_mixed)
-      <div class="ev-card__ticket-row ev-card__price-row">
-        <svg width="12" height="12" stroke-width="2.5" aria-hidden="true"><use href="#icon-ticket"/></svg>
-        <strong class="ev-card__price-value ev-card__price-value--free">{{ __('Gratis') }}</strong>
-      </div>
-    @endif
-
-    @if($ev_organizer_url)
-      <div class="ev-card__org-row">
-        <svg width="12" height="12" stroke-width="2.5" aria-hidden="true"><use href="#icon-user"/></svg>
-        <span>{{ __('Organiza') }}</span>
-        <a href="{{ $ev_organizer_url }}" class="ev-card__org-link" onclick="event.stopPropagation()">{{ $event->org_username }}</a>
-      </div>
-    @endif
 
   </div>{{-- /.ev-card__body --}}
   </div>{{-- /.ev-card__body-panel --}}

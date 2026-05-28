@@ -19,8 +19,8 @@
   $ogImage = asset('assets/admin/img/' . $basicInfo->breadcrumb);
 @endphp
 
-@section('meta-keywords',    "{{ $metaKeywords }}")
-@section('meta-description', "$metaDescription")
+@section('meta-keywords', $metaKeywords)
+@section('meta-description', $metaDescription)
 @section('og-title',       'Eventos en Argentina · Entradas y Tickets Online | Tukipass')
 @section('og-description', $metaDescription)
 @section('og-image',       $ogImage)

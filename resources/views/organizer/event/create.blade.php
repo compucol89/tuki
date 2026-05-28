@@ -553,11 +553,7 @@
                             </div>
                             <div class="row">
                               <div class="col-lg-12">
-                                <div class="form-group">
-                                  <label>{{ __('Política de reembolsos') }} *</label>
-                                  <textarea class="form-control" name="{{ $language->code }}_refund_policy" rows="5"
-                                    placeholder="{{ __('Explicá qué pasa si alguien no puede asistir, pide un cambio o solicita devolución.') }}"></textarea>
-                                </div>
+                                @include('partials.event-canonical-refund-policy')
                               </div>
                             </div>
 

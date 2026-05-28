@@ -21,7 +21,6 @@
   $metaDescriptionSource = $cleanSeoText($content->meta_description ?? '');
   $descriptionSource = $cleanSeoText($content->description ?? '');
   $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
-  $hasValidRefundPolicy = \App\Support\EventRefundPolicy::isValid($content->refund_policy ?? null);
   $hasValidEventDescription = $descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns);
 
   if ($metaDescriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($metaDescriptionSource), $placeholderPatterns)) {
@@ -2135,14 +2134,10 @@ ttq.page();
             </span>
             <div class="ed-refund-band__content">
               <strong>{{ __('Política de reembolso') }}</strong>
-              @if ($hasValidRefundPolicy)
-                <p>{{ $content->refund_policy }}</p>
-                <p class="ed-refund-band__more">
-                  <a href="{{ url('/politica-de-reembolsos') }}">{{ __('Ver política general de reembolsos de Tukipass') }}</a>
-                </p>
-              @else
-                <p>{!! \App\Support\EventRefundPolicy::defaultSummaryHtml() !!}</p>
-              @endif
+              <p>{{ \App\Support\EventRefundPolicy::canonicalPlainText() }}</p>
+              <p class="ed-refund-band__more">
+                <a href="{{ url('/politica-de-reembolsos') }}">{{ __('Ver política general de reembolsos de Tukipass') }}</a>
+              </p>
             </div>
           </div>
 

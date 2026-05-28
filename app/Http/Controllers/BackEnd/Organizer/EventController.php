@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BackEnd\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Support\EventRefundPolicy;
 use Illuminate\Http\Request;
 use App\Http\Helpers\UploadFile;
 use App\Http\Requests\Event\StoreRequest;
@@ -285,7 +286,7 @@ class EventController extends Controller
         }
         $event_content->slug = createSlug($request[$language->code . '_title']);
         $event_content->description = Purifier::clean($request[$language->code . '_description'], 'youtube');
-        $event_content->refund_policy = $request[$language->code . '_refund_policy'];
+        $event_content->refund_policy = EventRefundPolicy::canonicalPlainText();
         $event_content->meta_keywords = $request[$language->code . '_meta_keywords'];
         $event_content->meta_description = $request[$language->code . '_meta_description'];
         $event_content->save();
@@ -426,7 +427,7 @@ class EventController extends Controller
       }
       $event_content->slug = createSlug($request[$language->code . '_title']);
       $event_content->description = Purifier::clean($request[$language->code . '_description'], 'youtube');
-      $event_content->refund_policy = $request[$language->code . '_refund_policy'];
+      $event_content->refund_policy = EventRefundPolicy::canonicalPlainText();
       $event_content->meta_keywords = $request[$language->code . '_meta_keywords'];
       $event_content->meta_description = $request[$language->code . '_meta_description'];
       $event_content->save();

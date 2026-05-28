@@ -41,7 +41,7 @@
 
         $hasTitle = !empty(optional($defaultEventContent)->title) && mb_strlen(trim($defaultEventContent->title)) >= 8;
         $hasDescription = !empty(optional($defaultEventContent)->description) && mb_strlen(trim(strip_tags($defaultEventContent->description))) >= 80;
-        $hasRefundPolicy = !empty(optional($defaultEventContent)->refund_policy) && mb_strlen(trim($defaultEventContent->refund_policy)) >= 20;
+        $hasRefundPolicy = true;
         $hasThumbnail = !empty($event->thumbnail);
         $hasGallery = $galleryCount > 0;
         $hasDates = $event->date_type === 'single' ? !empty($event->start_date) && !empty($event->end_date) : $multipleDateCount > 0;
@@ -680,11 +680,7 @@
                       data-height="300">{!! @$event_content->description !!}</textarea>
                   </div>
 
-                  <div class="form-group">
-                    <label>{{ __('Política de reembolsos') }}*</label>
-                    <textarea class="form-control" name="{{ $language->code }}_refund_policy" rows="4"
-                      placeholder="{{ __('Explicá qué pasa si alguien no puede asistir, pide un cambio o solicita devolución.') }}">{{ @$event_content->refund_policy }}</textarea>
-                  </div>
+                  @include('partials.event-canonical-refund-policy')
 
                   <div class="form-group">
                     <label>{{ __('Event Meta Keywords') }}</label>

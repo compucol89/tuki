@@ -64,11 +64,13 @@ class CleanDemoEventRefundPolicies extends Command
       return self::SUCCESS;
     }
 
+    $canonical = EventRefundPolicy::canonicalPlainText();
+
     $updated = EventContent::query()
       ->whereIn('id', $all->pluck('id'))
-      ->update(['refund_policy' => null]);
+      ->update(['refund_policy' => $canonical]);
 
-    $this->info("Políticas de reembolso vaciadas: {$updated}");
+    $this->info("Políticas de reembolso reemplazadas por texto canónico: {$updated}");
 
     return self::SUCCESS;
   }

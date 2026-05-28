@@ -194,7 +194,17 @@ class EventController extends Controller
       Session::forget('online_gateways');
       Session::forget('offline_gateways');
 
-      \App\Models\Event::where('id', $id)->update([
+      $eventModel = Event::find($id);
+      if (
+        !$eventModel
+        || (int) $eventModel->status !== 1
+        || in_array((int) $id, DemoEventExclusion::EVENT_IDS, true)
+        || in_array($slug, DemoEventExclusion::EVENT_SLUGS, true)
+      ) {
+        abort(410);
+      }
+
+      Event::where('id', $id)->update([
         'views_count' => DB::raw('views_count + 1'),
         'views_last_24h' => DB::raw('views_last_24h + 1'),
       ]);

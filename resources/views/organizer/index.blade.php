@@ -92,7 +92,7 @@
             <div class="row">
               <div class="col-5">
                 <div class="icon-big text-center">
-                  <i class="fal fa-exchange-alt"></i>
+                  <i class="fas fa-exchange-alt"></i>
                 </div>
               </div>
 

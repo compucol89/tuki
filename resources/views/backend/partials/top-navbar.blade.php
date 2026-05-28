@@ -13,7 +13,7 @@
         <i class="fas fa-bars"></i>
       </span>
     </button>
-    <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+    <button class="topbar-toggler more"><i class="fas fa-ellipsis-v"></i></button>
 
     <div class="nav-toggle">
       <button class="btn btn-toggle toggle-sidebar">

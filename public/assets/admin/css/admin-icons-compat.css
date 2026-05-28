@@ -1,0 +1,33 @@
+/**
+ * Legacy admin icon classes → Font Awesome 5 Free/Brands (CDN).
+ * flaticon-* y simple-line-icons no se cargan en styles.blade.php.
+ */
+i[class*="flaticon-"]:before,
+[class*="flaticon-"]:before,
+.icon-options-vertical:before {
+  font-family: "Font Awesome 5 Free" !important;
+  font-weight: 900;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-home:before { content: "\f015"; }
+.flaticon-right-arrow:before { content: "\f105"; }
+.flaticon-interface-5:before { content: "\f1f8"; }
+.flaticon-users:before { content: "\f0c0"; }
+.flaticon-web-1:before { content: "\f0ac"; }
+.flaticon-file:before { content: "\f15c"; }
+.flaticon-round:before { content: "\f111"; }
+.flaticon-envelope:before { content: "\f0e0"; }
+.flaticon-settings:before { content: "\f013"; }
+.flaticon-paypal:before {
+  font-family: "Font Awesome 5 Brands" !important;
+  font-weight: 400;
+  content: "\f1ed";
+}
+.icon-options-vertical:before { content: "\f142"; }

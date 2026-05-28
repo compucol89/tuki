@@ -38,3 +38,6 @@
 
 {{-- admin skin: Modern SaaS UI override --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-skin.css') }}"><?php /* v11 */ ?>
+
+{{-- legacy flaticon / simple-line-icons → Font Awesome --}}
+<link rel="stylesheet" href="{{ asset('assets/admin/css/admin-icons-compat.css') }}">

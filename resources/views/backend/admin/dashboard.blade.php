@@ -107,7 +107,7 @@
               <div class="row">
                 <div class="col-5">
                   <div class="icon-big text-center">
-                    <i class="fal fa-sitemap"></i>
+                    <i class="fas fa-sitemap"></i>
                   </div>
                 </div>
 
@@ -133,7 +133,7 @@
               <div class="row">
                 <div class="col-5">
                   <div class="icon-big text-center">
-                    <i class="fal fa-exchange-alt"></i>
+                    <i class="fas fa-exchange-alt"></i>
                   </div>
                 </div>
 
@@ -183,7 +183,7 @@
               <div class="row">
                 <div class="col-5">
                   <div class="icon-big text-center">
-                    <i class="fal fa-chalkboard-teacher"></i>
+                    <i class="fas fa-chalkboard-teacher"></i>
                   </div>
                 </div>
 
@@ -208,7 +208,7 @@
               <div class="row">
                 <div class="col-5">
                   <div class="icon-big text-center">
-                    <i class="fal fa-blog"></i>
+                    <i class="fas fa-blog"></i>
                   </div>
                 </div>
 

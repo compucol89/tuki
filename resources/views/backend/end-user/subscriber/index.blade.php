@@ -41,7 +41,7 @@
 
                             <a href="{{ route('admin.user_management.mail_for_subscribers') }}"
                                 class="btn btn-primary btn-sm float-right ml-3 mt-1">
-                                <i class="fal fa-paper-plane"></i> {{ __('Send Mail') }}
+                                <i class="fas fa-paper-plane"></i> {{ __('Send Mail') }}
                             </a>
 
                             <form class="float-right" action="{{ route('admin.user_management.subscribers') }}"

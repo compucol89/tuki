@@ -57,7 +57,7 @@
               @elseif (request()->routeIs('organizer.event.add.ticket')) active
               @elseif (request()->routeIs('organizer.event.edit.ticket')) active @endif">
           <a data-toggle="collapse" href="#course">
-            <i class="fal fa-book"></i>
+            <i class="fas fa-book"></i>
             <p>{{ __('Event Management') }}</p>
             <span class="caret"></span>
           </a>
@@ -129,7 +129,7 @@
           @elseif (request()->routeIs('organizer.event_booking.details')) active
           @elseif (request()->routeIs('organizer.event_booking.report')) active @endif">
           <a data-toggle="collapse" href="#bookings">
-            <i class="fal fa-users-class"></i>
+            <i class="fas fa-users-class"></i>
             <p>{{ __('Event Bookings') }}</p>
             <span class="caret"></span>
           </a>
@@ -183,13 +183,13 @@
         @if (request()->routeIs('organizer.withdraw')) active 
         @elseif (request()->routeIs('organizer.withdraw.create')) active @endif">
           <a href="{{ route('organizer.withdraw', ['language' => $defaultLang->code]) }}">
-            <i class="fal fa-donate"></i>
+            <i class="fas fa-donate"></i>
             <p>{{ __('Withdraw') }}</p>
           </a>
         </li>
         <li class="nav-item @if (request()->routeIs('organizer.transcation')) active @endif">
           <a href="{{ route('organizer.transcation') }}">
-            <i class="fal fa-exchange-alt"></i>
+            <i class="fas fa-exchange-alt"></i>
             <p>{{ __('Transactions') }}</p>
           </a>
         </li>
@@ -242,19 +242,19 @@
         <li class="nav-item
                   @if (request()->routeIs('organizer.edit.profile')) active @endif">
           <a href="{{ route('organizer.edit.profile') }}">
-            <i class="fal fa-user-edit"></i>
+            <i class="fas fa-user-edit"></i>
             <p>{{ __('Edit Profile') }}</p>
           </a>
         </li>
         <li class="nav-item @if (request()->routeIs('organizer.change.password')) active @endif">
           <a href="{{ route('organizer.change.password') }}">
-            <i class="fal fa-key"></i>
+            <i class="fas fa-key"></i>
             <p>{{ __('Change Password') }}</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ route('organizer.logout') }}">
-            <i class="fal fa-sign-out "></i>
+            <i class="fas fa-sign-out "></i>
             <p>{{ __('Logout') }}</p>
           </a>
         </li>

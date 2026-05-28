@@ -89,7 +89,7 @@
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Menu Builder', $rolePermissions)))
           <li class="nav-item @if (request()->routeIs('admin.menu_builder')) active @endif">
             <a href="{{ route('admin.menu_builder', ['language' => $defaultLang->code]) }}">
-              <i class="fal fa-bars"></i>
+              <i class="fas fa-bars"></i>
               <p>{{ __('Menu Builder') }}</p>
             </a>
           </li>
@@ -107,7 +107,7 @@
             @elseif (request()->routeIs('admin.event.add.ticket')) active
             @elseif (request()->routeIs('admin.event.edit.ticket')) active @endif">
             <a data-toggle="collapse" href="#event">
-              <i class="fal fa-book"></i>
+              <i class="fas fa-book"></i>
               <p>{{ __('Event Management') }}</p>
               <span class="caret"></span>
             </a>
@@ -216,7 +216,7 @@
           @elseif (request()->routeIs('admin.event_booking.settings.tax_commission')) active  
           @elseif (request()->routeIs('admin.event_booking.report')) active @endif">
             <a data-toggle="collapse" href="#event_bookings">
-              <i class="fal fa-users-class"></i>
+              <i class="fas fa-users-class"></i>
               <p>{{ __('Event Bookings') }}</p>
               <span class="caret"></span>
             </a>
@@ -352,7 +352,7 @@
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Transaction', $rolePermissions)))
           <li class="nav-item @if (request()->routeIs('admin.transcation')) active @endif">
             <a href="{{ route('admin.transcation') }}">
-              <i class="fal fa-exchange-alt"></i>
+              <i class="fas fa-exchange-alt"></i>
               <p>{{ __('Transactions') }}</p>
             </a>
           </li>
@@ -664,7 +664,7 @@
             @elseif (request()->routeIs('admin.home_page.about_us_section')) active
             @elseif (request()->routeIs('admin.home_page.section_customization')) active @endif">
             <a data-toggle="collapse" href="#home_page">
-              <i class="fal fa-layer-group"></i>
+              <i class="fas fa-layer-group"></i>
               <p>{{ __('Home Page') }}</p>
               <span class="caret"></span>
             </a>
@@ -741,7 +741,7 @@
             @elseif (request()->routeIs('admin.footer.quick_links')) active
             @elseif (request()->routeIs('admin.contact.page')) active @endif">
             <a data-toggle="collapse" href="#footer">
-              <i class="fal fa-shoe-prints"></i>
+              <i class="fas fa-shoe-prints"></i>
               <p>{{ __('Footer') }}</p>
               <span class="caret"></span>
             </a>
@@ -793,7 +793,7 @@
             @elseif (request()->routeIs('admin.blog_management.create_blog')) active
             @elseif (request()->routeIs('admin.blog_management.edit_blog')) active @endif">
             <a data-toggle="collapse" href="#blog">
-              <i class="fal fa-blog"></i>
+              <i class="fas fa-blog"></i>
               <p>{{ __('Blog Management') }}</p>
               <span class="caret"></span>
             </a>
@@ -882,7 +882,7 @@
             @elseif (request()->routeIs('admin.announcement_popups.create_popup')) active
             @elseif (request()->routeIs('admin.announcement_popups.edit_popup')) active @endif">
             <a href="{{ route('admin.announcement_popups', ['language' => $defaultLang->code]) }}">
-              <i class="fal fa-bullhorn"></i>
+              <i class="fas fa-bullhorn"></i>
               <p>{{ __('Announcement Popups') }}</p>
             </a>
           </li>
@@ -923,7 +923,7 @@
             class="nav-item @if (request()->routeIs('admin.user_management.push_notification.settings')) active 
                     @elseif (request()->routeIs('admin.user_management.push_notification.notification_for_visitors')) active @endif">
             <a data-toggle="collapse" href="#push_notification">
-              <i class="fal fa-bell"></i>
+              <i class="fas fa-bell"></i>
               <p>{{ __('Push Notification') }}</p>
               <span class="caret"></span>
             </a>
@@ -988,7 +988,7 @@
           <li class="nav-item @if (request()->routeIs('admin.arca_invoices.index')) active
               @elseif (request()->routeIs('admin.arca_invoices.show')) active @endif">
             <a href="{{ route('admin.arca_invoices.index') }}">
-              <i class="fal fa-file-invoice"></i>
+              <i class="fas fa-file-invoice"></i>
               <p>{{ __('Facturas ARCA') }}</p>
             </a>
           </li>
@@ -1178,7 +1178,7 @@
             @elseif (request()->routeIs('admin.admin_management.role.permissions')) active
             @elseif (request()->routeIs('admin.admin_management.registered_admins')) active @endif">
             <a data-toggle="collapse" href="#admin">
-              <i class="fal fa-users-cog"></i>
+              <i class="fas fa-users-cog"></i>
               <p>{{ __('Admin Management') }}</p>
               <span class="caret"></span>
             </a>
@@ -1213,7 +1213,7 @@
             class="nav-item @if (request()->routeIs('admin.language_management')) active
             @elseif (request()->routeIs('admin.language_management.edit_keyword')) active @endif">
             <a href="{{ route('admin.language_management') }}">
-              <i class="fal fa-language"></i>
+              <i class="fas fa-language"></i>
               <p>{{ __('Language Management') }}</p>
             </a>
           </li>
@@ -1223,7 +1223,7 @@
             class="nav-item @if (request()->routeIs('admin.edit_admin_keywords')) active
             @elseif (request()->routeIs('admin.edit_admin_keywords')) active @endif">
             <a href="{{ route('admin.edit_admin_keywords') }}">
-              <i class="fal fa-language"></i>
+              <i class="fas fa-language"></i>
               <p>{{ __('Admin Language Keywords') }}</p>
             </a>
           </li>

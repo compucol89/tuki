@@ -21,6 +21,7 @@
   $metaDescriptionSource = $cleanSeoText($content->meta_description ?? '');
   $descriptionSource = $cleanSeoText($content->description ?? '');
   $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
+  $hasValidRefundPolicy = \App\Support\EventRefundPolicy::isValid($content->refund_policy ?? null);
   $hasValidEventDescription = $descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns);
 
   if ($metaDescriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($metaDescriptionSource), $placeholderPatterns)) {
@@ -280,6 +281,15 @@
       margin: 0;
       font-size: var(--tuki-text-sm);
       line-height: 1.6;
+    }
+
+    .page-event-detail .ed-refund-band__content .ed-refund-band__more {
+      margin-top: var(--tuki-space-2);
+    }
+
+    .page-event-detail .ed-refund-band__content a {
+      color: var(--tuki-primary, #F97316);
+      font-weight: 600;
     }
 
     .page-event-detail .ed-ticket-card,
@@ -2115,21 +2125,26 @@ ttq.page();
             </div>
           @endif
 
-          {{-- Refund policy card --}}
-          @if (!empty($content->refund_policy))
-	            <div class="ed-refund-band" role="note">
-                <span class="ed-refund-band__icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/>
-                    <path d="M9.5 12.5l1.7 1.7 3.3-3.7"/>
-                  </svg>
-                </span>
-                <div class="ed-refund-band__content">
-                  <strong>{{ __('Política de reembolso') }}</strong>
-                  <p>{{ $content->refund_policy }}</p>
-                </div>
+          {{-- Refund policy card (siempre visible: evento u política general Tukipass) --}}
+          <div class="ed-refund-band" role="note">
+            <span class="ed-refund-band__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/>
+                <path d="M9.5 12.5l1.7 1.7 3.3-3.7"/>
+              </svg>
+            </span>
+            <div class="ed-refund-band__content">
+              <strong>{{ __('Política de reembolso') }}</strong>
+              @if ($hasValidRefundPolicy)
+                <p>{{ $content->refund_policy }}</p>
+                <p class="ed-refund-band__more">
+                  <a href="{{ url('/politica-de-reembolsos') }}">{{ __('Ver política general de reembolsos de Tukipass') }}</a>
+                </p>
+              @else
+                <p>{!! \App\Support\EventRefundPolicy::defaultSummaryHtml() !!}</p>
+              @endif
             </div>
-          @endif
+          </div>
 
         </div>
         {{-- /Left column --}}

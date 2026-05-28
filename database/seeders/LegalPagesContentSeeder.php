@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Support\LegalPageFooter;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,8 @@ class LegalPagesContentSeeder extends Seeder
     $supportEmail = 'soporte@tukipass.com';
     $privacyEmail = 'info@tukipass.com';
     $updatedAt = '15/04/2026';
+    $refundUpdatedAt = '27/05/2026';
+    $legalFooter = LegalPageFooter::publishedFooterHtml();
     $operatorNotice = "TukiPass es una marca, nombre comercial y/o plataforma operada por {$operator}, CUIT {$cuit}, con domicilio legal/fiscal en {$address}.";
 
     $pages = [
@@ -91,7 +94,7 @@ class LegalPagesContentSeeder extends Seeder
 <h3>14. Cambios en esta política</h3>
 <p>Podemos actualizar esta política para reflejar cambios operativos, legales o técnicos. Si incorporamos Pages API, Social Plugins SDK u otras integraciones sociales nuevas, actualizaremos esta política según corresponda.</p>
 
-<p><strong>Este documento debe ser revisado por asesoría legal antes de su publicación definitiva.</strong></p>
+{$legalFooter}
 HTML
       ],
       'terminos-y-condiciones' => [
@@ -152,7 +155,7 @@ HTML
 <h3>13. Cambios en los términos</h3>
 <p>Podemos actualizar estos términos para reflejar cambios del servicio, requisitos legales o mejoras operativas. La versión vigente será la publicada en {$domain}.</p>
 
-<p><strong>Este documento debe ser revisado por asesoría legal antes de su publicación definitiva.</strong></p>
+{$legalFooter}
 HTML
       ],
       'eliminacion-de-datos' => [
@@ -194,7 +197,7 @@ HTML
 <h3>7. Sin callback automático</h3>
 <p>Esta página contiene instrucciones públicas para solicitar eliminación de datos. TukiPass no informa en esta página un callback automático de Meta ni un botón de borrado dentro del dashboard.</p>
 
-<p><strong>Este documento debe ser revisado por asesoría legal antes de su publicación definitiva.</strong></p>
+{$legalFooter}
 HTML
       ],
       'politica-de-reembolsos' => [
@@ -203,7 +206,7 @@ HTML
         'meta_description' => 'Conocé cómo se gestionan reembolsos, cancelaciones, reprogramaciones y arrepentimiento en TukiPass.',
         'content' => <<<HTML
 <h2>Política de reembolsos, cancelaciones y arrepentimiento</h2>
-<p><strong>Última actualización:</strong> {$updatedAt}</p>
+<p><strong>Última actualización:</strong> {$refundUpdatedAt}</p>
 <p>{$operatorNotice}</p>
 <p>Esta Política de reembolsos explica criterios generales aplicables a compras realizadas mediante TukiPass. Las condiciones específicas pueden variar según el evento, el organizador, el medio de pago y la normativa aplicable.</p>
 
@@ -241,7 +244,7 @@ HTML
 <h3>11. Casos donde puede no aplicar reembolso</h3>
 <p>Puede no corresponder reembolso en casos de inasistencia, error en la compra imputable al usuario, incumplimiento de condiciones de ingreso, entradas usadas o validadas, compras fuera de plazo de reclamo, fraude o supuestos expresamente informados como no reembolsables.</p>
 
-<p><strong>Este documento debe ser revisado por asesoría legal antes de su publicación definitiva.</strong></p>
+{$legalFooter}
 HTML
       ],
       'politica-de-cookies' => [
@@ -279,7 +282,7 @@ HTML
 <h3>8. Cambios en esta política</h3>
 <p>Podemos actualizar esta política para reflejar cambios técnicos, legales o funcionales. La versión vigente será la publicada en {$domain}.</p>
 
-<p><strong>Este documento debe ser revisado por asesoría legal antes de su publicación definitiva.</strong></p>
+{$legalFooter}
 HTML
       ],
       'defensa-al-consumidor' => [
@@ -317,7 +320,7 @@ HTML
 <h3>6. Identificación AAIP</h3>
 <p>La identificación de la AAIP podrá exhibirse únicamente cuando corresponda y exista inscripción aplicable de bases de datos personales. Esta página no incorpora imágenes, códigos QR ni isologotipos no confirmados.</p>
 
-<p><strong>Este documento debe ser revisado por asesoría legal antes de su publicación definitiva.</strong></p>
+{$legalFooter}
 HTML
       ],
     ];

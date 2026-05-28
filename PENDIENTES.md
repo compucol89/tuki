@@ -103,8 +103,6 @@ php artisan cache:clear
 
 ## 🟡 Deuda técnica / contenido
 
-- [ ] **Failed jobs — `ArcaInvoiceIssuingJob`**: Revisar en servidor (`php artisan queue:failed`, `queue:retry`). Probables causas: timeout SOAP, booking no pagado, certificado ARCA. Disparado desde PayPal/Stripe/MP/Booking — no reproducible en local.
-
 - [ ] **Eventos demo en DB**: ejecutar `events:unpublish-demo` en prod si aún tienen `status=1`.
 - [x] **Alt descriptivos** — `about` (aliados), `offline`, `customer/dashboard/order/details` (auditoría integral).
 - [ ] Revisar alt en listados (eventos, blog, shop) si quedan más `alt=""`.
@@ -132,7 +130,7 @@ php artisan cache:clear
 - [x] Comandos: `legal:remove-demo-disclaimer`, `events:sync-canonical-refund-policies`, `events:clean-demo-refund-policies`
 - [x] Sitemap + redirect `www` + exclusión demo en listados (`d900487`, `d077d9f`, `5658462`)
 - [x] Social Login cliente — catch vacío con mensaje en español (`CustomerController`)
-- [x] SEO técnico frontend ronda 1 (`1c5dad5`)
+- [x] Alt vacíos → descriptivos + pageHeading checkout español (`b340b5c`)
 
 ## ✅ Completado (histórico — marzo 2026 y antes)
 
@@ -144,4 +142,4 @@ php artisan cache:clear
 
 ---
 
-_Última actualización: 2026-05-28 — ARCA operativo en producción, health check OK, pendiente job fallido + auditorías restantes_
+_Última actualización: 2026-05-28 — ARCA ✅, failed job ✅ (EventConfirmationMail, queue:forget 24), alt + checkout español ✅ (b340b5c). Pendiente: GSC meta tag + Social Login Org + comandos post-deploy_

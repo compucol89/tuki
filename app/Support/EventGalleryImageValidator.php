@@ -20,22 +20,54 @@ final class EventGalleryImageValidator
     }
 
     $path = $img->getRealPath();
-    $image = self::loadImageResource($path, $ext);
 
-    if ($image === false) {
-      Log::warning('Gallery upload: could not read image', [
-        'extension' => $ext,
-        'size' => $img->getSize(),
-        'original_name' => $img->getClientOriginalName(),
-      ]);
-      $fail('No pudimos leer la imagen que intentaste subir.');
+    if (!is_string($path) || $path === '' || !is_readable($path) || filesize($path) === 0) {
+      $fail('No pudimos leer la imagen que intentaste subir. Verifica que el archivo no este vacio o corrupto.');
 
       return false;
     }
 
-    $width = imagesx($image);
-    $height = imagesy($image);
-    imagedestroy($image);
+    $width = null;
+    $height = null;
+    $imageSize = @getimagesize($path);
+
+    if ($imageSize !== false) {
+      $type = $imageSize[2] ?? null;
+
+      if (!in_array($type, [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) {
+        $fail('Solo se permiten imagenes JPG, PNG o WebP.');
+
+        return false;
+      }
+
+      $width = $imageSize[0];
+      $height = $imageSize[1];
+    } else {
+      $image = self::loadImageResource($path, $ext);
+
+      if ($image !== false) {
+        $width = imagesx($image);
+        $height = imagesy($image);
+        imagedestroy($image);
+      }
+    }
+
+    if ($width === null || $height === null) {
+      Log::warning('Gallery upload: could not read image', [
+        'extension' => $ext,
+        'size' => $img->getSize(),
+        'original_name' => $img->getClientOriginalName(),
+        'detected_type' => self::detectContentExtension($path),
+      ]);
+
+      if (self::isJpegContentWithExtension($path, $ext, 'png')) {
+        $fail('El archivo parece JPEG pero tiene extension .png (comun en imagenes de IA). Guardalo como .jpg o exportalo de nuevo en JPG/PNG real.');
+      } else {
+        $fail('No pudimos leer la imagen que intentaste subir.');
+      }
+
+      return false;
+    }
 
     $longestSide = max($width, $height);
     $shortestSide = min($width, $height);
@@ -105,5 +137,71 @@ final class EventGalleryImageValidator
       'webp' => function_exists('imagecreatefromwebp') ? (@imagecreatefromwebp($path) ?: false) : false,
       default => false,
     };
+  }
+
+  public static function isJpegContentWithExtension(string $path, string $ext, string $expectedExt): bool
+  {
+    if ($ext !== $expectedExt) {
+      return false;
+    }
+
+    return self::detectContentExtension($path) === 'jpg';
+  }
+
+  /**
+   * Extension real segun contenido (no el nombre del archivo).
+   */
+  public static function detectContentExtension(string $path): ?string
+  {
+    $imageSize = @getimagesize($path);
+
+    if ($imageSize !== false) {
+      return match ($imageSize[2] ?? null) {
+        IMAGETYPE_JPEG => 'jpg',
+        IMAGETYPE_PNG => 'png',
+        IMAGETYPE_WEBP => 'webp',
+        default => null,
+      };
+    }
+
+    $header = @file_get_contents($path, false, null, 0, 12);
+
+    if (!is_string($header)) {
+      return null;
+    }
+
+    if (str_starts_with($header, "\xFF\xD8\xFF")) {
+      return 'jpg';
+    }
+
+    if (str_starts_with($header, "\x89PNG\r\n\x1a\n")) {
+      return 'png';
+    }
+
+    if (
+      strlen($header) >= 12
+      && substr($header, 0, 4) === 'RIFF'
+      && substr($header, 8, 4) === 'WEBP'
+    ) {
+      return 'webp';
+    }
+
+    return null;
+  }
+
+  public static function resolveStorageExtension(UploadedFile $file): string
+  {
+    $path = $file->getRealPath();
+    $clientExt = strtolower($file->getClientOriginalExtension());
+
+    if (is_string($path) && $path !== '') {
+      $detected = self::detectContentExtension($path);
+
+      if ($detected !== null) {
+        return $detected;
+      }
+    }
+
+    return in_array($clientExt, self::ALLOWED_EXTENSIONS, true) ? $clientExt : 'jpg';
   }
 }

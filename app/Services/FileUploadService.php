@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\EventGalleryImageValidator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +11,7 @@ class FileUploadService
 {
   public function store(string $directory, UploadedFile $file)
   {
-    $extension = strtolower($file->getClientOriginalExtension());
+    $extension = EventGalleryImageValidator::resolveStorageExtension($file);
     $originalName = null;
 
     if (
@@ -64,12 +65,10 @@ class FileUploadService
 
   private function optimizeImage(string $path, string $extension): void
   {
-    $src = match ($extension) {
-      'png' => @imagecreatefrompng($path),
-      'jpg', 'jpeg' => @imagecreatefromjpeg($path),
-      'webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($path) : null,
-      default => null,
-    };
+    $src = EventGalleryImageValidator::loadImageResource($path, $extension);
+    if ($src === false) {
+      $src = null;
+    }
 
     if (!$src) {
       Log::warning('FileUploadService: could not read image for optimization.', ['path' => $path, 'extension' => $extension]);

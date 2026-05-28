@@ -555,22 +555,6 @@
                   </div>
 
 
-                  @if ($event->event_type == 'venue')
-                    <div class="col-lg-4">
-                      <div class="form-group">
-                        <label for="">{{ __('Latitude') }}</label>
-                        <input type="text" placeholder="{{ __('Latitude') }}" name="latitude"
-                          value="{{ $event->latitude }}" class="form-control">
-                      </div>
-                    </div>
-                    <div class="col-lg-4">
-                      <div class="form-group">
-                        <label for="">{{ __('Longitude') }}</label>
-                        <input type="text" placeholder="{{ __('Longitude') }}" name="longitude"
-                          value="{{ $event->longitude }}" class="form-control">
-                      </div>
-                    </div>
-                  @endif
                 </div>
                 @if ($event->event_type == 'online')
                   <div class="event-sales-note mb-5 mt-2">
@@ -853,6 +837,15 @@
                                 </div>
                               </div>
                             </div>
+                            @if ($language->is_default == 1)
+                              @include('partials.event-venue-location', [
+                                'mapId' => 'eventVenueMapEditOrganizer',
+                                'languages' => $languages,
+                                'latitude' => old('latitude', $event->latitude),
+                                'longitude' => old('longitude', $event->longitude),
+                                'geocodeUrl' => route('organizer.event.venue_geocode'),
+                              ])
+                            @endif
                           @endif
 
                           <div class="row">

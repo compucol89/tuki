@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Event;
 
+use App\Http\Requests\Event\Concerns\ValidatesVenueGeocoding;
 use App\Models\Event\EventContent;
 use App\Models\Language;
 use App\Rules\ImageMimeTypeRule;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
 {
+  use ValidatesVenueGeocoding;
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -89,8 +91,8 @@ class StoreRequest extends FormRequest
 
 
     if ($this->event_type == 'venue') {
-      $ruleArray['latitude'] = 'required_if:event_type,venue';
-      $ruleArray['longitude'] = 'required_if:event_type,venue';
+      $ruleArray['latitude'] = 'nullable|numeric|between:-90,90';
+      $ruleArray['longitude'] = 'nullable|numeric|between:-180,180';
     }
 
     $languages = Language::all();
@@ -163,6 +165,7 @@ class StoreRequest extends FormRequest
   public function withValidator(Validator $validator)
   {
     $validator->after(function (Validator $validator) {
+      $this->validateVenueGeocoding($validator);
       $this->validateChronologicalOrder($validator);
     });
   }

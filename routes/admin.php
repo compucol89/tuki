@@ -82,6 +82,7 @@ Route::prefix('/admin')->middleware(['auth:admin'])->group(function () {
     Route::get('event-management/events/', 'BackEnd\Event\EventController@index')->name('admin.event_management.event');
     Route::get('add-event/', 'BackEnd\Event\EventController@add_event')->name('add.event.event');
     Route::get('choose-event-type/', 'BackEnd\Event\EventController@choose_event_type')->name('admin.choose-event-type');
+    Route::get('event-venue-geocode', 'BackEnd\Event\VenueGeocodeController')->name('admin.event.venue_geocode');
     Route::post('event-imagesstore', 'BackEnd\Event\EventController@gallerystore')->name('admin.event.imagesstore');
     Route::post('event-imagermv', 'BackEnd\Event\EventController@imagermv')->name('admin.event.imagermv');
     Route::post('event-store', 'BackEnd\Event\EventController@store')->name('admin.event_management.store_event');

@@ -279,20 +279,6 @@
                       <p class="text-warning">{{ __('Dejalo vacio solo si quieres que quede como evento propio del admin.') }}</p>
                     </div>
                   </div>
-                  @if (request()->input('type') == 'venue')
-                    <div class="col-lg-4">
-                      <div class="form-group">
-                        <label for="">{{ __('Latitude') }}</label>
-                        <input type="text" name="latitude" placeholder="{{ __('Latitud') }}" class="form-control">
-                      </div>
-                    </div>
-                    <div class="col-lg-4">
-                      <div class="form-group">
-                        <label for="">{{ __('Longitude') }}</label>
-                        <input type="text" placeholder="{{ __('Longitud') }}" name="longitude" class="form-control">
-                      </div>
-                    </div>
-                  @endif
                 </div>
                 @if (request()->input('type') == 'online')
                   {{-- /*****--Ticekt limtit & ticket for each customer start--****** --}}
@@ -535,6 +521,13 @@
                                 </div>
                               </div>
                             </div>
+                            @if ($language->is_default == 1)
+                              @include('partials.event-venue-location', [
+                                'mapId' => 'eventVenueMapCreateAdmin',
+                                'languages' => $languages,
+                                'geocodeUrl' => route('admin.event.venue_geocode'),
+                              ])
+                            @endif
                           @endif
 
                           <div class="row">

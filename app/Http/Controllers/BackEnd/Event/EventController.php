@@ -138,8 +138,8 @@ class EventController extends Controller
 
       //calculate duration 
       if ($request->date_type == 'single') {
-        $start = Carbon::parse($request->start_date . $request->start_time);
-        $end =  Carbon::parse($request->end_date . $request->end_time);
+        $start = Carbon::parse($request->start_date . ' ' . $request->start_time);
+        $end = Carbon::parse($request->end_date . ' ' . $request->end_time);
         $diffent = DurationCalulate($start, $end);
       }
       //calculate duration end
@@ -158,8 +158,8 @@ class EventController extends Controller
       if ($request->date_type == 'multiple') {
         $i = 1;
         foreach ($request->m_start_date as $key => $date) {
-          $start = Carbon::parse($date . $request->m_start_time[$key]);
-          $end =  Carbon::parse($request->m_end_date[$key] . $request->m_end_time[$key]);
+          $start = Carbon::parse($date . ' ' . $request->m_start_time[$key]);
+          $end = Carbon::parse($request->m_end_date[$key] . ' ' . $request->m_end_time[$key]);
           $diffent = DurationCalulate($start, $end);
 
           EventDates::create([
@@ -317,8 +317,8 @@ class EventController extends Controller
   {
     //calculate duration 
     if ($request->date_type == 'single') {
-      $start = Carbon::parse($request->start_date . $request->start_time);
-      $end =  Carbon::parse($request->end_date . $request->end_time);
+      $start = Carbon::parse($request->start_date . ' ' . $request->start_time);
+      $end = Carbon::parse($request->end_date . ' ' . $request->end_time);
       $diffent = DurationCalulate($start, $end);
     }
     //calculate duration end
@@ -381,8 +381,8 @@ class EventController extends Controller
     if ($request->date_type == 'multiple') {
       $i = 1;
       foreach ($request->m_start_date as $key => $date) {
-        $start = Carbon::parse($date . $request->m_start_time[$key]);
-        $end =  Carbon::parse($request->m_end_date[$key] . $request->m_end_time[$key]);
+        $start = Carbon::parse($date . ' ' . $request->m_start_time[$key]);
+        $end = Carbon::parse($request->m_end_date[$key] . ' ' . $request->m_end_time[$key]);
         $diffent = DurationCalulate($start, $end);
 
         if (!empty($request->date_ids[$key])) {

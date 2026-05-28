@@ -6,6 +6,7 @@ Route::prefix('/organizer')->middleware('auth:organizer', 'Deactive:organizer', 
   Route::get('event-management/events/', 'BackEnd\Organizer\EventController@index')->name('organizer.event_management.event');
   Route::get('choose-event-type/', 'BackEnd\Organizer\EventController@choose_event_type')->name('choose-event-type');
   Route::get('add-event/', 'BackEnd\Organizer\EventController@add_event')->name('organizer.add.event.event');
+  Route::get('event-venue-geocode', 'BackEnd\Event\VenueGeocodeController')->name('organizer.event.venue_geocode');
   Route::post('event-imagesstore', 'BackEnd\Organizer\EventController@gallerystore')->name('organizer.event.imagesstore');
   Route::post('event-imagermv', 'BackEnd\Organizer\EventController@imagermv')->name('organizer.event.imagermv');
   Route::post('event-store', 'BackEnd\Organizer\EventController@store')->name('organizer.event_management.store_event');

@@ -985,6 +985,9 @@
     'organizer' => [
       '@type' => 'Organization',
       'name' => !empty($organizer) ? $organizer->username : $websiteInfo->website_title,
+      'url' => !empty($organizer) && !empty($organizer->id)
+        ? route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)], true)
+        : url('/'),
     ],
   ];
   if (
@@ -998,7 +1001,12 @@
       '@type' => 'Offer',
       'price' => is_numeric($ticketSummary['min_ticket_price'] ?? null) ? $ticketSummary['min_ticket_price'] : 0,
       'priceCurrency' => $event_currency ?? 'ARS',
-      'availability' => 'https://schema.org/InStock',
+      'availability' => (
+        ($ticketSummary['has_unlimited_stock'] ?? false)
+        || (($ticketSummary['total_stock'] ?? null) !== null && (int) $ticketSummary['total_stock'] > 0)
+      )
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/SoldOut',
       'url' => $eventUrl,
     ];
   }

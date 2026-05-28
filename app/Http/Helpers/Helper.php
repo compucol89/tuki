@@ -11,6 +11,7 @@ use App\Models\Transaction;
 use App\Services\OrganizerBalanceService;
 use App\Services\TransactionService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 if (!function_exists('convertUtf8')) {
   function convertUtf8($value)
@@ -19,25 +20,17 @@ if (!function_exists('convertUtf8')) {
   }
 }
 
-if (!function_exists('createSlug')) {
-  function createSlug($string)
-  {
-    $slug = preg_replace('/\s+/u', '-', trim($string));
-    $slug = str_replace('/', '', $slug);
-    $slug = str_replace('?', '', $slug);
-    $slug = str_replace(',', '', $slug);
-
-    return mb_strtolower($slug);
-  }
-}
-
 if (!function_exists('make_slug')) {
   function make_slug($string)
   {
-    $slug = preg_replace('/\s+/u', '-', trim($string));
-    $slug = str_replace("/", "", $slug);
-    $slug = str_replace("?", "", $slug);
-    return $slug;
+    return Str::slug((string) $string, '-', 'es');
+  }
+}
+
+if (!function_exists('createSlug')) {
+  function createSlug($string)
+  {
+    return make_slug($string);
   }
 }
 

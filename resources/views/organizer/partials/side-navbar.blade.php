@@ -41,7 +41,7 @@
         {{-- dashboard --}}
         <li class="nav-item @if (request()->routeIs('organizer.dashboard')) active @endif">
           <a href="{{ route('organizer.dashboard') }}">
-            <i class="la flaticon-paint-palette"></i>
+            <i class="fas fa-palette"></i>
             <p>{{ __('Dashboard') }}</p>
           </a>
         </li>

@@ -80,7 +80,7 @@
         {{-- dashboard --}}
         <li class="nav-item @if (request()->routeIs('admin.dashboard')) active @endif">
           <a href="{{ route('admin.dashboard') }}">
-            <i class="la flaticon-paint-palette"></i>
+            <i class="fas fa-palette"></i>
             <p>{{ __('Dashboard') }}</p>
           </a>
         </li>

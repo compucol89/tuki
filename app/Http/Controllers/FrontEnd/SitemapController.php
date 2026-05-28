@@ -12,11 +12,38 @@ use App\Models\Organizer;
 use App\Models\ShopManagement\Product;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 class SitemapController extends Controller
 {
+  private const DEMO_EVENT_SLUGS = [
+    'the-conference-planners',
+    'design-research-by-australia',
+    'decoration-of-the-marriage',
+    'motivation-for-online-business',
+    'small-business-ideas',
+    'grand-night-party',
+    'sports-grand-opening',
+  ];
+
+  private const DEMO_BLOG_SLUG_PREFIXES = [
+    'vivamus-vestibulum',
+    'vestibulum-commodo',
+    'nam-dui-mi',
+    'phasellus-ultrices',
+    'donec-nec-justo',
+    'morbi-in-sem',
+  ];
+
+  private const OBSOLETE_PAGE_SLUGS = [
+    'privacy-policy',
+    'terms-&-conditions',
+  ];
+
   public function index()
   {
+    URL::forceRootUrl(rtrim(config('app.url'), '/'));
+
     $defaultLanguageId = optional(Language::where('is_default', 1)->first())->id;
     $shopIsActive = (int) Basic::query()->value('shop_status') === 1;
 
@@ -47,22 +74,32 @@ class SitemapController extends Controller
     $events = EventContent::join('events', 'events.id', '=', 'event_contents.event_id')
       ->where('events.status', 1)
       ->whereDate('events.end_date_time', '>=', now()->toDateString())
+      ->whereNotIn('event_contents.slug', self::DEMO_EVENT_SLUGS)
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
         return $query->where('event_contents.language_id', $defaultLanguageId);
       })
-      ->select('events.id', 'events.updated_at', 'event_contents.slug')
+      ->select('events.id', 'events.updated_at', 'events.end_date_time', 'event_contents.slug')
       ->orderBy('events.updated_at', 'desc')
       ->get()
       ->map(function ($event) {
+        $isPast = !empty($event->end_date_time)
+          && Carbon::parse($event->end_date_time)->lt(now());
+
         return [
           'loc' => route('event.details', ['slug' => $event->slug, 'id' => $event->id], true),
           'lastmod' => $this->formatLastmod($event->updated_at),
           'changefreq' => 'daily',
-          'priority' => '0.8',
+          'priority' => $isPast ? '0.1' : '0.8',
         ];
       });
 
     $blogs = Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
+      ->whereDate('blogs.updated_at', '>=', '2024-01-01')
+      ->where(function ($query) {
+        foreach (self::DEMO_BLOG_SLUG_PREFIXES as $prefix) {
+          $query->where('blog_informations.slug', 'not like', $prefix . '%');
+        }
+      })
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
         return $query->where('blog_informations.language_id', $defaultLanguageId);
       })
@@ -70,11 +107,16 @@ class SitemapController extends Controller
       ->orderBy('blogs.updated_at', 'desc')
       ->get()
       ->map(function ($blog) {
+        $ageMonths = !empty($blog->updated_at)
+          ? Carbon::parse($blog->updated_at)->diffInMonths(now())
+          : 0;
+        $priority = $ageMonths > 12 ? '0.3' : '0.7';
+
         return [
           'loc' => route('blog_details', ['slug' => $blog->slug], true),
           'lastmod' => $this->formatLastmod($blog->updated_at),
           'changefreq' => 'weekly',
-          'priority' => '0.7',
+          'priority' => $priority,
         ];
       });
 
@@ -132,15 +174,22 @@ class SitemapController extends Controller
         return $query->where('page_contents.language_id', $defaultLanguageId);
       })
       ->whereNotIn('page_contents.slug', $reservedSlugs)
+      ->whereNotIn('page_contents.slug', self::OBSOLETE_PAGE_SLUGS)
+      ->where('page_contents.slug', 'not like', '%&%')
       ->select('pages.updated_at', 'page_contents.slug')
       ->orderBy('pages.updated_at', 'desc')
       ->get()
       ->map(function ($page) {
+        $ageMonths = !empty($page->updated_at)
+          ? Carbon::parse($page->updated_at)->diffInMonths(now())
+          : 0;
+        $priority = $ageMonths > 24 ? '0.3' : '0.5';
+
         return [
           'loc' => route('dynamic_page', ['slug' => $page->slug], true),
           'lastmod' => $this->formatLastmod($page->updated_at),
           'changefreq' => 'monthly',
-          'priority' => '0.5',
+          'priority' => $priority,
         ];
       });
 

@@ -1,176 +1,147 @@
-# Pendientes — Tuki
+# Pendientes — TukiPass
 
-> Este archivo se actualiza con cada commit. Claude lo lee al inicio de cada sesión.
-
----
-
-## 🔴 En progreso / Alta prioridad
-
-- [ ] **ARCA — confirmar modelo fiscal con contador**: Ya existe primera etapa técnica con `ArcaInvoiceIssuingJob` + unique `arca_invoices.booking_id`. Falta definir modelo de facturación, tipo de comprobante, homologación, datos fiscales requeridos y mecanismo de disparo automático antes de tocar checkout/gateways.
-- [ ] **Social Login — Organizadores**: El login/signup de organizadores no tiene botones de Google/Facebook (solo los clientes los tienen).
-- [x] **Social Login — catch vacío**: `authenticationViaProvider()` en `CustomerController` — ahora redirige a login con mensaje de error en español.
+> Actualizado: 2026-05-28 — ARCA ✅, failed job limpiado ✅, pendiente: Social Login + GSC meta tag + auditorías restantes
 
 ---
 
-## 🟠 Traducción al español — Frontend completo
+## 🔴 Alta prioridad
 
-> Todo texto visible para el cliente debe estar en español. Revisar vista por vista.
-
-- [ ] `frontend/home/index-v1.blade.php` — home principal
-- [ ] `frontend/event/event.blade.php` — listado de eventos
-- [ ] `frontend/event/event-details.blade.php` — detalle de evento
-- [ ] `frontend/event/invoice.blade.php` — factura/entrada del cliente
-- [ ] `frontend/check-out.blade.php` — checkout principal
-- [ ] `frontend/shop/checkout.blade.php` — checkout de shop
-- [ ] `frontend/shop/cart.blade.php` — carrito
-- [ ] `frontend/shop/details.blade.php` — detalle producto shop
-- [ ] `frontend/shop/index.blade.php` — listado shop
-- [ ] `frontend/shop/invoice.blade.php` — factura shop
-- [ ] `frontend/payment/success.blade.php` — pantalla de pago exitoso
-- [ ] `frontend/payment/order_success.blade.php`
-- [ ] `frontend/customer/login.blade.php` / `signup.blade.php` / `forget-password.blade.php` / `reset-password.blade.php`
-- [ ] `frontend/customer/dashboard/` — todas las vistas del dashboard cliente (index, bookings, orders, wishlist, profile, password, support tickets)
-- [ ] `frontend/organizer/login.blade.php` / `signup.blade.php` / `forget-password.blade.php` / `reset-password.blade.php`
-- [ ] `frontend/organizer/details.blade.php` / `index.blade.php`
-- [ ] `frontend/about.blade.php` / `contact.blade.php` / `faqs.blade.php` / `custom-page.blade.php`
-- [ ] `frontend/journal/` — blogs y detalle
-- [ ] `frontend/partials/` — header, footer, modals, breadcrumb, event-card, popups
+- [x] ~~Job fallido en producción~~: era `EventConfirmationMail` (base64_encode + HtmlString, 19-mayo, anterior a todos los fixes). Limpiado con `queue:forget 24`. Health check → 0 failed jobs ✅
+- [ ] **Social Login — Organizadores**: Clientes ya tienen Google/Facebook (`CustomerController` + vistas auth). Organizador **no** tiene botones OAuth en login/signup (`frontend/organizer/login`, `signup`). **Decisión de negocio pendiente** (ver historial: marzo 2026 se dijo "no panel" — si cambió, implementar).
+- [ ] **Google Search Console — meta tag de verificación**: Agregar en `<head>` de `resources/views/frontend/layout.blade.php`:
+  ```html
+  <meta name="google-site-verification" content="CODIGO_QUE_PASA_EL_USUARIO" />
+  ```
+  **Bloqueado hasta recibir el código** desde [Search Console](https://search.google.com/search-console). Sin esto no hay verificación de propiedad ni informes.
 
 ---
 
-## 🔵 Modern SaaS UI — Frontend público únicamente
+## 🟡 SEO / Google — post-deploy (manual + comandos)
 
-> Panel de organizador y admin se quedan con Atlantis (decisión tomada). Solo frontend visible para clientes. Referencia: Stripe · Linear · Vercel · Lemon Squeezy · Resend · Clerk.
+> Código ya en `master` (commits recientes abajo). Falta ejecutar en **producción** y validar en GSC.
 
-**Ya aplicado ✅**
-- [x] Home — hero slideshow + marquee + ev-card v2 (`e261d8b`, `9559d88`, `12efc2e`)
-- [x] `/eventos` — listado SaaS UI (`2d5726f`)
-- [x] Event details — hero + sidebar + countdown + badges (`e261d8b`, `555ecc0`, `d6adbbe`)
-- [x] Checkout — layout v2 Argentina + MercadoPago (`8ee6fb3`, `d6adbbe`)
-- [x] Customer login / signup — auth split-screen (`25ac1f9`, `b28dcaa`)
-- [x] Organizer login / signup — auth split-screen (`89eb584`)
-- [x] Customer dashboard index (`1560fc8`)
-- [x] Mis entradas / orders (`a4c7e99`)
-- [x] Lista de deseos / wishlist (`26b705f`)
-- [x] Contacto (`d6adbbe`)
-- [x] `frontend/about.blade.php`
-- [x] `frontend/faqs.blade.php`
-- [x] `frontend/journal/blogs.blade.php` / `blog-details.blade.php`
-- [x] `frontend/event/invoice.blade.php`
+### Comandos en servidor (después del deploy)
 
-**Falta aplicar ❌**
-- [ ] `frontend/shop/` — index, detalle, carrito, checkout, invoice
+```bash
+php artisan legal:remove-demo-disclaimer
+php artisan events:sync-canonical-refund-policies
+php artisan events:clean-demo-refund-policies --dry-run   # revisar
+php artisan events:clean-demo-refund-policies
+php artisan events:unpublish-demo --dry-run               # revisar
+php artisan events:unpublish-demo
+php artisan view:clear
+php artisan cache:clear
+```
+
+### Checklist Search Console (cuando el dominio esté verificado)
+
+- [ ] Verificar propiedad `https://www.tukipass.com` (meta tag o DNS — ver ítem alta prioridad).
+- [ ] Confirmar `APP_URL` / canonical alineados con `www` y HTTPS.
+- [ ] Enviar sitemap: `https://www.tukipass.com/sitemap.xml`.
+- [ ] Solicitar eliminación o recrawleo de URLs demo (ej. `/the-conference-planners/104`) — deben responder **410** tras deploy `a56a426`.
+- [ ] Inspeccionar e indexar: home, `/eventos`, `/organizadores`, `/politica-de-reembolsos`, 2–3 eventos reales activos.
+- [ ] [Rich Results Test](https://search.google.com/test/rich-results): evento real → `Event` + `Offer` con `availability` dinámico + `organizer.url` (`023fec1`).
+- [ ] Revisar cobertura a 48–72 h: sin `/admin/`, `/customer/dashboard`, checkout, carrito.
+- [ ] PageSpeed mobile: home + detalle de evento.
+
+### SEO técnico — mejoras futuras (código, con confirmación)
+
+- [ ] **Schema Event — múltiples imágenes** (Google recomienda hasta 3 ratios); usar galería si hay URLs válidas.
+- [ ] **`offers.validFrom`** — requiere campo `ticket_sale_start` (o similar) en DB; no implementar sin migración.
+- [ ] **`performer` en Schema** — requiere modelo/tabla de artistas; postergar.
+- [ ] **`/mapa-del-sitio` HTML** — toca `routes/` + footer; confirmar antes.
+- [ ] Sitemap index si supera 50k URLs.
+
+---
+
+## 🟢 SEO técnico — hecho en código (mayo 2026)
+
+| Área | Estado | Commits / notas |
+|------|--------|-----------------|
+| Meta keywords/description sin doble `{{ }}` | ✅ | `1c5dad5` |
+| JSON-LD Organization + WebSite en layout | ✅ | `1c5dad5` |
+| BreadcrumbList, FAQPage, OG en páginas clave | ✅ | `1c5dad5`, `5658462` |
+| Sitemap: URL canónica `www`, sin demo/blogs placeholder | ✅ | `d900487`, `5658462` |
+| Redirect apex → `www` HTTPS | ✅ | `d077d9f`, `5658462` |
+| Exclusión demo: home, `/eventos`, sitemap | ✅ | `5658462`, `DemoEventExclusion` |
+| Detalle demo → **410 Gone** | ✅ | `a56a426` |
+| Páginas legales sin pie “asesoría legal” demo | ✅ | `dc27a89` + comando `legal:remove-demo-disclaimer` |
+| Política reembolso evento: texto fijo, no editable | ✅ | `1dd32b5`, `EventRefundPolicy` |
+| Schema `offers.availability` dinámico (InStock/SoldOut) | ✅ | `023fec1` |
+| Schema `organizer.url` | ✅ | `023fec1` |
+| 404 frontend español + noindex | ✅ | `1c5dad5` |
+
+**Congelar sin auditoría:** rutas checkout, `recalcTotal()`, gateways, `config/auth.php`.
+
+---
+
+## 🟠 Traducción al español — frontend público
+
+> Texto visible al cliente en español (Argentina). Revisar vista por vista lo que siga en inglés.
+
+- [ ] `frontend/home/index-v1.blade.php`
+- [ ] `frontend/event/event.blade.php`
+- [ ] `frontend/event/event-details.blade.php` — revisar microcopy residual
+- [ ] `frontend/event/invoice.blade.php`
+- [x] `frontend/check-out.blade.php` — pageHeading español (`Finalizar compra de entradas`)
+- [ ] `frontend/shop/*` (index, details, cart, checkout, invoice)
 - [ ] `frontend/payment/success.blade.php` / `order_success.blade.php`
-- [ ] `frontend/customer/forget-password.blade.php` / `reset-password.blade.php`
-- [ ] `frontend/customer/dashboard/` — bookings details, orders details, support tickets, edit-profile, change-password
-- [ ] `frontend/organizer/forget-password.blade.php` / `reset-password.blade.php` / `details.blade.php` / `index.blade.php`
-- [ ] `frontend/partials/modals.blade.php` / `popups.blade.php`
+- [ ] `frontend/customer/*` (auth, dashboard, tickets, wishlist, soporte)
+- [ ] `frontend/organizer/*` (auth, details, index)
+- [ ] `frontend/about`, `contact`, `faqs`, `custom-page`, `journal/*`
+- [ ] `frontend/partials/*` (header, footer, modals, event-card)
 
 ---
 
-## 🟢 SEO técnico — CERRADO
+## 🔵 Modern SaaS UI — solo frontend público
 
-> Bloque SEO técnico completado y validado. Commits limpios, 0 archivos sensibles tocados.
+**Hecho ✅:** home, eventos, event-details, checkout, auth cliente/organizador, dashboard cliente (parcial), about, faqs, blog, contacto, invoice evento.
 
-**Quick wins completados:**
-1. Fix meta tags CMS (`custom-page.blade.php`) — `@section('meta-keywords')` corregido.
-2. Canonical + OG básico en 8 vistas principales (`about`, `contact`, `event`, `faqs`, `blog`, `blog-details`, `shop`, `shop-details`).
-3. WebSite + Organization schema JSON-LD en home (`index-v1.blade.php`).
-4. Product schema JSON-LD en `shop/details.blade.php`.
-5. BreadcrumbList JSON-LD en 6 vistas con breadcrumb HTML (`blog-details`, `shop/index`, `shop/details`, `faqs`, `about`, `organizer/details`).
-6. Sitemap XML expandido — ahora incluye blogs, productos, páginas CMS y organizadores (`SitemapController`).
-7. Titles de eventos truncados a 55 chars para evitar > 70 en `<title>`; H1, OG title y schema Event intactos.
-8. Alt descriptivos en logos aliados del home (reemplazados `alt=""` vacíos).
-9. URLs públicas en español cerradas — `/organizadores`, `/tienda`, `/preguntas-frecuentes` + 301 desde `/organizers`, `/shop`, `/faq`.
-10. Aliases auth en español cerrados — `/cliente/*` y `/organizador/*`, manteniendo compatibilidad con `/customer/*` y `/organizer/*`.
-
-**Commits:**
-- `19b5547` SEO: canonical, OG, schemas JSON-LD y BreadcrumbList en frontend
-- `64e0ee5` SEO: truncar title largos en eventos y alt descriptivos en logos aliados
-- `8ed5289` Auth: add Spanish auth route aliases
-- `a40da31` SEO: add Spanish public URL redirects
-
-**Nota:** Bloque auditado y cerrado. No tocar más rutas sin auditoría nueva. El resto es post-deploy/manual.
+**Falta ❌:** shop completo, payment success, recupero contraseña cliente/organizador, detalle bookings/orders en dashboard, organizer public pages, modals/popups.
 
 ---
 
-## 🟡 Search Console — PENDIENTE EXTERNO (post-deploy/manual)
+## 🟡 Deuda técnica / contenido
 
-> No mezclar Search Console con tareas de código. Es validación post-deploy/manual.
+- [ ] **Failed jobs — `ArcaInvoiceIssuingJob`**: Revisar en servidor (`php artisan queue:failed`, `queue:retry`). Probables causas: timeout SOAP, booking no pagado, certificado ARCA. Disparado desde PayPal/Stripe/MP/Booking — no reproducible en local.
 
-**Checklist post-deploy:**
-- [ ] Verificar dominio en Google Search Console (si no está hecho).
-- [ ] Reenviar `https://www.tukipass.com/sitemap.xml`.
-- [ ] Inspeccionar y solicitar indexación de:
-  - [ ] Home
-  - [ ] `/eventos`
-  - [ ] `/organizadores`
-  - [ ] `/preguntas-frecuentes`
-  - [ ] `/tienda` si shop está activo
-  - [ ] 2-3 eventos importantes activos
-  - [ ] 1 blog publicado
-  - [ ] 1 producto si shop está activo
-  - [ ] 1 página CMS importante
-- [ ] Validar redirects 301:
-  - [ ] `/organizers` → `/organizadores`
-  - [ ] `/shop` → `/tienda`
-  - [ ] `/faq` → `/preguntas-frecuentes`
-- [ ] Validar Rich Results Test:
-  - [ ] Home → WebSite + Organization
-  - [ ] Evento → Event + BreadcrumbList + Offer
-  - [ ] Producto → Product + BreadcrumbList + Offer
-  - [ ] Blog detail → BlogPosting + BreadcrumbList
-- [ ] PageSpeed Insights mobile:
-  - [ ] Home
-  - [ ] Event detail
-- [ ] Revisar cobertura/indexación a las 48-72h.
-- [ ] Verificar que no aparezcan URLs privadas indexadas: `/admin/`, `/customer/`, `/checkout/`, `/cart/`.
-- [ ] Mantener congeladas: `/event/{slug}/{id}`, `/checkout`, `/check-out2`, `/event-booking/*`, `/product-order/*`, `/shop/cart`, `/shop/checkout`, gateways, callbacks, cron, `/admin/*`.
-
-**Bloqueado por:** Deploy a producción + acceso a Google Search Console.
+- [ ] **Eventos demo en DB**: ejecutar `events:unpublish-demo` en prod si aún tienen `status=1`.
+- [x] **Alt descriptivos** — `about` (aliados), `offline`, `customer/dashboard/order/details` (auditoría integral).
+- [ ] Revisar alt en listados (eventos, blog, shop) si quedan más `alt=""`.
+- [ ] **Organizer details** — revisar thin content para SEO (auditoría sugerida).
+- [ ] Confirmar que no queden enlaces internos a slugs demo (`the-conference-planners`, etc.).
 
 ---
 
-## 🔵 Features SEO futuras (con confirmación)
+## 🟡 Pendiente confirmación (humano)
 
-- [ ] `/mapa-del-sitio` HTML — página visible para usuarios, enlazada desde footer. Requiere confirmación explícita porque toca `routes/` y footer.
-- [ ] Datos estructurados `FAQPage` en `/faq` si el contenido crece.
-- [ ] Datos estructurados `LocalBusiness` si hay venue físico principal.
-- [ ] Sitemap indexado (dividir en múltiples archivos si > 50k URLs).
-
----
-
-## 🔴 Deuda técnica — separada
-
-- [x] **Resuelto** — Removido `kreativdev/installer` y `rachidlaasri/laravel-installer` de Composer. `php artisan route:list` vuelve a funcionar (514 rutas). Validado `composer install`, `view:clear`, `config:clear`, sitemap 200 OK.
-- [ ] Alt descriptivos adicionales — revisar listados de eventos, blogs, productos si se detectan más `alt=""` en imágenes informativas.
+- [ ] ¿Social login en panel **organizador** sigue en roadmap o se mantiene solo email/contraseña?
+- [ ] Código exacto de **Google Search Console** para meta tag (pasarlo al agente cuando esté).
+- [ ] Otras tareas de sesiones anteriores que falten en esta lista.
 
 ---
 
-## 🟡 Pendiente confirmación
+## ✅ Completado recientemente (mayo 2026)
 
-- [ ] Verificar si hay otras tareas pendientes que el usuario recuerde de sesiones anteriores.
+- [x] **ARCA/AFIP**: integración completa WSFEv1 — WSAA, emisión CAE, preview, `ArcaInvoiceIssuingJob`, certificados, `condicion_iva_receptor_id`, producción con `ARCA_ENABLE_ISSUING=true`. Health check ✅ 19/2 warnings ✅
+- [x] MercadoPago: Checkout Pro en producción (token APP_USR, webhooks, notificaciones)
+- [x] Postmark: emails transaccionales en producción (Server Tukipass, info@tukipass.com)
+- [x] Bloqueo HTTP 410 en detalle de eventos demo / no publicados (`a56a426`)
+- [x] Schema Event: `availability` según stock + `organizer.url` (`023fec1`)
+- [x] Política de reembolsos canónica fija en admin/organizador y detalle público (`1dd32b5`, `dc27a89`)
+- [x] Comandos: `legal:remove-demo-disclaimer`, `events:sync-canonical-refund-policies`, `events:clean-demo-refund-policies`
+- [x] Sitemap + redirect `www` + exclusión demo en listados (`d900487`, `d077d9f`, `5658462`)
+- [x] Social Login cliente — catch vacío con mensaje en español (`CustomerController`)
+- [x] SEO técnico frontend ronda 1 (`1c5dad5`)
 
----
+## ✅ Completado (histórico — marzo 2026 y antes)
 
-## ✅ Completado recientemente
-
-- [x] Fix: login/signup organizador en inglés — `adminLang` pisaba locale `es` (`048231a`)
-- [x] Fix: traducciones faltantes signup organizador + "Repetir contraseña" (`89a5f77`)
-- [x] Decisión: social login NO se agrega al panel organizador (intencional por diseño)
-- [x] Fix: badge "Gratis" incorrecto en home para eventos con tickets `variation` (`50608cd`)
-- [x] Fix: precio "Gratis" en sidebar de event-details para tickets `variation` (`50608cd`)
-- [x] `payment/success.blade.php` — botón primario naranja + status free en verde (`50608cd`)
-
-- [x] Rediseño formulario edición de eventos (`edit.blade.php`) — cards por sección, Inter font, `admin-skin.css` (`de5e8e7`)
-- [x] Rediseño login/signup organizadores — auth-split layout (`89eb584`)
-- [x] Rediseño split-screen login clientes (`25ac1f9`)
-- [x] Fix: logo y favicon con nombres fijos para persistencia en Docker (`d085d1f`)
-- [x] Fix: incluir compras de invitados en reporte de organizador (`e885bac`)
-- [x] Rediseño checkout v2 Argentina + MercadoPago (`8ee6fb3`)
-- [x] Rediseño event details — hero con imagen, layout SaaS (`e261d8b`)
-- [x] Cambio de paleta — naranja `#F97316` + gris oscuro `#1e2532` (`3894f35`)
+- [x] Rediseño Modern SaaS: home, eventos, checkout, auth, about, faqs, blog, invoice (`e261d8b` … `d6adbbe`)
+- [x] URLs español + aliases auth (`a40da31`, `8ed5289`)
+- [x] Removido installer packages — `route:list` OK
+- [x] Fix badge/precio Gratis tickets `variation` (`50608cd`)
+- [x] Decisión documentada (marzo): social login organizador “no panel” — **revisar** si el producto cambió (ver alta prioridad)
 
 ---
 
-_Última actualización: 2026-03-18 — rediseño invoice/ticket evento: dark header, Inter, status badge, billing moderno_
+_Última actualización: 2026-05-28 — ARCA operativo en producción, health check OK, pendiente job fallido + auditorías restantes_

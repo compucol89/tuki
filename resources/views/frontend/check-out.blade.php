@@ -1,5 +1,5 @@
 @extends('frontend.layout')
-@section('pageHeading', 'Checkout de eventos')
+@section('pageHeading', __('Finalizar compra de entradas'))
 @section('body-class', 'checkout-page')
 
 @push('styles')

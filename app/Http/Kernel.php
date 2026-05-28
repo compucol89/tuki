@@ -14,6 +14,7 @@ class Kernel extends HttpKernel
    * @var array
    */
   protected $middleware = [
+    \App\Http\Middleware\RedirectToWww::class,
     \App\Http\Middleware\BlockSensitivePaths::class,
     \App\Http\Middleware\CacheControlMiddleware::class,
     \App\Http\Middleware\TrustProxies::class,

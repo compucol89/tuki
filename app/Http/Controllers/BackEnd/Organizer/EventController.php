@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BackEnd\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Support\EventGalleryImageValidator;
 use App\Support\EventRefundPolicy;
 use Illuminate\Http\Request;
 use App\Http\Helpers\UploadFile;
@@ -29,36 +30,18 @@ class EventController extends Controller
 {
   private function eventGalleryValidationRules($img)
   {
-    $allowedExts = ['jpg', 'png', 'jpeg'];
-
     return [
       'file' => [
-        function ($attribute, $value, $fail) use ($img, $allowedExts) {
+        function ($attribute, $value, $fail) use ($img) {
           if (empty($img)) {
-            return $fail('Debes seleccionar una imagen.');
+            $fail('Debes seleccionar una imagen.');
+
+            return;
           }
 
-          $ext = strtolower($img->getClientOriginalExtension());
-
-          if (!in_array($ext, $allowedExts)) {
-            return $fail('Solo se permiten imagenes JPG o PNG.');
-          }
-
-          $imageSize = @getimagesize($img->getRealPath());
-
-          if ($imageSize === false) {
-            return $fail('No pudimos leer la imagen que intentaste subir.');
-          }
-
-          [$width, $height] = $imageSize;
-          $longestSide = max($width, $height);
-          $shortestSide = min($width, $height);
-
-          if ($longestSide < 600 || $shortestSide < 450) {
-            return $fail('La imagen debe tener al menos 600 px en su lado mas largo y 450 px en su lado mas corto. Puede ser horizontal, cuadrada o vertical.');
-          }
+          EventGalleryImageValidator::validateUploadedFile($img, $fail);
         },
-      ]
+      ],
     ];
   }
 

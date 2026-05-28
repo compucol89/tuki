@@ -8,10 +8,10 @@
     });
     // Dropzone initialization
     Dropzone.options.myDropzone = {
-        acceptedFiles: '.png, .jpg, .jpeg',
+        acceptedFiles: '.png, .jpg, .jpeg, .webp',
         url: storeUrl,
         dictDefaultMessage: 'Arrastra imagenes aqui o haz clic para subirlas',
-        dictInvalidFileType: 'Solo se permiten imagenes JPG o PNG.',
+        dictInvalidFileType: 'Solo se permiten imagenes JPG, PNG o WebP.',
         dictResponseError: 'No se pudo subir la imagen. Intenta de nuevo.',
         dictCancelUpload: 'Cancelar carga',
         dictRemoveFile: 'Quitar',

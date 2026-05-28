@@ -95,7 +95,7 @@
                 <div class=" mb-0" id="errpreimg">
 
                 </div>
-                <p class="text-warning">{{ __('La galeria acepta imagenes horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
+                <p class="text-warning">{{ __('La galeria acepta imagenes JPG, PNG o WebP, horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
               </div>
               <form id="eventForm" action="{{ route('admin.event_management.store_event') }}" method="POST"
                 enctype="multipart/form-data">

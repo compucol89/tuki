@@ -199,7 +199,7 @@
             <input type="hidden" value="{{ $event->id }}" name="event_id">
           </form>
           <div class="mb-0" id="errpreimg"></div>
-          <p class="text-warning small mt-2 mb-4">{{ __('La galeria acepta imagenes horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
+          <p class="text-warning small mt-2 mb-4">{{ __('La galeria acepta imagenes JPG, PNG o WebP, horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
 
           {{-- Miniatura (pertenece al form principal via form="eventForm") --}}
           <div class="event-cover-box mt-4">

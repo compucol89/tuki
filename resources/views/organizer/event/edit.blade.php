@@ -281,7 +281,7 @@
                 <div class=" mb-0" id="errpreimg">
 
                 </div>
-                <p class="text-warning small mt-2 mb-0">{{ __('La galeria acepta imagenes horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
+                <p class="text-warning small mt-2 mb-0">{{ __('La galeria acepta imagenes JPG, PNG o WebP, horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
               </div>
               </div>
               </div>

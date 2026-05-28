@@ -10,21 +10,13 @@ use App\Models\Journal\Blog;
 use App\Models\Language;
 use App\Models\Organizer;
 use App\Models\ShopManagement\Product;
+use App\Support\DemoEventExclusion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 
 class SitemapController extends Controller
 {
-  private const DEMO_EVENT_SLUGS = [
-    'the-conference-planners',
-    'design-research-by-australia',
-    'decoration-of-the-marriage',
-    'motivation-for-online-business',
-    'small-business-ideas',
-    'grand-night-party',
-    'sports-grand-opening',
-  ];
 
   private const DEMO_BLOG_SLUG_PREFIXES = [
     'vivamus-vestibulum',
@@ -74,7 +66,8 @@ class SitemapController extends Controller
     $events = EventContent::join('events', 'events.id', '=', 'event_contents.event_id')
       ->where('events.status', 1)
       ->whereDate('events.end_date_time', '>=', now()->toDateString())
-      ->whereNotIn('event_contents.slug', self::DEMO_EVENT_SLUGS)
+      ->whereNotIn('event_contents.slug', DemoEventExclusion::EVENT_SLUGS)
+      ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
         return $query->where('event_contents.language_id', $defaultLanguageId);
       })

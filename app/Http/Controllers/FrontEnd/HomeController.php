@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
+use App\Support\DemoEventExclusion;
 use App\Http\Controllers\FrontEnd\PaymentGateway\MyFatoorahController;
 use App\Http\Controllers\FrontEnd\PaymentGateway\XenditController;
 use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MyFatoorahController as ShopGatewayMyFatoorahController;
@@ -121,6 +122,7 @@ class HomeController extends Controller
         })
         ->leftJoin(DB::raw('(SELECT event_id, MIN(CAST(price AS DECIMAL(10,2))) as min_price, MIN(pricing_type) as pricing_type FROM tickets GROUP BY event_id) as t'), 't.event_id', '=', 'events.id')
         ->where('events.status', 1)
+        ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
         ->where('events.end_date_time', '>=', $this->now_date_time)
         ->whereNotNull('events.thumbnail')
         ->select('events.id', 'events.thumbnail', 'event_contents.slug', 'event_contents.title', 'events.start_date', 'events.start_time', 'events.manual_badge', 'events.views_count', 'events.views_last_24h', 'events.created_at', 't.min_price', 't.pricing_type')
@@ -177,6 +179,7 @@ class HomeController extends Controller
           ['events.end_date_time', '>=', $this->now_date_time],
           ['events.is_featured', '=', 'yes'],
         ])
+        ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
         ->select('event_contents.*', 'events.*',
           'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
           'organizers.id as org_id', 'organizers.username as org_username');
@@ -205,6 +208,7 @@ class HomeController extends Controller
         ->whereIn('event_contents.event_category_id', $categoryIds)
         ->where('event_contents.language_id', $language->id)
         ->where('events.status', 1)
+        ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
         ->where('events.end_date_time', '>=', $this->now_date_time)
         ->where('events.is_featured', 'yes')
         ->select('event_contents.*', 'events.*',

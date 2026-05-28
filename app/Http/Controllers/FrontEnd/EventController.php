@@ -15,6 +15,7 @@ use App\Models\HomePage\HeroSection;
 use App\Models\Event\Wishlist;
 use App\Models\Organizer;
 use App\Services\HeroSlideUrlsService;
+use App\Support\DemoEventExclusion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -139,6 +140,7 @@ class EventController extends Controller
         return $query->where('event_contents.title', 'like', '%' . $keyword . '%');
       })
       ->where('events.status', 1)
+      ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
       ->where('events.end_date_time', '>=', $this->now_date_time)
       ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.address', 'event_contents.zip_code', 'event_contents.slug',
         'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',

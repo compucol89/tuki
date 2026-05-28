@@ -167,8 +167,11 @@ class EventController extends Controller
       );
     }
 
+    $heroSlideUrls = HeroSlideUrlsService::build();
+
     return view('frontend.event.event', compact('information', 'wishlistMap') + [
-      'heroSlideUrls' => HeroSlideUrlsService::build(),
+      'heroSlideUrls' => $heroSlideUrls,
+      'firstHeroSlideUrl' => $heroSlideUrls[0] ?? null,
       'heroSection'   => $information['heroSection'],
       'categories'    => $information['categories'],
     ]);

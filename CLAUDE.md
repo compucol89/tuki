@@ -249,6 +249,39 @@ php artisan migrate                            # migraciones
 
 Máxima precisión · Mínimo tokens · Cero exploración innecesaria
 
+---
+
+## DATOS FISCALES Y CORPORATIVOS
+
+**Entidad operadora:** TAYRONA GROUP SAS
+**CUIT:** 30-71885087-4
+**Rol:** Operador comercial de la plataforma Tukipass.
+
+### Disclaimer legal (visible al usuario)
+> Importante: Tukipass no organiza ni produce los eventos publicados, salvo indicación expresa. Tukipass presta un servicio tecnológico de publicación, gestión y venta online de entradas. La realización, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.
+>
+> Al utilizar este sitio o comprar una entrada, el usuario acepta los Términos y Condiciones de Tukipass y las políticas aplicables de cada evento.
+
+### Footer estándar
+```
+TAYRONA GROUP SAS — CUIT 30-71885087-4
+Operador comercial de la plataforma Tukipass.
+
+Copyright © 2026 Tukipass. Todos los derechos reservados.
+```
+
+### Uso obligatorio
+- PDFs de entradas/tickets: datos visibles, contraste correcto, NO texto blanco sobre fondo blanco.
+- Emails de confirmación de compra.
+- Página de confirmación post-compra (`/event-booking-complete`).
+- Footer del sitio público.
+- Facturas electrónicas ARCA/AFIP.
+- Cualquier documento fiscal o comercial generado por la plataforma.
+
+**NUNCA usar:** "AltokeTicket", "example.com", lorem ipsum, texto en inglés en contenido visible al cliente.
+
+---
+
 # userEmail
 The user's email address is infocompucol@gmail.com.
 # currentDate

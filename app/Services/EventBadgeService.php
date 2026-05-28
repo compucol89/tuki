@@ -25,7 +25,7 @@ class EventBadgeService
         if ($event->manual_badge === 'imperdible') {
             return [
                 'label' => 'Imperdible',
-                'icon'  => '🎪',
+                'fa'    => 'fas fa-certificate',
                 'class' => 'ev-badge--imperdible',
             ];
         }
@@ -33,7 +33,7 @@ class EventBadgeService
         if ($event->manual_badge === 'destacado') {
             return [
                 'label' => 'Destacado',
-                'icon'  => '⭐',
+                'fa'    => 'fas fa-star',
                 'class' => 'ev-badge--destacado',
             ];
         }
@@ -45,7 +45,7 @@ class EventBadgeService
         if ($stockPercent !== null && $stockPercent <= 15 && $stockPercent > 0) {
             return [
                 'label' => 'Últimas entradas',
-                'icon'  => '⚡',
+                'fa'    => 'fas fa-bolt',
                 'class' => 'ev-badge--agota',
             ];
         }
@@ -55,7 +55,7 @@ class EventBadgeService
         if ($recentSales >= 20) {
             return [
                 'label' => 'Furor',
-                'icon'  => '🔥',
+                'fa'    => 'fas fa-fire',
                 'class' => 'ev-badge--furor',
             ];
         }
@@ -65,7 +65,7 @@ class EventBadgeService
         if ($eventDate && $eventDate->isBetween(now(), now()->addHours(48))) {
             return [
                 'label' => 'Últimas horas',
-                'icon'  => '🎯',
+                'fa'    => 'fas fa-clock',
                 'class' => 'ev-badge--ultimas',
             ];
         }
@@ -75,7 +75,7 @@ class EventBadgeService
         if ($views >= 100) {
             return [
                 'label' => 'Trending',
-                'icon'  => '📈',
+                'fa'    => 'fas fa-chart-line',
                 'class' => 'ev-badge--trending',
             ];
         }
@@ -84,7 +84,7 @@ class EventBadgeService
         if (!empty($event->created_at) && Carbon::parse($event->created_at)->isAfter(now()->subHours(72))) {
             return [
                 'label' => 'Nuevo',
-                'icon'  => '🆕',
+                'fa'    => 'fas fa-tag',
                 'class' => 'ev-badge--nuevo',
             ];
         }
@@ -205,10 +205,10 @@ class EventBadgeService
     {
         // --- BADGES MANUALES (máxima prioridad) ---
         if ($event->manual_badge === 'imperdible') {
-            return ['label' => 'Imperdible', 'icon' => '🎪', 'class' => 'ev-badge--imperdible'];
+            return ['label' => 'Imperdible', 'fa' => 'fas fa-certificate', 'class' => 'ev-badge--imperdible'];
         }
         if ($event->manual_badge === 'destacado') {
-            return ['label' => 'Destacado', 'icon' => '⭐', 'class' => 'ev-badge--destacado'];
+            return ['label' => 'Destacado', 'fa' => 'fas fa-star', 'class' => 'ev-badge--destacado'];
         }
         // Últimas entradas: stock ≤ 15%
         $total = $ticketStock->sum('ticket_available');
@@ -216,12 +216,12 @@ class EventBadgeService
             $remaining = max(0, $total - (int)($totalSold ?? 0));
             $stockPercent = ($remaining / $total) * 100;
             if ($stockPercent <= 15 && $stockPercent > 0) {
-                return ['label' => 'Últimas entradas', 'icon' => '⚡', 'class' => 'ev-badge--agota'];
+                return ['label' => 'Últimas entradas', 'fa' => 'fas fa-bolt', 'class' => 'ev-badge--agota'];
             }
         }
         // Furor: ≥ 20 ventas en últimas 48h
         if (($recentSales ?? 0) >= 20) {
-            return ['label' => 'Furor', 'icon' => '🔥', 'class' => 'ev-badge--furor'];
+            return ['label' => 'Furor', 'fa' => 'fas fa-fire', 'class' => 'ev-badge--furor'];
         }
         // Últimas horas: evento en próximas 48h
         $eventDate = $event->start_date ?? null;
@@ -229,18 +229,18 @@ class EventBadgeService
             try {
                 $date = Carbon::parse($eventDate);
                 if ($date->isBetween(Carbon::now(), Carbon::now()->addHours(48))) {
-                    return ['label' => 'Últimas horas', 'icon' => '🎯', 'class' => 'ev-badge--ultimas'];
+                    return ['label' => 'Últimas horas', 'fa' => 'fas fa-clock', 'class' => 'ev-badge--ultimas'];
                 }
             } catch (\Exception $e) {}
         }
         // Trending: ≥ 100 visitas
         $views = $event->views_last_24h ?? $event->views_count ?? 0;
         if ($views >= 100) {
-            return ['label' => 'Trending', 'icon' => '📈', 'class' => 'ev-badge--trending'];
+            return ['label' => 'Trending', 'fa' => 'fas fa-chart-line', 'class' => 'ev-badge--trending'];
         }
         // Nuevo: creado hace menos de 72h
         if (!empty($event->created_at) && Carbon::parse($event->created_at)->isAfter(Carbon::now()->subHours(72))) {
-            return ['label' => 'Nuevo', 'icon' => '🆕', 'class' => 'ev-badge--nuevo'];
+            return ['label' => 'Nuevo', 'fa' => 'fas fa-tag', 'class' => 'ev-badge--nuevo'];
         }
         return null;
     }

@@ -140,3 +140,8 @@ I can still help you with this task directly! Would you like me to proceed?
 If this is something you do often, you could create your own skill:
 npx skills init my-xyz-skill
 ```
+
+---
+
+> **Project Reference:** For MercadoPago Checkout Pro integration details, see `.agents/mercadopago1.md`, `mercadopago2.md`, `mercadopago3.md`, `mercadopago4.md`, and `mercadopago5.md`.
+  Use this reference when working with payment gateways, checkout flows, or MercadoPago API.

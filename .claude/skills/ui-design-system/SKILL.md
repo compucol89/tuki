@@ -468,3 +468,8 @@ Avoid these frequent issues:
 **Progressive Disclosure:** Reference files for detailed guides ✅
 **Scope:** Design systems, styling, accessibility, UI/UX patterns (framework-agnostic)
 **Companion Skills:** react-nextjs-expert (for React/Next.js architecture and state management)
+
+---
+
+> **Project Reference:** For MercadoPago Checkout Pro integration details, see `.agents/mercadopago1.md`, `mercadopago2.md`, `mercadopago3.md`, `mercadopago4.md`, and `mercadopago5.md`.
+  Use this reference when working with payment gateways, checkout flows, or MercadoPago API.

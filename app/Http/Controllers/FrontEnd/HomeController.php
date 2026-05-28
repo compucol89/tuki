@@ -100,34 +100,11 @@ class HomeController extends Controller
       AboutUsSection::where('language_id', $language->id)->first()
     );
 
-    $queryResult['featureEventSection'] = Cache::remember('home_feature_section_' . $language->id, 86400, fn () =>
-      EventFeatureSection::where('language_id', $language->id)->first()
-    );
-    $queryResult['featureEventItems'] = Cache::remember('home_feature_items_' . $language->id, 86400, fn () =>
-      EventFeature::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
-    );
-
     $queryResult['howWork'] = Cache::remember('how_work_' . $language->id, 3600, fn () => HowWork::where('language_id', $language->id)->first());
     $queryResult['howWorkItems'] = Cache::remember('home_how_work_items_' . $language->id, 86400, fn () =>
       HowWorkItem::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
     );
 
-    if ($sectionInfo->testimonials_section_status == 1) {
-      $queryResult['testimonialData'] = Cache::remember('home_testimonial_section_' . $language->id, 86400, fn () =>
-        TestimonialSection::where('language_id', $language->id)->first()
-      );
-
-      $queryResult['testimonials'] = Cache::remember('home_testimonials_' . $language->id, 86400, fn () =>
-        Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
-      );
-    }
-
-    $queryResult['partnerInfo'] = Cache::remember('home_partner_info_' . $language->id, 86400, fn () =>
-      PartnerSection::where('language_id', $language->id)->first()
-    );
-    $queryResult['partners'] = Cache::remember('home_partners_' . $language->id, 86400, fn () =>
-      Partner::orderBy('serial_number', 'asc')->get()
-    );
     $queryResult['footerInfo'] = Cache::remember('home_footer_' . $language->id, 86400, fn () =>
       FooterContent::where('language_id', $language->id)->first()
     );

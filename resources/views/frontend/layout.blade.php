@@ -53,6 +53,9 @@
   <title>@yield('pageHeading') {{ '| ' . $websiteInfo->website_title }}</title>
   <!-- Favicon Icon -->
   <link rel="shortcut icon" href="{{ asset('assets/admin/img/' . $websiteInfo->favicon) }}" type="image/x-icon">
+  @hasSection('hero-preload')
+    @yield('hero-preload')
+  @endif
   {{-- include styles --}}
   @includeIf('frontend.partials.styles')
   @yield('custom-style')

@@ -357,3 +357,8 @@ For partner sales enablement, see the [tools registry](../../tools/REGISTRY.md):
 - **revops**: For lead lifecycle, scoring, routing, and pipeline management
 - **pricing-strategy**: For pricing decisions and packaging
 - **product-marketing-context**: For foundational positioning and messaging
+
+---
+
+> **Project Reference:** For MercadoPago Checkout Pro integration details, see `.agents/mercadopago1.md`, `mercadopago2.md`, `mercadopago3.md`, `mercadopago4.md`, and `mercadopago5.md`.
+  Use this reference when working with payment gateways, checkout flows, or MercadoPago API.

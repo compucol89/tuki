@@ -37,3 +37,37 @@ Este archivo sustituye o complementa búsquedas en sesiones anteriores. Actualiz
 ```
 
 Plus Jakarta Sans y Sora NO están en uso — eran datos de una auditoría anterior incorrecta. No introducir esas fuentes.
+
+---
+
+## Datos Fiscales y Corporativos (actualizado 2026-05-20)
+
+**Entidad operadora:** TAYRONA GROUP SAS
+**CUIT:** 30-71885087-4
+**Rol:** Operador comercial de la plataforma Tukipass.
+
+### Disclaimer legal
+> Importante: Tukipass no organiza ni produce los eventos publicados, salvo indicación expresa. Tukipass presta un servicio tecnológico de publicación, gestión y venta online de entradas. La realización, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.
+>
+> Al utilizar este sitio o comprar una entrada, el usuario acepta los Términos y Condiciones de Tukipass y las políticas aplicables de cada evento.
+
+### Footer estándar
+```
+TAYRONA GROUP SAS — CUIT 30-71885087-4
+Operador comercial de la plataforma Tukipass.
+Copyright © 2026 Tukipass. Todos los derechos reservados.
+```
+
+### Uso obligatorio en
+- PDFs de entradas/tickets (visible, contraste correcto)
+- Emails de confirmación
+- Página de confirmación post-compra
+- Footer del sitio
+- Facturas electrónicas ARCA/AFIP
+
+**NUNCA usar:** "AltokeTicket", "example.com", lorem ipsum, texto en inglés visible al cliente.
+
+### Archivos de referencia actualizados
+- `.opencode/agents/ayuda.md` — sección "Datos Fiscales y Corporativos de TukiPass"
+- `AGENTS.md` — sección "DATOS FISCALES Y CORPORATIVOS"
+- `CLAUDE.md` — sección "DATOS FISCALES Y CORPORATIVOS"

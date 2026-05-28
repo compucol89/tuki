@@ -210,6 +210,32 @@ Skills are in `.claude/skills/` — read SKILL.md before using:
 
 ---
 
+# === DATOS FISCALES Y CORPORATIVOS ===
+
+**Entidad operadora:** TAYRONA GROUP SAS
+**CUIT:** 30-71885087-4
+**Rol:** Operador comercial de la plataforma Tukipass.
+
+### Footer estándar
+```
+TAYRONA GROUP SAS — CUIT 30-71885087-4
+Operador comercial de la plataforma Tukipass.
+Copyright © 2026 Tukipass. Todos los derechos reservados.
+```
+
+### Disclaimer legal (obligatorio en emails, PDFs y web)
+Importante: Tukipass no organiza ni produce los eventos publicados, salvo indicación expresa. Tukipass presta un servicio tecnológico de publicación, gestión y venta online de entradas. La realización, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.
+
+### Términos y Condiciones
+Al utilizar este sitio o comprar una entrada, el usuario acepta los Términos y Condiciones de Tukipass y las políticas aplicables de cada evento.
+
+### Uso obligatorio
+Estos datos deben aparecer en: PDFs de entradas, emails de confirmación, página de confirmación post-compra, footer del sitio, facturas electrónicas ARCA/AFIP.
+
+**NUNCA usar:** "AltokeTicket", "example.com", lorem ipsum, texto en inglés en contenido visible al cliente.
+
+---
+
 # === I18N — SPANISH (ARGENTINA) ===
 
 All customer-facing text must be in **español rioplatense**:

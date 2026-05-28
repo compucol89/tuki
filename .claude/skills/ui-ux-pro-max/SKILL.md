@@ -657,3 +657,7 @@ Scope notice: This checklist is for App UI (iOS/Android/React Native/Flutter).
 - [ ] Color is not the only indicator
 - [ ] Reduced motion and dynamic text size are supported without layout breakage
 - [ ] Accessibility traits/roles/states (selected, disabled, expanded) are announced correctly
+---
+
+> **Project Reference:** For MercadoPago Checkout Pro integration details, see `.agents/mercadopago1.md`, `mercadopago2.md`, `mercadopago3.md`, `mercadopago4.md`, and `mercadopago5.md`.
+  Use this reference when working with payment gateways, checkout flows, or MercadoPago API.

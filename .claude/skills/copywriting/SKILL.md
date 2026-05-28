@@ -250,3 +250,8 @@ For headlines and CTAs, provide 2-3 options:
 - **email-sequence**: For email copywriting
 - **popup-cro**: For popup and modal copy
 - **ab-test-setup**: To test copy variations
+
+---
+
+> **Project Reference:** For MercadoPago Checkout Pro integration details, see `.agents/mercadopago1.md`, `mercadopago2.md`, `mercadopago3.md`, `mercadopago4.md`, and `mercadopago5.md`.
+  Use this reference when working with payment gateways, checkout flows, or MercadoPago API.

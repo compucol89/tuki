@@ -7,10 +7,17 @@ use App\Models\Admin;
 use App\Models\Event;
 use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
+use App\Models\HomePage\EventFeature;
+use App\Models\HomePage\EventFeatureSection;
+use App\Models\HomePage\Partner;
+use App\Models\HomePage\Section;
+use App\Models\HomePage\Testimonial;
+use App\Models\HomePage\TestimonialSection;
 use App\Models\Organizer;
 use App\Models\OrganizerInfo;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -70,7 +77,36 @@ class OrganizerController extends Controller
       })
       ->paginate(20);
 
-    return view('frontend.organizer.index', compact('collection'));
+    $secInfo = Cache::remember('home_section', 86400, fn () => Section::first());
+    $featureEventSection = Cache::remember('home_feature_section_' . $language->id, 86400, fn () =>
+      EventFeatureSection::where('language_id', $language->id)->first()
+    );
+    $featureEventItems = Cache::remember('home_feature_items_' . $language->id, 86400, fn () =>
+      EventFeature::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
+    );
+    $testimonialData = null;
+    $testimonials = collect();
+    if ($secInfo && $secInfo->testimonials_section_status == 1) {
+      $testimonialData = Cache::remember('home_testimonial_section_' . $language->id, 86400, fn () =>
+        TestimonialSection::where('language_id', $language->id)->first()
+      );
+      $testimonials = Cache::remember('home_testimonials_' . $language->id, 86400, fn () =>
+        Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
+      );
+    }
+    $partners = Cache::remember('home_partners_' . $language->id, 86400, fn () =>
+      Partner::orderBy('serial_number', 'asc')->get()
+    );
+
+    return view('frontend.organizer.index', compact(
+      'collection',
+      'secInfo',
+      'featureEventSection',
+      'featureEventItems',
+      'testimonialData',
+      'testimonials',
+      'partners'
+    ));
   }
 
   public function details(Request $request, $id, $name)

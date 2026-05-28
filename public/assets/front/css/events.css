@@ -1158,48 +1158,35 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
 
 .ev-card {
   --ev-card-radius: 20px;
+  --ev-ticket-height: 75px;
+  --ev-ticket-ink: #323d4f;
+  --ev-ticket-surface: #ffffff;
+  --ev-section-gap: 14px;
+  --ev-block-gap: 12px;
+  --ev-body-gap: 20px;
   display: flex;
   flex-direction: column;
+  gap: var(--ev-section-gap);
   height: 100%;
   width: 100%;
-  border-radius: var(--ev-card-radius);
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%);
-  border: 1px solid rgba(30,37,50,0.055);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.8) inset,
-    0 10px 26px rgba(15,23,42,0.045),
-    0 22px 54px rgba(15,23,42,0.055);
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   cursor: pointer;
   color: inherit;
-  contain: layout style;
   text-decoration: none;
   position: relative;
-  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
-              box-shadow 0.35s cubic-bezier(0.22,1,0.36,1),
-              border-color 0.35s cubic-bezier(0.22,1,0.36,1);
 }
 
 .ev-card::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.18) 100%);
-  z-index: 1;
-  pointer-events: none;
+  display: none;
 }
 
-.ev-card__link {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-}
-
-.ev-card__link:focus-visible {
+.ev-card:focus-visible {
   outline: 2px solid rgba(249, 115, 22, 0.82);
-  outline-offset: -3px;
+  outline-offset: 4px;
   box-shadow: 0 0 0 4px rgba(249,115,22,0.12);
 }
 
@@ -1216,42 +1203,66 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
 }
 
 .ev-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(249,115,22,0.14);
-  border-bottom-color: transparent;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.86) inset,
-    0 18px 40px rgba(15,23,42,0.075),
-    0 28px 72px rgba(15,23,42,0.085);
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .ev-card:focus-within {
-  transform: translateY(-5px);
-  border-color: rgba(249,115,22,0.14);
-  border-bottom-color: transparent;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.86) inset,
-    0 18px 40px rgba(15,23,42,0.075),
-    0 28px 72px rgba(15,23,42,0.085);
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
 }
 
-/* Visual wrapper — imagen + barra + overlay, SIN overflow:hidden */
+.ev-card__visual,
+.ev-card__datetime-bar,
+.ev-card__body-panel {
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.35s cubic-bezier(0.22,1,0.36,1),
+              border-color 0.35s cubic-bezier(0.22,1,0.36,1),
+              background 0.35s cubic-bezier(0.22,1,0.36,1);
+}
+
+.ev-card:hover .ev-card__visual,
+.ev-card:focus-within .ev-card__visual {
+  transform: translateY(-4px) translateZ(0);
+  box-shadow: 0 16px 36px rgba(15,23,42,0.1);
+}
+
+.ev-card:hover .ev-card__datetime-bar,
+.ev-card:focus-within .ev-card__datetime-bar {
+  transform: translateY(-2px);
+}
+
+.ev-card:hover .ev-card__body-panel,
+.ev-card:focus-within .ev-card__body-panel {
+  transform: translateY(-2px);
+  border-bottom-color: rgba(30, 37, 50, 0.12);
+}
+
+/* Visual wrapper — bloque 1: solo imagen */
 .ev-card__visual {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   isolation: isolate;
   transform: translateZ(0);
+  border-radius: var(--ev-card-radius);
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(15,23,42,0.11);
 }
 
-/* Image — proporción 4:3 clásica (recortada ~150px vs 4:5 anterior) */
+/* Image — cuadrada 1:1, jerarquía visual (objetivo 304×304) */
 .ev-card__img {
   position: relative;
-  aspect-ratio: 4/3;
+  aspect-ratio: 1 / 1;
+  width: 100%;
   overflow: hidden;
   flex-shrink: 0;
   background: #111827;
+  z-index: 1;
 }
 
 .ev-card__img img {
@@ -1302,6 +1313,7 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   top: 10px;
   right: 10px;
   z-index: 10;
+  pointer-events: auto;
   width: 38px;
   height: 38px;
   display: flex;
@@ -1324,10 +1336,13 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   transform: scale(1.06);
 }
 
-/* Hover overlay — dentro de ev-card__visual (sin overflow:hidden), elimina el corte visual */
+/* Hover overlay — sobre la imagen (hermano de ev-card__img, sin overflow:hidden) */
 .ev-card__overlay {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
   z-index: 5;
   background:
     radial-gradient(circle at top left, rgba(249,115,22,0.12) 0%, transparent 34%),
@@ -1409,13 +1424,6 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
 }
 
 /* Body */
-/* Mobile */
-@media (max-width: 1023px) {
-  .ev-card__overlay {
-    display: none;
-  }
-}
-
 @media (max-width: 767px) {
   .hero-collage-section,
   .hero-collage-section--premium {
@@ -1512,26 +1520,15 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
 .ev-badge--imperdible { color: #e11d48; }
 
 /* ============================================================
-   EVENT CARD — v4 Poster (info sobre gradiente)
+   EVENT CARD — v4 Poster
    ============================================================ */
 
-/* Gradiente: termina en #0d1827 para fundir con la barra fecha/hora */
+/* Gradiente sobre imagen — desactivado (el overlay de hover lo reemplaza) */
 .ev-card__gradient {
-  background:
-    linear-gradient(
-      to top,
-      rgba(13,24,39,0.88) 0%,
-      rgba(13,24,39,0.28) 36%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse at 0% 115%,
-      rgba(249,115,22,0.12) 0%,
-      transparent 50%
-    );
+  display: none;
 }
 
-/* ── Fecha sobre gradiente ── */
+/* ── Fecha sobre gradiente (legacy) ── */
 .ev-card__img-info {
   position: absolute;
   bottom: 0;
@@ -1587,89 +1584,115 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   transition: opacity 0.3s ease;
 }
 
-/* ── Barra fecha / hora / badge — sin fondo, texto oscuro ── */
+/* ── Bloque 2: ticket partido (fondo blanco + sombra leve) ── */
 .ev-card__datetime-bar {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(10px);
   position: relative;
   z-index: 6;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 10px 16px 11px;
+  display: block;
+  width: 100%;
+  height: var(--ev-ticket-height);
+  min-height: var(--ev-ticket-height);
+  max-height: var(--ev-ticket-height);
+  margin: calc(var(--ev-block-gap) - var(--ev-section-gap)) 0 0;
+  padding: 0;
   flex-shrink: 0;
-  box-shadow:
-    0 10px 24px rgba(15,23,42,0.08);
-  transition: background 0.18s ease, box-shadow 0.18s ease;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 2px 5px rgba(15, 23, 42, 0.05));
 }
 
-.ev-card:hover .ev-card__datetime-bar {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-}
-
-.ev-card:focus-within .ev-card__datetime-bar {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-}
-
-.ev-card:hover .ev-card__dtbar-block,
-.ev-card:hover .ev-card__dtbar-sep {
+.ev-card:hover .ev-card__dtbar-left,
+.ev-card:hover .ev-card__dtbar-right {
   opacity: 0;
   pointer-events: none;
 }
 
-.ev-card:focus-within .ev-card__dtbar-block,
-.ev-card:focus-within .ev-card__dtbar-sep {
+.ev-card:focus-within .ev-card__dtbar-left,
+.ev-card:focus-within .ev-card__dtbar-right {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Badge neutro en la barra */
-.ev-card__dtbar-block--badge {
-  gap: 5px;
-}
-
+/* Mitad derecha del ticket — icono + etiqueta, sin contenedor extra */
 .ev-card__dtbar-badge-icon {
-  font-size: 15px;
+  font-size: 22px;
   line-height: 1;
+  color: var(--ev-ticket-ink);
+  -webkit-font-smoothing: antialiased;
 }
 
-.ev-card__dtbar-badge-label {
-  font-family: var(--tuki-font-sans);
-  font-size: 12px;
-  font-weight: 600;
-  color: #223042;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
+.ev-card__dtbar-right.ev-badge--furor .ev-card__dtbar-badge-icon { color: #ef4444; }
+.ev-card__dtbar-right.ev-badge--agota .ev-card__dtbar-badge-icon { color: #d97706; }
+.ev-card__dtbar-right.ev-badge--trending .ev-card__dtbar-badge-icon { color: #059669; }
+.ev-card__dtbar-right.ev-badge--nuevo .ev-card__dtbar-badge-icon { color: #2563eb; }
+.ev-card__dtbar-right.ev-badge--ultimas .ev-card__dtbar-badge-icon { color: #ea580c; }
+.ev-card__dtbar-right.ev-badge--destacado .ev-card__dtbar-badge-icon { color: #7c3aed; }
+.ev-card__dtbar-right.ev-badge--imperdible .ev-card__dtbar-badge-icon { color: #e11d48; }
+.ev-card__dtbar-right.ev-badge--tipo .ev-card__dtbar-badge-icon { color: rgba(50, 61, 79, 0.82); }
 
-/* CTA hover — aparece sobre la barra oscura */
+/* CTA hover — texto 65% izq, flecha 35% der */
 .ev-card__dtbar-cta {
   position: absolute;
   inset: 0;
+  z-index: 2;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+  gap: 0;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.08s ease;
-  color: #fff;
+  color: var(--ev-ticket-ink);
+}
+
+.ev-card__dtbar-cta-label {
+  width: 65%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
   font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
-  font-size: 10.5px;
+  font-size: 14px;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   white-space: nowrap;
+  line-height: 1.05;
+}
+
+.ev-card__dtbar-cta-arrow {
+  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+.ev-card__dtbar-cta-arrow svg {
+  display: block;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  stroke-width: 2.75;
+  filter: none;
+}
+
+.ev-card:hover .ev-card__dtbar-cta-label,
+.ev-card:focus-within .ev-card__dtbar-cta-label {
+  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
 }
 
 .ev-card:hover .ev-card__dtbar-cta {
   opacity: 1;
+  color: #fff;
 }
 
 .ev-card:focus-within .ev-card__dtbar-cta {
   opacity: 1;
+  color: #fff;
 }
 
 .ev-card__dtbar-block {
@@ -1681,21 +1704,125 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
 }
 
 .ev-card__dtbar-sep {
+  display: none;
+}
+
+.ev-card__dtbar-left > .ev-card__dtbar-sep {
+  display: block;
+  flex-shrink: 0;
+  align-self: center;
   width: 1px;
-  height: 22px;
-  background: rgba(30,37,50,0.12);
+  height: 36px;
+  margin: 0 4px;
+  background: rgba(50, 61, 79, 0.28);
+}
+
+.ev-card__dtbar-left,
+.ev-card__dtbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   transition: opacity 0.1s ease;
 }
 
-/* ── Body ── */
+.ev-card__dtbar-left {
+  width: 65%;
+  gap: 14px;
+}
+
+.ev-card__dtbar-right {
+  width: 35%;
+  padding: 0 6px;
+}
+
+/* Fondo FreeTicket (SVGs absolutos — altura nativa, sin aplastar mordiscos) */
+.ev-card__ticket-bg {
+  position: absolute;
+  top: 0;
+  height: var(--ev-ticket-height);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ev-card__ticket-bg--left {
+  left: 0;
+  width: 65%;
+}
+
+.ev-card__ticket-bg--right {
+  right: 0;
+  width: 35%;
+}
+
+.ev-card__ticket-bg path {
+  fill: var(--ev-ticket-surface);
+  stroke: none;
+  transition: fill 0.2s ease;
+}
+
+.ev-card:hover .ev-card__ticket-bg path,
+.ev-card:focus-within .ev-card__ticket-bg path {
+  fill: var(--primary-color, #F97316);
+}
+
+.ev-card__dtbar-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+}
+
+/* Texto sobre ticket blanco */
+.ev-card__datetime-bar .ev-card__img-day,
+.ev-card__datetime-bar .ev-card__img-month-text,
+.ev-card__datetime-bar .ev-card__img-year-text {
+  color: var(--ev-ticket-ink);
+}
+
+.ev-card__datetime-bar .ev-card__img-day {
+  font-size: 36px;
+  letter-spacing: -0.03em;
+}
+
+.ev-card__datetime-bar .ev-card__img-month-text {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ev-card__datetime-bar .ev-card__img-year-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(50, 61, 79, 0.72);
+}
+
+/* ── Bloque 3: info — transparente, bordes izq/abajo ── */
+.ev-card__body-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: calc(var(--ev-block-gap) - var(--ev-section-gap));
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
 .ev-card__body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 16px 19px 19px;
+  padding: 0 20px 18px 22px;
   gap: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, #ffffff 100%);
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .ev-card__body::before {
@@ -1725,12 +1852,12 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   text-overflow: ellipsis;
 }
 
-/* Título — 2 líneas */
+/* Título — Inter */
 .ev-card__title {
-  font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-family: var(--tuki-font-sans);
   font-size: 20px;
   font-weight: 700;
-  color: #18212f;
+  color: var(--ev-ticket-ink);
   letter-spacing: -0.03em;
   margin: 0 0 12px;
   line-height: 1.26;
@@ -1840,13 +1967,6 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   transform: translateX(4px);
 }
 
-/* Mobile */
-@media (max-width: 1023px) {
-  .ev-card__overlay {
-    display: none;
-  }
-}
-
 @media (max-width: 767px) {
   .ev-card__img-day {
     font-size: 28px;
@@ -1855,9 +1975,165 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
     font-size: 11px;
   }
   .ev-card__title {
-    font-size: 18px;
-    min-height: calc(18px * 1.3 * 2);
+    font-size: 20px;
+    min-height: calc(20px * 1.26 * 2);
   }
+}
+
+/* ── Grid listing: más presencia (3 cols desktop, 2 tablet, 1 mobile) ── */
+@media (min-width: 1200px) {
+  .events-section .container,
+  .ev-listing__inner {
+    max-width: 1360px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .ev-card__title {
+    font-size: 22px;
+    min-height: calc(22px * 1.26 * 2);
+  }
+}
+
+@media (min-width: 992px) {
+  .events-section .row:has(> .ev-card-col),
+  .ev-listing__inner > .row:has(> .ev-card-col) {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
+  .events-section .ev-card-col,
+  .ev-listing__inner .ev-card-col {
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 22px;
+  }
+
+  .ev-card__visual {
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.13);
+  }
+}
+
+/* ================================================
+   /events — buscador (mismo patrón que home)
+   ================================================ */
+.hs-search-wrap--events {
+  padding: clamp(32px, 4.5vw, 48px) 0 32px;
+  margin-top: 0;
+  background: #fff;
+  border-top: none;
+  border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  box-shadow: none;
+}
+
+.hs-search-wrap--events .hs-search-head__count {
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.hs-search-wrap--events .hs-search-head__count-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-right: 4px;
+}
+
+@media (min-width: 992px) {
+  .hs-search-wrap--events .hs-sf__field--grow {
+    flex: 1 1 160px;
+    max-width: none;
+  }
+
+  .hs-search-wrap--events .hs-sf__field--location {
+    flex: 0 1 150px;
+  }
+
+  .hs-search-wrap--events .hs-sf__field--select {
+    flex: 0 1 155px;
+  }
+
+  .hs-search-wrap--events .hs-sf__btn {
+    flex: 0 0 clamp(112px, 9vw, 140px);
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .hs-search-wrap--events .hs-search-form {
+    flex-wrap: wrap;
+  }
+
+  .hs-search-wrap--events .hs-sf__divider {
+    display: none;
+  }
+
+  .hs-search-wrap--events .hs-sf__field--grow {
+    flex: 1 0 100%;
+  }
+
+  .hs-search-wrap--events .hs-sf__field--location,
+  .hs-search-wrap--events .hs-sf__field--select {
+    flex: 1 1 calc(50% - 1px);
+  }
+
+  .hs-search-wrap--events .hs-sf__btn {
+    flex: 1 0 100%;
+    border-radius: 0 0 11px 11px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 991px) {
+  .hs-search-wrap--events .hs-sf__divider {
+    display: none;
+  }
+
+  .hs-search-wrap--events .hs-sf__field--location,
+  .hs-search-wrap--events .hs-sf__field--select {
+    display: flex !important;
+    flex: 1 1 calc(50% - 1px);
+  }
+
+  .hs-search-wrap--events .hs-sf__field--grow {
+    max-width: none;
+    flex: 1 0 100%;
+  }
+
+  .hs-search-wrap--events .hs-sf__btn {
+    flex: 1 0 100%;
+    width: 100%;
+    border-radius: 0 0 11px 11px;
+  }
+
+  .hs-search-wrap--events .hs-search-head {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 575px) {
+  .hs-search-wrap--events {
+    padding: 28px 0 24px;
+    margin-top: 0;
+  }
+
+  .hs-search-wrap--events .hs-sf__field--location,
+  .hs-search-wrap--events .hs-sf__field--select {
+    flex: 1 0 100%;
+  }
+
+  .hs-search-wrap--events .hs-search-chips {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
+.ev-listing--premium {
+  padding: 32px 0 48px;
+  background: #f8fafc;
 }
 
 /* ================================================

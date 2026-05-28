@@ -165,3 +165,8 @@ When recommending ideas, provide for each:
 - **email-sequence**: For email marketing tactics
 - **free-tool-strategy**: For engineering as marketing (#15)
 - **referral-program**: For viral growth (#93)
+
+---
+
+> **Project Reference:** For MercadoPago Checkout Pro integration details, see `.agents/mercadopago1.md`, `mercadopago2.md`, `mercadopago3.md`, `mercadopago4.md`, and `mercadopago5.md`.
+  Use this reference when working with payment gateways, checkout flows, or MercadoPago API.

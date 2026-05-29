@@ -786,8 +786,8 @@ body {
   line-height: 30px;
 }
 
-.sidebar .nav>.nav-item a i[class^="flaticon-"],
-.sidebar[data-background-color="white"] .nav>.nav-item a i[class^="flaticon-"] {
+.sidebar .nav>.nav-item a i[class*="flaticon-"],
+.sidebar[data-background-color="white"] .nav>.nav-item a i[class*="flaticon-"] {
   font-size: 20px;
 }
 

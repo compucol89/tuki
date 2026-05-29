@@ -41,3 +41,6 @@
 
 {{-- legacy flaticon / simple-line-icons → Font Awesome --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-icons-compat.css') }}">
+
+{{-- web fonts: Flaticon, Font Awesome local, simple-line-icons --}}
+<link rel="stylesheet" href="{{ asset('assets/admin/css/fonts.min.css') }}">

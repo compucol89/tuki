@@ -2,6 +2,18 @@
  * Legacy admin icon classes → Font Awesome 5 Free/Brands (CDN).
  * flaticon-* y simple-line-icons no se cargan en styles.blade.php.
  */
+
+/* Base class for legacy la-* icon pattern in sidebar */
+.la {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 i[class*="flaticon-"]:before,
 [class*="flaticon-"]:before,
 .icon-options-vertical:before {
@@ -31,3 +43,5 @@ i[class*="flaticon-"]:before,
   content: "\f1ed";
 }
 .icon-options-vertical:before { content: "\f142"; }
+.icon-screen-desktop:before { content: "\f108"; }
+.icon-present:before { content: "\f06b"; }

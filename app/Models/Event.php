@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Event\Ticket;
 use App\Models\Event\Wishlist;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class Event extends Model
 {
@@ -79,5 +81,22 @@ class Event extends Model
   public function dates()
   {
     return $this->hasMany(EventDates::class);
+  }
+
+  protected static function booted()
+  {
+    static::saved(fn () => static::forgetHomeEventCaches());
+    static::deleted(fn () => static::forgetHomeEventCaches());
+  }
+
+  protected static function forgetHomeEventCaches(): void
+  {
+    $langIds = DB::table('languages')->pluck('id');
+    foreach ($langIds as $lid) {
+      Cache::forget('home_featured_events_all_' . $lid);
+      Cache::forget('home_featured_events_by_category_' . $lid);
+      Cache::forget('home_marquee_events_' . $lid);
+      Cache::forget('home_marquee_gallery_' . $lid);
+    }
   }
 }

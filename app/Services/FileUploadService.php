@@ -126,4 +126,38 @@ class FileUploadService
     }
     return asset($relativeDir . $filename);
   }
+
+  public static function imageExists(string $relativeDir, string $filename): bool
+  {
+    if ($filename === '') {
+      return false;
+    }
+    $webp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filename);
+    if ($webp !== $filename && file_exists(public_path($relativeDir . $webp))) {
+      return true;
+    }
+
+    return file_exists(public_path($relativeDir . $filename));
+  }
+
+  /**
+   * @param iterable<object{image?: string|null}>|null $galleryImages
+   */
+  public static function eventVisualUrl(?iterable $galleryImages, ?string $thumbnail): string
+  {
+    if ($galleryImages) {
+      foreach ($galleryImages as $row) {
+        $name = $row->image ?? '';
+        if (self::imageExists('assets/admin/img/event-gallery/', $name)) {
+          return self::imageUrl('assets/admin/img/event-gallery/', $name);
+        }
+      }
+    }
+
+    if ($thumbnail && self::imageExists('assets/admin/img/event/thumbnail/', $thumbnail)) {
+      return self::imageUrl('assets/admin/img/event/thumbnail/', $thumbnail);
+    }
+
+    return asset('assets/admin/img/noimage.jpg');
+  }
 }

@@ -71,9 +71,10 @@
   @if ($marqueeEvents->isNotEmpty())
     @php
       $mq_items = $marqueeEvents->take(10)->map(function ($ev) use ($marqueeGallery) {
-        $galleryImage = isset($marqueeGallery[$ev->id]) && $marqueeGallery[$ev->id]->isNotEmpty()
-          ? \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $marqueeGallery[$ev->id]->first()->image)
-          : \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $ev->thumbnail);
+        $galleryImage = \App\Services\FileUploadService::eventVisualUrl(
+          $marqueeGallery[$ev->id] ?? null,
+          $ev->thumbnail
+        );
 
         return [
           'event'  => $ev,

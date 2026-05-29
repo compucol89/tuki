@@ -35,6 +35,14 @@ if [ -z "$ARCA_KEY_PATH" ] && { [ -n "$ARCA_KEY_B64" ] || [ -n "$ARCA_KEY_B64_1"
     echo "ARCA_KEY_PATH=/app/storage/app/arca/private.key" >> .env
 fi
 
+# Restaurar imágenes seed del repositorio al volumen persistente
+# (EasyPanel monta /app/public/assets/admin/img/ como volumen)
+SEED_IMG_SRC="/app/public/assets/admin/img.seed"
+if [ -d "$SEED_IMG_SRC" ] && [ ! -f /app/public/assets/admin/img/.seed-restored ]; then
+    cp -rn "$SEED_IMG_SRC/"* /app/public/assets/admin/img/ 2>/dev/null || true
+    touch /app/public/assets/admin/img/.seed-restored
+fi
+
 php artisan storage:link --force
 php artisan migrate --force
 

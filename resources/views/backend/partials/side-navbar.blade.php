@@ -71,7 +71,7 @@
             <form action="" onsubmit="return false">
               <div class="form-group py-0">
                 <input name="term" type="text" class="form-control sidebar-search ltr"
-                  placeholder="Search Menu Here...">
+                  placeholder="{{ __('Search Menu Here...') }}">
               </div>
             </form>
           </div>
@@ -216,7 +216,7 @@
           @elseif (request()->routeIs('admin.event_booking.settings.tax_commission')) active  
           @elseif (request()->routeIs('admin.event_booking.report')) active @endif">
             <a data-toggle="collapse" href="#event_bookings">
-              <i class="fas fa-users-class"></i>
+              <i class="fas fa-calendar-check"></i>
               <p>{{ __('Event Bookings') }}</p>
               <span class="caret"></span>
             </a>
@@ -1165,7 +1165,7 @@
 
         <li class="nav-item">
           <a href="{{ route('admin.pwa.new') }}" target="_blank">
-            <i class="fas fa-scanner"></i>
+            <i class="fas fa-qrcode"></i>
             <p>{{ __('Pwa Scanner') }}</p>
           </a>
         </li>

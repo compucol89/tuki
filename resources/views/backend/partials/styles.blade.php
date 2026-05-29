@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 
-{{-- Font Awesome local — CDN-free (define .fas .fab .fa-palette etc) --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/fonts.min.css') }}">
+{{-- Font Awesome 6 Free (CDN) — todos los iconos fas, far, fab --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
 
 {{-- fontawesome icon picker css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/fontawesome-iconpicker.min.css') }}">

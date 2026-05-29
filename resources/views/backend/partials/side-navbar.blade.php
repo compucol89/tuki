@@ -368,7 +368,7 @@
             @elseif (request()->routeIs('admin.organizer_management.organizer.change_password')) active 
             @elseif (request()->routeIs('admin.organizer_management.settings')) active @endif">
             <a data-toggle="collapse" href="#organizer">
-              <i class="la flaticon-users"></i>
+              <i class="fas fa-users"></i>
               <p>{{ __('Organizers Management') }}</p>
               <span class="caret"></span>
             </a>
@@ -453,7 +453,7 @@
             @elseif (request()->routeIs('admin.support_tickets')) active
             @elseif (request()->routeIs('admin.support_tickets.message')) active @endif">
             <a data-toggle="collapse" href="#support_ticket">
-              <i class="la flaticon-web-1"></i>
+              <i class="fas fa-globe"></i>
               <p>{{ __('Support Tickets') }}</p>
               <span class="caret"></span>
             </a>
@@ -779,7 +779,7 @@
             @elseif (request()->routeIs('admin.custom_pages.create_page')) active
             @elseif (request()->routeIs('admin.custom_pages.edit_page')) active @endif">
             <a href="{{ route('admin.custom_pages', ['language' => $defaultLang->code]) }}">
-              <i class="la flaticon-file"></i>
+              <i class="fas fa-file"></i>
               <p>{{ __('Custom Pages') }}</p>
             </a>
           </li>
@@ -827,7 +827,7 @@
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('FAQ Management', $rolePermissions)))
           <li class="nav-item {{ request()->routeIs('admin.faq_management') ? 'active' : '' }}">
             <a href="{{ route('admin.faq_management', ['language' => $defaultLang->code]) }}">
-              <i class="la flaticon-round"></i>
+              <i class="fas fa-circle"></i>
               <p>{{ __('FAQ Management') }}</p>
             </a>
           </li>
@@ -893,7 +893,7 @@
           @if (request()->routeIs('admin.user_management.subscribers')) active
           @elseif(request()->routeIs('admin.user_management.mail_for_subscribers')) active @endif">
             <a data-toggle="collapse" href="#subscribers">
-              <i class="la flaticon-envelope"></i>
+              <i class="fas fa-envelope"></i>
               <p>{{ __('Subscribers') }}</p>
               <span class="caret"></span>
             </a>
@@ -957,7 +957,7 @@
             class="nav-item @if (request()->routeIs('admin.payment_gateways.online_gateways')) active
             @elseif (request()->routeIs('admin.payment_gateways.offline_gateways')) active @endif">
             <a data-toggle="collapse" href="#payment_gateways">
-              <i class="la flaticon-paypal"></i>
+              <i class="fab fa-paypal"></i>
               <p>{{ __('Payment Gateways') }}</p>
               <span class="caret"></span>
             </a>
@@ -1012,7 +1012,7 @@
             @elseif (request()->routeIs('admin.basic_settings.footer_logo')) active
             @elseif (request()->routeIs('admin.basic_settings.social_medias')) active @endif">
             <a data-toggle="collapse" href="#basic_settings">
-              <i class="la flaticon-settings"></i>
+              <i class="fas fa-cog"></i>
               <p>{{ __('Basic Settings') }}</p>
               <span class="caret"></span>
             </a>

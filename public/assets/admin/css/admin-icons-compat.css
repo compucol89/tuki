@@ -31,17 +31,6 @@ i[class*="flaticon-"]:before,
 .flaticon-home:before { content: "\f015"; }
 .flaticon-right-arrow:before { content: "\f105"; }
 .flaticon-interface-5:before { content: "\f1f8"; }
-.flaticon-users:before { content: "\f0c0"; }
-.flaticon-web-1:before { content: "\f0ac"; }
-.flaticon-file:before { content: "\f15c"; }
-.flaticon-round:before { content: "\f111"; }
-.flaticon-envelope:before { content: "\f0e0"; }
-.flaticon-settings:before { content: "\f013"; }
-.flaticon-paypal:before {
-  font-family: "Font Awesome 5 Brands" !important;
-  font-weight: 400;
-  content: "\f1ed";
-}
 .icon-options-vertical:before { content: "\f142"; }
 .icon-screen-desktop:before { content: "\f108"; }
 .icon-present:before { content: "\f06b"; }

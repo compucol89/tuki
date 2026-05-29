@@ -233,7 +233,7 @@
               <div class="row">
                 <div class="col-5">
                   <div class="icon-big text-center">
-                    <i class="la flaticon-users"></i>
+                    <i class="fas fa-users"></i>
                   </div>
                 </div>
 

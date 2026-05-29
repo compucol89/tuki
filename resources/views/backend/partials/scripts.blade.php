@@ -61,18 +61,6 @@
 {{-- atlantis js --}}
 <script type="text/javascript" src="{{ asset('assets/admin/js/atlantis.js') }}"></script>
 
-{{-- fonts and icons script --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/webfont.min.js') }}"></script>
-
-<script>
-  "use strict";
-  WebFont.load({
-    google: {
-      "families": ["Lato:300,400,700,900"]
-    }
-  });
-</script>
-
 @if (session()->has('success'))
   <script>
     "use strict";

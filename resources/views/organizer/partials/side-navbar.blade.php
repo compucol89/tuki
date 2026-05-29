@@ -210,7 +210,7 @@
             @elseif (request()->routeIs('organizer.support_tickets.message')) active
             @elseif (request()->routeIs('organizer.support_ticket.create')) active @endif">
             <a data-toggle="collapse" href="#support_ticket">
-              <i class="la flaticon-web-1"></i>
+              <i class="fas fa-globe"></i>
               <p>{{ __('Support Tickets') }}</p>
               <span class="caret"></span>
             </a>

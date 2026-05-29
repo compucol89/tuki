@@ -69,22 +69,6 @@
   WebFont.load({
     google: {
       "families": ["Lato:300,400,700,900"]
-    },
-    custom: {
-      "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands",
-        "simple-line-icons"
-      ],
-      urls: ['{{ asset('assets/admin/css/fonts.min.css') }}']
-    },
-    timeout: 3000,
-    active: function() {
-      sessionStorage.fonts = true;
-    },
-    inactive: function() {
-      var link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '{{ asset('assets/admin/css/fonts.min.css') }}';
-      document.head.appendChild(link);
     }
   });
 </script>

@@ -1041,6 +1041,11 @@ body.home-page .work-process-inner {
 
 /* Body */
 @media (max-width: 767px) {
+  .hero-slide {
+    aspect-ratio: auto !important;
+    height: 100%;
+  }
+
   .hero-collage-section,
   .hero-collage-section--premium {
     min-height: 440px !important;

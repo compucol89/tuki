@@ -9,6 +9,7 @@ use App\Http\Requests\MailFromAdminRequest;
 use App\Models\Timezone;
 use App\Rules\ImageMimeTypeRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -886,6 +887,8 @@ class BasicController extends Controller
   // /taxCommission
   public function preference()
   {
+    App::setLocale('admin');
+
     $content = DB::table('basic_settings')->select('event_guest_checkout_status', 'how_ticket_will_be_send')->first();
     return view('backend.event.preference', compact('content'));
   }

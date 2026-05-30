@@ -6,7 +6,6 @@ use App\Exports\BookingExport;
 use App\Http\Controllers\Controller;
 use App\Jobs\ArcaInvoiceIssuingJob;
 use App\Jobs\BookingBackendInvoiceJob;
-use App\Jobs\TestJob;
 use App\Models\BasicSettings\Basic;
 use App\Models\BasicSettings\MailTemplate;
 use App\Models\Earning;
@@ -21,6 +20,7 @@ use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,6 +32,8 @@ class EventBookingController extends Controller
 {
   public function index(Request $request)
   {
+    App::setLocale('admin');
+
     $bookingId = $paymentStatus = null;
     $eventIds = [];
     if ($request->filled('booking_id')) {
@@ -372,18 +374,17 @@ class EventBookingController extends Controller
   //show
   public function show($id)
   {
-    TestJob::dispatch($id)->delay(now()->addSeconds(5));
-    return;
-    $booking = Booking::findOrFail($id);
+    App::setLocale('admin');
 
-    // get course title
-    $language = $this->getLanguage();
+    $booking = Booking::findOrFail($id);
 
     return view('backend.event.booking.details', compact('booking'));
   }
 
   public function destroy($id)
   {
+    App::setLocale('admin');
+
     $Booking = Booking::find($id);
 
     // first, delete the attachment
@@ -399,6 +400,8 @@ class EventBookingController extends Controller
 
   public function bulkDestroy(Request $request)
   {
+    App::setLocale('admin');
+
     $ids = $request->ids;
 
     foreach ($ids as $id) {
@@ -420,6 +423,7 @@ class EventBookingController extends Controller
 
   public function report(Request $request)
   {
+    App::setLocale('admin');
 
     $language = $this->getLanguage();
 
@@ -463,6 +467,8 @@ class EventBookingController extends Controller
 
   public function export()
   {
+    App::setLocale('admin');
+
     $bookings = Session::get('booking_report');
     if (empty($bookings) || count($bookings) == 0) {
       Session::flash('warning', 'There is no bookings to export');

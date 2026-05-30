@@ -274,7 +274,7 @@
                   <span class="badge badge-danger">{{ __('Rejected') }}</span>
                 @else
                   @if ($booking->paymentStatus == 'free')
-                    <span class="badge badge-primary">{{ ucfirst($booking->paymentStatus) }}</span>
+                    <span class="badge badge-primary">{{ __('Free') }}</span>
                   @else
                     -
                   @endif
@@ -283,7 +283,7 @@
             </div>
             <div class="row mb-2">
               <div class="col-lg-4">
-                <strong>{{ __('Tickect Scan') }}</strong>
+                <strong>{{ __('Ticket Scan') }}</strong>
               </div>
               <div class="col-lg-8">
                 @php

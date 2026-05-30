@@ -129,7 +129,7 @@
                         <th scope="col">{{ __('Org. Received') }}</th>
                         <th scope="col">{{ __('Paid via') }}</th>
                         <th scope="col">{{ __('Payment Status') }}</th>
-                        <th scope="col">{{ __('Tickect Scan Status') }}</th>
+                        <th scope="col">{{ __('Ticket Scan Status') }}</th>
                         <th scope="col">{{ __('Actions') }}</th>
                       </tr>
                     </thead>
@@ -171,7 +171,7 @@
                               <a target="_blank"
                                 href="{{ route('admin.organizer_management.organizer_details', ['id' => $booking->organizer_id, 'language' => $defaultLang->code]) }}">{{ strlen($booking->organizer->username) > 20 ? mb_substr($booking->organizer->username, 0, 20, 'UTF-8') . '....' : $booking->organizer->username }}</a>
                             @else
-                              <span class="badge badge-success">{{ 'Admin' }}</span>
+                              <span class="badge badge-success">{{ __('Admin') }}</span>
                             @endif
                           </td>
 
@@ -238,11 +238,11 @@
                                 </form>
                               @else
                                 <span
-                                  class="badge badge-{{ $booking->paymentStatus == 'rejected' ? 'danger' : 'success' }}">{{ ucfirst($booking->paymentStatus) }}</span>
+                                  class="badge badge-{{ $booking->paymentStatus == 'rejected' ? 'danger' : 'success' }}">{{ $booking->paymentStatus == 'completed' ? __('Completed') : ($booking->paymentStatus == 'rejected' ? __('Rejected') : ucfirst($booking->paymentStatus)) }}</span>
                               @endif
                             @else
                               @if ($booking->paymentStatus == 'free')
-                                <span class="badge badge-primary">{{ ucfirst($booking->paymentStatus) }}</span>
+                                <span class="badge badge-primary">{{ __('Free') }}</span>
                               @else
                                 -
                               @endif

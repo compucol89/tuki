@@ -78,7 +78,7 @@
                             {{ $settings->base_currency_symbol_position == 'right' ? $settings->base_currency_symbol : '' }}
                           </td>
                           <td><a class="btn btn-info btn-sm"
-                              href="{{ route('admin.withdraw_payment_method.mange_input', ['id' => $item->id]) }}">{{ __('Mange Form') }}</a>
+                              href="{{ route('admin.withdraw_payment_method.mange_input', ['id' => $item->id]) }}">{{ __('Manage Form') }}</a>
                           </td>
                           <td>
                             @if ($item->status == 1)
@@ -133,4 +133,36 @@
 
   {{-- edit modal --}}
   @include('backend.withdraw.edit')
+@endsection
+
+@section('script')
+  <script>
+    $(document).ready(function() {
+      $('#basic-datatables').DataTable({
+        destroy: true,
+        ordering: false,
+        responsive: true,
+        language: {
+          decimal: '',
+          emptyTable: 'No hay información',
+          info: 'Mostrando _START_ a _END_ de _TOTAL_ entradas',
+          infoEmpty: 'Mostrando 0 a 0 de 0 entradas',
+          infoFiltered: '(Filtrado de _MAX_ entradas totales)',
+          infoPostFix: '',
+          thousands: ',',
+          lengthMenu: 'Mostrar _MENU_ entradas',
+          loadingRecords: 'Cargando...',
+          processing: 'Procesando...',
+          search: 'Buscar:',
+          zeroRecords: 'Sin resultados encontrados',
+          paginate: {
+            first: 'Primero',
+            last: 'Último',
+            next: 'Siguiente',
+            previous: 'Anterior'
+          }
+        }
+      });
+    });
+  </script>
 @endsection

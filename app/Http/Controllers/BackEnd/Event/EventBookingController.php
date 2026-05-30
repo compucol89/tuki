@@ -471,7 +471,7 @@ class EventBookingController extends Controller
 
     $bookings = Session::get('booking_report');
     if (empty($bookings) || count($bookings) == 0) {
-      Session::flash('warning', 'There is no bookings to export');
+      Session::flash('warning', __('There is no bookings to export'));
       return back();
     }
     return Excel::download(new BookingExport($bookings), 'bookings.csv');

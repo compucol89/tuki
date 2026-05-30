@@ -51,7 +51,7 @@ class BookingExport implements FromCollection, WithHeadings, WithMapping
       $bookings->country,
       $bookings->zip_code,
       $bookings->paymentMethod,
-      $bookings->paymentStatus,
+      $bookings->paymentStatus == 'completed' ? __('Completed') : ($bookings->paymentStatus == 'pending' ? __('Pending') : $bookings->paymentStatus),
       $bookings->created_at
     ];
   }
@@ -59,7 +59,23 @@ class BookingExport implements FromCollection, WithHeadings, WithMapping
   public function headings(): array
   {
     return [
-      'Booking Id', 'Event', 'Customer Name', 'Discount', 'Early Bird Discount', 'Quantity', 'Total', 'Name', 'Email', 'Phone', 'City', 'State', 'Country', 'Zip Code', 'Gateway', 'Payment Status', 'Date'
+      __('Booking ID'),
+      __('Event'),
+      __('Customer Name'),
+      __('Discount'),
+      __('Early Bird Discount'),
+      __('Quantity'),
+      __('Total'),
+      __('Name'),
+      __('Email'),
+      __('Phone'),
+      __('City'),
+      __('State'),
+      __('Country'),
+      __('Zip Code'),
+      __('Gateway'),
+      __('Payment Status'),
+      __('Date'),
     ];
   }
 }

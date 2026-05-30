@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\WithdrawPaymentMethodRequest;
 use App\Models\WithdrawPaymentMethod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
 class WithdrawPaymentMethodController extends Controller
 {
   public function index(Request $request)
   {
+    App::setLocale('admin');
+
     $information = [];
     $collection =  WithdrawPaymentMethod::get();
     $information['collection'] = $collection;
@@ -20,6 +23,8 @@ class WithdrawPaymentMethodController extends Controller
   //store
   public function store(WithdrawPaymentMethodRequest $request)
   {
+    App::setLocale('admin');
+
     WithdrawPaymentMethod::create($request->all());
     Session::flash('success', __('admin.flash.added_successfully'));
 
@@ -28,6 +33,8 @@ class WithdrawPaymentMethodController extends Controller
 
   public function update(Request $request)
   {
+    App::setLocale('admin');
+
     $request->validate([
       'min_limit' => 'required',
       'max_limit' => 'required',
@@ -41,6 +48,8 @@ class WithdrawPaymentMethodController extends Controller
   }
   public function destroy($id)
   {
+    App::setLocale('admin');
+
     $method = WithdrawPaymentMethod::where('id', $id)->first();
 
     //withdraws

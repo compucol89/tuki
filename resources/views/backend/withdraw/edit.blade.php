@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">{{ __('Edit Withdraw Payment Method') }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -39,7 +39,7 @@
           <div class="form-group">
             <label for="">{{ __('Percentage Charge') . '*' }} </label>
             <input type="number" id="in_percentage_charge" class="form-control" name="percentage_charge"
-              placeholder="{{ __('Enter Fixed Charge') }}">
+              placeholder="{{ __('Enter Percentage Charge') }}">
             <p id="editErr_percentage_charge" class="mt-1 mb-0 text-danger em"></p>
           </div>
 

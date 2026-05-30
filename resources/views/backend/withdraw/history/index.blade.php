@@ -36,7 +36,7 @@
                             <form class="float-right" action="{{ route('admin.withdraw.withdraw_request') }}"
                                 method="GET">
                                 <input name="search" type="text" class="form-control min-230"
-                                    placeholder="Search  withdraw id, method name" value="{{ request()->input('search') }}">
+                                    placeholder="{{ __('Search withdraw id, method name') }}" value="{{ request()->input('search') }}">
                             </form>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                                                         @elseif($item->status == 1)
                                                             <span class="badge badge-success">{{ __('Approved') }}</span>
                                                         @elseif($item->status == 2)
-                                                            <span class="badge badge-warning">{{ __('Decline') }}</span>
+                                                            <span class="badge badge-warning">{{ __('Declined') }}</span>
                                                         @endif
                                                     </td>
                                                     <td>
@@ -174,15 +174,16 @@
             const form = button.closest('form');
 
             swal({
-                title: 'Are you sure?',
+                title: {!! json_encode(__('Are you sure?')) !!},
                 type: 'warning',
                 buttons: {
                     confirm: {
-                        text: 'Yes',
+                        text: {!! json_encode(__('Yes')) !!},
                         className: 'btn btn-success'
                     },
                     cancel: {
                         visible: true,
+                        text: {!! json_encode(__('Cancel')) !!},
                         className: 'btn btn-danger'
                     }
                 }

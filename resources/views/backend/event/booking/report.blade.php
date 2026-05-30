@@ -35,14 +35,14 @@
               <form action="{{ url()->full() }}" class="form-inline">
                 <div class="form-group">
                   <label for="">{{ __('From') }}</label>
-                  <input class="form-control datepicker" type="text" name="from_date" placeholder="From"
+                  <input class="form-control datepicker" type="text" name="from_date" placeholder="{{ __('From') }}"
                     value="{{ request()->input('from_date') ? request()->input('from_date') : '' }}" required
                     autocomplete="off">
                 </div>
 
                 <div class="form-group">
                   <label for="">{{ __('To') }}</label>
-                  <input class="form-control datepicker ml-1" type="text" name="to_date" placeholder="To"
+                  <input class="form-control datepicker ml-1" type="text" name="to_date" placeholder="{{ __('To') }}"
                     value="{{ request()->input('to_date') ? request()->input('to_date') : '' }}" required
                     autocomplete="off">
                 </div>
@@ -73,9 +73,9 @@
                   <label for="">{{ __('Payment Status') }}</label>
                   <select name="payment_status" class="form-control ml-1">
                     <option value="" selected>{{ __('All') }}</option>
-                    <option value="Pending" {{ request()->input('payment_status') == 'Pending' ? 'selected' : '' }}>
+                    <option value="pending" {{ request()->input('payment_status') == 'pending' ? 'selected' : '' }}>
                       {{ __('Pending') }}</option>
-                    <option value="Completed" {{ request()->input('payment_status') == 'Completed' ? 'selected' : '' }}>
+                    <option value="completed" {{ request()->input('payment_status') == 'completed' ? 'selected' : '' }}>
                       {{ __('Completed') }}</option>
                   </select>
                 </div>
@@ -89,7 +89,7 @@
               <form action="{{ route('admin.event_bookings.export') }}" class="form-inline justify-content-lg-end justify-content-start">
                 <div class="form-group">
                   <button type="submit" class="btn btn-success btn-sm ml-1"
-                    title="CSV Format">{{ __('Export') }}</button>
+                    title="{{ __('CSV Format') }}">{{ __('Export') }}</button>
                 </div>
               </form>
             </div>
@@ -180,7 +180,7 @@
                             <div class="modal-content">
                               <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">{{ __('Receipt Image') }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
                               </div>
@@ -200,12 +200,14 @@
                     </tbody>
                   </table>
                 </div>
+              @else
+                <h3 class="text-center mt-2">{{ __('NO EVENT BOOKING FOUND') . '!' }}</h3>
               @endif
             </div>
           </div>
         </div>
 
-        @if (!empty($bookings))
+        @if (!empty($bookings) && count($bookings) > 0)
           <div class="card-footer">
             <div class="row">
               <div class="d-inline-block mx-auto">

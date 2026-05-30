@@ -10,6 +10,7 @@ use App\Models\Transaction;
 use App\Models\Withdraw;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -24,6 +25,8 @@ class WithdrawController extends Controller
   //index
   public function index()
   {
+    App::setLocale('admin');
+
     $search = request()->input('search');
 
     $collection = Withdraw::with('method')
@@ -37,10 +40,12 @@ class WithdrawController extends Controller
   //delete
   public function delete(Request $request)
   {
+    App::setLocale('admin');
+
     $withdraw = $this->getWithdrawOrFail($request->id);
 
     if ((int) $withdraw->status !== 0) {
-      return redirect()->back()->with('warning', 'Only pending withdraw requests can be deleted.');
+      return redirect()->back()->with('warning', __('Only pending withdraw requests can be deleted.'));
     }
 
     DB::transaction(function () use ($withdraw) {
@@ -65,10 +70,12 @@ class WithdrawController extends Controller
   //approve
   public function approve($id)
   {
+    App::setLocale('admin');
+
     $withdraw = $this->getWithdrawOrFail($id);
 
     if ((int) $withdraw->status !== 0) {
-      return redirect()->back()->with('warning', 'This withdraw request has already been processed.');
+      return redirect()->back()->with('warning', __('This withdraw request has already been processed.'));
     }
 
     //mail sending
@@ -148,14 +155,14 @@ class WithdrawController extends Controller
       $mail->send();
       Session::flash('success', __('admin.flash.withdraw_request_approved'));
     } catch (Exception $e) {
-      Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+      Session::flash('warning', __('Mail could not be sent.') . ' ' . $mail->ErrorInfo);
     }
     try {
       DB::transaction(function () use ($withdraw) {
         $lockedWithdraw = Withdraw::where('id', $withdraw->id)->lockForUpdate()->firstOrFail();
 
         if ((int) $lockedWithdraw->status !== 0) {
-          throw new \RuntimeException('This withdraw request has already been processed.');
+          throw new \RuntimeException(__('This withdraw request has already been processed.'));
         }
 
         $lockedWithdraw->status = 1;
@@ -179,10 +186,12 @@ class WithdrawController extends Controller
   //decline
   public function decline($id)
   {
+    App::setLocale('admin');
+
     $withdraw = $this->getWithdrawOrFail($id);
 
     if ((int) $withdraw->status !== 0) {
-      return redirect()->back()->with('warning', 'This withdraw request has already been processed.');
+      return redirect()->back()->with('warning', __('This withdraw request has already been processed.'));
     }
 
     //mail sending
@@ -251,16 +260,16 @@ class WithdrawController extends Controller
       $mail->Body = $mailData['body'];
 
       $mail->send();
-      Session::flash('success', 'Withdraw request decline & balance return to vendor account successfully!');
+      Session::flash('success', __('Withdraw request declined and balance returned to the organizer account successfully!'));
     } catch (Exception $e) {
-      Session::flash('warning', 'Mail could not be sent.');
+      Session::flash('warning', __('Mail could not be sent.'));
     }
     try {
       DB::transaction(function () use ($withdraw) {
         $lockedWithdraw = Withdraw::where('id', $withdraw->id)->lockForUpdate()->firstOrFail();
 
         if ((int) $lockedWithdraw->status !== 0) {
-          throw new \RuntimeException('This withdraw request has already been processed.');
+          throw new \RuntimeException(__('This withdraw request has already been processed.'));
         }
 
         $organizer = Organizer::where('id', $lockedWithdraw->organizer_id)->lockForUpdate()->firstOrFail();

@@ -11,9 +11,13 @@
     <script src="{{ asset('assets/front/js/vanilla-lazyload.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/jquery-syotimer.min.js') }}" defer></script>
     <!-- App scripts (defer) -->
-    <script defer>
+    <script>
       // Shim para selectmenu: evita TypeError en páginas sin jQuery UI
-      (function($) { $.fn.selectmenu = $.fn.selectmenu || function() { return this; }; })(jQuery);
+      document.addEventListener('DOMContentLoaded', function() {
+        if (typeof jQuery !== 'undefined') {
+          (function($) { $.fn.selectmenu = $.fn.selectmenu || function() { return this; }; })(jQuery);
+        }
+      });
     </script>
     <script src="{{ asset('assets/front/js/script.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/toastr.js') }}" defer></script>

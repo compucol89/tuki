@@ -429,7 +429,8 @@
     .event-index-table-wrap {
       border: 1px solid #e5e7eb;
       border-radius: 18px;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: visible;
       background: #fff;
     }
 

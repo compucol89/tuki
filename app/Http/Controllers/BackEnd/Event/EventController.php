@@ -12,6 +12,7 @@ use App\Http\Requests\TicketSettingRequest;
 use App\Models\City;
 use App\Models\Country;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use App\Models\Language;
 use App\Models\Event;
 use App\Models\Event\EventImage;
@@ -85,6 +86,8 @@ class EventController extends Controller
   //choose_event_type
   public function choose_event_type()
   {
+    App::setLocale('admin');
+
     return view('backend.event.event_type');
   }
   //online_event

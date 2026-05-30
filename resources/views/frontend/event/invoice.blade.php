@@ -54,7 +54,13 @@
   <style>
     @page { 
       size: A4; 
-      margin: 55mm 20mm 30mm 20mm;
+      margin: 25mm 20mm;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,15 +75,30 @@
       print-color-adjust: exact;
     }
 
-    .ticket-container {
+    .ticket-page {
+      display: table;
       width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      padding-top: 0;
+      height: 247mm;
+      page-break-after: always;
+    }
+
+    .ticket-page--last {
+      page-break-after: auto;
+    }
+
+    .ticket-container {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center;
+      width: 100%;
     }
 
     /* Ticket con forma de ticket real */
     .ticket {
+      display: inline-block;
+      text-align: left;
+      max-width: 400px;
+      width: 100%;
       background: #ffffff;
       border: 2px solid #F97316;
       border-radius: 20px;
@@ -410,6 +431,7 @@
       $isFree  = $bookingInfo->paymentStatus == 'free';
     @endphp
 
+    <div class="ticket-page{{ $loop->last ? ' ticket-page--last' : '' }}">
     <div class="ticket-container">
       <div class="ticket">
         
@@ -569,10 +591,7 @@
 
       </div>
     </div>
-
-    @if (!$loop->last)
-      <div class="page-break"></div>
-    @endif
+    </div>
   @endforeach
 
 @else
@@ -583,6 +602,7 @@
       $isFree   = $bookingInfo->paymentStatus == 'free';
     @endphp
 
+    <div class="ticket-page{{ $i >= $bookingInfo->quantity ? ' ticket-page--last' : '' }}">
     <div class="ticket-container">
       <div class="ticket">
         
@@ -736,10 +756,7 @@
 
       </div>
     </div>
-
-    @if ($i < $bookingInfo->quantity)
-      <div class="page-break"></div>
-    @endif
+    </div>
   @endfor
 @endif
 

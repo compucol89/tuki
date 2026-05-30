@@ -131,8 +131,8 @@
 
     /* Header */
     .ticket-header {
-      background: #F97316;
-      color: #ffffff;
+      background: #ffffff;
+      color: #1a1a1a;
       padding: 20px 15px 15px;
       text-align: center;
     }
@@ -143,10 +143,10 @@
 
     .logo-container img {
       height: 32px;
-      filter: brightness(0) invert(1);
     }
 
-    .event-title {
+    .event-title,
+    .event-date {
       font-size: 18px;
       font-weight: bold;
       line-height: 1.2;
@@ -154,21 +154,15 @@
       color: #1a1a1a;
     }
 
-    .event-date {
-      font-size: 11px;
-      font-weight: 600;
-      opacity: 0.95;
-    }
-
     .event-location {
       font-size: 10px;
-      opacity: 0.85;
+      color: #1a1a1a;
       margin-top: 4px;
     }
 
     /* QR Section */
     .qr-section {
-      background: #F97316;
+      background: #ffffff;
       padding: 15px;
       text-align: center;
     }
@@ -441,10 +435,10 @@
             @if($tukiLogoExists)
               <img src="{{ $tukiLogoPath }}" alt="TukiPass">
             @else
-              <span style="font-size:20px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
+              <span style="font-size:20px;font-weight:bold;color:#1a1a1a;">TUKIPASS</span>
             @endif
           </div>
-          <div class="event-title" style="color:#1a1a1a; background:rgba(255,255,255,0.9); padding:4px 8px; border-radius:4px;">{{ $eventInfo->title ?? '' }}</div>
+          <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
           <div class="event-date">{{ ucfirst($eventDate) }} · {{ $eventTime }} hs</div>
           @if($location)
             <div class="event-location">{{ $location }}</div>
@@ -614,10 +608,10 @@
             @if($tukiLogoExists)
               <img src="{{ $tukiLogoPath }}" alt="TukiPass">
             @else
-              <span style="font-size:20px;font-weight:bold;color:#ffffff;">TUKIPASS</span>
+              <span style="font-size:20px;font-weight:bold;color:#1a1a1a;">TUKIPASS</span>
             @endif
           </div>
-          <div class="event-title" style="color:#1a1a1a; background:rgba(255,255,255,0.9); padding:4px 8px; border-radius:4px;">{{ $eventInfo->title ?? '' }}</div>
+          <div class="event-title">{{ $eventInfo->title ?? '' }}</div>
           <div class="event-date">{{ ucfirst($eventDate) }} · {{ $eventTime }} hs</div>
           @if($location)
             <div class="event-location">{{ $location }}</div>

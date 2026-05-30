@@ -6,15 +6,21 @@
 @php
   $ev_badge = isset($badgeMap) && is_array($badgeMap) ? ($badgeMap[$event->id] ?? null) : \App\Services\EventBadgeService::getBadge($event);
 
-  // ── Fecha ──
+  // ── Fecha (parsear en TZ del sitio; evita -1 día por strtotime→UTC) ──
+  $ev_tz = $websiteInfo->timezone ?? config('app.timezone', 'UTC');
   if ($event->date_type == 'multiple') {
     $ev_date_obj = $latestDatesMap[$event->id] ?? null;
-    $ev_ts = $ev_date_obj ? strtotime($ev_date_obj->start_date) : null;
+    $ev_date_source = $ev_date_obj
+      ? ($ev_date_obj->start_date ?? substr((string) ($ev_date_obj->start_date_time ?? ''), 0, 10))
+      : $event->start_date;
   } else {
-    $ev_ts = strtotime($event->start_date);
+    $ev_date_source = $event->start_date;
   }
-  $ev_carbon = \Carbon\Carbon::parse($ev_ts)->timezone($websiteInfo->timezone);
-  $ev_time   = \Carbon\Carbon::parse(strtotime($event->start_time))->timezone($websiteInfo->timezone);
+  $ev_carbon = \Carbon\Carbon::parse($ev_date_source, $ev_tz)->locale('es');
+  $ev_time = \Carbon\Carbon::parse(
+    trim($ev_date_source . ' ' . ($event->start_time ?? '00:00:00')),
+    $ev_tz
+  );
 
   // ── Tickets — datos pre-cargados del controller (subquery JOIN) ──
   $ev_is_free      = !$event->has_paid;

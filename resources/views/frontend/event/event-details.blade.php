@@ -240,6 +240,28 @@
       overflow: hidden;
     }
 
+    .page-event-detail .ed-sidebar-map {
+      margin: 0 0 14px;
+    }
+
+    .page-event-detail .ed-sidebar-map .ed-card__head {
+      padding: 14px 16px 10px;
+    }
+
+    .page-event-detail .ed-sidebar-map .ed-card__title {
+      font-size: 16px;
+    }
+
+    .page-event-detail .ed-sidebar-map .ed-card__body--embed {
+      padding: 0;
+    }
+
+    .page-event-detail .ed-sidebar-map .ed-card__iframe {
+      width: 100%;
+      display: block;
+      border: 0;
+    }
+
     .page-event-detail .ed-refund-band {
       display: flex;
       align-items: flex-start;
@@ -765,16 +787,15 @@
     }
 
     .ed-ev-title {
-      font-size: clamp(24px, 3.5vw, 50px);
+      font-size: clamp(22px, 2.4vw, 36px);
       font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.03em;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       color: #ffffff;
       margin: 0 0 20px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      hyphens: auto;
     }
 
     .ed-ev-meta {
@@ -881,12 +902,8 @@
 
     @media (max-width: 991.98px) {
       .ed-ev-title {
-        font-size: clamp(20px, 6.5vw, 32px);
+        font-size: clamp(19px, 4.2vw, 28px);
         margin-bottom: 14px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
       }
 
       .ed-ev-meta {
@@ -918,11 +935,8 @@
         max-width: 100%;
       }
       .ed-ev-title {
-        font-size: clamp(18px, 5.5vw, 26px);
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        font-size: clamp(17px, 4.5vw, 24px);
+        line-height: 1.25;
       }
     }
   </style>
@@ -2085,24 +2099,6 @@ ttq.page();
             </div>
           @endif
 
-          {{-- Map card --}}
-          @if ($content->event_type != 'online' && !empty($map_address))
-	            <div class="ed-card ed-section ed-section--media">
-	              <div class="ed-card__head">
-	                <div>
-	                  <span class="ed-card__eyebrow">{{ __('Ubicación') }}</span>
-	                  <h2 class="ed-card__title">{{ __('Mapa') }}</h2>
-	                </div>
-	              </div>
-	              <div class="ed-card__body ed-card__body--embed">
-                <iframe
-                  src="https://maps.google.com/maps?width=100%25&amp;height=385&amp;hl=es&amp;q={{ urlencode($map_address) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                  height="385" class="ed-card__iframe" allow="fullscreen" loading="lazy"
-                  title="{{ $content->title }} — {{ __('Mapa') }}"></iframe>
-              </div>
-            </div>
-          @endif
-
           {{-- YouTube card --}}
           @php
             $youtubeEmbedUrl = null;
@@ -2187,6 +2183,23 @@ ttq.page();
                   <strong>{{ number_format($edInterestIndicator) }}</strong>
                   {{ __('personas interesadas en este evento') }}
                 </span>
+              </div>
+            @endif
+
+            @if ($content->event_type != 'online' && !empty($map_address))
+              <div class="ed-card ed-sidebar-map">
+                <div class="ed-card__head">
+                  <div>
+                    <span class="ed-card__eyebrow">{{ __('Ubicación') }}</span>
+                    <h2 class="ed-card__title">{{ __('Mapa') }}</h2>
+                  </div>
+                </div>
+                <div class="ed-card__body ed-card__body--embed">
+                  <iframe
+                    src="https://maps.google.com/maps?width=100%25&amp;height=280&amp;hl=es&amp;q={{ urlencode($map_address) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                    height="280" class="ed-card__iframe" allow="fullscreen" loading="lazy"
+                    title="{{ $content->title }} — {{ __('Mapa') }}"></iframe>
+                </div>
               </div>
             @endif
 

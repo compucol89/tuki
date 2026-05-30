@@ -83,11 +83,11 @@
                       <span class="selectgroup-button">{{ __('Instant') }}</span>
                     </label>
                   </div>
-                  <p class="text-warning">Tickets won't be sent in the background unless a cronjob is configured.</p>
-                  <p class="text-warning"><strong>Your Cron Job Command :</strong> <br>
+                  <p class="text-warning">{{ __('Tickets won\'t be sent in the background unless a cronjob is configured.') }}</p>
+                  <p class="text-warning"><strong>{{ __('Your Cron Job Command :') }}</strong> <br>
                     <code>curl -sS {{ url('/') }}/send-ticket</code>
                   </p>
-                  <strong class="text-warning">Set the cron job following this video: </strong> <a
+                  <strong class="text-warning">{{ __('Set the cron job following this video:') }} </strong> <a
                     href="https://youtu.be/RuFJ8Ej4Vkg" target="_blank">https://youtu.be/RuFJ8Ej4Vkg</a>
                 </div>
               </div>

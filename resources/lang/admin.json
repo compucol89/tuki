@@ -209,6 +209,7 @@
   "Send Notification": "Enviar notificación",
   "SEO Informations": "Información SEO",
   "Serial Number": "Número de serie",
+  "Set the cron job following this video:": "Configurá el cron job siguiendo este video:",
   "Settings": "Configuración",
   "Shipping Charges": "Cargos de envío",
   "Shop": "Tienda",
@@ -230,6 +231,7 @@
   "Ticket Scan Status": "Estado de escaneo",
   "Ticket Settings": "Configuración de entradas",
   "Tickets Info": "Info de entradas",
+  "Tickets won't be sent in the background unless a cronjob is configured.": "Las entradas no se envían en segundo plano si no configurás un cron job.",
   "Tipo": "Tipo",
   "Title": "Título",
   "To": "Hasta",
@@ -253,5 +255,6 @@
   "Withdraw Method": "Método de retiro",
   "Withdraw Requests": "Solicitudes de retiro",
   "Yes": "Sí",
+  "Your Cron Job Command :": "Comando de cron job:",
   "Zip Code": "Código postal"
 }

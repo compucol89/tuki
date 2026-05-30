@@ -1,3 +1,9 @@
+@php
+  if (! isset($previousLocale)) {
+    $previousLocale = app()->getLocale();
+    app()->setLocale('admin');
+  }
+@endphp
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,7 +16,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- title --}}
-    <title>{{ 'Admin' . ' | ' . $websiteInfo->website_title }}</title>
+    <title>{{ __('Admin') . ' | ' . $websiteInfo->website_title }}</title>
 
     {{-- fav icon --}}
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/admin/img/' . $websiteInfo->favicon) }}">
@@ -53,5 +59,11 @@
 
     {{-- include scripts --}}
     @includeIf('backend.partials.scripts')
+
+    @isset($previousLocale)
+      @php
+        app()->setLocale($previousLocale);
+      @endphp
+    @endisset
   </body>
 </html>

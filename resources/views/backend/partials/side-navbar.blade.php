@@ -1,6 +1,8 @@
 @php
-  $previousLocale = app()->getLocale();
-  app()->setLocale('admin');
+  if (! isset($previousLocale)) {
+    $previousLocale = app()->getLocale();
+    app()->setLocale('admin');
+  }
 @endphp
 
 <div class="sidebar sidebar-style-2"
@@ -1233,7 +1235,3 @@
     </div>
   </div>
 </div>
-
-@php
-  app()->setLocale($previousLocale);
-@endphp

@@ -434,6 +434,8 @@ class AdminController extends Controller
   //transcation 
   public function transcation(Request $request)
   {
+    App::setLocale('admin');
+
     $transcation_id = null;
     if ($request->filled('transcation_id')) {
       $transcation_id = $request->transcation_id;
@@ -448,6 +450,8 @@ class AdminController extends Controller
   //destroy
   public function destroy(Request $request)
   {
+    App::setLocale('admin');
+
     $transcation = Transaction::where('id', $request->id)->first();
     $transcation->delete();
     Session::flash('success', __('admin.flash.deleted_successfully'));
@@ -458,6 +462,8 @@ class AdminController extends Controller
   //destroy
   public function bulk_destroy(Request $request)
   {
+    App::setLocale('admin');
+
     $ids = $request->ids;
     foreach ($ids as $id) {
       $transcation = Transaction::where('id', $id)->first();

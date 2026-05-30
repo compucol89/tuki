@@ -16,6 +16,7 @@ use App\Models\Transaction;
 use Exception;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -36,12 +37,16 @@ class OrganizerManagementController extends Controller
 
   public function settings()
   {
+    App::setLocale('admin');
+
     $setting = DB::table('basic_settings')->where('uniqid', 12345)->select('organizer_email_verification', 'organizer_admin_approval', 'admin_approval_notice')->first();
     return view('backend.end-user.organizer.settings', compact('setting'));
   }
   //update_setting
   public function update_setting(Request $request)
   {
+    App::setLocale('admin');
+
     if ($request->organizer_email_verification) {
       $organizer_email_verification = 1;
     } else {
@@ -62,12 +67,14 @@ class OrganizerManagementController extends Controller
       ]
     );
 
-    Session::flash('success', __('organizer.flash.updated_successfully'));
+    Session::flash('success', __('admin.flash.updated_successfully'));
     return back();
   }
 
   public function index(Request $request)
   {
+    App::setLocale('admin');
+
     $searchKey = null;
 
     if ($request->filled('info')) {
@@ -87,11 +94,15 @@ class OrganizerManagementController extends Controller
   //add
   public function add()
   {
+    App::setLocale('admin');
+
     $languages = Language::get();
     return view('backend.end-user.organizer.create', compact('languages'));
   }
   public function create(Request $request)
   {
+    App::setLocale('admin');
+
     $rules = [
       'email' => [
         'required',

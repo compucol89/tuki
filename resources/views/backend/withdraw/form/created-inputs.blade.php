@@ -6,7 +6,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }} @if ($input->required == 1)
+                <label for="">{{ __($input->label) }} @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
                         ({{ __('Optional') }})
@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-md-10">
                         <input class="form-control" type="text" name="" value=""
-                            placeholder="{{ $input->placeholder }}">
+                            placeholder="{{ __($input->placeholder) }}">
                     </div>
                     <div class="col-md-1">
                         <a class="btn btn-warning btn-sm"
@@ -37,7 +37,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }} @if ($input->required == 1)
+                <label for="">{{ __($input->label) }} @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
                         ({{ __('Optional') }})
@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="col-md-10">
                         <input class="form-control" type="number" name="" value=""
-                            placeholder="{{ $input->placeholder }}">
+                            placeholder="{{ __($input->placeholder) }}">
                     </div>
                     <div class="col-md-1">
                         <a class="btn btn-warning btn-sm"
@@ -68,7 +68,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }} @if ($input->required == 1)
+                <label for="">{{ __($input->label) }} @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
                         ({{ __('Optional') }})
@@ -82,9 +82,9 @@
                                     ->where('withdraw_method_input_id', $input->id)
                                     ->get();
                             @endphp
-                            <option value="" selected disabled>{{ $input->placeholder }}</option>
+                            <option value="" selected disabled>{{ __($input->placeholder) }}</option>
                             @foreach ($input_options as $key => $option)
-                                <option value="">{{ $option->name }}</option>
+                                <option value="">{{ __($option->name) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -109,7 +109,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }} @if ($input->required == 1)
+                <label for="">{{ __($input->label) }} @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
                         ({{ __('Optional') }})
@@ -127,7 +127,7 @@
                                 <input type="checkbox" id="customRadio{{ $option->id }}" name="customRadio"
                                     class="custom-control-input">
                                 <label class="custom-control-label"
-                                    for="customRadio{{ $option->id }}">{{ $option->name }}</label>
+                                    for="customRadio{{ $option->id }}">{{ __($option->name) }}</label>
                             </div>
                         @endforeach
                     </div>
@@ -151,7 +151,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }} @if ($input->required == 1)
+                <label for="">{{ __($input->label) }} @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
                         ({{ __('Optional') }})
@@ -160,7 +160,7 @@
                 <div class="row">
                     <div class="col-md-10">
                         <textarea class="form-control" name="" rows="5" cols="80"
-                            placeholder="{{ $input->placeholder }}"></textarea>
+                            placeholder="{{ __($input->placeholder) }}"></textarea>
                     </div>
                     <div class="col-md-1">
                         <a class="btn btn-warning btn-sm"
@@ -183,7 +183,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }}
+                <label for="">{{ __($input->label) }}
                     @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
@@ -193,7 +193,7 @@
                 <div class="row">
                     <div class="col-md-10">
                         <input type="text" class="form-control datepicker" autocomplete="off"
-                            placeholder="{{ $input->placeholder }}">
+                            placeholder="{{ __($input->placeholder) }}">
                     </div>
                     <div class="col-md-1">
                         <a class="btn btn-warning btn-sm"
@@ -216,7 +216,7 @@
             {{ csrf_field() }}
             <input type="hidden" name="input_id" value="{{ $input->id }}">
             <div class="form-group">
-                <label for="">{{ $input->label }} @if ($input->required == 1)
+                <label for="">{{ __($input->label) }} @if ($input->required == 1)
                         <span>*</span>
                     @elseif($input->required == 0)
                         ({{ __('Optional') }})
@@ -225,7 +225,7 @@
                 <div class="row">
                     <div class="col-md-10">
                         <input type="text" class="form-control timepicker" autocomplete="off"
-                            placeholder="{{ $input->placeholder }}">
+                            placeholder="{{ __($input->placeholder) }}">
                     </div>
                     <div class="col-md-1">
                         <a class="btn btn-warning btn-sm"

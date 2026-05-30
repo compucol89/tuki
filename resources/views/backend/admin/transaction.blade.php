@@ -30,7 +30,7 @@
             <div class="col-lg-4">
               <form action="" method="get">
                 <input type="text" value="{{ request()->input('transcation_id') }}" name="transcation_id"
-                  placeholder="Enter Transaction Id" class="form-control">
+                  placeholder="{{ __('Enter Transaction Id') }}" class="form-control">
               </form>
             </div>
           </div>
@@ -69,20 +69,20 @@
                               <a target="_blank"
                                 href="{{ route('admin.organizer_management.organizer_details', ['id' => $organizer->id, 'language' => $defaultLang->code]) }}">{{ $organizer->username }}</a>
                             @else
-                              <span class="badge badge-success">{{ 'Admin' }}</span>
+                              <span class="badge badge-success">{{ __('Admin') }}</span>
                             @endif
                           </td>
                           <td>
                             @if ($transcation->transcation_type == 1)
-                              {{ 'Event Booking' }}
+                              {{ __('Event Booking') }}
                             @elseif ($transcation->transcation_type == 2)
-                              {{ 'Product Order' }}
+                              {{ __('Product Order') }}
                             @elseif ($transcation->transcation_type == 3)
-                              {{ 'Withdraw' }}
+                              {{ __('Withdraw') }}
                             @elseif ($transcation->transcation_type == 4)
-                              {{ 'Balance Add' }}
+                              {{ __('Balance Add') }}
                             @elseif ($transcation->transcation_type == 5)
-                              {{ 'Balance Subtract' }}
+                              {{ __('Balance Subtract') }}
                             @endif
                           </td>
                           <td>
@@ -96,7 +96,7 @@
                                 {{ '-' }}
                               @endif
                             @else
-                              {{ $transcation->payment_method != null ? $transcation->payment_method : '-' }}
+                              {{ $transcation->payment_method != null ? __($transcation->payment_method) : '-' }}
                             @endif
                           </td>
                           <td>
@@ -124,7 +124,7 @@
                             @if ($transcation->payment_status == 1)
                               <span class="badge badge-success">{{ __('Paid') }}</span>
                             @elseif ($transcation->payment_status == 2)
-                              <span class="badge badge-warning">{{ __('Decline') }}</span>
+                              <span class="badge badge-warning">{{ __('Declined') }}</span>
                             @else
                               <span class="badge badge-danger">{{ __('Unpaid') }}</span>
                             @endif

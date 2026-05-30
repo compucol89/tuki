@@ -42,7 +42,7 @@
               <form class="float-right" action="{{ route('admin.organizer_management.registered_organizer') }}"
                 method="GET">
                 <input name="info" type="text" class="form-control min-230"
-                  placeholder="Search By Username or Email ID"
+                  placeholder="{{ __('Search By Username or Email ID') }}"
                   value="{{ !empty(request()->input('info')) ? request()->input('info') : '' }}">
               </form>
             </div>

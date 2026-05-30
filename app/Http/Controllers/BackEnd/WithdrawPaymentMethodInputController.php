@@ -8,6 +8,7 @@ use App\Models\WithdrawMethodInput;
 use App\Models\WithdrawMethodOption;
 use App\Models\WithdrawPaymentMethod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +16,8 @@ class WithdrawPaymentMethodInputController extends Controller
 {
   public function index(Request $request)
   {
+    App::setLocale('admin');
+
     $id = $request->id;
     $data['payment_method'] = WithdrawPaymentMethod::where('id', $id)->select('name')->firstOrFail();
     $data['inputs'] = WithdrawMethodInput::where('withdraw_payment_method_id', $id)->orderBy('order_number', 'ASC')->get();
@@ -23,13 +26,15 @@ class WithdrawPaymentMethodInputController extends Controller
   //store
   public function store(Request $request)
   {
+    App::setLocale('admin');
+
     $inname = make_input_name($request->label);
     $inputs = WithdrawMethodInput::where('withdraw_payment_method_id', $request->withdraw_payment_method_id)->get();
     $maxOrder = WithdrawMethodInput::where('withdraw_payment_method_id', $request->withdraw_payment_method_id)->max('order_number');
 
     $messages = [
-      'options.*.required_if' => 'Options are required if field type is select dropdown/checkbox',
-      'placeholder.required_unless' => 'The placeholder field is required unless field type is Checkbox'
+      'options.*.required_if' => __('Options are required if field type is select dropdown or checkbox'),
+      'placeholder.required_unless' => __('The placeholder field is required unless field type is checkbox'),
     ];
 
     $rules = [
@@ -38,7 +43,7 @@ class WithdrawPaymentMethodInputController extends Controller
         function ($attribute, $value, $fail) use ($inname, $inputs) {
           foreach ($inputs as $key => $input) {
             if ($input->name == $inname) {
-              $fail("Input field already exists.");
+              $fail(__('Input field already exists.'));
             }
           }
         },
@@ -82,6 +87,8 @@ class WithdrawPaymentMethodInputController extends Controller
   //edit
   public function edit($id)
   {
+    App::setLocale('admin');
+
     $data = [];
     $input = WithdrawMethodInput::find($id);
     $data['input'] = $input;
@@ -95,14 +102,16 @@ class WithdrawPaymentMethodInputController extends Controller
   //update
   public function update(Request $request)
   {
+    App::setLocale('admin');
+
     $inname = make_input_name($request->label);
     $input = WithdrawMethodInput::find($request->input_id);
     $inputs = WithdrawMethodInput::where('withdraw_payment_method_id', $request->withdraw_payment_method_id)->get();
 
     $messages = [
-      'options.required_if' => 'Options are required',
-      'placeholder.required_unless' => 'Placeholder is required',
-      'label.required_unless' => 'Label is required',
+      'options.required_if' => __('Options are required'),
+      'placeholder.required_unless' => __('Placeholder is required'),
+      'label.required_unless' => __('Label is required'),
     ];
 
     $rules = [
@@ -111,7 +120,7 @@ class WithdrawPaymentMethodInputController extends Controller
         function ($attribute, $value, $fail) use ($inname, $inputs, $input) {
           foreach ($inputs as $key => $in) {
             if ($in->name == $inname && $inname != $input->name) {
-              $fail("Input field already exists.");
+              $fail(__('Input field already exists.'));
             }
           }
         },
@@ -123,7 +132,7 @@ class WithdrawPaymentMethodInputController extends Controller
           if ($request->type == 2 || $request->type == 3) {
             foreach ($request->options as $option) {
               if (empty($option)) {
-                $fail('All option fields are required.');
+                $fail(__('All option fields are required.'));
               }
             }
           }
@@ -173,6 +182,8 @@ class WithdrawPaymentMethodInputController extends Controller
   //order_update
   public function order_update(Request $request)
   {
+    App::setLocale('admin');
+
     $ids = $request->ids;
     $orders = $request->orders;
 
@@ -193,6 +204,8 @@ class WithdrawPaymentMethodInputController extends Controller
   //delete
   public function delete(Request $request)
   {
+    App::setLocale('admin');
+
     $input = WithdrawMethodInput::find($request->input_id);
     $options = WithdrawMethodOption::where('withdraw_method_input_id', $request->input_id)->get();
     foreach ($options as $option) {

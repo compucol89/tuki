@@ -151,7 +151,7 @@
                                                                         <label>{{ __('Name') . '*' }}</label>
                                                                         <input type="text" class="form-control"
                                                                             name="{{ $language->code }}_name"
-                                                                            placeholder="Enter Your Full Name"
+                                                                            placeholder="{{ __('Enter Your Full Name') }}"
                                                                             value="">
                                                                         @if ($errors->has("$language->code" . '_name'))
                                                                             <p class="mt-2 mb-0 text-danger">

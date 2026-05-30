@@ -67,7 +67,7 @@
                             <label for=""><strong>{{ __('Label Name') }}</strong></label>
                             <div class="">
                                 <input type="text" class="form-control" name="label" value="{{ $input->label }}"
-                                    placeholder="Enter Label Name">
+                                    placeholder="{{ __('Enter Label Name') }}">
                             </div>
                             <p id="err_label" class="mb-0 text-danger em"></p>
                         </div>
@@ -78,7 +78,7 @@
                                 <label for=""><strong>{{ __('Placeholder') }}</strong></label>
                                 <div class="">
                                     <input type="text" class="form-control" name="placeholder"
-                                        value="{{ $input->placeholder }}" placeholder="Enter Placeholder">
+                                        value="{{ $input->placeholder }}" placeholder="{{ __('Enter Placeholder') }}">
                                 </div>
                                 <p id="err_placeholder" class="mb-0 text-danger em"></p>
                             </div>
@@ -90,7 +90,7 @@
                                 <div class="row mb-2 counterrow" v-for="n in counter" :id="'counterrow' + n">
                                     <div class="col-md-11">
                                         <input class="form-control optionin" type="text" name="options[]"
-                                            :value="names[n - 1]" placeholder="Option label">
+                                            :value="names[n - 1]" placeholder="{{ __('Option label') }}">
                                     </div>
 
                                     <div class="col-md-1">

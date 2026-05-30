@@ -76,10 +76,10 @@
     }
 
     .ticket-page {
-      display: table;
       width: 100%;
       height: 247mm;
       page-break-after: always;
+      border-collapse: collapse;
     }
 
     .ticket-page--last {
@@ -87,18 +87,17 @@
     }
 
     .ticket-container {
-      display: table-cell;
       vertical-align: middle;
       text-align: center;
-      width: 100%;
+      height: 247mm;
     }
 
     /* Ticket con forma de ticket real */
     .ticket {
-      display: inline-block;
       text-align: left;
       max-width: 400px;
       width: 100%;
+      margin: 0 auto;
       background: #ffffff;
       border: 2px solid #F97316;
       border-radius: 20px;
@@ -431,9 +430,10 @@
       $isFree  = $bookingInfo->paymentStatus == 'free';
     @endphp
 
-    <div class="ticket-page{{ $loop->last ? ' ticket-page--last' : '' }}">
-    <div class="ticket-container">
-      <div class="ticket">
+    <table class="ticket-page{{ $loop->last ? ' ticket-page--last' : '' }}" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td class="ticket-container">
+          <div class="ticket">
         
         <!-- Header -->
         <div class="ticket-header">
@@ -590,8 +590,9 @@
         </div>
 
       </div>
-    </div>
-    </div>
+        </td>
+      </tr>
+    </table>
   @endforeach
 
 @else
@@ -602,9 +603,10 @@
       $isFree   = $bookingInfo->paymentStatus == 'free';
     @endphp
 
-    <div class="ticket-page{{ $i >= $bookingInfo->quantity ? ' ticket-page--last' : '' }}">
-    <div class="ticket-container">
-      <div class="ticket">
+    <table class="ticket-page{{ $i >= $bookingInfo->quantity ? ' ticket-page--last' : '' }}" cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr>
+        <td class="ticket-container">
+          <div class="ticket">
         
         <!-- Header -->
         <div class="ticket-header">
@@ -755,8 +757,9 @@
         </div>
 
       </div>
-    </div>
-    </div>
+        </td>
+      </tr>
+    </table>
   @endfor
 @endif
 

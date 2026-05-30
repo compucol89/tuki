@@ -131,7 +131,7 @@
 
     /* Header */
     .ticket-header {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+      background: #F97316;
       color: #ffffff;
       padding: 20px 15px 15px;
       text-align: center;
@@ -168,7 +168,7 @@
 
     /* QR Section */
     .qr-section {
-      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+      background: #F97316;
       padding: 15px;
       text-align: center;
     }

@@ -52,6 +52,8 @@ class EventController extends Controller
   //index
   public function index(Request $request)
   {
+    App::setLocale('admin');
+
     $information['langs'] = Language::all();
 
     $language = Language::where('code', $request->language)->firstOrFail();

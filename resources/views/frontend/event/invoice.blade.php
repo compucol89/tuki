@@ -77,7 +77,7 @@
 
     .ticket-page {
       width: 100%;
-      height: 247mm;
+      height: 100%;
       page-break-after: always;
       border-collapse: collapse;
     }
@@ -89,7 +89,7 @@
     .ticket-container {
       vertical-align: middle;
       text-align: center;
-      height: 247mm;
+      height: 100%;
     }
 
     /* Ticket con forma de ticket real */

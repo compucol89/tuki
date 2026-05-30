@@ -167,28 +167,24 @@
         @endif
 
         {{-- Información importante --}}
-        @if($event?->instructions || $event?->information?->refund_policy)
-          <div class="ps-card">
-            <div class="ps-card__head">
-              <h3 class="ps-card__title">Información importante</h3>
-            </div>
-            <div style="padding: 16px 20px;">
-              @if($event->instructions)
-                <div style="margin-bottom: 12px;">
-                  <strong style="font-size: 13px; color: #374151;">Instrucciones de acceso:</strong>
-                  <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br($event->instructions) !!}</p>
-                </div>
-              @endif
-              @if($event->information?->refund_policy)
-                <div>
-                  <strong style="font-size: 13px; color: #374151;">Política de reembolso:</strong>
-                  <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br(e($event->information->refund_policy)) !!}</p>
-                </div>
-              @endif
-            </div>
+        @php $accessInstructions = config('tukipass.access_instructions'); @endphp
+        <div class="ps-card">
+          <div class="ps-card__head">
+            <h3 class="ps-card__title">Información importante</h3>
           </div>
-        @endif
-
+          <div style="padding: 16px 20px;">
+            <div style="margin-bottom: 12px;">
+              <strong style="font-size: 13px; color: #374151;">Instrucciones de acceso:</strong>
+              <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{{ $accessInstructions }}</p>
+            </div>
+            @if($event->information?->refund_policy)
+              <div>
+                <strong style="font-size: 13px; color: #374151;">Política de reembolso:</strong>
+                <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br(e($event->information->refund_policy)) !!}</p>
+              </div>
+            @endif
+          </div>
+        </div>
         {{-- Datos de facturación --}}
         <div class="ps-card">
           <div class="ps-card__head">

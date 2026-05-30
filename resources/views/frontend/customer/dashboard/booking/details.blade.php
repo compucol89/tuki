@@ -198,12 +198,11 @@
                   </span>
                 </div>
               @endif
-              @if($eventData->instructions)
-                <div class="cd-info-row" style="align-items:flex-start">
-                  <span class="cd-info-row__label">Instrucciones <small class="text-muted" style="font-weight:400;font-size:11px">(del organizador)</small></span>
-                  <span class="cd-info-row__val" style="white-space:pre-line;text-align:left">{{ Str::limit(strip_tags($eventData->instructions), 200) }}</span>
-                </div>
-              @endif
+              @php $accessInstructions = config('tukipass.access_instructions'); @endphp
+              <div class="cd-info-row" style="align-items:flex-start">
+                <span class="cd-info-row__label">Instrucciones de acceso</span>
+                <span class="cd-info-row__val" style="white-space:pre-line;text-align:left">{{ $accessInstructions }}</span>
+              </div>
             @endif
             @if($event && $event->address)
               <div class="cd-info-row">

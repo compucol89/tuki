@@ -22,6 +22,7 @@ use App\Rules\MatchEmailRule;
 use App\Rules\MatchOldPasswordRule;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -154,6 +155,8 @@ class AdminController extends Controller
 
   public function redirectToDashboard()
   {
+    App::setLocale('admin');
+
     $language = Language::query()->where('is_default', '=', 1)->first();
 
     $information['basic'] = Basic::where('uniqid', 12345)->select('base_currency_symbol', 'base_currency_symbol_position')->first();

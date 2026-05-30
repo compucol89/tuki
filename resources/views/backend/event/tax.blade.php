@@ -47,9 +47,9 @@
             <div class="row">
               <div class="col-lg-6 offset-lg-3">
                 <div class="form-group">
-                  <label>{{ __('Tax') . '* (%)' }}</label>
+                  <label>{{ __('Service Cost') }}* (%)</label>
                   <input type="number" step="0.01" class="form-control" name="tax"
-                    value="{{ $content->tax != null ? $content->tax : '' }}" placeholder="{{ __('Enter Tax Amount') }}">
+                    value="{{ $content->tax != null ? $content->tax : '' }}" placeholder="{{ __('Enter Service Cost') }}">
                   @error('tax')
                     <p class="mt-2 mb-0 text-danger">{{ $message }}</p>
                   @enderror

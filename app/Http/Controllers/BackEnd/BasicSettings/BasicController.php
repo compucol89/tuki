@@ -920,12 +920,16 @@ class BasicController extends Controller
   // /taxCommission
   public function taxCommission()
   {
+    App::setLocale('admin');
+
     $content = DB::table('basic_settings')->select('tax', 'commission')->first();
     return view('backend.event.tax', compact('content'));
   }
 
   public function updateEventTaxCommission(Request $request)
   {
+    App::setLocale('admin');
+
     $rules = [
       'tax' => 'required|numeric|min:0|max:100',
       'commission' => 'nullable|numeric|min:0|max:15'

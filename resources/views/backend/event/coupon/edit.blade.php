@@ -30,7 +30,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Code') . '*' }}</label>
                                 <input type="text" id="in_code" class="form-control" name="code"
-                                    placeholder="Enter Coupon Code">
+                                    placeholder="{{ __('Enter Coupon Code') }}">
                                 <p id="editErr_code" class="mt-1 mb-0 text-danger em"></p>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('End Date') . '*' }}</label>
                                 <input type="text" id="in_end_date" class="form-control datepicker" name="end_date"
-                                    placeholder="{{ __('Enter End Dat') }}e">
+                                    placeholder="{{ __('Enter End Date') }}">
                                 <p id="editErr_end_date" class="mt-1 mb-0 text-danger em"></p>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Events') }}</label>
                                 <select id="in_events" class="select2" name="events[]" multiple="multiple"
-                                    placeholder="Select Events">
+                                    placeholder="{{ __('Select Events') }}">
                                     @foreach ($events as $event)
                                         @php
                                             $eventInfo = App\Models\Event\EventContent::where('event_id', $event->id)
@@ -103,7 +103,7 @@
                                                 @if ($event && $event->organizer != null)
                                                     ({{ optional($event->organizer)->username }})
                                                 @else
-                                                    ({{ 'Admin' }})
+                                                    ({{ __('Admin') }})
                                                 @endif
                                             @endif
                                         </option>

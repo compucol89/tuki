@@ -76,7 +76,7 @@
             <div class="col-lg-6">
               <div class="form-group">
                 <label for="">{{ __('Events') }}</label>
-                <select class="select2" name="events[]" multiple="multiple" placeholder="Select Events">
+                <select class="select2" name="events[]" multiple="multiple" placeholder="{{ __('Select Events') }}">
                   @foreach ($events as $event)
                     @php
                       $eventInfo = App\Models\Event\EventContent::where('language_id', $deLang->id)
@@ -95,7 +95,7 @@
                         @if ($event && $event->organizer != null)
                           ({{ optional($event->organizer)->username }})
                         @else
-                          ({{ 'Admin' }})
+                          ({{ __('Admin') }})
                         @endif
                       @endif
                     </option>

@@ -16,7 +16,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="page-title-item text-center">
-          <h3 class="title">{{ !empty($title) ? $title : '' }}</h3>
+          <h1 class="title">{{ !empty($title) ? $title : '' }}</h1>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>

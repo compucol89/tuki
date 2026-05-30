@@ -52,13 +52,13 @@
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
       <div class="banner-inner">
-        <h2 class="page-title">
+        <h1 class="page-title">
           @if (!empty($pageHeading))
             {{ $pageHeading->faq_page_title ?? __('Preguntas frecuentes') }}
           @else
             {{ __('Preguntas frecuentes') }}
           @endif
-        </h2>
+        </h1>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>

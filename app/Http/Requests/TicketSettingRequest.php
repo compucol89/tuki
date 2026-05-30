@@ -25,6 +25,7 @@ class TicketSettingRequest extends FormRequest
     public function rules()
     {
         return [
+            'instructions' => 'nullable|string|max:10000',
             'ticket_image' => $this->hasFile('ticket_image') ? new ImageMimeTypeRule() : '',
             'ticket_logo' => $this->hasFile('ticket_logo') ? new ImageMimeTypeRule() : ''
         ];

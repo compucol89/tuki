@@ -176,7 +176,7 @@
               @if($event->instructions)
                 <div style="margin-bottom: 12px;">
                   <strong style="font-size: 13px; color: #374151;">Instrucciones de acceso:</strong>
-                  <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br(e($event->instructions)) !!}</p>
+                  <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br($event->instructions) !!}</p>
                 </div>
               @endif
               @if($event->information?->refund_policy)

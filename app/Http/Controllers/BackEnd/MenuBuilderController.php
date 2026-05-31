@@ -18,7 +18,7 @@ class MenuBuilderController extends Controller
     $information['language'] = $language;
 
     // set the selected language as locale
-    App::setLocale('es');
+    App::setLocale('admin');
 
     // now, get the custom pages of that language from db
     $information['customPages'] = DB::table('pages')

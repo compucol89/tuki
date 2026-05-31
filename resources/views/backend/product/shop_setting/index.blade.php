@@ -129,3 +129,7 @@
   {{-- edit modal --}}
   @include('backend.product.shop_setting.edit')
 @endsection
+
+@section('script')
+  @include('backend.partials.datatables-es')
+@endsection

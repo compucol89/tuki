@@ -3,9 +3,15 @@
 namespace App\Http\Requests\ShopManagement;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
 
 class CategoryRequest extends FormRequest
 {
+  protected function prepareForValidation(): void
+  {
+    App::setLocale('admin');
+  }
+
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -33,7 +39,9 @@ class CategoryRequest extends FormRequest
   public function messages()
   {
     return [
-      'language_id.required' => 'The language field is required.'
+      'language_id.required' => __('The language field is required.'),
+      'name.required' => __('The name field is required.'),
+      'status.required' => __('The status field is required.'),
     ];
   }
 }

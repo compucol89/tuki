@@ -7,9 +7,15 @@ use App\Models\ShopManagement\Product;
 use App\Models\ShopManagement\ProductContent;
 use App\Rules\ImageMimeTypeRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
 
 class ProductUpdateRequest extends FormRequest
 {
+  protected function prepareForValidation(): void
+  {
+    App::setLocale('admin');
+  }
+
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -66,7 +72,7 @@ class ProductUpdateRequest extends FormRequest
           $cis = ProductContent::where('product_id', '<>', $id)->get();
           foreach ($cis as $key => $ci) {
             if (strtolower($slug) == strtolower($ci->slug)) {
-              $fail('The title field must be unique for ' . $language->name . ' language.');
+              $fail(__('The title field must be unique for :language.', ['language' => $language->name]));
             }
           }
         }
@@ -87,12 +93,10 @@ class ProductUpdateRequest extends FormRequest
     $languages = Language::all();
 
     foreach ($languages as $language) {
-      $messageArray[$language->code . '_title.required'] = 'The title field is required for ' . $language->name . ' language.';
-
-      $messageArray[$language->code . '_category_id.required'] = 'The category field is required for ' . $language->name . ' language.';
-      $messageArray[$language->code . '_summary.required'] = 'The Summery field is required for ' . $language->name . ' language.';
-
-      $messageArray[$language->code . '_description.min'] = 'The description must be at least 30 characters for ' . $language->name . ' language.';
+      $messageArray[$language->code . '_title.required'] = __('The title field is required for :language.', ['language' => $language->name]);
+      $messageArray[$language->code . '_category_id.required'] = __('The category field is required for :language.', ['language' => $language->name]);
+      $messageArray[$language->code . '_summary.required'] = __('The summary field is required for :language.', ['language' => $language->name]);
+      $messageArray[$language->code . '_description.min'] = __('The description must be at least 30 characters for :language.', ['language' => $language->name]);
     }
 
     return $messageArray;

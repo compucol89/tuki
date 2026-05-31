@@ -143,3 +143,7 @@
   {{-- edit modal --}}
   @include('backend.product.category.edit')
 @endsection
+
+@section('script')
+  @include('backend.partials.datatables-es')
+@endsection

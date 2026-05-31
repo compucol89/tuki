@@ -41,7 +41,7 @@
 
               <form class="float-right" action="" method="GET">
                 <input name="info" type="text" class="form-control min-230"
-                  placeholder="Search By Username or Email ID"
+                  placeholder="{{ __('Search By Username or Email ID') }}"
                   value="{{ !empty(request()->input('info')) ? request()->input('info') : '' }}">
               </form>
             </div>
@@ -62,7 +62,7 @@
                           <input type="checkbox" class="bulk-check" data-val="all">
                         </th>
                         <th scope="col">{{ __('Name') }}</th>
-                        <th scope="col">{{ __('Email ') }}</th>
+                        <th scope="col">{{ __('Email') }}</th>
                         <th scope="col">{{ __('Phone') }}</th>
                         <th scope="col">{{ __('Account Status') }}</th>
                         <th scope="col">{{ __('Email Status') }}</th>

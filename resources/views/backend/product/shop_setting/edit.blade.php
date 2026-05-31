@@ -23,7 +23,7 @@
 
           <div class="form-group">
             <label for="">{{ __('Text') . '*' }}</label>
-            <input type="text" id="in_text" class="form-control" name="text" placeholder="{{ __('Enter Tex') }}t">
+            <input type="text" id="in_text" class="form-control" name="text" placeholder="{{ __('Enter Short Text') }}">
             <p id="editErr_text" class="mt-1 mb-0 text-danger em"></p>
           </div>
 

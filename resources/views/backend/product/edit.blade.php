@@ -59,7 +59,7 @@
                 <ul></ul>
               </div>
               <div class="col-lg-12">
-                <label for="" class="mb-2"><strong>{{ __('Gallery Images ') . ' **' }}</strong></label>
+                <label for="" class="mb-2"><strong>{{ __('Gallery Images') . ' **' }}</strong></label>
 
                 <div class="row">
                   <div class="col-12">
@@ -124,7 +124,7 @@
                     <div class="form-group">
                       <label>{{ __('Previous Price') }}</label>
                       <input type="number" name="previous_price" value="{{ $product->previous_price }}"
-                        placeholder="Enter Previous Price" class="form-control">
+                        placeholder="{{ __('Enter Previous Price') }}" class="form-control">
                     </div>
                   </div>
 
@@ -214,7 +214,7 @@
                             data-target="#collapse{{ $language->id }}"
                             aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
                             aria-controls="collapse{{ $language->id }}">
-                            {{ $language->name . __(' Language') }}
+                            {{ $language->name . ' ' . __('Language') }}
                             {{ $language->is_default == 1 ? '(Default)' : '' }}
                           </button>
                         </h5>
@@ -236,7 +236,7 @@
                               <div class="form-group">
                                 <label>{{ __('Title') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
-                                  value="{{ @$product_content->title }}" placeholder="Enter  title">
+                                  value="{{ @$product_content->title }}" placeholder="{{ __('Enter Title') }}">
                               </div>
                             </div>
 
@@ -290,7 +290,7 @@
                                 <label for="">{{ __('Tags') }} </label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_tags"
                                   value="{{ @$product_content->tags }}" data-role="tagsinput"
-                                  placeholder="{{ __('Enter tags') }}">
+                                  placeholder="{{ __('Enter Tags') }}">
                                 <p id="errtags" class="mb-0 text-danger em"></p>
                               </div>
                             </div>

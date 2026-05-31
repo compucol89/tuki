@@ -13,7 +13,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __(' Support Tickets') }}</a>
+        <a href="#">{{ __('Support Tickets') }}</a>
       </li>
 
       <li class="separator">

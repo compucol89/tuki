@@ -69,7 +69,7 @@
                 {{ __('Delete') }}</button>
 
               <form action="" class="float-lg-right float-none" method="GET">
-                <input type="text" name="ticket_id" class="form-control min-w-250" placeholder="Search by Ticket ID"
+                <input type="text" name="ticket_id" class="form-control min-w-250" placeholder="{{ __('Search by Ticket ID') }}"
                   value="{{ !empty(request()->input('ticket_id')) ? request()->input('ticket_id') : '' }}">
               </form>
             </div>
@@ -117,7 +117,7 @@
                           </td>
                           <td>
                             <span
-                              class="badge badge-{{ $item->user_type == 'customer' ? 'info' : 'success' }}">{{ ucfirst($item->user_type) }}</span>
+                              class="badge badge-{{ $item->user_type == 'customer' ? 'info' : 'success' }}">{{ $item->user_type == 'customer' ? __('Customer') : __('Organizer') }}</span>
                           </td>
                           <td>
                             @if ($item->user_type == 'organizer')
@@ -172,7 +172,7 @@
                                   @else
                                     <a href="javascript:void(0)" data-toggle="modal"
                                       data-target="#exampleModal{{ $item->id }}" class="dropdown-item">
-                                      {{ __('Assing To') }}
+                                      {{ __('Assign To') }}
                                     </a>
                                   @endif
                                 @endif

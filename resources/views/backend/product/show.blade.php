@@ -98,7 +98,7 @@
                             {{ $product->title }}
                           </td>
                           <td>{{ $product->current_price }}</td>
-                          <td>{{ $product->type }}</td>
+                          <td>{{ $product->type == 'digital' ? __('Digital Product') : ($product->type == 'physical' ? __('Physical Product') : ucfirst($product->type)) }}</td>
                           <td>
                             {{ $product->category }}
                           </td>
@@ -175,4 +175,8 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('script')
+  @include('backend.partials.datatables-es')
 @endsection

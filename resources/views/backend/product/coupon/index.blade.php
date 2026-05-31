@@ -156,3 +156,7 @@
   {{-- edit modal --}}
   @includeIf('backend.product.coupon.edit')
 @endsection
+
+@section('script')
+  @include('backend.partials.datatables-es')
+@endsection

@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Facades\App;
 
 class SupportTicketController extends Controller
 {
   //index
   public function index(Request $request)
   {
+    App::setLocale('admin');
     $role_id = Auth::guard('admin')->user()->role_id;
 
     $status = $ticket_id = null;
@@ -147,15 +149,17 @@ class SupportTicketController extends Controller
   //ticket_closed
   public function ticket_closed($id)
   {
+    App::setLocale('admin');
     SupportTicket::where('id', $id)->update([
       'status' => 3,
     ]);
-    Session::flash('success', 'Support Ticket close successfully!');
+    Session::flash('success', __('Support Ticket closed successfully!'));
     return back();
   }
 
   public function unassign_stuff($id)
   {
+    App::setLocale('admin');
     $ticket = SupportTicket::where('id', $id)->firstOrFail();
 
     if (!empty($ticket->admin_id)) {
@@ -164,19 +168,21 @@ class SupportTicketController extends Controller
       ]);
     }
 
-    Session::flash('success', 'Unassign stuff successfully!');
+    Session::flash('success', __('Unassign staff successfully!'));
     return back();
   }
 
   //setting
   public function setting()
   {
+    App::setLocale('admin');
     $content = SupportTicketStatus::where('id', 1)->first();
     return view('backend.support_ticket.setting', compact('content'));
   }
   //update_setting
   public function update_setting(Request $request)
   {
+    App::setLocale('admin');
     $status = SupportTicketStatus::where('id', 1)->first();
     $status->support_ticket_status = $request->support_ticket_status;
     $status->save();
@@ -186,10 +192,11 @@ class SupportTicketController extends Controller
   //assign_stuff.supoort.ticket
   public function assign_stuff(Request $request, $id)
   {
+    App::setLocale('admin');
     $support_ticket = SupportTicket::where('id', $id)->first();
     $support_ticket->admin_id = $request->admin_id;
     $support_ticket->save();
-    Session::flash('success', 'Add Stuff to this support ticket successfully..!');
+    Session::flash('success', __('Staff assigned to this support ticket successfully!'));
     return back();
   }
 

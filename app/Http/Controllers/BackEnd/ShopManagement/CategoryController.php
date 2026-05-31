@@ -10,11 +10,13 @@ use App\Models\ShopManagement\ProductContent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class CategoryController extends Controller
 {
   public function index(Request $request)
   {
+    App::setLocale('admin');
     $language = Language::where('code', $request->language)->firstOrFail();
     $information['language'] = $language;
 
@@ -32,8 +34,7 @@ class CategoryController extends Controller
   //store
   public function store(CategoryRequest $request)
   {
-
-
+    App::setLocale('admin');
     $ins = $request->all();
     $ins['slug'] = createSlug($request->name);
     ProductCategory::create($ins);
@@ -59,6 +60,7 @@ class CategoryController extends Controller
 
   public function update(Request $request)
   {
+    App::setLocale('admin');
     $ins = $request->all();
     $ins['slug'] = make_slug($request->name);
 

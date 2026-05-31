@@ -14,11 +14,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Mews\Purifier\Facades\Purifier;
+use Illuminate\Support\Facades\App;
 
 class ProductController extends Controller
 {
   public function index()
   {
+    App::setLocale('admin');
     $digital_product = Product::where('type', 'digital')->get()->count();
     $physical_product = Product::where('type', 'physical')->get()->count();
 
@@ -28,11 +30,13 @@ class ProductController extends Controller
   }
   public function settings()
   {
+    App::setLocale('admin');
     $data['abex'] = Basic::first();
     return view('backend.product.settings', $data);
   }
   public function setting_update(Request $request)
   {
+    App::setLocale('admin');
     $in = $request->all();
     $bex = Basic::where('uniqid', 12345)->first();
     $bex->update($in);
@@ -43,6 +47,7 @@ class ProductController extends Controller
   //create
   public function create(Request $request)
   {
+    App::setLocale('admin');
     $languages = Language::get();
     $information['languages'] = $languages;
     return view('backend.product.create', $information);
@@ -57,7 +62,7 @@ class ProductController extends Controller
         function ($attribute, $value, $fail) use ($img, $allowedExts) {
           $ext = $img->getClientOriginalExtension();
           if (!in_array($ext, $allowedExts)) {
-            return $fail("Only png, jpg, jpeg images are allowed");
+            return $fail(__('Only png, jpg, jpeg images are allowed'));
           }
         },
       ]
@@ -89,6 +94,7 @@ class ProductController extends Controller
   //store
   public function store(ProductStoreRequest $request)
   {
+    App::setLocale('admin');
     $img = $request->file('feature_image');
     $in = $request->all();
     if ($request->hasFile('feature_image')) {
@@ -141,6 +147,7 @@ class ProductController extends Controller
   //show
   public function show(Request $request)
   {
+    App::setLocale('admin');
     $information['langs'] = Language::all();
 
     $language = Language::where('code', $request->language)->firstOrFail();
@@ -189,6 +196,7 @@ class ProductController extends Controller
   }
   public function edit(Request $request)
   {
+    App::setLocale('admin');
     $id = $request->id;
     $product = Product::findOrFail($id);
     $information['product'] = $product;
@@ -214,6 +222,7 @@ class ProductController extends Controller
   //update
   public function update(ProductUpdateRequest $request)
   {
+    App::setLocale('admin');
     $product = Product::where('id', $request->product_id)->first();
     $img = $request->file('feature_image');
     $in = $request->all();

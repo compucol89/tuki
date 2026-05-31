@@ -73,7 +73,7 @@
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label>{{ __('Enter Last Name')." *" }}</label>
+                      <label>{{ __('Last Name') . ' *' }}</label>
                       <input type="text" value="" class="form-control" name="lname"
                         placeholder="{{ __('Enter Last Name') }}">
                       <p id="editErr_lname" class="mt-1 mb-0 text-danger em"></p>
@@ -141,7 +141,7 @@
                     <div class="form-group">
                       <label>{{ __('Password')." *" }} </label>
                       <input type="password" value="" class="form-control" name="password"
-                        placeholder="{{ __('Enter Password') }} ">
+                        placeholder="{{ __('Enter Password') }}">
                       <p id="editErr_password" class="mt-1 mb-0 text-danger em"></p>
                     </div>
                   </div>
@@ -149,7 +149,7 @@
                     <div class="form-group">
                       <label>{{ __('Confirm Password') }} *</label>
                       <input type="password" value="" class="form-control" name="password_confirmation"
-                        placeholder="{{ __('Enter Confirm Password') }} ">
+                        placeholder="{{ __('Enter Confirm Password') }}">
                       <p id="editErr_password_confirmation" class="mt-1 mb-0 text-danger em"></p>
                     </div>
                   </div>

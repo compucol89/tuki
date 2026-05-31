@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
     'Demo' => \App\Http\Middleware\Demo::class,
     'certificate.status' => \App\Http\Middleware\EnsureCertificateIsEnable::class,
     'Deactive' => \App\Http\Middleware\Deactive::class,
-    'EmailStatus' => \App\Http\Middleware\EmailStatus::class
+    'EmailStatus' => \App\Http\Middleware\EmailStatus::class,
+    'admin.locale' => \App\Http\Middleware\SetAdminLocale::class,
   ];
 }

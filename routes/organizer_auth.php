@@ -28,7 +28,7 @@ Route::prefix('/organizador')->group(function () {
   });
 });
 
-Route::prefix('/organizer')->middleware('auth:organizer')->group(function () {
+Route::prefix('/organizer')->middleware(['auth:organizer', 'admin.locale'])->group(function () {
   Route::get('/logout', 'BackEnd\Organizer\OrganizerController@logout')->name('organizer.logout');
   Route::get('/change-password', 'BackEnd\Organizer\OrganizerController@change_password')->name('organizer.change.password');
   Route::post('/update-password', 'BackEnd\Organizer\OrganizerController@updated_password')->name('organizer.update_password');

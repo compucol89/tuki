@@ -52,8 +52,6 @@ class EventController extends Controller
   //index
   public function index(Request $request)
   {
-    App::setLocale('admin');
-
     $information['langs'] = Language::all();
 
     $language = Language::where('code', $request->language)->firstOrFail();
@@ -88,8 +86,6 @@ class EventController extends Controller
   //choose_event_type
   public function choose_event_type()
   {
-    App::setLocale('admin');
-
     return view('backend.event.event_type');
   }
   //online_event
@@ -285,7 +281,6 @@ class EventController extends Controller
 
   public function edit($id)
   {
-    App::setLocale('admin');
     $event = Event::with('ticket')->findOrFail($id);
     $information['event'] = $event;
 
@@ -321,7 +316,6 @@ class EventController extends Controller
 
   public function update(UpdateRequest $request)
   {
-    App::setLocale('admin');
     //calculate duration 
     if ($request->date_type == 'single') {
       $start = Carbon::parse($request->start_date . ' ' . $request->start_time);

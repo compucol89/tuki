@@ -27,7 +27,6 @@ class CustomerManagementController extends Controller
 
   public function index(Request $request)
   {
-    App::setLocale('admin');
     $searchKey = null;
 
     if ($request->filled('info')) {
@@ -78,13 +77,11 @@ class CustomerManagementController extends Controller
 
   public function create()
   {
-    App::setLocale('admin');
     return view('backend.end-user.customer.create');
   }
 
   public function store(Request $request)
   {
-    App::setLocale('admin');
     $rules = [
       'fname' => 'required',
       'lname' => 'required',

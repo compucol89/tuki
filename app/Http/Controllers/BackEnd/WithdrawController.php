@@ -25,8 +25,6 @@ class WithdrawController extends Controller
   //index
   public function index()
   {
-    App::setLocale('admin');
-
     $search = request()->input('search');
 
     $collection = Withdraw::with('method')
@@ -40,8 +38,6 @@ class WithdrawController extends Controller
   //delete
   public function delete(Request $request)
   {
-    App::setLocale('admin');
-
     $withdraw = $this->getWithdrawOrFail($request->id);
 
     if ((int) $withdraw->status !== 0) {
@@ -70,8 +66,6 @@ class WithdrawController extends Controller
   //approve
   public function approve($id)
   {
-    App::setLocale('admin');
-
     $withdraw = $this->getWithdrawOrFail($id);
 
     if ((int) $withdraw->status !== 0) {
@@ -186,8 +180,6 @@ class WithdrawController extends Controller
   //decline
   public function decline($id)
   {
-    App::setLocale('admin');
-
     $withdraw = $this->getWithdrawOrFail($id);
 
     if ((int) $withdraw->status !== 0) {

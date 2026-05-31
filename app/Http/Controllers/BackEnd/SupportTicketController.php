@@ -20,7 +20,6 @@ class SupportTicketController extends Controller
   //index
   public function index(Request $request)
   {
-    App::setLocale('admin');
     $role_id = Auth::guard('admin')->user()->role_id;
 
     $status = $ticket_id = null;
@@ -149,7 +148,6 @@ class SupportTicketController extends Controller
   //ticket_closed
   public function ticket_closed($id)
   {
-    App::setLocale('admin');
     SupportTicket::where('id', $id)->update([
       'status' => 3,
     ]);
@@ -159,7 +157,6 @@ class SupportTicketController extends Controller
 
   public function unassign_stuff($id)
   {
-    App::setLocale('admin');
     $ticket = SupportTicket::where('id', $id)->firstOrFail();
 
     if (!empty($ticket->admin_id)) {
@@ -175,14 +172,12 @@ class SupportTicketController extends Controller
   //setting
   public function setting()
   {
-    App::setLocale('admin');
     $content = SupportTicketStatus::where('id', 1)->first();
     return view('backend.support_ticket.setting', compact('content'));
   }
   //update_setting
   public function update_setting(Request $request)
   {
-    App::setLocale('admin');
     $status = SupportTicketStatus::where('id', 1)->first();
     $status->support_ticket_status = $request->support_ticket_status;
     $status->save();
@@ -192,7 +187,6 @@ class SupportTicketController extends Controller
   //assign_stuff.supoort.ticket
   public function assign_stuff(Request $request, $id)
   {
-    App::setLocale('admin');
     $support_ticket = SupportTicket::where('id', $id)->first();
     $support_ticket->admin_id = $request->admin_id;
     $support_ticket->save();

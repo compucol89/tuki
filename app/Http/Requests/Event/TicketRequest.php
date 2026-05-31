@@ -12,7 +12,6 @@ class TicketRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
-    App::setLocale('admin');
   }
 
 /**

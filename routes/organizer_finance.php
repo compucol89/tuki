@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/organizer')->middleware('auth:organizer', 'Deactive:organizer', 'EmailStatus:organizer')->group(function () {
+Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deactive:organizer', 'EmailStatus:organizer')->group(function () {
   Route::get('withdraw', 'BackEnd\Organizer\OrganizerWithdrawController@index')->name('organizer.withdraw');
   Route::get('withdraw/create', 'BackEnd\Organizer\OrganizerWithdrawController@create')->name('organizer.withdraw.create');
   Route::get('/get-withdraw-method/input/{id}', 'BackEnd\Organizer\OrganizerWithdrawController@get_inputs');

@@ -14,7 +14,7 @@ Route::post('admin/check-qrcode/', 'BackEnd\AdminController@check_qrcode')->midd
 
 Route::get('admin/get-state-city/{id}', 'BackEnd\Event\EventController@city_state')->name('get.city.state');
 
-Route::prefix('/admin')->middleware(['auth:admin'])->group(function () {
+Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(function () {
   // admin redirect to dashboard route
   Route::get('/dashboard', 'BackEnd\AdminController@redirectToDashboard')->name('admin.dashboard');
   Route::group(['middleware' => 'permission:Transaction'], function () {

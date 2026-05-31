@@ -32,8 +32,6 @@ class EventBookingController extends Controller
 {
   public function index(Request $request)
   {
-    App::setLocale('admin');
-
     $bookingId = $paymentStatus = null;
     $eventIds = [];
     if ($request->filled('booking_id')) {
@@ -374,8 +372,6 @@ class EventBookingController extends Controller
   //show
   public function show($id)
   {
-    App::setLocale('admin');
-
     $booking = Booking::findOrFail($id);
 
     return view('backend.event.booking.details', compact('booking'));
@@ -383,8 +379,6 @@ class EventBookingController extends Controller
 
   public function destroy($id)
   {
-    App::setLocale('admin');
-
     $Booking = Booking::find($id);
 
     // first, delete the attachment
@@ -400,8 +394,6 @@ class EventBookingController extends Controller
 
   public function bulkDestroy(Request $request)
   {
-    App::setLocale('admin');
-
     $ids = $request->ids;
 
     foreach ($ids as $id) {
@@ -423,8 +415,6 @@ class EventBookingController extends Controller
 
   public function report(Request $request)
   {
-    App::setLocale('admin');
-
     $language = $this->getLanguage();
 
     $fromDate = $request->from_date;
@@ -467,8 +457,6 @@ class EventBookingController extends Controller
 
   public function export()
   {
-    App::setLocale('admin');
-
     $bookings = Session::get('booking_report');
     if (empty($bookings) || count($bookings) == 0) {
       Session::flash('warning', __('There is no bookings to export'));

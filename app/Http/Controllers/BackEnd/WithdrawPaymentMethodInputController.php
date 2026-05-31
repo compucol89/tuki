@@ -16,8 +16,6 @@ class WithdrawPaymentMethodInputController extends Controller
 {
   public function index(Request $request)
   {
-    App::setLocale('admin');
-
     $id = $request->id;
     $data['payment_method'] = WithdrawPaymentMethod::where('id', $id)->select('name')->firstOrFail();
     $data['inputs'] = WithdrawMethodInput::where('withdraw_payment_method_id', $id)->orderBy('order_number', 'ASC')->get();
@@ -26,8 +24,6 @@ class WithdrawPaymentMethodInputController extends Controller
   //store
   public function store(Request $request)
   {
-    App::setLocale('admin');
-
     $inname = make_input_name($request->label);
     $inputs = WithdrawMethodInput::where('withdraw_payment_method_id', $request->withdraw_payment_method_id)->get();
     $maxOrder = WithdrawMethodInput::where('withdraw_payment_method_id', $request->withdraw_payment_method_id)->max('order_number');
@@ -87,8 +83,6 @@ class WithdrawPaymentMethodInputController extends Controller
   //edit
   public function edit($id)
   {
-    App::setLocale('admin');
-
     $data = [];
     $input = WithdrawMethodInput::find($id);
     $data['input'] = $input;
@@ -102,8 +96,6 @@ class WithdrawPaymentMethodInputController extends Controller
   //update
   public function update(Request $request)
   {
-    App::setLocale('admin');
-
     $inname = make_input_name($request->label);
     $input = WithdrawMethodInput::find($request->input_id);
     $inputs = WithdrawMethodInput::where('withdraw_payment_method_id', $request->withdraw_payment_method_id)->get();
@@ -182,8 +174,6 @@ class WithdrawPaymentMethodInputController extends Controller
   //order_update
   public function order_update(Request $request)
   {
-    App::setLocale('admin');
-
     $ids = $request->ids;
     $orders = $request->orders;
 
@@ -204,8 +194,6 @@ class WithdrawPaymentMethodInputController extends Controller
   //delete
   public function delete(Request $request)
   {
-    App::setLocale('admin');
-
     $input = WithdrawMethodInput::find($request->input_id);
     $options = WithdrawMethodOption::where('withdraw_method_input_id', $request->input_id)->get();
     foreach ($options as $option) {

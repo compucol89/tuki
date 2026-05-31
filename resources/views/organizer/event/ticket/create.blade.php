@@ -488,7 +488,7 @@
     $names = '';
     foreach ($languages as $language) {
         $varitaion_name = $language->code . '_variation_name[]';
-        $names .= "<div class='form-group'><label for=''>Variation Name *($language->name)</label><input type='text' name='$varitaion_name' class='form-control'></div>";
+        $names .= "<div class='form-group'><label for=''>" . __('Variation Name') . " *($language->name)</label><input type='text' name='$varitaion_name' class='form-control'></div>";
     }
   @endphp
 

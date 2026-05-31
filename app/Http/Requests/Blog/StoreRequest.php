@@ -13,7 +13,6 @@ class StoreRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
-    App::setLocale('admin');
   }
 
 /**

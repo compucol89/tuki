@@ -155,8 +155,6 @@ class AdminController extends Controller
 
   public function redirectToDashboard()
   {
-    App::setLocale('admin');
-
     $language = Language::query()->where('is_default', '=', 1)->first();
 
     $information['basic'] = Basic::where('uniqid', 12345)->select('base_currency_symbol', 'base_currency_symbol_position')->first();
@@ -434,8 +432,6 @@ class AdminController extends Controller
   //transcation 
   public function transcation(Request $request)
   {
-    App::setLocale('admin');
-
     $transcation_id = null;
     if ($request->filled('transcation_id')) {
       $transcation_id = $request->transcation_id;
@@ -450,8 +446,6 @@ class AdminController extends Controller
   //destroy
   public function destroy(Request $request)
   {
-    App::setLocale('admin');
-
     $transcation = Transaction::where('id', $request->id)->first();
     $transcation->delete();
     Session::flash('success', __('admin.flash.deleted_successfully'));
@@ -462,8 +456,6 @@ class AdminController extends Controller
   //destroy
   public function bulk_destroy(Request $request)
   {
-    App::setLocale('admin');
-
     $ids = $request->ids;
     foreach ($ids as $id) {
       $transcation = Transaction::where('id', $id)->first();

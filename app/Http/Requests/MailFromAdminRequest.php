@@ -10,7 +10,6 @@ class MailFromAdminRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
-    App::setLocale('admin');
   }
 
 /**

@@ -10,7 +10,6 @@ class FeatureRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
-    App::setLocale('admin');
   }
 
 /**

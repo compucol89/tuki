@@ -14,7 +14,6 @@ class SettingController extends Controller
 {
   public function index(Request $request)
   {
-    App::setLocale('admin');
     $lang = Language::where('code', $request->language)->firstOrFail();
     $lang_id = $lang->id;
     $data['collection'] = ShippingCharge::where('language_id', $lang_id)->orderBy('id', 'DESC')->get();
@@ -25,7 +24,6 @@ class SettingController extends Controller
   //store
   public function store(ShippingChargeRequest $request)
   {
-    App::setLocale('admin');
     $in = $request->all();
     $store = ShippingCharge::create($in);
     Session::flash('success', __('admin.flash.added_successfully'));
@@ -52,7 +50,6 @@ class SettingController extends Controller
   //update
   public function update(Request $request)
   {
-    App::setLocale('admin');
     $in = $request->all();
     $update = ShippingCharge::where('id', $request->id)->first();
     $update->update($in);

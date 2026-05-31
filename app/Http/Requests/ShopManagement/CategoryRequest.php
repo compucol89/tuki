@@ -9,7 +9,6 @@ class CategoryRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
-    App::setLocale('admin');
   }
 
   /**

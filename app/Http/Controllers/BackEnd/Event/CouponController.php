@@ -16,7 +16,6 @@ class CouponController extends Controller
 {
   public function index()
   {
-    App::setLocale('admin');
     Carbon::setLocale('es');
 
     // get the coupons from db
@@ -32,8 +31,6 @@ class CouponController extends Controller
 
   public function store(CouponRequest $request)
   {
-    App::setLocale('admin');
-
     $startDate = Carbon::parse($request->start_date);
     $endDate = Carbon::parse($request->end_date);
 
@@ -50,8 +47,6 @@ class CouponController extends Controller
 
   public function update(CouponRequest $request)
   {
-    App::setLocale('admin');
-
     $startDate = Carbon::parse($request->start_date);
     $endDate = Carbon::parse($request->end_date);
     $events = !empty($request->events) ? json_encode($request->events) : NULL;
@@ -71,8 +66,6 @@ class CouponController extends Controller
 
   public function destroy($id)
   {
-    App::setLocale('admin');
-
     Coupon::where('id', $id)->first()->delete();
 
     return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));

@@ -41,10 +41,10 @@
                   <div class="author">
                     @if ($organizer->photo == null)
                       <img class="uploaded-img rounded-circle mh70" src="{{ asset('assets/front/images/user.png') }}"
-                        alt="image">
+                        alt="{{ __('Image') }}">
                     @else
                       <img class="uploaded-img rounded-circle mh70"
-                        src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}" alt="image">
+                        src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}" alt="{{ __('Image') }}">
                     @endif
                     <div class="h6 card-title">{{ __('Organizer Information') }}</div>
                   </div>
@@ -202,7 +202,7 @@
                   @endif
 
                   @if (count($events) == 0)
-                    <h3 class="text-center mt-2">{{ __('NO EVENT CONTENT FOUND FOR ') . $language->name . '!' }}</h3>
+                    <h3 class="text-center mt-2">{{ __('NO EVENT CONTENT FOUND FOR') . $language->name . '!' }}</h3>
                   @else
                     <div class="table-responsive">
                       <table class="table table-striped mt-3" id="basic-datatables">

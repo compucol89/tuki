@@ -168,7 +168,7 @@
                   <div class="col-lg-3">
                     <div class="form-group">
                       <label>{{ __('Start Date') . '*' }}</label>
-                      <input type="date" name="start_date" placeholder="Enter Start Date" class="form-control">
+                      <input type="date" name="start_date" placeholder="{{ __('Enter Start Date') }}" class="form-control">
                     </div>
                   </div>
 
@@ -181,7 +181,7 @@
                   <div class="col-lg-3">
                     <div class="form-group">
                       <label>{{ __('End Date') . '*' }}</label>
-                      <input type="date" name="end_date" placeholder="Enter End Date" class="form-control">
+                      <input type="date" name="end_date" placeholder="{{ __('Enter End Date') }}" class="form-control">
                     </div>
                   </div>
 
@@ -348,7 +348,7 @@
                           <label for="">{{ __('Meeting Url') }} *
                           </label>
                           <input type="text" name="meeting_url" class="form-control"
-                            placeholder="Enter Meeting Url">
+                            placeholder="{{ __('Enter Meeting Url') }}">
                         </div>
                       </div>
                     </div>
@@ -504,7 +504,7 @@
                                   <label for="">{{ __('City') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_city"
                                     class="form-control"
-                                    placeholder="Enter City">
+                                    placeholder="{{ __('Enter City') }}">
                                 </div>
                               </div>
                               <div class="col-lg-4">

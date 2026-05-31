@@ -80,7 +80,7 @@
               </button>
 
               <form class="float-right ml-3" action="{{ route('admin.product.order') }}" method="GET">
-                <input name="order_id" type="text" class="form-control" placeholder="Search By Order ID"
+                <input name="order_id" type="text" class="form-control" placeholder="{{ __('Search By Order ID') }}"
                   value="{{ !empty(request()->input('order_id')) ? request()->input('order_id') : '' }}">
               </form>
 

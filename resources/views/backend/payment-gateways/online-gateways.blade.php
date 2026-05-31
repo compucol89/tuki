@@ -690,7 +690,7 @@
                   @endif
                 </div>
                 <p><strong class="text-warning">Your Success URL :</strong> <br> {{ url('/') }}/event-booking/bank-notify </p>
-                <p><strong class="text-warning">Your Cancel URL :</strong> <br> {{ url('/') }}/midtrans/cancel </p>
+                <p><strong class="text-warning">{{ __('Your Cancel URL') }} :</strong> <br> {{ url('/') }}/midtrans/cancel </p>
                 <p>
                   <strong class="text-warning">Set these URLs in Midtrans Dashboard like this :</strong> <br> <a href="https://prnt.sc/OiucUCeYJIXo"
                     target="_blank">https://prnt.sc/OiucUCeYJIXo</a>

@@ -136,7 +136,7 @@
                             <input type="checkbox" class="bulk-check" data-val="{{ $feature->id }}">
                           </td>
                           <td>
-                            <img src="{{ asset('assets/admin/img/partner/' . $feature->image) }}" alt="client"
+                            <img src="{{ asset('assets/admin/img/partner/' . $feature->image) }}" alt="{{ __('Client') }}"
                               width="50">
                           </td>
                           <td>{{ $feature->url }}</td>

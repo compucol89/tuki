@@ -51,7 +51,7 @@
                   <label for="">{{ __('Image') . '*' }}</label>
                   <br>
                   <div class="thumb-preview">
-                    <img src="{{ asset('assets/admin/img/popups/' . $popup->image) }}" alt="popup image" class="uploaded-img">
+                    <img src="{{ asset('assets/admin/img/popups/' . $popup->image) }}" alt="{{ __('Popup Image') }}" class="uploaded-img">
                   </div>
 
                   <div class="mt-3">

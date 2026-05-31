@@ -41,7 +41,7 @@
                 {{ __('Delete') }}</button>
 
               <form action="" class="float-lg-right float-none" method="GET">
-                <input type="text" name="ticket_id" class="form-control min-w-250" placeholder="Search by Ticket ID"
+                <input type="text" name="ticket_id" class="form-control min-w-250" placeholder="{{ __('Search by Ticket ID') }}"
                   value="{{ !empty(request()->input('ticket_id')) ? request()->input('ticket_id') : '' }}">
               </form>
             </div>

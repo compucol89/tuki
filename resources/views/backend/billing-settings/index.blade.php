@@ -225,7 +225,7 @@
                   <input type="file" name="pdf_logo" class="form-control-file" accept="image/png,image/jpeg">
                   @if ($billingSettings->pdf_logo_path)
                     <p class="mt-2 mb-0">
-                      <img src="{{ asset('storage/' . $billingSettings->pdf_logo_path) }}" alt="Logo" style="max-height: 60px;">
+                      <img src="{{ asset('storage/' . $billingSettings->pdf_logo_path) }}" alt="{{ __('Logo') }}" style="max-height: 60px;">
                     </p>
                   @endif
                   @if ($errors->has('pdf_logo'))

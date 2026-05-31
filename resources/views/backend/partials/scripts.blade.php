@@ -67,7 +67,7 @@
     var content = {};
 
     content.message = '{{ __(session('success')) }}';
-    content.title = 'Success';
+    content.title = '{{ __('Success') }}';
     content.icon = 'fa fa-bell';
 
     $.notify(content, {
@@ -89,7 +89,7 @@
     var content = {};
 
     content.message = '{{ __(session('warning')) }}';
-    content.title = 'Warning!';
+    content.title = '{{ __('Warning!') }}';
     content.icon = 'fa fa-bell';
 
     $.notify(content, {

@@ -31,7 +31,7 @@
   <body data-background-color="{{ $settings->admin_theme_version == 'light' ? 'white' : 'dark' }}">
     {{-- loader start --}}
     <div class="request-loader">
-      <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="loader">
+      <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="{{ __('Loader') }}">
     </div>
     {{-- loader end --}}
 

@@ -53,7 +53,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 1]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/1.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/1.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 1') }}</h5>
             </div>
           </div>
@@ -64,7 +64,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 2]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/2.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/2.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 2') }}</h5>
             </div>
           </div>
@@ -75,7 +75,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 3]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/3.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/3.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 3') }}</h5>
             </div>
           </div>
@@ -86,7 +86,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 4]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/4.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/4.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 4') }}</h5>
             </div>
           </div>
@@ -97,7 +97,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 5]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/5.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/5.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 5') }}</h5>
             </div>
           </div>
@@ -108,7 +108,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 6]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/6.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/6.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 6') }}</h5>
             </div>
           </div>
@@ -119,7 +119,7 @@
         <a href="{{ route('admin.announcement_popups.create_popup', ['type' => 7]) }}" class="d-block">
           <div class="card card-stats">
             <div class="card-body">
-              <img src="{{ asset('assets/admin/img/popup-samples/7.jpg') }}" alt="popup image" width="100%">
+              <img src="{{ asset('assets/admin/img/popup-samples/7.jpg') }}" alt="{{ __('Popup Image') }}" width="100%">
               <h5 class="text-center text-white mt-3 mb-0">{{ __('Type - 7') }}</h5>
             </div>
           </div>

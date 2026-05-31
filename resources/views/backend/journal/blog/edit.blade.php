@@ -60,7 +60,7 @@
                   <label for="">{{ __('Image') . '*' }}</label>
                   <br>
                   <div class="thumb-preview">
-                    <img src="{{ asset('assets/admin/img/blogs/' . $blog->image) }}" alt="image" class="uploaded-img">
+                    <img src="{{ asset('assets/admin/img/blogs/' . $blog->image) }}" alt="{{ __('Image') }}" class="uploaded-img">
                   </div>
 
                   <div class="mt-3">
@@ -110,7 +110,7 @@
                               <div class="form-group">
                                 <label>{{ __('Title') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_title"
-                                  placeholder="Enter Title" value="{{ is_null($blogData) ? '' : $blogData->title }}">
+                                  placeholder="{{ __('Enter Title') }}" value="{{ is_null($blogData) ? '' : $blogData->title }}">
                               </div>
                             </div>
 
@@ -148,7 +148,7 @@
                               <div class="form-group">
                                 <label>{{ __('Author') . '*' }}</label>
                                 <input type="text" class="form-control" name="{{ $language->code }}_author"
-                                  placeholder="Enter Author Name"
+                                  placeholder="{{ __('Enter Author Name') }}"
                                   value="{{ is_null($blogData) ? '' : $blogData->author }}">
                               </div>
                             </div>
@@ -159,7 +159,7 @@
                               <div class="form-group">
                                 <label>{{ __('Content') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
-                                  name="{{ $language->code }}_content" placeholder="Enter Blog Content" data-height="300">{{ is_null($blogData) ? '' : $blogData->content }}</textarea>
+                                  name="{{ $language->code }}_content" placeholder="{{ __('Enter Blog Content') }}" data-height="300">{{ is_null($blogData) ? '' : $blogData->content }}</textarea>
                               </div>
                             </div>
                           </div>
@@ -169,7 +169,7 @@
                               <div class="form-group">
                                 <label>{{ __('Meta Keywords') }}</label>
                                 <input class="form-control" name="{{ $language->code }}_meta_keywords"
-                                  placeholder="Enter Meta Keywords" data-role="tagsinput"
+                                  placeholder="{{ __('Enter Meta Keywords') }}" data-role="tagsinput"
                                   value="{{ is_null($blogData) ? '' : $blogData->meta_keywords }}">
                               </div>
                             </div>
@@ -180,7 +180,7 @@
                               <div class="form-group">
                                 <label>{{ __('Meta Description') }}</label>
                                 <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
-                                  placeholder="Enter Meta Description">{{ is_null($blogData) ? '' : $blogData->meta_description }}</textarea>
+                                  placeholder="{{ __('Enter Meta Description') }}">{{ is_null($blogData) ? '' : $blogData->meta_description }}</textarea>
                               </div>
                             </div>
                           </div>

@@ -12,7 +12,7 @@
         </div>
 
         <div class="modal-body">
-          <img src="{{ asset('assets/admin/file/order/attachments/' . $order->receipt) }}" alt="attachment" width="100%">
+          <img src="{{ asset('assets/admin/file/order/attachments/' . $order->receipt) }}" alt="{{ __('Attachment') }}" width="100%">
         </div>
 
         <div class="modal-footer"></div>

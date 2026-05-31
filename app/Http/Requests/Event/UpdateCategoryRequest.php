@@ -3,10 +3,17 @@
 namespace App\Http\Requests\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+
 
 class UpdateCategoryRequest extends FormRequest
 {
-    /**
+  protected function prepareForValidation(): void
+  {
+    App::setLocale('admin');
+  }
+
+/**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -34,7 +41,7 @@ class UpdateCategoryRequest extends FormRequest
     public function messages()
     {
       return [
-        'language_id.required' => 'The language field is required.'
+        'language_id.required' => __('The language field is required.')
       ];
     }
 }

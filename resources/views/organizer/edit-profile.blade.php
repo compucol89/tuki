@@ -165,7 +165,7 @@
                                   <div class="form-group">
                                     <label>{{ __('Name') . '*' }}</label>
                                     <input type="text" class="form-control" name="{{ $language->code }}_name"
-                                      placeholder="Enter Your Full Name"
+                                      placeholder="{{ __('Enter Your Full Name') }}"
                                       value="{{ $organizer_info ? $organizer_info->name : '' }}">
                                     @if ($errors->has("$language->code" . '_name'))
                                       <p class="mt-2 mb-0 text-danger">

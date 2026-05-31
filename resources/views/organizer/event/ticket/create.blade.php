@@ -196,7 +196,7 @@
                       <div class="form-group">
                         <label for="">{{ __('Price') }} ({{ $getCurrencyInfo->base_currency_text }})
                           *</label>
-                        <input type="number" name="price" class="form-control" placeholder="Enter Price">
+                        <input type="number" name="price" class="form-control" placeholder="{{ __('Enter Price') }}">
                       </div>
                     </div>
 
@@ -279,7 +279,7 @@
                           <div class="form-group">
                             <label>{{ __('Enter total number of available tickets') . '*' }}</label>
                             <input type="number" name="ticket_available"
-                              placeholder="Enter total number of available tickets" class="form-control">
+                              placeholder="{{ __('Enter total number of available tickets') }}" class="form-control">
                           </div>
                         </div>
 

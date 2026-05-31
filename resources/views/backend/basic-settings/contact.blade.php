@@ -59,7 +59,7 @@
                 <div class="form-group">
                   <label>{{ __('Address') . '*' }}</label>
                   <input type="text" class="form-control" name="address"
-                    value="{{ $data->address != null ? $data->address : '' }}" placeholder="Enter Address">
+                    value="{{ $data->address != null ? $data->address : '' }}" placeholder="{{ __('Enter Address') }}">
                   @if ($errors->has('address'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('address') }}</p>
                   @endif
@@ -68,7 +68,7 @@
                 <div class="form-group">
                   <label>{{ __('Latitude') . '*' }}</label>
                   <input type="text" class="form-control" name="latitude"
-                    value="{{ $data->latitude != null ? $data->latitude : '' }}" placeholder="Enter Latitude">
+                    value="{{ $data->latitude != null ? $data->latitude : '' }}" placeholder="{{ __('Enter Latitude') }}">
                   @if ($errors->has('latitude'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('latitude') }}</p>
                   @endif
@@ -80,7 +80,7 @@
                 <div class="form-group">
                   <label>{{ __('Longitude') . '*' }}</label>
                   <input type="text" class="form-control" name="longitude"
-                    value="{{ $data->longitude != null ? $data->longitude : '' }}" placeholder="Enter longitude">
+                    value="{{ $data->longitude != null ? $data->longitude : '' }}" placeholder="{{ __('Enter longitude') }}">
                   @if ($errors->has('longitude'))
                     <p class="mt-2 mb-0 text-danger">{{ $errors->first('longitude') }}</p>
                   @endif

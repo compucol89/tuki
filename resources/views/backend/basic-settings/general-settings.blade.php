@@ -61,7 +61,7 @@
                       <br>
                       <div class="thumb-preview">
                         @if (!empty($data->favicon))
-                          <img src="{{ asset('assets/admin/img/' . $data->favicon) }}" alt="favicon"
+                          <img src="{{ asset('assets/admin/img/' . $data->favicon) }}" alt="{{ __('Favicon') }}"
                             class="uploaded-img">
                         @else
                           <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
@@ -111,7 +111,7 @@
                       <br>
                       <div class="thumb-preview">
                         @if (!empty($data->logo))
-                          <img src="{{ asset('assets/admin/img/' . $data->logo) }}" alt="logo" class="uploaded-img2">
+                          <img src="{{ asset('assets/admin/img/' . $data->logo) }}" alt="{{ __('Logo') }}" class="uploaded-img2">
                         @else
                           <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img2">
                         @endif

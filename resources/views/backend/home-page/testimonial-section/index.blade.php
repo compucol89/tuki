@@ -69,7 +69,7 @@
                     <br>
                     <div class="thumb-preview">
                       @if (!empty($data->image))
-                        <img src="{{ asset('assets/admin/img/testimonial/' . $data->image) }}" alt="image"
+                        <img src="{{ asset('assets/admin/img/testimonial/' . $data->image) }}" alt="{{ __('Image') }}"
                           class="uploaded-img">
                       @else
                         <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
@@ -166,7 +166,7 @@
                             <input type="checkbox" class="bulk-check" data-val="{{ $testimonial->id }}">
                           </td>
                           <td>
-                            <img src="{{ asset('assets/admin/img/clients/' . $testimonial->image) }}" alt="client"
+                            <img src="{{ asset('assets/admin/img/clients/' . $testimonial->image) }}" alt="{{ __('Client') }}"
                               width="50">
                           </td>
                           <td>{{ $testimonial->name }}</td>

@@ -3,10 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+
 
 class MailFromAdminRequest extends FormRequest
 {
-  /**
+  protected function prepareForValidation(): void
+  {
+    App::setLocale('admin');
+  }
+
+/**
    * Determine if the user is authorized to make this request.
    *
    * @return bool
@@ -38,7 +45,7 @@ class MailFromAdminRequest extends FormRequest
   public function messages()
   {
     return [
-      'from_mail.required' => 'The mail address field is required.'
+      'from_mail.required' => __('The mail address field is required.')
     ];
   }
 }

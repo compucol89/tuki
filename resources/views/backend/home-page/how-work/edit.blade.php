@@ -62,7 +62,7 @@
 
           <div class="form-group">
             <label for="">{{ __('Text') . '*' }}</label>
-            <textarea class="form-control" name="text" placeholder="Enter Feature Text" id="in_text" rows="5"></textarea>
+            <textarea class="form-control" name="text" placeholder="{{ __('Enter Feature Text') }}" id="in_text" rows="5"></textarea>
             <p id="editErr_text" class="mt-1 mb-0 text-danger em"></p>
           </div>
 

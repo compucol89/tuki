@@ -162,7 +162,7 @@
                                         action="{{ route('admin.customer_management.customer_details', ['id' => $customer->id]) }}"
                                         method="GET">
                                         <input name="booking_id" type="text" class="form-control"
-                                            placeholder="Search By Order ID"
+                                            placeholder="{{ __('Search By Order ID') }}"
                                             value="{{ !empty(request()->input('booking_id')) ? request()->input('booking_id') : '' }}">
                                     </form>
 

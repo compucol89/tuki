@@ -63,7 +63,7 @@
                         <tr>
                           <td>{{ $loop->iteration }}</td>
                           <td>
-                            <img src="{{ asset('assets/admin/img/admins/' . $admin->image) }}" alt="admin image" width="45">
+                            <img src="{{ asset('assets/admin/img/admins/' . $admin->image) }}" alt="{{ __('Admin Image') }}" width="45">
                           </td>
                           <td>{{ $admin->username }}</td>
                           <td>{{ $admin->email }}</td>

@@ -118,7 +118,7 @@
                                             <div class="form-group">
                                                 <label>{{ __('Title') . '*' }}</label>
                                                 <input type="text" class="form-control" name="title"
-                                                    placeholder="Enter Popup Title">
+                                                    placeholder="{{ __('Enter Popup Title') }}">
                                                 <p id="err_title" class="mt-2 mb-0 text-danger em"></p>
                                             </div>
                                         </div>

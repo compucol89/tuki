@@ -79,7 +79,7 @@
                   <label for="">{{ __('Payment Status') }}</label>
                   <select name="payment_status" class="form-control ml-1">
                     <option value="" selected>All</option>
-                    <option value="Pending" {{ request()->input('payment_status') == 'Pending' ? 'selected' : '' }}>
+                    <option value="{{ __('Pending') }}" {{ request()->input('payment_status') == 'Pending' ? 'selected' : '' }}>
                       {{ __('Pending') }}</option>
                     <option value="Completed" {{ request()->input('payment_status') == 'Completed' ? 'selected' : '' }}>
                       {{ __('Completed') }}</option>

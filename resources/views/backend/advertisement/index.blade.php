@@ -78,7 +78,7 @@
                           </td>
                           <td>
                             @if ($ad->ad_type == 'banner')
-                              <img src="{{ asset('assets/admin/img/advertisements/' . $ad->image) }}" alt="ad image"
+                              <img src="{{ asset('assets/admin/img/advertisements/' . $ad->image) }}" alt="{{ __('Ad Image') }}"
                                 width="45">
                             @else
                               -

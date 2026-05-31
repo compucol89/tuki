@@ -74,11 +74,11 @@
                             <input type="checkbox" class="bulk-check" data-val="{{ $popup->id }}">
                           </td>
                           <td>
-                            <img src="{{ asset('assets/admin/img/popups/' . $popup->image) }}" alt="popup image" width="55">
+                            <img src="{{ asset('assets/admin/img/popups/' . $popup->image) }}" alt="{{ __('Popup Image') }}" width="55">
                           </td>
                           <td>{{ convertUtf8($popup->name) }}</td>
                           <td>
-                            <img src="{{ asset('assets/admin/img/popup-samples/' . $popup->type . '.jpg') }}" alt="popup type image" class="pt-4" width="55">
+                            <img src="{{ asset('assets/admin/img/popup-samples/' . $popup->type . '.jpg') }}" alt="{{ __('Popup Type Image') }}" class="pt-4" width="55">
                             <p class="mt-1 text-muted">{{ __('Type') . ' - ' . $popup->type }}</p>
                           </td>
                           <td>

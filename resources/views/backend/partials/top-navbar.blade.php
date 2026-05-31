@@ -3,7 +3,7 @@
   <div class="logo-header" data-background-color="{{ $settings->admin_theme_version == 'light' ? 'white' : 'dark2' }}">
     @if (!empty($websiteInfo->logo))
       <a href="{{ route('index') }}" class="logo" target="_blank">
-        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="logo" class="navbar-brand" width="120">
+        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('Logo') }}" class="navbar-brand" width="120">
       </a>
     @endif
 

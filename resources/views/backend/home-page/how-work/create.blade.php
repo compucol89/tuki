@@ -54,19 +54,19 @@
 
           <div class="form-group">
             <label for="">{{ __('Title') . '*' }}</label>
-            <input type="text" class="form-control" name="title" placeholder="Enter Feature Title">
+            <input type="text" class="form-control" name="title" placeholder="{{ __('Enter Feature Title') }}">
             <p id="err_title" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
           <div class="form-group">
             <label for="">{{ __('Text') . '*' }}</label>
-            <textarea class="form-control" name="text" placeholder="Enter Feature Text" rows="5"></textarea>
+            <textarea class="form-control" name="text" placeholder="{{ __('Enter Feature Text') }}" rows="5"></textarea>
             <p id="err_text" class="mt-1 mb-0 text-danger em"></p>
           </div>
 
           <div class="form-group">
             <label for="">{{ __('Serial Number') . '*' }}</label>
-            <input type="number" class="form-control ltr" name="serial_number" placeholder="Enter Feature Serial Number">
+            <input type="number" class="form-control ltr" name="serial_number" placeholder="{{ __('Enter Feature Serial Number') }}">
             <p id="err_serial_number" class="mt-1 mb-0 text-danger em"></p>
             <p class="text-warning mt-2 mb-0">
               <small>{{ __('The higher the serial number is, the later the feature will be shown') }}</small>

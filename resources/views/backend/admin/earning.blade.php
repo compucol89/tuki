@@ -26,7 +26,7 @@
 
             <div class="col-lg-5">
               <div class="card-title d-inline-block">
-                {{ __('Monthly Total Earning ') }}
+                {{ __('Monthly Total Earning') }}
               </div>
             </div>
             <div class="col-lg-7">

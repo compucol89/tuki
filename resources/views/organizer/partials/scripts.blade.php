@@ -64,8 +64,8 @@
     "use strict";
     var content = {};
 
-    content.message = '{{ session('success') }}';
-    content.title = 'Success';
+    content.message = '{{ __(session('success')) }}';
+    content.title = '{{ __('Success') }}';
     content.icon = 'fa fa-bell';
 
     $.notify(content, {
@@ -86,8 +86,8 @@
     "use strict";
     var content = {};
 
-    content.message = '{{ session('warning') }}';
-    content.title = 'Warning!';
+    content.message = '{{ __(session('warning')) }}';
+    content.title = '{{ __('Warning!') }}';
     content.icon = 'fa fa-bell';
 
     $.notify(content, {

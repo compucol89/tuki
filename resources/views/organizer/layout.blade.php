@@ -1,3 +1,9 @@
+@php
+  if (! isset($previousLocale)) {
+    $previousLocale = app()->getLocale();
+    app()->setLocale('admin');
+  }
+@endphp
 <!DOCTYPE html>
 <html>
 
@@ -58,3 +64,9 @@
 </body>
 
 </html>
+
+@isset($previousLocale)
+  @php
+    app()->setLocale($previousLocale);
+  @endphp
+@endisset

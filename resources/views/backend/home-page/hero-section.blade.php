@@ -50,7 +50,7 @@
                   <br>
                   <div class="thumb-preview">
                     @if (!empty($data->background_image))
-                      <img src="{{ asset('assets/admin/img/hero-section/' . $data->background_image) }}" alt="background image" class="uploaded-background-img">
+                      <img src="{{ asset('assets/admin/img/hero-section/' . $data->background_image) }}" alt="{{ __('Background Image') }}" class="uploaded-background-img">
                     @else
                       <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-background-img">
                     @endif
@@ -88,7 +88,7 @@
                     <div class="col-lg-6">
                       <div class="form-group">
                         <label for="">{{ __('Button Text') }}</label>
-                        <input type="text" class="form-control" name="first_button" value="{{ empty($data->first_button) ? '' : $data->first_button }}" placeholder="Enter First Button Name">
+                        <input type="text" class="form-control" name="first_button" value="{{ empty($data->first_button) ? '' : $data->first_button }}" placeholder="{{ __('Enter First Button Name') }}">
                       </div>
                     </div>
                   </div>
@@ -111,7 +111,7 @@
                     <br>
                     <div class="thumb-preview">
                       @if (!empty($data->image))
-                        <img src="{{ asset('assets/admin/img/hero-section/' . $data->image) }}" alt="image" class="uploaded-img">
+                        <img src="{{ asset('assets/admin/img/hero-section/' . $data->image) }}" alt="{{ __('Image') }}" class="uploaded-img">
                       @else
                         <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
                       @endif

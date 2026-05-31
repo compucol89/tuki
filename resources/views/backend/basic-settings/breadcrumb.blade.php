@@ -45,7 +45,7 @@
                   <br>
                   <div class="thumb-preview">
                     @if (!empty($data->breadcrumb))
-                      <img src="{{ asset('assets/admin/img/' . $data->breadcrumb) }}" alt="breadcrumb" class="uploaded-img">
+                      <img src="{{ asset('assets/admin/img/' . $data->breadcrumb) }}" alt="{{ __('Breadcrumb') }}" class="uploaded-img">
                     @else
                       <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
                     @endif

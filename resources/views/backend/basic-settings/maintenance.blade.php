@@ -47,7 +47,7 @@
                                     <div class="thumb-preview">
                                         @if (!empty($data->maintenance_img))
                                             <img src="{{ asset('assets/admin/img/' . $data->maintenance_img) }}"
-                                                alt="maintenance image" class="uploaded-img">
+                                                alt="{{ __('Maintenance Image') }}" class="uploaded-img">
                                         @else
                                             <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..."
                                                 class="uploaded-img">

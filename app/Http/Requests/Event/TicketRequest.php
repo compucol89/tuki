@@ -4,11 +4,18 @@ namespace App\Http\Requests\Event;
 
 use App\Models\Language;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+
 use App\Rules\ImageMimeTypeRule;
 
 class TicketRequest extends FormRequest
 {
-  /**
+  protected function prepareForValidation(): void
+  {
+    App::setLocale('admin');
+  }
+
+/**
    * Determine if the user is authorized to make this request.
    *
    * @return bool
@@ -85,7 +92,7 @@ class TicketRequest extends FormRequest
     $messageArray['v_ticket_available.**.min'] = 'The ticket available field must be at least 1.';
 
     foreach ($languages as $language) {
-      $messageArray[$language->code . '_title.required'] = 'The Ticket name field is required for ' . $language->name;
+      $messageArray[$language->code . '_title.required'] = __('The Ticket name field is required for :language', ['language' => $language->name]);
     }
     return $messageArray;
   }

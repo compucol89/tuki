@@ -21,7 +21,7 @@
             <label for="">{{ __('Image') . '*' }}</label>
             <br>
             <div class="thumb-preview">
-              <img src="" alt="client" class="in_image uploaded-img">
+              <img src="" alt="{{ __('Client') }}" class="in_image uploaded-img">
             </div>
 
             <div class="mt-3">

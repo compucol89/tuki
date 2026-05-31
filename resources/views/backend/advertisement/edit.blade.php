@@ -39,7 +39,7 @@
             <label for="">{{ __('Image') . '*' }}</label>
             <br>
             <div class="thumb-preview">
-              <img src="" alt="advertisement image" class="in_image uploaded-img">
+              <img src="" alt="{{ __('Advertisement Image') }}" class="in_image uploaded-img">
             </div>
 
             <div class="mt-3">

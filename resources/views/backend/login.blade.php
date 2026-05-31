@@ -24,7 +24,7 @@
     <div class="login-page">
       @if (!empty($websiteInfo->logo))
         <div class="text-center mb-4">
-          <img class="login-logo" src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="logo">
+          <img class="login-logo" src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('Logo') }}">
         </div>
       @endif
 

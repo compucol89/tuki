@@ -40,7 +40,7 @@
             </div>
 
             <div class="card-body text-center py-4">
-              <img src="{{ empty($userInfo->image) ? asset('assets/admin/img/profile.jpg') : asset('assets/admin/img/users/' . $userInfo->image) }}" alt="user image" width="150">
+              <img src="{{ empty($userInfo->image) ? asset('assets/admin/img/profile.jpg') : asset('assets/admin/img/users/' . $userInfo->image) }}" alt="{{ __('User Image') }}" width="150">
             </div>
           </div>
         </div>

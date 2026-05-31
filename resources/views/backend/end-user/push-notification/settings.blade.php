@@ -46,7 +46,7 @@
                   <br>
                   <div class="thumb-preview">
                     @if (!is_null($data->notification_image))
-                      <img src="{{ asset('assets/admin/img/' . $data->notification_image) }}" alt="image"
+                      <img src="{{ asset('assets/admin/img/' . $data->notification_image) }}" alt="{{ __('Image') }}"
                         class="uploaded-img">
                     @else
                       <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">

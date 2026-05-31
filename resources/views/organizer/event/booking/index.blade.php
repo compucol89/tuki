@@ -70,13 +70,13 @@
                 </div>
                 <div class="col-lg-3">
                   <form class="ml-3" action="{{ route('organizer.event.booking') }}" method="GET">
-                    <input name="booking_id" type="text" class="form-control" placeholder="Search By Order ID"
+                    <input name="booking_id" type="text" class="form-control" placeholder="{{ __('Search By Order ID') }}"
                       value="{{ !empty(request()->input('booking_id')) ? request()->input('booking_id') : '' }}">
                   </form>
                 </div>
                 <div class="col-lg-3">
                   <form class="ml-3" action="{{ route('organizer.event.booking') }}" method="GET">
-                    <input name="event_title" type="text" class="form-control" placeholder="Search By Event Title"
+                    <input name="event_title" type="text" class="form-control" placeholder="{{ __('Search By Event Title') }}"
                       value="{{ !empty(request()->input('event_title')) ? request()->input('event_title') : '' }}">
                   </form>
                 </div>

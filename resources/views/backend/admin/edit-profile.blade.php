@@ -40,7 +40,7 @@
                   <br>
                   <div class="thumb-preview">
                     @if (!empty($adminInfo->image))
-                      <img src="{{ asset('assets/admin/img/admins/' . $adminInfo->image) }}" alt="image"
+                      <img src="{{ asset('assets/admin/img/admins/' . $adminInfo->image) }}" alt="{{ __('Image') }}"
                         class="uploaded-img">
                     @else
                       <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">

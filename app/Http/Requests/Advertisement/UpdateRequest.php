@@ -5,10 +5,17 @@ namespace App\Http\Requests\Advertisement;
 use App\Models\Advertisement;
 use App\Rules\ImageMimeTypeRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
+
 
 class UpdateRequest extends FormRequest
 {
-  /**
+  protected function prepareForValidation(): void
+  {
+    App::setLocale('admin');
+  }
+
+/**
    * Determine if the user is authorized to make this request.
    *
    * @return bool
@@ -52,7 +59,7 @@ class UpdateRequest extends FormRequest
   public function messages()
   {
     return [
-      'image.required' => 'The image field is required when ad type is banner.'
+      'image.required' => __('The image field is required when ad type is banner.')
     ];
   }
 }

@@ -31,7 +31,7 @@
             <div class="col-lg-4">
               <form action="" method="get">
                 <input type="text" onsubmit="e.preventDefault()" value="{{ request()->input('transcation_id') }}"
-                  name="transcation_id" placeholder="Enter Transaction Id" class="form-control">
+                  name="transcation_id" placeholder="{{ __('Enter Transaction Id') }}" class="form-control">
               </form>
             </div>
           </div>

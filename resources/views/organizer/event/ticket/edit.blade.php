@@ -305,7 +305,7 @@
                         <label for="">{{ __('Price') }}
                           ({{ $getCurrencyInfo->base_currency_text }}) *</label>
                         <input type="number" name="price" value="{{ $ticket->price }}" class="form-control"
-                          placeholder="Enter Price">
+                          placeholder="{{ __('Enter Price') }}">
                       </div>
                     </div>
 
@@ -400,7 +400,7 @@
                           <div class="form-group">
                             <label>{{ __('Enter total number of available tickets') . '*' }}</label>
                             <input type="number" name="ticket_available" value="{{ $ticket->ticket_available }}"
-                              placeholder="Enter total number of available tickets" class="form-control">
+                              placeholder="{{ __('Enter total number of available tickets') }}" class="form-control">
                           </div>
                         </div>
                         @if ($websiteInfo->event_guest_checkout_status != 1)
@@ -430,7 +430,7 @@
                             <div class="form-group">
                               <label>{{ __('Enter Maximum number of tickets for each customer') . '*' }}</label>
                               <input type="number" name="max_buy_ticket" value="{{ $ticket->max_buy_ticket }}"
-                                placeholder="Enter Maximum number of tickets for each customer" class="form-control">
+                                placeholder="{{ __('Enter Maximum number of tickets for each customer') }}" class="form-control">
                             </div>
                           </div>
                         @else
@@ -473,7 +473,7 @@
                                 <div class="form-group">
                                   <label>{{ __('Ticket Name') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_title"
-                                    placeholder="Enter Ticket Name" value="{{ @$ticket_content->title }}"
+                                    placeholder="{{ __('Enter Ticket Name') }}" value="{{ @$ticket_content->title }}"
                                     class="form-control">
                                 </div>
                               </div>
@@ -483,7 +483,7 @@
                               <div class="col">
                                 <div class="form-group">
                                   <label>{{ __('Description') }}</label>
-                                  <textarea class="form-control" name="{{ $language->code }}_description" placeholder="Enter Description">{{ @$ticket_content->description }}</textarea>
+                                  <textarea class="form-control" name="{{ $language->code }}_description" placeholder="{{ __('Enter Description') }}">{{ @$ticket_content->description }}</textarea>
                                 </div>
                               </div>
                             </div>

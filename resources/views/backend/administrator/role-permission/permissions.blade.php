@@ -62,61 +62,61 @@
                 <div class="form-group">
                   <div class="selectgroup selectgroup-pills">
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Admin Management"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Admin Management') }}"
                         @if (is_array($rolePermissions) && in_array('Admin Management', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Admin Management') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Language Management"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Language Management') }}"
                         @if (is_array($rolePermissions) && in_array('Language Management', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Language Management') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="PWA Settings"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('PWA Settings') }}"
                         @if (is_array($rolePermissions) && in_array('PWA Settings', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('PWA Settings') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Basic Settings"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Basic Settings') }}"
                         @if (is_array($rolePermissions) && in_array('Basic Settings', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Basic Settings') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Payment Gateways"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Payment Gateways') }}"
                         @if (is_array($rolePermissions) && in_array('Payment Gateways', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Payment Gateways') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Push Notification"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Push Notification') }}"
                         @if (is_array($rolePermissions) && in_array('Push Notification', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Push Notification') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Subscribers"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Subscribers') }}"
                         @if (is_array($rolePermissions) && in_array('Subscribers', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Subscribers') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Announcement Popups"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Announcement Popups') }}"
                         @if (is_array($rolePermissions) && in_array('Announcement Popups', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Announcement Popups') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Advertise"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Advertise') }}"
                         @if (is_array($rolePermissions) && in_array('Advertise', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Advertise') }}</span>
                     </label>
 
                     <label class="selectgroup-item">
-                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="Contact Page"
+                      <input type="checkbox" class="selectgroup-input" name="permissions[]" value="{{ __('Contact Page') }}"
                         @if (is_array($rolePermissions) && in_array('Contact Page', $rolePermissions)) checked @endif>
                       <span class="selectgroup-button">{{ __('Contact Page') }}</span>
                     </label>

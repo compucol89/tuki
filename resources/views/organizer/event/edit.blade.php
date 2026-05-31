@@ -376,7 +376,7 @@
                     <div class="form-group">
                       <label>{{ __('Start Date') . '*' }}</label>
                       <input type="date" name="start_date" value="{{ $event->start_date }}"
-                        placeholder="Enter Start Date" class="form-control">
+                        placeholder="{{ __('Enter Start Date') }}" class="form-control">
                     </div>
                   </div>
 
@@ -391,7 +391,7 @@
                     <div class="form-group">
                       <label>{{ __('End Date') . '*' }}</label>
                       <input type="date" name="end_date" value="{{ $event->end_date }}"
-                        placeholder="Enter End Date" class="form-control">
+                        placeholder="{{ __('Enter End Date') }}" class="form-control">
                     </div>
                   </div>
 
@@ -829,7 +829,7 @@
                               </div>
                               <div class="col-lg-4">
                                 <div class="form-group">
-                                  <label for="">{{ __('Zip/Post Code ') }}</label>
+                                  <label for="">{{ __('Zip/Post Code') }}</label>
                                   <input type="text" placeholder="{{ __('Enter Zip/Post Code') }}"
                                     name="{{ $language->code }}_zip_code"
                                     class="form-control"

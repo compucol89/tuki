@@ -28,7 +28,7 @@
   <div class="forget-page">
     @if (!empty($websiteInfo->logo))
       <div class="text-center mb-4">
-        <img class="login-logo" src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="logo">
+        <img class="login-logo" src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('Logo') }}">
       </div>
     @endif
 
@@ -89,8 +89,8 @@
       "use strict";
       var content = {};
 
-      content.message = '{{ session('success') }}';
-      content.title = 'Success';
+      content.message = '{{ __(session('success')) }}';
+      content.title = '{{ __('Success') }}';
       content.icon = 'fa fa-bell';
 
       $.notify(content, {
@@ -111,8 +111,8 @@
       "use strict";
       var content = {};
 
-      content.message = '{{ session('warning') }}';
-      content.title = 'Warning!';
+      content.message = '{{ __(session('warning')) }}';
+      content.title = '{{ __('Warning!') }}';
       content.icon = 'fa fa-bell';
 
       $.notify(content, {

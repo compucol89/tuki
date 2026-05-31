@@ -45,7 +45,7 @@
                 <br>
                 <div class="thumb-preview">
                   @if (!empty($data->footer_logo))
-                    <img src="{{ asset('assets/admin/img/' . $data->footer_logo) }}" alt="footer logo" class="uploaded-img">
+                    <img src="{{ asset('assets/admin/img/' . $data->footer_logo) }}" alt="{{ __('Footer Logo') }}" class="uploaded-img">
                   @else
                     <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..." class="uploaded-img">
                   @endif

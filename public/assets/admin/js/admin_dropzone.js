@@ -121,7 +121,7 @@
                 let msg = `<tr class="table-row" id="trdb${data[i].id}">
                             <td>
                                 <img class="thumb-preview wf-150"
-                                src="${baseUrl}/assets/admin/img/event-gallery/${data[i].image} " alt="slider image">
+                                src="${baseUrl}/assets/admin/img/event-gallery/${data[i].image} " alt="${typeof window.adminGalleryImageAlt !== 'undefined' ? window.adminGalleryImageAlt : 'Imagen de galería del evento'}">
                             </td>
                             <td>
                                 <i class="fas fa-times-circle rmvbtndb" data-indb="${data[i].id}"></i>

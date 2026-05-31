@@ -571,7 +571,7 @@
                     aria-controls="collapse{{ $language->id }}">
                     <i class="fas fa-file-alt mr-2 text-primary"></i>
                     {{ __('Contenido') }} — {{ $language->name }}
-                    {{ $language->is_default == 1 ? '(Default)' : '' }}
+                    {{ $language->is_default == 1 ? '(' . __('Default') . ')' : '' }}
                   </button>
                 </h5>
               </div>
@@ -591,7 +591,7 @@
                       <div class="form-group">
                         <label>{{ __('Event Title') }}*</label>
                         <input type="text" class="form-control" name="{{ $language->code }}_title"
-                          value="{{ @$event_content->title }}" placeholder="Enter Event Name">
+                          value="{{ @$event_content->title }}" placeholder="{{ __('Enter Event Name') }}">
                       </div>
                     </div>
                     <div class="col-lg-6">
@@ -621,7 +621,7 @@
                           <label>{{ __('Address') }}*</label>
                           <input type="text" name="{{ $language->code }}_address"
                             class="form-control"
-                            placeholder="Enter Address" value="{{ @$event_content->address }}">
+                            placeholder="{{ __('Enter Address') }}" value="{{ @$event_content->address }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
@@ -629,7 +629,7 @@
                           <label>{{ __('County') }}*</label>
                           <input type="text" name="{{ $language->code }}_country"
                             class="form-control"
-                            placeholder="Enter Country" value="{{ @$event_content->country }}">
+                            placeholder="{{ __('Enter Country') }}" value="{{ @$event_content->country }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
@@ -637,7 +637,7 @@
                           <label>{{ __('Sate') }}</label>
                           <input type="text" name="{{ $language->code }}_state"
                             class="form-control"
-                            placeholder="Enter State" value="{{ @$event_content->state }}">
+                            placeholder="{{ __('Enter State') }}" value="{{ @$event_content->state }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
@@ -645,13 +645,13 @@
                           <label>{{ __('City') }}*</label>
                           <input type="text" name="{{ $language->code }}_city"
                             class="form-control"
-                            placeholder="Enter City" value="{{ @$event_content->city }}">
+                            placeholder="{{ __('Enter City') }}" value="{{ @$event_content->city }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
                           <label>{{ __('Zip/Post Code') }}</label>
-                          <input type="text" placeholder="Enter Zip/Post Code" name="{{ $language->code }}_zip_code"
+                          <input type="text" placeholder="{{ __('Enter Zip/Post Code') }}" name="{{ $language->code }}_zip_code"
                             class="form-control"
                             value="{{ @$event_content->zip_code }}">
                         </div>
@@ -671,7 +671,7 @@
                   <div class="form-group">
                     <label>{{ __('Description') }}*</label>
                     <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
-                      name="{{ $language->code }}_description" placeholder="Enter Event Description"
+                      name="{{ $language->code }}_description" placeholder="{{ __('Enter Event Description') }}"
                       data-height="300">{!! @$event_content->description !!}</textarea>
                   </div>
 
@@ -680,14 +680,14 @@
                   <div class="form-group">
                     <label>{{ __('Event Meta Keywords') }}</label>
                     <input class="form-control" name="{{ $language->code }}_meta_keywords"
-                      value="{{ @$event_content->meta_keywords }}" placeholder="Enter Meta Keywords"
+                      value="{{ @$event_content->meta_keywords }}" placeholder="{{ __('Enter Meta Keywords') }}"
                       data-role="tagsinput">
                   </div>
 
                   <div class="form-group">
                     <label>{{ __('Event Meta Description') }}</label>
                     <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="4"
-                      placeholder="Enter Meta Description">{{ @$event_content->meta_description }}</textarea>
+                      placeholder="{{ __('Enter Meta Description') }}">{{ @$event_content->meta_description }}</textarea>
                   </div>
 
                   @if (!$singleLanguageMode)
@@ -724,7 +724,7 @@
                 <div class="form-group">
                   <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace del artista en Spotify') }}</label>
                   <input type="url" class="form-control" name="spotify_url" value="{{ $event->spotify_url }}"
-                    placeholder="Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi">
+                    placeholder="{{ __('Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi') }}">
                   <small class="text-muted">{{ __('Abrí Spotify, buscá al artista, hacé clic en los tres puntos → Compartir → Copiar enlace del artista.') }}</small>
                 </div>
               </div>
@@ -732,7 +732,7 @@
                 <div class="form-group">
                   <label><i class="fab fa-youtube mr-1" style="color:#FF0000"></i> {{ __('Enlace del video en YouTube') }}</label>
                   <input type="url" class="form-control" name="youtube_url" value="{{ $event->youtube_url }}"
-                    placeholder="Ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    placeholder="{{ __('Ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ') }}">
                   <small class="text-muted">{{ __('Pegá el enlace del video de YouTube tal como aparece en el navegador.') }}</small>
                 </div>
               </div>
@@ -751,19 +751,19 @@
               <div class="col-lg-4">
                 <div class="form-group">
                   <label><i class="fab fa-facebook mr-1"></i> {{ __('Meta Pixel ID (Facebook)') }}</label>
-                  <input type="text" class="form-control" name="meta_pixel_id" value="{{ $event->meta_pixel_id }}" placeholder="Ej: 1234567890123456">
+                  <input type="text" class="form-control" name="meta_pixel_id" value="{{ $event->meta_pixel_id }}" placeholder="{{ __('Ej: 1234567890123456') }}">
                 </div>
               </div>
               <div class="col-lg-4">
                 <div class="form-group">
                   <label><i class="fab fa-google mr-1"></i> {{ __('Google Analytics ID') }}</label>
-                  <input type="text" class="form-control" name="google_analytics_id" value="{{ $event->google_analytics_id }}" placeholder="Ej: G-XXXXXXXXXX">
+                  <input type="text" class="form-control" name="google_analytics_id" value="{{ $event->google_analytics_id }}" placeholder="{{ __('Ej: G-XXXXXXXXXX') }}">
                 </div>
               </div>
               <div class="col-lg-4">
                 <div class="form-group">
                   <label><i class="fab fa-tiktok mr-1"></i> {{ __('TikTok Pixel ID') }}</label>
-                  <input type="text" class="form-control" name="tiktok_pixel_id" value="{{ $event->tiktok_pixel_id }}" placeholder="Ej: CXXXXXXXXXXXXXXX">
+                  <input type="text" class="form-control" name="tiktok_pixel_id" value="{{ $event->tiktok_pixel_id }}" placeholder="{{ __('Ej: CXXXXXXXXXXXXXXX') }}">
                 </div>
               </div>
             </div>
@@ -845,7 +845,7 @@
     }
 
     #my-dropzone .dz-message span::before {
-      content: "Subi las imagenes del evento";
+      content: "{{ addslashes(__('Subí las imágenes del evento')) }}";
       display: block;
       font-size: 17px;
       margin-bottom: 6px;
@@ -858,7 +858,7 @@
     }
 
     #my-dropzone .dz-message span::after {
-      content: "Arrastralas aqui o hace clic para elegirlas. Puedes seguir sumando imagenes aunque ya hayas cargado una.";
+      content: "{{ addslashes(__('Arrastralas aquí o hacé clic para elegirlas. Podés seguir sumando imágenes aunque ya hayas cargado una.')) }}";
       display: block;
       font-size: 13px;
       font-weight: 500;
@@ -1059,6 +1059,7 @@
 @section('variables')
   <script>
     "use strict";
+    window.adminGalleryImageAlt = @json(__('Imagen de galería del evento'));
     var storeUrl = "{{ route('admin.event.imagesstore') }}";
     var removeUrl = "{{ route('admin.event.imagermv') }}";
     var rmvdbUrl = "{{ route('admin.event.imgdbrmv') }}";

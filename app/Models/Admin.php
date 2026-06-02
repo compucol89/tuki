@@ -28,7 +28,6 @@ class Admin extends Model implements AuthenticatableContract
     'address',
     'details',
     'password',
-    'status'
   ];
 
   /**
@@ -36,7 +35,7 @@ class Admin extends Model implements AuthenticatableContract
    *
    * @var array
    */
-  protected $hidden = ['password'];
+  protected $hidden = ['password', 'remember_token'];
 
   public function role()
   {

@@ -17,13 +17,18 @@ class Organizer extends Model implements AuthenticatableContract
     'phone',
     'username',
     'password',
-    'status',
-    'amount',
     'facebook',
     'twitter',
     'linkedin',
-    'email_verified_at',
-    'theme_version'
+    'email_verification_token',
+    'email_verification_sent_at'
+  ];
+
+  protected $hidden = ['password', 'remember_token', 'email_verification_token'];
+
+  protected $casts = [
+    'email_verified_at' => 'datetime',
+    'email_verification_sent_at' => 'datetime',
   ];
 
   //withdraw

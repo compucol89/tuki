@@ -73,6 +73,6 @@ class MatchEmailRule implements Rule
    */
   public function message()
   {
-    return 'This email does not exist!';
+    return 'Si tu email está registrado, te enviamos un link de recuperación.';
   }
 }

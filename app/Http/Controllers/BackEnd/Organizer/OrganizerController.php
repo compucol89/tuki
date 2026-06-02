@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use App\Rules\MatchEmailRule;
 use App\Models\BasicSettings\MailTemplate;
 use App\Models\Event;
 use App\Models\Event\Booking;
@@ -139,7 +138,7 @@ class OrganizerController extends Controller
         "not_in:$this->admin_user_name"
       ],
       'email' => 'required|email|unique:organizers',
-      'password' => 'required|confirmed|min:6',
+      'password' => 'required|confirmed|min:10',
     ];
 
     $info = Basic::select('google_recaptcha_status')->first();
@@ -163,9 +162,40 @@ class OrganizerController extends Controller
 
 
 
-    $in = $request->all();
-
     $setting = DB::table('basic_settings')->where('uniqid', 12345)->select('organizer_email_verification', 'organizer_admin_approval')->first();
+
+    if ($setting->organizer_admin_approval == 0 && $setting->organizer_email_verification == 0) {
+      $defaultStatus = 1;
+    } else {
+      $defaultStatus = 0;
+    }
+
+    $verificationToken = null;
+    $organizerData = [
+      'name' => $request->name,
+      'username' => $request->username,
+      'email' => $request->email,
+      'password' => Hash::make($request->password),
+    ];
+
+    if ($setting->organizer_email_verification == 1) {
+      $verificationToken = Str::random(64);
+      $organizerData['email_verification_token'] = Hash::make($verificationToken);
+      $organizerData['email_verification_sent_at'] = now();
+    }
+
+    $organizer = Organizer::create($organizerData);
+    $organizer->status = $defaultStatus;
+    $organizer->email_verified_at = null;
+    $organizer->amount = 0;
+    $organizer->save();
+
+    $language = $this->getLanguage();
+    OrganizerInfo::create([
+      'organizer_id' => $organizer->id,
+      'language_id' => $language->id,
+      'name' => $request->name,
+    ]);
 
     if ($setting->organizer_email_verification == 1) {
       // first, get the mail template information from db
@@ -173,6 +203,8 @@ class OrganizerController extends Controller
 
       if (!$mailTemplate) {
         Log::error('Organizer signup: verify_email MailTemplate not found');
+        OrganizerInfo::where('organizer_id', $organizer->id)->delete();
+        $organizer->delete();
         Session::flash('error', __('Error de configuración. Contactá al administrador.'));
         return redirect()->back();
       }
@@ -186,9 +218,7 @@ class OrganizerController extends Controller
         ->first();
 
       $name = $request->username;
-      $token =  $request->email;
-
-      $link = url("organizers/email/verify?token=" . urlencode($token));
+      $link = url("organizers/email/verify?token=" . urlencode($verificationToken));
 
       $mailBody = str_replace('{username}', $name, $mailBody);
       $mailBody = str_replace('{verification_link}', $link, $mailBody);
@@ -227,33 +257,19 @@ class OrganizerController extends Controller
         $mail->Subject = $mailSubject;
         $mail->Body = $mailBody;
 
-        $mail = $mail->send();
+        $mail->send();
 
         Session::flash('success', __('organizer.flash.verification_mail_sent'));
       } catch (\Exception $e) {
         Log::error('Organizer verification mail failed: ' . $e->getMessage());
+        OrganizerInfo::where('organizer_id', $organizer->id)->delete();
+        $organizer->delete();
         Session::flash('error', __('organizer.flash.mail_not_sent'));
         return redirect()->back();
       }
-
-      $in['status'] = 0;
     } else {
       Session::flash('success', __('organizer.flash.signup_success'));
     }
-    if ($setting->organizer_admin_approval == 1) {
-      $in['status'] = 0;
-    }
-
-    if ($setting->organizer_admin_approval == 0 && $setting->organizer_email_verification == 0) {
-      $in['status'] = 1;
-    }
-
-    $in['password'] = Hash::make($request->password);
-    $organizer = Organizer::create($in);
-    $language = $this->getLanguage();
-    $in['organizer_id'] = $organizer->id;
-    $in['language_id'] = $language->id;
-    OrganizerInfo::create($in);
 
     return redirect()->route('organizer.login');
   }
@@ -324,7 +340,6 @@ class OrganizerController extends Controller
       'email' => [
         'required',
         'email:rfc,dns',
-        new MatchEmailRule('organizer')
       ]
     ];
 
@@ -334,23 +349,36 @@ class OrganizerController extends Controller
       return redirect()->back()->withErrors($validator)->withInput();
     }
 
+    $genericMessage = 'Si tu email está registrado, te enviamos un link de recuperación.';
     $user = Organizer::where('email', $request->email)->first();
 
-    // first, get the mail template information from db
+    if (!$user) {
+      usleep(random_int(100000, 500000));
+      Session::flash('success', $genericMessage);
+      return redirect()->back();
+    }
+
     $mailTemplate = MailTemplate::where('mail_type', 'reset_password')->first();
+    if (!$mailTemplate) {
+      Log::error('Organizer password reset: reset_password MailTemplate not found');
+      Session::flash('error', __('organizer.flash.mail_not_sent'));
+      return redirect()->back();
+    }
+
     $mailSubject = $mailTemplate->mail_subject;
     $mailBody = $mailTemplate->mail_body;
 
-    // second, send a password reset link to user via email
     $info = DB::table('basic_settings')
       ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
       ->first();
 
-    $name = $user->name;
-    $token =  Str::random(32);
+    $name = $user->username;
+    $token =  Str::random(64);
+    DB::table('password_resets')->where('email', $user->email)->delete();
     DB::table('password_resets')->insert([
       'email' => $user->email,
-      'token' => $token,
+      'token' => Hash::make('organizer|' . $token),
+      'created_at' => now(),
     ]);
 
     $link = url("organizer/reset-password?token=" . $token);
@@ -359,12 +387,10 @@ class OrganizerController extends Controller
     $mailBody = str_replace('{password_reset_link}', $link, $mailBody);
     $mailBody = str_replace('{website_title}', $info->website_title, $mailBody);
 
-    // initialize a new mail
     $mail = new PHPMailer(true);
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // if smtp status == 1, then set some value for PHPMailer
     if ($info->smtp_status == 1) {
       $mail->isSMTP();
       $mail->Host       = $info->smtp_host;
@@ -379,7 +405,6 @@ class OrganizerController extends Controller
       $mail->Port       = $info->smtp_port;
     }
 
-    // finally add other informations and send the mail
     try {
       $mail->setFrom($info->from_mail, $info->from_name);
       $mail->addAddress($request->email);
@@ -390,12 +415,13 @@ class OrganizerController extends Controller
 
       $mail->send();
 
-      Session::flash('success', __('organizer.flash.mail_sent'));
+      Session::flash('success', $genericMessage);
     } catch (\Exception $e) {
+      Log::error('Organizer password reset mail failed: ' . $e->getMessage());
+      DB::table('password_resets')->where('email', $user->email)->delete();
       Session::flash('error', __('organizer.flash.mail_not_sent'));
     }
 
-    // store user email in session to use it later
     $request->session()->put('userEmail', $user->email);
 
     return redirect()->back();
@@ -409,14 +435,43 @@ class OrganizerController extends Controller
   public function update_password(Request $request)
   {
     $request->validate([
-      'password' => 'required|confirmed|min:6',
+      'password' => 'required|confirmed|min:10',
       'token' => 'required',
     ]);
-    $reset = DB::table('password_resets')->where('token', $request->token)->first();
-    $email = $reset->email;
-    $organizer = Organizer::where('email',  $email)->first();
+
+    $reset = null;
+    foreach (DB::table('password_resets')->get() as $candidate) {
+      try {
+        if (Hash::check('organizer|' . $request->token, $candidate->token)) {
+          $reset = $candidate;
+          break;
+        }
+      } catch (\Exception $e) {
+        continue;
+      }
+    }
+
+    if (!$reset) {
+      Session::flash('alert', 'El link de recuperación es inválido o ya fue utilizado.');
+      return redirect()->route('organizer.login');
+    }
+
+    if ($reset->created_at && \Carbon\Carbon::parse($reset->created_at)->diffInMinutes(now()) > 60) {
+      DB::table('password_resets')->where('email', $reset->email)->delete();
+      Session::flash('alert', 'El link de recuperación expiró. Pedí uno nuevo.');
+      return redirect()->route('organizer.forget.password');
+    }
+
+    $organizer = Organizer::where('email',  $reset->email)->first();
+    if (!$organizer) {
+      DB::table('password_resets')->where('email', $reset->email)->delete();
+      Session::flash('alert', 'Cuenta no encontrada.');
+      return redirect()->route('organizer.login');
+    }
+
     $organizer->password = Hash::make($request->password);
     $organizer->save();
+    DB::table('password_resets')->where('email', $reset->email)->delete();
     Session::flash('success', __('organizer.flash.password_reset'));
 
     return redirect()->route('organizer.login');
@@ -442,7 +497,7 @@ class OrganizerController extends Controller
         new MatchOldPasswordRule('organizer')
 
       ],
-      'new_password' => 'required|confirmed',
+      'new_password' => 'required|confirmed|min:10',
       'new_password_confirmation' => 'required'
     ];
 
@@ -578,7 +633,10 @@ class OrganizerController extends Controller
       ->first();
 
     $name = $user->name;
-    $token =  $user->email;
+    $token = Str::random(64);
+    $user->email_verification_token = Hash::make($token);
+    $user->email_verification_sent_at = now();
+    $user->save();
 
     $link = url("organizers/email/verify?token=" . urlencode($token));
 
@@ -632,24 +690,50 @@ class OrganizerController extends Controller
   //confirm_email'
   public function confirm_email()
   {
-    $email = request()->input('token');
-    $user = Organizer::where('email', $email)->first();
+    $token = request()->input('token');
 
-    if (!$user) {
+    if (empty($token)) {
       Session::flash('error', __('Link de verificación inválido.'));
       return redirect()->route('organizer.login');
     }
 
+    $candidates = Organizer::whereNotNull('email_verification_token')
+      ->whereNull('email_verified_at')
+      ->get();
+
+    $user = null;
+    foreach ($candidates as $candidate) {
+      if (Hash::check($token, $candidate->email_verification_token)) {
+        $user = $candidate;
+        break;
+      }
+    }
+
+    if (!$user) {
+      Session::flash('error', __('Link de verificación inválido o expirado.'));
+      return redirect()->route('organizer.login');
+    }
+
+    if ($user->email_verification_sent_at && $user->email_verification_sent_at->diffInMinutes(now()) > 1440) {
+      $user->email_verification_token = null;
+      $user->email_verification_sent_at = null;
+      $user->save();
+      Session::flash('error', __('El link de verificación expiró. Pedí uno nuevo desde tu panel.'));
+      return redirect()->route('organizer.login');
+    }
+
     $user->email_verified_at = now();
+    $user->email_verification_token = null;
+    $user->email_verification_sent_at = null;
     $setting = DB::table('basic_settings')->where('uniqid', 12345)->select('organizer_admin_approval')->first();
     if ($setting->organizer_admin_approval != 1) {
       $user->status = 1;
     }
-
     $user->save();
-    Auth::guard('organizer')->login($user);
+
     Session::put('secret_login', 0);
-    return redirect()->route('organizer.dashboard');
+    Session::flash('success', __('Email verificado. Ya podés iniciar sesión.'));
+    return redirect()->route('organizer.login');
   }
   //pwa
   public function pwa()

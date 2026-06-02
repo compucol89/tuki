@@ -22,13 +22,13 @@ Route::middleware('guest:customer')->group(function () {
 });
 
 Route::middleware('guest:customer')->prefix('usuario')->group(function () {
-  Route::post('/create', 'FrontEnd\CustomerController@create')->name('customer.create');
+  Route::post('/create', 'FrontEnd\CustomerController@create')->middleware('throttle:3,1')->name('customer.create');
   Route::post('/store', 'FrontEnd\CustomerController@authentication')->middleware('throttle:5,1')->name('customer.authentication');
   Route::get('auth/facebook', 'FrontEnd\CustomerController@facebookRedirect')->name('auth.facebook');
   Route::get('auth/google', 'FrontEnd\CustomerController@googleRedirect')->name('auth.google');
   Route::post('/send-forget-mail', 'FrontEnd\CustomerController@forget_mail')->middleware('throttle:5,1')->name('customer.forget.mail');
   Route::get('/reset-password', 'FrontEnd\CustomerController@reset_password')->name('customer.reset.password');
-  Route::post('/update-forget-password', 'FrontEnd\CustomerController@update_password')->name('customer.update-forget-password');
+  Route::post('/update-forget-password', 'FrontEnd\CustomerController@update_password')->middleware('throttle:5,1')->name('customer.update-forget-password');
 });
 
 Route::get('/customer/login', function () {
@@ -66,4 +66,6 @@ Route::prefix('/admin')->middleware('guest:admin')->group(function () {
   Route::post('/auth', 'BackEnd\AdminController@authentication')->middleware('throttle:5,1')->name('admin.auth');
   Route::get('/forget-password', 'BackEnd\AdminController@forgetPassword')->name('admin.forget_password');
   Route::post('/mail-for-forget-password', 'BackEnd\AdminController@sendMail')->middleware('throttle:5,1')->name('admin.mail_for_forget_password');
+  Route::get('/reset-password', 'BackEnd\AdminController@resetPassword')->name('admin.reset_password');
+  Route::post('/update-reset-password', 'BackEnd\AdminController@updateResetPassword')->middleware('throttle:5,1')->name('admin.update_reset_password');
 });

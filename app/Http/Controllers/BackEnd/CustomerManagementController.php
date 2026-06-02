@@ -10,6 +10,7 @@ use App\Models\Event\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -88,7 +89,7 @@ class CustomerManagementController extends Controller
       'email' => [
         'required',
         'email',
-        Rule::unique('customers', 'username')
+        Rule::unique('customers', 'email')
       ],
       'username' => [
         'required',
@@ -96,7 +97,7 @@ class CustomerManagementController extends Controller
         "not_in:$this->admin_user_name",
         Rule::unique('customers', 'username')
       ],
-      'password' => 'required|confirmed|min:6'
+      'password' => 'required|confirmed|min:10'
     ];
 
     $validator = Validator::make($request->all(), $rules);
@@ -108,7 +109,13 @@ class CustomerManagementController extends Controller
     }
 
 
-    $in = $request->all();
+    $customerData = [
+      'fname' => $request->fname,
+      'lname' => $request->lname,
+      'email' => $request->email,
+      'username' => $request->username,
+      'password' => Hash::make($request->password),
+    ];
 
     $file = $request->file('photo');
     if ($file) {
@@ -117,13 +124,13 @@ class CustomerManagementController extends Controller
       $fileName = uniqid() . '.' . $extension;
       @mkdir($directory, 0775, true);
       $file->move($directory, $fileName);
-      $in['photo'] = $fileName;
+      $customerData['photo'] = $fileName;
     }
-    $in['status'] = 1;
-    $in['email_verified_at'] = now();
-    $in['password'] = Hash::make($request->password);
 
-    Customer::create($in);
+    $customer = Customer::create($customerData);
+    $customer->status = 1;
+    $customer->email_verified_at = now();
+    $customer->save();
     Session::flash('success', __('admin.flash.added_successfully'));
 
     return Response::json(['status' => 'success'], 200);
@@ -134,10 +141,11 @@ class CustomerManagementController extends Controller
 
     $user = Customer::find($id);
     if ($request->account_status == 1) {
-      $user->update(['status' => 1]);
+      $user->status = 1;
     } else {
-      $user->update(['status' => 0]);
+      $user->status = 0;
     }
+    $user->save();
     Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
@@ -146,10 +154,11 @@ class CustomerManagementController extends Controller
   {
     $user = Customer::find($id);
     if ($request->email_status == 1) {
-      $user->update(['email_verified_at' => now()]);
+      $user->email_verified_at = now();
     } else {
-      $user->update(['email_verified_at' => null]);
+      $user->email_verified_at = null;
     }
+    $user->save();
     Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
@@ -163,7 +172,7 @@ class CustomerManagementController extends Controller
   public function updatePassword(Request $request, $id)
   {
     $rules = [
-      'new_password' => 'required|confirmed',
+      'new_password' => 'required|confirmed|min:10',
       'new_password_confirmation' => 'required'
     ];
 
@@ -324,6 +333,10 @@ class CustomerManagementController extends Controller
   {
     Session::put('secret_login', true);
     $user = Customer::where('id', $id)->first();
+    Log::warning('Admin secret login as customer', [
+      'admin_id' => Auth::guard('admin')->id(),
+      'customer_id' => $id,
+    ]);
     Auth::guard('customer')->login($user);
     return redirect()->route('customer.dashboard');
   }

@@ -32,8 +32,6 @@ class Customer extends Model implements AuthenticatableContract
     'zip_code',
     'password',
     'gender',
-    'status',
-    'email_verified_at',
     'verification_token'
   ];
 

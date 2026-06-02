@@ -10,7 +10,6 @@ use App\Models\Organizer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use App\Rules\MatchEmailRule;
 use App\Models\BasicSettings\MailTemplate;
 use App\Models\Customer;
 use App\Models\Event\Booking;
@@ -21,7 +20,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -62,7 +60,7 @@ class CustomerController extends Controller
         "not_in:$this->admin_user_name",
         Rule::unique('customers', 'username')
       ],
-      'password' => 'required|confirmed|min:6',
+      'password' => 'required|confirmed|min:10',
     ];
 
     $info = Basic::select('google_recaptcha_status')->first();
@@ -81,7 +79,6 @@ class CustomerController extends Controller
 
     $request->validate($rules, $messages);
 
-    // Validar que existe el template de email antes de crear la cuenta
     $mailTemplate = MailTemplate::where('mail_type', 'verify_email')->first();
     if (!$mailTemplate) {
       Log::error('Customer signup: verify_email MailTemplate not found');
@@ -89,18 +86,23 @@ class CustomerController extends Controller
       return redirect()->back();
     }
 
-    $in = $request->all();
-    $in['password'] = Hash::make($request->password);
     $token = Str::random(32);
-    $in['verification_token'] = $token;
 
-    // Crear customer PRIMERO, luego enviar mail
-    $customer = Customer::create($in);
+    $customer = Customer::create([
+      'fname' => $request->fname,
+      'lname' => $request->lname,
+      'email' => $request->email,
+      'username' => $request->username,
+      'password' => Hash::make($request->password),
+      'verification_token' => $token,
+    ]);
+    $customer->status = 0;
+    $customer->email_verified_at = null;
+    $customer->save();
 
     $mailSent = $this->sendVerificationMail($request, $token, $mailTemplate);
 
     if (!$mailSent) {
-      // Si el mail falla, eliminar la cuenta para evitar cuentas huérfanas
       $customer->delete();
       Session::flash('error', __('No pudimos enviar el correo de verificación. Intentalo de nuevo más tarde.'));
       return redirect()->back();
@@ -168,11 +170,10 @@ class CustomerController extends Controller
       $customer = Customer::where('verification_token', $token)->firstOrFail();
 
       // after verify customer email, put "null" in the "verification token"
-      $customer->update([
-        'email_verified_at' => date('Y-m-d H:i:s'),
-        'status' => 1,
-        'verification_token' => null
-      ]);
+      $customer->email_verified_at = now();
+      $customer->status = 1;
+      $customer->verification_token = null;
+      $customer->save();
 
       // after email verification, authenticate this customer
       Auth::guard('customer')->login($customer);
@@ -288,7 +289,6 @@ class CustomerController extends Controller
       'email' => [
         'required',
         'email:rfc,dns',
-        new MatchEmailRule('customers')
       ]
     ];
 
@@ -298,23 +298,36 @@ class CustomerController extends Controller
       return redirect()->back()->withErrors($validator)->withInput();
     }
 
+    $genericMessage = 'Si tu email está registrado, te enviamos un link de recuperación.';
     $user = Customer::where('email', $request->email)->first();
 
-    // first, get the mail template information from db
+    if (!$user) {
+      usleep(random_int(100000, 500000));
+      Session::flash('success', $genericMessage);
+      return redirect()->back();
+    }
+
     $mailTemplate = MailTemplate::where('mail_type', 'reset_password')->first();
+    if (!$mailTemplate) {
+      Log::error('Customer password reset: reset_password MailTemplate not found');
+      Session::flash('error', __('customer.flash.mail_not_sent'));
+      return redirect()->back();
+    }
+
     $mailSubject = $mailTemplate->mail_subject;
     $mailBody = $mailTemplate->mail_body;
 
-    // second, send a password reset link to user via email
     $info = DB::table('basic_settings')
       ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
       ->first();
 
-    $name = $user->name;
-    $token =  Str::random(32);
+    $name = trim(($user->fname ?? '') . ' ' . ($user->lname ?? ''));
+    $token =  Str::random(64);
+    DB::table('password_resets')->where('email', $user->email)->delete();
     DB::table('password_resets')->insert([
       'email' => $user->email,
-      'token' => $token,
+      'token' => Hash::make('customer|' . $token),
+      'created_at' => now(),
     ]);
 
     $link = route('customer.reset.password', ['token' => $token], true);
@@ -323,12 +336,10 @@ class CustomerController extends Controller
     $mailBody = str_replace('{password_reset_link}', $link, $mailBody);
     $mailBody = str_replace('{website_title}', $info->website_title, $mailBody);
 
-    // initialize a new mail
     $mail = new PHPMailer(true);
     $mail->CharSet = 'UTF-8';
     $mail->Encoding = 'base64';
 
-    // if smtp status == 1, then set some value for PHPMailer
     if ($info->smtp_status == 1) {
       $mail->isSMTP();
       $mail->Host       = $info->smtp_host;
@@ -343,7 +354,6 @@ class CustomerController extends Controller
       $mail->Port       = $info->smtp_port;
     }
 
-    // finally add other informations and send the mail
     try {
       $mail->setFrom($info->from_mail, $info->from_name);
       $mail->addAddress($request->email);
@@ -354,12 +364,13 @@ class CustomerController extends Controller
 
       $mail->send();
 
-      Session::flash('success', __('customer.flash.mail_sent'));
+      Session::flash('success', $genericMessage);
     } catch (\Exception $e) {
+      Log::error('Customer password reset mail failed: ' . $e->getMessage());
+      DB::table('password_resets')->where('email', $user->email)->delete();
       Session::flash('error', __('customer.flash.mail_not_sent'));
     }
 
-    // store user email in session to use it later
     $request->session()->put('userEmail', $user->email);
 
     return redirect()->back();
@@ -373,14 +384,43 @@ class CustomerController extends Controller
   public function update_password(Request $request)
   {
     $request->validate([
-      'password' => 'required|confirmed|min:6',
+      'password' => 'required|confirmed|min:10',
       'token' => 'required',
     ]);
-    $reset = DB::table('password_resets')->where('token', $request->token)->first();
-    $email = $reset->email;
-    $customer = Customer::where('email',  $email)->first();
+
+    $reset = null;
+    foreach (DB::table('password_resets')->get() as $candidate) {
+      try {
+        if (Hash::check('customer|' . $request->token, $candidate->token)) {
+          $reset = $candidate;
+          break;
+        }
+      } catch (\Exception $e) {
+        continue;
+      }
+    }
+
+    if (!$reset) {
+      Session::flash('alert', 'El link de recuperación es inválido o ya fue utilizado.');
+      return redirect()->route('customer.login');
+    }
+
+    if ($reset->created_at && \Carbon\Carbon::parse($reset->created_at)->diffInMinutes(now()) > 60) {
+      DB::table('password_resets')->where('email', $reset->email)->delete();
+      Session::flash('alert', 'El link de recuperación expiró. Pedí uno nuevo.');
+      return redirect()->route('customer.forget.password');
+    }
+
+    $customer = Customer::where('email',  $reset->email)->first();
+    if (!$customer) {
+      DB::table('password_resets')->where('email', $reset->email)->delete();
+      Session::flash('alert', 'Cuenta no encontrada.');
+      return redirect()->route('customer.login');
+    }
+
     $customer->password = Hash::make($request->password);
     $customer->save();
+    DB::table('password_resets')->where('email', $reset->email)->delete();
     Session::flash('success', __('customer.flash.password_reset'));
 
     return redirect()->route('customer.login');
@@ -405,7 +445,7 @@ class CustomerController extends Controller
         new MatchOldPasswordRule('customer')
 
       ],
-      'new_password' => 'required|confirmed',
+      'new_password' => 'required|confirmed|min:10',
       'new_password_confirmation' => 'required'
     ];
 
@@ -455,7 +495,19 @@ class CustomerController extends Controller
       'photo' => $request->hasFile('photo') ? 'mimes:jpg,jpeg,png' : ''
     ]);
 
-    $in = $request->all();
+    $in = $request->only([
+      'fname',
+      'lname',
+      'email',
+      'username',
+      'phone',
+      'address',
+      'country',
+      'state',
+      'city',
+      'zip_code',
+      'gender',
+    ]);
     $file = $request->file('photo');
     if ($file) {
       $extension = $file->getClientOriginalExtension();
@@ -545,14 +597,16 @@ class CustomerController extends Controller
           'username' => $user->id,
           'provider' => $driver,
           'provider_id' => $user->id,
-          'password' => encrypt('123456'),
-          'email_verified_at' => now()
+          'password' => Hash::make(Str::random(32)),
         ]);
+        $createUser->email_verified_at = now();
+        $createUser->status = 1;
+        $createUser->save();
 
         Auth::guard('customer')->login($createUser);
         return redirect()->route('customer.dashboard');
       }
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       Session::flash('error', 'No se pudo completar el inicio de sesión. Intentá de nuevo.');
       return redirect()->route('customer.login');
     }

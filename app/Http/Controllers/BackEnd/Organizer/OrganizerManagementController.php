@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -96,7 +97,8 @@ class OrganizerManagementController extends Controller
     $rules = [
       'email' => [
         'required',
-        Rule::unique('organizers', 'username')
+        'email',
+        Rule::unique('organizers', 'email')
       ],
       'username' => [
         'required',
@@ -104,6 +106,7 @@ class OrganizerManagementController extends Controller
         "not_in:$this->admin_user_name",
         Rule::unique('organizers', 'username')
       ],
+      'password' => 'required|confirmed|min:10',
     ];
 
     $languages = Language::get();
@@ -117,8 +120,11 @@ class OrganizerManagementController extends Controller
 
     $request->validate($rules, $messages);
 
-    $in = $request->all();
-    $in['password'] = Hash::make($request->password);
+    $organizerData = [
+      'username' => $request->username,
+      'email' => $request->email,
+      'password' => Hash::make($request->password),
+    ];
 
     $file = $request->file('photo');
     if ($file) {
@@ -127,13 +133,14 @@ class OrganizerManagementController extends Controller
       $fileName = uniqid() . '.' . $extension;
       @mkdir($directory, 0775, true);
       $file->move($directory, $fileName);
-      $in['photo'] = $fileName;
+      $organizerData['photo'] = $fileName;
     }
 
-    $in['status'] = 1;
-    $in['email_verified_at'] = now();
-
-    $organizer = Organizer::create($in);
+    $organizer = Organizer::create($organizerData);
+    $organizer->status = 1;
+    $organizer->email_verified_at = now();
+    $organizer->amount = 0;
+    $organizer->save();
 
     $languages = Language::get();
     foreach ($languages as $language) {
@@ -161,10 +168,11 @@ class OrganizerManagementController extends Controller
   {
     $organizer = Organizer::find($id);
     if ($request->email_status == 1) {
-      $organizer->update(['email_verified_at' => now()]);
+      $organizer->email_verified_at = now();
     } else {
-      $organizer->update(['email_verified_at' => null]);
+      $organizer->email_verified_at = null;
     }
+    $organizer->save();
     Session::flash('success', __('organizer.flash.email_verification_status_updated'));
 
     return redirect()->back();
@@ -204,10 +212,11 @@ class OrganizerManagementController extends Controller
 
     $user = Organizer::find($id);
     if ($request->account_status == 1) {
-      $user->update(['status' => 1]);
+      $user->status = 1;
     } else {
-      $user->update(['status' => 0]);
+      $user->status = 0;
     }
+    $user->save();
     Session::flash('success', __('organizer.flash.updated_successfully'));
 
     return redirect()->back();
@@ -221,7 +230,7 @@ class OrganizerManagementController extends Controller
   public function updatePassword(Request $request, $id)
   {
     $rules = [
-      'new_password' => 'required|confirmed',
+      'new_password' => 'required|confirmed|min:10',
       'new_password_confirmation' => 'required'
     ];
 
@@ -583,6 +592,10 @@ class OrganizerManagementController extends Controller
   {
     Session::put('secret_login', 1);
     $organizer = Organizer::where('id', $id)->first();
+    Log::warning('Admin secret login as organizer', [
+      'admin_id' => Auth::guard('admin')->id(),
+      'organizer_id' => $id,
+    ]);
     Auth::guard('organizer')->login($organizer);
     return redirect()->route('organizer.dashboard');
   }

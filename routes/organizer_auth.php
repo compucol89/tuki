@@ -10,12 +10,12 @@ Route::prefix('/organizer')->group(function () {
   Route::middleware('guest:organizer')->group(function () {
     Route::get('/login', 'BackEnd\Organizer\OrganizerController@login')->name('organizer.login');
     Route::get('/signup', 'BackEnd\Organizer\OrganizerController@signup')->name('organizer.signup');
-    Route::post('/create', 'BackEnd\Organizer\OrganizerController@create')->name('organizer.create');
+    Route::post('/create', 'BackEnd\Organizer\OrganizerController@create')->middleware('throttle:3,1')->name('organizer.create');
     Route::post('/store', 'BackEnd\Organizer\OrganizerController@authentication')->middleware('throttle:5,1')->name('organizer.authentication');
     Route::get('/forget-password', 'BackEnd\Organizer\OrganizerController@forget_passord')->name('organizer.forget.password');
     Route::post('/send-forget-mail', 'BackEnd\Organizer\OrganizerController@forget_mail')->middleware('throttle:5,1')->name('organizer.forget.mail');
     Route::get('/reset-password', 'BackEnd\Organizer\OrganizerController@reset_password')->name('organizer.reset.password');
-    Route::post('/update-forget-password', 'BackEnd\Organizer\OrganizerController@update_password')->name('organizer.update-forget-password');
+    Route::post('/update-forget-password', 'BackEnd\Organizer\OrganizerController@update_password')->middleware('throttle:5,1')->name('organizer.update-forget-password');
   });
 });
 

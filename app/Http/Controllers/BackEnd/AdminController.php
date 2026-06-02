@@ -18,7 +18,6 @@ use App\Models\ShopManagement\Product;
 use App\Models\ShopManagement\ProductOrder;
 use App\Models\Transaction;
 use App\Rules\ImageMimeTypeRule;
-use App\Rules\MatchEmailRule;
 use App\Rules\MatchOldPasswordRule;
 use DateTime;
 use Illuminate\Http\Request;
@@ -90,7 +89,6 @@ class AdminController extends Controller
       'email' => [
         'required',
         'email:rfc,dns',
-        new MatchEmailRule('admin')
       ]
     ];
 
@@ -100,18 +98,29 @@ class AdminController extends Controller
       return redirect()->back()->withErrors($validator->errors())->withInput();
     }
 
-    // create a new password and store it in db
-    $newPassword = Str::random(16);
-
+    $genericMessage = 'Si tu email está registrado, te enviamos un link para restablecer tu contraseña.';
     $admin = Admin::where('email', $request->email)->first();
 
-    $admin->update([
-      'password' => Hash::make($newPassword)
+    if (!$admin) {
+      usleep(random_int(100000, 500000));
+      Session::flash('success', $genericMessage);
+      return redirect()->back();
+    }
+
+    $token = Str::random(64);
+
+    DB::table('password_resets')->where('email', $admin->email)->delete();
+
+    DB::table('password_resets')->insert([
+      'email' => $admin->email,
+      'token' => Hash::make('admin|' . $token),
+      'created_at' => now(),
     ]);
 
-    // send newly created password to admin via email
+    $link = route('admin.reset_password', ['token' => $token], true);
+
     $info = DB::table('basic_settings')
-      ->select('smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
+      ->select('website_title', 'smtp_status', 'smtp_host', 'smtp_port', 'encryption', 'smtp_username', 'smtp_password', 'from_mail', 'from_name')
       ->first();
 
     // initialize a new mail
@@ -140,17 +149,74 @@ class AdminController extends Controller
       $mail->addAddress($request->email);
 
       $mail->isHTML(true);
-      $mail->Subject = 'Reset Password';
-      $mail->Body = 'Hello ' . $admin->first_name . ',<br/><br/>Your password has reset. Your new password is: ' . $newPassword . '<br/><br/>Now, you can login with your new password. You can change your password later.<br/><br/>Thank you.';
+      $mail->Subject = 'Reset Password - ' . ($info->website_title ?? 'Tukipass');
+      $mail->Body = 'Hello ' . $admin->first_name . ',<br/><br/>Recibimos un pedido para restablecer la contraseña de tu cuenta.<br/><br/>Si vos lo pediste, ingresá al siguiente link para definir una nueva contraseña:<br/><br/><a href="' . $link . '">' . $link . '</a><br/><br/>Este link expira en 60 minutos y solo puede usarse una vez.<br/><br/>Si no realizaste este pedido, podés ignorar este mensaje.';
 
       $mail->send();
 
-      Session::flash('success', 'A mail has been sent to your email address.');
+      Session::flash('success', $genericMessage);
     } catch (Exception $e) {
-      Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+      Log::error('Admin password reset mail failed: ' . $e->getMessage());
+      DB::table('password_resets')->where('email', $admin->email)->delete();
+      Session::flash('warning', 'No pudimos enviar el mail. Intentalo de nuevo más tarde.');
     }
 
     return redirect()->back();
+  }
+
+  public function resetPassword(Request $request)
+  {
+    return view('backend.reset-password', ['token' => $request->query('token')]);
+  }
+
+  public function updateResetPassword(Request $request)
+  {
+    $request->validate([
+      'token' => 'required',
+      'password' => 'required|confirmed|min:10',
+    ]);
+
+    $token = $request->token;
+
+    $row = null;
+    foreach (DB::table('password_resets')->get() as $candidate) {
+      try {
+        if (Hash::check('admin|' . $token, $candidate->token)) {
+          $row = $candidate;
+          break;
+        }
+      } catch (\Exception $e) {
+        continue;
+      }
+    }
+
+    if (!$row) {
+      Session::flash('alert', 'El link de recuperación es inválido o ya fue utilizado.');
+      return redirect()->route('admin.login');
+    }
+
+    if ($row->created_at && \Carbon\Carbon::parse($row->created_at)->diffInMinutes(now()) > 60) {
+      DB::table('password_resets')->where('email', $row->email)->delete();
+      Session::flash('alert', 'El link de recuperación expiró. Pedí uno nuevo.');
+      return redirect()->route('admin.forget_password');
+    }
+
+    $admin = Admin::where('email', $row->email)->first();
+    if (!$admin) {
+      DB::table('password_resets')->where('email', $row->email)->delete();
+      Session::flash('alert', 'Cuenta no encontrada.');
+      return redirect()->route('admin.login');
+    }
+
+    $admin->password = Hash::make($request->password);
+    $admin->save();
+
+    DB::table('password_resets')->where('email', $row->email)->delete();
+
+    Log::info('Admin password reset completed', ['admin_id' => $admin->id, 'email' => $admin->email]);
+
+    Session::flash('success', 'Tu contraseña fue actualizada. Iniciá sesión.');
+    return redirect()->route('admin.login');
   }
 
   public function redirectToDashboard()
@@ -394,7 +460,7 @@ class AdminController extends Controller
         'required',
         new MatchOldPasswordRule('admin')
       ],
-      'new_password' => 'required|confirmed',
+      'new_password' => 'required|confirmed|min:10',
       'new_password_confirmation' => 'required'
     ];
 

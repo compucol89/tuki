@@ -46,10 +46,11 @@ class SiteAdminController extends Controller
     }
 
     if ($request->status == 1) {
-      $admin->update(['status' => 1]);
+      $admin->status = 1;
     } else {
-      $admin->update(['status' => 0]);
+      $admin->status = 0;
     }
+    $admin->save();
 
     $request->session()->flash('success', 'Status updated successfully!');
 

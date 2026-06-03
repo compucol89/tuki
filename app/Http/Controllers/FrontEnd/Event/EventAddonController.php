@@ -151,7 +151,6 @@ class EventAddonController extends Controller
 
     if (empty($addons)) {
       Session::put('cart_addons.' . $event->id, []);
-      Session::put('event_addons_decided.' . $event->id, true);
       return response()->json(['status' => 'success', 'items' => 0, 'total' => 0.0], 200);
     }
 
@@ -180,7 +179,6 @@ class EventAddonController extends Controller
           $validated[(int) $addonId] = $qty;
         }
         Session::put('cart_addons.' . $event->id, $validated);
-        Session::put('event_addons_decided.' . $event->id, true);
       });
 
       return response()->json([
@@ -197,17 +195,5 @@ class EventAddonController extends Controller
         'message' => $e->getMessage(),
       ], 422);
     }
-  }
-
-  /**
-   * Marca el modal de add-ons como ya visto/descartado en este evento.
-   * Permite al handler JS del modal submitear el form de tickets sin
-   * reabrir el modal en submits subsecuentes de la misma sesión.
-   * El flag se limpia en EventAddonCartService::forgetEvent (post-checkout).
-   */
-  public function markDecided(Event $event, Request $request)
-  {
-    Session::put('event_addons_decided.' . $event->id, true);
-    return response()->json(['status' => 'success'], 200);
   }
 }

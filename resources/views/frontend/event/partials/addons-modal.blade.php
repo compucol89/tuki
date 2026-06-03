@@ -56,7 +56,6 @@
     aria-labelledby="edAddonsModalTitle"
     aria-hidden="true"
     data-update-url="{{ route('event.addon.update-ajax', ['event' => $eventId]) }}"
-    data-decided="{{ Session::get('event_addons_decided.' . $eventId, false) ? '1' : '0' }}"
   >
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
       <div class="modal-content">
@@ -174,12 +173,6 @@
         </div>
 
         <div class="modal-footer ed-addons-modal__footer">
-          <div class="ed-addons-modal__never-show form-check">
-            <input class="form-check-input" type="checkbox" id="edAddonsNeverShow">
-            <label class="form-check-label small" for="edAddonsNeverShow">
-              {{ __('No volver a mostrar adicionales para este evento') }}
-            </label>
-          </div>
           <p class="ed-addons-modal__recap" aria-live="polite" aria-atomic="true">
             <span id="edAddonsCount">0</span>
             {{ __('adicionales sumados') }} ·

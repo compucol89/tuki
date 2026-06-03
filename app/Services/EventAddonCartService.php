@@ -139,7 +139,6 @@ class EventAddonCartService
 
     Session::forget('event_addons_summary');
     Session::forget('event_addons_total');
-    Session::forget('event_addons_decided.' . $eventId);
   }
 
   public function itemsForEvent(int $eventId, ?array $cartAddons = null): array

@@ -4586,6 +4586,20 @@ body.page-event-detail .footer-section.footer-section--premium {
   }
 }
 
+@media only screen and (max-width: 360px) {
+  .main-header--premium .main-menu .navbar-header .logo-mobile img {
+    height: 32px;
+    max-width: 145px;
+  }
+
+  .main-header--premium .header-ingresar-btn {
+    min-height: 38px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+}
+
 @media (max-width: 575px) {
     .footer-section {
         padding-top: 40px !important;

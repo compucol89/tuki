@@ -114,7 +114,7 @@
 @section('content')
 <div class="auth-split auth-split--context auth-split--event">
 
-  <div class="auth-split__visual" style="background-image: url('{{ $visualImage }}')">
+  <div class="auth-split__visual" data-auth-bg="{{ $visualImage }}">
     <div class="auth-split__visual-overlay"></div>
     <div class="auth-split__visual-content">
       <div class="auth-split__tagline auth-split__tagline--context">
@@ -140,10 +140,6 @@
 
   <div class="auth-split__form">
     <div class="auth-split__form-inner">
-      <a href="{{ route('index') }}" class="auth-split__logo-mobile">
-        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('Logo de Tukipass') }}">
-      </a>
-
       @if (!$isEventCheckout)
         <span class="auth-split__form-eyebrow">{{ $formEyebrow }}</span>
       @endif
@@ -250,3 +246,13 @@
 
 </div>
 @endsection
+
+@push('scripts')
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var visual = document.querySelector('[data-auth-bg]');
+      if (!visual || !window.matchMedia('(min-width: 768px)').matches) { return; }
+      visual.style.backgroundImage = 'url("' + visual.dataset.authBg + '")';
+    });
+  </script>
+@endpush

@@ -2805,24 +2805,24 @@ body.has-js.page-event-detail .event-addons--sidebar {
 }
 
 body.page-event-detail .ed-addons-modal .modal-content {
-  border: none;
-  border-radius: var(--ed-radius-lg, 16px);
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+  border: 1px solid var(--surface-card-border);
+  border-radius: var(--surface-card-radius);
+  box-shadow: var(--surface-card-shadow);
 }
 
 body.page-event-detail .ed-addons-modal .modal-header {
-  border-bottom: 1px solid #e2e8f0;
-  padding: var(--ed-space-5, 1.25rem) var(--ed-space-6, 1.5rem);
+  border-bottom: 1px solid var(--surface-section-divider);
+  padding: var(--space-card-head-y) var(--space-card-head-x);
 }
 
 body.page-event-detail .ed-addons-modal .modal-title {
   font-weight: 700;
-  color: #1e2532;
+  color: var(--color-fg);
   font-size: 1.125rem;
 }
 
 body.page-event-detail .ed-addons-modal .modal-body {
-  padding: var(--ed-space-5, 1.25rem) var(--ed-space-6, 1.5rem);
+  padding: var(--space-card-body-y) var(--space-card-body-x);
   max-height: 65vh;
 }
 
@@ -2834,7 +2834,7 @@ body.page-event-detail .ed-addons-modal__intro {
 body.page-event-detail .ed-addons-modal__section-title {
   font-size: 1rem;
   font-weight: 700;
-  color: #1e2532;
+  color: var(--color-fg);
   margin: var(--ed-space-4, 1rem) 0 var(--ed-space-2, 0.5rem);
 }
 
@@ -2860,7 +2860,7 @@ body.page-event-detail .ed-addons-modal__grid {
 body.page-event-detail .addon-modal-card {
   display: flex;
   flex-direction: column;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--surface-card-border);
   border-radius: 12px;
   background: #ffffff;
   padding: var(--ed-space-3, 0.75rem);
@@ -2868,8 +2868,8 @@ body.page-event-detail .addon-modal-card {
 }
 
 body.page-event-detail .addon-modal-card.is-selected {
-  border-color: #F97316;
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--selected-tint);
 }
 
 body.page-event-detail .addon-modal-card__media {
@@ -2900,7 +2900,7 @@ body.page-event-detail .addon-modal-card__body {
 body.page-event-detail .addon-modal-card__title {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1e2532;
+  color: var(--color-fg);
   margin: 0 0 var(--ed-space-2, 0.5rem);
 }
 
@@ -2915,7 +2915,7 @@ body.page-event-detail .addon-modal-card__price {
   display: inline-block;
   font-size: 1.05rem;
   font-weight: 700;
-  color: #1e2532;
+  color: var(--color-fg);
   margin-bottom: var(--ed-space-2, 0.5rem);
 }
 
@@ -2943,7 +2943,7 @@ body.page-event-detail .addon-modal-card__qty {
 body.page-event-detail .quantity-input--modal {
   display: inline-flex;
   align-items: center;
-  border: 1px solid #cbd5e1;
+  border: 1.5px solid var(--surface-card-border);
   border-radius: 8px;
   overflow: hidden;
   background: #ffffff;
@@ -2954,7 +2954,7 @@ body.page-event-detail .quantity-input--modal button {
   height: 44px;
   border: none;
   background: #f8fafc;
-  color: #1e2532;
+  color: var(--color-fg);
   font-size: 1.25rem;
   font-weight: 600;
   cursor: pointer;
@@ -2964,7 +2964,7 @@ body.page-event-detail .quantity-input--modal button {
 body.page-event-detail .quantity-input--modal button:hover,
 body.page-event-detail .quantity-input--modal button:focus {
   background: #e2e8f0;
-  outline: 2px solid #F97316;
+  outline: 2px solid var(--primary-color);
   outline-offset: -2px;
 }
 
@@ -2977,7 +2977,7 @@ body.page-event-detail .quantity-input--modal input {
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
-  color: #1e2532;
+  color: var(--color-fg);
   background: #ffffff;
   -moz-appearance: textfield;
 }
@@ -2994,7 +2994,7 @@ body.page-event-detail .ed-addons-modal__footer {
   align-items: center;
   justify-content: space-between;
   gap: var(--ed-space-3, 0.75rem);
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--surface-section-divider);
   padding: var(--ed-space-4, 1rem) var(--ed-space-6, 1.5rem);
 }
 
@@ -3002,13 +3002,13 @@ body.page-event-detail .ed-addons-modal__recap {
   flex: 1 1 auto;
   margin: 0;
   font-size: 0.9rem;
-  color: #64748b;
+  color: var(--color-muted);
   font-weight: 500;
 }
 
 body.page-event-detail .ed-addons-modal__recap #edAddonsTotal {
-  color: #1e2532;
-  font-weight: 700;
+  color: var(--color-fg);
+  font-weight: 800;
 }
 
 body.page-event-detail .ed-addons-modal .modal-footer .btn {
@@ -3018,14 +3018,14 @@ body.page-event-detail .ed-addons-modal .modal-footer .btn {
 }
 
 body.page-event-detail .ed-addons-modal .btn-primary {
-  background-color: #C2410C;
-  border-color: #C2410C;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 body.page-event-detail .ed-addons-modal .btn-primary:hover,
 body.page-event-detail .ed-addons-modal .btn-primary:focus {
-  background-color: #9a3412;
-  border-color: #9a3412;
+  background-color: #ea580c;
+  border-color: #ea580c;
 }
 
 body.page-event-detail .ed-addons-modal__error {

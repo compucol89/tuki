@@ -42,6 +42,7 @@ class Event extends Model
     'spotify_url',
     'youtube_url',
     'manual_badge',
+    'event_addons_enabled',
   ];
   public function ticket()
   {

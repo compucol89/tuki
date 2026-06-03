@@ -1395,7 +1395,7 @@ ttq.page();
                 @endif
               </div>
               <div class="ed-ticket-card__body">
-                <form action="{{ route('check-out2') }}" method="post">
+                <form action="{{ route('check-out2') }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}">
                   @csrf
                   <input type="hidden" name="event_id" value="{{ $content->id }}">
                   <input type="hidden" name="pricing_type" value="{{ $content->pricing_type }}">
@@ -1914,7 +1914,7 @@ ttq.page();
                   </div>
 
                 </form>
-                @if ($tickets_count > 0)
+                @if ($tickets_count > 0 && (!isset($content->event_addons_enabled) || $content->event_addons_enabled))
                   @include('frontend.event.partials.addons', ['event' => $content, 'variant' => 'sidebar'])
                 @endif
               </div>
@@ -2743,6 +2743,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (skipBtn) { skipBtn.disabled = isBusy; }
   }
 
+  function syncSidebarAddonInputs() {
+    modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
+      var sidebarInput = document.querySelector('.addon-card__qty-input[data-addon-id="' + inp.dataset.addonId + '"]');
+      if (sidebarInput) {
+        sidebarInput.value = inp.value;
+        sidebarInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+  }
+
   function collectSelectedAddons() {
     var addons = {};
     modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
@@ -2757,10 +2767,11 @@ document.addEventListener('DOMContentLoaded', function() {
       inp.value = 0;
     });
     updateRecap();
+    syncSidebarAddonInputs();
     return {};
   }
 
-  function syncAddonsAndSubmit(addons) {
+  function syncAddons(addons, shouldSubmit) {
     var url = modalEl.dataset.updateUrl;
     if (!url) {
       showModalError('No pudimos guardar tus adicionales. Reintentá o seguí sin sumar.');
@@ -2781,8 +2792,12 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
     .then(function(result) {
       if (result.ok && result.data && result.data.status === 'success') {
-        $modal.modal('hide');
-        form.submit();
+        if (shouldSubmit) {
+          $modal.modal('hide');
+          form.submit();
+        } else {
+          setModalBusy(false);
+        }
       } else {
         showModalError((result.data && result.data.message) || 'No pudimos guardar tus adicionales.');
         setModalBusy(false);
@@ -2794,15 +2809,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  function syncAddonsAndSubmit(addons) {
+    syncAddons(addons, true);
+  }
+
+  function syncAddonsOnly(addons) {
+    syncAddons(addons, false);
+  }
+
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    if (form.dataset.eventAddonsEnabled === '0') {
+      form.submit();
+      return;
+    }
     var hasAddons = modalEl.querySelectorAll('.addon-modal-card').length > 0;
     if (!hasAddons) {
       form.submit();
       return;
     }
+    if (modalEl.dataset.decided === '1') {
+      form.submit();
+      return;
+    }
     clearModalError();
     updateRecap();
+    syncSidebarAddonInputs();
     $modal.modal('show');
   });
 
@@ -2820,23 +2852,37 @@ document.addEventListener('DOMContentLoaded', function() {
     if (down && value > 0) { input.value = value - 1; }
     if (up && (isNaN(max) || value < max)) { input.value = value + 1; }
     updateRecap();
+    syncSidebarAddonInputs();
   });
 
+  var modalClosedByCTA = false;
   if (confirmBtn) {
     confirmBtn.addEventListener('click', function() {
+      if (document.getElementById('edAddonsNeverShow') && document.getElementById('edAddonsNeverShow').checked) {
+        modalEl.dataset.decided = '1';
+      }
+      modalClosedByCTA = true;
       syncAddonsAndSubmit(collectSelectedAddons());
     });
   }
 
   if (skipBtn) {
     skipBtn.addEventListener('click', function() {
+      if (document.getElementById('edAddonsNeverShow') && document.getElementById('edAddonsNeverShow').checked) {
+        modalEl.dataset.decided = '1';
+      }
+      modalClosedByCTA = true;
       syncAddonsAndSubmit(clearSelectedAddons());
     });
   }
 
   $modal.on('hidden.bs.modal', function () {
+    if (!modalClosedByCTA) {
+      syncAddonsOnly(clearSelectedAddons());
+    }
     clearModalError();
     setModalBusy(false);
+    modalClosedByCTA = false;
   });
 
   updateRecap();

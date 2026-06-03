@@ -93,6 +93,21 @@
     --flow-space-tight: 0.75lh;
     /* Espacio antes de un título cuando sigue a un bloque de texto */
     --flow-space-heading: 2lh;
+    /* Tokens compartidos checkout + modal de adicionales */
+    --surface-card: #ffffff;
+    --surface-card-border: #e5e7eb;
+    --surface-card-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
+    --surface-card-radius: 16px;
+    --surface-section-divider: #f3f4f6;
+    --color-muted: #6b7280;
+    --color-muted-strong: #9ca3af;
+    --color-fg: #1e2532;
+    --color-border-strong: #e2e8f0;
+    --space-card-head-y: 22px;
+    --space-card-head-x: 28px;
+    --space-card-body-y: 24px;
+    --space-card-body-x: 28px;
+    --selected-tint: rgba(249, 115, 22, 0.10);
 }
 
 body {

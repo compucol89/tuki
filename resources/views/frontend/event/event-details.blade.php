@@ -2676,6 +2676,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var csrfToken = document.querySelector('meta[name="csrf-token"]');
   if (!csrfToken) { return; }
   document.body.classList.add('has-js');
+  var addonsDirty = false;
+  var hasPersistedAddons = false;
 
   function formatPrice(n) {
     var rounded = Math.round(n);
@@ -2706,6 +2708,14 @@ document.addEventListener('DOMContentLoaded', function() {
     var totalEl = document.getElementById('edAddonsTotal');
     if (countEl) { countEl.textContent = count; }
     if (totalEl) { totalEl.textContent = '$' + formatPrice(total); }
+  }
+
+  function hasSelectedAddons() {
+    var selected = false;
+    modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
+      if ((parseInt(inp.value, 10) || 0) > 0) { selected = true; }
+    });
+    return selected;
   }
 
   function showModalError(msg) {
@@ -2791,10 +2801,6 @@ document.addEventListener('DOMContentLoaded', function() {
     syncAddons(addons, true);
   }
 
-  function syncAddonsOnly(addons) {
-    syncAddons(addons, false);
-  }
-
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     if (form.dataset.eventAddonsEnabled === '0') {
@@ -2824,33 +2830,38 @@ document.addEventListener('DOMContentLoaded', function() {
     var max = (maxAttr && maxAttr !== '') ? parseInt(maxAttr, 10) : NaN;
     if (down && value > 0) { input.value = value - 1; }
     if (up && (isNaN(max) || value < max)) { input.value = value + 1; }
+    addonsDirty = true;
     updateRecap();
   });
 
-  var modalClosedByCTA = false;
   if (confirmBtn) {
     confirmBtn.addEventListener('click', function() {
-      modalClosedByCTA = true;
+      if (!addonsDirty) {
+        form.submit();
+        return;
+      }
       syncAddonsAndSubmit(collectSelectedAddons());
     });
   }
 
   if (skipBtn) {
     skipBtn.addEventListener('click', function() {
-      modalClosedByCTA = true;
-      syncAddonsAndSubmit(clearSelectedAddons());
+      var shouldClearPersistedAddons = hasPersistedAddons || addonsDirty || hasSelectedAddons();
+      clearSelectedAddons();
+      if (!shouldClearPersistedAddons) {
+        form.submit();
+        return;
+      }
+      syncAddonsAndSubmit({});
     });
   }
 
   $modal.on('hidden.bs.modal', function () {
-    if (!modalClosedByCTA) {
-      syncAddonsOnly(clearSelectedAddons());
-    }
     clearModalError();
     setModalBusy(false);
-    modalClosedByCTA = false;
   });
 
+  hasPersistedAddons = hasSelectedAddons();
   updateRecap();
 });
 </script>

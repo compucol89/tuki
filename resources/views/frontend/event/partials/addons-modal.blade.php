@@ -48,7 +48,7 @@
 
 @if ($sections->isNotEmpty() && $eventId > 0 && (!isset($event->event_addons_enabled) || $event->event_addons_enabled))
   <div
-    class="modal fade ed-addons-modal"
+    class="modal ed-addons-modal"
     id="edAddonsModal"
     tabindex="-1"
     role="dialog"

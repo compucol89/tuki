@@ -41,6 +41,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
 
         // Preparar datos de entradas
         $tickets = $this->prepareTickets();
+        $addons = $this->booking->addons()->get();
 
         // Adjuntar PDF de entradas si existe
         $pdfPath = storage_path('app/invoices/') . $this->booking->invoice;
@@ -101,6 +102,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
                 'eventLocation' => $eventLocation,
                 'eventAddress'  => $eventAddress,
                 'tickets'       => $tickets,
+                'addons'        => $addons,
                 'guestLink'     => $guestLink,
                 'invoiceLink'   => $invoiceLink,
             ]);

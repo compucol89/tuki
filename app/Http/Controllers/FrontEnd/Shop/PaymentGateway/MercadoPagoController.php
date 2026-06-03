@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\Shop\OrderController;
 use App\Models\BasicSettings\Basic;
 use App\Models\PaymentGateway\OnlineGateway;
+use App\Models\ShopManagement\ProductContent;
 use App\Models\ShopManagement\ShippingCharge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class MercadoPagoController extends Controller
@@ -222,8 +224,59 @@ class MercadoPagoController extends Controller
     // Pago verificado — proceder con la orden
     $enrol = new OrderController();
 
-    $orderInfo = $enrol->storeData($arrData);
-    $orderItems = $enrol->storeOders($orderInfo);
+    // Fix #3 (P1 #2): pre-validación de stock con lockForUpdate.
+    // Si algún producto del carrito no tiene stock, abortamos ANTES de
+    // crear Order/Earning/Transaction para evitar registros huérfanos.
+    $cart = Session::get('cart');
+    $prevalidationError = null;
+    if (is_array($cart)) {
+      $language = $this->getLanguage();
+      DB::transaction(function () use ($cart, $language, &$prevalidationError) {
+        foreach ($cart as $productId => $item) {
+          $product = ProductContent::join('products', 'products.id', 'product_contents.product_id')
+            ->where('product_contents.language_id', $language->id)
+            ->where('products.id', $productId)
+            ->select('products.*', 'product_contents.title')
+            ->lockForUpdate()
+            ->first();
+
+          if (!$product) {
+            $prevalidationError = "Producto {$productId} no encontrado.";
+            return;
+          }
+
+          $requestedQty = (int) ($item['qty'] ?? 0);
+          $currentStock = (int) $product->stock;
+
+          if ($product->type !== 'digital' && $currentStock < $requestedQty) {
+            $prevalidationError = "Stock insuficiente para {$product->title}. Disponible: {$currentStock}, solicitado: {$requestedQty}.";
+            return;
+          }
+        }
+      });
+    }
+
+    if ($prevalidationError !== null) {
+      $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
+      Session::flash('error', $prevalidationError);
+      return redirect()->route('shop.checkout');
+    }
+
+    // Fix #3 (P1 #2): transacción envolvente sobre la orquestación completa.
+    // storeData() crea Order, Earning, Transaction. storeOders() crea OrderItems
+    // y descuenta stock. Si storeOders() lanza (por carrera o validación),
+    // toda la orden se rollback, sin registros huérfanos.
+    $orderInfo = null;
+    try {
+      DB::transaction(function () use ($enrol, $arrData, &$orderInfo) {
+        $orderInfo = $enrol->storeData($arrData);
+        $enrol->storeOders($orderInfo);
+      });
+    } catch (\Exception $e) {
+      $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
+      Session::flash('error', 'No se pudo confirmar la orden: ' . $e->getMessage());
+      return redirect()->route('shop.checkout');
+    }
 
     $invoice = $enrol->generateInvoice($orderInfo);
     $orderInfo->update(['invoice_number' => $invoice]);

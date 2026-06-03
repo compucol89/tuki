@@ -47,6 +47,8 @@ services:
 
   adminer:
     image: adminer:standalone
+    profiles:
+      - tools
     ports:
       - "8889:8080"
     depends_on:
@@ -55,6 +57,8 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:latest
+    profiles:
+      - tools
     ports:
       - "8890:80"
     environment:

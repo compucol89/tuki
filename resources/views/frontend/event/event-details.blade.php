@@ -1914,6 +1914,9 @@ ttq.page();
                   </div>
 
                 </form>
+                @if ($tickets_count > 0)
+                  @include('frontend.event.partials.addons', ['event' => $content, 'variant' => 'sidebar'])
+                @endif
               </div>
             </div>
             {{-- /Ticket form card --}}
@@ -2413,7 +2416,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function recalcTotal() {
     var total = 0;
-    document.querySelectorAll('.quantity[data-price]').forEach(function(inp) {
+    document.querySelectorAll('.quantity[data-price]:not(.addon-card__qty-input)').forEach(function(inp) {
+      var qty   = parseInt(inp.value,  10) || 0;
+      var price = parseFloat(inp.dataset.price) || 0;
+      total += qty * price;
+    });
+    document.querySelectorAll('.addon-card__qty-input[data-price]').forEach(function(inp) {
       var qty   = parseInt(inp.value,  10) || 0;
       var price = parseFloat(inp.dataset.price) || 0;
       total += qty * price;
@@ -2438,6 +2446,33 @@ document.addEventListener('DOMContentLoaded', function() {
     if (e.target.closest('.quantity-up, .quantity-down, .quantity-down_variation')) {
       setTimeout(recalcTotal, 0);
     }
+  });
+  document.addEventListener('input', function(e) {
+    if (e.target.closest('.addon-card__qty-input')) {
+      recalcTotal();
+    }
+  });
+  document.addEventListener('click', function(e) {
+    var down = e.target.closest('.addon-quantity-down');
+    var up = e.target.closest('.addon-quantity-up');
+    if (!down && !up) return;
+
+    var wrap = e.target.closest('.quantity-input');
+    if (!wrap) return;
+
+    var input = wrap.querySelector('.addon-card__qty-input');
+    if (!input) return;
+
+    var value = parseInt(input.value, 10) || 0;
+    var max = parseInt(input.getAttribute('max'), 10);
+
+    if (down && value > 0) {
+      input.value = value - 1;
+    }
+    if (up && (isNaN(max) || value < max)) {
+      input.value = value + 1;
+    }
+    recalcTotal();
   });
 });
 

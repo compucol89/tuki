@@ -782,6 +782,9 @@
 
       </form>
 
+      {{-- Tab: Add-ons por evento --}}
+      @include('backend.event.partials.addons-tab', ['event' => $event])
+
     </div>
   </div>
 @endsection

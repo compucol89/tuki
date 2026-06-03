@@ -32,9 +32,11 @@
   $eventAddress = @$event->information->address ?? ($event->event_type == 'online' ? __('Online') : '');
 
   $position   = $booking->currencyTextPosition;
-  $currency   = $booking->currencyText;
-  $variations = $booking->variation ? json_decode($booking->variation, true) : null;
-@endphp
+	  $currency   = $booking->currencyText;
+	  $variations = $booking->variation ? json_decode($booking->variation, true) : null;
+	  $bookingAddons = $booking->addons;
+	  $bookingAddonsTotal = $bookingAddons->sum('subtotal');
+	@endphp
 
 {{-- HERO --}}
 <div class="ps-hero {{ $isFree ? 'ps-hero--free' : ($isPending ? 'ps-hero--pending' : 'ps-hero--paid') }}">
@@ -149,9 +151,35 @@
               </table>
             </div>
           </div>
-        @endif
+	        @endif
 
-        {{-- Organizador --}}
+	        @if($bookingAddons->isNotEmpty())
+	          <div class="ps-card">
+	            <div class="ps-card__head">
+	              <h3 class="ps-card__title">Adicionales reservados</h3>
+	              <span class="ps-pill">{{ $bookingAddons->sum('quantity') }} {{ $bookingAddons->sum('quantity') == 1 ? 'adicional' : 'adicionales' }}</span>
+	            </div>
+	            <div class="cd-table-wrap">
+	              <table class="cd-table">
+	                <thead>
+	                  <tr><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Subtotal</th></tr>
+	                </thead>
+	                <tbody>
+	                  @foreach($bookingAddons as $addon)
+	                    <tr>
+	                      <td><strong>{{ $addon->title }}</strong></td>
+	                      <td>{{ $addon->quantity }}</td>
+	                      <td>{{ symbolPrice($addon->unit_price) }}</td>
+	                      <td><strong>{{ symbolPrice($addon->subtotal) }}</strong></td>
+	                    </tr>
+	                  @endforeach
+	                </tbody>
+	              </table>
+	            </div>
+	          </div>
+	        @endif
+
+	        {{-- Organizador --}}
         @if($event?->organizer?->organizer_info)
           <div class="ps-card">
             <div class="ps-card__head">
@@ -244,10 +272,13 @@
             @if($booking->discount)
               <div class="ps-pay-row ps-pay-row--discount"><span>Descuento cupón</span><span>− {{ $booking->currencySymbol }}{{ $booking->discount }}</span></div>
             @endif
-            @if(!is_null($booking->tax) && $booking->tax > 0)
-                <div class="ps-pay-row"><span>Costo de servicio</span><span dir="ltr">{{ $position == 'left' ? $currency . ' ' : '' }}{{ $booking->tax }}{{ $position == 'right' ? ' ' . $currency : '' }}</span></div>
-            @endif
-            <div class="ps-pay-row ps-pay-row--total">
+	            @if(!is_null($booking->tax) && $booking->tax > 0)
+	                <div class="ps-pay-row"><span>Costo de servicio</span><span dir="ltr">{{ $position == 'left' ? $currency . ' ' : '' }}{{ $booking->tax }}{{ $position == 'right' ? ' ' . $currency : '' }}</span></div>
+	            @endif
+	            @if($bookingAddonsTotal > 0)
+	              <div class="ps-pay-row"><span>Adicionales</span><span dir="ltr">{{ symbolPrice($bookingAddonsTotal) }}</span></div>
+	            @endif
+	            <div class="ps-pay-row ps-pay-row--total">
               <span>Total</span>
               <span dir="ltr">{{ $isFree ? 'Gratis' : $booking->currencySymbol . ($booking->price + $booking->tax) }}</span>
             </div>

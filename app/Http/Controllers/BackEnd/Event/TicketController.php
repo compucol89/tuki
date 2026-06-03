@@ -56,6 +56,10 @@ class TicketController extends Controller
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;
     $in['early_bird_discount_type'] = $request->discount_type;
+    $in['ticket_available'] = $request->ticket_available_type == 'limited' ? $request->ticket_available : null;
+
+    $in['max_buy_ticket'] = $request->max_ticket_buy_type == 'limited' ? $request->max_buy_ticket : null;
+
     if ($request->pricing_type_2 == 'free') {
       $in['pricing_type'] = 'free';
       $in['price'] = 0;

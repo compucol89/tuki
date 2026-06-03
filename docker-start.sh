@@ -3,6 +3,8 @@ set -e
 
 cd /app
 
+rm -f bootstrap/cache/config.php bootstrap/cache/packages.php bootstrap/cache/services.php
+
 # Generar .env desde variables de entorno del contenedor.
 # Los valores se escriben entre comillas para soportar espacios.
 quote_dotenv_value() {

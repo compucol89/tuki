@@ -35,8 +35,11 @@
   $address = cleanLocationPart($bookingInfo->address ?? null);
 
   $quantity = $bookingInfo->quantity ?? 1;
-  $unitPrice = ($quantity > 0) ? ($bookingInfo->price / $quantity) : 0;
   $subtotal = $bookingInfo->price ?? 0;
+  $bookingAddons = $bookingInfo->addons;
+  $addonsSubtotal = $bookingAddons->sum('subtotal');
+  $ticketSubtotal = max((float) $subtotal - (float) $addonsSubtotal, 0);
+  $unitPrice = ($quantity > 0) ? ($ticketSubtotal / $quantity) : 0;
   $tax = $bookingInfo->tax ?? 0;
   $discount = ($bookingInfo->early_bird_discount ?? 0) + ($bookingInfo->discount ?? 0);
   $total = $subtotal + $tax - $discount;
@@ -520,11 +523,19 @@
           <div class="payment-section">
             <div class="payment-title">Detalle de Pago</div>
             <table class="payment-table">
-              @if ($subtotal > 0)
+              @if ($ticketSubtotal > 0)
               <tr>
                 <td>{{ $quantity }} x {{ formatMoney($unitPrice, $position, $currency) }}</td>
-                <td>{{ formatMoney($subtotal, $position, $currency) }}</td>
+                <td>{{ formatMoney($ticketSubtotal, $position, $currency) }}</td>
               </tr>
+              @endif
+              @if ($bookingAddons->isNotEmpty())
+                @foreach ($bookingAddons as $addon)
+                <tr>
+                  <td>{{ $addon->quantity }} x {{ $addon->title }}</td>
+                  <td>{{ formatMoney($addon->subtotal, $position, $currency) }}</td>
+                </tr>
+                @endforeach
               @endif
               @if ($tax > 0)
               <tr>
@@ -687,11 +698,19 @@
           <div class="payment-section">
             <div class="payment-title">Detalle de Pago</div>
             <table class="payment-table">
-              @if ($subtotal > 0)
+              @if ($ticketSubtotal > 0)
               <tr>
                 <td>{{ $quantity }} x {{ formatMoney($unitPrice, $position, $currency) }}</td>
-                <td>{{ formatMoney($subtotal, $position, $currency) }}</td>
+                <td>{{ formatMoney($ticketSubtotal, $position, $currency) }}</td>
               </tr>
+              @endif
+              @if ($bookingAddons->isNotEmpty())
+                @foreach ($bookingAddons as $addon)
+                <tr>
+                  <td>{{ $addon->quantity }} x {{ $addon->title }}</td>
+                  <td>{{ formatMoney($addon->subtotal, $position, $currency) }}</td>
+                </tr>
+                @endforeach
               @endif
               @if ($tax > 0)
               <tr>

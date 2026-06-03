@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\Event\Booking;
 use App\Models\PaymentGateway\OnlineGateway;
 use App\Models\PendingBooking;
+use App\Services\EventAddonCartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -64,6 +65,12 @@ class MercadoPagoController extends Controller
 
     $tax_amount = Session::get('tax');
     $commission_amount = ($total * $basicSetting->commission) / 100;
+    try {
+      $addonSummary = app(EventAddonCartService::class)->putSummaryInSession((int) $request->event_id);
+    } catch (\Exception $e) {
+      Session::flash('error', $e->getMessage());
+      return redirect()->route('check-out');
+    }
 
     $currencyInfo = $this->getCurrencyInfo();
 
@@ -92,11 +99,14 @@ class MercadoPagoController extends Controller
       'country' => $request->country,
       'state' => $request->state,
       'city' => $request->city,
-      'zip_code' => $request->city,
+      'zip_code' => $request->zip_code,
       'address' => $request->address,
       'paymentMethod' => 'Mercadopago',
       'gatewayType' => 'online',
       'paymentStatus' => 'completed',
+      'cart_addons' => Session::get('cart_addons', []),
+      'event_addons' => $addonSummary['items'],
+      'event_addons_total' => $addonSummary['total'],
     );
 
     // Persistir selTickets para fallback DB/webhook (stock y variaciones)
@@ -275,6 +285,9 @@ class MercadoPagoController extends Controller
           if (!empty($arrData['selTickets'])) {
             $request->session()->put('selTickets', $arrData['selTickets']);
           }
+          if (!empty($arrData['cart_addons']) && is_array($arrData['cart_addons'])) {
+            $request->session()->put('cart_addons', $arrData['cart_addons']);
+          }
         } else {
           Log::error('MercadoPago notify: sin sesión ni registro en DB', [
             'payment_id' => $paymentId,
@@ -326,6 +339,9 @@ class MercadoPagoController extends Controller
 
       // Pago verificado — proceder con el booking
       $enrol = new BookingController();
+      if (!empty($arrData['cart_addons']) && is_array($arrData['cart_addons'])) {
+        $request->session()->put('cart_addons', $arrData['cart_addons']);
+      }
 
       $bookingInfo['transcation_type'] = 1;
 
@@ -407,7 +423,7 @@ class MercadoPagoController extends Controller
       }
 
       // remove all session data
-      $request->session()->forget(['event_id', 'eventId', 'selTickets', 'arrData', 'paymentId', 'discount', 'mp_payment_token', 'mp_expected_amount']);
+      $request->session()->forget(['event_id', 'eventId', 'selTickets', 'arrData', 'paymentId', 'discount', 'mp_payment_token', 'mp_expected_amount', 'event_addons_summary', 'event_addons_total']);
 
       Log::info('MercadoPago notify: booking completado', [
         'booking_id' => $bookingInfo->id,

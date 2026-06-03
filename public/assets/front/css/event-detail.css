@@ -1438,6 +1438,129 @@ body.page-event-detail .ed-cta-zone {
   background: transparent;
 }
 
+body.page-event-detail .ed-ticket-card__body > form:has(+ .event-addons--sidebar) .ed-cta-zone {
+  margin-bottom: 0;
+  padding-bottom: var(--ed-space-4, 16px);
+}
+
+body.page-event-detail .event-addons--sidebar {
+  margin: 0 calc(-1 * var(--ed-sidebar-rail)) calc(-1 * var(--ed-sidebar-rail));
+  padding: var(--ed-space-4, 16px) var(--ed-sidebar-rail) var(--ed-space-5, 20px);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fff;
+}
+
+body.page-event-detail .event-addons__title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+body.page-event-detail .event-addons__subtitle {
+  margin: 6px 0 14px;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-section {
+  margin: 0;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-section-title {
+  margin: 0 0 10px;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .addon-sidebar-list {
+  display: grid;
+  gap: 12px;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 10px;
+  align-items: start;
+  padding: 12px 0 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__image,
+body.page-event-detail .event-addons--sidebar .addon-card__image--placeholder {
+  width: 68px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__description,
+body.page-event-detail .event-addons--sidebar .addon-card__notice,
+body.page-event-detail .event-addons--sidebar small {
+  grid-column: 2;
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__price {
+  grid-column: 2;
+  margin-top: 6px;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__price-amount {
+  color: #f97316;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__form {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__qty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__qty-label {
+  margin: 0;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+body.page-event-detail .event-addons--sidebar .addon-card__add-btn {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 13px;
+  background: #f97316;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
 body.page-event-detail .ed-trust,
 body.page-event-detail .ed-trust-row {
   margin-top: 0;
@@ -2138,7 +2261,9 @@ body.page-event-detail .ed-ticket-card__body .quantity-input {
 
 body.page-event-detail .ed-ticket-card__body .quantity-up,
 body.page-event-detail .ed-ticket-card__body .quantity-down,
-body.page-event-detail .ed-ticket-card__body .quantity-down_variation {
+body.page-event-detail .ed-ticket-card__body .quantity-down_variation,
+body.page-event-detail .ed-ticket-card__body .addon-quantity-up,
+body.page-event-detail .ed-ticket-card__body .addon-quantity-down {
   min-width: 36px;
   min-height: 36px;
   padding: 0;
@@ -2158,14 +2283,18 @@ body.page-event-detail .ed-ticket-card__body .quantity-down_variation {
 
 body.page-event-detail .ed-ticket-card__body .quantity-up:hover,
 body.page-event-detail .ed-ticket-card__body .quantity-down:hover,
-body.page-event-detail .ed-ticket-card__body .quantity-down_variation:hover {
+body.page-event-detail .ed-ticket-card__body .quantity-down_variation:hover,
+body.page-event-detail .ed-ticket-card__body .addon-quantity-up:hover,
+body.page-event-detail .ed-ticket-card__body .addon-quantity-down:hover {
   background: rgba(15, 23, 42, 0.04);
   color: #0f172a;
 }
 
 body.page-event-detail .ed-ticket-card__body .quantity-up:focus-visible,
 body.page-event-detail .ed-ticket-card__body .quantity-down:focus-visible,
-body.page-event-detail .ed-ticket-card__body .quantity-down_variation:focus-visible {
+body.page-event-detail .ed-ticket-card__body .quantity-down_variation:focus-visible,
+body.page-event-detail .ed-ticket-card__body .addon-quantity-up:focus-visible,
+body.page-event-detail .ed-ticket-card__body .addon-quantity-down:focus-visible {
   outline: 3px solid rgba(249, 115, 22, 0.22);
   outline-offset: 2px;
 }

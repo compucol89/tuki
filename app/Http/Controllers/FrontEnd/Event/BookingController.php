@@ -19,6 +19,7 @@ use App\Models\Event\EventDates;
 use App\Models\Event\EventImage;
 use App\Models\Event\Ticket;
 use App\Models\Language;
+use App\Services\EventAddonCartService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -321,6 +322,8 @@ class BookingController extends Controller
         }
       }
 
+      app(EventAddonCartService::class)->attachToBooking($booking, $info['cart_addons'] ?? Session::get('cart_addons', []));
+
       return $booking;
     } catch (\Exception $th) {
       Log::error('storeData failed: ' . $th->getMessage());
@@ -344,6 +347,7 @@ class BookingController extends Controller
 
     $booking = Booking::where('id', $booking_id)->firstOrFail();
     $fiscalProfile = CustomerFiscalProfile::where('booking_id', $booking_id)->first();
+    app(EventAddonCartService::class)->forgetEvent((int) $id);
     $information['booking'] = $booking;
     $event = Event::where('id', $id)->with([
       'information' => function ($query) use ($language) {

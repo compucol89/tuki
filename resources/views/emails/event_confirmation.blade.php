@@ -322,15 +322,41 @@
               <td class="text-right">${{ number_format($ticket['price'] * $ticket['qty'], 2, ',', '.') }}</td>
             </tr>
             @endforeach
-            <tr class="total-row">
-              <td colspan="3">Total</td>
-              <td class="text-right">${{ number_format($booking->price ?? 0, 2, ',', '.') }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+	            <tr class="total-row">
+	              <td colspan="3">Total</td>
+	              <td class="text-right">${{ number_format($booking->price ?? 0, 2, ',', '.') }}</td>
+	            </tr>
+	          </tbody>
+	        </table>
+	      </div>
 
-      {{-- Entradas adjuntas --}}
+	      @if(isset($addons) && $addons->isNotEmpty())
+	      <div class="section">
+	        <div class="section-title">Adicionales</div>
+	        <table class="tickets-table">
+	          <thead>
+	            <tr>
+	              <th>Producto</th>
+	              <th class="text-right">Cant.</th>
+	              <th class="text-right">Precio unit.</th>
+	              <th class="text-right">Subtotal</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            @foreach($addons as $addon)
+	            <tr>
+	              <td>{{ $addon->title }}</td>
+	              <td class="text-right">{{ $addon->quantity }}</td>
+	              <td class="text-right">${{ number_format((float) $addon->unit_price, 2, ',', '.') }}</td>
+	              <td class="text-right">${{ number_format((float) $addon->subtotal, 2, ',', '.') }}</td>
+	            </tr>
+	            @endforeach
+	          </tbody>
+	        </table>
+	      </div>
+	      @endif
+
+	      {{-- Entradas adjuntas --}}
       <div class="section" style="text-align:center; margin: 32px 0;">
         <div style="background: #fff7ed; border: 2px solid #F97316; border-radius: 12px; padding: 28px 24px;">
           <div style="font-size: 32px; margin-bottom: 12px;">🎟️</div>

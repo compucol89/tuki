@@ -20,6 +20,9 @@
   $s_sub_total          = Session::get('sub_total');
   $s_discount           = Session::get('discount') ?: 0;
   $s_early_bird         = Session::get('total_early_bird_dicount') ?: 0;
+  $eventAddons          = collect(Session::get('event_addons_summary', []));
+  $eventAddonsTotal     = (float) Session::get('event_addons_total', 0);
+  $ticketSubtotal       = max((float) $s_sub_total - $eventAddonsTotal, 0);
   $tax_base             = $s_sub_total - ($s_early_bird + $s_discount);
   $computed_tax         = round(($tax_base * $basicData->tax) / 100, 2);
   $grand_total          = round($s_sub_total + $computed_tax - ($s_discount + $s_early_bird), 2);
@@ -386,18 +389,40 @@
                 <div class="co-summary__divider"></div>
               @endif
 
+              @if ($eventAddons->isNotEmpty())
+                <div class="co-ticket-list mb-3">
+                  @foreach ($eventAddons as $addon)
+                    <div class="co-ticket-row">
+                      <span class="co-ticket-row__name">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        {{ $addon['title'] }}
+                      </span>
+                      <span class="co-ticket-row__qty">{{ $addon['quantity'] }}x</span>
+                    </div>
+                  @endforeach
+                </div>
+                <div class="co-summary__divider"></div>
+              @endif
+
               <div class="co-price-rows">
                 <div class="co-price-row">
                   <span>Tickets ({{ $quantity }})</span>
                   <span dir="ltr">
                     @if ($s_early_bird)
-                      {{ symbolPrice($s_sub_total - $s_early_bird) }}
-                      <del class="text-muted ms-1" style="font-size:12px">{{ symbolPrice($s_sub_total) }}</del>
+                      {{ symbolPrice($ticketSubtotal - $s_early_bird) }}
+                      <del class="text-muted ms-1" style="font-size:12px">{{ symbolPrice($ticketSubtotal) }}</del>
                     @else
-                      {{ symbolPrice($s_sub_total) }}
+                      {{ symbolPrice($ticketSubtotal) }}
                     @endif
                   </span>
                 </div>
+
+                @if ($eventAddonsTotal > 0)
+                  <div class="co-price-row">
+                    <span>Adicionales</span>
+                    <span dir="ltr">{{ symbolPrice($eventAddonsTotal) }}</span>
+                  </div>
+                @endif
 
                 @if ($s_discount)
                   <div class="co-price-row co-price-row--discount">

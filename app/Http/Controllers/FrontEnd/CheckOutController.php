@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Event\TicketContent;
 use App\Models\Language;
+use App\Services\EventAddonCartService;
 use Carbon\Carbon;
 
 class CheckOutController extends Controller
@@ -282,6 +283,16 @@ class CheckOutController extends Controller
     if ($check == true) {
       $notification = array('message' => 'Something went wrong..!', 'alert-type' => 'error');
       return back()->with($notification);
+    }
+
+    try {
+      $addonSummary = app(EventAddonCartService::class)->putSummaryInSession((int) $request->event_id);
+      if ($addonSummary['total'] > 0) {
+        Session::put('total', round((float) Session::get('total', 0) + (float) $addonSummary['total'], 2));
+        Session::put('sub_total', round((float) Session::get('sub_total', 0) + (float) $addonSummary['total'], 2));
+      }
+    } catch (\Exception $e) {
+      return back()->with(['alert-type' => 'error', 'message' => $e->getMessage()]);
     }
 
     $event =  EventContent::join('events', 'events.id', 'event_contents.event_id')

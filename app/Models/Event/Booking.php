@@ -70,6 +70,10 @@ class Booking extends Model
   {
     return $this->hasOne(CustomerFiscalProfile::class, 'booking_id', 'id');
   }
+  public function addons()
+  {
+    return $this->hasMany(BookingAddon::class);
+  }
   public function organizer()
   {
     return $this->belongsTo(Organizer::class);

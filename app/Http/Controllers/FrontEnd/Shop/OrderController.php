@@ -5,6 +5,7 @@ namespace App\Http\Controllers\FrontEnd\Shop;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\MercadoPagoController;
 use App\Http\Controllers\FrontEnd\Shop\PaymentGateway\OfflineController;
+use App\Models\ShopManagement\Product;
 use App\Models\ShopManagement\ProductContent;
 use App\Models\ShopManagement\ProductOrder;
 use App\Models\BasicSettings\MailTemplate;
@@ -175,28 +176,47 @@ class OrderController extends Controller
   {
     $language = $this->getLanguage();
     $cart = Session::get('cart');
-    foreach ($cart as $key => $c) {
-      $product = ProductContent::join('products', 'products.id', 'product_contents.product_id')
-        ->where('product_contents.language_id', $language->id)
-        ->where('products.id', $key)
-        ->select('products.*', 'product_contents.summary', 'product_contents.description')
-        ->first();
 
-      $order_item = OrderItem::create([
-        'product_order_id' => $info->id,
-        'product_id' => $key,
-        'user_id' => $info->user_id,
-        'title' => $c['name'],
-        'sku' => $product->sku,
-        'qty' => $c['qty'],
-        'category' => '',
-        'image' => $c['photo'],
-        'summery' => $product->summary,
-        'description' => $product->description,
-        'price' => $c['price'],
-        'previous_price' => $product->previous_price,
-      ]);
-    }
+    DB::transaction(function () use ($cart, $info, $language) {
+      foreach ($cart as $key => $c) {
+        $product = ProductContent::join('products', 'products.id', 'product_contents.product_id')
+          ->where('product_contents.language_id', $language->id)
+          ->where('products.id', $key)
+          ->select('products.*', 'product_contents.summary', 'product_contents.description')
+          ->lockForUpdate()
+          ->first();
+
+        if (!$product) {
+          throw new \Exception("Producto {$key} no encontrado");
+        }
+
+        $requestedQty = (int) $c['qty'];
+        $currentStock = (int) $product->stock;
+
+        if ($product->type != 'digital' && $currentStock < $requestedQty) {
+          throw new \Exception("Stock insuficiente para {$product->title}");
+        }
+
+        if ($product->type != 'digital') {
+          Product::where('id', $key)->decrement('stock', $requestedQty);
+        }
+
+        $order_item = OrderItem::create([
+          'product_order_id' => $info->id,
+          'product_id' => $key,
+          'user_id' => $info->user_id,
+          'title' => $c['name'],
+          'sku' => $product->sku,
+          'qty' => $c['qty'],
+          'category' => '',
+          'image' => $c['photo'],
+          'summery' => $product->summary,
+          'description' => $product->description,
+          'price' => $c['price'],
+          'previous_price' => $product->previous_price,
+        ]);
+      }
+    });
   }
 
 

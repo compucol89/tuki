@@ -709,3 +709,40 @@ if (!function_exists('paytabInfo')) {
     ];
   }
 }
+
+if (!function_exists('addonsRoute')) {
+  /**
+   * Resuelve el nombre lógico de una ruta de add-ons según el guard activo.
+   *
+   *   addonsRoute('section.store', $eventId)         → admin.event.addons.section.store    (guard:admin)
+   *                                                → organizer.event.addons.section.store (guard:organizer)
+   *
+   * Si el guard activo no es admin/organizer, hace fallback al namespace admin.
+   * Si el nombre lógico no está mapeado, intenta route() directo (compatibilidad).
+   */
+  function addonsRoute(string $name, ...$params): string
+  {
+    $map = [
+      'index'              => ['admin' => 'admin.event.addons.index',              'organizer' => 'organizer.event.addons.index'],
+      'section.store'      => ['admin' => 'admin.event.addons.section.store',      'organizer' => 'organizer.event.addons.section.store'],
+      'section.update'     => ['admin' => 'admin.event.addons.section.update',     'organizer' => 'organizer.event.addons.section.update'],
+      'section.destroy'    => ['admin' => 'admin.event.addons.section.destroy',    'organizer' => 'organizer.event.addons.section.destroy'],
+      'addon.store'        => ['admin' => 'admin.event.addons.addon.store',        'organizer' => 'organizer.event.addons.addon.store'],
+      'addon.update'       => ['admin' => 'admin.event.addons.addon.update',       'organizer' => 'organizer.event.addons.addon.update'],
+      'addon.destroy'      => ['admin' => 'admin.event.addons.addon.destroy',      'organizer' => 'organizer.event.addons.addon.destroy'],
+      'image.upload'       => ['admin' => 'admin.event.addons.image.upload',       'organizer' => 'organizer.event.addons.image.upload'],
+    ];
+
+    if (!isset($map[$name])) {
+      return route($name, $params);
+    }
+
+    $guard = Auth::guard('admin')->check()
+      ? 'admin'
+      : (Auth::guard('organizer')->check() ? 'organizer' : 'admin');
+
+    $resolved = $map[$name][$guard] ?? $map[$name]['admin'];
+
+    return route($resolved, $params);
+  }
+}

@@ -2376,6 +2376,7 @@ ttq.page();
 @endsection
 @section('modals')
   @includeIf('frontend.partials.modals')
+  @include('frontend.event.partials.addons-modal', ['event' => $content])
 @endsection
 
 @push('scripts')
@@ -2665,5 +2666,180 @@ document.addEventListener('DOMContentLoaded', function() {
     cycleTimer = setTimeout(goNextWithFade, pauseAfterLineMs);
   });
 })();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  'use strict';
+
+  var form = document.querySelector('form[action*="check-out2"]');
+  var modalEl = document.getElementById('edAddonsModal');
+  if (!form || !modalEl) { return; }
+  if (typeof window.jQuery === 'undefined') { return; }
+
+  var $modal = window.jQuery(modalEl);
+  if (typeof $modal.modal !== 'function') { return; }
+
+  $modal.modal({ backdrop: 'static', keyboard: true, show: false });
+
+  var confirmBtn = document.getElementById('edAddonsConfirm');
+  var skipBtn = document.getElementById('edAddonsSkip');
+  var csrfToken = document.querySelector('meta[name="csrf-token"]');
+  if (!csrfToken) { return; }
+  document.body.classList.add('has-js');
+
+  function formatPrice(n) {
+    var rounded = Math.round(n);
+    var s = rounded.toString();
+    var parts = [];
+    while (s.length > 3) {
+      parts.unshift(s.slice(-3));
+      s = s.slice(0, -3);
+    }
+    parts.unshift(s);
+    return parts.join('.');
+  }
+
+  function updateRecap() {
+    var count = 0;
+    var total = 0;
+    modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
+      var qty = parseInt(inp.value, 10) || 0;
+      var price = parseFloat(inp.dataset.price) || 0;
+      var card = inp.closest('.addon-modal-card');
+      if (card) {
+        if (qty > 0) { card.classList.add('is-selected'); } else { card.classList.remove('is-selected'); }
+      }
+      count += qty;
+      total += qty * price;
+    });
+    var countEl = document.getElementById('edAddonsCount');
+    var totalEl = document.getElementById('edAddonsTotal');
+    if (countEl) { countEl.textContent = count; }
+    if (totalEl) { totalEl.textContent = '$' + formatPrice(total); }
+  }
+
+  function showModalError(msg) {
+    var errEl = document.getElementById('edAddonsError');
+    if (!errEl) {
+      errEl = document.createElement('div');
+      errEl.id = 'edAddonsError';
+      errEl.className = 'alert alert-danger ed-addons-modal__error';
+      errEl.setAttribute('role', 'alert');
+      var body = modalEl.querySelector('.modal-body');
+      if (body) { body.prepend(errEl); }
+    }
+    errEl.textContent = msg;
+    errEl.classList.remove('d-none');
+  }
+
+  function clearModalError() {
+    var errEl = document.getElementById('edAddonsError');
+    if (errEl) { errEl.classList.add('d-none'); }
+  }
+
+  function setModalBusy(isBusy) {
+    if (confirmBtn) { confirmBtn.disabled = isBusy; }
+    if (skipBtn) { skipBtn.disabled = isBusy; }
+  }
+
+  function collectSelectedAddons() {
+    var addons = {};
+    modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
+      var qty = parseInt(inp.value, 10) || 0;
+      if (qty > 0) { addons[inp.dataset.addonId] = qty; }
+    });
+    return addons;
+  }
+
+  function clearSelectedAddons() {
+    modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
+      inp.value = 0;
+    });
+    updateRecap();
+    return {};
+  }
+
+  function syncAddonsAndSubmit(addons) {
+    var url = modalEl.dataset.updateUrl;
+    if (!url) {
+      showModalError('No pudimos guardar tus adicionales. Reintentá o seguí sin sumar.');
+      return;
+    }
+
+    setModalBusy(true);
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken.content,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: JSON.stringify({ addons: addons })
+    })
+    .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
+    .then(function(result) {
+      if (result.ok && result.data && result.data.status === 'success') {
+        $modal.modal('hide');
+        form.submit();
+      } else {
+        showModalError((result.data && result.data.message) || 'No pudimos guardar tus adicionales.');
+        setModalBusy(false);
+      }
+    })
+    .catch(function() {
+      showModalError('No pudimos guardar tus adicionales. Reintentá o seguí sin sumar.');
+      setModalBusy(false);
+    });
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var hasAddons = modalEl.querySelectorAll('.addon-modal-card').length > 0;
+    if (!hasAddons) {
+      form.submit();
+      return;
+    }
+    clearModalError();
+    updateRecap();
+    $modal.modal('show');
+  });
+
+  modalEl.addEventListener('click', function(e) {
+    var down = e.target.closest('.addon-modal-quantity-down');
+    var up   = e.target.closest('.addon-modal-quantity-up');
+    if (!down && !up) { return; }
+    var wrap = e.target.closest('.quantity-input');
+    if (!wrap) { return; }
+    var input = wrap.querySelector('.addon-modal-card__qty-input');
+    if (!input) { return; }
+    var value = parseInt(input.value, 10) || 0;
+    var maxAttr = input.getAttribute('max');
+    var max = (maxAttr && maxAttr !== '') ? parseInt(maxAttr, 10) : NaN;
+    if (down && value > 0) { input.value = value - 1; }
+    if (up && (isNaN(max) || value < max)) { input.value = value + 1; }
+    updateRecap();
+  });
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener('click', function() {
+      syncAddonsAndSubmit(collectSelectedAddons());
+    });
+  }
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', function() {
+      syncAddonsAndSubmit(clearSelectedAddons());
+    });
+  }
+
+  $modal.on('hidden.bs.modal', function () {
+    clearModalError();
+    setModalBusy(false);
+  });
+
+  updateRecap();
+});
 </script>
 @endpush

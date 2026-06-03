@@ -17,6 +17,7 @@ Route::middleware('web')->prefix('event/{event}/addons')->group(function () {
   Route::post('add',    [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'addToCart'])->name('event.addon.add');
   Route::post('remove', [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'removeFromCart'])->name('event.addon.remove');
   Route::post('update', [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'updateCart'])->name('event.addon.update');
+  Route::post('update-ajax', [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'updateCartAjax'])->name('event.addon.update-ajax');
 });
 
 // Organizer: CRUD de add-ons por evento

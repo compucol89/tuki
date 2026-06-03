@@ -133,4 +133,62 @@ class EventAddonController extends Controller
     Session::flash('success', 'Carrito de add-ons actualizado.');
     return redirect()->back();
   }
+
+  /**
+   * Variante AJAX de updateCart: sincroniza el carrito de add-ons en sesión
+   * y devuelve JSON, sin redirigir. Usado por el modal Bootstrap 4 in-page
+   * que se abre desde event-details.blade.php al hacer click en "Reservar mi lugar".
+   * La validación de stock se hace dentro de DB::transaction con lockForUpdate.
+   */
+  public function updateCartAjax(Event $event, Request $request)
+  {
+    $request->validate([
+      'addons'   => 'nullable|array',
+      'addons.*' => 'integer|min:0',
+    ]);
+
+    $addons = $request->input('addons', []) ?: [];
+
+    try {
+      $validated = [];
+      DB::transaction(function () use ($addons, $event, &$validated) {
+        foreach ($addons as $addonId => $qty) {
+          $qty = (int) $qty;
+          if ($qty <= 0) {
+            continue;
+          }
+          $addon = EventAddon::where('id', (int) $addonId)
+            ->where('event_id', $event->id)
+            ->where('is_active', true)
+            ->lockForUpdate()
+            ->first();
+          if (!$addon) {
+            throw new \Exception("Add-on {$addonId} no disponible.");
+          }
+          if ($addon->max_per_order !== null && $qty > (int) $addon->max_per_order) {
+            throw new \Exception("Máximo {$addon->max_per_order} unidades de {$addon->title}.");
+          }
+          if ($addon->stock !== null && $qty > (int) $addon->stock) {
+            throw new \Exception("Stock insuficiente para {$addon->title}.");
+          }
+          $validated[(int) $addonId] = $qty;
+        }
+        Session::put('cart_addons.' . $event->id, $validated);
+      });
+
+      return response()->json([
+        'status' => 'success',
+        'items'  => count($validated),
+        'total'  => array_sum(array_map(function ($id) use ($validated) {
+          $addon = EventAddon::find($id);
+          return $addon ? (float) $addon->price * $validated[$id] : 0;
+        }, array_keys($validated))),
+      ], 200);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status'  => 'error',
+        'message' => $e->getMessage(),
+      ], 422);
+    }
+  }
 }

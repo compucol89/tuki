@@ -2797,3 +2797,270 @@ body.page-event-detail .ed-section--description .summernote-content + .ed-refund
 }
 
 /* =========================================================
+   Modal de Add-ons (intercepta submit de "Reservar mi lugar")
+   ========================================================= */
+
+body.has-js.page-event-detail .event-addons--sidebar {
+  display: none;
+}
+
+body.page-event-detail .ed-addons-modal .modal-content {
+  border: none;
+  border-radius: var(--ed-radius-lg, 16px);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+}
+
+body.page-event-detail .ed-addons-modal .modal-header {
+  border-bottom: 1px solid #e2e8f0;
+  padding: var(--ed-space-5, 1.25rem) var(--ed-space-6, 1.5rem);
+}
+
+body.page-event-detail .ed-addons-modal .modal-title {
+  font-weight: 700;
+  color: #1e2532;
+  font-size: 1.125rem;
+}
+
+body.page-event-detail .ed-addons-modal .modal-body {
+  padding: var(--ed-space-5, 1.25rem) var(--ed-space-6, 1.5rem);
+  max-height: 65vh;
+}
+
+body.page-event-detail .ed-addons-modal__intro {
+  font-size: 0.95rem;
+  margin-bottom: var(--ed-space-5, 1.25rem);
+}
+
+body.page-event-detail .ed-addons-modal__section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e2532;
+  margin: var(--ed-space-4, 1rem) 0 var(--ed-space-2, 0.5rem);
+}
+
+body.page-event-detail .ed-addons-modal__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ed-space-4, 1rem);
+  margin-bottom: var(--ed-space-4, 1rem);
+}
+
+@media (min-width: 768px) {
+  body.page-event-detail .ed-addons-modal__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  body.page-event-detail .ed-addons-modal__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+body.page-event-detail .addon-modal-card {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: var(--ed-space-3, 0.75rem);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.page-event-detail .addon-modal-card.is-selected {
+  border-color: #F97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12);
+}
+
+body.page-event-detail .addon-modal-card__media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f1f5f9;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: var(--ed-space-3, 0.75rem);
+}
+
+body.page-event-detail .addon-modal-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.page-event-detail .addon-modal-card__placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+body.page-event-detail .addon-modal-card__body {
+  flex: 1 1 auto;
+}
+
+body.page-event-detail .addon-modal-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e2532;
+  margin: 0 0 var(--ed-space-2, 0.5rem);
+}
+
+body.page-event-detail .addon-modal-card__desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: var(--ed-space-2, 0.5rem);
+  line-height: 1.4;
+}
+
+body.page-event-detail .addon-modal-card__price {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e2532;
+  margin-bottom: var(--ed-space-2, 0.5rem);
+}
+
+body.page-event-detail .addon-modal-card__notice {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: var(--ed-space-2, 0.5rem) 0;
+  line-height: 1.35;
+}
+
+body.page-event-detail .addon-modal-card__notice--warning {
+  color: #b45309;
+}
+
+body.page-event-detail .addon-modal-card__notice--danger {
+  color: #b91c1c;
+}
+
+body.page-event-detail .addon-modal-card__qty {
+  margin-top: var(--ed-space-3, 0.75rem);
+  display: flex;
+  justify-content: flex-end;
+}
+
+body.page-event-detail .quantity-input--modal {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+body.page-event-detail .quantity-input--modal button {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: #f8fafc;
+  color: #1e2532;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+body.page-event-detail .quantity-input--modal button:hover,
+body.page-event-detail .quantity-input--modal button:focus {
+  background: #e2e8f0;
+  outline: 2px solid #F97316;
+  outline-offset: -2px;
+}
+
+body.page-event-detail .quantity-input--modal input {
+  width: 56px;
+  height: 44px;
+  border: none;
+  border-left: 1px solid #cbd5e1;
+  border-right: 1px solid #cbd5e1;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e2532;
+  background: #ffffff;
+  -moz-appearance: textfield;
+}
+
+body.page-event-detail .quantity-input--modal input::-webkit-outer-spin-button,
+body.page-event-detail .quantity-input--modal input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+body.page-event-detail .ed-addons-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ed-space-3, 0.75rem);
+  border-top: 1px solid #e2e8f0;
+  padding: var(--ed-space-4, 1rem) var(--ed-space-6, 1.5rem);
+}
+
+body.page-event-detail .ed-addons-modal__recap {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+body.page-event-detail .ed-addons-modal__recap #edAddonsTotal {
+  color: #1e2532;
+  font-weight: 700;
+}
+
+body.page-event-detail .ed-addons-modal .modal-footer .btn {
+  min-height: 44px;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+}
+
+body.page-event-detail .ed-addons-modal .btn-primary {
+  background-color: #C2410C;
+  border-color: #C2410C;
+}
+
+body.page-event-detail .ed-addons-modal .btn-primary:hover,
+body.page-event-detail .ed-addons-modal .btn-primary:focus {
+  background-color: #9a3412;
+  border-color: #9a3412;
+}
+
+body.page-event-detail .ed-addons-modal__error {
+  margin-bottom: var(--ed-space-4, 1rem);
+  padding: var(--ed-space-3, 0.75rem) var(--ed-space-4, 1rem);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-addons-modal .modal-dialog {
+    margin: 0;
+    min-height: 100vh;
+    align-items: stretch;
+  }
+
+  body.page-event-detail .ed-addons-modal .modal-content {
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  body.page-event-detail .ed-addons-modal__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  body.page-event-detail .ed-addons-modal__footer .btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-event-detail .ed-addons-modal .modal.fade .modal-dialog,
+  body.page-event-detail .addon-modal-card {
+    transition: none;
+  }
+}
+
+/* =========================================================

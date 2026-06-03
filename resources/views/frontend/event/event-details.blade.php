@@ -2397,8 +2397,39 @@ document.addEventListener('DOMContentLoaded', function() {
   var symL = '{{ $basicInfo->base_currency_symbol_position == "left"  ? addslashes($basicInfo->base_currency_symbol) : "" }}';
   var symR = '{{ $basicInfo->base_currency_symbol_position == "right" ? addslashes($basicInfo->base_currency_symbol) : "" }}';
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function getSelectedTicketQty() {
+    var selected = 0;
+    document.querySelectorAll('.quantity[data-price]:not(.addon-card__qty-input)').forEach(function(inp) {
+      selected += parseInt(inp.value, 10) || 0;
+    });
+    return selected;
+  }
+
+  function submitBookingForm() {
+    var bookingCard = document.getElementById('event-booking-card');
+    var form = bookingCard ? bookingCard.querySelector('form[action*="check-out2"]') : document.querySelector('form[action*="check-out2"]');
+    if (!form) { return false; }
+    if (typeof form.requestSubmit === 'function') {
+      form.requestSubmit();
+    } else {
+      var submitBtn = form.querySelector('.ed-buy-btn[type="submit"], button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.click();
+      } else {
+        form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+      }
+    }
+    return true;
+  }
+
   document.querySelectorAll('[data-scroll-target]').forEach(function(link) {
     link.addEventListener('click', function(e) {
+      if (link.classList.contains('ed-mobile-bar__cta') && !link.classList.contains('ed-mobile-bar__cta--disabled') && getSelectedTicketQty() > 0) {
+        e.preventDefault();
+        submitBookingForm();
+        return;
+      }
       var target = document.querySelector(link.getAttribute('data-scroll-target'));
       if (!target) return;
       e.preventDefault();

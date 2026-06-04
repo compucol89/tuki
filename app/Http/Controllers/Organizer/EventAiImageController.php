@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Jobs\GenerateAiImageJob;
 use App\Models\Event;
 use App\Models\Event\EventAiGeneration;
-use App\Models\Organizer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
@@ -15,9 +14,7 @@ class EventAiImageController extends Controller
 {
     public function generate(Request $request, Event $event): JsonResponse
     {
-        $organizer = $this->getOrganizer();
-
-        if (!$organizer || $event->organizer_id !== $organizer->id) {
+        if (!$this->canManageEvent($event)) {
             return response()->json(['error' => 'forbidden'], 403);
         }
 
@@ -39,6 +36,13 @@ class EventAiImageController extends Controller
             return response()->json([
                 'error' => 'thumbnail_required',
                 'message' => 'Subí una imagen de portada primero.',
+            ], 422);
+        }
+
+        if (empty($event->organizer_id)) {
+            return response()->json([
+                'error' => 'organizer_required',
+                'message' => 'Asigná un organizador al evento antes de generar imágenes IA.',
             ], 422);
         }
 
@@ -86,9 +90,7 @@ class EventAiImageController extends Controller
 
     public function status(Request $request, Event $event): JsonResponse
     {
-        $organizer = $this->getOrganizer();
-
-        if (!$organizer || $event->organizer_id !== $organizer->id) {
+        if (!$this->canManageEvent($event)) {
             return response()->json(['error' => 'forbidden'], 403);
         }
 
@@ -129,9 +131,7 @@ class EventAiImageController extends Controller
 
     public function retry(Request $request, Event $event, string $format): JsonResponse
     {
-        $organizer = $this->getOrganizer();
-
-        if (!$organizer || $event->organizer_id !== $organizer->id) {
+        if (!$this->canManageEvent($event)) {
             return response()->json(['error' => 'forbidden'], 403);
         }
 
@@ -162,8 +162,14 @@ class EventAiImageController extends Controller
         return response()->json(['status' => 'dispatched', 'format' => $format]);
     }
 
-    private function getOrganizer(): ?Organizer
+    private function canManageEvent(Event $event): bool
     {
-        return auth('organizer')->user();
+        if (auth('admin')->check()) {
+            return true;
+        }
+
+        $organizer = auth('organizer')->user();
+
+        return $organizer && (int) $event->organizer_id === (int) $organizer->id;
     }
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackEnd\Event\CategoryController;
+use App\Http\Controllers\Organizer\EventAiImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +100,9 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
 
     Route::get('/event-images/{id}', 'BackEnd\Event\EventController@images')->name('admin.event.images');
     Route::post('/event-update', 'BackEnd\Event\EventController@update')->name('admin.event.update');
+    Route::post('events/{event}/ai-images/generate', [EventAiImageController::class, 'generate'])->name('admin.events.ai-images.generate');
+    Route::get('events/{event}/ai-images/status', [EventAiImageController::class, 'status'])->name('admin.events.ai-images.status');
+    Route::post('events/{event}/ai-images/{format}/retry', [EventAiImageController::class, 'retry'])->name('admin.events.ai-images.retry');
     Route::post('bulk/delete/event', 'BackEnd\Event\EventController@bulk_delete')->name('admin.event_management.bulk_delete_event');
 
     Route::get('event/ticket', 'BackEnd\Event\TicketController@index')->name('admin.event.ticket');

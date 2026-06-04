@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers\Organizer;
 
 use App\Jobs\GenerateAiImageJob;
+use App\Models\Admin;
 use App\Models\Event;
 use App\Models\Event\EventAiGeneration;
 use App\Models\Organizer;
@@ -27,6 +28,7 @@ class EventAiImageControllerTest extends TestCase
         Schema::dropIfExists('event_ai_generations');
         Schema::dropIfExists('events');
         Schema::dropIfExists('organizers');
+        Schema::dropIfExists('admins');
         Schema::dropIfExists('languages');
         Schema::dropIfExists('basic_settings');
 
@@ -51,6 +53,24 @@ class EventAiImageControllerTest extends TestCase
                 $table->string('email_verification_token')->nullable();
                 $table->timestamp('email_verification_sent_at')->nullable();
                 $table->tinyInteger('status')->default(1);
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('admins')) {
+            Schema::create('admins', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('role_id')->nullable();
+                $table->string('first_name')->nullable();
+                $table->string('last_name')->nullable();
+                $table->string('image')->nullable();
+                $table->string('username')->nullable();
+                $table->string('email')->nullable();
+                $table->string('phone')->nullable();
+                $table->string('address')->nullable();
+                $table->text('details')->nullable();
+                $table->string('password')->nullable();
+                $table->string('remember_token')->nullable();
                 $table->timestamps();
             });
         }
@@ -249,6 +269,41 @@ class EventAiImageControllerTest extends TestCase
             ->assertStatus(403);
     }
 
+    public function test_admin_can_generate_for_event(): void
+    {
+        Bus::fake();
+        $admin = $this->makeAdmin();
+        $organizer = $this->makeOrganizer('admin-event@test.com', 'admin-event');
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'cover.png',
+        ]);
+
+        $response = $this->actingAs($admin, 'admin')
+            ->postJson("/admin/events/{$event->id}/ai-images/generate");
+
+        $response->assertOk()
+            ->assertJsonStructure(['status', 'batch_id', 'formats']);
+
+        Bus::assertBatched(function ($batch) {
+            return count($batch->jobs) === 3;
+        });
+    }
+
+    public function test_admin_generate_requires_event_organizer(): void
+    {
+        $admin = $this->makeAdmin();
+        $event = Event::create([
+            'organizer_id' => null,
+            'thumbnail' => 'cover.png',
+        ]);
+
+        $this->actingAs($admin, 'admin')
+            ->postJson("/admin/events/{$event->id}/ai-images/generate")
+            ->assertStatus(422)
+            ->assertJson(['error' => 'organizer_required']);
+    }
+
     private function makeOrganizer(string $email, string $username): Organizer
     {
         $org = new Organizer();
@@ -260,5 +315,19 @@ class EventAiImageControllerTest extends TestCase
         ]);
         $org->save();
         return $org;
+    }
+
+    private function makeAdmin(): Admin
+    {
+        $admin = new Admin();
+        $admin->forceFill([
+            'id' => 1,
+            'email' => 'admin@test.com',
+            'username' => 'admin',
+            'password' => bcrypt('x'),
+            'role_id' => null,
+        ]);
+        $admin->save();
+        return $admin;
     }
 }

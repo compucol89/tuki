@@ -1,13 +1,24 @@
-@if(config('features.ai_images_enabled') && !empty($event->thumbnail))
+@php
+    $aiGenerateRoute = $aiGenerateRoute ?? route('organizer.events.ai-images.generate', $event->id);
+    $aiStatusRoute = $aiStatusRoute ?? route('organizer.events.ai-images.status', $event->id);
+    $hasAiThumbnail = !empty($event->thumbnail);
+@endphp
+
+@if(config('features.ai_images_enabled'))
 <div class="ai-generate-wrap" style="margin: 1rem 0;">
-    <button type="button" class="btn btn-primary" id="ai-generate-btn">
+    <button type="button" class="btn btn-primary" id="ai-generate-btn" @if(!$hasAiThumbnail) disabled @endif>
         Generar con IA
     </button>
     <small class="text-muted d-block mt-1">
-        Se crearán 3 imágenes (cover, galería, OG) basadas en tu portada actual.
+        @if($hasAiThumbnail)
+            Se crearán 3 imágenes (cover, galería, OG) basadas en tu portada actual.
+        @else
+            Subí y guardá una imagen de portada para activar la generación con IA.
+        @endif
     </small>
 </div>
 
+@if($hasAiThumbnail)
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const btn = document.getElementById('ai-generate-btn');
@@ -21,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         self.disabled = true;
         self.innerHTML = 'Generando...';
 
-        fetch('{{ route("organizer.events.ai-images.generate", $event->id) }}', {
+        fetch('{{ $aiGenerateRoute }}', {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -48,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function pollStatus() {
-        fetch('{{ route("organizer.events.ai-images.status", $event->id) }}', {
+        fetch('{{ $aiStatusRoute }}', {
             headers: { 'Accept': 'application/json' }
         })
         .then(r => r.json())
@@ -80,4 +91,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+@endif
 @endif

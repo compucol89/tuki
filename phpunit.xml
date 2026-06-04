@@ -19,6 +19,7 @@
     <server name="SESSION_DRIVER" value="array"/>
     <server name="TELESCOPE_ENABLED" value="false"/>
     <server name="VIEW_COMPILED_PATH" value="tools/testing/views"/>
+    <server name="OPENAI_API_KEY" value="sk-test-fake"/>
   </php>
   <source>
     <include>

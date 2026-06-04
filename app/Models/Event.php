@@ -19,6 +19,8 @@ class Event extends Model
   protected $fillable = [
     'organizer_id',
     'thumbnail',
+    'og_image',
+    'ai_metadata',
     'status',
     'countdown_status',
     'date_type',
@@ -44,6 +46,11 @@ class Event extends Model
     'manual_badge',
     'event_addons_enabled',
   ];
+
+  protected $casts = [
+    'ai_metadata' => 'array',
+  ];
+
   public function ticket()
   {
     return $this->hasOne(Ticket::class);

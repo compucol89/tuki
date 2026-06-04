@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Organizer\EventAiImageController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deactive:organizer', 'EmailStatus:organizer')->group(function () {
@@ -36,4 +37,7 @@ Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deact
   Route::post('/event-booking/bulk-delete', 'BackEnd\Organizer\EventBookingController@bulkDestroy')->name('organizer.event_booking.bulk_delete');
   Route::get('/event-booking/report', 'BackEnd\Organizer\EventBookingController@report')->name('organizer.event_booking.report');
   Route::get('/event-booking/export', 'BackEnd\Organizer\EventBookingController@export')->name('organizer.event_bookings.export');
+  Route::post('events/{event}/ai-images/generate', [EventAiImageController::class, 'generate'])->name('organizer.events.ai-images.generate');
+  Route::get('events/{event}/ai-images/status', [EventAiImageController::class, 'status'])->name('organizer.events.ai-images.status');
+  Route::post('events/{event}/ai-images/{format}/retry', [EventAiImageController::class, 'retry'])->name('organizer.events.ai-images.retry');
 });

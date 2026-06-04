@@ -103,7 +103,8 @@ class GenerateAiImageJobTest extends TestCase
         File::ensureDirectoryExists(dirname($path));
 
         $img = imagecreatetruecolor($size, $size);
-        imagecolorallocate($img, 200, 100, 50);
+        $color = imagecolorallocate($img, 200, 100, 50);
+        imagefill($img, 0, 0, $color);
         ob_start();
         imagepng($img);
         $data = ob_get_clean();
@@ -133,10 +134,6 @@ class GenerateAiImageJobTest extends TestCase
             'prompt' => 'test',
         ]);
 
-        $this->mock(ImageGenerationService::class, function ($mock) {
-            $mock->shouldReceive('generateEdit')->andReturn(base64_encode('fake-png-output'));
-        });
-
         $job = new GenerateAiImageJob($generation->id);
         $job->handle(app(ImageGenerationService::class));
 
@@ -145,6 +142,8 @@ class GenerateAiImageJobTest extends TestCase
         $this->assertEquals('completed', $generation->status);
         $this->assertNotNull($generation->output_path);
         $this->assertFileExists(public_path($generation->output_path));
+        $this->assertSame([1024, 1024], array_slice(getimagesize(public_path($generation->output_path)), 0, 2));
+        $this->assertEquals(0.0, (float) $generation->cost_estimate);
 
         $event->refresh();
         $this->assertEquals($originalThumbnail, $event->thumbnail, 'Organizer thumbnail must be preserved');
@@ -169,16 +168,13 @@ class GenerateAiImageJobTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->mock(ImageGenerationService::class, function ($mock) {
-            $mock->shouldReceive('generateEdit')->andReturn(base64_encode('gallery-png'));
-        });
-
         $job = new GenerateAiImageJob($generation->id);
         $job->handle(app(ImageGenerationService::class));
 
         $generation->refresh();
         $this->cleanupFiles[] = public_path($generation->output_path);
         $this->assertEquals('completed', $generation->status);
+        $this->assertSame([1536, 1024], array_slice(getimagesize(public_path($generation->output_path)), 0, 2));
 
         $this->assertSame(0, EventImage::where('event_id', $event->id)->where('format', 'gallery')->count());
     }
@@ -200,22 +196,21 @@ class GenerateAiImageJobTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->mock(ImageGenerationService::class, function ($mock) {
-            $mock->shouldReceive('generateEdit')->andReturn(base64_encode('og-png'));
-        });
-
         $job = new GenerateAiImageJob($generation->id);
         $job->handle(app(ImageGenerationService::class));
 
         $generation->refresh();
         $this->cleanupFiles[] = public_path($generation->output_path);
+        $this->assertSame([1536, 1024], array_slice(getimagesize(public_path($generation->output_path)), 0, 2));
 
         $event->refresh();
         $this->assertNull($event->og_image);
     }
 
-    public function test_job_rethrows_retryable_exception(): void
+    public function test_job_marks_failed_when_variant_size_is_invalid(): void
     {
+        config(['openai.formats.square.size' => 'bad-size']);
+
         $organizer = Organizer::create(['email' => 'org4@test.com', 'username' => 'org4']);
         $event = Event::create([
             'organizer_id' => $organizer->id,
@@ -231,10 +226,6 @@ class GenerateAiImageJobTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $this->mock(ImageGenerationService::class, function ($mock) {
-            $mock->shouldReceive('generateEdit')->andThrow(new \RuntimeException('API down 5xx'));
-        });
-
         $thrown = null;
         try {
             $job = new GenerateAiImageJob($generation->id);
@@ -243,11 +234,11 @@ class GenerateAiImageJobTest extends TestCase
             $thrown = $e;
         }
 
-        $this->assertNotNull($thrown, 'Retryable exception should propagate');
-        $this->assertEquals('API down 5xx', $thrown->getMessage());
+        $this->assertNull($thrown, 'Invalid local variant config should mark failed without bubbling.');
 
         $generation->refresh();
         $this->assertEquals('failed', $generation->status);
+        $this->assertStringContainsString('Invalid image size', $generation->error_message);
     }
 
     public function test_job_marks_failed_without_retry_on_invalid_image(): void
@@ -287,7 +278,7 @@ class GenerateAiImageJobTest extends TestCase
         $this->assertStringContainsString('not a valid image', $generation->error_message);
     }
 
-    public function test_job_does_not_rethrow_non_retryable_api_exception(): void
+    public function test_job_does_not_call_openai_api_for_preserved_variant(): void
     {
         $organizer = Organizer::create(['email' => 'org7@test.com', 'username' => 'org7']);
         $event = Event::create([
@@ -305,7 +296,7 @@ class GenerateAiImageJobTest extends TestCase
         ]);
 
         $this->mock(ImageGenerationService::class, function ($mock) {
-            $mock->shouldReceive('generateEdit')->andThrow(new OpenAiNonRetryableException('Invalid API key'));
+            $mock->shouldNotReceive('generateEdit');
         });
 
         $thrown = null;
@@ -316,11 +307,11 @@ class GenerateAiImageJobTest extends TestCase
             $thrown = $e;
         }
 
-        $this->assertNull($thrown, 'Non-retryable exception should not propagate: got ' . ($thrown ? get_class($thrown) : 'none'));
+        $this->assertNull($thrown, 'Local preserved variant should not call OpenAI.');
 
         $generation->refresh();
-        $this->assertEquals('failed', $generation->status);
-        $this->assertStringContainsString('Invalid API key', $generation->error_message);
+        $this->assertEquals('completed', $generation->status);
+        $this->cleanupFiles[] = public_path($generation->output_path);
     }
 
     public function test_job_throws_if_thumbnail_missing(): void

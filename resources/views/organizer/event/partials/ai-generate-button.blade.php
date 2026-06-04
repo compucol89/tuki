@@ -166,17 +166,17 @@
 <div class="ai-generate-panel" data-ai-panel>
   <div class="ai-generate-panel__head">
     <div>
-      <h5 class="ai-generate-panel__title">{{ __('Imágenes generadas con IA') }}</h5>
+      <h5 class="ai-generate-panel__title">{{ __('Variantes seguras de la portada') }}</h5>
       <p class="ai-generate-panel__hint">
         @if($hasAiThumbnail)
-          {{ __('Generá, revisá la vista previa y aplicá solo las imágenes que quieras usar.') }}
+          {{ __('Generá formatos desde la portada original, revisá la vista previa y aplicá solo las imágenes que quieras usar.') }}
         @else
-          {{ __('Subí y guardá una imagen de portada para activar la generación con IA.') }}
+          {{ __('Subí y guardá una imagen de portada para activar las variantes seguras.') }}
         @endif
       </p>
     </div>
     <button type="button" class="btn btn-primary btn-sm" id="ai-generate-btn" @if(!$hasAiThumbnail) disabled @endif>
-      {{ __('Generar con IA') }}
+      {{ __('Generar variantes') }}
     </button>
   </div>
 
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!btn || !container || !applyBtn) return;
 
     btn.addEventListener('click', function() {
-        if (!confirm('Se generarán hasta 3 imágenes con IA. Esto puede tardar 30-60 segundos. ¿Continuar?')) {
+        if (!confirm('Se generarán hasta 3 variantes desde la portada original sin cambiar el contenido del flyer. ¿Continuar?')) {
             return;
         }
         selected.clear();
@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function setGeneratingState(isGenerating) {
         btn.disabled = isGenerating;
-        btn.textContent = isGenerating ? 'Generando...' : 'Generar con IA';
+        btn.textContent = isGenerating ? 'Generando...' : 'Generar variantes';
     }
 
     function updateApplyButton() {
@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             not_started: 'Todavía no generada',
             pending: 'Esperando worker',
-            running: 'La IA está trabajando',
+            running: 'Generando variante',
             failed: 'No se pudo generar'
         }[status] || 'Sin preview';
     }

@@ -28,13 +28,6 @@ class EventAiImageController extends Controller
             ], 503);
         }
 
-        if (empty(config('openai.api_key'))) {
-            return response()->json([
-                'error' => 'openai_not_configured',
-                'message' => 'OPENAI_API_KEY no está configurado.',
-            ], 503);
-        }
-
         if (empty($event->thumbnail)) {
             return response()->json([
                 'error' => 'thumbnail_required',
@@ -198,13 +191,6 @@ class EventAiImageController extends Controller
 
         if (!config('features.ai_images_enabled', false)) {
             return response()->json(['error' => 'ai_images_disabled'], 503);
-        }
-
-        if (empty(config('openai.api_key'))) {
-            return response()->json([
-                'error' => 'openai_not_configured',
-                'message' => 'OPENAI_API_KEY no está configurado.',
-            ], 503);
         }
 
         if (empty($event->organizer_id)) {

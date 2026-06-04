@@ -19,21 +19,27 @@ class EventImagePromptBuilderTest extends TestCase
 
     public function test_build_returns_base_prompt_for_square(): void
     {
-        $prompt = $this->builder->build('square', $this->makeEvent());
+        $event = $this->makeEvent();
+        $event->setRelation('information', null);
+        $prompt = $this->builder->build('square', $event);
         $this->assertStringContainsString('cuadrado 1:1', $prompt);
         $this->assertStringContainsString('1024x1024', $prompt);
     }
 
     public function test_build_returns_base_prompt_for_gallery(): void
     {
-        $prompt = $this->builder->build('gallery', $this->makeEvent());
+        $event = $this->makeEvent();
+        $event->setRelation('information', null);
+        $prompt = $this->builder->build('gallery', $event);
         $this->assertStringContainsString('landscape 3:2', $prompt);
         $this->assertStringContainsString('1536x1024', $prompt);
     }
 
     public function test_build_returns_base_prompt_for_og(): void
     {
-        $prompt = $this->builder->build('og', $this->makeEvent());
+        $event = $this->makeEvent();
+        $event->setRelation('information', null);
+        $prompt = $this->builder->build('og', $event);
         $this->assertStringContainsString('Open Graph', $prompt);
         $this->assertStringContainsString('1536x1024', $prompt);
     }
@@ -81,6 +87,18 @@ class EventImagePromptBuilderTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->builder->build('invalid_format', $this->makeEvent());
+    }
+
+    public function test_build_throws_logic_exception_when_information_not_loaded(): void
+    {
+        $event = $this->makeEvent();
+        $event->id = 1;
+        $event->organizer_id = 1;
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Event::information must be eager-loaded');
+
+        $this->builder->build('square', $event);
     }
 
     private function makeEvent(): Event

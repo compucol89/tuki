@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class EventAiImageController extends Controller
 {
@@ -275,14 +276,17 @@ class EventAiImageController extends Controller
     private function applyGenerationToEvent(Event $event, EventAiGeneration $generation): void
     {
         match ($generation->format) {
-            'square', 'gallery' => $this->replaceEventImage($event->id, $generation->format, $generation->output_path),
+            'square', 'gallery' => $this->replaceEventImage($event, $generation),
             'og' => $event->update(['og_image' => basename($generation->output_path)]),
             default => null,
         };
     }
 
-    private function replaceEventImage(int $eventId, string $format, string $outputPath): void
+    private function replaceEventImage(Event $event, EventAiGeneration $generation): void
     {
+        $eventId = $event->id;
+        $format = $generation->format;
+        $outputPath = $generation->output_path;
         $source = public_path($outputPath);
         if (!is_file($source)) {
             return;
@@ -300,11 +304,24 @@ class EventAiImageController extends Controller
         $filename = 'ai_' . $format . '_' . $eventId . '_' . uniqid() . '.png';
         File::copy($source, $galleryDir . $filename);
 
-        EventImage::create([
+        $attributes = [
             'event_id' => $eventId,
             'image' => $filename,
             'format' => $format,
-        ]);
+        ];
+
+        if (Schema::hasColumn('event_images', 'generation_method')) {
+            $attributes['generation_method'] = ((float) $generation->cost_estimate) > 0 ? 'hybrid' : 'blur_extend';
+        }
+        if (Schema::hasColumn('event_images', 'source_image_hash')) {
+            $refPath = public_path('assets/admin/img/event/thumbnail/' . $event->thumbnail);
+            $attributes['source_image_hash'] = is_file($refPath) ? hash_file('sha256', $refPath) : null;
+        }
+        if (Schema::hasColumn('event_images', 'validation_ssim_score')) {
+            $attributes['validation_ssim_score'] = $generation->validation_ssim_score;
+        }
+
+        EventImage::create($attributes);
     }
 
     private function formatLabel(string $format): string

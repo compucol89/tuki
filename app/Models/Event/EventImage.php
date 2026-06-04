@@ -13,5 +13,12 @@ class EventImage extends Model
         'event_id',
         'image',
         'format',
+        'generation_method',
+        'source_image_hash',
+        'validation_ssim_score',
+    ];
+
+    protected $casts = [
+        'validation_ssim_score' => 'float',
     ];
 }

@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Event\EventAiGeneration;
 use App\Models\Event\EventImage;
 use App\Models\Organizer;
+use App\Services\ImageGeneration\BlurExtendService;
 use App\Services\OpenAI\ImageGenerationService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -79,6 +80,7 @@ class GenerateAiImageJobTest extends TestCase
             $table->text('prompt')->nullable();
             $table->unsignedInteger('duration_ms')->nullable();
             $table->decimal('cost_estimate', 8, 4)->nullable();
+            $table->decimal('validation_ssim_score', 8, 6)->nullable();
             $table->text('error_message')->nullable();
             $table->string('output_path')->nullable();
             $table->timestamps();
@@ -115,6 +117,19 @@ class GenerateAiImageJobTest extends TestCase
         return $path;
     }
 
+    private function pixelRgb(string $path, int $x, int $y): array
+    {
+        $image = imagecreatefrompng($path);
+        $color = imagecolorat($image, $x, $y);
+        imagedestroy($image);
+
+        return [
+            ($color >> 16) & 0xFF,
+            ($color >> 8) & 0xFF,
+            $color & 0xFF,
+        ];
+    }
+
     public function test_job_saves_preview_file_and_does_not_apply_or_overwrite_organizer_thumbnail(): void
     {
         $organizer = Organizer::create(['email' => 'org1@test.com', 'username' => 'org1']);
@@ -135,7 +150,7 @@ class GenerateAiImageJobTest extends TestCase
         ]);
 
         $job = new GenerateAiImageJob($generation->id);
-        $job->handle(app(ImageGenerationService::class));
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
 
         $generation->refresh();
         $this->cleanupFiles[] = public_path($generation->output_path);
@@ -169,7 +184,7 @@ class GenerateAiImageJobTest extends TestCase
         ]);
 
         $job = new GenerateAiImageJob($generation->id);
-        $job->handle(app(ImageGenerationService::class));
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
 
         $generation->refresh();
         $this->cleanupFiles[] = public_path($generation->output_path);
@@ -177,6 +192,33 @@ class GenerateAiImageJobTest extends TestCase
         $this->assertSame([1536, 1024], array_slice(getimagesize(public_path($generation->output_path)), 0, 2));
 
         $this->assertSame(0, EventImage::where('event_id', $event->id)->where('format', 'gallery')->count());
+    }
+
+    public function test_job_uses_blur_extend_background_instead_of_solid_margin(): void
+    {
+        $organizer = Organizer::create(['email' => 'org8@test.com', 'username' => 'org8']);
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'test-ref.png',
+        ]);
+
+        $refPath = $this->makeRefPng('test-ref.png');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'gallery',
+            'status' => 'pending',
+        ]);
+
+        $job = new GenerateAiImageJob($generation->id);
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
+
+        $generation->refresh();
+        $this->cleanupFiles[] = public_path($generation->output_path);
+        $rgb = $this->pixelRgb(public_path($generation->output_path), 24, 512);
+
+        $this->assertNotSame([8, 12, 24], $rgb);
     }
 
     public function test_job_creates_preview_only_for_og_format(): void
@@ -197,7 +239,7 @@ class GenerateAiImageJobTest extends TestCase
         ]);
 
         $job = new GenerateAiImageJob($generation->id);
-        $job->handle(app(ImageGenerationService::class));
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
 
         $generation->refresh();
         $this->cleanupFiles[] = public_path($generation->output_path);
@@ -229,7 +271,7 @@ class GenerateAiImageJobTest extends TestCase
         $thrown = null;
         try {
             $job = new GenerateAiImageJob($generation->id);
-            $job->handle(app(ImageGenerationService::class));
+            $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
         } catch (\RuntimeException $e) {
             $thrown = $e;
         }
@@ -264,7 +306,7 @@ class GenerateAiImageJobTest extends TestCase
         $thrown = null;
         try {
             $job = new GenerateAiImageJob($generation->id);
-            $job->handle(app(ImageGenerationService::class));
+            $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
         } catch (OpenAiNonRetryableException $e) {
             $thrown = $e;
         } catch (\Throwable $e) {
@@ -302,7 +344,7 @@ class GenerateAiImageJobTest extends TestCase
         $thrown = null;
         try {
             $job = new GenerateAiImageJob($generation->id);
-            $job->handle(app(ImageGenerationService::class));
+            $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
         } catch (\Throwable $e) {
             $thrown = $e;
         }
@@ -312,6 +354,118 @@ class GenerateAiImageJobTest extends TestCase
         $generation->refresh();
         $this->assertEquals('completed', $generation->status);
         $this->cleanupFiles[] = public_path($generation->output_path);
+    }
+
+    public function test_job_uses_hybrid_mode_when_enabled(): void
+    {
+        config(['openai.hybrid_mode' => true]);
+
+        $organizer = Organizer::create(['email' => 'org9@test.com', 'username' => 'org9']);
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'test-ref.png',
+        ]);
+
+        $refPath = $this->makeRefPng('test-ref.png');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'square',
+            'status' => 'pending',
+        ]);
+
+        $this->mock(ImageGenerationService::class, function ($mock) {
+            $mock->shouldReceive('extendBackground')
+                ->once()
+                ->andReturn($this->pngBytes([200, 100, 50], 1024, 1024));
+        });
+
+        $job = new GenerateAiImageJob($generation->id);
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
+
+        $generation->refresh();
+        $this->cleanupFiles[] = public_path($generation->output_path);
+
+        $this->assertEquals('completed', $generation->status);
+        $this->assertEquals(0.04, (float) $generation->cost_estimate);
+        $this->assertGreaterThanOrEqual(0.99, (float) $generation->validation_ssim_score);
+    }
+
+    public function test_job_falls_back_to_blur_extend_when_hybrid_fails(): void
+    {
+        config(['openai.hybrid_mode' => true]);
+
+        $organizer = Organizer::create(['email' => 'org10@test.com', 'username' => 'org10']);
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'test-ref.png',
+        ]);
+
+        $refPath = $this->makeRefPng('test-ref.png');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'gallery',
+            'status' => 'pending',
+        ]);
+
+        $this->mock(ImageGenerationService::class, function ($mock) {
+            $mock->shouldReceive('extendBackground')
+                ->once()
+                ->andThrow(new \RuntimeException('OpenAI temporary failure'));
+        });
+
+        $job = new GenerateAiImageJob($generation->id);
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
+
+        $generation->refresh();
+        $this->cleanupFiles[] = public_path($generation->output_path);
+
+        $this->assertEquals('completed', $generation->status);
+        $this->assertEquals(0.0, (float) $generation->cost_estimate);
+        $this->assertSame([1536, 1024], array_slice(getimagesize(public_path($generation->output_path)), 0, 2));
+    }
+
+    public function test_job_falls_back_to_blur_extend_when_hybrid_validation_fails(): void
+    {
+        config([
+            'openai.hybrid_mode' => true,
+            'openai.ssim_threshold' => 0.99,
+        ]);
+
+        $organizer = Organizer::create(['email' => 'org11@test.com', 'username' => 'org11']);
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'test-ref.png',
+        ]);
+
+        $refPath = $this->makeRefPng('test-ref.png');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'gallery',
+            'status' => 'pending',
+        ]);
+
+        $this->mock(ImageGenerationService::class, function ($mock) {
+            $mock->shouldReceive('extendBackground')
+                ->once()
+                ->andReturn($this->pngBytes([0, 0, 0], 1536, 1024));
+        });
+
+        $job = new GenerateAiImageJob($generation->id);
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
+
+        $generation->refresh();
+        $this->cleanupFiles[] = public_path($generation->output_path);
+
+        $this->assertEquals('completed', $generation->status);
+        $this->assertEquals(0.0, (float) $generation->cost_estimate);
+        $this->assertLessThan(0.99, (float) $generation->validation_ssim_score);
+        $this->assertNotSame([0, 0, 0], $this->pixelRgb(public_path($generation->output_path), 768, 512));
     }
 
     public function test_job_throws_if_thumbnail_missing(): void
@@ -333,6 +487,20 @@ class GenerateAiImageJobTest extends TestCase
         $this->expectExceptionMessage('thumbnail is empty');
 
         $job = new GenerateAiImageJob($generation->id);
-        $job->handle(app(ImageGenerationService::class));
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
+    }
+
+    private function pngBytes(array $rgb, int $width, int $height): string
+    {
+        $img = imagecreatetruecolor($width, $height);
+        $color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+        imagefill($img, 0, 0, $color);
+
+        ob_start();
+        imagepng($img);
+        $bytes = ob_get_clean();
+        imagedestroy($img);
+
+        return $bytes;
     }
 }

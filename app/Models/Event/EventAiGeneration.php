@@ -19,6 +19,7 @@ class EventAiGeneration extends Model
         'prompt',
         'duration_ms',
         'cost_estimate',
+        'validation_ssim_score',
         'error_message',
         'output_path',
     ];
@@ -26,6 +27,7 @@ class EventAiGeneration extends Model
     protected $casts = [
         'duration_ms' => 'integer',
         'cost_estimate' => 'decimal:4',
+        'validation_ssim_score' => 'float',
     ];
 
     public function event(): BelongsTo
@@ -43,13 +45,14 @@ class EventAiGeneration extends Model
         $this->update(['status' => 'running']);
     }
 
-    public function markCompleted(int $durationMs, string $outputPath, float $costEstimate): void
+    public function markCompleted(int $durationMs, string $outputPath, float $costEstimate, ?float $validationScore = null): void
     {
         $this->update([
             'status' => 'completed',
             'duration_ms' => $durationMs,
             'output_path' => $outputPath,
             'cost_estimate' => $costEstimate,
+            'validation_ssim_score' => $validationScore,
         ]);
     }
 

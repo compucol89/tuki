@@ -130,6 +130,7 @@ class EventAiImageControllerTest extends TestCase
                 $table->text('prompt')->nullable();
                 $table->unsignedInteger('duration_ms')->nullable();
                 $table->decimal('cost_estimate', 8, 4)->nullable();
+                $table->decimal('validation_ssim_score', 8, 6)->nullable();
                 $table->text('error_message')->nullable();
                 $table->string('output_path')->nullable();
                 $table->timestamps();
@@ -142,6 +143,9 @@ class EventAiImageControllerTest extends TestCase
                 $table->unsignedBigInteger('event_id')->nullable();
                 $table->string('image')->nullable();
                 $table->string('format')->nullable();
+                $table->string('generation_method')->nullable();
+                $table->string('source_image_hash', 64)->nullable();
+                $table->decimal('validation_ssim_score', 8, 6)->nullable();
                 $table->timestamps();
             });
         }
@@ -382,6 +386,47 @@ class EventAiImageControllerTest extends TestCase
         $this->assertSame(1, \App\Models\Event\EventImage::where('event_id', $event->id)->where('format', 'square')->count());
 
         @unlink($source);
+    }
+
+    public function test_apply_selected_generation_stores_ai_metadata(): void
+    {
+        $organizer = $this->makeOrganizer('metadata@test.com', 'metadata');
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'cover.png',
+        ]);
+        $thumbnail = public_path('assets/admin/img/event/thumbnail/cover.png');
+        \Illuminate\Support\Facades\File::ensureDirectoryExists(dirname($thumbnail));
+        file_put_contents($thumbnail, 'source-flyer');
+
+        $source = public_path('assets/admin/img/event-ai/' . $event->id . '/gallery_1.png');
+        \Illuminate\Support\Facades\File::ensureDirectoryExists(dirname($source));
+        file_put_contents($source, 'generated-preview');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'gallery',
+            'status' => 'completed',
+            'cost_estimate' => 0.1200,
+            'validation_ssim_score' => 0.996,
+            'output_path' => 'assets/admin/img/event-ai/' . $event->id . '/gallery_1.png',
+        ]);
+
+        $this->actingAs($organizer, 'organizer')
+            ->postJson("/organizer/events/{$event->id}/ai-images/apply", [
+                'generation_ids' => [$generation->id],
+            ])
+            ->assertOk();
+
+        $eventImage = \App\Models\Event\EventImage::where('event_id', $event->id)->where('format', 'gallery')->first();
+
+        $this->assertSame('hybrid', $eventImage->generation_method);
+        $this->assertSame(hash_file('sha256', $thumbnail), $eventImage->source_image_hash);
+        $this->assertSame(0.996, (float) $eventImage->validation_ssim_score);
+
+        @unlink($source);
+        @unlink($thumbnail);
     }
 
     public function test_regenerate_dispatches_single_format_job(): void

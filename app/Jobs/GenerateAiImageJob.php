@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Exceptions\OpenAiNonRetryableException;
 use App\Models\Event\EventAiGeneration;
+use App\Services\ImageGeneration\BlurExtendService;
+use App\Services\ImageValidation\ImageSimilarityService;
 use App\Services\OpenAI\ImageGenerationService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -31,7 +33,7 @@ class GenerateAiImageJob implements ShouldQueue
         return [30, 120, 480];
     }
 
-    public function handle(ImageGenerationService $service): void
+    public function handle(BlurExtendService $blurExtendService, ImageGenerationService $imageGenerationService): void
     {
         $generation = EventAiGeneration::findOrFail($this->generationId);
         $generation->markRunning();
@@ -52,14 +54,39 @@ class GenerateAiImageJob implements ShouldQueue
             $this->validateReferenceImage($refPath);
 
             $size = config("openai.formats.{$generation->format}.size");
-            $imageBytes = $this->createPreservedVariant($refPath, $size);
+            $costEstimate = 0.0;
+            $validationScore = null;
+            $imageBytes = null;
+
+            if (config('openai.hybrid_mode', false)) {
+                try {
+                    $imageBytes = $imageGenerationService->extendBackground($refPath, $size);
+                    $validationScore = $this->hybridValidationScore($imageBytes, $refPath, $size);
+                    if ($validationScore >= (float) config('openai.ssim_threshold', 0.99)) {
+                        $costEstimate = $this->estimateCost($size);
+                    } else {
+                        Log::warning('ai.image.hybrid_validation_failed_falling_back_to_blur_extend', [
+                            'generation_id' => $generation->id,
+                        ]);
+                        $imageBytes = null;
+                    }
+                } catch (Throwable $e) {
+                    Log::warning('ai.image.hybrid_failed_falling_back_to_blur_extend', [
+                        'generation_id' => $generation->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            if ($imageBytes === null) {
+                $imageBytes = $blurExtendService->render($refPath, $size);
+            }
 
             $outputPath = $this->saveImage($event->id, $generation->format, $imageBytes);
 
             $durationMs = (int) ((microtime(true) - $start) * 1000);
-            $costEstimate = 0.0;
 
-            $generation->markCompleted($durationMs, $outputPath, $costEstimate);
+            $generation->markCompleted($durationMs, $outputPath, $costEstimate, $validationScore);
 
             Log::info('ai.image.generated', [
                 'event_id' => $event->id,
@@ -107,81 +134,6 @@ class GenerateAiImageJob implements ShouldQueue
         }
     }
 
-    private function createPreservedVariant(string $refPath, string $size): string
-    {
-        [$targetWidth, $targetHeight] = $this->parseSize($size);
-
-        $source = $this->loadImage($refPath);
-        $sourceWidth = imagesx($source);
-        $sourceHeight = imagesy($source);
-
-        $scale = min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight);
-        $newWidth = (int) floor($sourceWidth * $scale);
-        $newHeight = (int) floor($sourceHeight * $scale);
-        $dstX = (int) floor(($targetWidth - $newWidth) / 2);
-        $dstY = (int) floor(($targetHeight - $newHeight) / 2);
-
-        $canvas = imagecreatetruecolor($targetWidth, $targetHeight);
-        $background = imagecolorallocate($canvas, 8, 12, 24);
-        imagefill($canvas, 0, 0, $background);
-
-        imagecopyresampled(
-            $canvas,
-            $source,
-            $dstX,
-            $dstY,
-            0,
-            0,
-            $newWidth,
-            $newHeight,
-            $sourceWidth,
-            $sourceHeight
-        );
-
-        ob_start();
-        imagepng($canvas, null, 6);
-        $bytes = ob_get_clean();
-
-        imagedestroy($source);
-        imagedestroy($canvas);
-
-        if ($bytes === false) {
-            throw new OpenAiNonRetryableException('Could not render preserved image variant');
-        }
-
-        return $bytes;
-    }
-
-    private function parseSize(string $size): array
-    {
-        if (!preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
-            throw new OpenAiNonRetryableException("Invalid image size: {$size}");
-        }
-
-        return [(int) $matches[1], (int) $matches[2]];
-    }
-
-    private function loadImage(string $path): \GdImage
-    {
-        $imageInfo = @getimagesize($path);
-        if ($imageInfo === false) {
-            throw new OpenAiNonRetryableException('Reference image is not readable');
-        }
-
-        $image = match ($imageInfo[2] ?? null) {
-            IMAGETYPE_JPEG => @imagecreatefromjpeg($path),
-            IMAGETYPE_PNG => @imagecreatefrompng($path),
-            IMAGETYPE_WEBP => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($path) : false,
-            default => false,
-        };
-
-        if (!$image instanceof \GdImage) {
-            throw new OpenAiNonRetryableException('Reference image format is not supported');
-        }
-
-        return $image;
-    }
-
     private function saveImage(int $eventId, string $format, string $imageBytes): string
     {
         $dir = public_path("assets/admin/img/event-ai/{$eventId}");
@@ -193,5 +145,77 @@ class GenerateAiImageJob implements ShouldQueue
         file_put_contents($fullPath, $imageBytes);
 
         return "assets/admin/img/event-ai/{$eventId}/{$filename}";
+    }
+
+    private function hybridValidationScore(string $imageBytes, string $refPath, string $size): float
+    {
+        [$targetWidth, $targetHeight] = $this->parseSize($size);
+        $refInfo = getimagesize($refPath);
+        if ($refInfo === false) {
+            return 0.0;
+        }
+
+        [$sourceWidth, $sourceHeight] = $refInfo;
+        [$dstX, $dstY, $newWidth, $newHeight] = $this->containedPlacement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
+
+        $outputPath = tempnam(sys_get_temp_dir(), 'ai_hybrid_output_') . '.png';
+        $cropPath = tempnam(sys_get_temp_dir(), 'ai_hybrid_crop_') . '.png';
+        file_put_contents($outputPath, $imageBytes);
+
+        $output = imagecreatefrompng($outputPath);
+        if (!$output instanceof \GdImage) {
+            @unlink($outputPath);
+            @unlink($cropPath);
+            return 0.0;
+        }
+
+        $crop = imagecreatetruecolor($newWidth, $newHeight);
+        imagecopy($crop, $output, 0, 0, $dstX, $dstY, $newWidth, $newHeight);
+        imagepng($crop, $cropPath);
+
+        imagedestroy($output);
+        imagedestroy($crop);
+
+        $score = app(ImageSimilarityService::class)->score(
+            $refPath,
+            $cropPath
+        );
+
+        @unlink($outputPath);
+        @unlink($cropPath);
+
+        return $score;
+    }
+
+    private function parseSize(string $size): array
+    {
+        if (!preg_match('/^(\d+)x(\d+)$/', $size, $matches)) {
+            throw new OpenAiNonRetryableException("Invalid image size: {$size}");
+        }
+
+        return [(int) $matches[1], (int) $matches[2]];
+    }
+
+    private function containedPlacement(int $sourceWidth, int $sourceHeight, int $targetWidth, int $targetHeight): array
+    {
+        $scale = min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight);
+        $newWidth = (int) floor($sourceWidth * $scale);
+        $newHeight = (int) floor($sourceHeight * $scale);
+
+        return [
+            (int) floor(($targetWidth - $newWidth) / 2),
+            (int) floor(($targetHeight - $newHeight) / 2),
+            $newWidth,
+            $newHeight,
+        ];
+    }
+
+    private function estimateCost(string $size): float
+    {
+        return match (true) {
+            str_contains($size, '1024x1024') => 0.04,
+            str_contains($size, '1536x1024') => 0.12,
+            default => 0.08,
+        };
     }
 }

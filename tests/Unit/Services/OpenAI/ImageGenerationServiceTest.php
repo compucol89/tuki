@@ -123,4 +123,85 @@ class ImageGenerationServiceTest extends TestCase
 
         $this->service->generateEdit('/tmp/x.png', 'p', '1024x1024');
     }
+
+    public function test_extend_background_sends_mask_and_input_fidelity(): void
+    {
+        Http::fake([
+            'api.openai.com/v1/images/edits' => Http::response([
+                'data' => [['b64_json' => base64_encode($this->pngBytes([0, 0, 0], 1024, 1024))]],
+            ], 200),
+        ]);
+
+        $source = $this->writePng([230, 80, 20], 600, 600);
+
+        try {
+            $this->service->extendBackground($source, '1024x1024');
+
+            Http::assertSent(function ($request) {
+                $body = $request->body();
+                return str_contains($body, 'name="mask"')
+                    && str_contains($body, 'name="input_fidelity"')
+                    && str_contains($body, 'high')
+                    && str_contains($body, 'name="model"');
+            });
+        } finally {
+            @unlink($source);
+        }
+    }
+
+    public function test_extend_background_composites_original_on_top_of_ai_output(): void
+    {
+        Http::fake([
+            'api.openai.com/v1/images/edits' => Http::response([
+                'data' => [['b64_json' => base64_encode($this->pngBytes([0, 0, 0], 1536, 1024))]],
+            ], 200),
+        ]);
+
+        $source = $this->writePng([230, 80, 20], 600, 600);
+        $output = tempnam(sys_get_temp_dir(), 'extended_') . '.png';
+
+        try {
+            file_put_contents($output, $this->service->extendBackground($source, '1536x1024'));
+
+            $this->assertSame([230, 80, 20], $this->pixelRgb($output, 768, 512));
+        } finally {
+            @unlink($source);
+            @unlink($output);
+        }
+    }
+
+    private function writePng(array $rgb, int $width, int $height): string
+    {
+        $path = tempnam(sys_get_temp_dir(), 'openai_ref_') . '.png';
+        file_put_contents($path, $this->pngBytes($rgb, $width, $height));
+
+        return $path;
+    }
+
+    private function pngBytes(array $rgb, int $width, int $height): string
+    {
+        $img = imagecreatetruecolor($width, $height);
+        $color = imagecolorallocate($img, $rgb[0], $rgb[1], $rgb[2]);
+        imagefill($img, 0, 0, $color);
+
+        ob_start();
+        imagepng($img);
+        $bytes = ob_get_clean();
+        imagedestroy($img);
+
+        return $bytes;
+    }
+
+    private function pixelRgb(string $path, int $x, int $y): array
+    {
+        $image = imagecreatefrompng($path);
+        $color = imagecolorat($image, $x, $y);
+        imagedestroy($image);
+
+        return [
+            ($color >> 16) & 0xFF,
+            ($color >> 8) & 0xFF,
+            $color & 0xFF,
+        ];
+    }
 }

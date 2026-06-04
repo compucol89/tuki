@@ -5,7 +5,7 @@ return [
     'organization' => env('OPENAI_ORGANIZATION'),
     'base_url' => 'https://api.openai.com/v1',
     'model' => env('OPENAI_IMAGE_MODEL', 'gpt-image-2'),
-    'timeout' => 60,
+    'timeout' => (int) env('OPENAI_TIMEOUT', 150),
     'max_retries' => 3,
     'queue' => 'ai-images',
 

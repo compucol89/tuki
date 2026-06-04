@@ -39,5 +39,7 @@ Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deact
   Route::get('/event-booking/export', 'BackEnd\Organizer\EventBookingController@export')->name('organizer.event_bookings.export');
   Route::post('events/{event}/ai-images/generate', [EventAiImageController::class, 'generate'])->name('organizer.events.ai-images.generate');
   Route::get('events/{event}/ai-images/status', [EventAiImageController::class, 'status'])->name('organizer.events.ai-images.status');
+  Route::post('events/{event}/ai-images/apply', [EventAiImageController::class, 'apply'])->name('organizer.events.ai-images.apply');
+  Route::post('events/{event}/ai-images/regenerate/{format}', [EventAiImageController::class, 'regenerate'])->name('organizer.events.ai-images.regenerate');
   Route::post('events/{event}/ai-images/{format}/retry', [EventAiImageController::class, 'retry'])->name('organizer.events.ai-images.retry');
 });

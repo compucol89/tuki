@@ -25,7 +25,16 @@ class EventAiImageControllerTest extends TestCase
 
     protected function tearDown(): void
     {
+        foreach (\Illuminate\Support\Facades\File::glob(public_path('assets/admin/img/event-gallery/ai_*')) ?: [] as $file) {
+            @unlink($file);
+        }
+        foreach (\Illuminate\Support\Facades\File::glob(public_path('assets/admin/img/event-ai/*/*')) ?: [] as $file) {
+            @unlink($file);
+        }
         Schema::dropIfExists('event_ai_generations');
+        Schema::dropIfExists('job_batches');
+        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('event_images');
         Schema::dropIfExists('events');
         Schema::dropIfExists('organizers');
         Schema::dropIfExists('admins');
@@ -127,6 +136,43 @@ class EventAiImageControllerTest extends TestCase
             });
         }
 
+        if (!Schema::hasTable('event_images')) {
+            Schema::create('event_images', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('event_id')->nullable();
+                $table->string('image')->nullable();
+                $table->string('format')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('jobs')) {
+            Schema::create('jobs', function (Blueprint $table) {
+                $table->id();
+                $table->string('queue')->index();
+                $table->longText('payload');
+                $table->unsignedTinyInteger('attempts');
+                $table->unsignedInteger('reserved_at')->nullable();
+                $table->unsignedInteger('available_at');
+                $table->unsignedInteger('created_at');
+            });
+        }
+
+        if (!Schema::hasTable('job_batches')) {
+            Schema::create('job_batches', function (Blueprint $table) {
+                $table->string('id')->primary();
+                $table->string('name');
+                $table->integer('total_jobs');
+                $table->integer('pending_jobs');
+                $table->integer('failed_jobs');
+                $table->longText('failed_job_ids');
+                $table->mediumText('options')->nullable();
+                $table->integer('cancelled_at')->nullable();
+                $table->integer('created_at');
+                $table->integer('finished_at')->nullable();
+            });
+        }
+
         if (!Schema::hasTable('languages')) {
             Schema::create('languages', function (Blueprint $table) {
                 $table->bigIncrements('id');
@@ -203,8 +249,9 @@ class EventAiImageControllerTest extends TestCase
             ->assertStatus(422);
     }
 
-    public function test_generate_fails_if_3_already_generated(): void
+    public function test_generate_allows_new_batch_after_previous_completed_generations(): void
     {
+        Bus::fake();
         $organizer = $this->makeOrganizer('org4@test.com', 'org4');
         $event = Event::create([
             'organizer_id' => $organizer->id,
@@ -222,7 +269,8 @@ class EventAiImageControllerTest extends TestCase
 
         $this->actingAs($organizer, 'organizer')
             ->postJson("/organizer/events/{$event->id}/ai-images/generate")
-            ->assertStatus(422);
+            ->assertOk()
+            ->assertJsonStructure(['status', 'batch_id', 'formats']);
     }
 
     public function test_status_returns_correct_payload(): void
@@ -302,6 +350,59 @@ class EventAiImageControllerTest extends TestCase
             ->postJson("/admin/events/{$event->id}/ai-images/generate")
             ->assertStatus(422)
             ->assertJson(['error' => 'organizer_required']);
+    }
+
+    public function test_apply_selected_generation_creates_event_image(): void
+    {
+        $organizer = $this->makeOrganizer('apply@test.com', 'apply');
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'cover.png',
+        ]);
+
+        $source = public_path('assets/admin/img/event-ai/' . $event->id . '/square_1.png');
+        \Illuminate\Support\Facades\File::ensureDirectoryExists(dirname($source));
+        file_put_contents($source, 'fake-preview');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'square',
+            'status' => 'completed',
+            'output_path' => 'assets/admin/img/event-ai/' . $event->id . '/square_1.png',
+        ]);
+
+        $this->actingAs($organizer, 'organizer')
+            ->postJson("/organizer/events/{$event->id}/ai-images/apply", [
+                'generation_ids' => [$generation->id],
+            ])
+            ->assertOk()
+            ->assertJson(['status' => 'applied']);
+
+        $this->assertSame(1, \App\Models\Event\EventImage::where('event_id', $event->id)->where('format', 'square')->count());
+
+        @unlink($source);
+    }
+
+    public function test_regenerate_dispatches_single_format_job(): void
+    {
+        Bus::fake();
+        $organizer = $this->makeOrganizer('regen@test.com', 'regen');
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'cover.png',
+        ]);
+
+        $this->actingAs($organizer, 'organizer')
+            ->postJson("/organizer/events/{$event->id}/ai-images/regenerate/gallery")
+            ->assertOk()
+            ->assertJson([
+                'status' => 'dispatched',
+                'format' => 'gallery',
+            ]);
+
+        $this->assertSame(1, EventAiGeneration::where('event_id', $event->id)->where('format', 'gallery')->count());
+        Bus::assertDispatched(GenerateAiImageJob::class);
     }
 
     private function makeOrganizer(string $email, string $username): Organizer

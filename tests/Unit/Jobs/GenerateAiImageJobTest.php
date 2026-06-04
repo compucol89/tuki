@@ -114,7 +114,7 @@ class GenerateAiImageJobTest extends TestCase
         return $path;
     }
 
-    public function test_job_saves_file_and_does_not_overwrite_organizer_thumbnail(): void
+    public function test_job_saves_preview_file_and_does_not_apply_or_overwrite_organizer_thumbnail(): void
     {
         $organizer = Organizer::create(['email' => 'org1@test.com', 'username' => 'org1']);
         $event = Event::create([
@@ -149,15 +149,10 @@ class GenerateAiImageJobTest extends TestCase
         $event->refresh();
         $this->assertEquals($originalThumbnail, $event->thumbnail, 'Organizer thumbnail must be preserved');
 
-        $row = EventImage::where('event_id', $event->id)
-            ->where('format', 'square')
-            ->first();
-        $this->assertNotNull($row, 'Square image should be saved in event_images with format=square');
-        $this->assertStringStartsWith('ai_square_' . $event->id . '_', $row->image);
-        $this->assertFileExists(public_path('assets/admin/img/event-gallery/' . $row->image));
+        $this->assertSame(0, EventImage::where('event_id', $event->id)->where('format', 'square')->count());
     }
 
-    public function test_job_creates_event_image_for_gallery_format(): void
+    public function test_job_creates_preview_only_for_gallery_format(): void
     {
         $organizer = Organizer::create(['email' => 'org2@test.com', 'username' => 'org2']);
         $event = Event::create([
@@ -185,15 +180,10 @@ class GenerateAiImageJobTest extends TestCase
         $this->cleanupFiles[] = public_path($generation->output_path);
         $this->assertEquals('completed', $generation->status);
 
-        $row = EventImage::where('event_id', $event->id)
-            ->where('format', 'gallery')
-            ->first();
-        $this->assertNotNull($row);
-        $this->assertStringStartsWith('ai_gallery_' . $event->id . '_', $row->image);
-        $this->assertFileExists(public_path('assets/admin/img/event-gallery/' . $row->image));
+        $this->assertSame(0, EventImage::where('event_id', $event->id)->where('format', 'gallery')->count());
     }
 
-    public function test_job_updates_og_image_for_og_format(): void
+    public function test_job_creates_preview_only_for_og_format(): void
     {
         $organizer = Organizer::create(['email' => 'org3@test.com', 'username' => 'org3']);
         $event = Event::create([
@@ -221,7 +211,7 @@ class GenerateAiImageJobTest extends TestCase
         $this->cleanupFiles[] = public_path($generation->output_path);
 
         $event->refresh();
-        $this->assertEquals('og.png', $event->og_image);
+        $this->assertNull($event->og_image);
     }
 
     public function test_job_rethrows_retryable_exception(): void

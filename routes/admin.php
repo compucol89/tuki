@@ -102,6 +102,8 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
     Route::post('/event-update', 'BackEnd\Event\EventController@update')->name('admin.event.update');
     Route::post('events/{event}/ai-images/generate', [EventAiImageController::class, 'generate'])->name('admin.events.ai-images.generate');
     Route::get('events/{event}/ai-images/status', [EventAiImageController::class, 'status'])->name('admin.events.ai-images.status');
+    Route::post('events/{event}/ai-images/apply', [EventAiImageController::class, 'apply'])->name('admin.events.ai-images.apply');
+    Route::post('events/{event}/ai-images/regenerate/{format}', [EventAiImageController::class, 'regenerate'])->name('admin.events.ai-images.regenerate');
     Route::post('events/{event}/ai-images/{format}/retry', [EventAiImageController::class, 'retry'])->name('admin.events.ai-images.retry');
     Route::post('bulk/delete/event', 'BackEnd\Event\EventController@bulk_delete')->name('admin.event_management.bulk_delete_event');
 

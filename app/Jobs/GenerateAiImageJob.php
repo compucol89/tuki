@@ -4,23 +4,21 @@ namespace App\Jobs;
 
 use App\Exceptions\OpenAiNonRetryableException;
 use App\Models\Event\EventAiGeneration;
-use App\Models\Event\EventImage;
 use App\Services\OpenAI\EventImagePromptBuilder;
 use App\Services\OpenAI\ImageGenerationService;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Throwable;
 
 class GenerateAiImageJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
 
@@ -66,10 +64,6 @@ class GenerateAiImageJob implements ShouldQueue
             $costEstimate = $this->estimateCost($size);
 
             $generation->markCompleted($durationMs, $outputPath, $costEstimate);
-
-            DB::transaction(function () use ($event, $generation, $outputPath) {
-                $this->assignToSlot($event, $generation->format, $outputPath);
-            });
 
             Log::info('ai.image.generated', [
                 'event_id' => $event->id,
@@ -123,36 +117,11 @@ class GenerateAiImageJob implements ShouldQueue
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
-        $filename = config("openai.formats.{$format}.output_filename", "{$format}.png");
+        $filename = $format . '_' . $this->generationId . '.png';
         $fullPath = "{$dir}/{$filename}";
         file_put_contents($fullPath, base64_decode($base64));
 
         return "assets/admin/img/event-ai/{$eventId}/{$filename}";
-    }
-
-    private function assignToSlot($event, string $format, string $outputPath): void
-    {
-        match ($format) {
-            'square' => $this->createEventImage($event->id, $format, $outputPath),
-            'og' => $event->update(['og_image' => basename($outputPath)]),
-            'gallery' => $this->createEventImage($event->id, $format, $outputPath),
-        };
-    }
-
-    private function createEventImage(int $eventId, string $format, string $outputPath): void
-    {
-        $source = public_path($outputPath);
-        $galleryDir = public_path('assets/admin/img/event-gallery/');
-        File::ensureDirectoryExists($galleryDir);
-
-        $filename = 'ai_' . $format . '_' . $eventId . '_' . uniqid() . '.png';
-        File::copy($source, $galleryDir . $filename);
-
-        EventImage::create([
-            'event_id' => $eventId,
-            'image' => $filename,
-            'format' => $format,
-        ]);
     }
 
     private function estimateCost(string $size): float

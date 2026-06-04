@@ -328,6 +328,8 @@
                     'event' => $event,
                     'aiGenerateRoute' => route('organizer.events.ai-images.generate', $event->id),
                     'aiStatusRoute' => route('organizer.events.ai-images.status', $event->id),
+                    'aiApplyRoute' => route('organizer.events.ai-images.apply', $event->id),
+                    'aiRegenerateRoute' => route('organizer.events.ai-images.regenerate', [$event->id, '__FORMAT__']),
                 ])
                 @include('organizer.event.partials.ai-images-status')
                 <div id="section-schedule" class="mb-3">

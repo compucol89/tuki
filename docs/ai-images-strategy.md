@@ -35,6 +35,34 @@ flyer against OpenAI and confirm that the mask is interpreted correctly: only th
 background outside the protected flyer area should change. If the output is
 identical to the source, the mask was likely ignored and the flag must remain off.
 
+## Fase 3A: Mask Alpha Channel
+
+The first hybrid production test preserved the flyer content but produced poor
+background extensions with duplicated players near the sides. The likely cause was
+the legacy opaque mask: white outside the flyer and black over the flyer, without
+an alpha channel.
+
+Fase 3A changes the hybrid mask to an alpha PNG:
+
+- Outside the flyer: alpha `127`, editable background area.
+- Over the flyer: alpha `0`, protected original area.
+- PNG masks are saved with `imagesavealpha($mask, true)`.
+- `input_fidelity` is omitted from background-extension requests because the
+  configured image model handles input fidelity automatically.
+
+Rollback is immediate with `AI_IMAGES_USE_ALPHA_MASK=false`, which restores the
+previous opaque mask without changing the deterministic blur fallback.
+
+Manual staging check:
+
+1. Use a flyer with visible people, date, venue, logo, and address.
+2. Set `AI_IMAGES_USE_HYBRID_MODE=true` and `AI_IMAGES_USE_ALPHA_MASK=true`.
+3. Generate one variant.
+4. Confirm the flyer center is unchanged and the extended background does not add
+   duplicated players or factual text.
+5. If the output is worse, set `AI_IMAGES_USE_ALPHA_MASK=false` and restart config
+   cache/workers.
+
 ## Safety Rules
 
 - Generated variants are previews only.

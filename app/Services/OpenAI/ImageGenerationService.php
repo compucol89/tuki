@@ -83,18 +83,19 @@ class ImageGenerationService
             throw new OpenAiNonRetryableException('Extension input image is not readable');
         }
 
+        $payload = [
+            'model' => config('openai.model'),
+            'prompt' => $this->backgroundExtensionPrompt(),
+            'size' => $size,
+            'n' => 1,
+            'output_format' => 'png',
+        ];
+
         $response = Http::withToken($apiKey)
             ->timeout(config('openai.timeout', 60))
             ->attach('image[]', $canvasStream, basename($canvasPath))
             ->attach('mask', $maskStream, basename($maskPath))
-            ->post(config('openai.base_url') . '/images/edits', [
-                'model' => config('openai.model'),
-                'prompt' => $this->backgroundExtensionPrompt(),
-                'size' => $size,
-                'n' => 1,
-                'output_format' => 'png',
-                'input_fidelity' => 'high',
-            ]);
+            ->post(config('openai.base_url') . '/images/edits', $payload);
 
         if ($response->failed()) {
             $status = $response->status();
@@ -132,9 +133,15 @@ class ImageGenerationService
         imagefill($canvas, 0, 0, $background);
         imagecopyresampled($canvas, $source, $dstX, $dstY, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
 
-        $mask = imagecreatetruecolor($targetWidth, $targetHeight);
-        imagefill($mask, 0, 0, imagecolorallocate($mask, 255, 255, 255));
-        imagefilledrectangle($mask, $dstX, $dstY, $dstX + $newWidth - 1, $dstY + $newHeight - 1, imagecolorallocate($mask, 0, 0, 0));
+        $bounds = [
+            'x' => $dstX,
+            'y' => $dstY,
+            'width' => $newWidth,
+            'height' => $newHeight,
+        ];
+        $mask = config('openai.use_alpha_mask', true)
+            ? $this->buildAlphaMask($targetWidth, $targetHeight, $bounds)
+            : $this->buildOpaqueMask($targetWidth, $targetHeight, $bounds);
 
         $canvasPath = $this->tempPngPath();
         $maskPath = $this->tempPngPath();
@@ -146,6 +153,44 @@ class ImageGenerationService
         imagedestroy($mask);
 
         return [$canvasPath, $maskPath];
+    }
+
+    public function buildAlphaMask(int $canvasWidth, int $canvasHeight, array $bounds): \GdImage
+    {
+        $mask = imagecreatetruecolor($canvasWidth, $canvasHeight);
+        imagealphablending($mask, false);
+        imagesavealpha($mask, true);
+
+        $editable = imagecolorallocatealpha($mask, 0, 0, 0, 127);
+        imagefill($mask, 0, 0, $editable);
+
+        $protected = imagecolorallocatealpha($mask, 255, 255, 255, 0);
+        imagefilledrectangle(
+            $mask,
+            $bounds['x'],
+            $bounds['y'],
+            $bounds['x'] + $bounds['width'] - 1,
+            $bounds['y'] + $bounds['height'] - 1,
+            $protected
+        );
+
+        return $mask;
+    }
+
+    public function buildOpaqueMask(int $canvasWidth, int $canvasHeight, array $bounds): \GdImage
+    {
+        $mask = imagecreatetruecolor($canvasWidth, $canvasHeight);
+        imagefill($mask, 0, 0, imagecolorallocate($mask, 255, 255, 255));
+        imagefilledrectangle(
+            $mask,
+            $bounds['x'],
+            $bounds['y'],
+            $bounds['x'] + $bounds['width'] - 1,
+            $bounds['y'] + $bounds['height'] - 1,
+            imagecolorallocate($mask, 0, 0, 0)
+        );
+
+        return $mask;
     }
 
     private function compositeOriginalOnTop(string $generatedBytes, string $referenceImagePath, string $size): string

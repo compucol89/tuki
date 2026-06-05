@@ -124,7 +124,7 @@ class ImageGenerationServiceTest extends TestCase
         $this->service->generateEdit('/tmp/x.png', 'p', '1024x1024');
     }
 
-    public function test_extend_background_sends_mask_and_input_fidelity(): void
+    public function test_extend_background_sends_mask_and_omits_input_fidelity(): void
     {
         Http::fake([
             'api.openai.com/v1/images/edits' => Http::response([
@@ -140,9 +140,131 @@ class ImageGenerationServiceTest extends TestCase
             Http::assertSent(function ($request) {
                 $body = $request->body();
                 return str_contains($body, 'name="mask"')
-                    && str_contains($body, 'name="input_fidelity"')
-                    && str_contains($body, 'high')
+                    && !str_contains($body, 'name="input_fidelity"')
                     && str_contains($body, 'name="model"');
+            });
+        } finally {
+            @unlink($source);
+        }
+    }
+
+    public function test_build_alpha_mask_has_transparent_outside_original(): void
+    {
+        $mask = $this->service->buildAlphaMask(100, 80, [
+            'x' => 10,
+            'y' => 20,
+            'width' => 30,
+            'height' => 40,
+        ]);
+
+        try {
+            $this->assertGreaterThan(0, $this->pixelAlphaFromImage($mask, 0, 0));
+            $this->assertSame(127, $this->pixelAlphaFromImage($mask, 0, 0));
+        } finally {
+            imagedestroy($mask);
+        }
+    }
+
+    public function test_build_alpha_mask_has_opaque_over_original(): void
+    {
+        $mask = $this->service->buildAlphaMask(100, 80, [
+            'x' => 10,
+            'y' => 20,
+            'width' => 30,
+            'height' => 40,
+        ]);
+
+        try {
+            $this->assertSame(0, $this->pixelAlphaFromImage($mask, 15, 25));
+        } finally {
+            imagedestroy($mask);
+        }
+    }
+
+    public function test_build_alpha_mask_png_preserves_alpha_channel(): void
+    {
+        $mask = $this->service->buildAlphaMask(100, 80, [
+            'x' => 10,
+            'y' => 20,
+            'width' => 30,
+            'height' => 40,
+        ]);
+        $path = tempnam(sys_get_temp_dir(), 'mask_alpha_') . '.png';
+
+        try {
+            imagepng($mask, $path);
+            $reopened = imagecreatefrompng($path);
+
+            $this->assertSame(127, $this->pixelAlphaFromImage($reopened, 0, 0));
+            $this->assertSame(0, $this->pixelAlphaFromImage($reopened, 15, 25));
+
+            imagedestroy($reopened);
+        } finally {
+            imagedestroy($mask);
+            @unlink($path);
+        }
+    }
+
+    public function test_extend_background_uses_alpha_mask_when_enabled(): void
+    {
+        config(['openai.use_alpha_mask' => true]);
+        Http::fake([
+            'api.openai.com/v1/images/edits' => Http::response([
+                'data' => [['b64_json' => base64_encode($this->pngBytes([0, 0, 0], 1536, 1024))]],
+            ], 200),
+        ]);
+
+        $source = $this->writePng([230, 80, 20], 600, 600);
+
+        try {
+            $this->service->extendBackground($source, '1536x1024');
+
+            Http::assertSent(function ($request) {
+                $maskBytes = $this->extractMultipartFile($request->body(), 'mask');
+                $mask = imagecreatefromstring($maskBytes);
+
+                try {
+                    return imagesx($mask) === 1536
+                        && imagesy($mask) === 1024
+                        && $this->pixelAlphaFromImage($mask, 0, 0) === 127
+                        && $this->pixelAlphaFromImage($mask, 768, 512) === 0;
+                } finally {
+                    imagedestroy($mask);
+                }
+            });
+        } finally {
+            @unlink($source);
+        }
+    }
+
+    public function test_extend_background_uses_opaque_mask_when_alpha_mask_disabled(): void
+    {
+        config(['openai.use_alpha_mask' => false]);
+        Http::fake([
+            'api.openai.com/v1/images/edits' => Http::response([
+                'data' => [['b64_json' => base64_encode($this->pngBytes([0, 0, 0], 1536, 1024))]],
+            ], 200),
+        ]);
+
+        $source = $this->writePng([230, 80, 20], 600, 600);
+
+        try {
+            $this->service->extendBackground($source, '1536x1024');
+
+            Http::assertSent(function ($request) {
+                $maskBytes = $this->extractMultipartFile($request->body(), 'mask');
+                $mask = imagecreatefromstring($maskBytes);
+
+                try {
+                    return imagesx($mask) === 1536
+                        && imagesy($mask) === 1024
+                        && $this->pixelAlphaFromImage($mask, 0, 0) === 0
+                        && $this->pixelAlphaFromImage($mask, 768, 512) === 0
+                        && $this->pixelRgbFromImage($mask, 0, 0) === [255, 255, 255]
+                        && $this->pixelRgbFromImage($mask, 768, 512) === [0, 0, 0];
+                } finally {
+                    imagedestroy($mask);
+                }
             });
         } finally {
             @unlink($source);
@@ -203,5 +325,39 @@ class ImageGenerationServiceTest extends TestCase
             ($color >> 8) & 0xFF,
             $color & 0xFF,
         ];
+    }
+
+    private function pixelAlphaFromImage(\GdImage $image, int $x, int $y): int
+    {
+        $color = imagecolorat($image, $x, $y);
+
+        return ($color >> 24) & 0x7F;
+    }
+
+    private function pixelRgbFromImage(\GdImage $image, int $x, int $y): array
+    {
+        $color = imagecolorat($image, $x, $y);
+
+        return [
+            ($color >> 16) & 0xFF,
+            ($color >> 8) & 0xFF,
+            $color & 0xFF,
+        ];
+    }
+
+    private function extractMultipartFile(string $body, string $fieldName): string
+    {
+        $needle = 'name="' . $fieldName . '";';
+        $start = strpos($body, $needle);
+        $this->assertNotFalse($start, "Multipart field {$fieldName} not found");
+
+        $contentStart = strpos($body, "\r\n\r\n", $start);
+        $this->assertNotFalse($contentStart, "Multipart content for {$fieldName} not found");
+        $contentStart += 4;
+
+        $contentEnd = strpos($body, "\r\n--", $contentStart);
+        $this->assertNotFalse($contentEnd, "Multipart boundary for {$fieldName} not found");
+
+        return substr($body, $contentStart, $contentEnd - $contentStart);
     }
 }

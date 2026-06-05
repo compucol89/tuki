@@ -9,6 +9,7 @@ return [
     'max_retries' => 3,
     'queue' => 'ai-images',
     'hybrid_mode' => env('AI_IMAGES_USE_HYBRID_MODE', false),
+    'use_alpha_mask' => env('AI_IMAGES_USE_ALPHA_MASK', true),
     'ssim_threshold' => (float) env('AI_IMAGES_SSIM_THRESHOLD', 0.99),
 
     'formats' => [

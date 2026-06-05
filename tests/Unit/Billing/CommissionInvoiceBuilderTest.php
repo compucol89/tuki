@@ -2,11 +2,45 @@
 
 namespace Tests\Unit\Billing;
 
+use App\Models\BillingSetting;
 use App\Services\Billing\CommissionInvoiceBuilder;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class CommissionInvoiceBuilderTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (! Schema::hasTable('billing_settings')) {
+            $this->artisan('migrate', [
+                '--path' => 'database/migrations/2026_05_02_090359_create_billing_settings_table.php',
+                '--force' => true,
+            ]);
+            $this->artisan('migrate', [
+                '--path' => 'database/migrations/2026_05_14_000000_add_invoice_template_fields_to_billing_settings.php',
+                '--force' => true,
+            ]);
+        }
+
+        BillingSetting::query()->delete();
+        BillingSetting::create([
+            'enabled' => false,
+            'environment' => 'testing',
+            'issuer_cuit' => null,
+            'issuer_iva_condition' => null,
+            'point_of_sale' => null,
+            'service_fee_percentage' => 10,
+            'service_fee_tax_mode' => 'no_vat_added',
+            'vat_percentage' => 0,
+            'default_invoice_type' => null,
+            'invoice_item_description' => 'Comisión TukiPass por venta de entradas',
+            'invoice_item_include_event' => false,
+            'invoice_item_include_booking' => false,
+        ]);
+    }
+
     public function test_builds_blocked_invoice_preview_when_fiscal_data_is_missing(): void
     {
         $calculation = [

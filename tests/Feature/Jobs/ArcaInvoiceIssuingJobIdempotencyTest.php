@@ -285,6 +285,56 @@ class ArcaInvoiceIssuingJobIdempotencyTest extends TestCase
             });
         }
 
+        if (! Schema::hasTable('event_contents')) {
+            Schema::create('event_contents', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('event_id');
+                $table->string('title')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('organizers')) {
+            Schema::create('organizers', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('email')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('organizer_info')) {
+            Schema::create('organizer_info', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('organizer_id');
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('customers')) {
+            Schema::create('customers', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->string('email')->nullable();
+                $table->string('fname')->nullable();
+                $table->string('lname')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('customer_fiscal_profiles')) {
+            Schema::create('customer_fiscal_profiles', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('customer_id')->nullable();
+                $table->unsignedBigInteger('booking_id')->nullable();
+                $table->string('full_name');
+                $table->string('document_type')->default('DNI');
+                $table->string('document_number', 20);
+                $table->string('iva_condition')->default('consumidor_final');
+                $table->string('fiscal_address')->nullable();
+                $table->string('fiscal_email')->nullable();
+                $table->timestamps();
+            });
+        }
+
         // bookings: no tiene migración propia, se crea el schema mínimo necesario
         if (! Schema::hasTable('bookings')) {
             Schema::create('bookings', function (Blueprint $table) {

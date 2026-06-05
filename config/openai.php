@@ -8,6 +8,7 @@ return [
     'timeout' => (int) env('OPENAI_TIMEOUT', 150),
     'max_retries' => 3,
     'queue' => 'ai-images',
+    'smart_crop_mode' => env('AI_IMAGES_SMART_CROP_MODE', true),
     'hybrid_mode' => env('AI_IMAGES_USE_HYBRID_MODE', false),
     'use_alpha_mask' => env('AI_IMAGES_USE_ALPHA_MASK', true),
     'ssim_threshold' => (float) env('AI_IMAGES_SSIM_THRESHOLD', 0.99),

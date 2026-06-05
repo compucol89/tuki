@@ -339,6 +339,7 @@ class GenerateAiImageJobTest extends TestCase
 
         $this->mock(ImageGenerationService::class, function ($mock) {
             $mock->shouldNotReceive('generateEdit');
+            $mock->shouldNotReceive('extendBackground');
         });
 
         $thrown = null;
@@ -356,9 +357,49 @@ class GenerateAiImageJobTest extends TestCase
         $this->cleanupFiles[] = public_path($generation->output_path);
     }
 
+    public function test_job_uses_smart_crop_mode_even_when_hybrid_flag_is_enabled(): void
+    {
+        config([
+            'openai.smart_crop_mode' => true,
+            'openai.hybrid_mode' => true,
+        ]);
+
+        $organizer = Organizer::create(['email' => 'org12@test.com', 'username' => 'org12']);
+        $event = Event::create([
+            'organizer_id' => $organizer->id,
+            'thumbnail' => 'test-ref.png',
+        ]);
+
+        $refPath = $this->makeRefPng('test-ref.png');
+
+        $generation = EventAiGeneration::create([
+            'event_id' => $event->id,
+            'organizer_id' => $organizer->id,
+            'format' => 'gallery',
+            'status' => 'pending',
+        ]);
+
+        $this->mock(ImageGenerationService::class, function ($mock) {
+            $mock->shouldNotReceive('extendBackground');
+        });
+
+        $job = new GenerateAiImageJob($generation->id);
+        $job->handle(app(BlurExtendService::class), app(ImageGenerationService::class));
+
+        $generation->refresh();
+        $this->cleanupFiles[] = public_path($generation->output_path);
+
+        $this->assertEquals('completed', $generation->status);
+        $this->assertEquals(0.0, (float) $generation->cost_estimate);
+        $this->assertSame([1536, 1024], array_slice(getimagesize(public_path($generation->output_path)), 0, 2));
+    }
+
     public function test_job_uses_hybrid_mode_when_enabled(): void
     {
-        config(['openai.hybrid_mode' => true]);
+        config([
+            'openai.smart_crop_mode' => false,
+            'openai.hybrid_mode' => true,
+        ]);
 
         $organizer = Organizer::create(['email' => 'org9@test.com', 'username' => 'org9']);
         $event = Event::create([
@@ -394,7 +435,10 @@ class GenerateAiImageJobTest extends TestCase
 
     public function test_job_falls_back_to_blur_extend_when_hybrid_fails(): void
     {
-        config(['openai.hybrid_mode' => true]);
+        config([
+            'openai.smart_crop_mode' => false,
+            'openai.hybrid_mode' => true,
+        ]);
 
         $organizer = Organizer::create(['email' => 'org10@test.com', 'username' => 'org10']);
         $event = Event::create([
@@ -431,6 +475,7 @@ class GenerateAiImageJobTest extends TestCase
     public function test_job_falls_back_to_blur_extend_when_hybrid_validation_fails(): void
     {
         config([
+            'openai.smart_crop_mode' => false,
             'openai.hybrid_mode' => true,
             'openai.ssim_threshold' => 0.99,
         ]);

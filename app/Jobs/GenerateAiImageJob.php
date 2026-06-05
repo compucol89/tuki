@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Exceptions\OpenAiNonRetryableException;
 use App\Models\Event\EventAiGeneration;
 use App\Services\ImageGeneration\BlurExtendService;
+use App\Services\ImageGeneration\SmartFlyerPlacementService;
 use App\Services\ImageValidation\ImageSimilarityService;
 use App\Services\OpenAI\ImageGenerationService;
 use Illuminate\Bus\Batchable;
@@ -58,7 +59,7 @@ class GenerateAiImageJob implements ShouldQueue
             $validationScore = null;
             $imageBytes = null;
 
-            if (config('openai.hybrid_mode', false)) {
+            if (!config('openai.smart_crop_mode', true) && config('openai.hybrid_mode', false)) {
                 try {
                     $imageBytes = $imageGenerationService->extendBackground($refPath, $size);
                     $validationScore = $this->hybridValidationScore($imageBytes, $refPath, $size);
@@ -156,7 +157,8 @@ class GenerateAiImageJob implements ShouldQueue
         }
 
         [$sourceWidth, $sourceHeight] = $refInfo;
-        [$dstX, $dstY, $newWidth, $newHeight] = $this->containedPlacement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
+        [$dstX, $dstY, $newWidth, $newHeight] = app(SmartFlyerPlacementService::class)
+            ->placement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
 
         $outputPath = tempnam(sys_get_temp_dir(), 'ai_hybrid_output_') . '.png';
         $cropPath = tempnam(sys_get_temp_dir(), 'ai_hybrid_crop_') . '.png';
@@ -194,20 +196,6 @@ class GenerateAiImageJob implements ShouldQueue
         }
 
         return [(int) $matches[1], (int) $matches[2]];
-    }
-
-    private function containedPlacement(int $sourceWidth, int $sourceHeight, int $targetWidth, int $targetHeight): array
-    {
-        $scale = min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight);
-        $newWidth = (int) floor($sourceWidth * $scale);
-        $newHeight = (int) floor($sourceHeight * $scale);
-
-        return [
-            (int) floor(($targetWidth - $newWidth) / 2),
-            (int) floor(($targetHeight - $newHeight) / 2),
-            $newWidth,
-            $newHeight,
-        ];
     }
 
     private function estimateCost(string $size): float

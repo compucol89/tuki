@@ -7,12 +7,16 @@ logos, team names, prices, and visible text are treated as protected content.
 
 ## Current Architecture
 
-The default path is deterministic and local:
+The default path is deterministic and local. This is the smart-crop mode
+(`AI_IMAGES_SMART_CROP_MODE=true` by default):
 
 1. The event thumbnail is loaded from `public/assets/admin/img/event/thumbnail`.
 2. `BlurExtendService` creates the target canvas with a blurred background derived
    from the original flyer.
-3. The original flyer is composited centered on top.
+3. `SmartFlyerPlacementService` places the original flyer on top. Square outputs
+   use a full contain placement. Landscape outputs (`gallery` and `og`) use a
+   conservative crop scale so the flyer occupies more of the canvas and leaves
+   less invented margin.
 4. The result is saved as a preview in `public/assets/admin/img/event-ai/{eventId}`.
 
 This path does not call OpenAI and has `cost_estimate = 0.0`.
@@ -21,9 +25,10 @@ This path does not call OpenAI and has `cost_estimate = 0.0`.
 
 `AI_IMAGES_USE_HYBRID_MODE=false` by default.
 
-When enabled, OpenAI is used only to extend the masked background. The original flyer
-is composited on top again after the API response. The job validates the protected
-center area against the source flyer using `AI_IMAGES_SSIM_THRESHOLD`.
+When `AI_IMAGES_SMART_CROP_MODE=false` and `AI_IMAGES_USE_HYBRID_MODE=true`, OpenAI
+is used only to extend the masked background. The original flyer is composited on
+top again after the API response. The job validates the protected center area
+against the source flyer using `AI_IMAGES_SSIM_THRESHOLD`.
 
 If OpenAI fails or validation fails, the job falls back to `BlurExtendService`.
 
@@ -73,5 +78,6 @@ Manual staging check:
 - Generated variants are previews only.
 - Applying a variant remains a manual admin/organizer action.
 - The event thumbnail is never overwritten by generation.
-- OpenAI must not be used unless `AI_IMAGES_USE_HYBRID_MODE=true`.
+- OpenAI must not be used unless `AI_IMAGES_SMART_CROP_MODE=false` and
+  `AI_IMAGES_USE_HYBRID_MODE=true`.
 - Fallback to blur extend must remain available at all times.

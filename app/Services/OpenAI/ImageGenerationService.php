@@ -4,6 +4,7 @@ namespace App\Services\OpenAI;
 
 use App\Exceptions\OpenAiNonRetryableException;
 use App\Services\ImageGeneration\FlyerBlendService;
+use App\Services\ImageGeneration\SmartFlyerPlacementService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -127,7 +128,7 @@ class ImageGenerationService
         $source = $this->loadImage($referenceImagePath);
         $sourceWidth = imagesx($source);
         $sourceHeight = imagesy($source);
-        [$dstX, $dstY, $newWidth, $newHeight] = $this->containedPlacement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
+        [$dstX, $dstY, $newWidth, $newHeight] = $this->placement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
 
         $canvas = imagecreatetruecolor($targetWidth, $targetHeight);
         $background = imagecolorallocate($canvas, 0, 0, 0);
@@ -204,7 +205,7 @@ class ImageGenerationService
         $source = $this->loadImage($referenceImagePath);
         $sourceWidth = imagesx($source);
         $sourceHeight = imagesy($source);
-        [$dstX, $dstY, $newWidth, $newHeight] = $this->containedPlacement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
+        [$dstX, $dstY, $newWidth, $newHeight] = $this->placement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
 
         imagecopyresampled($canvas, $source, $dstX, $dstY, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
 
@@ -231,18 +232,9 @@ class ImageGenerationService
             . 'Match the original flyer color palette, contrast, lighting, grain, and energy. The result must look like one continuous event poster background, with no visible hard border, no duplicated subjects, and no new factual information.';
     }
 
-    private function containedPlacement(int $sourceWidth, int $sourceHeight, int $targetWidth, int $targetHeight): array
+    private function placement(int $sourceWidth, int $sourceHeight, int $targetWidth, int $targetHeight): array
     {
-        $scale = min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight);
-        $newWidth = (int) floor($sourceWidth * $scale);
-        $newHeight = (int) floor($sourceHeight * $scale);
-
-        return [
-            (int) floor(($targetWidth - $newWidth) / 2),
-            (int) floor(($targetHeight - $newHeight) / 2),
-            $newWidth,
-            $newHeight,
-        ];
+        return app(SmartFlyerPlacementService::class)->placement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
     }
 
     private function parseSize(string $size): array

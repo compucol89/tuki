@@ -18,11 +18,8 @@ class BlurExtendService
         $background = $this->makeBlurredBackground($source, $sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
         imagecopy($canvas, $background, 0, 0, 0, 0, $targetWidth, $targetHeight);
 
-        $scale = min($targetWidth / $sourceWidth, $targetHeight / $sourceHeight);
-        $newWidth = (int) floor($sourceWidth * $scale);
-        $newHeight = (int) floor($sourceHeight * $scale);
-        $dstX = (int) floor(($targetWidth - $newWidth) / 2);
-        $dstY = (int) floor(($targetHeight - $newHeight) / 2);
+        [$dstX, $dstY, $newWidth, $newHeight] = app(SmartFlyerPlacementService::class)
+            ->placement($sourceWidth, $sourceHeight, $targetWidth, $targetHeight);
 
         app(FlyerBlendService::class)->composite($canvas, $source, $dstX, $dstY, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
 

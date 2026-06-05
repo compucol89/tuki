@@ -10,6 +10,7 @@ use App\Models\Event\Booking;
 use App\Models\Event\Ticket;
 use App\Models\Organizer;
 use App\Services\Billing\BookingFiscalCalculator;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
@@ -24,6 +25,15 @@ class BookingFiscalCalculatorTest extends TestCase
                 '--path' => 'database/migrations/2026_05_02_090359_create_billing_settings_table.php',
                 '--force' => true,
             ]);
+        }
+
+        if (! Schema::hasTable('event_contents')) {
+            Schema::create('event_contents', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('event_id');
+                $table->string('title')->nullable();
+                $table->timestamps();
+            });
         }
 
         BillingSetting::query()->delete();

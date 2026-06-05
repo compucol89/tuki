@@ -141,6 +141,8 @@ class ImageGenerationServiceTest extends TestCase
                 $body = $request->body();
                 return str_contains($body, 'name="mask"')
                     && !str_contains($body, 'name="input_fidelity"')
+                    && str_contains($body, 'Do not create people')
+                    && str_contains($body, 'no duplicated subjects')
                     && str_contains($body, 'name="model"');
             });
         } finally {

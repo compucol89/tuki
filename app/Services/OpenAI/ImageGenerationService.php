@@ -3,6 +3,7 @@
 namespace App\Services\OpenAI;
 
 use App\Exceptions\OpenAiNonRetryableException;
+use App\Services\ImageGeneration\FlyerBlendService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
@@ -131,7 +132,7 @@ class ImageGenerationService
         $canvas = imagecreatetruecolor($targetWidth, $targetHeight);
         $background = imagecolorallocate($canvas, 0, 0, 0);
         imagefill($canvas, 0, 0, $background);
-        imagecopyresampled($canvas, $source, $dstX, $dstY, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
+        app(FlyerBlendService::class)->composite($canvas, $source, $dstX, $dstY, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
 
         $bounds = [
             'x' => $dstX,
@@ -223,9 +224,11 @@ class ImageGenerationService
 
     private function backgroundExtensionPrompt(): string
     {
-        return 'Extend only the empty masked background areas to match the original flyer style. '
-            . 'Do not create text, logos, badges, addresses, dates, people, symbols, UI elements, or new objects. '
-            . 'Generate only abstract/background continuation outside the protected original flyer area.';
+        return 'Edit only the transparent masked area outside the protected flyer. '
+            . 'The protected central flyer must remain visually untouched. Do not alter, redraw, reinterpret, cover, blur, improve, translate, move, or regenerate any text, logo, crest, badge, date, address, phone number, player, jersey number, team name, or typography. '
+            . 'In the editable outer area, generate only abstract atmospheric continuation: colored smoke, light particles, stadium glow, subtle sparks, soft gradients, grain, and bokeh. '
+            . 'Do not create people, faces, bodies, uniforms, flags, logos, text, symbols, numbers, football crests, signs, posters, or objects. '
+            . 'Match the original flyer color palette, contrast, lighting, grain, and energy. The result must look like one continuous event poster background, with no visible hard border, no duplicated subjects, and no new factual information.';
     }
 
     private function containedPlacement(int $sourceWidth, int $sourceHeight, int $targetWidth, int $targetHeight): array

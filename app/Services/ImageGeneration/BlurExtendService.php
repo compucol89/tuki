@@ -24,18 +24,7 @@ class BlurExtendService
         $dstX = (int) floor(($targetWidth - $newWidth) / 2);
         $dstY = (int) floor(($targetHeight - $newHeight) / 2);
 
-        imagecopyresampled(
-            $canvas,
-            $source,
-            $dstX,
-            $dstY,
-            0,
-            0,
-            $newWidth,
-            $newHeight,
-            $sourceWidth,
-            $sourceHeight
-        );
+        app(FlyerBlendService::class)->composite($canvas, $source, $dstX, $dstY, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
 
         ob_start();
         imagepng($canvas, null, 6);

@@ -30,6 +30,11 @@ If OpenAI fails or validation fails, the job falls back to `BlurExtendService`.
 The hybrid path requires an additive migration that stores generation metadata on
 `event_images` and the validation score on `event_ai_generations`.
 
+After OpenAI returns the extended background, PHP/GD composites the original flyer
+again and applies a local blend layer around the flyer boundary. This blend uses
+edge colors from the flyer, a subtle shadow, and a soft outer transition so the
+center stays unchanged while the visible seam is reduced.
+
 Before enabling `AI_IMAGES_USE_HYBRID_MODE=true` outside staging, validate one real
 flyer against OpenAI and confirm that the mask is interpreted correctly: only the
 background outside the protected flyer area should change. If the output is

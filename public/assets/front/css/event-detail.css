@@ -2179,6 +2179,36 @@ body.page-event-detail .ed-ticket-card__body .ed-section-label {
   text-transform: uppercase;
 }
 
+body.page-event-detail .ed-ticket-card__body .event-details-information > p.mb-0 {
+  margin: 18px 0 7px;
+  color: #101827;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+body.page-event-detail .ed-ticket-card__body .event-details-information > p.mb-0:first-of-type {
+  margin-top: 0;
+}
+
+body.page-event-detail .ed-ticket-card__body .event-details-information > p.mb-0 strong {
+  font: inherit;
+  color: inherit;
+}
+
+body.page-event-detail .ed-ticket-card__body .click-show {
+  margin: 0 0 9px;
+}
+
+body.page-event-detail .ed-ticket-card__body .show-content {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+}
+
 /* Event detail — align ticket price and quantity controls (scope página; h6 vía .event-details-information para vencer margin-bottom legacy) */
 body.page-event-detail .price-count {
   display: flex;
@@ -2273,7 +2303,7 @@ body.page-event-detail .ed-ticket-card__body .addon-quantity-down {
   border: 0;
   background: transparent;
   color: #475569;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
   line-height: 1;
   transition:
@@ -2311,7 +2341,7 @@ body.page-event-detail .ed-ticket-card__body .quantity {
   border-right: 1px solid rgba(15, 23, 42, 0.08);
   background: #ffffff;
   color: #0f172a;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   line-height: 1;
   text-align: center;
@@ -2336,7 +2366,7 @@ body.page-event-detail .ed-total-label {
   justify-self: start;
   max-width: 16rem;
   color: #64748b;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: 0.09em;
@@ -2377,7 +2407,7 @@ body.page-event-detail .ed-total-row__note {
   margin: 0;
   max-width: none;
   color: #94a3b8;
-  font-size: 10.5px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
   text-align: left;
@@ -2446,6 +2476,8 @@ body.page-event-detail .ed-conversion-trust__item i {
 
 body.page-event-detail .ed-cta-zone__hint {
   color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
   text-align: center;
   line-height: 1.45;
   max-width: 100%;
@@ -2471,7 +2503,7 @@ body.page-event-detail .ed-cta-zone .ed-trust-item {
   display: inline-flex;
   align-items: flex-start;
   gap: 6px;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 600;
   line-height: 1.3;
   color: #64748b;
@@ -2667,8 +2699,45 @@ body.page-event-detail .ed-refund-band {
     border-radius: 15px;
   }
 
+  body.page-event-detail .ed-ticket-card__body .event-details-information > p.mb-0 {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  body.page-event-detail .ed-ticket-card__body .show-content {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
   body.page-event-detail .event-details-information .price-count h6 {
     font-size: 18px;
+  }
+
+  body.page-event-detail .event-details-information .price-count .quantity-input {
+    min-height: 40px;
+  }
+
+  body.page-event-detail .event-details-information .price-count .quantity-input .quantity-up,
+  body.page-event-detail .event-details-information .price-count .quantity-input .quantity-down,
+  body.page-event-detail .event-details-information .price-count .quantity-input .quantity-down_variation {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  body.page-event-detail .event-details-information .price-count .quantity-input input.quantity {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  body.page-event-detail .ed-ticket-card__body .quantity {
+    font-size: 16px;
+  }
+
+  body.page-event-detail .ed-total-row__note {
+    font-size: 12.5px;
+    line-height: 1.5;
   }
 
   body.page-event-detail .ed-total-value {
@@ -2677,6 +2746,16 @@ body.page-event-detail .ed-refund-band {
 
   body.page-event-detail .ed-buy-btn {
     min-height: 50px;
+    font-size: 16px;
+  }
+
+  body.page-event-detail .ed-cta-zone__hint {
+    font-size: 13px;
+  }
+
+  body.page-event-detail .ed-cta-zone .ed-trust-item {
+    font-size: 12.5px;
+    line-height: 1.4;
   }
 }
 
@@ -3170,4 +3249,230 @@ body.page-event-detail .ed-addons-modal__error {
   }
 }
 
+/* ========================================================= */
+
 /* =========================================================
+   Event Detail — information card
+   Professional quick facts panel inspired by checkout summary
+   ========================================================= */
+body.page-event-detail .ed-info-card {
+  margin: 0 0 24px;
+  overflow: hidden;
+  border: 1px solid #e9edf2;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.045), 0 18px 38px rgba(15, 23, 42, 0.04);
+}
+
+body.page-event-detail .ed-info-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid #f1f4f9;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+}
+
+body.page-event-detail .ed-info-card__title {
+  margin: 0;
+  color: #0f172a;
+  font-family: var(--tuki-font-sans, "Inter", sans-serif);
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-info-card__body {
+  padding: 18px 22px 22px;
+}
+
+body.page-event-detail .ed-info-card--description {
+  margin-bottom: var(--ed-space-8, 40px);
+}
+
+body.page-event-detail .ed-info-card__body--description {
+  color: #475569;
+  font-size: var(--tuki-text-base, 16px);
+  line-height: 1.75;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content {
+  max-width: 72ch;
+  color: #1e2532;
+  line-height: 1.8;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content > *:first-child {
+  margin-top: 0 !important;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+body.page-event-detail .ed-info-card--description .ed-refund-band {
+  margin-top: var(--ed-space-6, 24px);
+}
+
+body.page-event-detail .ed-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+body.page-event-detail .ed-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 0;
+}
+
+body.page-event-detail .ed-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border: 1px solid #ffedd5;
+  border-radius: 10px;
+  background: #fff7ed;
+  color: #f97316;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+body.page-event-detail .ed-info-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+body.page-event-detail .ed-info-item__content {
+  min-width: 0;
+  padding-top: 1px;
+}
+
+body.page-event-detail .ed-info-item__value {
+  display: block;
+  margin: 0 0 2px;
+  color: #0f172a;
+  font-family: var(--tuki-font-sans, "Inter", sans-serif);
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.4;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+body.page-event-detail .ed-info-item__value--available {
+  color: #059669;
+}
+
+body.page-event-detail .ed-info-item__value--low {
+  color: #dc2626;
+}
+
+body.page-event-detail .ed-info-item__meta {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+body.page-event-detail .ed-info-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #f1f4f9;
+}
+
+body.page-event-detail .ed-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 5px 11px;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #166534;
+  font-size: 11.5px;
+  font-weight: 650;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+body.page-event-detail .ed-info-badge svg {
+  flex-shrink: 0;
+  color: #16a34a;
+}
+
+@media (max-width: 767.98px) {
+  body.page-event-detail .ed-info-card {
+    margin-bottom: 22px;
+    border-radius: 15px;
+  }
+
+  body.page-event-detail .ed-info-card__head {
+    padding: 14px 16px 12px;
+  }
+
+  body.page-event-detail .ed-info-card__title {
+    font-size: 16px;
+  }
+
+  body.page-event-detail .ed-info-card__body {
+    padding: 14px 16px 18px;
+  }
+
+  body.page-event-detail .ed-info-card__body--description {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  body.page-event-detail .ed-info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  body.page-event-detail .ed-info-item {
+    gap: 12px;
+  }
+
+  body.page-event-detail .ed-info-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 10px;
+  }
+
+  body.page-event-detail .ed-info-item__value {
+    font-size: 15.5px;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-info-item__meta {
+    font-size: 13px;
+    line-height: 1.42;
+  }
+
+  body.page-event-detail .ed-info-badges {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 7px;
+    margin-top: 17px;
+    padding-top: 16px;
+  }
+
+  body.page-event-detail .ed-info-badge {
+    width: 100%;
+    justify-content: flex-start;
+    white-space: normal;
+  }
+}

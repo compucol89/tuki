@@ -121,7 +121,7 @@ if (!function_exists('showAd')) {
         }
 
         if ($ad->ad_type == 'banner') {
-          $markUp = '<a href="' . url($ad->url) . '" target="_blank" onclick="adView(' . $ad->id . ')">
+          $markUp = '<a href="' . url($ad->url) . '" target="_blank" rel="noopener noreferrer" onclick="adView(' . $ad->id . ')">
             <img data-src="' . asset('assets/admin/img/advertisements/' . $ad->image) . '" src="' . asset('assets/admin/img/advertisements/' . $ad->image) . '" class="lazy" alt="advertisement" style="width: ' . $maxWidth . ';' . ' ' . 'max-height: ' . $maxHeight . ';max-width: 100%;">
           </a>';
 

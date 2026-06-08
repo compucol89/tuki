@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/event-detail.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/event-detail.css') }}?v={{ filemtime(public_path('assets/front/css/event-detail.css')) }}">
 @endpush
 
 @section('body-class', 'page-event-detail')
@@ -798,28 +798,6 @@
       hyphens: auto;
     }
 
-    .ed-ev-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 11px;
-      margin: 0 0 22px;
-    }
-
-    .ed-ev-meta__item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      color: rgba(255, 255, 255, 0.80);
-      font-size: 15px;
-      line-height: 1.45;
-    }
-
-    .ed-ev-meta__item svg {
-      flex-shrink: 0;
-      margin-top: 2px;
-      stroke: #f97316;
-    }
-
     .ed-ev-price {
       display: inline-flex;
       flex-direction: column;
@@ -906,11 +884,6 @@
         margin-bottom: 14px;
       }
 
-      .ed-ev-meta {
-        gap: 9px;
-        margin-bottom: 18px;
-      }
-
       .ed-ev-price {
         margin-bottom: 16px;
       }
@@ -931,6 +904,30 @@
     }
 
     @media (max-width: 767px) {
+      body.page-event-detail .ed-hero-event.hero-collage-section,
+      body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+        min-height: 480px !important;
+      }
+
+      body.page-event-detail .ed-hero-event .hero-overlay--premium {
+        background:
+          radial-gradient(120% 90% at 50% 120%, rgba(15, 20, 32, 0.95) 0%, transparent 60%),
+          radial-gradient(ellipse 80% 60% at 20% 15%, rgba(249, 115, 22, 0.10) 0%, transparent 50%),
+          radial-gradient(ellipse 70% 50% at 85% 35%, rgba(59, 130, 241, 0.08) 0%, transparent 45%),
+          linear-gradient(180deg,
+            rgba(8, 11, 18, 0.72) 0%,
+            rgba(10, 14, 22, 0.68) 30%,
+            rgba(12, 16, 26, 0.85) 60%,
+            rgba(8, 11, 18, 0.94) 100%);
+      }
+
+      .hero-ambient__orb--a,
+      .hero-ambient__orb--b,
+      .hero-ambient__orb--c {
+        opacity: 0.12;
+        filter: blur(48px);
+      }
+
       .ed-hero-event .hero-content--premium {
         max-width: 100%;
       }
@@ -1281,43 +1278,6 @@ ttq.page();
         {{-- Título H1 --}}
         <h1 id="heroHeadingEvent" class="ed-ev-title">{{ $content->title }}</h1>
 
-        {{-- Meta: fecha, ubicación, organizador --}}
-        @php $heroDate = $eventStartAt ?: $countdownNow; @endphp
-        <div class="ed-ev-meta">
-
-          <div class="ed-ev-meta__item">
-            <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-calendar"/></svg>
-            <span>
-              {{ ucfirst($heroDate->translatedFormat('l')) }},
-              {{ $heroDate->format('j') }} de {{ ucfirst($heroDate->translatedFormat('F Y')) }}
-              &middot; {{ $heroDate->format('H:i') }}
-            </span>
-          </div>
-
-          <div class="ed-ev-meta__item">
-            <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-map-pin"/></svg>
-            @if ($content->event_type == 'venue')
-              <span>
-                @if ($content->address != null){{ $content->address }}, @endif
-                @if ($content->city != null){{ $content->city }}@endif
-                @if ($content->state != null && $content->city != null), {{ $content->state }}@elseif ($content->state != null){{ $content->state }}@endif
-                @if ($content->country != null), {{ $content->country }}@endif
-              </span>
-            @else
-              <span>{{ __('Online') }}</span>
-            @endif
-          </div>
-
-          @if (!empty($publicOrganizerName))
-            <div class="ed-ev-meta__item">
-              <svg width="15" height="15" stroke-width="2" aria-hidden="true"><use href="#icon-user"/></svg>
-              <span>{{ $publicOrganizerName }}</span>
-            </div>
-          @endif
-
-        </div>
-        {{-- /Meta --}}
-
         {{-- Microcopy dinámico del hero --}}
         <div class="ed-hero-nudge">
           {{-- Solo se actualiza al terminar cada frase (evita leer letra a letra) --}}
@@ -1387,11 +1347,11 @@ ttq.page();
                 @if (!$over)
                   <p class="ed-head-stock">
                     @if ($ticketSummary['has_unlimited_stock'])
-                      <span class="ed-head-stock__dot" aria-hidden="true"></span>{{ __('Disponible') }}
+                      <span class="ed-head-stock__dot" aria-hidden="true"></span>{{ __('Venta online activa') }}
                     @elseif($ticketSummary['total_stock'] !== null && $ticketSummary['total_stock'] <= 10)
-                      <span class="ed-head-stock__dot ed-head-stock__dot--low" aria-hidden="true"></span>{{ __('¡Últimas') }} {{ $ticketSummary['total_stock'] }} {{ $ticketSummary['total_stock'] == 1 ? __('entrada') : __('entradas') }}!
+                      <span class="ed-head-stock__dot ed-head-stock__dot--low" aria-hidden="true"></span>{{ __('Alta demanda') }}
                     @elseif($ticketSummary['total_stock'] !== null)
-                      <span class="ed-head-stock__dot" aria-hidden="true"></span>{{ $ticketSummary['total_stock'] }} {{ __('entradas disponibles') }}
+                      <span class="ed-head-stock__dot" aria-hidden="true"></span>{{ __('Venta online activa') }}
                     @endif
                   </p>
                 @endif
@@ -1953,40 +1913,110 @@ ttq.page();
             </ol>
           </nav>
 
-          {{-- Quick facts: horario + acceso (precio y organizador ya en hero / sidebar) --}}
-          @php $quickDate = $eventStartAt ?: $countdownNow; @endphp
-          <section class="ed-event-quickfacts ed-section" aria-label="{{ __('Información clave del evento') }}">
-            <div class="ed-summary-grid ed-summary-grid--quickfacts" role="list">
-              <div class="ed-summary-item ed-summary-item--quickfact" role="listitem">
-                <div class="ed-summary-item--quickfact__inner" role="group" aria-labelledby="ed-qf-time-label">
-                  <span class="ed-summary-item__icon" aria-hidden="true">
-                    <svg class="ed-summary-item__icon-svg" width="18" height="18" stroke-width="2" aria-hidden="true"><use href="#icon-clock"/></svg>
+          {{-- Info Card: fecha, ubicación, organizador, disponibilidad --}}
+          @php
+            $quickDate = $eventStartAt ?: $countdownNow;
+            $locationAddressParts = collect(explode(',', (string) $content->address))
+              ->map(fn ($part) => trim($part))
+              ->filter()
+              ->values();
+            $locationPrimary = $locationAddressParts->take(2)->implode(', ');
+            if ($locationPrimary === '') {
+              $locationPrimary = __('Lugar a confirmar');
+            }
+          @endphp
+          <section class="ed-info-card" aria-label="{{ __('Información del evento') }}">
+            <div class="ed-info-card__body">
+              <div class="ed-info-grid" role="list">
+                <div class="ed-info-item" role="listitem">
+                  <span class="ed-info-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
                   </span>
-                  <div class="ed-quickfact__content">
-                    <span class="ed-summary-item__label" id="ed-qf-time-label">{{ __('Horario') }}</span>
-                    <strong class="ed-summary-item__value">{{ $quickDate->format('H:i') }}</strong>
-                    <span class="ed-summary-item__meta">{{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
+                  <div class="ed-info-item__content">
+                    <strong class="ed-info-item__value">{{ ucfirst($quickDate->translatedFormat('l j \d\e F \d\e Y')) }}</strong>
+                    <span class="ed-info-item__meta">{{ $quickDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
                   </div>
-                </div>
               </div>
-              <div class="ed-summary-item ed-summary-item--quickfact" role="listitem">
-                <div class="ed-summary-item--quickfact__inner" role="group" aria-labelledby="ed-qf-access-label">
-                  <span class="ed-summary-item__icon" aria-hidden="true">
+
+                <div class="ed-info-item" role="listitem">
+                  <span class="ed-info-icon" aria-hidden="true">
                     @if ($content->event_type == 'online')
-                      <svg class="ed-summary-item__icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="3" width="20" height="14" rx="2"/>
                         <path d="M8 21h8M12 17v4"/>
                       </svg>
                     @else
-                      <svg class="ed-summary-item__icon-svg" width="18" height="18" stroke-width="2" aria-hidden="true"><use href="#icon-map-pin"/></svg>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                      </svg>
                     @endif
                   </span>
-                  <div class="ed-quickfact__content">
-                    <span class="ed-summary-item__label" id="ed-qf-access-label">{{ __('Acceso') }}</span>
-                    <strong class="ed-summary-item__value">{{ $content->event_type == 'online' ? __('Online') : __('Presencial') }}</strong>
-                    <span class="ed-summary-item__meta">{{ $content->event_type == 'online' ? __('Desde celular o computadora') : __('Ubicación en la ficha del evento') }}</span>
+                  <div class="ed-info-item__content">
+                    <strong class="ed-info-item__value">{{ $content->event_type == 'online' ? __('Online') : $locationPrimary }}</strong>
+                    <span class="ed-info-item__meta">
+                      @if ($content->event_type == 'online')
+                        {{ __('Desde celular o computadora') }}
+                      @else
+                        {{ collect([$content->city, $content->state, $content->country])->filter()->implode(', ') ?: __('Presencial') }}
+                      @endif
+                    </span>
                   </div>
                 </div>
+
+                <div class="ed-info-item" role="listitem">
+                  <span class="ed-info-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                  </span>
+                  <div class="ed-info-item__content">
+                    <strong class="ed-info-item__value">{{ $publicOrganizerName }}</strong>
+                    <span class="ed-info-item__meta">{{ __('Organizador del evento') }}</span>
+                  </div>
+                </div>
+
+                <div class="ed-info-item" role="listitem">
+                  <span class="ed-info-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                  </span>
+                  <div class="ed-info-item__content">
+                    @if ($ticketSummary['has_unlimited_stock'])
+                      <strong class="ed-info-item__value ed-info-item__value--available">{{ __('Venta online activa') }}</strong>
+                      <span class="ed-info-item__meta">{{ __('Confirmación al instante') }}</span>
+                    @elseif (($signalStock ?? 0) > 0)
+                      <strong class="ed-info-item__value{{ ($signalStock ?? 0) <= 10 ? ' ed-info-item__value--low' : ' ed-info-item__value--available' }}">
+                        @if (($signalStock ?? 0) <= 10)
+                          {{ __('Alta demanda') }}
+                        @else
+                          {{ __('Venta online activa') }}
+                        @endif
+                      </strong>
+                      <span class="ed-info-item__meta">{{ __('Reservá con anticipación') }}</span>
+                    @else
+                      <strong class="ed-info-item__value">{{ __('Consultar') }}</strong>
+                      <span class="ed-info-item__meta">{{ __('Disponibilidad no especificada') }}</span>
+                    @endif
+                  </div>
+                </div>
+              </div>
+
+              <div class="ed-info-badges" aria-label="{{ __('Garantías de compra') }}">
+                <span class="ed-info-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  {{ __('Confirmación al instante') }}
+                </span>
+                <span class="ed-info-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  {{ __('Pago seguro') }}
+                </span>
+                <span class="ed-info-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  {{ __('Entrada digital') }}
+                </span>
               </div>
             </div>
           </section>
@@ -1998,11 +2028,8 @@ ttq.page();
           @php Session::forget('paypal_error'); @endphp
 
           {{-- Description card --}}
-	          <section class="ed-section ed-section--description" aria-labelledby="event-description-title">
-	            <div class="ed-section__head">
-	                <h2 class="ed-section__title" id="event-description-title">{{ $hasValidEventDescription ? __('Descripción') : __('Sobre esta experiencia') }}</h2>
-	            </div>
-	              <div class="ed-section__content">
+	          <section class="ed-info-card ed-info-card--description" aria-label="{{ $hasValidEventDescription ? __('Descripción') : __('Sobre esta experiencia') }}">
+	              <div class="ed-info-card__body ed-info-card__body--description">
                   @if ($hasValidEventDescription)
                     <div class="summernote-content">
                       {!! $eventDescriptionHtml !!}
@@ -2035,8 +2062,8 @@ ttq.page();
                       </ul>
                     </div>
                   @endif
-              </div>
-          </section>
+	              </div>
+	          </section>
 
           @if($images->count() > 0)
           <div class="ed-card ed-card--gallery ed-section ed-section--media">

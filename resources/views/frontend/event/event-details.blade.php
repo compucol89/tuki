@@ -1388,7 +1388,7 @@ ttq.page();
                 @endif
               </div>
               <div class="ed-ticket-card__body ed-ticket-card__body--premium">
-                <form action="{{ route('check-out2') }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}">
+                <form action="{{ route('check-out2', [], false) }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}">
                   @csrf
                   <input type="hidden" name="event_id" value="{{ $content->id }}">
                   <input type="hidden" name="pricing_type" value="{{ $content->pricing_type }}">

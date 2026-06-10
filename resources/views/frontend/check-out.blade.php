@@ -81,7 +81,7 @@
       </div>
     @endif
 
-    <form class="form" action="{{ route('ticket.booking', [$event->id, 'type' => 'guest']) }}"
+    <form class="form" action="{{ route('ticket.booking', [$event->id, 'type' => 'guest'], false) }}"
           method="POST" enctype="multipart/form-data" id="payment-form">
       @csrf
 

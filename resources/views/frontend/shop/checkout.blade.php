@@ -28,7 +28,7 @@
   <!-- CheckOut Area Start -->
   <section class="checkout-area pt-120 rpt-95 pb-90 rpb-70">
     <div class="container">
-      <form class="form" action="{{ route('shop.buy', ['type' => 'guest']) }}" method="POST"
+      <form class="form" action="{{ route('shop.buy', ['type' => 'guest'], false) }}" method="POST"
         enctype="multipart/form-data" id="payment-form">
         @csrf
         @if (Auth::guard('customer')->user())

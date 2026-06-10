@@ -7,9 +7,9 @@
 @endpush
 
 @section('custom-style')
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @section('content')
 @php
@@ -549,7 +549,7 @@
   <script type="text/javascript">
     let url = "{{ route('apply-coupon') }}";
   </script>
-  <script src="{{ asset('assets/front/js/event_checkout.js') }}"></script>
+  <script src="{{ asset('assets/front/js/event_checkout.js') }}" defer></script>
   <script>
     (function initCheckoutUi() {
       try {

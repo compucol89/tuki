@@ -308,10 +308,10 @@ class CheckOutController extends Controller
     Session::put('offline_gateways', $offline_gateways);
     Session::put('event_date', $request->event_date);
     //check customer logged in or not ?
-    if (Auth::guard('customer')->check() == false) {
+    if ((int) $event_guest_checkout_status !== 1 && Auth::guard('customer')->check() == false) {
       return redirect()->route('customer.login', ['redirectPath' => 'event_checkout']);
     }
-    return redirect()->route('check-out');
+    return redirect()->route('check-out', (int) $event_guest_checkout_status === 1 && Auth::guard('customer')->check() == false ? ['type' => 'guest'] : []);
   }
   public function checkout()
   {

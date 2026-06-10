@@ -91,11 +91,7 @@
   </div>
 
   <div class="auth-split__form">
-    <div class="auth-split__form-inner">
-
-      <a href="{{ route('index') }}" class="auth-split__logo-mobile">
-        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('organizer.login.logo_alt', ['site' => $websiteInfo->website_title]) }}">
-      </a>
+    <div class="auth-split__form-inner auth-surface">
 
       <span class="auth-split__form-eyebrow">{{ __('organizer.login.form_eyebrow') }}</span>
       <h1 class="auth-split__title">{{ __('organizer.login.form_title') }}</h1>

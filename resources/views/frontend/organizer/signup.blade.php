@@ -95,11 +95,7 @@
   </div>
 
   <div class="auth-split__form">
-    <div class="auth-split__form-inner auth-split__form-inner--wide">
-
-      <a href="{{ route('index') }}" class="auth-split__logo-mobile">
-        <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ __('organizer.signup.logo_alt', ['site' => $websiteInfo->website_title]) }}">
-      </a>
+    <div class="auth-split__form-inner auth-split__form-inner--wide auth-surface">
 
       <h1 class="auth-split__title">{{ __('organizer.signup.form_title') }}</h1>
       <p class="auth-split__subtitle">{{ __('organizer.signup.form_subtitle') }}</p>

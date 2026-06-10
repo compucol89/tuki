@@ -262,56 +262,7 @@
       border: 0;
     }
 
-    .page-event-detail .ed-refund-band {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--tuki-space-3);
-      padding: var(--tuki-space-4);
-      margin-top: var(--tuki-space-10);
-      border: 1px solid #f1e7dc;
-      border-radius: var(--tuki-radius-md);
-      background: linear-gradient(180deg, rgba(249, 115, 22, 0.06) 0%, #fffaf3 100%);
-      color: #4b5563;
-    }
-
-    .page-event-detail .ed-refund-band__icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex: 0 0 36px;
-      width: 36px;
-      height: 36px;
-      border-radius: var(--tuki-radius-full);
-      background: rgba(249, 115, 22, 0.12);
-      color: var(--tuki-primary-accessible);
-    }
-
-    .page-event-detail .ed-refund-band__content {
-      min-width: 0;
-      max-width: 72ch;
-    }
-
-    .page-event-detail .ed-refund-band__content strong {
-      display: block;
-      margin-bottom: var(--tuki-space-1);
-      color: var(--tuki-dark);
-      font-weight: 700;
-    }
-
-    .page-event-detail .ed-refund-band__content p {
-      margin: 0;
-      font-size: var(--tuki-text-sm);
-      line-height: 1.6;
-    }
-
-    .page-event-detail .ed-refund-band__content .ed-refund-band__more {
-      margin-top: var(--tuki-space-2);
-    }
-
-    .page-event-detail .ed-refund-band__content a {
-      color: var(--tuki-primary, #F97316);
-      font-weight: 600;
-    }
+    /* .ed-refund-band — estilos en event-detail.css */
 
     .page-event-detail .ed-ticket-card,
     .page-event-detail .ei-card {
@@ -621,17 +572,33 @@
         text-overflow: ellipsis;
       }
 
+      /* Mismo verde que .auth-guest-btn--green (compra como invitado) */
       .ed-mobile-bar__cta {
         flex: 1 1 auto;
         min-height: 48px;
         border-radius: var(--tuki-radius-full);
-        background: var(--tuki-primary-accessible);
-        color: var(--tuki-surface) !important;
+        background: #16a34a;
+        color: #ffffff !important;
         font-weight: 700;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         text-decoration: none !important;
+        transition: background-color 0.15s ease, transform 0.15s ease;
+      }
+
+      .ed-mobile-bar__cta:hover {
+        background: #15803d;
+        color: #ffffff !important;
+        transform: translateY(-1px);
+      }
+
+      .ed-mobile-bar__cta:focus-visible {
+        background: #15803d;
+        color: #ffffff !important;
+        outline: 3px solid #14532d;
+        outline-offset: 2px;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.35);
       }
 
       .ed-mobile-bar__cta--disabled {
@@ -668,10 +635,7 @@
         font-size: 22px;
       }
 
-      .page-event-detail .ed-refund-band {
-        padding: 14px;
-        margin-top: var(--tuki-space-6);
-      }
+
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -904,27 +868,30 @@
     }
 
     @media (max-width: 767px) {
-      body.page-event-detail .ed-hero-event.hero-collage-section,
-      body.page-event-detail .hero-collage-section--premium.ed-hero-event {
-        min-height: 480px !important;
-      }
-
       body.page-event-detail .ed-hero-event .hero-overlay--premium {
         background:
-          radial-gradient(120% 90% at 50% 120%, rgba(15, 20, 32, 0.95) 0%, transparent 60%),
-          radial-gradient(ellipse 80% 60% at 20% 15%, rgba(249, 115, 22, 0.10) 0%, transparent 50%),
-          radial-gradient(ellipse 70% 50% at 85% 35%, rgba(59, 130, 241, 0.08) 0%, transparent 45%),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.58) 100%),
+          radial-gradient(120% 90% at 50% 120%, rgba(6, 9, 15, 0.98) 0%, transparent 52%),
+          radial-gradient(ellipse 95% 75% at 50% 0%, rgba(4, 6, 12, 0.72) 0%, transparent 65%),
           linear-gradient(180deg,
-            rgba(8, 11, 18, 0.72) 0%,
-            rgba(10, 14, 22, 0.68) 30%,
-            rgba(12, 16, 26, 0.85) 60%,
-            rgba(8, 11, 18, 0.94) 100%);
+            rgba(4, 6, 12, 0.9) 0%,
+            rgba(6, 9, 15, 0.86) 40%,
+            rgba(8, 11, 18, 0.92) 70%,
+            rgba(4, 6, 12, 0.96) 100%);
+      }
+
+      body.page-event-detail .ed-hero-grid__main .ed-ev-title,
+      body.page-event-detail .ed-hero-grid__main .ed-hero-nudge,
+      body.page-event-detail .ed-hero-grid__main .ed-ev-kicker {
+        text-shadow:
+          0 2px 14px rgba(0, 0, 0, 0.7),
+          0 1px 3px rgba(0, 0, 0, 0.85);
       }
 
       .hero-ambient__orb--a,
       .hero-ambient__orb--b,
       .hero-ambient__orb--c {
-        opacity: 0.12;
+        opacity: 0.08;
         filter: blur(48px);
       }
 
@@ -1169,6 +1136,70 @@ ttq.page();
     document.fonts.ready.then(schedule).catch(function() { schedule(); });
   }
 })();
+
+/**
+ * Móvil: recorta el collage del hero en el borde superior de .ed-ticket-card__body
+ * (coincide con la frontera head/body). El body queda sobre fondo claro, fuera del hero.
+ */
+(function syncEventDetailHeroBgMobile() {
+  var body = document.body;
+  if (!body.classList.contains('page-event-detail')) return;
+
+  var mq = window.matchMedia('(max-width: 991.98px)');
+  var hero = document.getElementById('heroSection');
+  var ticketBody = document.querySelector('#event-booking-card .ed-ticket-card__body');
+  var rafScheduled = false;
+
+  function measure() {
+    rafScheduled = false;
+    if (!hero) return;
+    if (!mq.matches || !ticketBody) {
+      hero.style.removeProperty('--ed-hero-bg-height');
+      return;
+    }
+    var heroRect = hero.getBoundingClientRect();
+    var bodyRect = ticketBody.getBoundingClientRect();
+    var height = Math.round(bodyRect.top - heroRect.top);
+    if (height > 0) {
+      hero.style.setProperty('--ed-hero-bg-height', height + 'px');
+    }
+  }
+
+  function schedule() {
+    if (rafScheduled) return;
+    rafScheduled = true;
+    requestAnimationFrame(measure);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', schedule);
+  } else {
+    schedule();
+  }
+
+  window.addEventListener('resize', schedule);
+  window.addEventListener('orientationchange', schedule);
+  window.addEventListener('load', schedule);
+
+  if (mq.addEventListener) {
+    mq.addEventListener('change', schedule);
+  } else if (mq.addListener) {
+    mq.addListener(schedule);
+  }
+
+  if (typeof ResizeObserver !== 'undefined') {
+    var card = document.getElementById('event-booking-card');
+    var grid = document.querySelector('.ed-hero-grid');
+    var ro = new ResizeObserver(schedule);
+    if (card) ro.observe(card);
+    if (grid) ro.observe(grid);
+    if (ticketBody) ro.observe(ticketBody);
+  }
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(schedule).catch(function() { schedule(); });
+  }
+})();
 </script>
 @endpush
 
@@ -1356,7 +1387,7 @@ ttq.page();
                   </p>
                 @endif
               </div>
-              <div class="ed-ticket-card__body">
+              <div class="ed-ticket-card__body ed-ticket-card__body--premium">
                 <form action="{{ route('check-out2') }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}">
                   @csrf
                   <input type="hidden" name="event_id" value="{{ $content->id }}">
@@ -1397,7 +1428,15 @@ ttq.page();
                         value="{{ FullDateTime($content->start_date . $content->start_time) }}">
                     @endif
 
-                    <p class="ed-section-label">{{ __('Seleccioná tus entradas') }}</p>
+                    <div class="ed-ticket-picker__intro">
+                      <p class="ed-ticket-picker__title" id="ed-ticket-picker-label">{{ __('Seleccioná tus entradas') }}</p>
+                      <p class="ed-ticket-picker__sub">{{ __('Elegí cantidad y seguí al checkout seguro.') }}</p>
+                      <span class="ed-ticket-picker__badge">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                        {{ __('Compra protegida') }}
+                      </span>
+                    </div>
+                    <div class="ed-ticket-picker__list" role="group" aria-labelledby="ed-ticket-picker-label">
 
                     @if ($content->event_type == 'online' && $content->pricing_type == 'normal')
 
@@ -1420,8 +1459,9 @@ ttq.page();
                       @endphp
                       @if ($ticket)
 
-                        <div class="price-count">
-                          <h6 dir="ltr">
+                        <div class="ed-ticket-option ed-ticket-option--solo">
+                        <div class="price-count ed-ticket-option__buy-row">
+                          <h6 dir="ltr" class="ed-ticket-option__price">
 
                             @if ($ticket->early_bird_discount == 'enable')
                               @php
@@ -1491,6 +1531,7 @@ ttq.page();
 
 
                         </div>
+                        </div>
                         <p
                           class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
                         </p>
@@ -1518,8 +1559,9 @@ ttq.page();
                             $max_buy_ticket = 999999;
                         }
                       @endphp
-                      <div class="price-count">
-                        <h6>
+                      <div class="ed-ticket-option ed-ticket-option--solo ed-ticket-option--free">
+                      <div class="price-count ed-ticket-option__buy-row">
+                        <h6 class="ed-ticket-option__price ed-ticket-option__price--free">
                           {{ __('Gratis') }}
                         </h6>
                         <div class="quantity-input">
@@ -1536,6 +1578,7 @@ ttq.page();
                           </button>
                         </div>
 
+                      </div>
                       </div>
                       <p
                         class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
@@ -1566,8 +1609,11 @@ ttq.page();
                               }
 
                             @endphp
-                            <p class="mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
-                            <div class="click-show">
+                            <div class="ed-ticket-option">
+                            <div class="ed-ticket-option__head">
+                              <p class="ed-ticket-option__title mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
+                            </div>
+                            <div class="click-show ed-ticket-option__desc">
                               <div class="show-content">
                                 {!! clean(@$ticket_content->description ?? '') !!}
                               </div>
@@ -1578,8 +1624,8 @@ ttq.page();
                                 </div>
                               @endif
                             </div>
-                            <div class="price-count">
-                              <h6 dir="ltr">
+                            <div class="price-count ed-ticket-option__buy-row">
+                              <h6 dir="ltr" class="ed-ticket-option__price">
                                 @if ($ticket->early_bird_discount == 'enable')
                                   @php
                                     $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
@@ -1637,6 +1683,7 @@ ttq.page();
                               @endif
 
                             </div>
+                            </div>
                             <p
                               class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
                             </p>
@@ -1670,10 +1717,12 @@ ttq.page();
                                     $ticket_content = App\Models\Event\TicketContent::where([['ticket_id', $ticket->id]])->first();
                                 }
                               @endphp
-                              <p class="mb-0"><strong>{{ __(@$ticket_content->title ?: '') }} -
-                                  {{ __(@$varition_names[$key]['name'] ?: '') }}</strong>
-                              </p>
-                              <div class="click-show">
+                              <div class="ed-ticket-option">
+                              <div class="ed-ticket-option__head">
+                                <p class="ed-ticket-option__title mb-0"><strong>{{ __(@$ticket_content->title ?: '') }} —
+                                  {{ __(@$varition_names[$key]['name'] ?: '') }}</strong></p>
+                              </div>
+                              <div class="click-show ed-ticket-option__desc">
                                 <div class="show-content">
                                   {!! clean(@$ticket_content->description ?? '') !!}
                                 </div>
@@ -1684,8 +1733,8 @@ ttq.page();
                                   </div>
                                 @endif
                               </div>
-                              <div class="price-count">
-                                <h6 dir="ltr">
+                              <div class="price-count ed-ticket-option__buy-row">
+                                <h6 dir="ltr" class="ed-ticket-option__price">
                                   @if ($ticket->early_bird_discount == 'enable')
                                     @php
                                       $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
@@ -1764,6 +1813,7 @@ ttq.page();
                                   @endif
                                 @endif
                               </div>
+                              </div>
                               <p class="text-warning max_error_{{ $ticket->id }}{{ $item->v_max_ticket_buy }} ">
                               </p>
                             @endforeach
@@ -1785,8 +1835,11 @@ ttq.page();
                               }
                               $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
                             @endphp
-                            <p class="mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
-                            <div class="click-show">
+                            <div class="ed-ticket-option ed-ticket-option--free">
+                            <div class="ed-ticket-option__head">
+                              <p class="ed-ticket-option__title mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
+                            </div>
+                            <div class="click-show ed-ticket-option__desc">
                               <div class="show-content">
                                 {!! clean(@$ticket_content->description ?? '') !!}
                               </div>
@@ -1797,8 +1850,8 @@ ttq.page();
                                 </div>
                               @endif
                             </div>
-                            <div class="price-count">
-                              <h6>
+                            <div class="price-count ed-ticket-option__buy-row">
+                              <h6 class="ed-ticket-option__price ed-ticket-option__price--free">
                                 <span class="">{{ __('Gratis') }}</span>
                               </h6>
                               <div class="quantity-input">
@@ -1815,6 +1868,7 @@ ttq.page();
                                 </button>
                               </div>
                             </div>
+                            </div>
                             <p
                               class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
                             </p>
@@ -1822,9 +1876,10 @@ ttq.page();
                         @endforeach
                       @endif
                     @endif
+                    </div>{{-- /.ed-ticket-picker__list --}}
 
                     @if ($tickets_count > 0)
-                      <div class="ed-total-row" role="group" aria-labelledby="ed-booking-total-label" aria-describedby="ed-booking-total-note">
+                      <div class="ed-total-row ed-total-row--premium" role="group" aria-labelledby="ed-booking-total-label" aria-describedby="ed-booking-total-note">
                         <span class="ed-total-label" id="ed-booking-total-label">{{ __('Subtotal entradas') }}</span>
                         <span class="ed-total-value" dir="ltr" aria-live="polite" aria-atomic="true">
                           @if ($basicInfo->base_currency_symbol_position == 'left')
@@ -1843,8 +1898,8 @@ ttq.page();
                         <input type="hidden" name="total" id="total">
                       </div>
                       {{-- ed-order-recap removed: total already shown above --}}
-                      <div class="ed-cta-zone">
-                        <button class="ed-buy-btn" type="submit" {{ $over ? 'disabled' : '' }}>
+                      <div class="ed-cta-zone ed-cta-zone--premium">
+                        <button class="ed-buy-btn ed-buy-btn--premium" type="submit" {{ $over ? 'disabled' : '' }}>
                           {{ $over ? __('Evento finalizado') : __('Reservar mi lugar') }}
                           @if (!$over)
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1926,22 +1981,35 @@ ttq.page();
             }
           @endphp
           <section class="ed-info-card" aria-label="{{ __('Información del evento') }}">
+            <div class="ed-info-card__head">
+              <div class="ed-info-card__head-main">
+                <span class="ed-info-card__shield" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <polyline points="9 12 11 14 15 10"/>
+                  </svg>
+                </span>
+                <h2 class="ed-info-card__title">{{ __('Datos del evento') }}</h2>
+              </div>
+              <span class="ed-info-card__verified-pill" role="status">{{ __('Compra verificada') }}</span>
+            </div>
             <div class="ed-info-card__body">
               <div class="ed-info-grid" role="list">
                 <div class="ed-info-item" role="listitem">
-                  <span class="ed-info-icon" aria-hidden="true">
+                  <span class="ed-info-icon ed-info-icon--date" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                     </svg>
                   </span>
                   <div class="ed-info-item__content">
+                    <span class="ed-info-item__label">{{ __('Fecha y hora') }}</span>
                     <strong class="ed-info-item__value">{{ ucfirst($quickDate->translatedFormat('l j \d\e F \d\e Y')) }}</strong>
                     <span class="ed-info-item__meta">{{ $quickDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
                   </div>
-              </div>
+                </div>
 
                 <div class="ed-info-item" role="listitem">
-                  <span class="ed-info-icon" aria-hidden="true">
+                  <span class="ed-info-icon ed-info-icon--place" aria-hidden="true">
                     @if ($content->event_type == 'online')
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="2" y="3" width="20" height="14" rx="2"/>
@@ -1954,6 +2022,7 @@ ttq.page();
                     @endif
                   </span>
                   <div class="ed-info-item__content">
+                    <span class="ed-info-item__label">{{ $content->event_type == 'online' ? __('Modalidad') : __('Ubicación') }}</span>
                     <strong class="ed-info-item__value">{{ $content->event_type == 'online' ? __('Online') : $locationPrimary }}</strong>
                     <span class="ed-info-item__meta">
                       @if ($content->event_type == 'online')
@@ -1966,27 +2035,29 @@ ttq.page();
                 </div>
 
                 <div class="ed-info-item" role="listitem">
-                  <span class="ed-info-icon" aria-hidden="true">
+                  <span class="ed-info-icon ed-info-icon--org" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
                   </span>
                   <div class="ed-info-item__content">
+                    <span class="ed-info-item__label">{{ __('Organizador') }}</span>
                     <strong class="ed-info-item__value">{{ $publicOrganizerName }}</strong>
-                    <span class="ed-info-item__meta">{{ __('Organizador del evento') }}</span>
+                    <span class="ed-info-item__meta">{{ __('Productor del evento') }}</span>
                   </div>
                 </div>
 
                 <div class="ed-info-item" role="listitem">
-                  <span class="ed-info-icon" aria-hidden="true">
+                  <span class="ed-info-icon ed-info-icon--stock" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                   </span>
                   <div class="ed-info-item__content">
+                    <span class="ed-info-item__label">{{ __('Disponibilidad') }}</span>
                     @if ($ticketSummary['has_unlimited_stock'])
                       <strong class="ed-info-item__value ed-info-item__value--available">{{ __('Venta online activa') }}</strong>
-                      <span class="ed-info-item__meta">{{ __('Confirmación al instante') }}</span>
+                      <span class="ed-info-item__meta">{{ __('Cupos disponibles en este momento') }}</span>
                     @elseif (($signalStock ?? 0) > 0)
                       <strong class="ed-info-item__value{{ ($signalStock ?? 0) <= 10 ? ' ed-info-item__value--low' : ' ed-info-item__value--available' }}">
                         @if (($signalStock ?? 0) <= 10)
@@ -2004,20 +2075,40 @@ ttq.page();
                 </div>
               </div>
 
-              <div class="ed-info-badges" aria-label="{{ __('Garantías de compra') }}">
-                <span class="ed-info-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                  {{ __('Confirmación al instante') }}
-                </span>
-                <span class="ed-info-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                  {{ __('Pago seguro') }}
-                </span>
-                <span class="ed-info-badge">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                  {{ __('Entrada digital') }}
-                </span>
+              <div class="ed-info-trust" role="list" aria-label="{{ __('Garantías de compra') }}">
+                <div class="ed-info-trust__item" role="listitem">
+                  <span class="ed-info-trust__icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </span>
+                  <span class="ed-info-trust__copy">
+                    <strong class="ed-info-trust__title">{{ __('Confirmación al instante') }}</strong>
+                    <span class="ed-info-trust__desc">{{ __('Entrada en tu email al completar') }}</span>
+                  </span>
+                </div>
+                <div class="ed-info-trust__item" role="listitem">
+                  <span class="ed-info-trust__icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </span>
+                  <span class="ed-info-trust__copy">
+                    <strong class="ed-info-trust__title">{{ __('Pago seguro') }}</strong>
+                    <span class="ed-info-trust__desc">{{ __('Conexión encriptada SSL') }}</span>
+                  </span>
+                </div>
+                <div class="ed-info-trust__item" role="listitem">
+                  <span class="ed-info-trust__icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  </span>
+                  <span class="ed-info-trust__copy">
+                    <strong class="ed-info-trust__title">{{ __('Entrada digital') }}</strong>
+                    <span class="ed-info-trust__desc">{{ __('QR listo para ingresar') }}</span>
+                  </span>
+                </div>
               </div>
+
+              <p class="ed-info-assurance">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                {{ __('Venta operada por Tukipass · TAYRONA GROUP SAS · CUIT 30-71885087-4') }}
+              </p>
             </div>
           </section>
 
@@ -2034,23 +2125,23 @@ ttq.page();
                     <div class="summernote-content">
                       {!! $eventDescriptionHtml !!}
                     </div>
-                    <div class="ed-refund-band">
+                    <div class="ed-refund-band ed-refund-band--highlight">
                       <span class="ed-refund-band__icon" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                       </span>
                       <div class="ed-refund-band__content">
-                        <strong>{{ $isOnlineEvent ? __('Sumate a este evento online con compra simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con compra simple, confirmación inmediata y entrada digital.') }}</strong>
-                        <p>{{ $isOnlineEvent ? __('Comprás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Comprás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
+                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con compra simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con compra simple, confirmación inmediata y entrada digital.') }}</p>
+                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Comprás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Comprás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
                       </div>
                     </div>
                   @else
-                    <div class="ed-refund-band">
+                    <div class="ed-refund-band ed-refund-band--highlight">
                       <span class="ed-refund-band__icon" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                       </span>
                       <div class="ed-refund-band__content">
-                        <strong>{{ $isOnlineEvent ? __('Sumate a este evento online con compra simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con compra simple, confirmación inmediata y entrada digital.') }}</strong>
-                        <p>{{ $isOnlineEvent ? __('Comprás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Comprás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
+                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con compra simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con compra simple, confirmación inmediata y entrada digital.') }}</p>
+                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Comprás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Comprás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
                       </div>
                     </div>
                     <div class="summernote-content mt-4">
@@ -2161,21 +2252,60 @@ ttq.page();
           @endif
 
           {{-- Refund policy card (siempre visible: evento u política general Tukipass) --}}
-          <div class="ed-refund-band" role="note">
-            <span class="ed-refund-band__icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/>
-                <path d="M9.5 12.5l1.7 1.7 3.3-3.7"/>
-              </svg>
-            </span>
-            <div class="ed-refund-band__content">
-              <strong>{{ __('Política de reembolso') }}</strong>
-              <p>{{ \App\Support\EventRefundPolicy::canonicalPlainText() }}</p>
-              <p class="ed-refund-band__more">
-                <a href="{{ url('/politica-de-reembolsos') }}">{{ __('Ver política general de reembolsos de Tukipass') }}</a>
-              </p>
+          <section class="ed-refund-band ed-refund-band--policy" role="note" aria-labelledby="ed-refund-band-title">
+            <div class="ed-refund-band__head">
+              <span class="ed-refund-band__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z"/>
+                  <path d="M9.5 12.5l1.7 1.7 3.3-3.7"/>
+                </svg>
+              </span>
+              <div class="ed-refund-band__head-copy">
+                <h3 id="ed-refund-band-title" class="ed-refund-band__title">{{ __('Política de reembolso') }}</h3>
+                <p class="ed-refund-band__kicker">{{ __('Transparencia antes de comprar') }}</p>
+              </div>
             </div>
-          </div>
+
+            <ul class="ed-refund-band__points" role="list">
+              <li class="ed-refund-band__point" role="listitem">
+                <span class="ed-refund-band__point-icon" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                </span>
+                <span class="ed-refund-band__point-copy">
+                  <strong>{{ __('Rol de Tukipass') }}</strong>
+                  <span>{{ __('Servicio tecnológico de venta online. TAYRONA GROUP SAS — CUIT 30-71885087-4. No organiza ni produce los eventos.') }}</span>
+                </span>
+              </li>
+              <li class="ed-refund-band__point" role="listitem">
+                <span class="ed-refund-band__point-icon" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <span class="ed-refund-band__point-copy">
+                  <strong>{{ __('Responsabilidad del organizador') }}</strong>
+                  <span>{{ __('El organizador o productor es quien define la realización del evento y la información publicada.') }}</span>
+                </span>
+              </li>
+              <li class="ed-refund-band__point" role="listitem">
+                <span class="ed-refund-band__point-icon" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </span>
+                <span class="ed-refund-band__point-copy">
+                  <strong>{{ __('Reembolsos y cancelaciones') }}</strong>
+                  <span>{{ __('Se rigen por la política de Tukipass, las condiciones del organizador y la Ley 24.240 cuando corresponda.') }}</span>
+                </span>
+              </li>
+            </ul>
+
+            <details class="ed-refund-band__legal-details">
+              <summary class="ed-refund-band__legal-summary">{{ __('Leer texto legal completo') }}</summary>
+              <p class="ed-refund-band__legal-text">{{ \App\Support\EventRefundPolicy::canonicalPlainText() }}</p>
+            </details>
+
+            <div class="ed-refund-band__footer">
+              <a class="ed-refund-band__cta" href="{{ url('/politica-de-reembolsos') }}">{{ __('Ver política general de reembolsos') }}</a>
+              <a class="ed-refund-band__contact" href="mailto:soporte@tukipass.com">soporte@tukipass.com</a>
+            </div>
+          </section>
 
         </div>
         {{-- /Left column --}}
@@ -2312,12 +2442,6 @@ ttq.page();
         {{-- /Right column --}}
 
       </div>
-
-      @if (!empty(showAd(3)))
-        <div class="text-center mt-4">
-          {!! showAd(3) !!}
-        </div>
-      @endif
 
     </div>
   </section>

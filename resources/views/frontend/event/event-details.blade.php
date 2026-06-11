@@ -1030,17 +1030,6 @@
 <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
 <script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
 
-@if(!empty($content->meta_pixel_id))
-<!-- Meta Pixel -->
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '{{ $content->meta_pixel_id }}');
-fbq('track', 'PageView');
-fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!}, content_type: 'event'});
-</script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id={{ $content->meta_pixel_id }}&ev=PageView&noscript=1"/></noscript>
-@endif
-
 @if(!empty($content->google_analytics_id))
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ $content->google_analytics_id }}"></script>
@@ -1062,6 +1051,27 @@ ttq.page();
 </script>
 @endif
 @endpush
+
+@php
+  $eventMetaPixelId = trim((string) ($content->meta_pixel_id ?? ''));
+  $siteMetaPixelId = trim((string) config('services.facebook.pixel_id'));
+@endphp
+@if($eventMetaPixelId !== '' || $siteMetaPixelId !== '')
+@push('head-scripts')
+<script>
+if (typeof fbq === 'function') {
+  @if ($eventMetaPixelId !== '' && $eventMetaPixelId !== $siteMetaPixelId)
+  fbq('init', '{{ $eventMetaPixelId }}');
+  fbq('trackSingle', '{{ $eventMetaPixelId }}', 'PageView');
+  @endif
+  fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!}, content_type: 'event'});
+}
+</script>
+@if ($eventMetaPixelId !== '' && $eventMetaPixelId !== $siteMetaPixelId)
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id={{ $eventMetaPixelId }}&ev=PageView&noscript=1"/></noscript>
+@endif
+@endpush
+@endif
 
 @push('scripts')
 <script>

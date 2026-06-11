@@ -48,6 +48,7 @@ return [
     'client_id' => env('FACEBOOK_CLIENT_ID'),
     'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
     'redirect' => env('FACEBOOK_CALLBACK_URL'),
+    'pixel_id' => env('META_PIXEL_ID', '1777241013650531'),
   ],
   'google' => [
     'client_id' => env('GOOGLE_CLIENT_ID'),

@@ -2586,6 +2586,13 @@ document.addEventListener('DOMContentLoaded', function() {
   var symL = '{{ $basicInfo->base_currency_symbol_position == "left"  ? addslashes($basicInfo->base_currency_symbol) : "" }}';
   var symR = '{{ $basicInfo->base_currency_symbol_position == "right" ? addslashes($basicInfo->base_currency_symbol) : "" }}';
   var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bookingForm = document.querySelector('form[action*="check-out2"]');
+  @if($eventMetaPixelId !== '')
+  var metaPixelInitiateTracked = false;
+  var metaPixelId = {!! json_encode($eventMetaPixelId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
+  var metaPixelEventName = {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
+  var metaPixelCurrency = {!! json_encode($basicInfo->base_currency_text ?? 'ARS', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
+  @endif
 
   function getSelectedTicketQty() {
     var selected = 0;
@@ -2653,6 +2660,44 @@ document.addEventListener('DOMContentLoaded', function() {
     if (elRecap)  elRecap.textContent = total > 0 ? ' · ' + symL + formatted + symR : '';
     if (elMobile) elMobile.textContent = total > 0 ? (symL + formatted + symR) : {!! json_encode($heroPriceLabel, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!};
   }
+
+  @if($eventMetaPixelId !== '')
+  function trackMetaInitiateCheckout() {
+    var qty = getSelectedTicketQty();
+    if (metaPixelInitiateTracked || qty <= 0) return;
+    metaPixelInitiateTracked = true;
+
+    var totalInput = document.getElementById('total');
+    var value = totalInput ? (parseFloat(totalInput.value) || 0) : 0;
+    var params = {
+      content_name: metaPixelEventName,
+      content_type: 'event',
+      currency: metaPixelCurrency,
+      num_items: qty,
+      value: Math.round(value)
+    };
+
+    if (typeof window.fbq === 'function') {
+      window.fbq('track', 'InitiateCheckout', params);
+    }
+
+    var query = new URLSearchParams();
+    query.set('id', metaPixelId);
+    query.set('ev', 'InitiateCheckout');
+    query.set('noscript', '1');
+    query.set('dl', window.location.href);
+    query.set('cd[content_name]', metaPixelEventName);
+    query.set('cd[content_type]', 'event');
+    query.set('cd[currency]', metaPixelCurrency);
+    query.set('cd[num_items]', String(qty));
+    query.set('cd[value]', String(Math.round(value)));
+    new Image().src = 'https://www.facebook.com/tr?' + query.toString();
+  }
+
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', trackMetaInitiateCheckout);
+  }
+  @endif
 
   /* Ejecutar al cargar */
   recalcTotal();

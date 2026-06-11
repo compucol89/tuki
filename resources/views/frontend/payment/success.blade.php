@@ -36,7 +36,59 @@
 	  $variations = $booking->variation ? json_decode($booking->variation, true) : null;
 	  $bookingAddons = $booking->addons;
 	  $bookingAddonsTotal = $bookingAddons->sum('subtotal');
+	  $successMetaPixelId = trim((string) ($event->meta_pixel_id ?? ''));
+	  $purchaseEventId = 'event-booking-' . $booking->id;
+	  $purchaseQuantity = $variations ? collect($variations)->sum('qty') : (int) ($booking->quantity ?? 1);
+	  $purchaseValue = round((float) $booking->price + (float) $booking->tax + (float) $bookingAddonsTotal, 2);
+	  $purchaseCurrency = $booking->currencyText ?: 'ARS';
+	  $shouldTrackMetaPurchase = $successMetaPixelId !== '' && !$isPending;
+	  $metaPixelPurchaseUrl = '';
+	  if ($shouldTrackMetaPurchase) {
+	    $metaPixelPurchaseUrl = 'https://www.facebook.com/tr?' . http_build_query([
+	      'id' => $successMetaPixelId,
+	      'ev' => 'Purchase',
+	      'noscript' => 1,
+	      'dl' => request()->fullUrl(),
+	      'eid' => $purchaseEventId,
+	      'cd' => [
+	        'content_name' => $eventTitle,
+	        'content_type' => 'event',
+	        'currency' => $purchaseCurrency,
+	        'num_items' => $purchaseQuantity,
+	        'value' => $purchaseValue,
+	        'order_id' => $booking->booking_id,
+	      ],
+	    ]);
+	  }
 	@endphp
+
+@if($shouldTrackMetaPurchase)
+@push('scripts')
+<!-- Meta Pixel Purchase -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '{{ $successMetaPixelId }}');
+fbq('track', 'Purchase', {
+  content_name: {!! json_encode($eventTitle, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
+  content_type: 'event',
+  currency: {!! json_encode($purchaseCurrency, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
+  num_items: {{ (int) $purchaseQuantity }},
+  value: {{ json_encode($purchaseValue) }},
+  order_id: {!! json_encode($booking->booking_id, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
+}, {eventID: {!! json_encode($purchaseEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
+new Image().src = {!! json_encode($metaPixelPurchaseUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="{{ $metaPixelPurchaseUrl }}"/></noscript>
+<!-- End Meta Pixel Purchase -->
+@endpush
+@endif
 
 {{-- HERO --}}
 <div class="ps-hero {{ $isFree ? 'ps-hero--free' : ($isPending ? 'ps-hero--pending' : 'ps-hero--paid') }}">

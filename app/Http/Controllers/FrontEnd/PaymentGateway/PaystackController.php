@@ -86,7 +86,7 @@ class PaystackController extends Controller
         'country' => $request->country,
         'state' => $request->state,
         'city' => $request->city,
-        'zip_code' => $request->city,
+        'zip_code' => $request->zip_code,
         'address' => $request->address,
         'paymentMethod' => 'Paystack',
         'gatewayType' => 'online',
@@ -215,14 +215,14 @@ class PaystackController extends Controller
     }
 
     //add blance to admin revinue
-    $earning = Earning::first();
-    $earning->total_revenue = $earning->total_revenue + $arrData['price'] + $bookingInfo->tax;
-    if ($bookingInfo['organizer_id'] != null) {
-      $earning->total_earning = $earning->total_earning + ($bookingInfo->tax + $bookingInfo->commission);
-    } else {
-      $earning->total_earning = $earning->total_earning + $arrData['price'] + $bookingInfo->tax;
-    }
-    $earning->save();
+    $revenueInc = round((float)($arrData['price'] + $bookingInfo->tax), 2);
+    $earningInc = $bookingInfo['organizer_id'] != null
+      ? round((float)($bookingInfo->tax + $bookingInfo->commission), 2)
+      : round((float)($arrData['price'] + $bookingInfo->tax), 2);
+    Earning::query()->limit(1)->update([
+      'total_revenue' => DB::raw("total_revenue + {$revenueInc}"),
+      'total_earning' => DB::raw("total_earning + {$earningInc}"),
+    ]);
 
     //storeTransaction
     $bookingInfo['paymentStatus'] = 1;

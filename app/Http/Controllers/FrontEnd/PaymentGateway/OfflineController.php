@@ -84,7 +84,7 @@ class OfflineController extends Controller
       'country' => $request->country,
       'state' => $request->state,
       'city' => $request->city,
-      'zip_code' => $request->city,
+      'zip_code' => $request->zip_code,
       'address' => $request->address,
       'paymentMethod' => $offlineGateway->name,
       'gatewayType' => 'offline',
@@ -137,11 +137,10 @@ class OfflineController extends Controller
     }
 
     // Add balance to admin revenue
-    $earning = Earning::first();
-    if ($earning) {
-      $earning->total_revenue = $earning->total_revenue + $arrData['price'] + $bookingInfo->tax;
-      $earning->save();
-    }
+    $revenueInc = round((float)($arrData['price'] + $bookingInfo->tax), 2);
+    Earning::query()->limit(1)->update([
+      'total_revenue' => DB::raw("total_revenue + {$revenueInc}"),
+    ]);
 
     $request->session()->forget('event_id');
     $request->session()->forget('selTickets');

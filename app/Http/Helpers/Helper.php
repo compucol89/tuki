@@ -418,7 +418,7 @@ if (!function_exists('DurationCalulate')) {
 if (!function_exists('eventDates')) {
   function eventDates($event_id)
   {
-    $now = Carbon\Carbon::now()->format('Y-m-d h:i:s');
+    $now = Carbon\Carbon::now()->format('Y-m-d H:i:s');
     $event_dates = EventDates::where('event_id', $event_id)->where('end_date_time', '>=', $now)->orderBy('start_date_time', 'asc')->get();
     return $event_dates;
   }
@@ -439,7 +439,7 @@ if (!function_exists('eventExpDates')) {
 if (!function_exists('eventLatestDates')) {
   function eventLatestDates($event_id)
   {
-    $now = Carbon\Carbon::now()->format('Y-m-d h:i:s');
+    $now = Carbon\Carbon::now()->format('Y-m-d H:i:s');
     $event_date = EventDates::where('event_id', $event_id)->where('start_date_time', '>=', $now)->orderBy('start_date_time', 'asc')->first();
     if ($event_date) {
       return $event_date;
@@ -453,7 +453,7 @@ if (!function_exists('eventLatestDates')) {
 if (!function_exists('eventLastEndDates')) {
   function eventLastEndDates($event_id)
   {
-    $now = Carbon\Carbon::now()->format('Y-m-d h:i:s');
+    $now = Carbon\Carbon::now()->format('Y-m-d H:i:s');
     $event_date = EventDates::where('event_id', $event_id)->where('end_date_time', '>=', $now)->orderBy('end_date_time', 'desc')->first();
     if ($event_date) {
       return $event_date;

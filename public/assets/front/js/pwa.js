@@ -19,7 +19,7 @@ function initSW() {
             scope: '.' // <--- THIS BIT IS REQUIRED
         })
             .then(() => {
-                console.log('serviceWorker registered!')
+                // console.log('serviceWorker registered!')
                 initPush();
             })
             .catch((err) => {
@@ -65,11 +65,11 @@ function subscribeUser() {
             return registration.pushManager.subscribe(subscribeOptions);
         })
         .then((pushSubscription) => {
-            console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
+            // console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
             storePushSubscription(pushSubscription);
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
         });
 }
 
@@ -90,7 +90,7 @@ function urlBase64ToUint8Array(base64String) {
 
 function storePushSubscription(pushSubscription) {
     const token = document.querySelector('meta[name=csrf-token]').getAttribute('content');
-    console.log(mainurl + '/push');
+    // console.log(mainurl + '/push');
     fetch(mainurl + '/push', {
         method: 'POST',
         body: JSON.stringify(pushSubscription),
@@ -104,10 +104,10 @@ function storePushSubscription(pushSubscription) {
             return res.json();
         })
         .then((res) => {
-            console.log(res)
+            // console.log(res)
         })
         .catch((err) => {
-            console.log(err)
+            // console.log(err)
         });
 }
 

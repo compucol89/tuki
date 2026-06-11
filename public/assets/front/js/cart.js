@@ -25,7 +25,7 @@
                         var url = t(this).attr("data-href");
                         let q = t('#quantity').val();
                         let e = url + '?qty=' + q;
-                        console.log(e);
+                        // console.log(e);
                         let a = t(".cart-amount").val();
                         a > 1 ? t.get(e + ",,," + a, function (e) {
                             e.message ? (toastr.success(e.message), t(".cart-amount")
@@ -74,7 +74,7 @@
                             , processData: !1
                             , contentType: !1
                             , success: function (a) {
-                                if (console.log(a), a.message) {
+                                if (a.message) {
                                     let r = [];
                                     t(".product-price span")
                                         .each(function () {

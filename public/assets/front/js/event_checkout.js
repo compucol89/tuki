@@ -44,6 +44,9 @@ $('#coupon-code').on('keypress', function (event) {
         } else {
           toastr['error'](data.message);
         }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        toastr['error']('Error de conexión. Intentá nuevamente.');
       }
     });
   }
@@ -66,6 +69,9 @@ $(".base-btn").on('click', function (e) {
       } else {
         toastr['error'](data.message);
       }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      toastr['error']('Error de conexión. Intentá nuevamente.');
     }
   });
 });

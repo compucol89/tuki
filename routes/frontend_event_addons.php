@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Público: cliente agrega add-ons al carrito del evento
-Route::middleware('web')->prefix('event/{event}/addons')->group(function () {
+Route::prefix('event/{event}/addons')->group(function () {
   Route::post('add',    [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'addToCart'])->name('event.addon.add');
   Route::post('remove', [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'removeFromCart'])->name('event.addon.remove');
   Route::post('update', [App\Http\Controllers\FrontEnd\Event\EventAddonController::class, 'updateCart'])->name('event.addon.update');

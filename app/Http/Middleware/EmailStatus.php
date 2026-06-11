@@ -24,7 +24,7 @@ class EmailStatus
                 $userInfo = Auth::guard('customer')->user();
                 if ($userInfo->email_verified_at == null) {
                     Auth::guard('customer')->logout();
-                    return redirect()->route('customer.dashboard');
+                    return redirect()->route('customer.login');
                 }
             } elseif ($type == 'organizer') {
                 $basic = Basic::where('uniqid', 12345)->select('organizer_email_verification')->first();

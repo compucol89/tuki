@@ -243,14 +243,14 @@ class PayPalController extends Controller
         }
 
         //add blance to admin revinue
-        $earning = Earning::first();
-        $earning->total_revenue = $earning->total_revenue + $arrData['price'] + $bookingInfo->tax;
-        if ($bookingInfo['organizer_id'] != null) {
-          $earning->total_earning = $earning->total_earning + ($bookingInfo->tax + $bookingInfo->commission);
-        } else {
-          $earning->total_earning = $earning->total_earning + $arrData['price'] + $bookingInfo->tax;
-        }
-        $earning->save();
+        $revenueInc = round((float)($arrData['price'] + $bookingInfo->tax), 2);
+        $earningInc = $bookingInfo['organizer_id'] != null
+          ? round((float)($bookingInfo->tax + $bookingInfo->commission), 2)
+          : round((float)($arrData['price'] + $bookingInfo->tax), 2);
+        Earning::query()->limit(1)->update([
+          'total_revenue' => DB::raw("total_revenue + {$revenueInc}"),
+          'total_earning' => DB::raw("total_earning + {$earningInc}"),
+        ]);
 
         //storeTransaction
         $bookingInfo['paymentStatus'] = 1;
@@ -282,6 +282,12 @@ class PayPalController extends Controller
         return redirect()->route('event_booking.cancel', ['id' => $event_id]);
       }
     } catch (\Exception $th) {
+      \Log::error('PayPal notification error: ' . $th->getMessage(), [
+        'file' => $th->getFile(),
+        'line' => $th->getLine(),
+        'trace' => $th->getTraceAsString(),
+      ]);
+      return response()->json(['error' => 'Internal server error'], 500);
     }
   }
 }

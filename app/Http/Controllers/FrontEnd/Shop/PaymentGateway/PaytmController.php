@@ -68,7 +68,7 @@ class PaytmController extends Controller
       's_country' => $request->sameas_shipping == NULL ? $request->s_country : $request->country,
       's_state' => $request->sameas_shipping == NULL ? $request->s_state : $request->state,
       's_city' => $request->sameas_shipping == NULL ? $request->s_city : $request->city,
-      's_zip_code' => $request->sameas_shipping == NULL ? $request->s_city : $request->city,
+      's_zip_code' => $request->sameas_shipping == NULL ? $request->s_zip_code : $request->zip_code,
       's_address' => $request->sameas_shipping == NULL ? $request->s_address : $request->address,
 
       'cart_total' => $total,

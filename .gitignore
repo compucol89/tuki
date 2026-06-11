@@ -81,3 +81,20 @@ docs/generated/*.sql
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
+# ── Playwright E2E outputs ───────────────────────────────────────────────────
+/test-results/
+/.playwright-mcp/
+
+# ── AI / Dev tooling cache ───────────────────────────────────────────────────
+/.claude/
+/.superpowers/
+/.atl/
+
+# ── App-generated event uploads ──────────────────────────────────────────────
+/public/assets/admin/img/event-addons/
+/public/assets/admin/img/event-gallery/
+/public/assets/admin/img/event/thumbnail/
+
+# ── Third-party docs ─────────────────────────────────────────────────────────
+/docs/vendor/

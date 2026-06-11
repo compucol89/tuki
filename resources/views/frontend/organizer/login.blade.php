@@ -43,9 +43,7 @@
 {{ __('organizer.login.seo.robots') }}
 @endsection
 
-@section('canonical')
-{{ $loginCanonical }}
-@endsection
+@section('canonical', url()->current())
 
 @section('og-title')
 {{ $loginOgTitle }}

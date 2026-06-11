@@ -4429,3 +4429,149 @@ body.page-event-detail .ed-cta-zone--premium .ed-trust-item__icon {
     transition: none;
   }
 }
+
+/* ================================================
+   EVENT DETAIL — Checkout-like flat surface pass
+   ================================================ */
+body.page-event-detail .page-wrapper,
+body.page-event-detail .ed-body,
+body.page-event-detail .ed-related {
+  background: #f8f9fb;
+}
+
+body.page-event-detail .ed-body {
+  border-top: 1px solid #eef0f3;
+}
+
+body.page-event-detail .ed-card,
+body.page-event-detail .ed-info-card,
+body.page-event-detail .ei-card,
+body.page-event-detail .ed-ticket-card,
+body.page-event-detail .ed-countdown-wrap,
+body.page-event-detail .ed-viewer-counter {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
+}
+
+body.page-event-detail .ed-card__head,
+body.page-event-detail .ed-info-card__head {
+  border-bottom: 1px solid #f3f4f6;
+  background: #fff;
+}
+
+body.page-event-detail .ed-card__body:not(.ed-card__body--embed),
+body.page-event-detail .ed-info-card__body,
+body.page-event-detail .ei-card,
+body.page-event-detail .ed-card--context .ed-card__body,
+body.page-event-detail .ed-card.ed-card--gallery,
+body.page-event-detail .ed-card.ed-card--context {
+  background: #fff;
+}
+
+body.page-event-detail .ed-body-breadcrumbs {
+  color: #8a94a6;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a,
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current {
+  color: #8a94a6;
+}
+
+body.page-event-detail .ed-summary-item:not(.ed-summary-item--quickfact),
+body.page-event-detail .ed-info-item,
+body.page-event-detail .ed-refund-point,
+body.page-event-detail .event-addons--sidebar .addon-card {
+  background: #fff;
+  border-color: #eef0f3;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ticket-card {
+  overflow: hidden;
+}
+
+body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.28);
+  border-radius: 24px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.14);
+  overflow: hidden;
+  backdrop-filter: blur(9px) saturate(1.12);
+  -webkit-backdrop-filter: blur(9px) saturate(1.12);
+}
+
+body.page-event-detail .ed-ticket-card__head {
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+  background:
+    linear-gradient(180deg, rgba(12, 16, 26, 0.08) 0%, rgba(12, 16, 26, 0.035) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px) saturate(1.12);
+  -webkit-backdrop-filter: blur(8px) saturate(1.12);
+}
+
+body.page-event-detail .ed-ticket-card__body,
+body.page-event-detail .ed-ticket-card__body--premium {
+  background: #fff;
+  border: 0;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ticket-picker__intro {
+  border-bottom-color: #eef0f3;
+}
+
+body.page-event-detail .ed-ticket-option {
+  background: #fff;
+  border-color: #eef0f3;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ticket-option:hover,
+body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+  border-color: #d6dce5;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-total-row,
+body.page-event-detail .ed-cta-zone,
+body.page-event-detail .ed-cta-zone--premium,
+body.page-event-detail .event-addons--sidebar {
+  background: #fff;
+  border-top-color: #eef0f3;
+}
+
+body.page-event-detail .ed-trust-integrated,
+body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
+  border-top-color: #eef0f3;
+}
+
+body.page-event-detail .sidebar-sticky {
+  gap: 18px;
+}
+
+body.page-event-detail .ei-org,
+body.page-event-detail .ei-meta,
+body.page-event-detail .ei-cal,
+body.page-event-detail .ed-info-row {
+  border-color: #f3f4f6;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    background-color: #f8f9fb;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    background: #fff;
+    border-color: #e5e7eb;
+    box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
+  }
+}

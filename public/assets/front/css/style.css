@@ -1,35 +1,4 @@
 @charset "UTF-8";
-/*-----------------------------------------------------------------------------------
-    Template Name: Evento - Event HTML Template
-    Template URI: https://webtend.net/demo/html/evento/
-    Author: WebTend
-    Author URI:  https://webtend.net/
-    Version: 1.0
-
-    Note: This is Main Style CSS File.
------------------------------------------------------------------------------------
-	CSS INDEX
-	===================
-    01. Default CSS
-    02. Common Class
-    03. Hero Section
-    04. Page Banner
-    05. Event Section
-    06. Cart + Checkout
-    07. Category Section
-    08. About Section
-    09. Feature Section
-    10. Work Process
-    11. Testimonials
-    12. Shop Section
-    13. Client Logos
-    14. Blog Section
-    15. Widgets
-    16. FAQ Page
-    17. Contact Section
-    18. Footer Area
-    19. Rate review
------------------------------------------------------------------------------------*/
 
 /****************************************************** */
 /******************** 01. Default CSS ***************** */
@@ -1794,18 +1763,26 @@ body.home-page .hero-content-wrapper {
   z-index: 10000;
   display: none;
 }
-.request-loader img {
+.request-loader__spinner {
   position: fixed;
   display: none;
-  width: 80px;
+  width: 40px;
+  height: 40px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border: 3px solid #e5e7eb;
+  border-top-color: #F97316;
+  border-radius: 50%;
+  animation: loader-spin 0.8s linear infinite;
+}
+@keyframes loader-spin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 .request-loader.show {
   display: block;
 }
-.request-loader.show img {
+.request-loader.show .request-loader__spinner {
   display: block;
 }
 /* request loader css end */

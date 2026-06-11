@@ -30,7 +30,7 @@
 @section('og-image-height','630')
 @section('og-type',        'website')
 @section('og-url',         url()->current())
-@section('canonical',      url()->current())
+@section('canonical',      route('index', [], true))
 
 @section('hero-section')
   <!-- Hero Section Start -->

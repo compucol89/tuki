@@ -48,9 +48,7 @@
 {{ __('organizer.signup.seo.robots') }}
 @endsection
 
-@section('canonical')
-{{ $signupCanonical }}
-@endsection
+@section('canonical', url()->current())
 
 @section('og-title')
 {{ $signupOgTitle }}

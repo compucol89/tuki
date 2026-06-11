@@ -87,9 +87,7 @@
 {{ __('customer.login.seo.robots') }}
 @endsection
 
-@section('canonical')
-{{ $loginSeoCanonical }}
-@endsection
+@section('canonical', url()->current())
 
 @section('og-title')
 {{ $loginOgTitle }}

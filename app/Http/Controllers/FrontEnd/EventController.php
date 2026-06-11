@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Country;
 use App\Models\Event;
 use App\Models\Event\Coupon;
@@ -12,6 +13,7 @@ use App\Models\Event\EventDates;
 use App\Models\Event\EventImage;
 use App\Models\Event\Ticket;
 use App\Models\HomePage\HeroSection;
+use App\Models\Language;
 use App\Models\Event\Wishlist;
 use App\Models\Organizer;
 use App\Services\HeroSlideUrlsService;
@@ -145,7 +147,21 @@ class EventController extends Controller
       ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.address', 'event_contents.zip_code', 'event_contents.slug',
         'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
         'organizers.id as org_id', 'organizers.username as org_username')
-      ->orderBy('events.id', 'desc')
+      ->when(true, function ($query) use ($request) {
+        $sort = $request->get('sort', 'start_date');
+        switch ($sort) {
+          case 'price_asc':
+            return $query->orderBy('tk.min_price', 'asc');
+          case 'price_desc':
+            return $query->orderBy('tk.min_price', 'desc');
+          case 'title':
+            return $query->orderBy('event_contents.title', 'asc');
+          case '-start_date':
+            return $query->orderBy('events.start_date', 'desc');
+          default:
+            return $query->orderBy('events.start_date', 'asc');
+        }
+      })
       ->paginate(9);
 
     $priceStats = Ticket::selectRaw('MIN(f_price) as min_price, MAX(f_price) as max_price')->first();
@@ -428,6 +444,19 @@ class EventController extends Controller
       $information['og_url'] = $officialEventUrl;
       $information['canonical'] = $officialEventUrl;
       $information['event_currency'] = $baseCurrencyText;
+
+      // --- P0.2: Queries movidas desde la vista ---
+      $firstTicket = Ticket::where('event_id', $content->id)->first();
+      $ticketCount = Ticket::where('event_id', $content->id)->count();
+      $allTickets = Ticket::where('event_id', $content->id)->get();
+      $defaultLanguage = Language::where('is_default', 1)->first();
+      $admin = Admin::first();
+
+      $information['firstTicket'] = $firstTicket;
+      $information['ticketCount'] = $ticketCount;
+      $information['allTickets'] = $allTickets;
+      $information['defaultLanguage'] = $defaultLanguage;
+      $information['admin'] = $admin;
 
       return view('frontend.event.event-details', $information);
   }

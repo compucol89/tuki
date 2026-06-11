@@ -180,6 +180,38 @@
   </div>
 </section>
 
+{{-- Sort options --}}
+<div class="container ev-sort-container">
+  <form action="{{ route('events') }}" method="GET" id="evfSortForm">
+    @foreach (app('request')->except('sort') as $key => $value)
+      @if (is_array($value))
+        @foreach ($value as $k => $v)
+          <input type="hidden" name="{{ $key }}[{{ $k }}]" value="{{ $v }}">
+        @endforeach
+      @else
+        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+      @endif
+    @endforeach
+    <div class="ev-sort">
+      <label for="ev-sort-select" class="ev-sort__label">Ordenar por:</label>
+      <select id="ev-sort-select" class="ev-sort__select" name="sort" onchange="this.form.submit()">
+        <option value="start_date" {{ request('sort') == 'start_date' || !request('sort') ? 'selected' : '' }}>Fecha (más próximos)</option>
+        <option value="-start_date" {{ request('sort') == '-start_date' ? 'selected' : '' }}>Fecha (más lejanos)</option>
+        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Precio (menor a mayor)</option>
+        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Precio (mayor a menor)</option>
+        <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>Nombre (A-Z)</option>
+      </select>
+    </div>
+  </form>
+</div>
+
+<style>
+.ev-sort-container { margin-bottom: 16px; }
+.ev-sort { display: flex; align-items: center; gap: 8px; }
+.ev-sort__label { font-size: 14px; color: #6b7280; white-space: nowrap; }
+.ev-sort__select { padding: 6px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; background: white; cursor: pointer; }
+</style>
+
 <section class="ev-listing ev-listing--premium">
   <div class="container ev-listing__inner">
 

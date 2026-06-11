@@ -48,6 +48,20 @@
   <meta name="twitter:url" content="{{ $ogUrl }}" />
   <link rel="canonical" href="{{ $canonicalUrl }}" />
 
+  {{-- hreflang tags --}}
+  @php
+    $hreflangUrl = url()->current();
+    $allLanguages = \App\Models\Language::all();
+  @endphp
+  @if ($allLanguages->count() > 1)
+    @foreach ($allLanguages as $lang)
+  <link rel="alternate" hreflang="{{ $lang->code }}" href="{{ $hreflangUrl }}">
+    @endforeach
+  @else
+  <link rel="alternate" hreflang="es-AR" href="{{ $hreflangUrl }}">
+  @endif
+  <link rel="alternate" hreflang="x-default" href="{{ $hreflangUrl }}">
+
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -177,16 +191,15 @@
       box-shadow: 0 0 0 4px rgba(var(--tuki-dark-rgb), 0.55);
     }
   </style>
-  {{-- Prerender sólo "Sobre nosotros" (/sobre-nosotros): hover / intención, sin masificar todo el sitio --}}
+  {{-- Prerender: páginas del sitio con intención de navegación (hover/mousedown) --}}
   <script type="speculationrules">
   {
     "prerender": [{
       "where": {
         "and": [
-          { "href_matches": "*sobre-nosotros*" },
-          { "not": { "href_matches": "*logout*" } },
-          { "not": { "selector_matches": "[rel~=nofollow]" } },
-          { "not": { "selector_matches": "[data-no-prerender]" } }
+          { "href_matches": "/*" },
+          { "not": { "href_matches": ["*logout*", "*checkout*", "*admin*", "*organizer*", "*usuario*"] } },
+          { "not": { "selector_matches": "[rel~=nofollow], [data-no-prerender]" } }
         ]
       },
       "eagerness": "moderate"
@@ -207,8 +220,8 @@
   </svg>
   <div class="page-wrapper">
 
-    <div class="request-loader">
-      <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="loader" width="50" height="50">
+    <div class="request-loader" aria-label="Cargando..." role="status">
+      <div class="request-loader__spinner"></div>
     </div>
 
 

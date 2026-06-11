@@ -44,9 +44,9 @@ class InstamojoController extends Controller
 
     $message = [];
 
-    $message['fname.required'] = 'The first name feild is required';
-    $message['lname.required'] = 'The last name feild is required';
-    $message['gateway.required'] = 'The payment gateway feild is required';
+    $message['fname.required'] = 'El nombre es obligatorio';
+    $message['lname.required'] = 'El apellido es obligatorio';
+    $message['gateway.required'] = 'El medio de pago es obligatorio';
     $request->validate($rules, $message);
 
     $booking = new BookingController();

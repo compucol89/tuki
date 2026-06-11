@@ -7,4 +7,4 @@ Disallow: /organizer/
 Disallow: /checkout/
 Disallow: /cart/
 
-Sitemap: https://www.tukipass.com/sitemap.xml
+Sitemap: https://tukipass.com/sitemap.xml

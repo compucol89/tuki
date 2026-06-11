@@ -57,7 +57,7 @@ class SitemapController extends Controller
     })->map(function ($page) {
       return [
         'loc' => route($page['route'], [], true),
-        'lastmod' => null,
+        'lastmod' => Carbon::now()->format('c'),
         'changefreq' => $page['changefreq'],
         'priority' => $page['priority'],
       ];

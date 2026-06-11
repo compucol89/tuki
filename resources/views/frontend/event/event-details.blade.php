@@ -1054,6 +1054,27 @@ ttq.page();
 
 @php
   $eventMetaPixelId = trim((string) ($content->meta_pixel_id ?? ''));
+  $metaPixelPageViewUrl = '';
+  $metaPixelViewContentUrl = '';
+
+  if ($eventMetaPixelId !== '') {
+    $metaPixelPageViewUrl = 'https://www.facebook.com/tr?' . http_build_query([
+      'id' => $eventMetaPixelId,
+      'ev' => 'PageView',
+      'noscript' => 1,
+      'dl' => $eventUrl,
+    ]);
+    $metaPixelViewContentUrl = 'https://www.facebook.com/tr?' . http_build_query([
+      'id' => $eventMetaPixelId,
+      'ev' => 'ViewContent',
+      'noscript' => 1,
+      'dl' => $eventUrl,
+      'cd' => [
+        'content_name' => $content->title,
+        'content_type' => 'event',
+      ],
+    ]);
+  }
 @endphp
 @if($eventMetaPixelId !== '')
 @push('head-scripts')
@@ -1070,8 +1091,10 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '{{ $eventMetaPixelId }}');
 fbq('track', 'PageView');
 fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!}, content_type: 'event'});
+new Image().src = {!! json_encode($metaPixelPageViewUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
+new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id={{ $eventMetaPixelId }}&ev=PageView&noscript=1"/></noscript>
+<noscript><img height="1" width="1" alt="" style="display:none" src="{{ $metaPixelPageViewUrl }}"/></noscript>
 <!-- End Meta Pixel Code -->
 @endpush
 @endif

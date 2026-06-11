@@ -18,6 +18,13 @@
   $og_description = strip_tags($details->content);
   $og_image       = asset('assets/admin/img/blogs/' . $details->image);
   $readTime       = max(1, round(str_word_count(strip_tags($details->content)) / 200));
+
+  // Demo blog posts: no deben indexarse
+  $demoBlogSlugs = [
+    'vivamus-vestibulum', 'vestibulum-commodo', 'nam-dui-mi',
+    'phasellus-ultrices', 'donec-nec-justo', 'morbi-in-sem',
+  ];
+  $isDemo = isset($details->slug) && \Illuminate\Support\Str::startsWith($details->slug, $demoBlogSlugs);
 @endphp
 
 @section('og-title', "$og_title")
@@ -26,6 +33,9 @@
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'article')
+@if ($isDemo)
+@section('meta-robots', 'noindex, nofollow')
+@endif
 @section('custom-style')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection

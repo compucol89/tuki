@@ -18,6 +18,7 @@ class VerifyCsrfToken extends Middleware
     'event-booking/mercadopago/notify',
     'event-booking/mercadopago/webhook',
     'product-order/mercadopago/notify',
+    'product-order/mercadopago/webhook',
     '*/paytm/notify',
     '*/iyzico/notify',
     '*/paytabs/notify/',

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\FrontEnd\Shop\OrderController;
 use App\Models\BasicSettings\Basic;
 use App\Models\PaymentGateway\OnlineGateway;
+use App\Models\PendingBooking;
 use App\Models\ShopManagement\ProductContent;
 use App\Models\ShopManagement\ShippingCharge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class MercadoPagoController extends Controller
@@ -111,6 +113,8 @@ class MercadoPagoController extends Controller
     // Token único por sesión de pago para verificar external_reference
     $paymentToken = bin2hex(random_bytes(16));
 
+    $isLocalhost = str_contains($notifyURL, 'localhost') || str_contains($notifyURL, '127.0.0.1');
+
     $curl = curl_init();
     $preferenceData = [
       'items' => [
@@ -132,12 +136,19 @@ class MercadoPagoController extends Controller
         'failure' => $cancelURL
       ],
       'external_reference' => $paymentToken,
-      'auto_return' => 'approved'
+      'notification_url' => route('product_order.mercadopago.webhook'),
     ];
 
-    $httpHeader = ['Content-Type: application/json'];
+    if (!$isLocalhost) {
+      $preferenceData['auto_return'] = 'approved';
+    }
 
-    $url = 'https://api.mercadopago.com/checkout/preferences?access_token=' . $this->token;
+    $httpHeader = [
+      'Authorization: Bearer ' . $this->token,
+      'Content-Type: application/json',
+    ];
+
+    $url = 'https://api.mercadopago.com/checkout/preferences';
 
     $curlOPT = [
       CURLOPT_URL             => $url,
@@ -165,6 +176,21 @@ class MercadoPagoController extends Controller
     $request->session()->put('mp_payment_token', $paymentToken);
     $request->session()->put('mp_expected_amount', $chargeTotal);
 
+    // Persistir en DB como fallback si la sesión expira
+    PendingBooking::create([
+      'token' => $paymentToken,
+      'event_id' => 0,
+      'data' => $arrData,
+      'amount' => $chargeTotal,
+      'status' => 'pending',
+      'expires_at' => now()->addHours(2),
+    ]);
+
+    Log::info('MercadoPago shop enrolmentProcess: preferencia creada', [
+      'order_number' => $arrData['order_number'] ?? 'N/A',
+      'amount' => $chargeTotal,
+    ]);
+
     if ($this->sandbox_status == 1) {
       return redirect($responseInfo['sandbox_init_point']);
     } else {
@@ -174,18 +200,26 @@ class MercadoPagoController extends Controller
 
   public function notify(Request $request)
   {
-    $arrData = $request->session()->get('arrData');
-    $paymentToken = $request->session()->get('mp_payment_token');
-    $expectedAmount = $request->session()->get('mp_expected_amount');
+    try {
+      $arrData = $request->session()->get('arrData');
+      $paymentToken = $request->session()->get('mp_payment_token');
+      $expectedAmount = $request->session()->get('mp_expected_amount');
 
-    // El payment_id lo envía MercadoPago como parámetro GET en el redirect
-    $paymentId = $request->get('payment_id') ?? $request->get('collection_id');
+      // El payment_id lo envía MercadoPago como parámetro GET en el redirect
+      $paymentId = $request->get('payment_id') ?? $request->get('collection_id');
 
-    // Abortar si faltan datos de sesión o payment_id
-    if (empty($paymentId) || empty($arrData)) {
-      $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
-      return redirect()->route('shop.checkout');
-    }
+      Log::info('MercadoPago shop notify: inicio', [
+        'payment_id' => $paymentId,
+        'has_arrData' => !empty($arrData),
+        'has_session_token' => !empty($paymentToken),
+      ]);
+
+      // Abortar si no hay payment_id (sin esto no podemos verificar nada)
+      if (empty($paymentId)) {
+        Log::warning('MercadoPago shop notify: sin payment_id');
+        $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
+        return redirect()->route('shop.checkout');
+      }
 
     // Verificar el pago contra la API de MercadoPago (server-side)
     $curl = curl_init();
@@ -202,14 +236,43 @@ class MercadoPagoController extends Controller
     $apiResponse = json_decode(curl_exec($curl), true);
     curl_close($curl);
 
+    // Fallback a DB si la sesión expiró — recuperar datos desde PendingBooking
+    $mpExternalRef = $apiResponse['external_reference'] ?? $paymentToken;
+    if (empty($arrData)) {
+      $pending = PendingBooking::pending()->where('token', $mpExternalRef)->first();
+      if ($pending) {
+        Log::info('MercadoPago shop notify: recuperado desde DB (sesión perdida)', [
+          'payment_id' => $paymentId,
+          'token' => $mpExternalRef,
+        ]);
+        $arrData = $pending->data;
+        $expectedAmount = (float)$pending->amount;
+      } else {
+        Log::warning('MercadoPago shop notify: sin sesión ni DB fallback', [
+          'payment_id' => $paymentId,
+        ]);
+        $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
+        return redirect()->route('shop.checkout');
+      }
+    }
+
     // Validar status desde la API (nunca desde los parámetros URL)
     if (($apiResponse['status'] ?? '') !== 'approved') {
+      Log::warning('MercadoPago shop notify: pago no aprobado', [
+        'payment_id' => $paymentId,
+        'mp_status' => $apiResponse['status'] ?? 'unknown',
+      ]);
       $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
       return redirect()->route('shop.checkout');
     }
 
     // Validar external_reference para evitar reutilización de pagos ajenos
     if (!empty($paymentToken) && ($apiResponse['external_reference'] ?? '') !== $paymentToken) {
+      Log::warning('MercadoPago shop notify: external_reference no coincide', [
+        'payment_id' => $paymentId,
+        'expected' => $paymentToken,
+        'received' => $apiResponse['external_reference'] ?? 'null',
+      ]);
       $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
       return redirect()->route('shop.checkout');
     }
@@ -217,8 +280,32 @@ class MercadoPagoController extends Controller
     // Validar monto cobrado ≥ monto esperado
     $paidAmount = (float)($apiResponse['transaction_amount'] ?? 0);
     if (!empty($expectedAmount) && $paidAmount < (float)$expectedAmount) {
+      Log::warning('MercadoPago shop notify: monto insuficiente', [
+        'payment_id' => $paymentId,
+        'expected' => $expectedAmount,
+        'paid' => $paidAmount,
+      ]);
       $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
       return redirect()->route('shop.checkout');
+    }
+
+    Log::info('MercadoPago shop notify: pago verificado', [
+      'payment_id' => $paymentId,
+      'amount' => $paidAmount,
+    ]);
+
+    // Atomic check-and-set — evita doble orden si notify() y webhook() llegan juntos
+    $token = $mpExternalRef ?: $paymentToken;
+    $claimed = PendingBooking::where('token', $token)
+      ->where('status', 'pending')
+      ->update(['status' => 'processing']);
+    if ($claimed === 0) {
+      Log::info('MercadoPago shop notify: pago ya siendo procesado (atómico)', [
+        'payment_id' => $paymentId,
+        'token' => $token,
+      ]);
+      $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
+      return redirect()->route('product_order.complete');
     }
 
     // Pago verificado — proceder con la orden
@@ -257,6 +344,9 @@ class MercadoPagoController extends Controller
     }
 
     if ($prevalidationError !== null) {
+      PendingBooking::where('token', $token)
+        ->where('status', 'processing')
+        ->update(['status' => 'failed']);
       $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
       Session::flash('error', $prevalidationError);
       return redirect()->route('shop.checkout');
@@ -273,6 +363,9 @@ class MercadoPagoController extends Controller
         $enrol->storeOders($orderInfo);
       });
     } catch (\Exception $e) {
+      PendingBooking::where('token', $token)
+        ->where('status', 'processing')
+        ->update(['status' => 'failed']);
       $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
       Session::flash('error', 'No se pudo confirmar la orden: ' . $e->getMessage());
       return redirect()->route('shop.checkout');
@@ -282,8 +375,30 @@ class MercadoPagoController extends Controller
     $orderInfo->update(['invoice_number' => $invoice]);
     $enrol->sendMail($orderInfo);
 
+    // Marcar PendingBooking como completado
+    if (!empty($mpExternalRef)) {
+      PendingBooking::where('token', $mpExternalRef)
+        ->where('status', 'processing')
+        ->update(['status' => 'completed']);
+    }
+
+    Log::info('MercadoPago shop notify: orden completada', [
+      'order_id' => $orderInfo->id,
+      'payment_id' => $paymentId,
+    ]);
+
     $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
     return redirect()->route('product_order.complete');
+    } catch (\Exception $e) {
+      Log::error('MercadoPago shop notify: excepción', [
+        'message' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
+        'payment_id' => $request->get('payment_id') ?? $request->get('collection_id'),
+      ]);
+      $request->session()->forget(['arrData', 'mp_payment_token', 'mp_expected_amount']);
+      Session::flash('error', 'No pudimos procesar el pago. Contactá a soporte.');
+      return redirect()->route('shop.checkout');
+    }
   }
 
   public function curlCalls($url)
@@ -298,5 +413,105 @@ class MercadoPagoController extends Controller
     curl_close($curl);
 
     return $curlData;
+  }
+
+  /**
+   * Webhook de MercadoPago (IPN/notification_url) para Shop.
+   * Recibe notificaciones server-to-server, independiente del navegador.
+   */
+  public function webhook(Request $request)
+  {
+    try {
+      $topic = $request->input('topic') ?? $request->input('type');
+      $paymentId = $request->input('data.id') ?? $request->input('id');
+
+      Log::info('MercadoPago shop webhook: recibido', [
+        'topic' => $topic,
+        'payment_id' => $paymentId,
+      ]);
+
+      if ($topic !== 'payment' || empty($paymentId)) {
+        return response('OK', 200);
+      }
+
+      // Consultar el pago en la API de MP
+      $curl = curl_init();
+      curl_setopt_array($curl, [
+        CURLOPT_URL            => 'https://api.mercadopago.com/v1/payments/' . intval($paymentId),
+        CURLOPT_CUSTOMREQUEST  => 'GET',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 30,
+        CURLOPT_HTTPHEADER     => [
+          'Authorization: Bearer ' . $this->token,
+          'Content-Type: application/json',
+        ],
+      ]);
+      $apiResponse = json_decode(curl_exec($curl), true);
+      curl_close($curl);
+
+      $mpStatus = $apiResponse['status'] ?? 'unknown';
+      $mpExternalRef = $apiResponse['external_reference'] ?? null;
+
+      Log::info('MercadoPago shop webhook: respuesta API', [
+        'payment_id' => $paymentId,
+        'status' => $mpStatus,
+        'external_reference' => $mpExternalRef,
+      ]);
+
+      if ($mpStatus !== 'approved') {
+        return response('OK', 200);
+      }
+
+      // Atomic check-and-set
+      $claimed = PendingBooking::where('token', $mpExternalRef)
+        ->where('status', 'pending')
+        ->update(['status' => 'processing']);
+      if ($claimed === 0) {
+        Log::info('MercadoPago shop webhook: ya procesado (atómico)');
+        return response('OK', 200);
+      }
+
+      $pending = PendingBooking::where('token', $mpExternalRef)->first();
+      if (!$pending) {
+        return response('OK', 200);
+      }
+
+      // Validar monto
+      $paidAmount = (float)($apiResponse['transaction_amount'] ?? 0);
+      if ($paidAmount < (float)$pending->amount) {
+        Log::warning('MercadoPago shop webhook: monto insuficiente');
+        $pending->update(['status' => 'failed']);
+        return response('OK', 200);
+      }
+
+      // Crear orden
+      $arrData = $pending->data;
+      $enrol = new OrderController();
+      $orderInfo = null;
+
+      DB::transaction(function () use ($enrol, $arrData, &$orderInfo) {
+        $orderInfo = $enrol->storeData($arrData);
+        $enrol->storeOders($orderInfo);
+      });
+
+      $invoice = $enrol->generateInvoice($orderInfo);
+      $orderInfo->update(['invoice_number' => $invoice]);
+      $enrol->sendMail($orderInfo);
+
+      $pending->update(['status' => 'completed']);
+
+      Log::info('MercadoPago shop webhook: orden completada', [
+        'order_id' => $orderInfo->id,
+        'payment_id' => $paymentId,
+      ]);
+
+      return response('OK', 200);
+    } catch (\Exception $e) {
+      Log::error('MercadoPago shop webhook: excepción', [
+        'message' => $e->getMessage(),
+        'trace' => $e->getTraceAsString(),
+      ]);
+      return response('OK', 200);
+    }
   }
 }

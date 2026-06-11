@@ -26,4 +26,5 @@ Route::get('/product-order-complete/complete/{via?}', 'FrontEnd\Shop\OrderContro
 
 Route::prefix('product-order')->group(function () {
   Route::get('mercadopago/notify', 'FrontEnd\Shop\PaymentGateway\MercadoPagoController@notify')->name('product_order.mercadopago.notify');
+  Route::post('mercadopago/webhook', 'FrontEnd\Shop\PaymentGateway\MercadoPagoController@webhook')->name('product_order.mercadopago.webhook');
 });

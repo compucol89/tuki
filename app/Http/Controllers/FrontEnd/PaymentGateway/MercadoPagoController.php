@@ -149,9 +149,12 @@ class MercadoPagoController extends Controller
       $preferenceData['auto_return'] = 'approved';
     }
 
-    $httpHeader = ['Content-Type: application/json'];
+    $httpHeader = [
+      'Authorization: Bearer ' . $this->token,
+      'Content-Type: application/json',
+    ];
 
-    $url = 'https://api.mercadopago.com/checkout/preferences?access_token=' . $this->token;
+    $url = 'https://api.mercadopago.com/checkout/preferences';
 
     $curlOPT = [
       CURLOPT_URL             => $url,
@@ -319,12 +322,15 @@ class MercadoPagoController extends Controller
         return redirect()->route('event_booking.cancel', ['id' => $eventId]);
       }
 
-      // Idempotencia: si el webhook ya procesó este pago, evitar booking duplicado
-      $pendingCheck = PendingBooking::where('token', $paymentToken ?: $mpExternalRef)->first();
-      if ($pendingCheck && $pendingCheck->status === 'completed') {
-        Log::info('MercadoPago notify: pago ya procesado por webhook, evitando booking duplicado', [
+      // Atomic check-and-set — evita race condition con webhook()
+      $token = $paymentToken ?: $mpExternalRef;
+      $claimed = PendingBooking::where('token', $token)
+        ->where('status', 'pending')
+        ->update(['status' => 'processing']);
+      if ($claimed === 0) {
+        Log::info('MercadoPago notify: pago ya siendo procesado (atómico)', [
           'payment_id' => $paymentId,
-          'token'      => $paymentToken,
+          'token' => $token,
         ]);
         $existingBooking = Booking::where('paymentMethod', 'Mercadopago')
           ->where('event_id', $eventId)
@@ -336,6 +342,7 @@ class MercadoPagoController extends Controller
           'booking_id' => $existingBooking?->id ?? 0,
         ]);
       }
+      // Si llegamos aquí, somos el único proceso que crea el booking
 
       // Pago verificado — proceder con el booking
       $enrol = new BookingController();
@@ -419,7 +426,9 @@ class MercadoPagoController extends Controller
 
       // Marcar pending booking como completado
       if (!empty($mpExternalRef)) {
-        PendingBooking::where('token', $mpExternalRef)->update(['status' => 'completed']);
+        PendingBooking::where('token', $mpExternalRef)
+          ->where('status', 'processing')
+          ->update(['status' => 'completed']);
       }
 
       // remove all session data
@@ -464,6 +473,14 @@ class MercadoPagoController extends Controller
         return response('OK', 200);
       }
 
+      if (!$this->hasValidWebhookSignature($request, (string) $paymentId)) {
+        Log::warning('MercadoPago webhook: firma inválida', [
+          'payment_id' => $paymentId,
+          'ip' => $request->ip(),
+        ]);
+        return response('Invalid signature', 401);
+      }
+
       // Consultar el pago en la API de MP
       $curl = curl_init();
       curl_setopt_array($curl, [
@@ -493,19 +510,25 @@ class MercadoPagoController extends Controller
         return response('OK', 200);
       }
 
-      // Buscar pending booking por token
-      $pending = PendingBooking::pending()->where('token', $mpExternalRef)->first();
-      if (!$pending) {
-        Log::warning('MercadoPago webhook: no se encontró pending booking', [
+      // Atomic check-and-set — evita race condition con notify()
+      $claimed = PendingBooking::where('token', $mpExternalRef)
+        ->where('status', 'pending')
+        ->update(['status' => 'processing']);
+      if ($claimed === 0) {
+        Log::info('MercadoPago webhook: pago ya siendo procesado (atómico)', [
           'payment_id' => $paymentId,
           'external_reference' => $mpExternalRef,
         ]);
         return response('OK', 200);
       }
 
-      // Idempotencia: si ya está completado, no procesar de nuevo
-      if ($pending->status === 'completed') {
-        Log::info('MercadoPago webhook: booking ya completado, ignorando');
+      // Recuperar pending booking (ahora con status = processing)
+      $pending = PendingBooking::where('token', $mpExternalRef)->first();
+      if (!$pending) {
+        Log::warning('MercadoPago webhook: no se encontró pending booking después de claim', [
+          'payment_id' => $paymentId,
+          'external_reference' => $mpExternalRef,
+        ]);
         return response('OK', 200);
       }
 
@@ -516,6 +539,7 @@ class MercadoPagoController extends Controller
           'expected' => $pending->amount,
           'paid' => $paidAmount,
         ]);
+        $pending->update(['status' => 'failed']);
         return response('OK', 200);
       }
 
@@ -584,6 +608,8 @@ class MercadoPagoController extends Controller
       storeOrganizer($organizerData);
 
       $pending->update(['status' => 'completed']);
+      // Nota: el update anterior ya fue condicionado via update atómico donde('status', 'processing')
+      // al inicio del método webhook()
 
       Log::info('MercadoPago webhook: booking completado', [
         'booking_id' => $bookingInfo->id,
@@ -598,5 +624,37 @@ class MercadoPagoController extends Controller
       ]);
       return response('OK', 200);
     }
+  }
+
+  private function hasValidWebhookSignature(Request $request, string $paymentId): bool
+  {
+    $secret = config('services.mercadopago.webhook_secret') ?: env('MERCADOPAGO_WEBHOOK_SECRET');
+    if (empty($secret)) {
+      Log::debug('MercadoPago webhook: secret de firma no configurado');
+      return true;
+    }
+
+    $xSignature = (string) $request->header('x-signature');
+    $xRequestId = (string) $request->header('x-request-id');
+    if ($xSignature === '' || $xRequestId === '') {
+      return false;
+    }
+
+    $signatureParts = [];
+    foreach (explode(',', $xSignature) as $part) {
+      [$key, $value] = array_pad(explode('=', trim($part), 2), 2, null);
+      if ($key !== null && $value !== null) {
+        $signatureParts[$key] = $value;
+      }
+    }
+
+    if (empty($signatureParts['ts']) || empty($signatureParts['v1'])) {
+      return false;
+    }
+
+    $manifest = 'id:' . $paymentId . ';request-id:' . $xRequestId . ';ts:' . $signatureParts['ts'] . ';';
+    $expected = hash_hmac('sha256', $manifest, $secret);
+
+    return hash_equals($expected, $signatureParts['v1']);
   }
 }

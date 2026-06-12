@@ -2411,11 +2411,10 @@ body.page-event-detail .ed-ticket-card__body .addon-quantity-down:focus-visible 
 }
 
 body.page-event-detail .ed-ticket-card__body .quantity {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  height: 44px;
+  line-height: 44px;
   width: 40px;
-  min-height: 36px;
   padding: 0;
   border: 0;
   border-left: 1px solid rgba(15, 23, 42, 0.08);
@@ -2424,7 +2423,6 @@ body.page-event-detail .ed-ticket-card__body .quantity {
   color: #0f172a;
   font-size: 15px;
   font-weight: 800;
-  line-height: 1;
   text-align: center;
   -moz-appearance: textfield;
   appearance: textfield;

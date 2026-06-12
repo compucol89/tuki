@@ -21,6 +21,7 @@
   $metaDescriptionSource = $cleanSeoText($content->meta_description ?? '');
   $descriptionSource = $cleanSeoText($content->description ?? '');
   $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
+  $freeLabel = 'FREE PASS';
   $hasValidEventDescription = $descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns);
 
   if ($metaDescriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($metaDescriptionSource), $placeholderPatterns)) {
@@ -1280,11 +1281,11 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
   @endphp
   @php
     if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price'])) {
-      $heroPriceLabel = __('Gratis');
+      $heroPriceLabel = $freeLabel;
     } elseif($ticketSummary['min_ticket_price'] == 0 && is_numeric($ticketSummary['lowest_paid_price'])) {
-      $heroPriceLabel = __('Gratis') . ' — ' . symbolPrice($ticketSummary['lowest_paid_price']);
+      $heroPriceLabel = $freeLabel . ' — ' . symbolPrice($ticketSummary['lowest_paid_price']);
     } elseif($ticketSummary['min_ticket_price'] == 0) {
-      $heroPriceLabel = __('Gratis');
+      $heroPriceLabel = $freeLabel;
     } elseif($ticketSummary['has_price_range'] && is_numeric($ticketSummary['second_ticket_price'])) {
       $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']) . ' — ' . symbolPrice($ticketSummary['second_ticket_price']);
     } else {
@@ -1399,11 +1400,11 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 {{-- Price --}}
                 <p class="ed-ticket-card__head-price">
                   @if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price']))
-                    {{ __('Gratis') }}
+                    {{ $freeLabel }}
                   @elseif($ticketSummary['min_ticket_price'] == 0 && is_numeric($ticketSummary['lowest_paid_price']))
-                    {{ __('Gratis') }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['lowest_paid_price']) }}
+                    {{ $freeLabel }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['lowest_paid_price']) }}
                   @elseif($ticketSummary['min_ticket_price'] == 0)
-                    {{ __('Gratis') }}
+                    {{ $freeLabel }}
                   @elseif($ticketSummary['has_price_range'] && is_numeric($ticketSummary['second_ticket_price']))
                     {{ symbolPrice($ticketSummary['min_ticket_price']) }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['second_ticket_price']) }}
                   @else
@@ -1598,7 +1599,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                       <div class="ed-ticket-option ed-ticket-option--solo ed-ticket-option--free">
                       <div class="price-count ed-ticket-option__buy-row">
                         <h6 class="ed-ticket-option__price ed-ticket-option__price--free">
-                          {{ __('Gratis') }}
+                          {{ $freeLabel }}
                         </h6>
                         <div class="quantity-input">
                           <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
@@ -1888,7 +1889,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                             </div>
                             <div class="price-count ed-ticket-option__buy-row">
                               <h6 class="ed-ticket-option__price ed-ticket-option__price--free">
-                                <span class="">{{ __('Gratis') }}</span>
+                                <span class="">{{ $freeLabel }}</span>
                               </h6>
                               <div class="quantity-input">
                                 <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
@@ -2527,7 +2528,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
 
                   if (!empty($relatedTicket)) {
                     if ($relatedTicket->pricing_type == 'free') {
-                      $relatedPrice = __('Gratis');
+                      $relatedPrice = $freeLabel;
                     } elseif (is_numeric($relatedTicket->price ?? null)) {
                       $relatedPrice = symbolPrice($relatedTicket->price);
                     }

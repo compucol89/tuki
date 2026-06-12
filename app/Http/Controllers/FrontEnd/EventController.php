@@ -526,18 +526,12 @@ class EventController extends Controller
 
   private function buildTicketSummary($content): array
   {
-    $minTicketPrice = Ticket::where('event_id', $content->id)->min('price');
-    $maxTicketPrice = Ticket::where('event_id', $content->id)->max('price');
+    $tickets = Ticket::where('event_id', $content->id)->get();
+    $ticketPrices = collect();
 
-    if (!is_numeric($minTicketPrice)) {
-      $variationTickets = Ticket::where('event_id', $content->id)
-        ->where('pricing_type', 'variation')
-        ->pluck('variations');
-
-      $variationPrices = [];
-
-      foreach ($variationTickets as $variationJson) {
-        $variations = json_decode($variationJson, true);
+    foreach ($tickets as $ticket) {
+      if ($ticket->pricing_type === 'variation') {
+        $variations = json_decode($ticket->variations, true);
 
         if (!is_array($variations)) {
           continue;
@@ -545,16 +539,28 @@ class EventController extends Controller
 
         foreach ($variations as $variation) {
           if (isset($variation['price']) && is_numeric($variation['price'])) {
-            $variationPrices[] = (float) $variation['price'];
+            $ticketPrices->push($this->effectiveTicketPrice((float) $variation['price'], $ticket));
           }
         }
+
+        continue;
       }
 
-      if (!empty($variationPrices)) {
-        $minTicketPrice = min($variationPrices);
-        $maxTicketPrice = max($variationPrices);
+      if (is_numeric($ticket->price)) {
+        $ticketPrices->push($this->effectiveTicketPrice((float) $ticket->price, $ticket));
       }
     }
+
+    $ticketPrices = $ticketPrices
+      ->map(fn($price) => (float) $price)
+      ->unique()
+      ->sort()
+      ->values();
+
+    $minTicketPrice = $ticketPrices->first();
+    $maxTicketPrice = $ticketPrices->last();
+    $secondTicketPrice = $ticketPrices->get(1);
+    $lowestPaidPrice = $ticketPrices->first(fn($price) => $price > 0);
 
     $ticketStocks = Ticket::where('event_id', $content->id)
       ->get(['ticket_available_type', 'ticket_available']);
@@ -565,6 +571,8 @@ class EventController extends Controller
     return [
       'min_ticket_price' => $minTicketPrice,
       'max_ticket_price' => $maxTicketPrice,
+      'second_ticket_price' => $secondTicketPrice,
+      'lowest_paid_price' => $lowestPaidPrice,
       'has_price_range' => is_numeric($minTicketPrice) && is_numeric($maxTicketPrice) && $minTicketPrice != $maxTicketPrice,
       'has_unlimited_stock' => $hasUnlimitedStock,
       'total_stock' => $totalStock,
@@ -572,6 +580,31 @@ class EventController extends Controller
         ->where('ticket_available_type', 'limited')
         ->sum('ticket_available'),
     ];
+  }
+
+  private function effectiveTicketPrice(float $price, Ticket $ticket): float
+  {
+    if ($ticket->early_bird_discount !== 'enable') {
+      return $price;
+    }
+
+    if (empty($ticket->early_bird_discount_date) || empty($ticket->early_bird_discount_time)) {
+      return $price;
+    }
+
+    $discountDate = Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
+
+    if ($discountDate->isPast()) {
+      return $price;
+    }
+
+    $discountAmount = (float) $ticket->early_bird_discount_amount;
+
+    if ($ticket->early_bird_discount_type === 'percentage') {
+      $discountAmount = ($price * $discountAmount) / 100;
+    }
+
+    return max(0, $price - $discountAmount);
   }
 
   private function buildInterestIndicator(int $eventId, $content): array

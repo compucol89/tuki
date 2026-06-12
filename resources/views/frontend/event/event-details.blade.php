@@ -1281,12 +1281,12 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
   @php
     if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price'])) {
       $heroPriceLabel = __('Gratis');
-    } elseif($ticketSummary['min_ticket_price'] == 0 && $ticketSummary['max_ticket_price'] > 0) {
-      $heroPriceLabel = __('Gratis') . ' — ' . symbolPrice($ticketSummary['max_ticket_price']);
+    } elseif($ticketSummary['min_ticket_price'] == 0 && is_numeric($ticketSummary['lowest_paid_price'])) {
+      $heroPriceLabel = __('Gratis') . ' — ' . symbolPrice($ticketSummary['lowest_paid_price']);
     } elseif($ticketSummary['min_ticket_price'] == 0) {
       $heroPriceLabel = __('Gratis');
-    } elseif($ticketSummary['has_price_range']) {
-      $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']) . ' — ' . symbolPrice($ticketSummary['max_ticket_price']);
+    } elseif($ticketSummary['has_price_range'] && is_numeric($ticketSummary['second_ticket_price'])) {
+      $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']) . ' — ' . symbolPrice($ticketSummary['second_ticket_price']);
     } else {
       $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']);
     }
@@ -1400,12 +1400,12 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 <p class="ed-ticket-card__head-price">
                   @if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price']))
                     {{ __('Gratis') }}
-                  @elseif($ticketSummary['min_ticket_price'] == 0 && $ticketSummary['max_ticket_price'] > 0)
-                    {{ __('Gratis') }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['max_ticket_price']) }}
+                  @elseif($ticketSummary['min_ticket_price'] == 0 && is_numeric($ticketSummary['lowest_paid_price']))
+                    {{ __('Gratis') }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['lowest_paid_price']) }}
                   @elseif($ticketSummary['min_ticket_price'] == 0)
                     {{ __('Gratis') }}
-                  @elseif($ticketSummary['has_price_range'])
-                    {{ symbolPrice($ticketSummary['min_ticket_price']) }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['max_ticket_price']) }}
+                  @elseif($ticketSummary['has_price_range'] && is_numeric($ticketSummary['second_ticket_price']))
+                    {{ symbolPrice($ticketSummary['min_ticket_price']) }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['second_ticket_price']) }}
                   @else
                     {{ symbolPrice($ticketSummary['min_ticket_price']) }}
                   @endif

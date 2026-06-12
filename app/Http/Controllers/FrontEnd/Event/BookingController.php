@@ -58,6 +58,12 @@ class BookingController extends Controller
       }
     }
 
+    $freePassLimit = checkSelectedFreePassLimits($id, Session::get('selTickets') ?: Session::get('freeTicketSelection'), $request->email, $request->phone);
+    if ($freePassLimit['status'] == 'true') {
+      Session::flash('error', __('Alcanzaste el límite de FREE PASS para este evento.'));
+      return redirect()->back()->withInput();
+    }
+
     // payment
     if ($request->total != 0 || Session::get('sub_total') != 0) {
       if (!$request->exists('gateway')) {
@@ -152,6 +158,7 @@ class BookingController extends Controller
 
         $request->session()->forget('event_id');
         $request->session()->forget('selTickets');
+        $request->session()->forget('freeTicketSelection');
         $request->session()->forget('arrData');
         $request->session()->forget('discount');
 

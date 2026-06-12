@@ -65,6 +65,7 @@ class CheckOutController extends Controller
     }
     $information = [];
     $information['selTickets'] = '';
+    Session::forget('freeTicketSelection');
     $event = Event::where('id', $request->event_id)->select('event_type')->first();
 
     $check = false;
@@ -122,16 +123,15 @@ class CheckOutController extends Controller
         Session::put('sub_total', $total);
         Session::put('quantity', $request->quantity);
       } elseif ($request->pricing_type == 'free') {
-        $price = Ticket::where('event_id', $request->event_id)->select('max_buy_ticket')->first();
-        //check guest checkout status enable or not
-        if ($event_guest_checkout_status != 1) {
-          //check max buy by customer 
-          $max_buy = isTicketPurchaseOnline($request->event_id, $price->max_buy_ticket);
-          if ($max_buy['status'] == 'true') {
-            $check = true;
-          }
+        $ticketId = (int) $request->ticket_id;
+        if ($ticketId <= 0) {
+          $ticketId = (int) Ticket::where('event_id', $request->event_id)->where('pricing_type', 'free')->value('id');
         }
 
+        Session::put('freeTicketSelection', [[
+          'ticket_id' => $ticketId,
+          'qty' => (int) $request->quantity,
+        ]]);
         $information['quantity'] = $request->quantity;
         $information['total'] = 0;
         Session::put('total', 0);

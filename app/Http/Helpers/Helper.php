@@ -539,6 +539,89 @@ if (!function_exists('TicketStockCheck')) {
   }
 }
 
+if (!function_exists('checkFreePassLimit')) {
+  function checkFreePassLimit($event_id, $ticket_id, $email, $phone, $requested_qty, $limit = 2)
+  {
+    $emailNormalized = strtolower(trim((string) $email));
+    $phoneNormalized = preg_replace('/[^0-9]/', '', (string) ($phone ?? ''));
+    $customer_id = Auth::guard('customer')->check()
+      ? Auth::guard('customer')->user()->id
+      : null;
+
+    if ($emailNormalized === '' && $phoneNormalized === '' && !$customer_id) {
+      return false;
+    }
+
+    $bookings = Booking::where('event_id', $event_id)
+      ->where('paymentStatus', '!=', 'rejected')
+      ->select('customer_id', 'email', 'phone', 'quantity', 'variation')
+      ->get();
+
+    $previousQty = 0;
+    foreach ($bookings as $booking) {
+      $bookingEmail = strtolower(trim((string) $booking->email));
+      $bookingPhone = preg_replace('/[^0-9]/', '', (string) ($booking->phone ?? ''));
+      $sameCustomer = $customer_id && (int) $booking->customer_id === (int) $customer_id;
+      $sameEmail = $emailNormalized !== '' && $bookingEmail === $emailNormalized;
+      $samePhone = $phoneNormalized !== '' && $bookingPhone === $phoneNormalized;
+
+      if (!$sameCustomer && !$sameEmail && !$samePhone) {
+        continue;
+      }
+
+      if (!empty($booking->variation)) {
+        $variations = json_decode($booking->variation, true) ?: [];
+        foreach ($variations as $variation) {
+          if ((int) ($variation['ticket_id'] ?? 0) === (int) $ticket_id) {
+            $previousQty += (int) ($variation['qty'] ?? 1);
+          }
+        }
+      } else {
+        $previousQty += (int) $booking->quantity;
+      }
+    }
+
+    return ($previousQty + (int) $requested_qty) > $limit;
+  }
+}
+
+if (!function_exists('checkSelectedFreePassLimits')) {
+  function checkSelectedFreePassLimits($event_id, $selectedTickets, $email, $phone)
+  {
+    if (empty($selectedTickets) || !is_array($selectedTickets)) {
+      return ['status' => 'false'];
+    }
+
+    $qtyByTicket = [];
+    foreach ($selectedTickets as $selectedTicket) {
+      $ticketId = (int) ($selectedTicket['ticket_id'] ?? 0);
+      $qty = (int) ($selectedTicket['qty'] ?? 0);
+      if ($ticketId > 0 && $qty > 0) {
+        $qtyByTicket[$ticketId] = ($qtyByTicket[$ticketId] ?? 0) + $qty;
+      }
+    }
+
+    if (empty($qtyByTicket)) {
+      return ['status' => 'false'];
+    }
+
+    $tickets = Ticket::whereIn('id', array_keys($qtyByTicket))
+      ->where('event_id', $event_id)
+      ->where('pricing_type', 'free')
+      ->select('id', 'max_buy_ticket')
+      ->get();
+
+    foreach ($tickets as $ticket) {
+      $limit = (int) $ticket->max_buy_ticket > 0 ? (int) $ticket->max_buy_ticket : 2;
+      if (checkFreePassLimit($event_id, $ticket->id, $email, $phone, $qtyByTicket[$ticket->id] ?? 0, $limit)) {
+        return ['status' => 'true', 'ticket_id' => $ticket->id, 'limit' => $limit];
+      }
+    }
+
+    return ['status' => 'false'];
+  }
+}
+
 if (!function_exists('isTicketPurchaseOnline')) {
   function isTicketPurchaseOnline($event_id, $max_buy_ticket)
   {

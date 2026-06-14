@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\File;
 
 class OptimizeEventImages extends Command
 {
+    private const MAX_WEBP_WIDTH = 1920;
+    private const WEBP_QUALITY = 80;
+
     protected $signature = 'events:optimize-images';
-    protected $description = 'Convertir imágenes JPG/PNG existentes a WebP';
+    protected $description = 'Convertir imagenes JPG/PNG existentes a WebP sin modificar los originales';
 
     public function handle(): int
     {
@@ -25,6 +28,7 @@ class OptimizeEventImages extends Command
         $service = new FileUploadService();
         $total = 0;
         $converted = 0;
+        $failed = 0;
 
         foreach ($dirs as $dir) {
             if (!is_dir($dir)) {
@@ -46,12 +50,18 @@ class OptimizeEventImages extends Command
                 }
 
                 $this->line("Procesando: {$file->getFilename()}");
-                $service->convertToWebp($path, $ext);
-                $converted++;
+                if ($service->createResponsiveWebp($path, $ext, self::MAX_WEBP_WIDTH, self::WEBP_QUALITY)) {
+                    $converted++;
+                } else {
+                    $failed++;
+                }
             }
         }
 
         $this->info("{$converted} imágenes convertidas a WebP (de {$total} totales).");
+        if ($failed > 0) {
+            $this->warn("{$failed} imágenes no se pudieron convertir.");
+        }
 
         return Command::SUCCESS;
     }

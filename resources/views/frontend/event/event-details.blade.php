@@ -22,6 +22,19 @@
   $descriptionSource = $cleanSeoText($content->description ?? '');
   $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
   $freeLabel = 'FREE PASS';
+  $eventHeroPreloadUrl = null;
+
+  if (isset($images) && $images->count() > 0) {
+    $firstHeroImage = $images->first();
+    if ($firstHeroImage && !empty($firstHeroImage->image)) {
+      $eventHeroPreloadUrl = \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $firstHeroImage->image);
+    }
+  }
+
+  if (empty($eventHeroPreloadUrl) && !empty($content->thumbnail)) {
+    $eventHeroPreloadUrl = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail);
+  }
+
   $hasValidEventDescription = $descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns);
 
   if ($metaDescriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($metaDescriptionSource), $placeholderPatterns)) {
@@ -34,6 +47,12 @@
 
   $seoDescription = \Illuminate\Support\Str::limit($cleanSeoText($seoDescription), 158, '');
 @endphp
+
+@section('hero-preload')
+  @if (!empty($eventHeroPreloadUrl))
+    <link rel="preload" as="image" href="{{ $eventHeroPreloadUrl }}" fetchpriority="high">
+  @endif
+@endsection
 
 @section('pageHeading', \Illuminate\Support\Str::limit($eventName, 55, ''))
 @section('meta-keywords', $content->meta_keywords ?? '')

@@ -118,6 +118,57 @@ class FileUploadService
     $this->optimizeImage($path, $extension);
   }
 
+  public function createResponsiveWebp(string $path, string $extension, int $maxWidth = 1920, int $quality = 80): bool
+  {
+    if (!function_exists('imagewebp')) {
+      Log::warning('FileUploadService: WebP support is not available.', ['path' => $path]);
+
+      return false;
+    }
+
+    $src = EventGalleryImageValidator::loadImageResource($path, $extension);
+    if ($src === false) {
+      Log::warning('FileUploadService: could not read image for WebP conversion.', ['path' => $path, 'extension' => $extension]);
+
+      return false;
+    }
+
+    if (function_exists('imageistruecolor') && !imageistruecolor($src)) {
+      imagepalettetotruecolor($src);
+    }
+
+    $width = imagesx($src);
+    $height = imagesy($src);
+
+    if ($width <= 0 || $height <= 0) {
+      imagedestroy($src);
+
+      return false;
+    }
+
+    if ($width > $maxWidth) {
+      $newWidth = $maxWidth;
+      $newHeight = (int) round($height * ($maxWidth / $width));
+      $dst = imagecreatetruecolor($newWidth, $newHeight);
+
+      if ($extension === 'png') {
+        imagealphablending($dst, false);
+        imagesavealpha($dst, true);
+      }
+
+      imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+      imagedestroy($src);
+      $src = $dst;
+    }
+
+    $webpPath = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $path);
+    $converted = is_string($webpPath) && imagewebp($src, $webpPath, $quality);
+
+    imagedestroy($src);
+
+    return $converted;
+  }
+
   public static function imageUrl(string $relativeDir, string $filename): string
   {
     $webp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filename);

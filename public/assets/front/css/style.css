@@ -4195,7 +4195,7 @@ body.page-event-detail .footer-section.footer-section--premium {
     font-size: 13px;
     font-weight: 700;
     line-height: 1.2;
-    color: #fff;
+    color: #1e2532;
     background: #F97316;
     text-decoration: none;
     border: none;
@@ -4205,8 +4205,8 @@ body.page-event-detail .footer-section.footer-section--premium {
 
   .main-header--premium .header-ingresar-btn:hover,
   .main-header--premium .header-ingresar-btn:focus {
-    background: #ea580c;
-    color: #fff;
+    background: #fb923c;
+    color: #1e2532;
     text-decoration: none;
   }
 
@@ -4216,7 +4216,7 @@ body.page-event-detail .footer-section.footer-section--premium {
   }
 
   .main-header--premium .main-menu:has(#main-menu.show) .header-ingresar-btn {
-    color: #fff;
+    color: #1e2532;
   }
 
   .main-header--premium .main-menu #main-menu.navbar-collapse {

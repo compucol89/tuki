@@ -7,7 +7,8 @@
     "watch-poll": "mix watch -- --watch-options-poll=1000",
     "hot": "mix watch --hot",
     "prod": "npm run production",
-    "production": "mix --production",
+    "production": "mix --production && npm run front-assets:min",
+    "front-assets:min": "node scripts/build-front-assets.js",
     "build": "npm run production"
   },
   "devDependencies": {

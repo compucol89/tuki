@@ -7,7 +7,7 @@
 @endsection
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/home.css') }}">
+  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}">
 @endpush
 
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
@@ -136,6 +136,7 @@
   <!-- Event Images Marquee End -->
 @endsection
 @section('content')
+<main id="main-content" tabindex="-1">
 
   {{-- ── BUSCADOR HOME — Modern SaaS UI ── --}}
   @php
@@ -258,6 +259,7 @@
     </section>
   @endif
   <!-- Events Section End -->
+</main>
 @endsection
 
 @push('scripts')

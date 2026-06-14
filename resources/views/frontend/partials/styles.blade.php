@@ -1,3 +1,4 @@
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 <!-- FlatIcon Font -->
@@ -9,11 +10,11 @@
 <!-- Padding Margin -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/menu.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}">
 <!-- Main css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}">
 <!-- Responsive css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/responsive.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}">
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}">
 <style>
   :root {

@@ -20,6 +20,33 @@
   $pageTitle       = !empty($pageHeading) ? ($pageHeading->blog_page_title ?? __('Blog')) : __('Blog');
   $activeCategory  = request()->input('category', '');
   $searchTitle     = request()->input('title', '');
+  $blogSchemaPosts = collect($blogs->items())->map(function ($blog) {
+    return array_filter([
+      '@type' => 'BlogPosting',
+      'headline' => $blog->title,
+      'description' => \Illuminate\Support\Str::limit(strip_tags($blog->content), 150),
+      'url' => route('blog_details', ['slug' => $blog->slug]),
+      'image' => !empty($blog->image) ? asset('assets/admin/img/blogs/' . $blog->image) : null,
+      'datePublished' => !empty($blog->created_at) ? \Carbon\Carbon::parse($blog->created_at)->toIso8601String() : null,
+      'articleSection' => $blog->categoryName ?? null,
+    ], function ($value) {
+      return $value !== null && $value !== '';
+    });
+  })->values()->all();
+  $blogSchema = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Blog',
+    'name' => $pageTitle,
+    'description' => $metaDescription ?: __('Novedades, ideas y consejos de Tukipass.'),
+    'url' => url()->current(),
+    'mainEntityOfPage' => url()->current(),
+    'publisher' => [
+      '@type' => 'Organization',
+      'name' => 'Tukipass',
+      'url' => route('index'),
+    ],
+    'blogPost' => $blogSchemaPosts,
+  ];
 @endphp
 @section('meta-keywords', $metaKeywords)
 @section('meta-description', $metaDescription)
@@ -27,6 +54,10 @@
 @section('og-url', url()->current())
 @section('og-type', 'website')
 @section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
+
+@push('scripts')
+  <script type="application/ld+json">@json($blogSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</script>
+@endpush
 
 @section('content')
 

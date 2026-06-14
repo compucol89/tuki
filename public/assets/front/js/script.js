@@ -81,12 +81,18 @@
                     $menu.removeAttr('aria-hidden');
                     $overlay.attr('aria-hidden', 'true');
                     $btn.attr('aria-expanded', 'false');
+                    if ($menu.length && 'inert' in $menu[0]) {
+                        $menu[0].inert = false;
+                    }
                     return;
                 }
                 var open = premiumDrawerOpen();
                 $menu.attr('aria-hidden', open ? 'false' : 'true');
                 $overlay.attr('aria-hidden', open ? 'false' : 'true');
                 $btn.attr('aria-expanded', open ? 'true' : 'false');
+                if ($menu.length && 'inert' in $menu[0]) {
+                    $menu[0].inert = !open;
+                }
             }
 
             function scrollbarGapPx() {
@@ -794,6 +800,5 @@ $('body').on('submit', '#vendorContactForm', function (e) {
 
 
 })
-
 
 

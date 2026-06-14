@@ -184,7 +184,7 @@
         <ul class="footer-payments">
           <li><span class="footer-pay footer-pay--visa">VISA</span></li>
           <li>
-            <span class="footer-pay footer-pay--mc" aria-label="Mastercard">
+            <span class="footer-pay footer-pay--mc" role="img" aria-label="Mastercard">
               <span class="footer-pay__mc-dot footer-pay__mc-dot--l" aria-hidden="true"></span>
               <span class="footer-pay__mc-dot footer-pay__mc-dot--r" aria-hidden="true"></span>
             </span>

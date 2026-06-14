@@ -43,8 +43,12 @@ fi
 # faltantes para no pisar uploads reales del admin/organizador.
 SEED_IMG_SRC="/app/public/assets/admin/img.seed"
 if [ -d "$SEED_IMG_SRC" ]; then
-    mkdir -p /app/public/assets/admin/img
-    cp -rn "$SEED_IMG_SRC/"* /app/public/assets/admin/img/ 2>/dev/null || true
+    find "$SEED_IMG_SRC" -type f | while read -r seed_file; do
+        relative_path="${seed_file#$SEED_IMG_SRC/}"
+        target_file="/app/public/assets/admin/img/$relative_path"
+        mkdir -p "$(dirname "$target_file")"
+        cp -n "$seed_file" "$target_file" 2>/dev/null || true
+    done
     touch /app/public/assets/admin/img/.seed-restored
 fi
 

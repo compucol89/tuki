@@ -37,10 +37,13 @@ if [ -z "$ARCA_KEY_PATH" ] && { [ -n "$ARCA_KEY_B64" ] || [ -n "$ARCA_KEY_B64_1"
     echo "ARCA_KEY_PATH=/app/storage/app/arca/private.key" >> .env
 fi
 
-# Restaurar imágenes seed del repositorio al volumen persistente
-# (EasyPanel monta /app/public/assets/admin/img/ como volumen)
+# Restaurar imágenes seed del repositorio al volumen persistente.
+# EasyPanel monta /app/public/assets/admin/img/ como volumen, por eso los
+# assets versionados en esa carpeta pueden quedar ocultos. Copiamos solo
+# faltantes para no pisar uploads reales del admin/organizador.
 SEED_IMG_SRC="/app/public/assets/admin/img.seed"
-if [ -d "$SEED_IMG_SRC" ] && [ ! -f /app/public/assets/admin/img/.seed-restored ]; then
+if [ -d "$SEED_IMG_SRC" ]; then
+    mkdir -p /app/public/assets/admin/img
     cp -rn "$SEED_IMG_SRC/"* /app/public/assets/admin/img/ 2>/dev/null || true
     touch /app/public/assets/admin/img/.seed-restored
 fi

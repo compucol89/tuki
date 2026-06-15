@@ -6,7 +6,7 @@
     <div class="cd-sidebar__profile">
       <div class="cd-sidebar__avatar">
         @if($u->image)
-          <img src="{{ asset('assets/admin/img/customer/' . $u->image) }}" alt="{{ $u->username }}">
+          <img src="{{ asset('assets/admin/img/customer/' . $u->image) }}" alt="{{ $u->username }}" loading="lazy">
         @else
           <span class="cd-sidebar__avatar-initials">{{ strtoupper(substr($u->fname ?? $u->username, 0, 1)) }}</span>
         @endif

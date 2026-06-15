@@ -98,7 +98,7 @@
                     }
                   @endphp
                   <div class="st-msg {{ $isAdmin ? 'st-msg--admin' : 'st-msg--customer' }}">
-                    <img class="st-msg__avatar" src="{{ $senderPhoto }}" alt="{{ $senderName }}">
+                    <img class="st-msg__avatar" src="{{ $senderPhoto }}" alt="{{ $senderName }}" loading="lazy">
                     <div class="st-msg__body">
                       <div class="st-msg__meta">
                         <span class="st-msg__name">{{ $senderName }}</span>

@@ -214,18 +214,18 @@
                 <figure class="org-profile-card__avatar author-img">
                   @if ($admin == true)
                     <img class="rounded-lg lazy org-profile-card__img" data-src="{{ asset('assets/admin/img/admins/' . $organizer->image) }}"
-                      alt="{{ __('Perfil del organizador') }}">
+                      alt="{{ __('Perfil del organizador') }}" loading="lazy">
                   @else
                     @if ($organizer->photo == null)
                       <picture>
                         <source srcset="{{ asset('assets/front/images/user.webp') }}" type="image/webp">
                         <img class="rounded-lg lazy org-profile-card__img" data-src="{{ asset('assets/front/images/user.png') }}"
-                          alt="{{ __('Perfil del organizador') }}">
+                          alt="{{ __('Perfil del organizador') }}" loading="lazy">
                       </picture>
                     @else
                       <img class="rounded-lg lazy org-profile-card__img"
                         data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}"
-                        alt="{{ __('Perfil del organizador') }}">
+                        alt="{{ __('Perfil del organizador') }}" loading="lazy">
                     @endif
                   @endif
                 </figure>

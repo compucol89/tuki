@@ -272,7 +272,7 @@
                               <td>
                                 <img class="mh-60"
                                   src="{{ asset('assets/admin/img/product/feature_image/' . $item->image) }}"
-                                  alt="{{ __('Imagen del producto') }}: {{ $item->title }}">
+                                  alt="{{ __('Imagen del producto') }}: {{ $item->title }}" loading="lazy">
                                 @php
                                   $product = App\Models\ShopManagement\Product::where('id', $item->product_id)->first();
                                 @endphp

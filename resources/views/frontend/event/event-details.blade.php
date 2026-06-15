@@ -2221,7 +2221,8 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                        src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image) }}"
                        alt="{{ $content->title }}"
                        class="ed-gallery-main__img"
-                       width="800" height="533">
+                       width="800" height="533"
+                       fetchpriority="high">
                   @if($images->count() > 1)
                   <div class="ed-gallery-count">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
@@ -2237,10 +2238,10 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                         class="ed-gallery-thumb {{ $i === 0 ? 'ed-gallery-thumb--active' : '' }}"
                          data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
                          data-action="thumb-switch">
-                    <img {{ $i === 0 ? 'src' : 'data-src' }}="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
-                       alt="{{ $content->title }} — foto {{ $i + 1 }}"
+                     <img {{ $i === 0 ? 'src' : 'data-src' }}="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
+                        alt="{{ $content->title }} — foto {{ $i + 1 }}"
                         width="150" height="100"
-                        @if($i > 0) class="lazy" @endif>
+                        @if($i > 0) class="lazy" loading="lazy" @endif>
                 </button>
                 @endforeach
               </div>
@@ -2431,7 +2432,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                   <img class="ei-org__avatar lazy"
                     src="{{ asset('assets/front/images/user.png') }}"
                     data-src="{{ asset('assets/admin/img/admins/' . $admin->image) }}"
-                    alt="{{ $publicOrganizerName }}">
+                    alt="{{ $publicOrganizerName }}" loading="lazy">
                   <div class="ei-org__info">
                     <span class="ei-label">{{ __('Organizado por') }}</span>
                     <p class="ei-org__name">{{ $publicOrganizerName }}</p>
@@ -2445,7 +2446,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                     @if ($organizer->photo != null)
                       data-src="{{ asset('assets/admin/img/organizer-photo/' . $organizer->photo) }}"
                     @endif
-                    alt="{{ \Illuminate\Support\Str::lower($organizer->username) === 'admin' ? $publicOrganizerName : $organizer->username }}">
+                    alt="{{ \Illuminate\Support\Str::lower($organizer->username) === 'admin' ? $publicOrganizerName : $organizer->username }}" loading="lazy">
                   <div class="ei-org__info">
                     <span class="ei-label">{{ __('Organizado por') }}</span>
                     <p class="ei-org__name">{{ \Illuminate\Support\Str::lower($organizer->username) === 'admin' ? $publicOrganizerName : $organizer->username }}</p>
@@ -2556,7 +2557,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 <a href="{{ route('event.details', ['slug' => $item->slug, 'id' => $item->id]) }}" class="ed-related__card">
                   <img
                     src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $item->thumbnail) }}"
-                    alt="{{ $item->title }}"
+                    alt="{{ $item->title }}" loading="lazy"
                     class="ed-related__thumb">
                   <div class="ed-related__body">
                     <div class="ed-related__meta">

@@ -1,0 +1,7 @@
+/* Font Awesome 6 Free - self-hosted via Laravel Mix */
+/* font-display:block -> swap transformado en PostCSS */
+/* Usamos CSS individuales por estilo (no all.css) según recomendación FA docs */
+@import '@fortawesome/fontawesome-free/css/fontawesome.css';
+@import '@fortawesome/fontawesome-free/css/solid.css';
+@import '@fortawesome/fontawesome-free/css/regular.css';
+@import '@fortawesome/fontawesome-free/css/brands.css';

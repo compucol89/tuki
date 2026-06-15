@@ -1,20 +1,12 @@
-<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-@php
-  $isHomePage = trim($__env->yieldContent('body-class')) === 'home-page';
-@endphp
-@if ($isHomePage)
+<!-- app.css -->
 <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ mix('css/app.css') }}"></noscript>
-@else
-<link rel="stylesheet" href="{{ mix('css/app.css') }}">
-@endif
 <!-- FlatIcon Font -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}"></noscript>
-<!-- Font Awesome 5.15.4 (CDN) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></noscript>
+<!-- Font Awesome 6 (self-hosted via Laravel Mix) -->
+<link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}"></noscript>
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}"></noscript>
@@ -22,21 +14,15 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}"></noscript>
 <!-- Menu css -->
-@if ($isHomePage)
 <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}"></noscript>
-@else
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}">
-@endif
 <!-- Main css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}"></noscript>
 <!-- Responsive css -->
-@if ($isHomePage)
 <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}"></noscript>
-@else
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}">
-@endif
+<!-- Toastr css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}"></noscript>
 <style>

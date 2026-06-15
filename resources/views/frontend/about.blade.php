@@ -325,10 +325,10 @@
                 <div class="review-images mb-30">
                   @if (!is_null($testimonialData))
                     <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/' . $testimonialData->image) }}"
-                      alt="{{ __('Reseña destacada') }}">
+                      alt="{{ __('Reseña destacada') }}" loading="lazy">
                   @else
                     <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/clients.png') }}"
-                      alt="{{ __('Reseña destacada') }}">
+                      alt="{{ __('Reseña destacada') }}" loading="lazy">
                   @endif
                   <span class="pluse"><i class="fas fa-plus"></i></span>
                 </div>
@@ -345,7 +345,7 @@
                       <div class="testimonial-item">
                         <div class="author">
                           <img class="lazy" data-src="{{ asset('assets/admin/img/clients/' . $item->image) }}"
-                            alt="{{ __('Foto de quien dejó la reseña') }}">
+                            alt="{{ __('Foto de quien dejó la reseña') }}" loading="lazy">
                           <div class="content">
                             <h5>{{ $item->name }}</h5>
                             <span>{{ $item->occupation }}</span>
@@ -395,10 +395,10 @@
                 @if ($partnerUrl !== '')
                   <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
                     aria-label="{{ __('Visitar sitio del aliado estratégico') }}"><img class="lazy"
-                      data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="{{ __('Logo de aliado') }}"></a>
+                      data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></a>
                 @else
                   <span><img class="lazy"
-                      data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="{{ __('Logo de aliado') }}"></span>
+                      data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></span>
                 @endif
               </div>
             @endforeach

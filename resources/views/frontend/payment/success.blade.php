@@ -135,7 +135,7 @@ new Image().src = {!! json_encode($metaPixelPurchaseUrl, JSON_UNESCAPED_SLASHES 
               <img class="ps-event-row__thumb lazy"
                    data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $event->thumbnail) }}"
                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                   alt="{{ $eventTitle }}">
+                   alt="{{ $eventTitle }}" loading="lazy">
             @endif
             <div class="ps-event-row__info">
               <h4 class="ps-event-row__name">{{ $eventTitle }}</h4>

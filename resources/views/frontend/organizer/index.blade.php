@@ -106,11 +106,11 @@
                   @if ($item->photo == null)
                     <picture>
                       <source srcset="{{ asset('assets/front/images/user.webp') }}" type="image/webp">
-                      <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Foto del organizador') }}">
+                      <img class="rounded-lg lazy" data-src="{{ asset('assets/front/images/user.png') }}" alt="{{ __('Foto del organizador') }}" loading="lazy">
                     </picture>
                   @else
                     <img class="rounded-lg lazy" data-src="{{ asset('assets/admin/img/organizer-photo/' . $item->photo) }}"
-                      alt="{{ __('Foto del organizador') }}">
+                      alt="{{ __('Foto del organizador') }}" loading="lazy">
                   @endif
                 </a>
               </figure>

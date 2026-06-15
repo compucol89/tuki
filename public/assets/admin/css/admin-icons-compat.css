@@ -1,5 +1,5 @@
 /**
- * Legacy admin icon classes → Font Awesome 5 Free/Brands (CDN).
+ * Legacy admin icon classes -> Font Awesome 6 Free/Brands (self-hosted).
  * flaticon-* y simple-line-icons no se cargan en styles.blade.php.
  */
 
@@ -17,7 +17,7 @@
 i[class*="flaticon-"]:before,
 [class*="flaticon-"]:before,
 .icon-options-vertical:before {
-  font-family: "Font Awesome 5 Free" !important;
+  font-family: "Font Awesome 6 Free" !important;
   font-weight: 900;
   font-style: normal;
   font-variant: normal;

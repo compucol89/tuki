@@ -51,9 +51,9 @@
                     {{-- Thumbnail --}}
                     <div class="wl-item__img">
                       <img class="lazy"
-                           data-src="{{ asset('assets/admin/img/event/thumbnail/' . $ev->thumbnail) }}"
+                           data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $ev->thumbnail) }}"
                            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                           alt="{{ $ev->title }}">
+                           alt="{{ $ev->title }}" loading="lazy">
                       <span class="wl-item__type {{ $ev->event_type == 'online' ? 'wl-item__type--online' : 'wl-item__type--venue' }}">
                         {{ $ev->event_type == 'online' ? 'Online' : 'Presencial' }}
                       </span>

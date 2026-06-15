@@ -79,6 +79,12 @@
       opacity: 0;
       pointer-events: none;
     }
+    body.home-page .hero-slide__image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     body.home-page .hero-slide:first-child {
       opacity: 1;
     }
@@ -439,9 +445,15 @@
     {{-- Slideshow de fondo --}}
     <div class="hero-slideshow" id="heroCollageBg">
       @forelse($heroSlideUrls ?? [] as $slideUrl)
-        <div class="hero-slide" style="background-image: url('{{ $slideUrl }}'); aspect-ratio: 1920 / 800;"></div>
+        <div class="hero-slide" @unless($loop->first) style="background-image: url('{{ $slideUrl }}'); aspect-ratio: 1920 / 800;" @else style="aspect-ratio: 1920 / 800;" @endunless>
+          @if($loop->first)
+            <img class="hero-slide__image" src="{{ $slideUrl }}" width="1920" height="800" alt="" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
+          @endif
+        </div>
       @empty
-        <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}'); aspect-ratio: 1920 / 800;"></div>
+        <div class="hero-slide" style="aspect-ratio: 1920 / 800;">
+          <img class="hero-slide__image" src="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}" width="1920" height="800" alt="" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
+        </div>
       @endforelse
     </div>
 
@@ -698,6 +710,7 @@
   var hero = document.getElementById('heroSection');
   var bg   = document.getElementById('heroCollageBg');
   if (!hero || !bg) return;
+  if (!window.matchMedia || !window.matchMedia('(pointer: fine)').matches) return;
 
   var tx = 0, ty = 0, cx = 0, cy = 0;
   var rafId = null;

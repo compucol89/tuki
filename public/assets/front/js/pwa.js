@@ -34,23 +34,36 @@ function initPush() {
         return;
     }
 
-    new Promise(function (resolve, reject) {
-        const permissionResult = Notification.requestPermission(function (result) {
-            resolve(result);
-        });
+    if (!("Notification" in window)) {
+        return;
+    }
 
-        if (permissionResult) {
-            permissionResult.then(resolve, reject);
-        }
-    })
-        .then((permissionResult) => {
-            if (permissionResult !== 'granted') {
-                // throw new Error('We weren\'t granted permission.');
-            } else {
-                subscribeUser();
-            }
-        });
+    if (Notification.permission === 'granted') {
+        subscribeUser();
+    }
 }
+
+function requestPushPermission() {
+    if (!("Notification" in window) || Notification.permission === 'denied') {
+        return Promise.resolve(Notification.permission);
+    }
+
+    if (Notification.permission === 'granted') {
+        subscribeUser();
+        return Promise.resolve('granted');
+    }
+
+    return Notification.requestPermission().then((permissionResult) => {
+        if (permissionResult === 'granted') {
+            subscribeUser();
+        }
+
+        return permissionResult;
+    });
+}
+
+window.TukiPassPushNotifications = window.TukiPassPushNotifications || {};
+window.TukiPassPushNotifications.requestPermission = requestPushPermission;
 
 function subscribeUser() {
     navigator.serviceWorker.ready

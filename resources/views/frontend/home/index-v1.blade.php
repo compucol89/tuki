@@ -706,10 +706,6 @@
     slide.removeAttribute('data-bg');
   }
 
-  function hydrateSecondarySlides() {
-    slides.slice(1).forEach(hydrateSlide);
-  }
-
   function nextSlide() {
     var nxt  = (cur + 1) % n;
     var prev = cur;
@@ -725,10 +721,23 @@
     cur = nxt;
   }
 
-  setTimeout(function() {
-    hydrateSecondarySlides();
+  function startSlideshow() {
+    if (sliderId) return;
+
+    nextSlide();
     sliderId = setInterval(nextSlide, 5000);
-  }, 5000);
+    if (startFallbackId) clearTimeout(startFallbackId);
+    startEvents.forEach(function(eventName) {
+      window.removeEventListener(eventName, startSlideshow);
+    });
+  }
+
+  var startEvents = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'mousemove'];
+  startEvents.forEach(function(eventName) {
+    window.addEventListener(eventName, startSlideshow, { passive: true, once: true });
+  });
+
+  var startFallbackId = setTimeout(startSlideshow, 15000);
 
   // --- Parallax — se detiene cuando el hero no es visible ---
   var hero = document.getElementById('heroSection');

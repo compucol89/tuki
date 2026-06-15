@@ -51,7 +51,7 @@
                 <a class="product-image-preview"
                   href="{{ asset('assets/admin/img/product/gallery/' . $gallery->image) }}">
                   <img class="lazy" data-src="{{ asset('assets/admin/img/product/gallery/' . $gallery->image) }}"
-                    alt="{{ __('Vista previa del producto') }}">
+                    alt="{{ __('Vista previa del producto') }}" loading="lazy">
                 </a>
               @endforeach
             </div>
@@ -59,7 +59,7 @@
               @foreach ($galleries as $gallery)
                 <div class="product-thumb-item">
                   <img class="lazy" data-src="{{ asset('assets/admin/img/product/gallery/' . $gallery->image) }}"
-                    alt="{{ __('Miniatura del producto') }}">
+                    alt="{{ __('Miniatura del producto') }}" loading="lazy">
                 </div>
               @endforeach
             </div>
@@ -173,7 +173,7 @@
                         @endphp
                         <img class="lazy"
                           src="{{ $customer->photo != null ? asset('assets/admin/img/customer-profile/' . $customer->photo) : asset('assets/front/images/profile.jpg') }}"
-                          alt="{{ __('Imagen del usuario') }}" width="60">
+                          alt="{{ __('Imagen del usuario') }}" width="60" loading="lazy">
 
 
                         <ul>

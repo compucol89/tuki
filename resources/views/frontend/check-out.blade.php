@@ -324,7 +324,7 @@
             {{-- Info del evento --}}
             <div class="co-summary__event">
               <a href="{{ route('event.details', [$event->slug, $event->id]) }}" class="co-summary__thumb">
-              <img src="{{ asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) }}"
+              <img src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $event->thumbnail) }}"
                    alt="{{ $event->title }}"
                    width="200" height="133">
               </a>

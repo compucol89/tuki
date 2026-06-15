@@ -123,7 +123,7 @@
               <div class="bl-card__img">
                 <img data-src="{{ asset('assets/admin/img/blogs/' . $blog->image) }}"
                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                     class="lazy bl-card__photo" alt="{{ $blog->title }}">
+                     class="lazy bl-card__photo" alt="{{ $blog->title }}" loading="lazy">
                 <div class="bl-card__gradient" aria-hidden="true"></div>
               </div>
               <div class="bl-card__overlay" aria-hidden="true">

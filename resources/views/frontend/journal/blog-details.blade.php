@@ -84,7 +84,7 @@
           <div class="bl-article__img-frame">
             <img data-src="{{ asset('assets/admin/img/blogs/' . $details->image) }}"
                  src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                 class="lazy bl-article__img" alt="{{ $details->title }}" itemprop="image">
+                 class="lazy bl-article__img" alt="{{ $details->title }}" itemprop="image" loading="lazy" fetchpriority="high">
           </div>
         </figure>
       @endif
@@ -134,7 +134,7 @@
               <div class="bl-card__img">
                 <img data-src="{{ asset('assets/admin/img/blogs/' . $rel->image) }}"
                      src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-                     class="lazy bl-card__photo" alt="{{ $rel->title }}">
+                     class="lazy bl-card__photo" alt="{{ $rel->title }}" loading="lazy">
                 <div class="bl-card__gradient" aria-hidden="true"></div>
               </div>
               <div class="bl-card__overlay" aria-hidden="true">

@@ -5,7 +5,7 @@
     @if ($type == 1)
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper">
         <div>
-          <img data-src="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}" class="lazy" alt="Popup Image" width="100%">
+          <img data-src="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}" class="lazy" alt="Popup Image" loading="lazy">
         </div>
       </div>
     @elseif ($type == 2)

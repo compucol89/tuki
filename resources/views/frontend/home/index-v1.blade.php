@@ -502,7 +502,7 @@
               @foreach ($mq_items as $mqi)
                 @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
                 <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0) aria-hidden="true" tabindex="-1" @endif>
-                  <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" width="400" height="267" loading="{{ $copy === 0 && $loop->index < 4 ? 'eager' : 'lazy' }}">
+                  <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" width="400" height="267" loading="lazy">
 
                   <div class="emq-date" aria-hidden="true">
                     <span class="emq-date__day">{{ $mq_carbon->format('d') }}</span>

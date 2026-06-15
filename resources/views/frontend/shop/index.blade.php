@@ -150,7 +150,7 @@
                       <div class="image">
                         <img class="lazy"
                           data-src="{{ asset('assets/admin/img/product/feature_image/' . $item->feature_image) }}"
-                          alt="{{ __('Producto') }}">
+                          alt="{{ __('Producto') }}" loading="lazy">
                         <div class="product-icons">
                           <a class="cart-link cart" data-href="{{ route('add.cart', $item->id) }}" data-toggle="tooltip"
                             data-placement="top" title="{{ __('Add to Cart') }}"><i class="fas fa-shopping-cart"></i></a>

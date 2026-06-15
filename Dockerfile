@@ -3,9 +3,9 @@ FROM php:8.4-cli-alpine AS builder
 
 RUN apk add --no-cache \
     bash git curl nodejs npm \
-    freetype-dev libpng-dev libjpeg-turbo-dev \
+    freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev \
     libzip-dev libxml2-dev oniguruma-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip soap
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -26,9 +26,9 @@ FROM php:8.4-cli-alpine
 
 RUN apk add --no-cache \
     bash \
-    freetype-dev libpng-dev libjpeg-turbo-dev \
+    freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev \
     libzip-dev libxml2-dev oniguruma-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip soap
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

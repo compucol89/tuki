@@ -453,7 +453,7 @@
     {{-- Slideshow de fondo --}}
     <div class="hero-slideshow" id="heroCollageBg">
       @forelse($heroSlideUrls ?? [] as $slideUrl)
-        <div class="hero-slide" @unless($loop->first) style="background-image: url('{{ $slideUrl }}'); aspect-ratio: 1920 / 800;" @else style="aspect-ratio: 1920 / 800;" @endunless>
+        <div class="hero-slide" @unless($loop->first) data-bg="{{ $slideUrl }}" @endunless style="aspect-ratio: 1920 / 800;">
           @if($loop->first)
             <img class="hero-slide__image" src="{{ $slideUrl }}" width="1920" height="800" alt="" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
           @endif
@@ -698,9 +698,22 @@
   var cur = 0;
   var sliderId = null;
 
+  function hydrateSlide(slide) {
+    var bg = slide.getAttribute('data-bg');
+    if (!bg) return;
+
+    slide.style.backgroundImage = "url('" + bg.replace(/'/g, "\\'") + "')";
+    slide.removeAttribute('data-bg');
+  }
+
+  function hydrateSecondarySlides() {
+    slides.slice(1).forEach(hydrateSlide);
+  }
+
   function nextSlide() {
     var nxt  = (cur + 1) % n;
     var prev = cur;
+    hydrateSlide(slides[nxt]);
     slides[prev].style.zIndex = '0';
     slides[nxt].style.zIndex  = '1';
     slides[nxt].style.transition = 'opacity 1.2s ease-in-out';
@@ -712,7 +725,10 @@
     cur = nxt;
   }
 
-  sliderId = setInterval(nextSlide, 5000);
+  setTimeout(function() {
+    hydrateSecondarySlides();
+    sliderId = setInterval(nextSlide, 5000);
+  }, 5000);
 
   // --- Parallax — se detiene cuando el hero no es visible ---
   var hero = document.getElementById('heroSection');

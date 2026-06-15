@@ -123,7 +123,7 @@ if (!function_exists('showAd')) {
         if ($ad->ad_type == 'banner') {
           $adImageUrl = \App\Services\FileUploadService::imageUrl('assets/admin/img/advertisements/', $ad->image);
           $markUp = '<a href="' . url($ad->url) . '" target="_blank" rel="noopener noreferrer" onclick="adView(' . $ad->id . ')">
-            <img data-src="' . $adImageUrl . '" src="' . $adImageUrl . '" class="lazy" alt="advertisement" style="width: ' . $maxWidth . ';' . ' ' . 'max-height: ' . $maxHeight . ';max-width: 100%;">
+            <img data-src="' . $adImageUrl . '" src="' . $adImageUrl . '" class="lazy" alt="advertisement" width="' . (int) $maxWidth . '" height="' . (int) $maxHeight . '" style="width: ' . $maxWidth . ';' . ' ' . 'max-height: ' . $maxHeight . ';max-width: 100%;">
           </a>';
 
           return $markUp;

@@ -490,15 +490,12 @@
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
     @php
-      $mq_items = $marqueeEvents->take(10)->map(function ($ev) use ($marqueeGallery) {
-        $galleryImage = \App\Services\FileUploadService::eventVisualUrl(
-          $marqueeGallery[$ev->id] ?? null,
-          $ev->thumbnail
-        );
+      $mq_items = $marqueeEvents->take(10)->map(function ($ev) {
+        $eventImage = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $ev->thumbnail);
 
         return [
           'event'  => $ev,
-          'src'    => $galleryImage,
+          'src'    => $eventImage,
           'url'    => route('event.details', [$ev->slug, $ev->id]),
           'badge'  => $badgeMap[$ev->id] ?? null,
           'carbon' => \Carbon\Carbon::parse($ev->start_date)->locale('es'),
@@ -732,12 +729,12 @@
     });
   }
 
-  var startEvents = ['pointerdown', 'touchstart', 'keydown', 'scroll', 'mousemove'];
+  var startEvents = ['pointerdown', 'touchstart', 'keydown', 'click'];
   startEvents.forEach(function(eventName) {
     window.addEventListener(eventName, startSlideshow, { passive: true, once: true });
   });
 
-  var startFallbackId = setTimeout(startSlideshow, 15000);
+  var startFallbackId = setTimeout(startSlideshow, 30000);
 
   // --- Parallax — se detiene cuando el hero no es visible ---
   var hero = document.getElementById('heroSection');

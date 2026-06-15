@@ -47,6 +47,7 @@
   <meta name="twitter:image:alt" content="{{ $ogImageAlt }}" />
   <meta name="twitter:url" content="{{ $ogUrl }}" />
   <link rel="canonical" href="{{ $canonicalUrl }}" />
+  <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-400-normal.woff2') }}?eca1e21531598d5db58f56b3ba23a8cc" type="font/woff2" crossorigin>
 
   {{-- hreflang tags --}}
   @php

@@ -574,20 +574,6 @@ button.theme-btn:focus-visible {
     margin-right: 0;
 }
 
-/* Page fade-in (reemplaza preloader bloqueante) */
-body {
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    animation: fallback-show 0s 3s forwards;
-}
-body.loaded {
-    opacity: 1;
-    animation: none;
-}
-@keyframes fallback-show {
-    to { opacity: 1; }
-}
-
 /*** Scroll Top style ** */
 .scroll-top {
     flex: none;
@@ -1011,45 +997,11 @@ body.home-page .hero-content-wrapper {
     margin-top: clamp(22px, 3vw, 30px);
 }
 
-.hero-collage-section--premium .hero-content--premium > * {
-    animation: heroPremiumReveal 0.95s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-}
-
-.hero-collage-section--premium .hero-content--premium h1 {
-    animation-delay: 0.06s;
-}
-
-.hero-collage-section--premium .hero-lede {
-    animation-delay: 0.14s;
-}
-
-.hero-collage-section--premium .hero-trust {
-    animation-delay: 0.22s;
-}
-
-.hero-collage-section--premium .hero-actions {
-    animation-delay: 0.3s;
-}
-
-@keyframes heroPremiumReveal {
-    from {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
     .hero-ambient__orb {
         animation: none !important;
     }
 
-    .hero-collage-section--premium .hero-content--premium > * {
-        animation: none !important;
-    }
 }
 
 @media (min-width: 992px) {

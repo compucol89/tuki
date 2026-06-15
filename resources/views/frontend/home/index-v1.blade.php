@@ -172,6 +172,50 @@
       background: #fff;
       padding: 24px 0 34px;
     }
+    body.home-page .hs-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    body.home-page .hs-header__left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    body.home-page .hs-header__title {
+      margin: 0;
+      color: #111827;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    body.home-page .hs-header__sub {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    body.home-page .hs-header__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+      padding: 9px 18px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 9px;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.75;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    body.home-page .mb-32 {
+      margin-bottom: 32px;
+    }
     body.home-page .events-marquee-track {
       position: relative;
       display: block;
@@ -201,6 +245,67 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+    body.home-page .emq-date {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 3;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 46px;
+      padding: 7px 8px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.92);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.16);
+    }
+    body.home-page .emq-date__day {
+      color: #1e2532;
+      font-family: var(--tuki-font-sans);
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    body.home-page .emq-date__month {
+      color: #f97316;
+      font-family: var(--tuki-font-sans);
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+    body.home-page .emq-bottom {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 3;
+      padding: 30px 16px 14px;
+      background: linear-gradient(to top, rgba(17,24,39,0.94) 0%, rgba(17,24,39,0.76) 42%, rgba(17,24,39,0.30) 68%, rgba(17,24,39,0) 100%);
+      pointer-events: none;
+    }
+    body.home-page .emq-bottom__eyebrow {
+      display: inline-flex;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,0.70);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    body.home-page .emq-bottom__title {
+      display: -webkit-box;
+      min-height: calc(15px * 1.25 * 2);
+      overflow: hidden;
+      color: #fff;
+      font-family: var(--tuki-font-sans);
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.25;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
     }
     body.home-page .hs-search-wrap {
       position: relative;
@@ -269,8 +374,8 @@
         min-height: 420px !important;
       }
       body.home-page .hero-content-wrapper {
-        padding-top: 52px;
-        padding-bottom: 46px;
+        padding-top: 56px;
+        padding-bottom: 44px;
       }
       body.home-page .hero-content--premium h1,
       body.home-page #heroHeadingHome {
@@ -278,11 +383,30 @@
         line-height: 1.04;
       }
       body.home-page .events-marquee-item {
-        width: 260px;
-        height: 165px;
+        width: 270px;
+        height: 178px;
+      }
+      body.home-page .events-marquee {
+        padding-bottom: 30px;
+      }
+      body.home-page .hs-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      body.home-page .emq-bottom {
+        padding: 26px 14px 13px;
+      }
+      body.home-page .emq-bottom__title {
+        min-height: calc(14px * 1.25 * 2);
+        font-size: 14px;
       }
     }
     @media (max-width: 575px) {
+      body.home-page .events-marquee-item {
+        width: 250px;
+        height: 170px;
+      }
       body.home-page .hero-actions {
         gap: 10px;
       }
@@ -297,6 +421,12 @@
       body.home-page .hs-sf__field,
       body.home-page .hs-sf__btn {
         width: 100%;
+      }
+    }
+    @media (max-width: 420px) {
+      body.home-page .events-marquee-item {
+        width: 234px;
+        height: 162px;
       }
     }
   </style>

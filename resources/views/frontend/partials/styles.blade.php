@@ -111,6 +111,26 @@
     background: #fff;
   }
 
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -48px;
+    z-index: 2000;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #1e2532;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .skip-link:focus {
+    top: 16px;
+    color: #fff;
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(30, 37, 50, 0.55);
+  }
+
   img,
   svg {
     vertical-align: middle;
@@ -148,6 +168,10 @@
     display: block;
     clear: both;
     content: "";
+  }
+
+  .d-none {
+    display: none !important;
   }
 
   .collapse:not(.show) {

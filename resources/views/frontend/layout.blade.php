@@ -271,7 +271,6 @@
   {{-- Cookie alert dialog end --}}
 
   @stack('scripts')
-  <script>document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('loaded');});</script>
 </body>
 
 </html>

@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}"></noscript>
 <!-- Responsive css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}" media="print" onload="this.onload=null; this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}"></noscript>
 <!-- Toastr css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">

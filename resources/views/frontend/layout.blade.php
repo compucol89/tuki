@@ -46,6 +46,9 @@
   <meta name="twitter:image" content="{{ $ogImage }}" />
   <meta name="twitter:image:alt" content="{{ $ogImageAlt }}" />
   <meta name="twitter:url" content="{{ $ogUrl }}" />
+  {{-- Preconnect to own origin for CSS/fonts/assets --}}
+  <link rel="preconnect" href="https://www.tukipass.com">
+  <link rel="dns-prefetch" href="https://www.tukipass.com">
   <link rel="canonical" href="{{ $canonicalUrl }}" />
   <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-400-normal.woff2') }}?eca1e21531598d5db58f56b3ba23a8cc" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-500-normal.woff2') }}?b7c27c60f848f2083f45be25012ce41d" type="font/woff2" crossorigin>

@@ -15,7 +15,8 @@
 @section('body-class', 'organizers-page')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/home.css') }}">
+  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
 @endpush
 
 @section('hero-section')

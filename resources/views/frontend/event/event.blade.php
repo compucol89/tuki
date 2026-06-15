@@ -1,8 +1,10 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/events.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/home.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/events.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/events.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
 @endpush
 
 @section('hero-preload')

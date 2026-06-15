@@ -376,9 +376,16 @@
       line-height: 1;
     }
     @media (max-width: 767px) {
+      body.home-page .hero-slide {
+        aspect-ratio: auto !important;
+        height: 100%;
+      }
       body.home-page .hero-collage-section,
       body.home-page .hero-collage-section--premium {
-        min-height: 420px !important;
+        min-height: 440px !important;
+      }
+      body.home-page .hero-ambient {
+        display: none;
       }
       body.home-page .hero-content-wrapper {
         padding-top: 56px;

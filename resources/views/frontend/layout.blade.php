@@ -48,6 +48,9 @@
   <meta name="twitter:url" content="{{ $ogUrl }}" />
   <link rel="canonical" href="{{ $canonicalUrl }}" />
   <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-400-normal.woff2') }}?eca1e21531598d5db58f56b3ba23a8cc" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-500-normal.woff2') }}?b7c27c60f848f2083f45be25012ce41d" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-700-normal.woff2') }}?1104236696a5d2d1f236f40aa0c491d1" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-800-normal.woff2') }}?d2cf8417dfce77f8f2bea87245ce39ee" type="font/woff2" crossorigin>
 
   {{-- hreflang tags --}}
   @php
@@ -111,6 +114,7 @@
   @endif
   {{-- include styles --}}
   @includeIf('frontend.partials.styles')
+  @stack('critical-styles')
   @yield('custom-style')
   @stack('styles')
   <style>

@@ -7,7 +7,8 @@
 @endsection
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}">
+  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
 @endpush
 
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
@@ -31,6 +32,211 @@
 @section('og-type',        'website')
 @section('og-url',         url()->current())
 @section('canonical',      route('index', [], true))
+
+@push('critical-styles')
+  <style>
+    body.home-page .hero-collage-section,
+    body.home-page .hero-collage-section--premium {
+      position: relative;
+      min-height: 440px !important;
+      height: auto !important;
+      overflow: hidden;
+      background: #111827;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body.home-page .hero-slideshow,
+    body.home-page .hero-overlay,
+    body.home-page .hero-vignette,
+    body.home-page .hero-noise,
+    body.home-page .hero-ambient {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    body.home-page .hero-slideshow {
+      z-index: 0;
+    }
+    body.home-page .hero-slide {
+      position: absolute;
+      inset: -20px;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    body.home-page .hero-slide:first-child {
+      opacity: 1;
+    }
+    body.home-page .hero-overlay {
+      z-index: 1;
+      background:
+        radial-gradient(120% 90% at 50% 120%, rgba(15, 20, 32, 0.92) 0%, transparent 55%),
+        linear-gradient(180deg, rgba(18, 22, 34, 0.35) 0%, rgba(12, 16, 26, 0.82) 48%, rgba(8, 11, 18, 0.94) 100%);
+    }
+    body.home-page .hero-vignette {
+      z-index: 2;
+      background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 0%, rgba(5, 8, 14, 0.55) 100%);
+    }
+    body.home-page .hero-noise,
+    body.home-page .hero-ambient {
+      z-index: 3;
+    }
+    body.home-page .hero-content-wrapper {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      padding-top: clamp(56px, 8vw, 96px);
+      padding-bottom: clamp(44px, 6vw, 72px);
+    }
+    body.home-page .hero-content {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    body.home-page .hero-content.hero-content--premium {
+      max-width: 920px;
+    }
+    body.home-page .hero-content h1,
+    body.home-page .hero-content p {
+      color: #fff;
+    }
+    body.home-page .hero-content--premium h1,
+    body.home-page #heroHeadingHome {
+      max-width: 980px;
+      margin: 0 auto;
+      font-family: var(--heading-font);
+      font-size: clamp(2.15rem, 1.2vw + 1.85rem, 3.65rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: 0;
+      text-wrap: balance;
+      text-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+    }
+    body.home-page .hero-content .hero-lede {
+      max-width: 38rem;
+      margin: 18px auto 0;
+      font-size: clamp(0.9rem, 0.65vw + 0.78rem, 1.05rem);
+      line-height: 1.58;
+      font-weight: 500;
+      color: rgba(248, 250, 252, 0.88);
+    }
+    body.home-page .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: clamp(22px, 3vw, 30px);
+    }
+    body.home-page .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 24px;
+      border: 1px solid transparent;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+    body.home-page .hero-btn--primary {
+      background: #fff;
+      color: #111827;
+    }
+    body.home-page .hero-btn--secondary {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.20);
+      color: #fff;
+    }
+    body.home-page .events-marquee {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      padding: 24px 0 34px;
+    }
+    body.home-page .events-marquee-track {
+      position: relative;
+      display: block;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      overflow: hidden;
+    }
+    body.home-page .events-marquee-inner {
+      display: flex;
+      width: max-content;
+      gap: 12px;
+    }
+    body.home-page .events-marquee-item {
+      position: relative;
+      display: block;
+      flex-shrink: 0;
+      width: 328px;
+      height: 208px;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #f8fafc;
+      text-decoration: none;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
+    }
+    body.home-page .events-marquee-item img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    body.home-page .hs-search-wrap {
+      position: relative;
+      z-index: 10;
+      background: #fff;
+      padding: 8px 0 44px;
+    }
+    body.home-page .hs-search-form {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 1px solid rgba(30, 37, 50, 0.12);
+      border-radius: 12px;
+      background: #fff;
+    }
+    @media (max-width: 767px) {
+      body.home-page .hero-collage-section,
+      body.home-page .hero-collage-section--premium {
+        min-height: 420px !important;
+      }
+      body.home-page .hero-content-wrapper {
+        padding-top: 52px;
+        padding-bottom: 46px;
+      }
+      body.home-page .hero-content--premium h1,
+      body.home-page #heroHeadingHome {
+        font-size: clamp(2.05rem, 10vw, 3.05rem);
+        line-height: 1.04;
+      }
+      body.home-page .events-marquee-item {
+        width: 260px;
+        height: 165px;
+      }
+    }
+    @media (max-width: 575px) {
+      body.home-page .hero-actions {
+        gap: 10px;
+      }
+      body.home-page .hero-btn {
+        width: 100%;
+        max-width: 280px;
+      }
+      body.home-page .hs-search-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+@endpush
 
 @section('hero-section')
   <!-- Hero Section Start -->

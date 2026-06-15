@@ -64,30 +64,6 @@
     font-display: swap;
     font-family: Inter;
     font-style: normal;
-    font-weight: 500;
-    src: url('/fonts/vendor/@fontsource/inter/files/inter-latin-500-normal.woff2?b7c27c60f848f2083f45be25012ce41d') format('woff2');
-    unicode-range: U+00??, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-  @font-face {
-    font-display: swap;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 600;
-    src: url('/fonts/vendor/@fontsource/inter/files/inter-latin-600-normal.woff2?69a8d1d484967aba2389ef57577b76be') format('woff2');
-    unicode-range: U+00??, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-  @font-face {
-    font-display: swap;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: 700;
-    src: url('/fonts/vendor/@fontsource/inter/files/inter-latin-700-normal.woff2?1104236696a5d2d1f236f40aa0c491d1') format('woff2');
-    unicode-range: U+00??, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-  }
-  @font-face {
-    font-display: swap;
-    font-family: Inter;
-    font-style: normal;
     font-weight: 800;
     src: url('/fonts/vendor/@fontsource/inter/files/inter-latin-800-normal.woff2?d2cf8417dfce77f8f2bea87245ce39ee') format('woff2');
     unicode-range: U+00??, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;

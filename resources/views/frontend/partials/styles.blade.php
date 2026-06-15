@@ -8,16 +8,20 @@
 <link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}"></noscript>
 <!-- Bootstrap css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}"></noscript>
 <!-- Padding Margin -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}"></noscript>
 <!-- Menu css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}"></noscript>
 <!-- Main css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}"></noscript>
 <!-- Responsive css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}">
+<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}"></noscript>
 <!-- Toastr css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}"></noscript>
@@ -170,6 +174,116 @@
 
   .ml-lg-auto {
     margin-left: auto !important;
+  }
+
+  .main-header--premium {
+    padding-top: 10px;
+    background: transparent;
+  }
+  .main-header--premium .header-upper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    background: transparent;
+  }
+  .main-header--premium .header-inner {
+    min-height: 74px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  .main-header--premium .main-menu,
+  .main-header--premium .nav-outer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .main-header--premium .logo img,
+  .main-header--premium .logo-mobile img {
+    width: auto;
+    max-width: 190px;
+    height: 38px;
+    object-fit: contain;
+  }
+
+  @media only screen and (max-width: 1199px) {
+    .main-header--premium {
+      padding-top: 0;
+    }
+    .main-header--premium .header-inner {
+      min-height: auto;
+      padding: 14px 0;
+    }
+    .main-header--premium .main-menu {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 10px;
+      position: relative;
+    }
+    .main-header--premium .main-menu .navbar-header {
+      order: 1;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex: 1 1 auto;
+      min-width: 0;
+      gap: 10px;
+      position: relative;
+      z-index: 10001;
+    }
+    .main-header--premium .main-menu .navbar-header .logo-mobile {
+      flex: 0 0 auto;
+      min-width: auto;
+      margin-inline-start: 0;
+    }
+    .main-header--premium .main-menu .navbar-header .navbar-toggle {
+      display: inline-flex;
+      flex: 0 0 auto;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3.5px;
+      min-width: 44px;
+      min-height: 44px;
+      width: auto;
+      height: auto;
+      padding: 10px;
+      margin: 0;
+      color: #1e2532;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      appearance: none;
+    }
+    .main-header--premium .main-menu .navbar-header .navbar-toggle .icon-bar {
+      display: block !important;
+      width: 23px;
+      height: 3.5px;
+      margin: 0 !important;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 1;
+      visibility: visible;
+      flex-shrink: 0;
+    }
+    .main-header--premium .header-ingresar-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      min-height: 40px;
+      padding: 9px 14px;
+      margin-left: auto;
+      border-radius: 10px;
+      color: #1e2532;
+      background: #F97316;
+      border: none;
+      font-family: var(--tuki-font-sans, var(--base-font));
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-decoration: none;
+    }
   }
 
   @media (min-width: 576px) {

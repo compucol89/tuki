@@ -7,7 +7,8 @@
 @endsection
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}">
+  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
 @endpush
 
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')
@@ -573,7 +574,7 @@
         {{-- Categoría --}}
         <div class="hs-sf__field hs-sf__field--select">
           <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          <select name="category" class="hs-sf__select">
+          <select name="category" class="hs-sf__select" aria-label="{{ __('Categoría del evento') }}">
             <option value="">{{ __('Categorías') }}</option>
             @foreach ($categories as $cat)
               <option value="{{ $cat->slug }}">{{ $cat->name }}</option>

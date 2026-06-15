@@ -55,4 +55,5 @@ fi
 php artisan storage:link --force
 php artisan migrate --force
 
-php -S 0.0.0.0:8080 -t public docker-router.php
+mkdir -p /app/.router-root
+php -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php

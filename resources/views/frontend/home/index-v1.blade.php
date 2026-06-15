@@ -78,6 +78,7 @@
       background-position: center;
       opacity: 0;
       pointer-events: none;
+      will-change: opacity;
     }
     body.home-page .hero-slide__image {
       display: block;

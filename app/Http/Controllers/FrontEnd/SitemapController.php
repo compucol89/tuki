@@ -187,6 +187,8 @@ class SitemapController extends Controller
       });
 
     $organizers = Organizer::where('status', 1)
+      ->whereNotNull('username')
+      ->where('username', '!=', '')
       ->select('id', 'username', 'updated_at')
       ->orderBy('updated_at', 'desc')
       ->get()

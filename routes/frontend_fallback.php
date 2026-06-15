@@ -18,5 +18,5 @@ Route::get('/{slug}', 'FrontEnd\PageController@page')
   ->where('slug', '^(?!sobre-nosotros$)[^/]+$');
 
 Route::fallback(function () {
-  return view('errors.404');
+  return response()->view('errors.404', [], 404);
 });

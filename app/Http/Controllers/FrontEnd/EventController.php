@@ -36,6 +36,14 @@ class EventController extends Controller
   //index
   public function index(Request $request)
   {
+    if (str_ends_with($request->getPathInfo(), '/')) {
+      $url = route('events');
+      if ($query = $request->getQueryString()) {
+        $url .= '?' . $query;
+      }
+      return redirect($url, 301);
+    }
+
     $language = $this->getLanguage();
     $information  = [];
     $categories = Cache::remember('event_categories_' . $language->id, now()->addHours(6), function () use ($language) {
@@ -53,8 +61,11 @@ class EventController extends Controller
 
     if ($request->filled('category')) {
       $category = $request['category'];
-      $category = EventCategory::where([['slug', $category], ['status', 1]])->first();
-      $category = $category->id;
+      $categoryModel = EventCategory::where([['slug', $category], ['status', 1]])->first();
+      if (!$categoryModel) {
+        return redirect()->route('events');
+      }
+      $category = $categoryModel->id;
     }
     $eventSIds = [];
     if ($request->filled('location')) {

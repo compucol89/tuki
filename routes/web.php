@@ -5,6 +5,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+Route::get('/robots.txt', function () {
+  return response()->file(public_path('robots.txt'), [
+    'Content-Type' => 'text/plain; charset=UTF-8',
+  ]);
+})->name('robots');
+
+Route::redirect('/privacy-policy', '/politica-de-privacidad', 301);
+Route::redirect('/terms-&-conditions', '/terminos-y-condiciones', 301);
+
 require __DIR__ . '/frontend_auth.php';
 require __DIR__ . '/frontend_customer.php';
 require __DIR__ . '/frontend_events.php';

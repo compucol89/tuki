@@ -129,6 +129,9 @@ class OrganizerController extends Controller
         $information['organizer_info'] = [];
       } else {
         $organizer = Organizer::where('id', $id)->first();
+        if (!$organizer) {
+          return response()->view('errors.404', [], 404);
+        }
 
         $information['organizer_info'] = OrganizerInfo::where('organizer_id', $id)->where('language_id', $language->id)->first();
 
@@ -148,8 +151,8 @@ class OrganizerController extends Controller
 
       $information['events'] = $events;
       return view('frontend.organizer.details', $information); //code...
-    } catch (\Exception $th) {
-      return view('errors.404');
+    } catch (\Throwable $th) {
+      return response()->view('errors.404', [], 404);
     }
   }
 

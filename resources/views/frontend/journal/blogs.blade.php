@@ -20,7 +20,16 @@
   $pageTitle       = !empty($pageHeading) ? ($pageHeading->blog_page_title ?? __('Blog')) : __('Blog');
   $activeCategory  = request()->input('category', '');
   $searchTitle     = request()->input('title', '');
-  $blogSchemaPosts = collect($blogs->items())->map(function ($blog) {
+  $demoBlogSlugs = [
+    'vivamus-vestibulum', 'vestibulum-commodo', 'nam-dui-mi',
+    'phasellus-ultrices', 'donec-nec-justo', 'morbi-in-sem',
+  ];
+  $isDemoBlog = function ($slug) use ($demoBlogSlugs) {
+    return isset($slug) && \Illuminate\Support\Str::startsWith($slug, $demoBlogSlugs);
+  };
+  $blogSchemaPosts = collect($blogs->items())->reject(function ($blog) use ($isDemoBlog) {
+    return $isDemoBlog($blog->slug);
+  })->map(function ($blog) {
     return array_filter([
       '@type' => 'BlogPosting',
       'headline' => $blog->title,
@@ -114,6 +123,9 @@
     @else
       <div class="bl-grid">
         @foreach($blogs as $blog)
+          @if($isDemoBlog($blog->slug))
+            @continue
+          @endif
           @php
             $readTime = max(1, round(str_word_count(strip_tags($blog->content)) / 200));
           @endphp

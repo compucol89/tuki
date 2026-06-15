@@ -3,6 +3,7 @@ Allow: /
 
 Disallow: /admin/
 Disallow: /customer/
+Allow: /organizer/details/
 Disallow: /organizer/
 Disallow: /checkout/
 Disallow: /cart/

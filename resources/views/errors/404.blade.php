@@ -3,7 +3,7 @@
 @section('meta-robots', 'noindex,follow')
 @section('pageHeading', __('Página no encontrada'))
 @section('meta-description', __('La página que buscás no existe o fue movida. Volvé al inicio para seguir explorando eventos en Tukipass.'))
-@section('canonical', url('/'))
+@section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
 

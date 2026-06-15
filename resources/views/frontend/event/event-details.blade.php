@@ -1887,7 +1887,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                               if (Auth::guard('customer')->user() && $ticket->max_ticket_buy_type == 'limited') {
                                   $purchase = isTicketPurchaseVenue($ticket->event_id, $ticket->max_buy_ticket, $ticket->id, @$ticket_content_default->title);
                               } else {
-                                  $purchase = ['status' => 'false', 'p_qty' => 1];
+                                  $purchase = ['status' => 'false', 'p_qty' => 0];
                               }
                               $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
                             @endphp

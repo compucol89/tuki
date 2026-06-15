@@ -35,6 +35,20 @@
 
 @push('critical-styles')
   <style>
+    body.home-page {
+      line-height: 1.75;
+    }
+    body.home-page .page-wrapper {
+      position: relative;
+      width: 100%;
+      min-width: 300px;
+      overflow: hidden;
+    }
+    body.home-page .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     body.home-page .hero-collage-section,
     body.home-page .hero-collage-section--premium {
       position: relative;
@@ -203,6 +217,52 @@
       border-radius: 12px;
       background: #fff;
     }
+    body.home-page .hs-sf__field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 56px;
+      min-width: 0;
+      padding: 0 14px;
+    }
+    body.home-page .hs-sf__field--grow {
+      flex: 1 1 0%;
+      max-width: min(440px, 42%);
+    }
+    body.home-page .hs-sf__input,
+    body.home-page .hs-sf__select {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #1e2532;
+      font-family: var(--tuki-font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1;
+    }
+    body.home-page .hs-sf__divider {
+      flex-shrink: 0;
+      width: 1px;
+      height: 30px;
+      background: rgba(30,37,50,0.08);
+    }
+    body.home-page .hs-sf__btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+      flex: 0 0 clamp(128px, 11vw, 168px);
+      padding: 0;
+      border: 0;
+      background: #f97316;
+      color: #1e2532;
+      font-family: var(--tuki-font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1;
+    }
     @media (max-width: 767px) {
       body.home-page .hero-collage-section,
       body.home-page .hero-collage-section--premium {
@@ -233,6 +293,10 @@
       body.home-page .hs-search-form {
         flex-direction: column;
         align-items: stretch;
+      }
+      body.home-page .hs-sf__field,
+      body.home-page .hs-sf__btn {
+        width: 100%;
       }
     }
   </style>

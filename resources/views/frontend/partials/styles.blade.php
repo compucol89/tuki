@@ -5,8 +5,34 @@
 <link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}"></noscript>
 <!-- Font Awesome 6 (self-hosted via Laravel Mix) -->
+@if (request()->routeIs('index'))
+<script>
+  (function() {
+    var loaded = false;
+    var href = @json(mix('css/fontawesome.css'));
+
+    function loadFontAwesome() {
+      if (loaded) return;
+      loaded = true;
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    }
+
+    ['pointerdown', 'touchstart', 'keydown'].forEach(function(eventName) {
+      window.addEventListener(eventName, loadFontAwesome, { passive: true, once: true });
+    });
+    window.addEventListener('load', function() {
+      setTimeout(loadFontAwesome, 8000);
+    }, { once: true });
+  })();
+</script>
+<noscript><link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}"></noscript>
+@else
 <link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}"></noscript>
+@endif
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}"></noscript>

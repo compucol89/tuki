@@ -23,8 +23,10 @@
   );
 
   // ── Tickets — datos pre-cargados del controller (subquery JOIN) ──
-  $ev_is_free      = !$event->has_paid;
-  $ev_is_mixed     = $event->has_free && $event->has_paid;
+  $ev_has_free     = isset($event->has_free) ? (bool) $event->has_free : false;
+  $ev_has_paid     = isset($event->has_paid) ? (bool) $event->has_paid : true;
+  $ev_is_free      = !$ev_has_paid;
+  $ev_is_mixed     = $ev_has_free && $ev_has_paid;
   $ev_min_price    = isset($event->min_price) ? (float) $event->min_price : null;
   $ev_currency_symbol = $basicInfo->base_currency_symbol ?? ($currencyInfo->base_currency_symbol ?? '');
   $ev_currency_position = $basicInfo->base_currency_symbol_position ?? ($currencyInfo->base_currency_symbol_position ?? 'left');

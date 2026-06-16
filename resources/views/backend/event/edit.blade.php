@@ -413,14 +413,13 @@
               </div>
               <div class="col-lg-4">
                 <div class="form-group">
-                  <label>{{ __('Organizer') }}</label>
-                  <select name="organizer_id" class="form-control js-example-basic-single">
+                  <label>{{ __('Organizador') . '*' }}</label>
+                  <select name="organizer_id" class="form-control js-example-basic-single" required>
                     <option value="" selected>{{ __('Selecciona un organizador') }}</option>
                     @foreach ($organizers as $organizer)
                       <option {{ $organizer->id == $event->organizer_id ? 'selected' : '' }} value="{{ $organizer->id }}">{{ $organizer->username }}</option>
                     @endforeach
                   </select>
-                  <small class="form-text text-muted">{{ __("Please leave it blank for Admin's event") }}</small>
                 </div>
               </div>
             </div>

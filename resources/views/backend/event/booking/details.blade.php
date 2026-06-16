@@ -32,7 +32,7 @@
         $slug = $eventInfos ? $eventInfos->slug : '';
       @endphp
       <li class="nav-item">
-        <a href="#">{{ $eventInfos->title }}</a>
+        <a href="#">{{ $eventInfos->title ?? __('Evento no disponible') }}</a>
       </li>
       <li class="separator">
         <i class="flaticon-right-arrow"></i>
@@ -101,13 +101,16 @@
                 {{ $booking->event_date }}
               </div>
             </div>
-            @if (@$booking->evnt->date_type == 'single')
+            @php
+              $eventModel = $booking->evnt;
+            @endphp
+            @if ($eventModel && $eventModel->date_type == 'single')
               <div class="row">
                 <div class="col-lg-4">
                   <strong>{{ __('Event End Date') . ' :' }}</strong>
                 </div>
                 <div class="col-lg-8">
-                  {{ Carbon\Carbon::parse(@$booking->evnt->end_date . @$booking->evnt->end_time)->format('D, M d, Y h:i A') }}
+                  {{ Carbon\Carbon::parse($eventModel->end_date . $eventModel->end_time)->format('D, M d, Y h:i A') }}
                 </div>
               </div>
 
@@ -116,14 +119,14 @@
                   <strong>{{ __('Duration') . ' :' }}</strong>
                 </div>
                 <div class="col-lg-8">
-                  {{ @$booking->evnt->duration }}
+                  {{ $eventModel->duration }}
                 </div>
               </div>
-            @else
+            @elseif ($eventModel && $booking->event_date)
               @php
                 $date = Carbon\Carbon::parse($booking->event_date)->format('Y-m-d');
                 $time = Carbon\Carbon::parse($booking->event_date)->format('H:i');
-                $evnt = @$booking->evnt->dates()->where('start_date', $date)->where('start_time', $time)->first();
+                $evnt = $eventModel->dates()->where('start_date', $date)->where('start_time', $time)->first();
               @endphp
               <div class="row">
                 <div class="col-lg-4">
@@ -144,6 +147,19 @@
                     {{ $evnt->duration }}
                   @endif
                 </div>
+              </div>
+            @else
+              <div class="row">
+                <div class="col-lg-4">
+                  <strong>{{ __('Event End Date') . ' :' }}</strong>
+                </div>
+                <div class="col-lg-8">-</div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4">
+                  <strong>{{ __('Duration') . ' :' }}</strong>
+                </div>
+                <div class="col-lg-8">-</div>
               </div>
             @endif
 
@@ -408,7 +424,7 @@
         </div>
       </div>
     </div>
-    @if (!empty($booking->organizer_id))
+    @if (!empty($booking->organizer_id) && $booking->organizer)
       <div class="col-md-3">
         <div class="card">
           <div class="card-header">
@@ -448,7 +464,7 @@
               </div>
 
               @php
-                $organizer_info = @$booking->organizer
+                $organizer_info = $booking->organizer
                     ->organizer_info()
                     ->where('language_id', $defaultLang->id)
                     ->first();

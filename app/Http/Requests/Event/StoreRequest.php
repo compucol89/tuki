@@ -45,7 +45,8 @@ use ValidatesVenueGeocoding;
         'max:5120'
       ],
       'status' => 'required',
-      'is_featured' => 'required'
+      'is_featured' => 'required',
+      'organizer_id' => 'required|exists:organizers,id'
     ];
 
     if ($this->date_type == 'single') {

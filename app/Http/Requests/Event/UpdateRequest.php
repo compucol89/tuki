@@ -43,6 +43,7 @@ use ValidatesVenueGeocoding;
       'gallery_images' => $event_galleries == 0 ? 'numeric|min:1' : '',
       'status' => 'required',
       'is_featured' => 'required',
+      'organizer_id' => 'required|exists:organizers,id',
     ];
 
     if ($this->date_type == 'single') {

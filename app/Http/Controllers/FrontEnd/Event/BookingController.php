@@ -87,7 +87,26 @@ class BookingController extends Controller
     } else {
       try {
         $event = Session::get('event');
-        $event_id = is_object($event) ? ($event->id ?? null) : ($event['id'] ?? null);
+        $sessionEventId = is_object($event) ? ($event->id ?? null) : ($event['id'] ?? null);
+        $event_id = (int) $id;
+        if ($sessionEventId && (int) $sessionEventId !== $event_id) {
+          Log::warning('Free event booking session event mismatch', [
+            'route_event_id' => $event_id,
+            'session_event_id' => $sessionEventId,
+            'email' => $request->email,
+          ]);
+        }
+        $eventModel = Event::find($event_id);
+        if (!$eventModel || empty($eventModel->organizer_id)) {
+          Log::warning('Free event booking blocked: invalid event context', [
+            'route_event_id' => $id,
+            'session_event_id' => $sessionEventId,
+            'email' => $request->email,
+          ]);
+
+          return redirect()->route('event_booking.cancel', ['id' => $event_id ?: $id])
+            ->with('error', 'No pudimos validar el evento de tu reserva. Por favor intentá de nuevo.');
+        }
         $event = $event ? (array) $event : [];
         $arrData = array(
           'event_id' => $event_id,
@@ -174,8 +193,11 @@ class BookingController extends Controller
   {
     try {
       $event = Event::find($info['event_id']);
+      if (!$event || empty($event->organizer_id)) {
+        throw new \RuntimeException('Invalid booking event context.');
+      }
 
-      $organizer_id = $event?->organizer_id ?? null;
+      $organizer_id = $event->organizer_id;
       $variations = Session::get('selTickets');
 
       if ($variations) {

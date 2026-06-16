@@ -114,7 +114,6 @@ class CustomerController extends Controller
   public function sendVerificationMail(Request $request, $token, $mailTemplate): bool
   {
     $mailSubject = $mailTemplate->mail_subject;
-    $mailBody = $mailTemplate->mail_body;
 
     // get the website title & mail's smtp information from db
     $info = DB::table('basic_settings')
@@ -123,9 +122,11 @@ class CustomerController extends Controller
 
     $link = route('customer.signup.verify', ['token' => $token], true);
 
-    $mailBody = str_replace('{username}', $request->fname . ' ' . $request->lname, $mailBody);
-    $mailBody = str_replace('{verification_link}', $link, $mailBody);
-    $mailBody = str_replace('{website_title}', $info->website_title, $mailBody);
+    $mailBody = view('emails.customer_verification', [
+      'username' => $request->fname . ' ' . $request->lname,
+      'verificationLink' => $link,
+      'websiteTitle' => $info->website_title,
+    ])->render();
 
     // initialize a new mail
     $mail = new PHPMailer(true);

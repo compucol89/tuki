@@ -35,13 +35,23 @@
 	  $currency   = $booking->currencyText;
 	  $variations = $booking->variation ? json_decode($booking->variation, true) : null;
 	  $bookingAddons = $booking->addons;
-	  $bookingAddonsTotal = $bookingAddons->sum('subtotal');
 	  $successMetaPixelId = trim((string) ($event->meta_pixel_id ?? ''));
 	  $purchaseEventId = 'event-booking-' . $booking->id;
 	  $purchaseQuantity = $variations ? collect($variations)->sum('qty') : (int) ($booking->quantity ?? 1);
-	  $purchaseValue = round((float) $booking->price + (float) $booking->tax + (float) $bookingAddonsTotal, 2);
-	  $purchaseCurrency = $booking->currencyText ?: 'ARS';
-	  $shouldTrackMetaPurchase = $successMetaPixelId !== '' && !$isPending;
+	  $purchaseValue = round(max(
+      (float) $booking->price + (float) $booking->tax - (float) $booking->discount - (float) $booking->early_bird_discount,
+      0
+    ), 2);
+	  $purchaseCurrency = strtoupper(trim((string) ($booking->currencyText ?: 'ARS')));
+    if (!preg_match('/^[A-Z]{3}$/', $purchaseCurrency)) {
+      $purchaseCurrency = 'ARS';
+    }
+    $purchaseContentId = 'event_' . (int) $booking->event_id;
+    $purchaseContents = [[
+      'id' => $purchaseContentId,
+      'quantity' => max((int) $purchaseQuantity, 1),
+    ]];
+	  $shouldTrackMetaPurchase = $successMetaPixelId !== '' && !$isPending && $purchaseValue > 0;
 	  $metaPixelPurchaseUrl = '';
 	  if ($shouldTrackMetaPurchase) {
 	    $metaPixelPurchaseUrl = 'https://www.facebook.com/tr?' . http_build_query([
@@ -50,14 +60,14 @@
 	      'noscript' => 1,
 	      'dl' => request()->fullUrl(),
 	      'eid' => $purchaseEventId,
-	      'cd' => [
-	        'content_name' => $eventTitle,
-	        'content_type' => 'event',
-	        'currency' => $purchaseCurrency,
-	        'num_items' => $purchaseQuantity,
-	        'value' => $purchaseValue,
-	        'order_id' => $booking->booking_id,
-	      ],
+	      'cd[content_ids]' => json_encode([$purchaseContentId]),
+	      'cd[content_name]' => $eventTitle,
+	      'cd[content_type]' => 'product',
+	      'cd[contents]' => json_encode($purchaseContents),
+	      'cd[currency]' => $purchaseCurrency,
+	      'cd[num_items]' => $purchaseQuantity,
+	      'cd[value]' => $purchaseValue,
+	      'cd[order_id]' => $booking->booking_id,
 	    ]);
 	  }
 	@endphp
@@ -76,11 +86,13 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '{{ $successMetaPixelId }}');
 fbq('track', 'Purchase', {
+  content_ids: {!! json_encode([$purchaseContentId], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
   content_name: {!! json_encode($eventTitle, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
-  content_type: 'event',
+  content_type: 'product',
+  contents: {!! json_encode($purchaseContents, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
   currency: {!! json_encode($purchaseCurrency, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
   num_items: {{ (int) $purchaseQuantity }},
-  value: {{ json_encode($purchaseValue) }},
+  value: {{ number_format($purchaseValue, 2, '.', '') }},
   order_id: {!! json_encode($booking->booking_id, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
 }, {eventID: {!! json_encode($purchaseEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
 new Image().src = {!! json_encode($metaPixelPurchaseUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};

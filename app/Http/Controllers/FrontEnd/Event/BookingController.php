@@ -375,10 +375,11 @@ class BookingController extends Controller
     $booking_id = $request->booking_id;
 
     $booking = Booking::where('id', $booking_id)->firstOrFail();
+    $eventId = (int) ($booking->event_id ?: $id);
     $fiscalProfile = CustomerFiscalProfile::where('booking_id', $booking_id)->first();
-    app(EventAddonCartService::class)->forgetEvent((int) $id);
+    app(EventAddonCartService::class)->forgetEvent($eventId);
     $information['booking'] = $booking;
-    $event = Event::where('id', $id)->with([
+    $event = Event::where('id', $eventId)->with([
       'information' => function ($query) use ($language) {
         return $query->where('language_id', $language->id)->first();
       },
@@ -402,7 +403,7 @@ class BookingController extends Controller
       $start_date_time = strtotime($booking->event_date);
       $start_date_time = date('Y-m-d H:i:s', $start_date_time);
 
-      $event_date = EventDates::where('start_date_time', $start_date_time)->where('event_id', $id)->first();
+      $event_date = EventDates::where('start_date_time', $start_date_time)->where('event_id', $eventId)->first();
 
       $information['event_date'] = $event_date;
     }

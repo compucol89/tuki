@@ -85,6 +85,18 @@
           method="POST" enctype="multipart/form-data" id="payment-form">
       @csrf
 
+      @if (Session::has('error'))
+        <div class="alert alert-danger" role="alert">
+          {{ Session::get('error') }}
+        </div>
+      @endif
+
+      @if ($errors->any())
+        <div class="alert alert-danger" role="alert">
+          {{ __('Revisá los datos marcados e intentá nuevamente.') }}
+        </div>
+      @endif
+
       {{-- Hidden compatibility fields --}}
       <input type="hidden" name="total"    value="{{ $total }}">
       <input type="hidden" name="quantity" value="{{ $quantity }}">

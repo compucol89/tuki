@@ -1,92 +1,25 @@
-var CACHE_STATIC_NAME = 'static-v29';
-
-self.addEventListener('install', function(event) {
-    event.waitUntil(
-      caches.open(CACHE_STATIC_NAME)
-        .then(function(cache) {
-          console.log('[Service Worker] Precaching App Shell');
-          cache.addAll([
-            './offline',
-            './assets/front/images/offline.png',
-            './assets/front/img/static/offline-breadcrumb.jpeg'
-          ]);
-        })
-    )
+self.addEventListener('install', function (event) {
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', function(event) {
-    console.log('[Service Worker] Activating Service Worker ....', event);
-    event.waitUntil(
-      caches.keys()
-        .then(function(keyList) {
-          return Promise.all(keyList.map(function(key) {
-            if (key !== CACHE_STATIC_NAME) {
-              console.log('[Service Worker] Removing old cache.', key);
-              return caches.delete(key);
-            }
-          }));
-        })
-    );
-    return self.clients.claim();
-});
-
-self.addEventListener('fetch', function(event) {
-    event.respondWith(
-      caches.match(event.request)
-        .then(function(response) {
-          if (response) {
-            var dest = event.request.destination;
-            if (dest === 'script' || dest === 'style') {
-              var ct = (response.headers.get('content-type') || '').toLowerCase();
-              if (dest === 'script' && ct.indexOf('javascript') === -1 && ct.indexOf('ecmascript') === -1) {
-                return fetch(event.request);
-              }
-              if (dest === 'style' && ct.indexOf('css') === -1) {
-                return fetch(event.request);
-              }
-            }
-            return response;
-          } else {
-            return fetch(event.request)
-              .catch(function(err) {
-                var req = event.request;
-                var isDocument = req.mode === 'navigate' || (req.destination && req.destination === 'document');
-                if (!isDocument) {
-                  return Promise.reject(err);
-                }
-                return caches.open(CACHE_STATIC_NAME)
-                  .then(function(cache) {
-                    return cache.match('./offline');
-                  });
-              });
-          }
-        })
-    );
-});
-
-self.addEventListener('push', function(e) {
-    if (!(self.Notification && self.Notification.permission === 'granted')) {
-        //notifications aren't supported or permission not granted!
-        return;
-    }
-
-    if (e.data) {
-        var msg = e.data.json();
-        console.log(msg)
-        var options = {
-            body: msg.body,
-            icon: msg.icon
-        };
-        if (msg.actions && msg.actions.length > 0) {
-            options.actions = msg.actions;
-        }
-        e.waitUntil(self.registration.showNotification(msg.title, options));
-    }
-});
-
-
-self.addEventListener('notificationclick', function(e) {
-    if (e.action.length > 0) {
-        self.clients.openWindow(e.action);
-    }
+self.addEventListener('activate', function (event) {
+  event.waitUntil(
+    caches.keys()
+      .then(function (keys) {
+        return Promise.all(keys.map(function (key) {
+          return caches.delete(key);
+        }));
+      })
+      .then(function () {
+        return self.registration.unregister();
+      })
+      .then(function () {
+        return self.clients.matchAll({ type: 'window' });
+      })
+      .then(function (clients) {
+        clients.forEach(function (client) {
+          client.navigate(client.url);
+        });
+      })
+  );
 });

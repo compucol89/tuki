@@ -21,7 +21,7 @@
     </script>
     <script src="{{ asset(app()->environment('production') ? 'assets/front/js/script.min.js' : 'assets/front/js/script.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/toastr.js') }}" defer></script>
-    <script src="{{ asset('assets/front/js/pwa.js') }}" defer></script>
+    <script src="{{ asset('assets/front/js/pwa.js') }}?v=20260615-reset" defer></script>
 
     @if (Session::has('message'))
     <script>

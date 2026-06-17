@@ -609,10 +609,14 @@ if (!function_exists('checkSelectedFreePassLimits')) {
     $tickets = Ticket::whereIn('id', array_keys($qtyByTicket))
       ->where('event_id', $event_id)
       ->where('pricing_type', 'free')
-      ->select('id', 'max_buy_ticket')
+      ->select('id', 'max_ticket_buy_type', 'max_buy_ticket')
       ->get();
 
     foreach ($tickets as $ticket) {
+      if ($ticket->max_ticket_buy_type === 'unlimited') {
+        continue;
+      }
+
       $limit = (int) $ticket->max_buy_ticket > 0 ? (int) $ticket->max_buy_ticket : 2;
       if (checkFreePassLimit($event_id, $ticket->id, $email, $phone, $qtyByTicket[$ticket->id] ?? 0, $limit)) {
         return ['status' => 'true', 'ticket_id' => $ticket->id, 'limit' => $limit];

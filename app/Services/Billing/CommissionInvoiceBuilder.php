@@ -107,7 +107,7 @@ class CommissionInvoiceBuilder
     private function buildItemDescription(BillingSetting $billing, array $calculation): string
     {
         $template = $billing->invoice_item_description
-            ?: 'Comisión por servicio de gestión de compra de entradas TukiPass';
+            ?: 'Cargo de servicio TukiPass por gestión de entradas';
 
         $eventName = $calculation['event_name'] ?? '';
         $bookingId = $calculation['booking_id'] ?? '';

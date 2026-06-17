@@ -139,8 +139,8 @@
   <div class="container">
     <div class="header">
       <h1>TukiPass</h1>
-      <p>Factura electrónica autorizada por ARCA/AFIP</p>
-      <div class="badge">{{ $invoice->environment === 'production' ? 'Producción' : 'Homologación' }}</div>
+      <p>Factura electrónica autorizada por ARCA</p>
+      <div class="badge">Comprobante válido</div>
     </div>
 
     <div class="body">
@@ -216,7 +216,7 @@
         <div class="section-title">Detalle</div>
         @foreach($invoice->items as $item)
         <div class="row">
-          <span>{{ $item->description ?? 'Comisión TukiPass por venta de entradas' }}</span>
+          <span>{{ $item->description ?? 'Cargo de servicio TukiPass por gestión de entradas' }}</span>
           <span>${{ number_format($item->total_amount ?? $item->amount ?? 0, 2, ',', '.') }}</span>
         </div>
         @endforeach
@@ -224,7 +224,7 @@
 
       <div class="highlight">
         <div class="row">
-          <strong>Subtotal (neto):</strong>
+          <strong>Subtotal:</strong>
           <span>${{ number_format($invoice->net_amount ?? 0, 2, ',', '.') }}</span>
         </div>
         @if(($invoice->vat_amount ?? 0) > 0)
@@ -240,14 +240,14 @@
       </div>
 
       <div class="disclaimer">
-        <strong>Importante:</strong> Este comprobante corresponde al cargo de servicio/comisión de TukiPass por la gestión de la venta de entradas. La compra de las entradas propiamente dicha se realizó a través de nuestra plataforma. Si tenés dudas, contactanos por el centro de ayuda.
+        <strong>Importante:</strong> Este comprobante corresponde al cargo de servicio de TukiPass por la gestión de la reserva. TukiPass no organiza ni produce los eventos publicados, salvo indicación expresa; la realización, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.
       </div>
     </div>
 
     <div class="footer">
-      <p><strong>TukiPass</strong> — Entradas y Tickets Online para Eventos en Argentina</p>
-      <p>Factura electrónica autorizada por ARCA/AFIP</p>
-      <p>Homologación: {{ $invoice->environment ?? 'homologation' }}</p>
+      <p><strong>TukiPass</strong> — Entradas online para eventos en Argentina</p>
+      <p>TAYRONA GROUP SAS — CUIT 30-71885087-4</p>
+      <p>Factura electrónica autorizada por ARCA</p>
       <p style="margin-top: 12px; font-size: 11px; color: #999;">
         Este email fue generado automáticamente. No respondas a esta dirección.
       </p>

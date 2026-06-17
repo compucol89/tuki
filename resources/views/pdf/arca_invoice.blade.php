@@ -138,8 +138,8 @@
   <div class="header">
     <div class="header-left">
       <h1>TukiPass</h1>
-      <p>Factura electrónica autorizada por ARCA/AFIP</p>
-      <div class="badge">{{ $invoice->environment === 'production' ? 'Producción' : 'Homologación' }}</div>
+      <p>Factura electrónica autorizada por ARCA</p>
+      <div class="badge">Comprobante válido</div>
     </div>
     <div class="header-right">
       @if($billing->pdf_logo_path)
@@ -255,7 +255,7 @@
 
     <div class="highlight">
       <div class="row">
-        <strong>Subtotal (neto):</strong>
+        <strong>Subtotal:</strong>
         <span>${{ number_format($invoice->net_amount ?? 0, 2, ',', '.') }}</span>
       </div>
       @if(($invoice->vat_amount ?? 0) > 0)
@@ -271,14 +271,14 @@
     </div>
 
     <div style="background: #fff7ed; border-left: 3px solid #F97316; padding: 10px 12px; margin: 12px 0; font-size: 11px; color: #7c2d12;">
-      <strong>Importante:</strong> Este comprobante corresponde al cargo de servicio/comisión de TukiPass por la gestión de la venta de entradas. La compra de las entradas propiamente dicha se realizó a través de nuestra plataforma. Si tenés dudas, contactanos por el centro de ayuda.
+      <strong>Importante:</strong> Este comprobante corresponde al cargo de servicio de TukiPass por la gestión de la reserva. TukiPass no organiza ni produce los eventos publicados, salvo indicación expresa; la realización, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.
     </div>
   </div>
 
   <div class="footer">
-    <p><strong>TukiPass</strong> — Entradas y Tickets Online para Eventos en Argentina</p>
-    <p>Factura electrónica autorizada por ARCA/AFIP</p>
-    <p>Homologación: {{ $invoice->environment ?? 'homologation' }}</p>
+    <p><strong>TukiPass</strong> — Entradas online para eventos en Argentina</p>
+    <p>TAYRONA GROUP SAS — CUIT 30-71885087-4</p>
+    <p>Factura electrónica autorizada por ARCA</p>
   </div>
 </body>
 </html>

@@ -35,6 +35,7 @@
 	  $currency   = $booking->currencyText;
 	  $variations = $booking->variation ? json_decode($booking->variation, true) : null;
 	  $bookingAddons = $booking->addons;
+	  $bookingAddonsTotal = $bookingAddons->sum('subtotal');
 	  $successMetaPixelId = trim((string) ($event->meta_pixel_id ?? ''));
 	  $purchaseEventId = 'event-booking-' . $booking->id;
 	  $purchaseQuantity = $variations ? collect($variations)->sum('qty') : (int) ($booking->quantity ?? 1);

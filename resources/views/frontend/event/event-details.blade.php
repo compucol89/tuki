@@ -1076,19 +1076,27 @@ ttq.page();
   $eventMetaPixelId = trim((string) ($content->meta_pixel_id ?? ''));
   $metaPixelPageViewUrl = '';
   $metaPixelViewContentUrl = '';
+  $metaPixelPageViewEventId = '';
+  $metaPixelViewContentEventId = '';
+  $metaPixelInitiateCheckoutEventId = '';
 
   if ($eventMetaPixelId !== '') {
+    $metaPixelPageViewEventId = 'page-view-' . (int) $content->id . '-' . \Illuminate\Support\Str::uuid();
+    $metaPixelViewContentEventId = 'view-content-' . (int) $content->id . '-' . \Illuminate\Support\Str::uuid();
+    $metaPixelInitiateCheckoutEventId = 'initiate-checkout-' . (int) $content->id . '-' . \Illuminate\Support\Str::uuid();
     $metaPixelPageViewUrl = 'https://www.facebook.com/tr?' . http_build_query([
       'id' => $eventMetaPixelId,
       'ev' => 'PageView',
       'noscript' => 1,
       'dl' => $eventUrl,
+      'eid' => $metaPixelPageViewEventId,
     ]);
     $metaPixelViewContentUrl = 'https://www.facebook.com/tr?' . http_build_query([
       'id' => $eventMetaPixelId,
       'ev' => 'ViewContent',
       'noscript' => 1,
       'dl' => $eventUrl,
+      'eid' => $metaPixelViewContentEventId,
       'cd' => [
         'content_name' => $content->title,
         'content_type' => 'event',
@@ -1109,8 +1117,8 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '{{ $eventMetaPixelId }}');
-fbq('track', 'PageView');
-fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!}, content_type: 'event'});
+fbq('track', 'PageView', {}, {eventID: {!! json_encode($metaPixelPageViewEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
+fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!}, content_type: 'event'}, {eventID: {!! json_encode($metaPixelViewContentEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
 new Image().src = {!! json_encode($metaPixelPageViewUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
 new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
 </script>
@@ -2613,6 +2621,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var metaPixelId = {!! json_encode($eventMetaPixelId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   var metaPixelEventName = {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   var metaPixelCurrency = {!! json_encode($basicInfo->base_currency_text ?? 'ARS', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
+  var metaPixelInitiateEventId = {!! json_encode($metaPixelInitiateCheckoutEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   @endif
 
   function getSelectedTicketQty() {
@@ -2699,7 +2708,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     if (typeof window.fbq === 'function') {
-      window.fbq('track', 'InitiateCheckout', params);
+      window.fbq('track', 'InitiateCheckout', params, {eventID: metaPixelInitiateEventId});
     }
 
     var query = new URLSearchParams();
@@ -2707,6 +2716,7 @@ document.addEventListener('DOMContentLoaded', function() {
     query.set('ev', 'InitiateCheckout');
     query.set('noscript', '1');
     query.set('dl', window.location.href);
+    query.set('eid', metaPixelInitiateEventId);
     query.set('cd[content_name]', metaPixelEventName);
     query.set('cd[content_type]', 'event');
     query.set('cd[currency]', metaPixelCurrency);

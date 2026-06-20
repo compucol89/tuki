@@ -413,12 +413,14 @@
 
         // Medir la altura natural ANTES de cualquier cambio de clase
         var naturalH = headerEl.offsetHeight;
+        var headerStyles = window.getComputedStyle(headerEl);
+        var reservedH = Math.max(0, naturalH - parseFloat(headerStyles.paddingTop || 0) - parseFloat(headerStyles.paddingBottom || 0));
 
         function applyHeader(shouldFix) {
             if (shouldFix === wasFixed) return;
             if (shouldFix) {
                 // Reservar el espacio ANTES de sacar el header del flujo
-                headerEl.style.paddingBottom = naturalH + 'px';
+                headerEl.style.paddingBottom = reservedH + 'px';
                 headerEl.classList.remove('header-instant');
                 headerEl.classList.add('fixed-header');
                 $scrollBtn.fadeIn(300);
@@ -800,5 +802,4 @@ $('body').on('submit', '#vendorContactForm', function (e) {
 
 
 })
-
 

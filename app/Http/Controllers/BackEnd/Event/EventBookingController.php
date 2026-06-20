@@ -16,6 +16,7 @@ use App\Models\Event\Ticket;
 use App\Models\Language;
 use App\Models\PaymentGateway\OfflineGateway;
 use App\Models\PaymentGateway\OnlineGateway;
+use App\Services\EventTicketSalesSummaryService;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -32,39 +33,104 @@ class EventBookingController extends Controller
 {
   public function index(Request $request)
   {
-    $bookingId = $paymentStatus = null;
-    $eventIds = [];
-    if ($request->filled('booking_id')) {
-      $bookingId = $request['booking_id'];
-    }
+    $language = Language::where('is_default', 1)->first();
+    $filterParams = $request->only([
+      'search',
+      'status',
+      'from_date',
+      'to_date',
+      'document_number',
+      'booking_id',
+      'event_title',
+    ]);
 
-    if ($request->filled('event_title')) {
-      $event_contents = EventContent::where('title', 'like', '%' . $request->event_title . '%')->get();
-      foreach ($event_contents as $event_content) {
-        if (!in_array($event_content->event_id, $eventIds)) {
-          array_push($eventIds, $event_content->event_id);
-        }
-      }
-    }
+    $applyFilters = function ($query) use ($request) {
+      return $query
+        ->when($request->filled('search'), function ($query) use ($request) {
+          $search = $request->input('search');
 
-    if ($request->filled('status')) {
-      $paymentStatus = $request['status'];
-    }
+          return $query->where(function ($query) use ($search) {
+            $query->where('booking_id', 'like', '%' . $search . '%')
+              ->orWhere('fname', 'like', '%' . $search . '%')
+              ->orWhere('lname', 'like', '%' . $search . '%')
+              ->orWhere('email', 'like', '%' . $search . '%')
+              ->orWhere('phone', 'like', '%' . $search . '%')
+              ->orWhereIn('event_id', EventContent::select('event_id')
+                ->where('title', 'like', '%' . $search . '%'));
+          });
+        })
+        ->when($request->filled('booking_id'), function ($query) use ($request) {
+          return $query->where('booking_id', 'like', '%' . $request->input('booking_id') . '%');
+        })
+        ->when($request->filled('event_title'), function ($query) use ($request) {
+          return $query->whereIn('event_id', EventContent::select('event_id')
+            ->where('title', 'like', '%' . $request->input('event_title') . '%'));
+        })
+        ->when($request->filled('status'), function ($query) use ($request) {
+          return $query->where('paymentStatus', '=', $request->input('status'));
+        })
+        ->when($request->filled('from_date'), function ($query) use ($request) {
+          return $query->whereDate('created_at', '>=', Carbon::parse($request->input('from_date')));
+        })
+        ->when($request->filled('to_date'), function ($query) use ($request) {
+          return $query->whereDate('created_at', '<=', Carbon::parse($request->input('to_date')));
+        })
+        ->when($request->filled('document_number'), function ($query) use ($request) {
+          return $query->whereHas('fiscalProfile', function ($query) use ($request) {
+            $query->where('document_number', 'like', '%' . $request->input('document_number') . '%');
+          });
+        });
+    };
 
+    $bookingQuery = $applyFilters(Booking::with(['organizer', 'customerInfo', 'addons', 'arcaInvoice', 'fiscalProfile']));
+    $kpiQuery = $applyFilters(Booking::query());
+    $ticketSummaryBookings = $applyFilters(Booking::select([
+      'id',
+      'event_id',
+      'organizer_id',
+      'variation',
+      'quantity',
+      'price',
+      'tax',
+      'commission',
+      'early_bird_discount',
+      'paymentStatus',
+      'scanned_tickets',
+    ]))->get();
 
-    $bookings = Booking::with(['organizer', 'customerInfo'])
-      ->when($bookingId, function ($query) use ($bookingId) {
-        return $query->where('booking_id', 'like', '%' . $bookingId . '%');
-      })->when($paymentStatus, function ($query, $paymentStatus) {
-        return $query->where('paymentStatus', '=', $paymentStatus);
-      })
-      ->when($eventIds, function ($query) use ($eventIds) {
-        return $query->whereIn('event_id', $eventIds);
-      })
+    $bookings = $bookingQuery
       ->orderByDesc('id')
-      ->paginate(10);
+      ->paginate(10)
+      ->appends($filterParams);
 
-    return view('backend.event.booking.index', compact('bookings'));
+    $kpis = [
+      'total' => (clone $kpiQuery)->count(),
+      'charged' => (clone $kpiQuery)->where('paymentStatus', 'completed')->selectRaw('COALESCE(SUM(COALESCE(price, 0) + COALESCE(tax, 0)), 0) as total')->value('total'),
+      'ticket_revenue' => (clone $kpiQuery)->where('paymentStatus', 'completed')->selectRaw('COALESCE(SUM(COALESCE(price, 0)), 0) as total')->value('total'),
+      'organizer_net' => (clone $kpiQuery)->where('paymentStatus', 'completed')->selectRaw('COALESCE(SUM(CASE WHEN organizer_id IS NOT NULL THEN COALESCE(price, 0) - COALESCE(commission, 0) ELSE 0 END), 0) as total')->value('total'),
+      'platform_earning' => (clone $kpiQuery)->where('paymentStatus', 'completed')->selectRaw('COALESCE(SUM(CASE WHEN organizer_id IS NOT NULL THEN COALESCE(tax, 0) + COALESCE(commission, 0) ELSE COALESCE(price, 0) + COALESCE(tax, 0) END), 0) as total')->value('total'),
+      'pending' => (clone $kpiQuery)->where('paymentStatus', 'pending')->count(),
+      'completed' => (clone $kpiQuery)->where('paymentStatus', 'completed')->count(),
+      'free' => (clone $kpiQuery)->where('paymentStatus', 'free')->count(),
+    ];
+    $currencySettings = Basic::select('base_currency_symbol_position', 'base_currency_symbol')->first();
+    $defaultLanguage = $language;
+
+    $eventIds = $bookings->pluck('event_id')
+      ->merge($ticketSummaryBookings->pluck('event_id'))
+      ->filter()
+      ->unique();
+    $eventInfos = EventContent::whereIn('event_id', $eventIds)
+      ->get()
+      ->groupBy('event_id')
+      ->map(function ($items) use ($language) {
+        return $language ? ($items->firstWhere('language_id', $language->id) ?: $items->first()) : $items->first();
+      })
+      ->all();
+    $ticketSalesSummary = app(EventTicketSalesSummaryService::class)
+      ->summarize($ticketSummaryBookings, $eventInfos);
+
+    return view('backend.event.booking.index', compact('bookings', 'kpis', 'eventInfos', 'ticketSalesSummary', 'currencySettings', 'defaultLanguage'));
   }
   //updatePaymentStatus
   public function updatePaymentStatus(Request $request, $id)

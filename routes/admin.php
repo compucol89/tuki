@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackEnd\Event\CategoryController;
-use App\Http\Controllers\Organizer\EventAiImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +88,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
     Route::post('event-store', 'BackEnd\Event\EventController@store')->name('admin.event_management.store_event');
     Route::post('/event/{id}/update-status', 'BackEnd\Event\EventController@updateStatus')->name('admin.event_management.event.event_status');
     Route::post('/event/{id}/update-featured', 'BackEnd\Event\EventController@updateFeatured')->name('admin.event_management.event.update_featured');
+    Route::post('/event/{id}/settlement', 'BackEnd\Event\EventSettlementController@store')->name('admin.event_management.event.settlement.store');
     Route::post('/delete-event/{id}', 'BackEnd\Event\EventController@destroy')->name('admin.event_management.delete_event');
     Route::get('/edit-event/{id}', 'BackEnd\Event\EventController@edit')->name('admin.event_management.edit_event');
     Route::post('/event-img-dbrmv', 'BackEnd\Event\EventController@imagedbrmv')->name('admin.event.imgdbrmv');
@@ -100,11 +100,6 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
 
     Route::get('/event-images/{id}', 'BackEnd\Event\EventController@images')->name('admin.event.images');
     Route::post('/event-update', 'BackEnd\Event\EventController@update')->name('admin.event.update');
-    Route::post('events/{event}/ai-images/generate', [EventAiImageController::class, 'generate'])->name('admin.events.ai-images.generate');
-    Route::get('events/{event}/ai-images/status', [EventAiImageController::class, 'status'])->name('admin.events.ai-images.status');
-    Route::post('events/{event}/ai-images/apply', [EventAiImageController::class, 'apply'])->name('admin.events.ai-images.apply');
-    Route::post('events/{event}/ai-images/regenerate/{format}', [EventAiImageController::class, 'regenerate'])->name('admin.events.ai-images.regenerate');
-    Route::post('events/{event}/ai-images/{format}/retry', [EventAiImageController::class, 'retry'])->name('admin.events.ai-images.retry');
     Route::post('bulk/delete/event', 'BackEnd\Event\EventController@bulk_delete')->name('admin.event_management.bulk_delete_event');
 
     Route::get('event/ticket', 'BackEnd\Event\TicketController@index')->name('admin.event.ticket');

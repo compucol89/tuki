@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Event\Ticket;
 use App\Models\Event\Wishlist;
+use App\Models\EventSettlement;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -68,6 +69,11 @@ class Event extends Model
   public function booking()
   {
     return $this->hasMany(Booking::class);
+  }
+
+  public function settlements()
+  {
+    return $this->hasMany(EventSettlement::class);
   }
 
   //wishtlist

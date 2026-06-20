@@ -228,14 +228,6 @@
             </div>
           </div>
           </div>
-          @include('organizer.event.partials.ai-generate-button', [
-            'event' => $event,
-            'aiGenerateRoute' => route('admin.events.ai-images.generate', $event->id),
-            'aiStatusRoute' => route('admin.events.ai-images.status', $event->id),
-            'aiApplyRoute' => route('admin.events.ai-images.apply', $event->id),
-            'aiRegenerateRoute' => route('admin.events.ai-images.regenerate', [$event->id, '__FORMAT__']),
-          ])
-          @include('organizer.event.partials.ai-images-status')
         </div>
       </div>
 

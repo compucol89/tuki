@@ -14,10 +14,12 @@ use App\Models\City;
 use App\Models\Country;
 use App\Models\Language;
 use App\Models\Event;
+use App\Models\Event\Booking;
 use App\Models\Event\EventImage;
 use App\Models\Event\EventContent;
 use App\Models\Event\EventDates;
 use App\Models\Event\Ticket;
+use App\Services\EventSettlementService;
 use App\Models\State;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -79,12 +81,13 @@ class EventController extends Controller
   }
 
   //index
-  public function index(Request $request)
+  public function index(Request $request, EventSettlementService $eventSettlementService)
   {
     $information['langs'] = Language::all();
 
     $language = Language::where('code', $request->language)->firstOrFail();
     $information['language'] = $language;
+    $organizerId = Auth::guard('organizer')->user()->id;
 
     $event_type = request()->input('event_type');
     $title = null;
@@ -99,7 +102,7 @@ class EventController extends Controller
       ->when($title, function ($query) use ($title) {
         return $query->where('event_contents.title', 'like', '%' . $title . '%');
       })
-      ->where('events.organizer_id', '=', Auth::guard('organizer')->user()->id)
+      ->where('events.organizer_id', '=', $organizerId)
       ->when($event_type, function ($query, $event_type) {
         return $query->where('events.event_type', $event_type);
       })
@@ -107,7 +110,50 @@ class EventController extends Controller
       ->orderByDesc('events.id')
       ->paginate(10);
 
+    $eventIds = $events->pluck('id')->filter()->values();
+    $eventBookings = Booking::whereIn('event_id', $eventIds)->get()->groupBy('event_id');
+    $eventDates = EventDates::whereIn('event_id', $eventIds)->orderBy('start_date')->orderBy('start_time')->get()->groupBy('event_id');
+    $eventMetrics = [];
+
+    foreach ($events as $event) {
+      $eventId = $event->id;
+      $bookings = $eventBookings->get($eventId, collect());
+      $completed = $bookings->where('paymentStatus', 'completed');
+      $issued = $bookings->filter(fn ($booking) => in_array($booking->paymentStatus, ['completed', 'free'], true));
+      $totalTickets = $issued->sum(fn ($booking) => (int) ($booking->quantity ?? 0));
+      $scannedTickets = $issued->sum(fn ($booking) => $booking->scannedTicketsCount());
+      $firstEventDate = $eventDates->get($eventId, collect())->first();
+      $dateLabel = '-';
+
+      if ($event->date_type === 'single' && $event->start_date) {
+        $dateLabel = Carbon::parse($event->start_date . ' ' . $event->start_time)->format('d/m/Y H:i');
+      } elseif ($firstEventDate) {
+        $dateLabel = Carbon::parse($firstEventDate->start_date . ' ' . $firstEventDate->start_time)->format('d/m/Y H:i');
+      }
+
+      $eventMetrics[$eventId] = [
+        'date_label' => $dateLabel,
+        'bookings' => $bookings->count(),
+        'paid_bookings' => $completed->count(),
+        'free_bookings' => $bookings->where('paymentStatus', 'free')->count(),
+        'tickets' => $totalTickets,
+        'scanned' => $scannedTickets,
+        'scan_percent' => $totalTickets > 0 ? min(100, (int) round(($scannedTickets * 100) / $totalTickets)) : 0,
+        'charged_amount' => $completed->sum(fn ($booking) => (float) ($booking->price ?? 0) + (float) ($booking->tax ?? 0)),
+        'organizer_amount' => $completed->sum(fn ($booking) => max((float) ($booking->price ?? 0) - (float) ($booking->commission ?? 0), 0)),
+      ];
+    }
+
     $information['events'] = $events;
+    $information['eventMetrics'] = $eventMetrics;
+    $information['settlementSummaries'] = $eventSettlementService->summariesForEvents($eventIds);
+    $information['dashboardSettlementSummary'] = $eventSettlementService->dashboardSummaryForOrganizer($organizerId);
+    $information['eventKpis'] = [
+      'total' => Event::where('organizer_id', $organizerId)->count(),
+      'active' => Event::where('organizer_id', $organizerId)->where('status', 1)->count(),
+      'venue' => Event::where('organizer_id', $organizerId)->where('event_type', 'venue')->count(),
+      'online' => Event::where('organizer_id', $organizerId)->where('event_type', 'online')->count(),
+    ];
     return view('organizer.event.index', $information);
   }
   //choose_event_type

@@ -17,6 +17,7 @@ use App\Models\Language;
 use App\Models\OrganizerInfo;
 use App\Models\Transaction;
 use App\Rules\MatchOldPasswordRule;
+use App\Services\EventSettlementService;
 use DateTime;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
@@ -37,11 +38,13 @@ class OrganizerController extends Controller
   }
 
   //index
-  public function index()
+  public function index(EventSettlementService $eventSettlementService)
   {
-    $information['total_events'] = Event::where('organizer_id', Auth::guard('organizer')->user()->id)->get()->count();
-    $information['total_event_bookings'] = Booking::where('organizer_id', Auth::guard('organizer')->user()->id)->get()->count();
-    $information['transcation_count'] = Transaction::where('organizer_id', Auth::guard('organizer')->user()->id)->get()->count();
+    $organizerId = Auth::guard('organizer')->user()->id;
+    $information['total_events'] = Event::where('organizer_id', $organizerId)->get()->count();
+    $information['total_event_bookings'] = Booking::where('organizer_id', $organizerId)->get()->count();
+    $information['transcation_count'] = Transaction::where('organizer_id', $organizerId)->get()->count();
+    $information['settlementSummary'] = $eventSettlementService->dashboardSummaryForOrganizer($organizerId);
 
     //income of event bookings 
     $eventBookingTotalIncomes = DB::table('bookings')
@@ -49,7 +52,7 @@ class OrganizerController extends Controller
       ->where('paymentStatus', '=', 'completed')
       ->groupBy('month')
       ->whereYear('created_at', '=', date('Y'))
-      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->where('organizer_id', $organizerId)
       ->get();
 
     $TotalEventBookings = DB::table('bookings')
@@ -57,7 +60,7 @@ class OrganizerController extends Controller
       ->where('paymentStatus', '=', 'completed')
       ->groupBy('month')
       ->whereYear('created_at', '=', date('Y'))
-      ->where('organizer_id', Auth::guard('organizer')->user()->id)
+      ->where('organizer_id', $organizerId)
       ->get();
 
 
@@ -758,26 +761,18 @@ class OrganizerController extends Controller
         if ($check->organizer_id == $organizer_id) {
           // check payment status completed or not 
           if ($check->paymentStatus == 'completed' || $check->paymentStatus == 'free') {
-            //check scanned_tickets column empty or not
-            if (is_null($check->scanned_tickets)) {
-              $scannedTicketArr = [
-                $unique_id
-              ];
+            if (!$check->hasIssuedTicketUniqueId($unique_id)) {
+              return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified'), 'booking_id' => $request->booking_id]);
+            }
+
+            $scannedTicketArr = $check->scannedTicketIds();
+            if (!in_array($unique_id, $scannedTicketArr, true)) {
+              $scannedTicketArr[] = $unique_id;
               $check->scanned_tickets = json_encode($scannedTicketArr);
               $check->save();
-                return response()->json(['alert_type' => 'success', 'message' => __('organizer.qrcode.verified'), 'booking_id' => $request->booking_id]);
-            } else {
-              //ticket random id will be insert
-              $scannedTicketArr = json_decode($check->scanned_tickets, true);
-              if (!in_array($unique_id, $scannedTicketArr)) {
-                array_push($scannedTicketArr, $unique_id);
-                $check->scanned_tickets = json_encode($scannedTicketArr);
-                $check->save();
               return response()->json(['alert_type' => 'success', 'message' => __('organizer.qrcode.verified'), 'booking_id' => $request->booking_id]);
-              } else {
-
-                return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.already_scanned'), 'booking_id' => $request->booking_id]);
-              }
+            } else {
+              return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.already_scanned'), 'booking_id' => $request->booking_id]);
             }
           } elseif ($check->paymentStatus == 'pending') {
             return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.payment_incomplete'), 'booking_id' => $request->booking_id]);

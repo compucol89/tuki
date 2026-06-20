@@ -324,14 +324,6 @@
                     </div>
                   </div>
                 </div>
-                @include('organizer.event.partials.ai-generate-button', [
-                    'event' => $event,
-                    'aiGenerateRoute' => route('organizer.events.ai-images.generate', $event->id),
-                    'aiStatusRoute' => route('organizer.events.ai-images.status', $event->id),
-                    'aiApplyRoute' => route('organizer.events.ai-images.apply', $event->id),
-                    'aiRegenerateRoute' => route('organizer.events.ai-images.regenerate', [$event->id, '__FORMAT__']),
-                ])
-                @include('organizer.event.partials.ai-images-status')
                 <div id="section-schedule" class="mb-3">
                   <p class="text-muted mb-0">{{ __('Define si el evento tiene una sola fecha o varias funciones.') }}</p>
                 </div>

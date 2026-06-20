@@ -117,7 +117,18 @@ class StripeController extends Controller
           $bookingInfo['transcation_type'] = 1;
 
           // store the course enrolment information in database
-          $bookingInfo = $enrol->storeData($arrData);
+          try {
+            $bookingInfo = $enrol->storeData($arrData);
+          } catch (\RuntimeException $e) {
+            \Illuminate\Support\Facades\Log::warning('Stripe booking validation failed', [
+              'error' => $e->getMessage(),
+            ]);
+            $errorMessage = str_contains($e->getMessage(), 'entradas seleccionadas')
+              ? $e->getMessage()
+              : 'Hubo un problema al procesar tu reserva. Por favor intentá de nuevo.';
+            return redirect()->route('event_booking.cancel', ['id' => $eventId])
+              ->with('error', $errorMessage);
+          }
 
           if (BillingSetting::current()->enabled) {
             ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));

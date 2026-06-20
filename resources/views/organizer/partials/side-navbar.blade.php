@@ -199,6 +199,12 @@
             <p>{{ __('Pwa Scanner') }}</p>
           </a>
         </li>
+        <li class="nav-item @if (request()->routeIs('organizer.telegram_bot.*')) active @endif">
+          <a href="{{ route('organizer.telegram_bot.index') }}">
+            <i class="fab fa-telegram-plane"></i>
+            <p>{{ __('Bot de Telegram') }}</p>
+          </a>
+        </li>
 
         @php
           $support_status = DB::table('support_ticket_statuses')->first();

@@ -82,7 +82,7 @@
                             @elseif ($transcation->transcation_type == 4)
                               {{ __('Balance Add') }}
                             @elseif ($transcation->transcation_type == 5)
-                              {{ __('Balance Subtract') }}
+                              {{ $transcation->payment_method == 'event_settlement' ? __('Liquidación de evento') : __('Balance Subtract') }}
                             @endif
                           </td>
                           <td>
@@ -96,7 +96,7 @@
                                 {{ '-' }}
                               @endif
                             @else
-                              {{ $transcation->payment_method != null ? __($transcation->payment_method) : '-' }}
+                              {{ $transcation->payment_method == 'event_settlement' ? __('Liquidación de evento') : ($transcation->payment_method != null ? __($transcation->payment_method) : '-') }}
                             @endif
                           </td>
                           <td>

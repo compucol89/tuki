@@ -182,6 +182,12 @@ class BookingController extends Controller
         $request->session()->forget('discount');
 
         return redirect()->route('event_booking.complete', ['id' => $event_id, 'booking_id' => $bookingInfo->id, 'via' => 'offline']);
+      } catch (\RuntimeException $th) {
+        Log::warning('Free event booking validation failed: ' . $th->getMessage());
+        $errorMessage = str_contains($th->getMessage(), 'entradas seleccionadas')
+          ? $th->getMessage()
+          : 'Hubo un problema al procesar tu reserva. Por favor intentá de nuevo.';
+        return redirect()->back()->with('error', $errorMessage)->withInput();
       } catch (\Throwable $th) {
         Log::error('Free event booking failed: ' . $th->getMessage() . ' | ' . $th->getFile() . ':' . $th->getLine());
         return redirect()->back()->with('error', 'Hubo un problema al procesar tu reserva. Por favor intentá de nuevo.');
@@ -198,9 +204,14 @@ class BookingController extends Controller
       }
 
       $organizer_id = $event->organizer_id;
-      $variations = Session::get('selTickets');
+      $variations = $info['selTickets'] ?? Session::get('selTickets');
 
       if ($variations) {
+        $this->ensureSelectedTicketsBelongToEvent($variations, (int) $info['event_id']);
+        $info['quantity'] = !empty($info['quantity'])
+          ? $info['quantity']
+          : collect($variations)->sum(fn ($variation) => (int) ($variation['qty'] ?? 0));
+
         foreach ($variations as $variation) {
           // Transacción por ticket — lockForUpdate evita overselling en pagos simultáneos
           DB::transaction(function () use ($variation) {
@@ -250,7 +261,6 @@ class BookingController extends Controller
             }
           });
         }
-        $variations = Session::get('selTickets');
         $c_variations = [];
         foreach ($variations as $variation) {
           for ($i = 1; $i <= $variation['qty']; $i++) {
@@ -275,6 +285,9 @@ class BookingController extends Controller
               $ticket->save();
             }
           });
+        }
+        if ($event->event_type == 'venue' && $event->tickets()->exists()) {
+          throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
         }
       }
 
@@ -312,7 +325,7 @@ class BookingController extends Controller
         'paymentStatus' => $info['paymentStatus'],
         'invoice' => array_key_exists('attachmentFile', $info) ? $info['attachmentFile'] : null,
         'attachmentFile' => array_key_exists('attachmentFile', $info) ? $info['attachmentFile'] : null,
-        'event_date' => Session::get('event_date'),
+        'event_date' => $info['event_date'] ?? Session::get('event_date'),
         'conversation_id' => array_key_exists('conversation_id', $info) ? $info['conversation_id'] : null,
         'access_token' => Auth::guard('customer')->check() ? null : Str::random(40),
         'token_legacy_expires_at' => Auth::guard('customer')->check() ? null : now()->addDays(30),
@@ -357,6 +370,60 @@ class BookingController extends Controller
     } catch (\Exception $th) {
       Log::error('storeData failed: ' . $th->getMessage());
       throw $th;
+    }
+  }
+
+  private function ensureSelectedTicketsBelongToEvent($variations, int $eventId): void
+  {
+    if (!is_array($variations)) {
+      Log::warning('Invalid selected tickets payload for booking.', [
+        'event_id' => $eventId,
+      ]);
+
+      throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+    }
+
+    $ticketIds = [];
+
+    foreach ($variations as $variation) {
+      if (!is_array($variation) || !isset($variation['ticket_id']) || !is_numeric($variation['ticket_id'])) {
+        Log::warning('Invalid selected ticket item for booking.', [
+          'event_id' => $eventId,
+        ]);
+
+        throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+      }
+
+      $ticketIds[] = (int) $variation['ticket_id'];
+    }
+
+    $ticketIds = array_values(array_unique($ticketIds));
+
+    if (empty($ticketIds)) {
+      Log::warning('Empty selected tickets payload for booking.', [
+        'event_id' => $eventId,
+      ]);
+
+      throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+    }
+
+    $ticketEventIds = Ticket::whereIn('id', $ticketIds)->pluck('event_id', 'id');
+    $invalidTicketIds = [];
+
+    foreach ($ticketIds as $ticketId) {
+      if (!$ticketEventIds->has($ticketId) || (int) $ticketEventIds->get($ticketId) !== $eventId) {
+        $invalidTicketIds[] = $ticketId;
+      }
+    }
+
+    if (!empty($invalidTicketIds)) {
+      Log::warning('Selected tickets do not belong to booking event.', [
+        'event_id' => $eventId,
+        'ticket_ids' => $ticketIds,
+        'invalid_ticket_ids' => $invalidTicketIds,
+      ]);
+
+      throw new \RuntimeException('Las entradas seleccionadas no corresponden a este evento. Volvé a seleccionar tus entradas.');
     }
   }
 

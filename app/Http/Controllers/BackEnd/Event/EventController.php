@@ -22,6 +22,7 @@ use App\Models\Event\EventCategory;
 use App\Models\Event\Ticket;
 use App\Models\Organizer;
 use App\Models\State;
+use App\Services\EventSettlementService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -50,7 +51,7 @@ class EventController extends Controller
   }
 
   //index
-  public function index(Request $request)
+  public function index(Request $request, EventSettlementService $eventSettlementService)
   {
     $information['langs'] = Language::all();
 
@@ -81,6 +82,7 @@ class EventController extends Controller
       ->paginate(10);
 
     $information['events'] = $events;
+    $information['settlementSummaries'] = $eventSettlementService->summariesForEvents($events->pluck('id'));
     return view('backend.event.index', $information);
   }
   //choose_event_type

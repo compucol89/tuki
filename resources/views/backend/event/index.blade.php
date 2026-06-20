@@ -1,6 +1,22 @@
 @extends('backend.layout')
 
 @section('content')
+  @php
+    $settlementCurrencySettings = $settings ?? null;
+    $formatSettlementMoney = function ($amount) use ($settlementCurrencySettings) {
+        $symbol = optional($settlementCurrencySettings)->base_currency_symbol ?: '$';
+        $position = optional($settlementCurrencySettings)->base_currency_symbol_position ?: 'left';
+        $amount = number_format((float) $amount, 0, ',', '.');
+        return ($position == 'left' ? $symbol : '') . $amount . ($position == 'right' ? $symbol : '');
+    };
+    $settlementStatusLabels = [
+        'pending' => ['label' => __('Pendiente'), 'class' => 'warning text-dark'],
+        'partial' => ['label' => __('Parcial'), 'class' => 'info'],
+        'settled' => ['label' => __('Liquidado'), 'class' => 'success'],
+        'no_balance' => ['label' => __('Sin saldo'), 'class' => 'secondary'],
+    ];
+  @endphp
+
   <div class="page-header">
     <h4 class="page-title">{{ __('Events') }}</h4>
     <ul class="breadcrumbs">
@@ -156,11 +172,18 @@
                         <th scope="col">{{ __('Ticket') }}</th>
                         <th scope="col">{{ __('Status') }}</th>
                         <th scope="col">{{ __('Featured') }}</th>
+                        <th scope="col">{{ __('Liquidación') }}</th>
                         <th scope="col">{{ __('Actions') }}</th>
                       </tr>
                     </thead>
                     <tbody>
                       @foreach ($events as $event)
+                        @php
+                          $settlementSummary = $settlementSummaries[$event->id] ?? null;
+                          $settlementStatus = $settlementSummary
+                              ? ($settlementStatusLabels[$settlementSummary['status']] ?? $settlementStatusLabels['pending'])
+                              : $settlementStatusLabels['no_balance'];
+                        @endphp
                         <tr>
                           <td>
                             <input type="checkbox" class="bulk-check" data-val="{{ $event->id }}">
@@ -236,6 +259,19 @@
                             </form>
                           </td>
                           <td>
+                            @if ($event->organizer && $settlementSummary)
+                              <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
+                              <div class="small text-muted mt-1">
+                                {{ __('Pendiente') }}: {{ $formatSettlementMoney($settlementSummary['pending_organizer_amount']) }}
+                              </div>
+                              <div class="small text-muted">
+                                {{ __('Liquidado') }}: {{ $formatSettlementMoney($settlementSummary['covered_organizer_amount']) }}
+                              </div>
+                            @else
+                              <span class="badge badge-secondary">{{ __('No aplica') }}</span>
+                            @endif
+                          </td>
+                          <td>
                             <div class="dropdown">
                               <button class="btn btn-secondary dropdown-toggle btn-sm event-index-actions-btn" type="button"
                                 id="dropdownMenuButton-{{ $event->id }}" data-toggle="dropdown" aria-haspopup="true"
@@ -254,6 +290,13 @@
                                   {{ __('Ticket Settings') }}
                                 </a>
 
+                                @if ($event->organizer && $settlementSummary && $settlementSummary['pending_organizer_amount'] > 0)
+                                  <button type="button" class="dropdown-item" data-toggle="modal"
+                                    data-target="#eventSettlementModal-{{ $event->id }}">
+                                    {{ __('Marcar como liquidado') }}
+                                  </button>
+                                @endif
+
                                 <form class="deleteForm d-block"
                                   action="{{ route('admin.event_management.delete_event', ['id' => $event->id]) }}"
                                   method="post">
@@ -271,6 +314,98 @@
                     </tbody>
                   </table>
                 </div>
+
+                @foreach ($events as $event)
+                  @php
+                    $settlementSummary = $settlementSummaries[$event->id] ?? null;
+                  @endphp
+                  @if ($event->organizer && $settlementSummary && $settlementSummary['pending_organizer_amount'] > 0)
+                    <div class="modal fade" id="eventSettlementModal-{{ $event->id }}" tabindex="-1" role="dialog"
+                      aria-labelledby="eventSettlementModalLabel-{{ $event->id }}" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <form action="{{ route('admin.event_management.event.settlement.store', ['id' => $event->id]) }}" method="post">
+                            @csrf
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="eventSettlementModalLabel-{{ $event->id }}">
+                                {{ __('Liquidar evento') }}
+                              </h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Cerrar') }}">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <p class="mb-3">
+                                <strong>{{ $event->title }}</strong><br>
+                                <span class="text-muted">{{ __('Organizador') }}: {{ optional($event->organizer)->username }}</span>
+                              </p>
+
+                              <div class="row">
+                                <div class="col-md-4">
+                                  <div class="border rounded p-2 mb-3">
+                                    <span class="small text-muted d-block">{{ __('Total cobrado') }}</span>
+                                    <strong>{{ $formatSettlementMoney($settlementSummary['charged_amount']) }}</strong>
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="border rounded p-2 mb-3">
+                                    <span class="small text-muted d-block">{{ __('Neto organizador') }}</span>
+                                    <strong>{{ $formatSettlementMoney($settlementSummary['organizer_net_amount']) }}</strong>
+                                  </div>
+                                </div>
+                                <div class="col-md-4">
+                                  <div class="border rounded p-2 mb-3">
+                                    <span class="small text-muted d-block">{{ __('Pendiente') }}</span>
+                                    <strong>{{ $formatSettlementMoney($settlementSummary['pending_organizer_amount']) }}</strong>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>{{ __('Monto a registrar') }}</label>
+                                <select class="form-control" name="amount_option" required>
+                                  <option value="organizer_net">
+                                    {{ __('Monto completo') }} - {{ __('neto organizador') }} ({{ $formatSettlementMoney($settlementSummary['pending_organizer_amount']) }})
+                                  </option>
+                                  <option value="charged_total">
+                                    {{ __('Total cobrado') }} ({{ $formatSettlementMoney($settlementSummary['charged_amount']) }})
+                                  </option>
+                                  <option value="custom">{{ __('Monto personalizado') }}</option>
+                                </select>
+                              </div>
+
+                              <div class="form-group">
+                                <label>{{ __('Monto personalizado') }}</label>
+                                <input type="number" name="custom_amount" class="form-control" min="0.01" step="0.01"
+                                  placeholder="{{ __('Usar solo si elegís monto personalizado') }}">
+                              </div>
+
+                              <div class="form-group">
+                                <label>{{ __('Fecha de pago') }}</label>
+                                <input type="date" name="paid_at" class="form-control" value="{{ now()->format('Y-m-d') }}">
+                              </div>
+
+                              <div class="form-group">
+                                <label>{{ __('Referencia / comprobante') }}</label>
+                                <input type="text" name="reference" class="form-control" maxlength="160"
+                                  placeholder="{{ __('Transferencia, comprobante o referencia interna') }}">
+                              </div>
+
+                              <div class="form-group mb-0">
+                                <label>{{ __('Nota interna') }}</label>
+                                <textarea name="note" class="form-control" rows="3" maxlength="1000"></textarea>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('Cancelar') }}</button>
+                              <button type="submit" class="btn btn-primary">{{ __('Guardar liquidación') }}</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  @endif
+                @endforeach
               @endif
             </div>
           </div>

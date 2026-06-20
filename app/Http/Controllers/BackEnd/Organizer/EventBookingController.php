@@ -11,6 +11,7 @@ use App\Models\Event\Booking;
 use App\Models\Event\EventContent;
 use App\Models\PaymentGateway\OfflineGateway;
 use App\Models\PaymentGateway\OnlineGateway;
+use App\Services\EventTicketSalesSummaryService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -52,21 +53,68 @@ class EventBookingController extends Controller
 
     $organizer_id = Auth::guard('organizer')->user()->id;
 
-    $bookings = Booking::join('events', 'events.id', 'bookings.event_id')
-      ->when($bookingId, function ($query, $bookingId) {
+    $applyFilters = function ($query) use ($bookingId, $eventIds, $paymentStatus, $organizer_id) {
+      return $query->join('events', 'events.id', 'bookings.event_id')
+      ->when($bookingId, function ($query) use ($bookingId) {
         return $query->where('bookings.booking_id', 'like', '%' . $bookingId . '%');
       })
       ->when($eventIds, function ($query) use ($eventIds) {
-        return $query->whereIn('event_id', $eventIds);
+        return $query->whereIn('bookings.event_id', $eventIds);
       })
       ->when($paymentStatus, function ($query, $paymentStatus) {
         return $query->where('bookings.paymentStatus', '=', $paymentStatus);
       })
+      ->where('events.organizer_id', $organizer_id);
+    };
+
+    $bookingQuery = $applyFilters(Booking::with(['customerInfo', 'addons']));
+    $kpiQuery = $applyFilters(Booking::query());
+    $ticketSummaryBookings = $applyFilters(Booking::select([
+      'bookings.id',
+      'bookings.event_id',
+      DB::raw('COALESCE(bookings.organizer_id, events.organizer_id) as organizer_id'),
+      'bookings.variation',
+      'bookings.quantity',
+      'bookings.price',
+      'bookings.tax',
+      'bookings.commission',
+      'bookings.early_bird_discount',
+      'bookings.paymentStatus',
+      'bookings.scanned_tickets',
+    ]))->get();
+
+    $bookings = $bookingQuery
       ->select('bookings.*')
-      ->where('events.organizer_id', $organizer_id)
-      ->orderByDesc('id')
-      ->paginate(10);
-    return view('organizer.event.booking.index', compact('bookings'));
+      ->orderByDesc('bookings.id')
+      ->paginate(10)
+      ->appends($request->only(['booking_id', 'event_title', 'status']));
+
+    $kpis = [
+      'total' => (clone $kpiQuery)->count(),
+      'charged' => (clone $kpiQuery)->where('bookings.paymentStatus', 'completed')->selectRaw('COALESCE(SUM(COALESCE(bookings.price, 0) + COALESCE(bookings.tax, 0)), 0) as total')->value('total'),
+      'organizer_net' => (clone $kpiQuery)->where('bookings.paymentStatus', 'completed')->selectRaw('COALESCE(SUM(COALESCE(bookings.price, 0) - COALESCE(bookings.commission, 0)), 0) as total')->value('total'),
+      'completed' => (clone $kpiQuery)->where('bookings.paymentStatus', 'completed')->count(),
+      'pending' => (clone $kpiQuery)->where('bookings.paymentStatus', 'pending')->count(),
+      'free' => (clone $kpiQuery)->where('bookings.paymentStatus', 'free')->count(),
+    ];
+    $currencySettings = Basic::select('base_currency_symbol_position', 'base_currency_symbol')->first();
+
+    $language = $this->getLanguage();
+    $eventIdsForInfo = $bookings->pluck('event_id')
+      ->merge($ticketSummaryBookings->pluck('event_id'))
+      ->filter()
+      ->unique();
+    $eventInfos = EventContent::whereIn('event_id', $eventIdsForInfo)
+      ->get()
+      ->groupBy('event_id')
+      ->map(function ($items) use ($language) {
+        return $language ? ($items->firstWhere('language_id', $language->id) ?: $items->first()) : $items->first();
+      })
+      ->all();
+    $ticketSalesSummary = app(EventTicketSalesSummaryService::class)
+      ->summarize($ticketSummaryBookings, $eventInfos);
+
+    return view('organizer.event.booking.index', compact('bookings', 'eventInfos', 'kpis', 'ticketSalesSummary', 'currencySettings'));
   }
   //updatePaymentStatus
   public function updatePaymentStatus(Request $request, $id)
@@ -207,6 +255,7 @@ class EventBookingController extends Controller
   public function show($id)
   {
     $booking = $this->getOwnedBookingOrFail($id);
+    $booking->loadMissing(['customerInfo', 'addons', 'evnt']);
 
     // get course title
     $language = $this->getLanguage();

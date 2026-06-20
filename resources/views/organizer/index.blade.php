@@ -1,6 +1,16 @@
 @extends('organizer.layout')
 
 @section('content')
+  @php
+    $dashboardCurrencySettings = $settings ?? null;
+    $formatDashboardMoney = function ($amount) use ($dashboardCurrencySettings) {
+        $symbol = optional($dashboardCurrencySettings)->base_currency_symbol ?: '$';
+        $position = optional($dashboardCurrencySettings)->base_currency_symbol_position ?: 'left';
+        $amount = number_format((float) $amount, 0, ',', '.');
+        return ($position == 'left' ? $symbol : '') . $amount . ($position == 'right' ? $symbol : '');
+    };
+  @endphp
+
   <div class="mt-2 mb-4">
     <h2 class=" pb-2 ">{{ __('Welcome back') .','}} {{ Auth::guard('organizer')->user()->username . '!' }}</h2>
   </div>
@@ -29,12 +39,11 @@
 
               <div class="col-7 col-stats">
                 <div class="numbers">
-                  <p class="card-category">{{ __('My Balance') }}</p>
+                  <p class="card-category">{{ __('Pendiente por liquidar') }}</p>
                   <h4 class="card-title">
-                    {{ $settings->base_currency_symbol_position == 'left' ? $settings->base_currency_symbol : '' }}
-                    {{ round(Auth::guard('organizer')->user()->amount, 2) }}
-                    {{ $settings->base_currency_symbol_position == 'right' ? $settings->base_currency_symbol : '' }}
+                    {{ $formatDashboardMoney($settlementSummary['pending_organizer_amount'] ?? 0) }}
                   </h4>
+                  <small class="d-block">{{ __('Disponible') }}: {{ $formatDashboardMoney(Auth::guard('organizer')->user()->amount) }}</small>
                 </div>
               </div>
             </div>
@@ -57,6 +66,7 @@
                 <div class="numbers">
                   <p class="card-category">{{ __('Events') }}</p>
                   <h4 class="card-title">{{ $total_events }}</h4>
+                  <small class="d-block">{{ __('Pendientes') }}: {{ $settlementSummary['pending_events_count'] ?? 0 }}</small>
                 </div>
               </div>
             </div>

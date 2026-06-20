@@ -11,9 +11,13 @@ use App\Models\BasicSettings\Basic;
 use App\Models\Earning;
 use App\Models\Event;
 use App\Models\Event\Booking;
+use App\Models\Event\EventContent;
+use App\Models\Event\EventDates;
+use App\Models\Language;
 use App\Models\PaymentGateway\OnlineGateway;
 use App\Models\PendingBooking;
 use App\Services\EventAddonCartService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -59,11 +63,63 @@ class MercadoPagoController extends Controller
     $quantity = Session::get('quantity');
     $discount = Session::get('discount');
     $total_early_bird_dicount = Session::get('total_early_bird_dicount');
+    $event = Event::find($eventId);
+    $selectedTickets = Session::get('selTickets');
+    $eventDate = Session::get('event_date') ?: $this->resolveEventStartLabel($event);
+
+    if (!$event) {
+      Session::flash('error', 'No pudimos validar el evento de tu reserva. Por favor intentá de nuevo.');
+      return redirect()->route('index');
+    }
+
+    if ($selectedTickets) {
+      $quantity = collect($selectedTickets)->sum(fn ($ticket) => (int) ($ticket['qty'] ?? 0));
+    }
+
+    if ($event->event_type == 'venue' && empty($selectedTickets)) {
+      Log::warning('MercadoPago bookingProcess blocked: missing selected tickets.', [
+        'event_id' => $eventId,
+        'email' => $request->email,
+      ]);
+
+      return redirect()->route('event.details', [
+        'slug' => $this->resolveEventSlug((int) $eventId),
+        'id' => $eventId,
+      ])->with('error', 'No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+    }
+
+    if ((int) $quantity <= 0 || $eventDate === null || $eventDate === '') {
+      Log::warning('MercadoPago bookingProcess blocked: incomplete booking context.', [
+        'event_id' => $eventId,
+        'quantity' => $quantity,
+        'event_date' => $eventDate,
+        'email' => $request->email,
+      ]);
+
+      return redirect()->route('event.details', [
+        'slug' => $this->resolveEventSlug((int) $eventId),
+        'id' => $eventId,
+      ])->with('error', 'No pudimos validar la fecha o cantidad de tu reserva. Volvé a seleccionar tus entradas.');
+    }
 
     //tax and commission end
     $basicSetting = Basic::select('commission')->first();
 
     $tax_amount = Session::get('tax');
+    if ($total === null || $tax_amount === null) {
+      Log::warning('MercadoPago bookingProcess blocked: missing checkout totals.', [
+        'event_id' => $eventId,
+        'total' => $total,
+        'tax' => $tax_amount,
+        'email' => $request->email,
+      ]);
+
+      return redirect()->route('event.details', [
+        'slug' => $this->resolveEventSlug((int) $eventId),
+        'id' => $eventId,
+      ])->with('error', 'Tu sesión de compra expiró. Volvé a seleccionar tus entradas.');
+    }
+
     $commission_amount = ($total * $basicSetting->commission) / 100;
     try {
       $addonSummary = app(EventAddonCartService::class)->putSummaryInSession((int) $request->event_id);
@@ -104,16 +160,15 @@ class MercadoPagoController extends Controller
       'paymentMethod' => 'Mercadopago',
       'gatewayType' => 'online',
       'paymentStatus' => 'completed',
+      'event_date' => $eventDate,
       'cart_addons' => Session::get('cart_addons', []),
       'event_addons' => $addonSummary['items'],
       'event_addons_total' => $addonSummary['total'],
     );
 
     // Persistir selTickets para fallback DB/webhook (stock y variaciones)
-    $arrData['selTickets'] = Session::get('selTickets');
+    $arrData['selTickets'] = $selectedTickets;
 
-    $sessionEvent = Session::get('event');
-    $eventTitle = $sessionEvent ? $sessionEvent->title : 'Event Booking';
     $completeURL = route('event_booking.mercadopago.notify');
     $cancelURL = route('event_booking.cancel', ['id' => $eventId]);
     $chargeTotal = round((float)$total + $tax_amount, 2);
@@ -125,14 +180,7 @@ class MercadoPagoController extends Controller
     $isLocalhost = str_contains($completeURL, 'localhost') || str_contains($completeURL, '127.0.0.1');
     $preferenceData = [
       'items' => [
-        [
-          'id' => uniqid(),
-          'title' => $eventTitle . ' — ' . $quantity . ' entrada(s)',
-          'description' => $eventTitle . ' (' . $quantity . ' entrada(s))',
-          'quantity' => 1,
-          'currency_id' => $currencyInfo->base_currency_text,
-          'unit_price' => $chargeTotal
-        ]
+        $this->buildEventBookingPreferenceItem((int) $eventId, (int) $quantity, $chargeTotal, $currencyInfo->base_currency_text)
       ],
       'payer' => [
         'email' => $request->email
@@ -353,7 +401,21 @@ class MercadoPagoController extends Controller
       $bookingInfo['transcation_type'] = 1;
 
       // store the course enrolment information in database
-      $bookingInfo = $enrol->storeData($arrData);
+      try {
+        $bookingInfo = $enrol->storeData($arrData);
+      } catch (\RuntimeException $e) {
+        Log::warning('MercadoPago notify: booking validation failed', [
+          'payment_id' => $paymentId,
+          'error' => $e->getMessage(),
+        ]);
+        PendingBooking::where('token', $token)->update(['status' => 'failed']);
+        $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
+        $errorMessage = str_contains($e->getMessage(), 'entradas seleccionadas')
+          ? $e->getMessage()
+          : 'Hubo un problema al procesar tu reserva. Por favor intentá de nuevo.';
+        return redirect()->route('event_booking.cancel', ['id' => $eventId])
+          ->with('error', $errorMessage);
+      }
 
       if (BillingSetting::current()->enabled) {
         ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));
@@ -551,7 +613,18 @@ class MercadoPagoController extends Controller
       // Crear booking
       $enrol = new BookingController();
       $arrData = $pending->data;
-      $bookingInfo = $enrol->storeData($arrData);
+      try {
+        $bookingInfo = $enrol->storeData($arrData);
+      } catch (\RuntimeException $e) {
+        Log::warning('MercadoPago webhook: booking validation failed', [
+          'payment_id' => $paymentId ?? 'unknown',
+          'error' => $e->getMessage(),
+        ]);
+        if (isset($pending) && $pending) {
+          $pending->update(['status' => 'failed']);
+        }
+        return response('OK', 200);
+      }
 
       if (BillingSetting::current()->enabled) {
         ArcaInvoiceIssuingJob::dispatch($bookingInfo->id)->delay(now()->addSeconds(30));
@@ -656,5 +729,59 @@ class MercadoPagoController extends Controller
     $expected = hash_hmac('sha256', $manifest, $secret);
 
     return hash_equals($expected, $signatureParts['v1']);
+  }
+
+  private function buildEventBookingPreferenceItem(int $eventId, int $quantity, float $chargeTotal, string $currency): array
+  {
+    $eventTitle = $this->resolveEventTitle($eventId);
+    $eventDate = $this->resolveEventStartLabel(Event::find($eventId));
+    $dateSuffix = $eventDate ? ' — ' . $eventDate : '';
+
+    return [
+      'id' => 'event-' . $eventId,
+      'title' => $eventTitle . $dateSuffix . ' — ' . $quantity . ' entrada(s)',
+      'description' => $eventTitle . ($eventDate ? ' — Función: ' . $eventDate : '') . ' — ' . $quantity . ' entrada(s)',
+      'quantity' => 1,
+      'currency_id' => $currency,
+      'unit_price' => $chargeTotal,
+    ];
+  }
+
+  private function resolveEventTitle(int $eventId): string
+  {
+    $defaultLanguageId = optional(Language::where('is_default', 1)->first())->id;
+    $query = EventContent::where('event_id', $eventId);
+
+    if ($defaultLanguageId) {
+      $defaultTitle = (clone $query)->where('language_id', $defaultLanguageId)->value('title');
+      if (!empty($defaultTitle)) {
+        return $defaultTitle;
+      }
+    }
+
+    return $query->whereNotNull('title')->value('title') ?: 'Reserva de evento #' . $eventId;
+  }
+
+  private function resolveEventSlug(int $eventId): string
+  {
+    return EventContent::where('event_id', $eventId)->whereNotNull('slug')->value('slug') ?: (string) $eventId;
+  }
+
+  private function resolveEventStartLabel(?Event $event): ?string
+  {
+    if (!$event) {
+      return null;
+    }
+
+    if ($event->date_type == 'single' && $event->start_date) {
+      return Carbon::parse(trim($event->start_date . ' ' . $event->start_time))->format('d/m/Y H:i');
+    }
+
+    $date = EventDates::where('event_id', $event->id)->orderBy('start_date')->orderBy('start_time')->first();
+    if (!$date) {
+      return null;
+    }
+
+    return Carbon::parse(trim($date->start_date . ' ' . $date->start_time))->format('d/m/Y H:i');
   }
 }

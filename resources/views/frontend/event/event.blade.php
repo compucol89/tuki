@@ -13,10 +13,8 @@
 @push('styles')
   <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/daterangepicker.css') }}" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/daterangepicker.css') }}"></noscript>
-  <link rel="stylesheet" href="{{ $frontCssAsset($eventsCssPath) }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ $frontCssAsset($eventsCssPath) }}"></noscript>
-  <link rel="stylesheet" href="{{ $frontCssAsset($homeCssPath) }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ $frontCssAsset($homeCssPath) }}"></noscript>
+  <link rel="stylesheet" href="{{ $frontCssAsset($eventsCssPath) }}">
+  <link rel="stylesheet" href="{{ $frontCssAsset($homeCssPath) }}">
 @endpush
 
 @section('body-class', 'events-page')

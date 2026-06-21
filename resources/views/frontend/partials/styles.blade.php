@@ -18,20 +18,15 @@
 <!-- Font Awesome 6 (self-hosted via Laravel Mix) -->
 <link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}">
 <!-- Bootstrap css -->
-<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}">
 <!-- Padding Margin -->
-<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/spacing.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/spacing.min.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/spacing.min.css') }}">
 <!-- Menu css -->
-<link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}">
 <!-- Main css -->
-<link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}">
 <!-- Responsive css -->
-<link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}" media="print" onload="this.onload=null; this.media='all'">
-<noscript><link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}">
 <!-- Toastr css -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/toastr.css') }}"></noscript>

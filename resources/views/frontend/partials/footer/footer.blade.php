@@ -57,7 +57,7 @@
     @endphp
 
     <div class="footer-layout">
-      <section class="footer-layout__brand" aria-labelledby="footer-brand-title">
+      <section class="footer-layout__brand" aria-label="{{ config('app.name', 'Tukipass') }}">
         <div class="footer-logo">
           <a href="{{ route('index') }}">
             <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}">
@@ -66,7 +66,6 @@
         <div class="footer-copy summernote-content">{!! $footerInfo ? $footerInfo->about_company : '' !!}</div>
         @if ($socialMediaInfos->isNotEmpty())
           <div class="footer-social">
-            <p class="footer-social__label" id="footer-brand-title">{{ __('Seguinos') }}</p>
             <ul class="footer-social__list">
               @foreach ($socialMediaInfos as $socialMediaInfo)
                 @php
@@ -113,51 +112,6 @@
             <li><a href="{{ url('/defensa-al-consumidor') }}">{{ __('Defensa al consumidor') }}</a></li>
           </ul>
         </nav>
-
-        <section class="footer-nav footer-nav--contact" aria-labelledby="footer-contact-title">
-          <h2 class="footer-title" id="footer-contact-title">{{ __('Contacto') }}</h2>
-          @if (!is_null($bex) && (!empty($addresses) || !empty($mails) || !empty($phones)))
-            <ul class="footer-contact-list">
-              @if (!empty($addresses))
-                <li class="footer-contact-item">
-                  <span class="footer-contact-item__icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></span>
-                  <div class="footer-contact-item__body">
-                    <span class="sr-only">{{ __('Dirección') }}</span>
-                    @foreach ($addresses as $address)
-                      <span>{{ $address }}</span>
-                    @endforeach
-                  </div>
-                </li>
-              @endif
-              @if (!empty($mails))
-                <li class="footer-contact-item">
-                  <span class="footer-contact-item__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
-                  <div class="footer-contact-item__body">
-                    <span class="sr-only">{{ __('Email') }}</span>
-                    @foreach ($mails as $mail)
-                      <a href="mailto:{{ $mail }}" class="text-transform-normal">{{ $mail }}</a>
-                    @endforeach
-                  </div>
-                </li>
-              @endif
-              @if (!empty($phones))
-                <li class="footer-contact-item">
-                  <span class="footer-contact-item__icon" aria-hidden="true"><i class="fas fa-mobile-alt"></i></span>
-                  <div class="footer-contact-item__body">
-                    <span class="sr-only">{{ __('Teléfono') }}</span>
-                    @foreach ($phones as $phone)
-                      <a href="tel:{{ $phone }}">{{ $phone }}</a>
-                    @endforeach
-                  </div>
-                </li>
-              @endif
-            </ul>
-          @else
-            <p class="footer-contact-fallback">
-              <a href="{{ route('contact') }}">{{ __('Escribinos o consultá por tu compra') }}</a>
-            </p>
-          @endif
-        </section>
       </div>
     </div>
   </div>

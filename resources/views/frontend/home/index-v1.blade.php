@@ -233,7 +233,13 @@
     body.home-page .events-marquee-inner {
       display: flex;
       width: max-content;
+      gap: 0;
+    }
+    body.home-page .events-marquee-group {
+      display: flex;
+      flex-shrink: 0;
       gap: 12px;
+      padding-right: 12px;
     }
     body.home-page .events-marquee-item {
       position: relative;
@@ -304,13 +310,16 @@
     }
     body.home-page .emq-bottom__title {
       display: -webkit-box;
-      min-height: calc(15px * 1.25 * 2);
+      min-height: calc(16px * 1.15 * 2);
       overflow: hidden;
       color: #fff;
       font-family: var(--tuki-font-sans);
-      font-size: 15px;
-      font-weight: 800;
-      line-height: 1.25;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: 0;
+      text-rendering: geometricPrecision;
+      text-wrap: balance;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
     }
@@ -412,8 +421,9 @@
         padding: 26px 14px 13px;
       }
       body.home-page .emq-bottom__title {
-        min-height: calc(14px * 1.25 * 2);
-        font-size: 14px;
+        min-height: calc(15px * 1.16 * 2);
+        font-size: 15px;
+        line-height: 1.16;
       }
     }
     @media (max-width: 575px) {
@@ -476,11 +486,17 @@
 
     <div class="container hero-content-wrapper">
       <div class="hero-content hero-content--premium text-center">
-        <h1 id="heroHeadingHome">{{ __('Tu próximo evento a un solo clic') }}</h1>
-        <p class="hero-lede">{{ __('Descubrí eventos y sacá tus entradas en minutos') }}</p>
+        <span class="hero-kicker">{{ __('Tukipass Argentina') }}</span>
+        <h1 id="heroHeadingHome">{{ __('Reservá entradas para vivir lo que viene') }}</h1>
+        <p class="hero-lede">{{ __('Agenda real, eventos cerca tuyo y una experiencia de reserva simple, clara y segura.') }}</p>
         <div class="hero-actions justify-content-center">
-          <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Ver eventos') }}</a>
-          <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Vender mis entradas') }}</a>
+          <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Explorar eventos') }}</a>
+          <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Publicar un evento') }}</a>
+        </div>
+        <div class="hero-proof" aria-label="{{ __('Beneficios de Tukipass') }}">
+          <span>{{ __('Entrada digital') }}</span>
+          <span>{{ __('Pago seguro') }}</span>
+          <span>{{ __('Soporte local') }}</span>
         </div>
       </div>
     </div>
@@ -490,7 +506,11 @@
   <!-- Event Images Marquee Start -->
   @if ($marqueeEvents->isNotEmpty())
     @php
-      $mq_items = $marqueeEvents->take(10)->map(function ($ev) {
+      $mq_source = $marqueeEvents->take(10)->values();
+      $mq_source_count = $mq_source->count();
+      $mq_min_items = max(10, $mq_source_count);
+      $mq_items = collect(range(0, $mq_min_items - 1))->map(function ($index) use ($mq_source, $mq_source_count, $badgeMap) {
+        $ev = $mq_source[$index % $mq_source_count];
         $eventImage = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $ev->thumbnail);
 
         return [
@@ -500,6 +520,7 @@
           'badge'  => $badgeMap[$ev->id] ?? null,
           'carbon' => \Carbon\Carbon::parse($ev->start_date)->locale('es'),
           'time'   => $ev->start_time ? \Carbon\Carbon::parse($ev->start_time)->format('H:i') : null,
+          'is_duplicate' => $index >= $mq_source_count,
         ];
       });
     @endphp
@@ -515,10 +536,11 @@
 
         <div class="events-marquee-track">
           <div class="events-marquee-inner">
-            @for ($copy = 0; $copy < 3; $copy++)
+            @for ($copy = 0; $copy < 2; $copy++)
+              <div class="events-marquee-group" @if($copy > 0) aria-hidden="true" @endif>
               @foreach ($mq_items as $mqi)
                 @php $ev = $mqi['event']; $mq_carbon = $mqi['carbon']; @endphp
-                <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0) aria-hidden="true" tabindex="-1" @endif>
+                <a href="{{ $mqi['url'] }}" class="events-marquee-item" @if($copy > 0 || $mqi['is_duplicate']) aria-hidden="true" tabindex="-1" @endif>
                   <img src="{{ $mqi['src'] }}" alt="{{ $ev->title }}" width="400" height="267" loading="lazy">
 
                   <div class="emq-date" aria-hidden="true">
@@ -544,6 +566,7 @@
                   </div>
                 </a>
               @endforeach
+              </div>
             @endfor
           </div>
         </div>
@@ -565,8 +588,8 @@
     <div class="container">
       <div class="hs-search-head">
         <div>
-          <h2 class="hs-search-head__title">{{ __('Encontrá un plan que te cierre') }}</h2>
-          <p class="hs-search-head__sub">{{ __('Buscá por evento, ciudad o categoría y filtrá en segundos.') }}</p>
+          <h2 class="hs-search-head__title">{{ __('Encontrá tu próxima salida') }}</h2>
+          <p class="hs-search-head__sub">{{ __('Buscá por nombre, ciudad o categoría y reservá sin vueltas.') }}</p>
         </div>
       </div>
 
@@ -611,12 +634,10 @@
 
       {{-- Quick filters --}}
       <div class="hs-search-chips">
-        <span class="hs-search-chips__label">{{ __('Explorá rápido:') }}</span>
+        <span class="hs-search-chips__label">{{ __('Explorá:') }}</span>
         <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Todos') }}</a>
         <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">{{ __('Gratis') }}</a>
         <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">{{ __('Pagos') }}</a>
-        <a href="{{ route('events', ['event' => 'venue']) }}" class="hs-chip">{{ __('Presenciales') }}</a>
-        <a href="{{ route('events', ['event' => 'online']) }}" class="hs-chip">{{ __('En línea') }}</a>
         <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' to ' . $today->format('Y-m-d')]) }}" class="hs-chip">{{ __('Hoy') }}</a>
         <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' to ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">{{ __('Este finde') }}</a>
         @foreach ($categories->take(4) as $cat)

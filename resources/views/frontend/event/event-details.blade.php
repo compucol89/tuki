@@ -260,28 +260,6 @@
       overflow: hidden;
     }
 
-    .page-event-detail .ed-sidebar-map {
-      margin: 0 0 14px;
-    }
-
-    .page-event-detail .ed-sidebar-map .ed-card__head {
-      padding: 14px 16px 10px;
-    }
-
-    .page-event-detail .ed-sidebar-map .ed-card__title {
-      font-size: 16px;
-    }
-
-    .page-event-detail .ed-sidebar-map .ed-card__body--embed {
-      padding: 0;
-    }
-
-    .page-event-detail .ed-sidebar-map .ed-card__iframe {
-      width: 100%;
-      display: block;
-      border: 0;
-    }
-
     /* .ed-refund-band — estilos en event-detail.css */
 
     .page-event-detail .ed-ticket-card,
@@ -291,12 +269,6 @@
       background: rgba(255, 255, 255, 0.96);
       box-shadow: 0 18px 40px rgba(var(--tuki-dark-rgb), 0.10);
       overflow: hidden;
-    }
-
-    .page-event-detail .ed-related > .container > .ed-card {
-      box-shadow: none;
-      border-color: transparent;
-      background: transparent;
     }
 
     .ed-breadcrumbs {
@@ -404,95 +376,6 @@
 
     .ed-mobile-bar {
       display: none;
-    }
-
-    .ed-related {
-      padding: 20px 0 28px;
-      background: transparent;
-      border-top: 0;
-    }
-
-    .ed-related__grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .ed-related--count-1 .ed-related__grid {
-      grid-template-columns: minmax(280px, 360px);
-    }
-
-    .ed-related--count-1 .ed-card__body {
-      padding-bottom: 0;
-    }
-
-    .ed-related__card {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      border-radius: var(--tuki-radius-xl);
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
-      box-shadow: 0 10px 24px rgba(var(--tuki-dark-rgb), 0.06);
-      text-decoration: none !important;
-      color: inherit;
-      transition: transform var(--tuki-transition-base), box-shadow var(--tuki-transition-base), border-color var(--tuki-transition-base);
-    }
-
-    .ed-related__card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(249, 115, 22, 0.18);
-      box-shadow: 0 16px 30px rgba(var(--tuki-dark-rgb), 0.08);
-    }
-
-    .ed-related__thumb {
-      width: 100%;
-      aspect-ratio: 16 / 10;
-      object-fit: cover;
-      background: var(--tuki-border-light);
-    }
-
-    .ed-related__body {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: var(--tuki-radius-lg);
-    }
-
-    .ed-related__meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 12px;
-      font-size: 13px;
-      color: var(--tuki-muted);
-    }
-
-    .ed-related__title {
-      margin: 0;
-      font-size: var(--tuki-text-xl);
-      line-height: 1.3;
-      color: var(--tuki-dark);
-    }
-
-    .ed-related__desc {
-      margin: 0;
-      color: #4b5563;
-    }
-
-    .ed-related__footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: auto;
-      font-weight: 700;
-      color: var(--tuki-dark);
-    }
-
-    .ed-related__price {
-      color: var(--tuki-primary-accessible);
     }
 
     .ed-hero__btn,
@@ -624,14 +507,6 @@
       .ed-mobile-bar__cta--disabled {
         background: var(--tuki-muted-light);
         pointer-events: none;
-      }
-
-      .ed-related__grid {
-        grid-template-columns: 1fr;
-      }
-
-      .ed-related {
-        padding: 16px 0 24px;
       }
 
       .page-event-detail .ed-section,
@@ -1264,6 +1139,23 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
     document.fonts.ready.then(schedule).catch(function() { schedule(); });
   }
 })();
+
+(function toggleMobileBookingBar() {
+  var body = document.body;
+  if (!body.classList.contains('page-event-detail')) return;
+
+  var card = document.getElementById('event-booking-card');
+  var mobileBar = document.querySelector('.ed-mobile-bar');
+  if (!card || !mobileBar || typeof IntersectionObserver === 'undefined') return;
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      body.classList.toggle('ed-booking-card-visible', entry.isIntersecting);
+    });
+  }, { threshold: 0 });
+
+  observer.observe(card);
+})();
 </script>
 @endpush
 
@@ -1277,6 +1169,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
     $eventDescriptionHtml = $content->description ?? '';
     $eventDescriptionHtml = preg_replace('/<\s*h1\b/i', '<h2', $eventDescriptionHtml);
     $eventDescriptionHtml = preg_replace('/<\s*\/\s*h1\s*>/i', '</h2>', $eventDescriptionHtml);
+    $eventDescriptionHtml = preg_replace('/<p>(?:\s|&nbsp;|\xC2\xA0|<br\s*\/?>)*<\/p>/iu', '', $eventDescriptionHtml);
     $publicOrganizerName = trim((string) ($summaryOrganizer ?? ''));
     if ($publicOrganizerName === '' || \Illuminate\Support\Str::lower($publicOrganizerName) === 'admin') {
       $publicOrganizerName = 'TukiPass';
@@ -1285,7 +1178,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
     $heroNudges = $isOnlineEvent
       ? [
           __('Confirmación al instante.'),
-          __('Comprá en minutos, sin vueltas.'),
+          __('Reservá en minutos, sin vueltas.'),
           __('Tu acceso llega por email.'),
           __('Entrada 100% digital.'),
           __('Desde el celular o la PC.'),
@@ -1298,13 +1191,35 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
           __('Confirmación al instante.'),
           __('Llegás y mostrás el QR.'),
           __('Sin filas en taquilla.'),
-          __('Comprá en minutos.'),
+          __('Reservá en minutos.'),
           __('Instrucciones en tu mail.'),
         ];
+    $interestCountLabel = number_format((int) ($edInterestIndicator ?? 0));
+    $ticketSignalMessages = [
+      ['lead' => $interestCountLabel, 'copy' => __('movimientos recientes en este evento')],
+      ['lead' => __('Reservá online'), 'copy' => __('y recibí la confirmación al instante')],
+      ['lead' => __('Entrada digital'), 'copy' => __('la mostrás desde el celular, sin imprimir nada')],
+      ['lead' => __('Tu lugar'), 'copy' => __('queda reservado en pocos minutos')],
+      ['lead' => __('Mejor con tiempo'), 'copy' => __('dejá la entrada resuelta antes de salir')],
+      ['lead' => __('Sin vueltas'), 'copy' => __('elegís cantidad, confirmás y listo')],
+      ['lead' => __('Plan armado'), 'copy' => __('entrada en el mail y datos del evento a mano')],
+      ['lead' => __('Para ir tranquilo'), 'copy' => __('precio y condiciones claras antes de pagar')],
+      ['lead' => __('Un paso más'), 'copy' => __('y tu reserva queda encaminada')],
+      ['lead' => __('Desde el celular'), 'copy' => __('tu QR queda listo para el día del evento')],
+    ];
     $eventTimezone = $websiteTimezone ?? $websiteInfo->timezone;
     $eventStartAt = !empty($startDateTime) ? \Carbon\Carbon::parse($startDateTime, $eventTimezone) : null;
     $eventEndAt = !empty($endDateTime) ? \Carbon\Carbon::parse($endDateTime, $eventTimezone) : null;
     $countdownNow = !empty($nowTime) ? \Carbon\Carbon::parse($nowTime, $eventTimezone) : \Carbon\Carbon::now($eventTimezone);
+    $quickDate = $eventStartAt ?: $countdownNow;
+    $locationAddressParts = collect(explode(',', (string) $content->address))
+      ->map(fn ($part) => trim($part))
+      ->filter()
+      ->values();
+    $locationPrimary = $locationAddressParts->take(2)->implode(', ');
+    if ($locationPrimary === '') {
+      $locationPrimary = __('Lugar a confirmar');
+    }
   @endphp
   @php
     if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price'])) {
@@ -1382,6 +1297,145 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
           @endforeach
         </div>
 
+        <div class="ed-info-card__body ed-hero-info" aria-label="{{ __('Datos clave del evento') }}">
+          <div class="ed-info-grid" role="list">
+            <div class="ed-info-item" role="listitem">
+              <span class="ed-info-icon ed-info-icon--date" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </span>
+              <div class="ed-info-item__content">
+                <span class="ed-info-item__label">{{ __('Fecha y hora') }}</span>
+                <strong class="ed-info-item__value">{{ ucfirst($quickDate->translatedFormat('l j \d\e F \d\e Y')) }}</strong>
+                <span class="ed-info-item__meta">{{ $quickDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
+              </div>
+            </div>
+
+            <div class="ed-info-item" role="listitem">
+              <span class="ed-info-icon ed-info-icon--place" aria-hidden="true">
+                @if ($content->event_type == 'online')
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                  </svg>
+                @else
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                @endif
+              </span>
+              <div class="ed-info-item__content">
+                <span class="ed-info-item__label">{{ $content->event_type == 'online' ? __('Modalidad') : __('Ubicación') }}</span>
+                <strong class="ed-info-item__value">{{ $content->event_type == 'online' ? __('Online') : $locationPrimary }}</strong>
+                <span class="ed-info-item__meta">
+                  @if ($content->event_type == 'online')
+                    {{ __('Desde celular o computadora') }}
+                  @else
+                    {{ collect([$content->city, $content->state, $content->country])->filter()->implode(', ') ?: __('Presencial') }}
+                  @endif
+                </span>
+              </div>
+            </div>
+
+            <div class="ed-info-item" role="listitem">
+              <span class="ed-info-icon ed-info-icon--org" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+              <div class="ed-info-item__content">
+                <span class="ed-info-item__label">{{ __('Organizador') }}</span>
+                <strong class="ed-info-item__value">{{ $publicOrganizerName }}</strong>
+                <span class="ed-info-item__meta">{{ __('Productor del evento') }}</span>
+              </div>
+            </div>
+
+            <div class="ed-info-item" role="listitem">
+              <span class="ed-info-icon ed-info-icon--stock" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </span>
+              <div class="ed-info-item__content">
+                <span class="ed-info-item__label">{{ __('Disponibilidad') }}</span>
+                @if ($ticketSummary['has_unlimited_stock'])
+                  <strong class="ed-info-item__value ed-info-item__value--available">{{ __('Venta online activa') }}</strong>
+                  <span class="ed-info-item__meta">{{ __('Cupos disponibles en este momento') }}</span>
+                @elseif (($signalStock ?? 0) > 0)
+                  <strong class="ed-info-item__value{{ ($signalStock ?? 0) <= 10 ? ' ed-info-item__value--low' : ' ed-info-item__value--available' }}">
+                    {{ ($signalStock ?? 0) <= 10 ? __('Alta demanda') : __('Venta online activa') }}
+                  </strong>
+                  <span class="ed-info-item__meta">{{ __('Reservá con anticipación') }}</span>
+                @else
+                  <strong class="ed-info-item__value">{{ __('Consultar') }}</strong>
+                  <span class="ed-info-item__meta">{{ __('Disponibilidad no especificada') }}</span>
+                @endif
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ed-hero-facts ed-hero-facts--mobile" role="list" aria-label="{{ __('Datos clave del evento') }}">
+          <div class="ed-hero-fact" role="listitem">
+            <span class="ed-hero-fact__icon ed-hero-fact__icon--date" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </span>
+            <span class="ed-hero-fact__copy">
+              <span class="ed-hero-fact__label">{{ __('Fecha y hora') }}</span>
+              <strong class="ed-hero-fact__value">{{ ucfirst($quickDate->translatedFormat('l j \d\e F')) }}</strong>
+              <span class="ed-hero-fact__meta">{{ $quickDate->format('H:i') }} · {{ timeZoneOffset($websiteInfo->timezone) }} {{ __('GMT') }}</span>
+            </span>
+          </div>
+          <div class="ed-hero-fact" role="listitem">
+            <span class="ed-hero-fact__icon ed-hero-fact__icon--place" aria-hidden="true">
+              @if ($content->event_type == 'online')
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                </svg>
+              @else
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+              @endif
+            </span>
+            <span class="ed-hero-fact__copy">
+              <span class="ed-hero-fact__label">{{ $content->event_type == 'online' ? __('Modalidad') : __('Ubicación') }}</span>
+              <strong class="ed-hero-fact__value">{{ $content->event_type == 'online' ? __('Online') : $locationPrimary }}</strong>
+              <span class="ed-hero-fact__meta">
+                @if ($content->event_type == 'online')
+                  {{ __('Desde celular o computadora') }}
+                @else
+                  {{ collect([$content->city, $content->state, $content->country])->filter()->implode(', ') ?: __('Presencial') }}
+                @endif
+              </span>
+            </span>
+          </div>
+          <div class="ed-hero-fact" role="listitem">
+            <span class="ed-hero-fact__icon ed-hero-fact__icon--stock" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </span>
+            <span class="ed-hero-fact__copy">
+              <span class="ed-hero-fact__label">{{ __('Disponibilidad') }}</span>
+              @if ($ticketSummary['has_unlimited_stock'])
+                <strong class="ed-hero-fact__value ed-hero-fact__value--available">{{ __('Venta online activa') }}</strong>
+                <span class="ed-hero-fact__meta">{{ __('Cupos disponibles') }}</span>
+              @elseif (($signalStock ?? 0) > 0)
+                <strong class="ed-hero-fact__value{{ ($signalStock ?? 0) <= 10 ? ' ed-hero-fact__value--low' : ' ed-hero-fact__value--available' }}">
+                  {{ ($signalStock ?? 0) <= 10 ? __('Alta demanda') : __('Venta online activa') }}
+                </strong>
+                <span class="ed-hero-fact__meta">{{ __('Reservá con anticipación') }}</span>
+              @else
+                <strong class="ed-hero-fact__value">{{ __('Consultar') }}</strong>
+                <span class="ed-hero-fact__meta">{{ __('Disponibilidad no especificada') }}</span>
+              @endif
+            </span>
+          </div>
+        </div>
+
         {{-- Acciones: favoritos, share, mapa --}}
         <div class="ed-ev-actions">
           @if (Auth::guard('customer')->check())
@@ -1413,44 +1467,29 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
         </div>
         {{-- /ed-hero-grid__main --}}
 
-        <aside class="ed-hero-grid__aside" aria-label="{{ __('Comprar entradas') }}">
+        <aside class="ed-hero-grid__aside" aria-label="{{ __('Reservar entradas') }}">
             {{-- CARD 1: Ticket form (única instancia #event-booking-card) --}}
             <div class="ed-ticket-card" id="event-booking-card">
-              <div class="ed-ticket-card__head">
-                {{-- Status pill --}}
-                <div class="ed-head-top">
-                  <span class="ed-head-status {{ $over ? 'ed-head-status--over' : 'ed-head-status--open' }}" role="status">
-                    {{ $over ? __('Venta cerrada') : __('Venta abierta') }}
+              @if (($edInterestIndicator ?? 0) > 0)
+                <div class="ed-ticket-card__head ed-ticket-card__head--interest ed-ticket-card__head--signal" aria-label="{{ __('Interés del evento') }}" data-ticket-signal-rotator>
+                  <span id="ed-ticket-signal-live" class="sr-only" aria-live="polite" aria-atomic="true">
+                    {{ $ticketSignalMessages[0]['lead'] }} {{ $ticketSignalMessages[0]['copy'] }}
                   </span>
-                  <span class="ed-ticket-card__head-title">{{ __('Entradas') }}</span>
+                  <span class="ed-ticket-signal__eyebrow">
+                    <span class="ed-ticket-signal__dot" aria-hidden="true"></span>
+                    {{ __('Se está moviendo') }}
+                  </span>
+                  <span class="ed-ticket-signal__rail" aria-hidden="true">
+                    @foreach ($ticketSignalMessages as $messageIndex => $signalMessage)
+                      <span class="ed-ticket-signal__item {{ $messageIndex === 0 ? 'ed-ticket-signal__item--active' : '' }}">
+                        <strong>{{ $signalMessage['lead'] }}</strong>
+                        <span>{{ $signalMessage['copy'] }}</span>
+                      </span>
+                    @endforeach
+                  </span>
+                  <span class="ed-ticket-signal__progress" aria-hidden="true"><span></span></span>
                 </div>
-                {{-- Price --}}
-                <p class="ed-ticket-card__head-price">
-                  @if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price']))
-                    {{ $freeLabel }}
-                  @elseif($ticketSummary['min_ticket_price'] == 0 && is_numeric($ticketSummary['lowest_paid_price']))
-                    {{ $freeLabel }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['lowest_paid_price']) }}
-                  @elseif($ticketSummary['min_ticket_price'] == 0)
-                    {{ $freeLabel }}
-                  @elseif($ticketSummary['has_price_range'] && is_numeric($ticketSummary['second_ticket_price']))
-                    {{ symbolPrice($ticketSummary['min_ticket_price']) }}<span class="ed-ticket-card__head-sep">—</span>{{ symbolPrice($ticketSummary['second_ticket_price']) }}
-                  @else
-                    {{ symbolPrice($ticketSummary['min_ticket_price']) }}
-                  @endif
-                </p>
-                {{-- Stock indicator --}}
-                @if (!$over)
-                  <p class="ed-head-stock">
-                    @if ($ticketSummary['has_unlimited_stock'])
-                      <span class="ed-head-stock__dot" aria-hidden="true"></span>{{ __('Venta online activa') }}
-                    @elseif($ticketSummary['total_stock'] !== null && $ticketSummary['total_stock'] <= 10)
-                      <span class="ed-head-stock__dot ed-head-stock__dot--low" aria-hidden="true"></span>{{ __('Alta demanda') }}
-                    @elseif($ticketSummary['total_stock'] !== null)
-                      <span class="ed-head-stock__dot" aria-hidden="true"></span>{{ __('Venta online activa') }}
-                    @endif
-                  </p>
-                @endif
-              </div>
+              @endif
               <div class="ed-ticket-card__body ed-ticket-card__body--premium">
                 <form action="{{ route('check-out2', [], false) }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}">
                   @csrf
@@ -1493,12 +1532,11 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                     @endif
 
                     <div class="ed-ticket-picker__intro">
-                      <p class="ed-ticket-picker__title" id="ed-ticket-picker-label">{{ __('Seleccioná tus entradas') }}</p>
-                      <p class="ed-ticket-picker__sub">{{ __('Elegí cantidad y seguí al checkout seguro.') }}</p>
-                      <span class="ed-ticket-picker__badge">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                        {{ __('Compra protegida') }}
-                      </span>
+                      <p class="ed-ticket-picker__title" id="ed-ticket-picker-label">
+                        {{ __('Elegí tu acceso') }}
+                        <svg class="ed-ticket-picker__title-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+                      </p>
+                      <p class="ed-ticket-picker__sub">{{ __('Seleccioná cantidad. Reservás online. Recibís tu entrada digital al instante.') }}</p>
                     </div>
                     <div class="ed-ticket-picker__list" role="group" aria-labelledby="ed-ticket-picker-label">
 
@@ -1945,6 +1983,10 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                     @if ($tickets_count > 0)
                       <div class="ed-total-row ed-total-row--premium" role="group" aria-labelledby="ed-booking-total-label" aria-describedby="ed-booking-total-note">
                         <span class="ed-total-label" id="ed-booking-total-label">{{ __('Subtotal entradas') }}</span>
+                        <span class="ed-total-protection">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                          {{ __('Reserva protegida') }}
+                        </span>
                         <span class="ed-total-value" dir="ltr" aria-live="polite" aria-atomic="true">
                           @if ($basicInfo->base_currency_symbol_position == 'left')
                             <span class="ed-total-value__currency">{{ $basicInfo->base_currency_symbol }}</span><span id="total_price" class="ed-total-value__amount">0</span>
@@ -1954,47 +1996,67 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                         </span>
                         <p class="ed-total-row__note" id="ed-booking-total-note">
                           @if (($basicInfo->tax ?? 0) > 0)
-                            {{ __('Incluye el precio publicado de las entradas. Los impuestos (:pct%) y otros cargos del medio de pago, si correspondieran, se muestran desglosados en el checkout antes de pagar.', ['pct' => number_format((float) $basicInfo->tax, 2, ',', '.')]) }}
+                            {{ __('Incluye el precio publicado de las entradas. Los impuestos (:pct%) y otros cargos del medio de pago, si correspondieran, se muestran desglosados antes de pagar.', ['pct' => number_format((float) $basicInfo->tax, 2, ',', '.')]) }}
                           @else
-                            {{ __('Incluye el precio publicado de las entradas. Cargos del medio de pago u otros conceptos, si correspondieran, se muestran en el checkout antes de pagar.') }}
+                            {{ __('Incluye el precio publicado de las entradas. Cargos del medio de pago u otros conceptos, si correspondieran, se muestran antes de pagar.') }}
                           @endif
                         </p>
                         <input type="hidden" name="total" id="total">
-                      </div>
-                      {{-- ed-order-recap removed: total already shown above --}}
-                      <div class="ed-cta-zone ed-cta-zone--premium">
-                        <button class="ed-buy-btn ed-buy-btn--premium" type="submit" {{ $over ? 'disabled' : '' }}>
+                        <button class="ed-buy-btn ed-buy-btn--premium ed-total-row__action" type="submit" {{ $over ? 'disabled' : '' }}>
                           {{ $over ? __('Evento finalizado') : __('Reservar mi lugar') }}
                           @if (!$over)
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                           @endif
                         </button>
                         @if (!$over)
-                          <p class="ed-cta-zone__hint small font-weight-semibold mt-2 mb-0">{{ __('Comprás online. Recibís tu acceso al instante.') }}</p>
-                          <ul class="ed-trust-row" role="list" aria-label="{{ __('Por qué comprar con confianza') }}">
+                          <ul class="ed-trust-row ed-total-row__trust" role="list" aria-label="{{ __('Por qué reservar con confianza') }}">
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                               {{ __('Pago seguro') }}
                             </li>
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                              {{ __('Acceso al instante') }}
+                              {{ __('Acceso inmediato') }}
                             </li>
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                              {{ __('Soporte humano') }}
+                              {{ __('Soporte local') }}
                             </li>
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                              {{ __('Reembolsos disponibles') }}
+                              {{ __('Reembolsos') }}
                             </li>
                           </ul>
                         @endif
                       </div>
+                      {{-- ed-order-recap removed: total already shown above --}}
                     @endif
                   </div>
 
                 </form>
+                @if($images->count() > 0)
+                  <div class="ed-ticket-gallery d-lg-none" aria-label="{{ __('Imagen principal del evento') }}">
+                    <img
+                      src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image) }}"
+                      alt="{{ $content->title }}"
+                      class="ed-ticket-gallery__img"
+                      width="800" height="533"
+                      loading="lazy">
+                    <nav class="ed-body-breadcrumbs ed-body-breadcrumbs--under-image" aria-label="{{ __('Ruta de navegación') }}">
+                      <ol class="ed-breadcrumbs__list">
+                        <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
+                        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+                        <li><a href="{{ route('events') }}">{{ __('Eventos') }}</a></li>
+                        @if (!empty($content->name))
+                          <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+                          <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
+                        @endif
+                        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+                        <li class="ed-breadcrumbs__current" aria-current="page" title="{{ $content->title }}">{{ $content->title }}</li>
+                      </ol>
+                    </nav>
+                  </div>
+                @endif
                 @if ($tickets_count > 0 && (!isset($content->event_addons_enabled) || $content->event_addons_enabled))
                   @include('frontend.event.partials.addons', ['event' => $content, 'variant' => 'sidebar'])
                 @endif
@@ -2017,8 +2079,19 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
         {{-- Left column --}}
         <div class="col-lg-8">
 
+          @if(!empty($content->thumbnail))
+          <figure class="ed-event-cover" aria-label="{{ __('Imagen de portada del evento') }}">
+            <img id="edMainImg"
+                 src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail) }}"
+                 alt="{{ $content->title }}"
+                 class="ed-event-cover__img"
+                 width="800" height="800"
+                 fetchpriority="high">
+          </figure>
+          @endif
+
           {{-- Breadcrumb --}}
-          <nav class="ed-body-breadcrumbs" aria-label="{{ __('Breadcrumb') }}">
+          <nav class="ed-body-breadcrumbs{{ $images->count() > 0 ? ' ed-body-breadcrumbs--desktop' : '' }}" aria-label="{{ __('Ruta de navegación') }}">
             <ol class="ed-breadcrumbs__list">
               <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
               <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
@@ -2028,23 +2101,12 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
               @endif
               <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-              <li class="ed-breadcrumbs__current" aria-current="page">{{ $content->title }}</li>
+              <li class="ed-breadcrumbs__current" aria-current="page" title="{{ $content->title }}">{{ $content->title }}</li>
             </ol>
           </nav>
 
           {{-- Info Card: fecha, ubicación, organizador, disponibilidad --}}
-          @php
-            $quickDate = $eventStartAt ?: $countdownNow;
-            $locationAddressParts = collect(explode(',', (string) $content->address))
-              ->map(fn ($part) => trim($part))
-              ->filter()
-              ->values();
-            $locationPrimary = $locationAddressParts->take(2)->implode(', ');
-            if ($locationPrimary === '') {
-              $locationPrimary = __('Lugar a confirmar');
-            }
-          @endphp
-          <section class="ed-info-card" aria-label="{{ __('Información del evento') }}">
+          <section class="ed-info-card ed-info-card--quickfacts" aria-label="{{ __('Información del evento') }}">
             <div class="ed-info-card__head">
               <div class="ed-info-card__head-main">
                 <span class="ed-info-card__shield" aria-hidden="true">
@@ -2055,7 +2117,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 </span>
                 <h2 class="ed-info-card__title">{{ __('Datos del evento') }}</h2>
               </div>
-              <span class="ed-info-card__verified-pill" role="status">{{ __('Compra verificada') }}</span>
+              <span class="ed-info-card__verified-pill" role="status">{{ __('Reserva verificada') }}</span>
             </div>
             <div class="ed-info-card__body">
               <div class="ed-info-grid" role="list">
@@ -2139,7 +2201,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 </div>
               </div>
 
-              <div class="ed-info-trust" role="list" aria-label="{{ __('Garantías de compra') }}">
+              <div class="ed-info-trust" role="list" aria-label="{{ __('Garantías de reserva') }}">
                 <div class="ed-info-trust__item" role="listitem">
                   <span class="ed-info-trust__icon" aria-hidden="true">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -2194,78 +2256,53 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                       </span>
                       <div class="ed-refund-band__content">
-                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con compra simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con compra simple, confirmación inmediata y entrada digital.') }}</p>
-                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Comprás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Comprás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
+                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con reserva simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con reserva simple, confirmación inmediata y entrada digital.') }}</p>
+                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Reservás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Reservás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
                       </div>
                     </div>
+                    @if ($content->event_type != 'online' && !empty($map_address))
+                      <div class="ed-description-map" aria-labelledby="ed-description-map-title">
+                        <h2 class="ed-description-map__title" id="ed-description-map-title">{{ __('Ubicación') }}</h2>
+                        <div class="ed-description-map__frame">
+                          <iframe
+                            src="https://maps.google.com/maps?width=100%25&amp;height=280&amp;hl=es&amp;q={{ urlencode($map_address) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                            height="280" class="ed-description-map__iframe" allow="fullscreen" loading="lazy"
+                            title="{{ $content->title }} — {{ __('Mapa') }}"></iframe>
+                        </div>
+                      </div>
+                    @endif
                   @else
+                    <div class="summernote-content mt-4">
+                      <p><strong>{{ __('Antes de reservar, tené en cuenta esto:') }}</strong></p>
+                      <ul>
+                        <li>{{ $isOnlineEvent ? __('Acceso online desde tu celular o computadora.') : __('Entrada digital disponible para mostrar desde tu celular.') }}</li>
+                        <li>{{ __('Confirmación enviada por email apenas se acredita tu reserva.') }}</li>
+                        <li>{{ $isOnlineEvent ? __('Los datos de ingreso quedan disponibles en tu confirmación para que te conectes sin vueltas.') : __('Toda la información clave del acceso queda disponible en tu confirmación.') }}</li>
+                      </ul>
+                    </div>
                     <div class="ed-refund-band ed-refund-band--highlight">
                       <span class="ed-refund-band__icon" aria-hidden="true">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                       </span>
                       <div class="ed-refund-band__content">
-                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con compra simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con compra simple, confirmación inmediata y entrada digital.') }}</p>
-                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Comprás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Comprás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
+                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con reserva simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con reserva simple, confirmación inmediata y entrada digital.') }}</p>
+                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Reservás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Reservás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
                       </div>
                     </div>
-                    <div class="summernote-content mt-4">
-                      <p><strong>{{ __('Antes de comprar, tené en cuenta esto:') }}</strong></p>
-                      <ul>
-                        <li>{{ $isOnlineEvent ? __('Acceso online desde tu celular o computadora.') : __('Entrada digital disponible para mostrar desde tu celular.') }}</li>
-                        <li>{{ __('Confirmación enviada por email apenas se acredita tu compra.') }}</li>
-                        <li>{{ $isOnlineEvent ? __('Los datos de ingreso quedan disponibles en tu confirmación para que te conectes sin vueltas.') : __('Toda la información clave del acceso queda disponible en tu confirmación.') }}</li>
-                      </ul>
-                    </div>
+                    @if ($content->event_type != 'online' && !empty($map_address))
+                      <div class="ed-description-map" aria-labelledby="ed-description-map-title">
+                        <h2 class="ed-description-map__title" id="ed-description-map-title">{{ __('Ubicación') }}</h2>
+                        <div class="ed-description-map__frame">
+                          <iframe
+                            src="https://maps.google.com/maps?width=100%25&amp;height=280&amp;hl=es&amp;q={{ urlencode($map_address) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+                            height="280" class="ed-description-map__iframe" allow="fullscreen" loading="lazy"
+                            title="{{ $content->title }} — {{ __('Mapa') }}"></iframe>
+                        </div>
+                      </div>
+                    @endif
                   @endif
 	              </div>
 	          </section>
-
-          @if($images->count() > 0)
-          <div class="ed-card ed-card--gallery ed-section ed-section--media">
-            <div class="ed-gallery-wrap">
-              <div class="ed-gallery-main">
-                <button type="button" class="ed-gallery-main__link" id="edMainLink" aria-label="{{ __('Abrir galería del evento') }}">
-                   <img id="edMainImg"
-                       src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image) }}"
-                       alt="{{ $content->title }}"
-                       class="ed-gallery-main__img"
-                       width="800" height="533"
-                       fetchpriority="high">
-                  @if($images->count() > 1)
-                  <div class="ed-gallery-count">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    {{ $images->count() }} {{ __('fotos') }}
-                  </div>
-                  @endif
-                </button>
-              </div>
-              @if($images->count() > 1)
-              <div class="ed-gallery-thumbs" id="edGalleryThumbs">
-                @foreach($images as $i => $item)
-                <button type="button"
-                        class="ed-gallery-thumb {{ $i === 0 ? 'ed-gallery-thumb--active' : '' }}"
-                         data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
-                         data-action="thumb-switch">
-                     <img {{ $i === 0 ? 'src' : 'data-src' }}="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
-                        alt="{{ $content->title }} — foto {{ $i + 1 }}"
-                        width="150" height="100"
-                        @if($i > 0) class="lazy" loading="lazy" @endif>
-                </button>
-                @endforeach
-              </div>
-              @endif
-              <div id="edGalleryLinks" style="display:none">
-                @foreach($images as $item)
-                 <a href="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $item->image) }}"
-                    class="ed-gallery-popup-link"
-                   aria-label="{{ $content->title }} — abrir imagen de galería">
-                  <span class="sr-only">{{ $content->title }} — abrir imagen de galería</span>
-                </a>
-                @endforeach
-              </div>
-            </div>
-          </div>
-          @endif
 
           @if ($spotifyEmbedUrl)
             <div class="ed-card ed-card--context ed-section ed-section--media">
@@ -2326,8 +2363,8 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                 </svg>
               </span>
               <div class="ed-refund-band__head-copy">
-                <h3 id="ed-refund-band-title" class="ed-refund-band__title">{{ __('Política de reembolso') }}</h3>
-                <p class="ed-refund-band__kicker">{{ __('Transparencia antes de comprar') }}</p>
+                <h3 id="ed-refund-band-title" class="ed-refund-band__title">{{ __('Condiciones de reserva') }}</h3>
+                <p class="ed-refund-band__kicker">{{ __('Información clara antes de confirmar tu entrada') }}</p>
               </div>
             </div>
 
@@ -2337,8 +2374,8 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
                 </span>
                 <span class="ed-refund-band__point-copy">
-                  <strong>{{ __('Rol de Tukipass') }}</strong>
-                  <span>{{ __('Servicio tecnológico de venta online. TAYRONA GROUP SAS — CUIT 30-71885087-4. No organiza ni produce los eventos.') }}</span>
+                  <strong>{{ __('Venta online') }}</strong>
+                  <span>{{ __('Tukipass presta el servicio tecnológico de reserva y venta de entradas. TAYRONA GROUP SAS — CUIT 30-71885087-4.') }}</span>
                 </span>
               </li>
               <li class="ed-refund-band__point" role="listitem">
@@ -2346,8 +2383,8 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </span>
                 <span class="ed-refund-band__point-copy">
-                  <strong>{{ __('Responsabilidad del organizador') }}</strong>
-                  <span>{{ __('El organizador o productor es quien define la realización del evento y la información publicada.') }}</span>
+                  <strong>{{ __('Organizador') }}</strong>
+                  <span>{{ __('La producción, realización, accesos, horarios y datos publicados son responsabilidad del organizador del evento.') }}</span>
                 </span>
               </li>
               <li class="ed-refund-band__point" role="listitem">
@@ -2355,8 +2392,8 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </span>
                 <span class="ed-refund-band__point-copy">
-                  <strong>{{ __('Reembolsos y cancelaciones') }}</strong>
-                  <span>{{ __('Se rigen por la política de Tukipass, las condiciones del organizador y la Ley 24.240 cuando corresponda.') }}</span>
+                  <strong>{{ __('Reembolsos') }}</strong>
+                  <span>{{ __('Aplican la política de Tukipass, las condiciones del organizador y la Ley 24.240 cuando corresponda.') }}</span>
                 </span>
               </li>
             </ul>
@@ -2367,7 +2404,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
             </details>
 
             <div class="ed-refund-band__footer">
-              <a class="ed-refund-band__cta" href="{{ url('/politica-de-reembolsos') }}">{{ __('Ver política general de reembolsos') }}</a>
+              <a class="ed-refund-band__cta" href="{{ url('/politica-de-reembolsos') }}">{{ __('Política de reembolsos') }}</a>
               <a class="ed-refund-band__contact" href="mailto:soporte@tukipass.com">soporte@tukipass.com</a>
             </div>
           </section>
@@ -2396,36 +2433,6 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
                      data-minute="{{ $heroDate->minute }}"
                      data-end_date="{{ $heroDate->format('Y-m-d') }}"
                      data-end_time="{{ $heroDate->format('H:i') }}">
-                </div>
-              </div>
-            @endif
-
-            {{-- Indicador de interés --}}
-            @if (($edInterestIndicator ?? 0) > 0)
-              <div class="ed-interest-indicator" aria-label="{{ __('Interés del evento') }}">
-                <span class="ed-interest-indicator__icon" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                </span>
-                <span class="ed-interest-indicator__text">
-                  <strong>{{ number_format($edInterestIndicator) }}</strong>
-                  {{ __('personas interesadas en este evento') }}
-                </span>
-              </div>
-            @endif
-
-            @if ($content->event_type != 'online' && !empty($map_address))
-              <div class="ed-card ed-sidebar-map">
-                <div class="ed-card__head">
-                  <div>
-                    <span class="ed-card__eyebrow">{{ __('Ubicación') }}</span>
-                    <h2 class="ed-card__title">{{ __('Mapa') }}</h2>
-                  </div>
-                </div>
-                <div class="ed-card__body ed-card__body--embed">
-                  <iframe
-                    src="https://maps.google.com/maps?width=100%25&amp;height=280&amp;hl=es&amp;q={{ urlencode($map_address) }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                    height="280" class="ed-card__iframe" allow="fullscreen" loading="lazy"
-                    title="{{ $content->title }} — {{ __('Mapa') }}"></iframe>
                 </div>
               </div>
             @endif
@@ -2512,7 +2519,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
   </section>
   <!-- Event Details V2 End -->
 
-  <div class="ed-mobile-bar d-lg-none" aria-label="{{ __('Acceso rápido a la compra') }}">
+  <div class="ed-mobile-bar d-lg-none" aria-label="{{ __('Acceso rápido a la reserva') }}">
     <div class="container">
       <div class="ed-mobile-bar__inner">
         <div class="ed-mobile-bar__price">
@@ -2528,69 +2535,6 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
     </div>
   </div>
 
-  @if (!empty($related_events) && $related_events->count() > 0)
-    <section class="ed-related ed-related--count-{{ min($related_events->count(), 3) }}">
-      <div class="container">
-        <div class="ed-card">
-          <div class="ed-card__head">
-            <div>
-              @if (($relatedEventsMode ?? null) === 'upcoming')
-                <span class="ed-card__eyebrow">{{ __('Próximos eventos') }}</span>
-                <h2 class="ed-card__title">{{ __('De este organizador') }}</h2>
-              @elseif (($relatedEventsMode ?? null) === 'past')
-                <span class="ed-card__eyebrow">{{ __('Eventos anteriores') }}</span>
-                <h2 class="ed-card__title">{{ __('De este organizador') }}</h2>
-              @else
-                <span class="ed-card__eyebrow">{{ __('Más del organizador') }}</span>
-                <h2 class="ed-card__title">{{ __('Eventos de este organizador') }}</h2>
-              @endif
-            </div>
-          </div>
-          <div class="ed-card__body">
-            <div class="ed-related__grid">
-              @foreach ($related_events->take(3) as $item)
-                @php
-                  $relatedTicket = $relatedTickets[$item->id] ?? null;
-                  $relatedOrganizer = !empty($item->organizer_id) ? ($relatedOrganizers[$item->organizer_id] ?? null) : null;
-                  $relatedPrice = __('Próximamente');
-
-                  if (!empty($relatedTicket)) {
-                    if ($relatedTicket->pricing_type == 'free') {
-                      $relatedPrice = $freeLabel;
-                    } elseif (is_numeric($relatedTicket->price ?? null)) {
-                      $relatedPrice = symbolPrice($relatedTicket->price);
-                    }
-                  }
-                @endphp
-                <a href="{{ route('event.details', ['slug' => $item->slug, 'id' => $item->id]) }}" class="ed-related__card">
-                  <img
-                    src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $item->thumbnail) }}"
-                    alt="{{ $item->title }}" loading="lazy"
-                    class="ed-related__thumb">
-                  <div class="ed-related__body">
-                    <div class="ed-related__meta">
-                      @if (!empty($item->city) || !empty($item->country))
-                        <span>{{ collect([$item->city, $item->country])->filter()->implode(', ') }}</span>
-                      @endif
-                      @if (!empty($relatedOrganizer))
-                        <span>{{ __('Por') }} {{ $relatedOrganizer->username }}</span>
-                      @endif
-                    </div>
-                    <h3 class="ed-related__title">{{ $item->title }}</h3>
-                    <p class="ed-related__desc">{{ \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/u', ' ', strip_tags($item->description ?? ''))), 110, '...') }}</p>
-                    <div class="ed-related__footer">
-                      <span class="ed-related__price" dir="ltr">{{ $relatedPrice }}</span>
-                      <span>{{ __('Ver evento') }}</span>
-                    </div>
-                  </div>
-                </a>
-              @endforeach
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  @endif
 @endsection
 @section('modals')
   @includeIf('frontend.partials.modals')
@@ -2848,15 +2792,14 @@ document.addEventListener('DOMContentLoaded', function() {
   observer.observe(hero);
 })();
 
-/* ── Hero nudge: typewriter + fade salida; live region solo al terminar cada frase ── */
+/* ── Hero nudge: fade entre frases completas; live region solo al cambiar cada frase ── */
 (function() {
   var root = document.querySelector('.ed-hero-nudge');
   var nudges = document.querySelectorAll('.ed-hero-nudge__item');
   var live = document.getElementById('ed-hero-nudge-live');
   if (!root || nudges.length < 2) return;
 
-  var mqReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  var prefersReducedMotion = mqReduce.matches;
+  var prefersReducedMotion = true;
   var charMs = 32;
   var pauseAfterLineMs = 3600;
   var fadeOutMs = 400;
@@ -2950,6 +2893,60 @@ document.addEventListener('DOMContentLoaded', function() {
   typeWriter(first, first.dataset.nudgeFull, function() {
     cycleTimer = setTimeout(goNextWithFade, pauseAfterLineMs);
   });
+})();
+
+/* ── Ticket signal: microcopy rotativo de prueba social y decisión ── */
+(function() {
+  var root = document.querySelector('[data-ticket-signal-rotator]');
+  if (!root) return;
+
+  var items = root.querySelectorAll('.ed-ticket-signal__item');
+  var live = document.getElementById('ed-ticket-signal-live');
+  var progress = root.querySelector('.ed-ticket-signal__progress span');
+  if (items.length < 2) return;
+
+  var current = 0;
+  var timer = null;
+  var intervalMs = 5200;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function itemText(item) {
+    return item.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function activate(index) {
+    items[current].classList.remove('ed-ticket-signal__item--active');
+    current = index;
+    items[current].classList.add('ed-ticket-signal__item--active');
+    if (live) live.textContent = itemText(items[current]);
+    if (progress) {
+      progress.style.animation = 'none';
+      progress.offsetHeight;
+      progress.style.animation = '';
+    }
+  }
+
+  function next() {
+    activate((current + 1) % items.length);
+  }
+
+  function start() {
+    if (reduceMotion || timer) return;
+    timer = window.setInterval(next, intervalMs);
+  }
+
+  function stop() {
+    if (!timer) return;
+    window.clearInterval(timer);
+    timer = null;
+  }
+
+  if (live) live.textContent = itemText(items[0]);
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('focusout', start);
+  start();
 })();
 </script>
 

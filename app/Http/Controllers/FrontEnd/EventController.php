@@ -337,66 +337,6 @@ class EventController extends Controller
         ? $information['organizer']->username
         : $websiteTitle;
 
-      $event_id = $content->id;
-      $currentOrganizerId = $content->organizer_id ?? null;
-      $related_events = collect();
-      $relatedEventsMode = null;
-
-      if ($currentOrganizerId) {
-        // Próximos eventos del mismo organizador
-        $related_events = EventContent::join('events', 'events.id', 'event_contents.event_id')
-          ->where('event_contents.language_id', $language->id)
-          ->where('events.organizer_id', $currentOrganizerId)
-          ->where('events.id', '!=', $event_id)
-          ->where('events.status', 1)
-      ->where('events.end_date_time', '>=', $this->now_date_time)
-          ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
-          ->orderBy('events.start_date', 'asc')
-          ->orderBy('events.start_time', 'asc')
-          ->limit(6)
-          ->get();
-
-        if ($related_events->isNotEmpty()) {
-          $relatedEventsMode = 'upcoming';
-        } else {
-          // Fallback: eventos anteriores del mismo organizador
-          $related_events = EventContent::join('events', 'events.id', 'event_contents.event_id')
-            ->where('event_contents.language_id', $language->id)
-            ->where('events.organizer_id', $currentOrganizerId)
-            ->where('events.id', '!=', $event_id)
-            ->where('events.status', 1)
-            ->where('events.end_date_time', '<', $this->now_date_time)
-            ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.slug', 'event_contents.city', 'event_contents.country')
-            ->orderBy('events.end_date_time', 'desc')
-            ->limit(6)
-            ->get();
-
-          if ($related_events->isNotEmpty()) {
-            $relatedEventsMode = 'past';
-          }
-        }
-      }
-
-      // Pre-cargar tickets y organizadores de eventos relacionados en 2 queries (evita N+1)
-      $relatedIds = $related_events->pluck('id')->toArray();
-      $relatedTickets = Ticket::whereIn('event_id', $relatedIds)
-        ->select('event_id', 'price', 'event_type', 'early_bird_discount', 'early_bird_discount_type', 'early_bird_discount_amount', 'early_bird_discount_date', 'early_bird_discount_time')
-        ->get()
-        ->keyBy('event_id');
-      $relatedOrganizerIds = $related_events->whereNotNull('organizer_id')->pluck('organizer_id')->unique()->toArray();
-      $relatedOrganizers = Organizer::whereIn('id', $relatedOrganizerIds)
-        ->select('id', 'username')
-        ->get()
-        ->keyBy('id');
-
-      $information['related_events'] = $related_events;
-      $information['relatedTickets'] = $relatedTickets;
-      $information['relatedOrganizers'] = $relatedOrganizers;
-      $information['relatedEventsMode'] = $relatedEventsMode;
-
-      // Pre-calcular badges para related events
-      $information['relatedBadgeMap'] = \App\Services\EventBadgeService::getBadgesForEvents($related_events);
-
       // SEO / Open Graph
       $cleanText = function ($value) {
         return trim(preg_replace('/\s+/u', ' ', html_entity_decode(strip_tags((string) $value), ENT_QUOTES | ENT_HTML5, 'UTF-8')));

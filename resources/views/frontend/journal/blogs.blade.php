@@ -27,9 +27,10 @@
   $isDemoBlog = function ($slug) use ($demoBlogSlugs) {
     return isset($slug) && \Illuminate\Support\Str::startsWith($slug, $demoBlogSlugs);
   };
-  $blogSchemaPosts = collect($blogs->items())->reject(function ($blog) use ($isDemoBlog) {
+  $visibleBlogs = collect($blogs->items())->reject(function ($blog) use ($isDemoBlog) {
     return $isDemoBlog($blog->slug);
-  })->map(function ($blog) {
+  })->values();
+  $blogSchemaPosts = $visibleBlogs->map(function ($blog) {
     return array_filter([
       '@type' => 'BlogPosting',
       'headline' => $blog->title,
@@ -115,17 +116,20 @@
 <section class="bl-section" aria-label="Artículos del blog">
   <div class="bl-section__bg" aria-hidden="true"></div>
   <div class="container bl-section__container">
-    @if(count($blogs) === 0)
+    @if($visibleBlogs->isEmpty())
       <div class="bl-empty">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <p>No se encontraron artículos.</p>
+        <span class="bl-empty__icon" aria-hidden="true">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z"/><path d="M8 7h8M8 11h6"/></svg>
+        </span>
+        <h2>No encontramos artículos para mostrar</h2>
+        <p>Probá con otra búsqueda o volvé pronto para leer novedades de Tukipass.</p>
+        @if($searchTitle || $activeCategory)
+          <a href="{{ route('blogs') }}" class="bl-empty__link">Ver todas las notas</a>
+        @endif
       </div>
     @else
       <div class="bl-grid">
-        @foreach($blogs as $blog)
-          @if($isDemoBlog($blog->slug))
-            @continue
-          @endif
+        @foreach($visibleBlogs as $blog)
           @php
             $readTime = max(1, round(str_word_count(strip_tags($blog->content)) / 200));
           @endphp

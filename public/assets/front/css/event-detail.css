@@ -664,44 +664,6 @@ body:not(.page-event-detail) .ed-cta-zone {
   opacity: 1;
 }
 
-/* ── Related events section ── */
-.ed-related {
-  background: #f8f9fb;
-  border-top: 1px solid #e9ecf0;
-  padding: 60px 0 72px;
-}
-.ed-related__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-  gap: 16px;
-}
-.ed-related__title {
-  font-size: 22px;
-  font-weight: 800;
-  color: #1e2532;
-  margin: 0;
-  letter-spacing: -0.02em;
-}
-.ed-related__more {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--primary-text-color);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.15s;
-}
-.ed-related__more:hover { color: #ea580c; }
-.ed-related__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-@media (max-width: 1199px) { .ed-related__grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 767px)  { .ed-related__grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 479px)  { .ed-related__grid { grid-template-columns: 1fr; } }
-
 /* ================================================
 /* ================================================
    EVENT DETAILS — Left Column Premium Pass
@@ -1886,38 +1848,6 @@ body.page-event-detail .ei-meta__text {
   box-shadow: 0 12px 28px rgba(15,23,42,0.08);
 }
 
-.ed-related {
-  background:
-    linear-gradient(180deg, #f7f9fb 0%, #f3f6fa 100%);
-  border-top: 1px solid rgba(30,37,50,0.06);
-  padding: 68px 0 80px;
-}
-
-.ed-related__header {
-  align-items: flex-end;
-  margin-bottom: 30px;
-}
-
-.ed-related__title {
-  font-family: var(--tuki-font-sans);
-  letter-spacing: -0.03em;
-}
-
-.ed-related__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 14px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.82);
-  border: 1px solid rgba(30,37,50,0.08);
-  box-shadow: 0 8px 20px rgba(15,23,42,0.04);
-}
-
-.ed-related__more:hover {
-  background: #ffffff;
-}
-
 @media (max-width: 1199px) {
   .ed-body .col-lg-8 {
     padding-right: 15px;
@@ -1952,10 +1882,6 @@ body.page-event-detail .ei-meta__text {
     gap: 14px;
   }
 
-  .ed-related {
-    padding-top: 54px;
-    padding-bottom: 66px;
-  }
 }
 
 @media (max-width: 575px) {
@@ -2001,20 +1927,6 @@ body.page-event-detail .ei-meta__text {
     margin-top: 22px !important;
   }
 
-  .ed-related {
-    padding-top: 46px;
-    padding-bottom: 54px;
-  }
-
-  .ed-related__header {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 22px;
-  }
-
-  .ed-related__more {
-    padding: 8px 12px;
-  }
 }
 
 /* ═══════════════════════════════════════════
@@ -4432,8 +4344,7 @@ body.page-event-detail .ed-cta-zone--premium .ed-trust-item__icon {
    EVENT DETAIL — Checkout-like flat surface pass
    ================================================ */
 body.page-event-detail .page-wrapper,
-body.page-event-detail .ed-body,
-body.page-event-detail .ed-related {
+body.page-event-detail .ed-body {
   background: #f8f9fb;
 }
 
@@ -4571,5 +4482,4598 @@ body.page-event-detail .ed-info-row {
     background: #fff;
     border-color: #e5e7eb;
     box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
+  }
+}
+
+/* Event detail — tangerine precision layer */
+body.page-event-detail {
+  --ed-page: #e8ebed;
+  --ed-surface: #ffffff;
+  --ed-surface-soft: #f6f7f8;
+  --ed-ink: #1e2532;
+  --ed-ink-strong: #111827;
+  --ed-muted: #687386;
+  --ed-muted-soft: #8a95a5;
+  --ed-line: rgba(30, 37, 50, 0.08);
+  --ed-line-strong: rgba(30, 37, 50, 0.13);
+  --ed-orange: #f97316;
+  --ed-orange-strong: #ea580c;
+  --ed-orange-soft: #fff3ea;
+  --ed-green: #16a34a;
+  --ed-green-strong: #15803d;
+  --ed-blue: #2563eb;
+  --ed-radius: 12px;
+  --ed-radius-lg: 16px;
+  --ed-shadow: 0 14px 34px rgba(30, 37, 50, 0.07);
+  --ed-shadow-soft: 0 8px 22px rgba(30, 37, 50, 0.055);
+  --ed-shadow-hero: 0 28px 70px rgba(5, 8, 15, 0.22);
+  --ed-sidebar-rail: 1.5rem;
+  background: var(--ed-page);
+  color: var(--ed-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body.page-event-detail .page-wrapper,
+body.page-event-detail .ed-body {
+  background: var(--ed-page);
+}
+
+body.page-event-detail .hero-ambient,
+body.page-event-detail .hero-noise {
+  display: none;
+}
+
+body.page-event-detail .ed-hero-event .hero-slide {
+  filter: saturate(0.96) contrast(1.03);
+}
+
+body.page-event-detail .ed-hero-event .hero-overlay--premium {
+  background:
+    linear-gradient(90deg, rgba(6, 8, 14, 0.82) 0%, rgba(10, 12, 18, 0.66) 48%, rgba(10, 12, 18, 0.86) 100%),
+    linear-gradient(180deg, rgba(7, 9, 14, 0.58) 0%, rgba(7, 9, 14, 0.84) 100%);
+}
+
+body.page-event-detail .ed-hero-event .hero-vignette {
+  background: radial-gradient(ellipse 80% 80% at 38% 38%, transparent 0%, rgba(3, 5, 10, 0.62) 100%);
+}
+
+body.page-event-detail .ed-hero-grid__main.hero-content {
+  padding-top: 4.25rem;
+  padding-bottom: 4.75rem;
+}
+
+body.page-event-detail .ed-ev-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+}
+
+body.page-event-detail .ed-ev-kicker__chip,
+body.page-event-detail .ed-hero__status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.875rem;
+  padding: 0.42rem 0.86rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ev-kicker__chip--category {
+  border-color: rgba(249, 115, 22, 0.5);
+  background: rgba(249, 115, 22, 0.16);
+  color: #fed7aa;
+}
+
+body.page-event-detail .ed-hero__status-pill--upcoming {
+  border-color: rgba(147, 197, 253, 0.32);
+  background: rgba(37, 99, 235, 0.18);
+  color: #bfdbfe;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-hero__status-pill--running {
+  border-color: rgba(134, 239, 172, 0.32);
+  background: rgba(22, 163, 74, 0.18);
+  color: #bbf7d0;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-hero__status-pill--over {
+  border-color: rgba(252, 165, 165, 0.32);
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ev-title {
+  max-width: 13.5em;
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--tuki-font-sans, "Inter", sans-serif);
+  font-size: 3.75rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  text-wrap: balance;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.34);
+}
+
+body.page-event-detail .ed-hero-nudge {
+  height: auto;
+  min-height: 1.35rem;
+  margin-top: 1rem;
+  padding-left: 0.9rem;
+  max-width: 36rem;
+}
+
+body.page-event-detail .ed-hero-nudge::before {
+  width: 0.375rem;
+  height: 0.375rem;
+  background: var(--ed-orange);
+}
+
+body.page-event-detail .ed-hero-nudge__item {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ev-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+body.page-event-detail .ed-hero__btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffffff;
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.page-event-detail .ed-hero__btn:hover,
+body.page-event-detail .ed-hero__btn:focus-visible {
+  border-color: rgba(249, 115, 22, 0.5);
+  background: rgba(249, 115, 22, 0.18);
+  color: #ffffff;
+}
+
+body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
+  border-radius: var(--ed-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--ed-surface);
+  box-shadow: var(--ed-shadow-hero);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+body.page-event-detail .ed-ticket-card__head,
+body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+  padding: 1.65rem var(--ed-sidebar-rail) 1.45rem;
+  border: 0;
+  border-radius: var(--ed-radius-lg) var(--ed-radius-lg) 0 0;
+  background:
+    linear-gradient(180deg, rgba(31, 38, 51, 0.96) 0%, rgba(22, 28, 39, 0.94) 100%),
+    radial-gradient(circle at 88% 0%, rgba(249, 115, 22, 0.22), transparent 36%);
+  color: rgba(255, 255, 255, 0.86);
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-head-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.15rem;
+}
+
+body.page-event-detail .ed-head-status {
+  color: #bbf7d0;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-head-status--over {
+  color: #fecaca;
+}
+
+body.page-event-detail .ed-ticket-card__head-title {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.54) !important;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-ticket-card__head-price {
+  margin: 0;
+  color: #ffffff;
+  font-size: 2.35rem !important;
+  font-weight: 800 !important;
+  line-height: 1;
+  letter-spacing: 0 !important;
+}
+
+body.page-event-detail .ed-head-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 1.15rem 0 0 !important;
+  color: rgba(255, 255, 255, 0.68) !important;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-head-stock__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--ed-green);
+  box-shadow: 0 0 0 0.25rem rgba(22, 163, 74, 0.17);
+}
+
+body.page-event-detail .ed-ticket-card__body,
+body.page-event-detail .ed-ticket-card__body--premium {
+  padding: 1.45rem var(--ed-sidebar-rail) 1.55rem;
+  border: 0;
+  border-radius: 0 0 var(--ed-radius-lg) var(--ed-radius-lg);
+  background: var(--ed-surface);
+}
+
+body.page-event-detail .ed-ticket-picker__intro {
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.8rem;
+  row-gap: 0.35rem;
+  margin: 0 0 1rem;
+  padding-bottom: 0.95rem;
+  border-bottom: 1px solid var(--ed-line);
+}
+
+body.page-event-detail .ed-ticket-picker__title {
+  color: var(--ed-ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ticket-picker__sub {
+  grid-column: 1;
+  color: var(--ed-muted);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ticket-picker__badge {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin: 0;
+  padding: 0.35rem 0.55rem;
+  border-color: rgba(22, 163, 74, 0.2);
+  border-radius: 8px;
+  background: rgba(240, 253, 244, 0.78);
+  color: var(--ed-green-strong);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+body.page-event-detail .ed-ticket-picker__list {
+  gap: 0;
+  border-bottom: 1px solid var(--ed-line);
+}
+
+body.page-event-detail .ed-ticket-option {
+  padding: 0;
+  background: var(--ed-surface);
+  border: 0;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+  border-top: 1px solid var(--ed-line);
+}
+
+body.page-event-detail .ed-ticket-option:hover {
+  background: #fbfcfd;
+}
+
+body.page-event-detail .ed-ticket-option__head {
+  padding: 1rem 0 0;
+}
+
+body.page-event-detail .ed-ticket-option__title {
+  color: var(--ed-ink-strong);
+  font-size: 0.95rem;
+  font-weight: 750;
+  line-height: 1.32;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ticket-option__desc {
+  padding-top: 0.45rem;
+}
+
+body.page-event-detail .ed-ticket-option__desc .show-content {
+  color: #5f6e84;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.72rem 0 0;
+  padding: 0 0 1rem;
+}
+
+body.page-event-detail .ed-ticket-option__price {
+  min-height: 2.5rem;
+  color: var(--ed-ink-strong);
+  font-size: 1.28rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ticket-option__price del {
+  color: var(--ed-muted-soft);
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+  min-height: 2.875rem;
+  overflow: hidden;
+  border: 1px solid var(--ed-line-strong);
+  border-radius: 999px;
+  background: var(--ed-surface);
+}
+
+body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation,
+body.page-event-detail .ed-ticket-card__body--premium .quantity {
+  height: 2.875rem;
+  min-height: 2.875rem;
+}
+
+body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
+  width: 2.875rem;
+  min-width: 2.875rem;
+  color: #435066;
+  background: #fbfcfd;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+body.page-event-detail .ed-ticket-card__body--premium .quantity {
+  width: 2.75rem;
+  color: var(--ed-ink-strong);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+body.page-event-detail .ed-ticket-card__body--premium .quantity-up:hover,
+body.page-event-detail .ed-ticket-card__body--premium .quantity-down:hover,
+body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation:hover {
+  background: var(--ed-orange-soft);
+  color: var(--ed-orange-strong);
+}
+
+body.page-event-detail .ed-total-row--premium {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ed-line);
+}
+
+body.page-event-detail .ed-total-row--premium .ed-total-label {
+  color: var(--ed-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-total-row--premium .ed-total-value,
+body.page-event-detail .ed-total-row--premium .ed-total-value__currency,
+body.page-event-detail .ed-total-row--premium .ed-total-value__amount,
+body.page-event-detail .ed-total-row--premium .ed-total-value #total_price {
+  color: var(--ed-ink-strong);
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-total-row--premium .ed-total-row__note {
+  color: var(--ed-muted-soft);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+body.page-event-detail .ed-buy-btn--premium {
+  min-height: 3.1rem;
+  border-radius: 999px;
+  background: var(--ed-green);
+  color: #ffffff;
+  font-size: 0.9375rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-buy-btn--premium:hover,
+body.page-event-detail .ed-buy-btn--premium:focus-visible {
+  background: var(--ed-green-strong);
+  color: #ffffff;
+}
+
+body.page-event-detail .ed-cta-zone--premium .ed-cta-zone__hint {
+  color: #4b5a70;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
+  gap: 0.45rem 0.85rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--ed-line);
+}
+
+body.page-event-detail .ed-cta-zone--premium .ed-trust-item {
+  color: var(--ed-muted);
+  font-size: 0.735rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+body.page-event-detail #main-content {
+  padding-top: 2.6rem;
+}
+
+body.page-event-detail .ed-body {
+  padding-bottom: 4.5rem;
+  border-top: 1px solid rgba(30, 37, 50, 0.06);
+}
+
+body.page-event-detail .ed-body .col-lg-8 {
+  padding-right: 1.5rem;
+}
+
+body.page-event-detail .ed-body .col-lg-4 {
+  padding-left: 0.75rem;
+}
+
+body.page-event-detail .ed-card,
+body.page-event-detail .ed-info-card,
+body.page-event-detail .ei-card,
+body.page-event-detail .ed-countdown-wrap,
+body.page-event-detail .ed-interest-indicator,
+body.page-event-detail .ed-refund-band {
+  border: 1px solid var(--ed-line);
+  border-radius: var(--ed-radius-lg);
+  background: var(--ed-surface);
+  box-shadow: var(--ed-shadow-soft);
+}
+
+body.page-event-detail .ed-info-card {
+  margin-bottom: 1.5rem;
+}
+
+body.page-event-detail .ed-info-card__body {
+  padding: 1.05rem 1.25rem 1.15rem;
+}
+
+body.page-event-detail .ed-info-grid {
+  gap: 0 1.25rem;
+}
+
+body.page-event-detail .ed-info-item {
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.95rem 0;
+}
+
+body.page-event-detail .ed-info-icon {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  border-radius: 10px;
+  background: var(--ed-orange-soft);
+  color: var(--ed-orange);
+}
+
+body.page-event-detail .ed-info-icon--place {
+  background: #eff6ff;
+  color: var(--ed-blue);
+}
+
+body.page-event-detail .ed-info-icon--org {
+  background: #f1f5f9;
+  color: #526074;
+}
+
+body.page-event-detail .ed-info-icon--stock {
+  background: #f0fdf4;
+  color: var(--ed-green);
+}
+
+body.page-event-detail .ed-info-item__value {
+  color: var(--ed-ink-strong);
+  font-size: 0.97rem;
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-info-item__meta {
+  color: var(--ed-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content {
+  max-width: 74ch;
+  color: #2b3444;
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content strong,
+body.page-event-detail .ed-info-card--description .summernote-content b {
+  color: var(--ed-ink-strong);
+  font-weight: 750;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content p {
+  margin-bottom: 0.82rem;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content ul,
+body.page-event-detail .ed-info-card--description .summernote-content ol {
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+body.page-event-detail .ed-refund-band--highlight,
+body.page-event-detail .ed-refund-band--policy {
+  background: #fffaf6;
+  border-color: rgba(249, 115, 22, 0.14);
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-refund-band__title,
+body.page-event-detail .ed-refund-band__lead {
+  color: var(--ed-ink-strong);
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band__desc,
+body.page-event-detail .ed-refund-band__point-copy > span,
+body.page-event-detail .ed-refund-band__kicker {
+  color: var(--ed-muted);
+}
+
+body.page-event-detail .ed-card__head {
+  padding: 1.2rem 1.35rem 0.9rem;
+  border-bottom: 1px solid var(--ed-line);
+  background: var(--ed-surface);
+}
+
+body.page-event-detail .ed-card__body:not(.ed-card__body--embed) {
+  padding: 1.25rem 1.35rem 1.35rem;
+}
+
+body.page-event-detail .ed-card__eyebrow,
+body.page-event-detail .ei-label {
+  color: var(--ed-muted-soft);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-card__title {
+  color: var(--ed-ink);
+  font-size: 1.15rem;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-gallery-main,
+body.page-event-detail .ed-gallery-main__link,
+body.page-event-detail .ed-gallery-main__img {
+  border-radius: var(--ed-radius-lg);
+}
+
+body.page-event-detail .ed-gallery-main {
+  box-shadow: var(--ed-shadow);
+}
+
+body.page-event-detail .ed-gallery-main__img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+}
+
+body.page-event-detail .ed-gallery-thumbs {
+  gap: 0.65rem;
+  margin-top: 0.8rem;
+  padding: 0;
+}
+
+body.page-event-detail .ed-gallery-thumb {
+  width: 5rem;
+  height: 3.35rem;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  opacity: 0.7;
+}
+
+body.page-event-detail .ed-gallery-thumb--active {
+  border-color: var(--ed-orange);
+  opacity: 1;
+}
+
+body.page-event-detail .sidebar-sticky {
+  gap: 1rem;
+}
+
+body.page-event-detail .ed-countdown-wrap,
+body.page-event-detail .ed-interest-indicator,
+body.page-event-detail .ei-card {
+  box-shadow: var(--ed-shadow-soft);
+}
+
+body.page-event-detail .ed-countdown-wrap {
+  padding: 1rem;
+  border-left: 0;
+}
+
+body.page-event-detail .ed-countdown-label {
+  color: var(--ed-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer-cell {
+  border-color: var(--ed-line) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer-cell__value {
+  color: var(--ed-ink-strong) !important;
+  letter-spacing: 0 !important;
+}
+
+body.page-event-detail .ed-interest-indicator {
+  padding: 0.9rem 1rem;
+  background: #fffaf6;
+  border-color: rgba(249, 115, 22, 0.16);
+  color: var(--ed-muted);
+}
+
+body.page-event-detail .ed-interest-indicator__text strong {
+  color: var(--ed-ink-strong);
+}
+
+body.page-event-detail .ei-org,
+body.page-event-detail .ei-meta,
+body.page-event-detail .ei-cal {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  border-color: var(--ed-line);
+}
+
+body.page-event-detail .ei-org__avatar {
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid var(--ed-line);
+}
+
+body.page-event-detail .ei-org__name,
+body.page-event-detail .ei-meta__text {
+  color: var(--ed-ink-strong);
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ei-org__link,
+body.page-event-detail .ei-cal__btn {
+  color: var(--ed-orange-strong);
+}
+
+body.page-event-detail .ei-cal__btn {
+  min-height: 2.5rem;
+  border-color: var(--ed-line);
+  border-radius: 999px;
+  background: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ei-cal__btn:hover,
+body.page-event-detail .ei-cal__btn:focus-visible {
+  background: var(--ed-orange);
+  border-color: var(--ed-orange);
+  color: #ffffff;
+}
+
+body.page-event-detail .ed-description-map {
+  margin: clamp(0.78rem, 1.45vw, 1.05rem) 0 clamp(0.95rem, 1.8vw, 1.25rem);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-info-card--description .ed-refund-band--highlight + .ed-description-map {
+  margin-top: 0.72rem;
+}
+
+body.page-event-detail .ed-description-map__title {
+  margin: 0 0 0.62rem;
+  color: #1e2532;
+  font-size: clamp(0.98rem, 1vw, 1.08rem);
+  font-weight: 650;
+  line-height: 1.28;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-description-map__frame {
+  overflow: hidden;
+  border: 1px solid rgba(30, 37, 50, 0.1);
+  border-radius: 16px;
+  background: #f8f9fb;
+  box-shadow: 0 10px 24px rgba(30, 37, 50, 0.055);
+}
+
+body.page-event-detail .ed-description-map__iframe {
+  display: block;
+  width: 100%;
+  height: clamp(260px, 34vw, 340px);
+  border: 0;
+  border-radius: 0;
+}
+
+body.page-event-detail .ed-mobile-bar {
+  background: rgba(255, 255, 255, 0.92);
+  border-top: 1px solid var(--ed-line);
+  box-shadow: 0 -14px 36px rgba(30, 37, 50, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.page-event-detail .ed-mobile-bar__inner {
+  gap: 0.75rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+body.page-event-detail .ed-mobile-bar__label {
+  color: var(--ed-muted);
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-mobile-bar__value {
+  color: var(--ed-ink-strong);
+  font-size: 1.12rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-mobile-bar__cta {
+  min-height: 3rem;
+  border-radius: 999px;
+  background: var(--ed-green);
+  color: #ffffff;
+  font-size: 0.94rem;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-mobile-bar__cta:hover,
+body.page-event-detail .ed-mobile-bar__cta:focus-visible {
+  background: var(--ed-green-strong);
+  color: #ffffff;
+}
+
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  body.page-event-detail .ed-ev-title {
+    font-size: 3.25rem;
+  }
+
+  body.page-event-detail {
+    --ed-sidebar-rail: 1.25rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-price {
+    font-size: 2.05rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail {
+    --ed-sidebar-rail: 1.125rem;
+    --ed-radius-lg: 16px;
+  }
+
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    background-color: var(--ed-page);
+  }
+
+  body.page-event-detail .ed-hero-event .hero-overlay--premium {
+    background:
+      linear-gradient(180deg, rgba(4, 6, 12, 0.86) 0%, rgba(4, 6, 12, 0.76) 46%, rgba(4, 6, 12, 0.96) 100%),
+      linear-gradient(90deg, rgba(4, 6, 12, 0.72) 0%, rgba(4, 6, 12, 0.55) 100%);
+  }
+
+  body.page-event-detail .ed-hero-event .hero-vignette {
+    background: radial-gradient(ellipse 88% 78% at 50% 36%, transparent 0%, rgba(2, 4, 9, 0.76) 100%);
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 3.15rem;
+    padding-bottom: 1.8rem;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    max-width: 11.5em;
+    font-size: 2.35rem;
+    line-height: 1.04;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    max-width: 100%;
+    min-height: 2.65rem;
+    margin-top: 0.9rem;
+    overflow: hidden;
+  }
+
+  body.page-event-detail .ed-hero-nudge__item {
+    white-space: normal;
+    font-size: 0.875rem;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: 1.2rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 1.35rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
+    border-color: rgba(30, 37, 50, 0.08);
+    border-radius: var(--ed-radius-lg);
+    box-shadow: var(--ed-shadow);
+  }
+
+  body.page-event-detail .ed-ticket-card__head,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    padding-top: 1.35rem;
+    padding-bottom: 1.25rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-price {
+    font-size: 2rem !important;
+  }
+
+  body.page-event-detail #main-content {
+    padding-top: 2rem;
+  }
+
+  body.page-event-detail .ed-body .col-lg-8,
+  body.page-event-detail .ed-body .col-lg-4 {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  body.page-event-detail .ed-body .col-lg-4 {
+    margin-top: 0;
+  }
+
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-ev-kicker {
+    gap: 0.45rem;
+    margin-bottom: 0.85rem;
+  }
+
+  body.page-event-detail .ed-ev-kicker__chip,
+  body.page-event-detail .ed-hero__status-pill {
+    min-height: 1.75rem;
+    padding: 0.38rem 0.72rem;
+    font-size: 0.64rem;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    font-size: 1.95rem;
+    line-height: 1.06;
+  }
+
+  body.page-event-detail .ed-hero__btn {
+    width: 2.55rem;
+    height: 2.55rem;
+    min-width: 2.55rem;
+    min-height: 2.55rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub,
+  body.page-event-detail .ed-ticket-picker__badge {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge {
+    width: fit-content;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.65rem;
+  }
+
+  body.page-event-detail .ed-ticket-option__price {
+    min-height: 2.25rem;
+    font-size: 1.12rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+    min-height: 2.65rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    height: 2.65rem;
+    min-height: 2.65rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
+    width: 2.65rem;
+    min-width: 2.65rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    width: 2.5rem;
+  }
+
+  body.page-event-detail .ed-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.page-event-detail .ed-info-item:nth-child(n + 2) {
+    border-top: 1px solid var(--ed-line);
+  }
+
+  body.page-event-detail .ed-info-card__body,
+  body.page-event-detail .ed-card__body:not(.ed-card__body--embed) {
+    padding: 1rem;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content {
+    font-size: 0.95rem;
+    line-height: 1.68;
+  }
+
+  body.page-event-detail .ed-refund-band {
+    padding: 1rem;
+  }
+
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    grid-template-columns: 1fr;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+    justify-self: end;
+  }
+}
+
+/* Event detail — mobile hero alignment corrections */
+body.page-event-detail .ed-hero-nudge {
+  display: flex;
+  align-items: center;
+  gap: 0.52rem;
+  height: auto;
+  min-height: 0;
+  padding-left: 0;
+  overflow: visible;
+}
+
+body.page-event-detail .ed-hero-nudge::before {
+  position: static;
+  flex: 0 0 0.375rem;
+  width: 0.375rem;
+  height: 0.375rem;
+  margin-top: 0.08em;
+  transform: none;
+}
+
+body.page-event-detail .ed-hero-nudge__item {
+  position: static;
+  display: none;
+  left: auto;
+  top: auto;
+  max-width: 100%;
+  opacity: 0;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+body.page-event-detail .ed-hero-nudge__item--active {
+  display: block;
+  opacity: 1;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-bottom: 0.65rem;
+  }
+
+  body.page-event-detail .ed-ev-kicker {
+    margin-bottom: 0.7rem;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    margin-top: 0.62rem;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: 0.9rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 0.7rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
+    border: 0;
+    background: transparent;
+    box-shadow: 0 16px 36px rgba(5, 8, 15, 0.18);
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 2.9rem;
+    padding-bottom: 0.45rem;
+  }
+
+  body.page-event-detail .ed-ev-kicker {
+    margin-bottom: 0.62rem;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    margin-top: 0.55rem;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: 0.75rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 0.55rem;
+  }
+}
+
+/* Event detail — mobile SaaS title + clean ticket panel trial */
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    background:
+      linear-gradient(180deg, #f4f6f8 0%, var(--ed-page) 100%);
+    color: var(--ed-ink);
+  }
+
+  body.page-event-detail .ed-hero-event .hero-slideshow,
+  body.page-event-detail .ed-hero-event .hero-overlay,
+  body.page-event-detail .ed-hero-event .hero-vignette,
+  body.page-event-detail .ed-hero-event .hero-ambient,
+  body.page-event-detail .ed-hero-event .hero-noise {
+    display: none;
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 2.2rem;
+    padding-bottom: 1.1rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__main .ed-ev-title,
+  body.page-event-detail .ed-hero-grid__main .ed-hero-nudge,
+  body.page-event-detail .ed-hero-grid__main .ed-ev-kicker {
+    text-shadow: none !important;
+  }
+
+  body.page-event-detail .ed-ev-kicker__chip,
+  body.page-event-detail .ed-hero__status-pill {
+    border-color: var(--ed-line);
+    background: #ffffff;
+    color: var(--ed-muted);
+    box-shadow: 0 6px 18px rgba(30, 37, 50, 0.045);
+  }
+
+  body.page-event-detail .ed-ev-kicker__chip--category {
+    border-color: rgba(249, 115, 22, 0.24);
+    background: #fff7ed;
+    color: #9a3412;
+  }
+
+  body.page-event-detail .ed-hero__status-pill--upcoming {
+    border-color: rgba(37, 99, 235, 0.2);
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  body.page-event-detail .ed-hero__status-pill--running {
+    border-color: rgba(22, 163, 74, 0.2);
+    background: #f0fdf4;
+    color: var(--ed-green-strong);
+  }
+
+  body.page-event-detail .ed-hero__status-pill--over {
+    border-color: rgba(239, 68, 68, 0.2);
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    color: var(--ed-ink);
+    text-shadow: none;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    color: var(--ed-muted);
+  }
+
+  body.page-event-detail .ed-hero-nudge__item {
+    color: var(--ed-muted);
+  }
+
+  body.page-event-detail .ed-hero__btn {
+    border-color: var(--ed-line);
+    background: #ffffff;
+    color: var(--ed-ink);
+    box-shadow: 0 8px 22px rgba(30, 37, 50, 0.065);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.page-event-detail .ed-hero__btn:hover,
+  body.page-event-detail .ed-hero__btn:focus-visible {
+    border-color: rgba(249, 115, 22, 0.28);
+    background: #fff7ed;
+    color: var(--ed-orange-strong);
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
+    overflow: hidden;
+    border: 1px solid rgba(30, 37, 50, 0.08);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 14px 34px rgba(30, 37, 50, 0.08);
+  }
+
+  body.page-event-detail .ed-ticket-card__head,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    padding: 1.2rem 1.15rem 1.05rem;
+    border: 0;
+    border-bottom: 1px solid var(--ed-line);
+    border-radius: 18px 18px 0 0;
+    background: #ffffff;
+    color: var(--ed-ink);
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-head-top {
+    margin-bottom: 0.8rem;
+  }
+
+  body.page-event-detail .ed-head-status {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.55rem;
+    padding: 0.28rem 0.52rem;
+    border: 1px solid rgba(22, 163, 74, 0.18);
+    border-radius: 999px;
+    background: #f0fdf4;
+    color: var(--ed-green-strong);
+    font-size: 0.63rem;
+    font-weight: 750;
+    line-height: 1;
+  }
+
+  body.page-event-detail .ed-head-status--over {
+    border-color: rgba(239, 68, 68, 0.18);
+    background: #fef2f2;
+    color: #b91c1c;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-title {
+    color: var(--ed-muted-soft) !important;
+    font-size: 0.64rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-price {
+    color: var(--ed-ink-strong);
+    font-size: 2rem !important;
+    letter-spacing: 0 !important;
+  }
+
+  body.page-event-detail .ed-head-stock {
+    margin-top: 0.85rem !important;
+    color: var(--ed-muted) !important;
+  }
+
+  body.page-event-detail .ed-ticket-card__body,
+  body.page-event-detail .ed-ticket-card__body--premium,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    padding: 1.05rem;
+    border: 0;
+    border-radius: 0 0 18px 18px;
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.85rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title {
+    font-size: 1rem;
+    font-weight: 750;
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub {
+    color: var(--ed-muted);
+    font-size: 0.8rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge {
+    border-radius: 999px;
+    background: #f0fdf4;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list {
+    display: grid;
+    gap: 0.72rem;
+    border: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    padding: 0.85rem;
+    border: 1px solid rgba(30, 37, 50, 0.08);
+    border-radius: 14px;
+    background: #fbfcfd;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-option:hover,
+  body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+    border-color: rgba(249, 115, 22, 0.24);
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(30, 37, 50, 0.055);
+  }
+
+  body.page-event-detail .ed-ticket-option__head {
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    font-size: 0.94rem;
+    font-weight: 750;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc .show-content {
+    font-size: 0.8rem;
+    line-height: 1.42;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    margin-top: 0.7rem;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__price {
+    min-height: 2.2rem;
+    font-size: 1.08rem;
+  }
+
+  body.page-event-detail .ed-total-row--premium {
+    margin-top: 0.95rem;
+    padding: 0.9rem;
+    border: 1px solid var(--ed-line);
+    border-radius: 14px;
+    background: #f8fafc;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__note {
+    margin-top: 0.4rem;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium {
+    margin-top: 0.9rem;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-cta-zone__hint {
+    max-width: 18rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 0.75rem;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-trust-item {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 1.85rem;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    font-size: 1.8rem;
+    line-height: 1.07;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 0.7rem;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Event detail — mobile SaaS refinement pass */
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    background: linear-gradient(180deg, #f7f8fa 0%, var(--ed-page) 100%) !important;
+    overflow: visible;
+  }
+
+  body.page-event-detail .ed-hero-event .hero-slideshow,
+  body.page-event-detail .ed-hero-event .hero-overlay,
+  body.page-event-detail .ed-hero-event .hero-vignette,
+  body.page-event-detail .ed-hero-event .hero-ambient,
+  body.page-event-detail .ed-hero-event .hero-noise {
+    display: none !important;
+  }
+
+  body.page-event-detail .ed-hero-grid {
+    gap: 0;
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+
+  body.page-event-detail .ed-ev-kicker {
+    margin-bottom: 0.85rem;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    max-width: 10.5em;
+    color: var(--ed-ink-strong);
+    font-size: clamp(1.92rem, 7vw, 2.65rem);
+    font-weight: 800;
+    line-height: 1.04;
+    text-shadow: none !important;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    margin-top: 0.78rem;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: 1rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 0.85rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card,
+  body.page-event-detail .ed-ticket-card {
+    max-width: 34rem;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    border: 1px solid rgba(30, 37, 50, 0.09);
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 16px 38px rgba(30, 37, 50, 0.09);
+  }
+
+  body.page-event-detail .ed-ticket-card__head,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    padding: 1.1rem 1.1rem 1rem;
+    border: 0;
+    border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+    border-radius: 0;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  body.page-event-detail .ed-ticket-card__body,
+  body.page-event-detail .ed-ticket-card__body--premium,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    padding: 1rem;
+    border: 0;
+    border-radius: 0;
+    background: #ffffff;
+  }
+
+  body.page-event-detail .ed-head-top {
+    margin-bottom: 0.78rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-title {
+    color: #7a8596 !important;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-price {
+    font-size: clamp(1.7rem, 7vw, 2.05rem) !important;
+    line-height: 1.02;
+  }
+
+  body.page-event-detail .ed-head-stock {
+    margin-top: 0.72rem !important;
+    font-size: 0.82rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.35rem;
+    margin-bottom: 0.78rem;
+    padding: 0.82rem;
+    border: 1px solid rgba(30, 37, 50, 0.07);
+    border-radius: 14px;
+    background: #f8fafc;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title {
+    font-size: 1rem;
+    line-height: 1.22;
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub {
+    grid-column: auto;
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: flex-start;
+    align-self: flex-start;
+    margin-top: 0.12rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list {
+    gap: 0.68rem;
+  }
+
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    padding: 0.82rem;
+    border-color: rgba(30, 37, 50, 0.085);
+    border-radius: 14px;
+    background: #ffffff;
+  }
+
+  body.page-event-detail .ed-ticket-option:hover,
+  body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+    box-shadow: 0 8px 20px rgba(30, 37, 50, 0.055);
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    margin-top: 0.72rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 0.25rem 0.75rem;
+    margin-top: 0.82rem;
+    padding: 0.85rem;
+    border: 1px solid rgba(30, 37, 50, 0.075);
+    border-radius: 14px;
+    background: #f8fafc;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium .ed-total-row__note {
+    grid-column: 1 / -1;
+    margin: 0.28rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.36;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium #total {
+    display: none;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium {
+    margin-top: 0.78rem;
+    padding: 0.9rem 0 0;
+    border-top: 1px solid rgba(30, 37, 50, 0.07);
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-buy-btn--premium {
+    min-height: 3rem;
+    box-shadow: 0 10px 20px rgba(22, 163, 74, 0.16);
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-cta-zone__hint {
+    max-width: 18rem;
+    margin-top: 0.65rem !important;
+    color: #46566d;
+    font-size: 0.8rem;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.46rem 0.75rem;
+    margin-top: 0.78rem;
+    padding-top: 0.78rem;
+    border-top: 1px solid rgba(30, 37, 50, 0.07);
+  }
+
+  body.page-event-detail .ed-cta-zone--premium .ed-trust-item {
+    gap: 0.34rem;
+    min-width: 0;
+    color: #59677c;
+    font-size: 0.72rem;
+    line-height: 1.28;
+  }
+
+  body.page-event-detail .ed-mobile-bar {
+    transform: translateY(0);
+    opacity: 1;
+    transition: transform 180ms ease, opacity 180ms ease;
+    will-change: transform, opacity;
+  }
+
+  body.page-event-detail.ed-booking-card-visible .ed-mobile-bar {
+    transform: translateY(110%);
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 1.7rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body,
+  body.page-event-detail .ed-ticket-card__body--premium,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    padding: 0.92rem;
+  }
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Event detail — mobile decision-first composition */
+body.page-event-detail .ed-hero-facts {
+  display: none;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail {
+    --ed-page: #f8f9fb;
+  }
+
+  body.page-event-detail .page-wrapper,
+  body.page-event-detail .ed-body {
+    background: #f8f9fb;
+  }
+
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    border-top: 1px solid #e5e7eb;
+    background:
+      linear-gradient(180deg, #f8f9fb 0%, #f8f9fb 62%, #eef2f6 100%) !important;
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 1.55rem;
+    padding-bottom: 0;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    margin-top: 0.72rem;
+  }
+
+  body.page-event-detail .ed-hero-facts {
+    display: grid;
+    gap: 0;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(30, 37, 50, 0.09);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.09);
+  }
+
+  body.page-event-detail .ed-hero-fact {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.72rem;
+    min-width: 0;
+    padding: 0.82rem 0;
+  }
+
+  body.page-event-detail .ed-hero-fact + .ed-hero-fact {
+    border-top: 1px solid rgba(30, 37, 50, 0.075);
+  }
+
+  body.page-event-detail .ed-hero-fact__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 2rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 1px 0 rgba(30, 37, 50, 0.08);
+  }
+
+  body.page-event-detail .ed-hero-fact__icon--date {
+    color: var(--ed-orange);
+  }
+
+  body.page-event-detail .ed-hero-fact__icon--place {
+    color: var(--ed-blue);
+  }
+
+  body.page-event-detail .ed-hero-fact__icon--stock {
+    color: var(--ed-green);
+  }
+
+  body.page-event-detail .ed-hero-fact__copy {
+    display: grid;
+    gap: 0.08rem;
+    min-width: 0;
+  }
+
+  body.page-event-detail .ed-hero-fact__label {
+    color: #7b8797;
+    font-size: 0.68rem;
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  body.page-event-detail .ed-hero-fact__value {
+    color: var(--ed-ink-strong);
+    font-size: 0.94rem;
+    font-weight: 750;
+    line-height: 1.25;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  body.page-event-detail .ed-hero-fact__value--available {
+    color: var(--ed-green-strong);
+  }
+
+  body.page-event-detail .ed-hero-fact__value--low {
+    color: #b45309;
+  }
+
+  body.page-event-detail .ed-hero-fact__meta {
+    color: #657287;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.32;
+    overflow-wrap: anywhere;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: 0.95rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 1.15rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card,
+  body.page-event-detail .ed-ticket-card {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-card__head,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    padding: 0 0 0.95rem;
+    border: 0;
+    border-bottom: 1px solid rgba(30, 37, 50, 0.1);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-ticket-card__body,
+  body.page-event-detail .ed-ticket-card__body--premium,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    padding: 0.95rem 0 0;
+    border: 0;
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    margin-bottom: 0.9rem;
+    padding: 0 0 0.85rem;
+    border: 0;
+    border-bottom: 1px solid rgba(30, 37, 50, 0.085);
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title {
+    font-size: 1.08rem;
+    font-weight: 800;
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub {
+    max-width: 19rem;
+    color: #657287;
+  }
+
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    padding: 0.9rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
+  }
+
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    margin-top: 0.7rem;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    font-size: 0.96rem;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium {
+    border-color: #e5e7eb;
+    background: #ffffff;
+  }
+
+  body.page-event-detail .ed-cta-zone--premium {
+    border-top-color: rgba(30, 37, 50, 0.095);
+  }
+
+  body.page-event-detail .ed-info-card--quickfacts {
+    display: none;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+
+  body.page-event-detail .ed-hero-fact + .ed-hero-fact {
+    border-top: 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: 1.35rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    margin-top: 1rem;
+  }
+}
+
+/* Event detail — mobile ticket picker, tweakcn-clean pass */
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-ticket-card__head,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    display: none;
+  }
+
+  body.page-event-detail .ed-ticket-card__body,
+  body.page-event-detail .ed-ticket-card__body--premium,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    padding-top: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.28rem 0.75rem;
+    margin: 0 0 1rem;
+    padding: 0 0 1rem;
+    border-bottom: 1px solid #dfe4ea;
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title {
+    margin: 0;
+    color: #2f3338;
+    font-family: var(--tuki-font-sans, "Inter", sans-serif);
+    font-size: 1.05rem;
+    font-weight: 650;
+    line-height: 1.28;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub {
+    grid-column: 1 / -1;
+    max-width: 22rem;
+    margin: 0;
+    color: #687386;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.42;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
+    gap: 0.3rem;
+    margin: 0;
+    min-height: 1.7rem;
+    padding: 0.32rem 0.58rem;
+    border-radius: 999px;
+    border-color: rgba(22, 163, 74, 0.18);
+    background: #f0fdf4;
+    color: #15803d;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge svg {
+    width: 0.78rem;
+    height: 0.78rem;
+  }
+
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    display: grid;
+    gap: 0.88rem;
+    padding: 1rem;
+    border: 1px solid #d9dee5;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(30, 37, 50, 0.04);
+  }
+
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    margin-top: 0.9rem;
+  }
+
+  body.page-event-detail .ed-ticket-option:hover,
+  body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+    border-color: #cfd6df;
+    background: #ffffff;
+    box-shadow: 0 3px 10px rgba(30, 37, 50, 0.055);
+  }
+
+  body.page-event-detail .ed-ticket-option__head {
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    margin: 0;
+    color: #2f3338;
+    font-family: var(--tuki-font-sans, "Inter", sans-serif);
+    font-size: 1rem;
+    font-weight: 650;
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title strong {
+    font: inherit;
+    color: inherit;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc {
+    margin: -0.55rem 0 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc .show-content {
+    color: #687386;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.42;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.85rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__price {
+    min-height: 2.75rem;
+    color: #2f3338;
+    font-size: 1.55rem;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .event-details-information .price-count h6.ed-ticket-option__price,
+  body.page-event-detail .event-details-information .price-count .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price--free {
+    color: #2f3338;
+    font-size: 1.45rem;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+    min-height: 2.875rem;
+    border-color: #d9dee5;
+    background: #fbfcfd;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    height: 2.875rem;
+    min-height: 2.875rem;
+    color: #334155;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
+    width: 2.875rem;
+    min-width: 2.875rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    width: 2.65rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up:hover,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down:hover,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation:hover {
+    background: #fff7ed;
+    color: var(--ed-orange-strong);
+  }
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-ticket-picker__intro {
+    grid-template-columns: 1fr;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+  }
+}
+
+/* Event detail — compact mobile ticket cards */
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-ticket-picker__list {
+    display: block;
+    gap: 0;
+    border: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > p.text-warning[class*="max_error"] {
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 0.75rem;
+    line-height: 1.25;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option:not(:first-of-type) {
+    margin-top: 0.68rem;
+  }
+
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option,
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option {
+    display: grid;
+    gap: 0.42rem;
+    padding: 0.84rem 0.9rem;
+    border-color: #dfe4ea;
+    border-radius: 11px;
+    background: #ffffff;
+    box-shadow: 0 1px 1px rgba(30, 37, 50, 0.035);
+  }
+
+  body.page-event-detail .ed-ticket-option:hover,
+  body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+    border-color: #cfd6df;
+    box-shadow: 0 2px 8px rgba(30, 37, 50, 0.055);
+  }
+
+  body.page-event-detail .ed-ticket-option__head {
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    color: #30343a;
+    font-size: 0.96rem;
+    font-weight: 650;
+    line-height: 1.22;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc {
+    margin: 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc .show-content {
+    color: #687386;
+    font-size: 0.82rem;
+    font-weight: 400;
+    line-height: 1.32;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.72rem;
+    margin: 0.12rem 0 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .event-details-information .price-count h6.ed-ticket-option__price,
+  body.page-event-detail .event-details-information .price-count .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price--free {
+    min-height: 2.45rem;
+    color: #30343a;
+    font-size: 1.28rem;
+    font-weight: 650;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+    min-height: 2.52rem;
+    border-color: #dfe4ea;
+    background: #fbfcfd;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    height: 2.52rem;
+    min-height: 2.52rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
+    width: 2.52rem;
+    min-width: 2.52rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    width: 2.48rem;
+  }
+}
+
+/* Event detail — checkout-summary inspired mobile ticket panel */
+@media (max-width: 991.98px) {
+  body.page-event-detail #event-booking-card {
+    scroll-margin-top: 5.5rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .event-details-information {
+    display: block;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    margin: 0 0 0.78rem;
+    padding: 0 0 0.62rem;
+    border-bottom: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    color: #1f2430;
+    font-size: 1rem;
+    font-weight: 680;
+    line-height: 1.24;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title-icon {
+    flex: 0 0 auto;
+    color: #f97316;
+    transform: translateY(0.02em);
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub {
+    max-width: 20rem;
+    color: #697386;
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-ticket-picker__badge {
+    min-height: 1.6rem;
+    padding: 0.28rem 0.5rem;
+    font-size: 0.68rem;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list {
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #e4e8ee;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba(30, 37, 50, 0.055);
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0.88rem 1rem;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option:not(:first-of-type) {
+    margin-top: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option:not(:last-of-type) {
+    border-bottom: 1px solid #eef1f5;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > p.text-warning[class*="max_error"] {
+    min-height: 0;
+    margin: 0 !important;
+    padding: 0 0.92rem;
+    background: #ffffff;
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  body.page-event-detail .ed-ticket-option:hover,
+  body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+    border-color: transparent;
+    background: #fffaf6;
+    box-shadow: inset 3px 0 0 rgba(249, 115, 22, 0.55);
+  }
+
+  body.page-event-detail .ed-ticket-option__head {
+    min-width: 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    margin: 0;
+    color: #252a33;
+    font-size: 0.94rem;
+    font-weight: 680;
+    line-height: 1.22;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title strong {
+    font: inherit;
+    color: inherit;
+  }
+
+  body.page-event-detail .ed-ticket-option .click-show.ed-ticket-option__desc,
+  body.page-event-detail .ed-ticket-option__desc {
+    margin: 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc .show-content {
+    color: #667184;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.34;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.72rem;
+    margin: 0.08rem 0 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count > p {
+    grid-column: 1 / -1;
+    margin: 0.1rem 0 0;
+    color: #c2410c;
+    font-size: 0.74rem;
+    line-height: 1.3;
+  }
+
+  body.page-event-detail .event-details-information .price-count h6.ed-ticket-option__price,
+  body.page-event-detail .event-details-information .price-count .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price--free {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    width: fit-content;
+    min-height: 1.86rem;
+    margin: 0;
+    padding: 0.34rem 0.58rem;
+    border: 1px solid rgba(249, 115, 22, 0.18);
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #1f2430;
+    font-size: 0.9rem;
+    font-weight: 760;
+    line-height: 1;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: normal;
+  }
+
+  body.page-event-detail .ed-ticket-option__price--free {
+    color: #c2410c;
+  }
+
+  body.page-event-detail .ed-ticket-option__price del {
+    margin-left: 0.4rem;
+    color: #8b95a5;
+    font-size: 0.78rem;
+    font-weight: 550;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+    min-height: 2.75rem;
+    border-color: #dfe4ea;
+    border-radius: 999px;
+    background: #fbfcfd;
+    box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    height: 2.75rem;
+    min-height: 2.75rem;
+    color: #334155;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 760;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
+    width: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    width: 2.45rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up:hover,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down:hover,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation:hover {
+    background: #fff7ed;
+    color: #ea580c;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > p.text-warning[class*="max_error"] {
+    min-height: 0;
+    margin: 0;
+    padding: 0 1rem;
+    color: #b45309;
+    background: #fff;
+    font-size: 0.74rem;
+    line-height: 1.25;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 0.28rem 0.75rem;
+    margin: 0;
+    padding: 0.95rem 1rem 1rem;
+    border: 1px solid #e4e8ee;
+    border-top: 0;
+    border-radius: 0 0 16px 16px;
+    background: #f8fafc;
+    box-shadow: 0 10px 22px rgba(30, 37, 50, 0.07);
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium::before {
+    content: "";
+    grid-column: 1 / -1;
+    height: 1px;
+    margin: -0.95rem 0 0.58rem;
+    background: #eef1f5;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-label {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+    color: #667184;
+    font-size: 0.72rem;
+    font-weight: 720;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-protection {
+    grid-column: 1;
+    grid-row: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    width: fit-content;
+    margin: 0.14rem 0 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #15803d;
+    font-size: 0.74rem;
+    font-weight: 560;
+    line-height: 1.2;
+    letter-spacing: 0;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-protection svg {
+    flex: 0 0 auto;
+    width: 0.82rem;
+    height: 0.82rem;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-value,
+  body.page-event-detail .ed-total-row--premium .ed-total-value__currency,
+  body.page-event-detail .ed-total-row--premium .ed-total-value__amount,
+  body.page-event-detail .ed-total-row--premium .ed-total-value #total_price {
+    grid-column: 2;
+    grid-row: 2 / 4;
+    align-self: center;
+    justify-self: end;
+    margin: 0;
+    color: #1f2430;
+    font-size: 1.72rem;
+    font-weight: 760;
+    line-height: 0.95;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__note {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    max-width: 24rem;
+    margin: 0.22rem 0 0.3rem;
+    color: #687386;
+    font-size: 0.74rem;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__action {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    margin: 0.25rem 0 0;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust {
+    grid-column: 1 / -1;
+    grid-row: 6;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.34rem 0.55rem;
+    margin: 0.66rem 0 0;
+    padding: 0.64rem 0 0;
+    border-top: 1px solid rgba(30, 37, 50, 0.08);
+    background: transparent;
+    list-style: none;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust .ed-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    min-width: 0;
+    color: #64748b;
+    font-size: 0.68rem;
+    font-weight: 540;
+    line-height: 1.15;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust .ed-trust-item__icon {
+    flex: 0 0 auto;
+    width: 0.7rem;
+    height: 0.7rem;
+    color: #16a34a;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium #total {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    padding: 0.86rem 0.88rem;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    font-size: 0.9rem;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc .show-content {
+    font-size: 0.78rem;
+  }
+
+  body.page-event-detail .event-details-information .price-count h6.ed-ticket-option__price,
+  body.page-event-detail .event-details-information .price-count .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price--free {
+    font-size: 0.95rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    gap: 0.55rem;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-value,
+  body.page-event-detail .ed-total-row--premium .ed-total-value__currency,
+  body.page-event-detail .ed-total-row--premium .ed-total-value__amount,
+  body.page-event-detail .ed-total-row--premium .ed-total-value #total_price {
+    font-size: 1.48rem;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust {
+    gap: 0.3rem 0.42rem;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust .ed-trust-item {
+    font-size: 0.66rem;
+  }
+}
+
+/* Event detail — quieter mobile facts and nudge alignment */
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-hero-fact__label {
+    color: #8b95a5;
+    font-size: 0.68rem;
+    font-weight: 520;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    align-items: center;
+    gap: 0.48rem;
+  }
+
+  body.page-event-detail .ed-hero-nudge::before {
+    align-self: center;
+    width: 0.34rem;
+    height: 0.34rem;
+    margin-top: 0;
+    transform: translateY(-0.01em);
+  }
+
+  body.page-event-detail .ed-hero-nudge__item {
+    display: none;
+    align-items: center;
+    min-height: 1.35em;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-hero-nudge__item--active {
+    display: inline-flex;
+  }
+}
+
+body.page-event-detail .ed-total-protection {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  color: #15803d;
+  font-size: 0.74rem;
+  font-weight: 560;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-total-protection svg {
+  flex: 0 0 auto;
+  width: 0.82rem;
+  height: 0.82rem;
+}
+
+body.page-event-detail .ed-total-row__action {
+  grid-column: 1 / -1;
+  margin-top: 0.45rem;
+}
+
+body.page-event-detail .ed-total-row__trust {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.36rem 0.6rem;
+  margin: 0.7rem 0 0;
+  padding: 0.68rem 0 0;
+  border-top: 1px solid rgba(30, 37, 50, 0.08);
+  background: transparent;
+  list-style: none;
+}
+
+body.page-event-detail .ed-total-row__trust .ed-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  min-width: 0;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 540;
+  line-height: 1.18;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.page-event-detail .ed-total-row__trust .ed-trust-item__icon {
+  flex: 0 0 auto;
+  width: 0.74rem;
+  height: 0.74rem;
+  color: #16a34a;
+}
+
+body.page-event-detail .ed-body-breadcrumbs {
+  margin: 0 0 0.85rem;
+  padding: 0;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.38rem;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  color: #8a94a6;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list li {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a {
+  color: #7d8798;
+  font-weight: 540;
+  text-decoration: none;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a:hover,
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a:focus-visible {
+  color: #f97316;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__sep {
+  color: #c4cad4;
+  font-size: 0.68rem;
+  line-height: 1;
+}
+
+body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current {
+  flex: 1 1 auto;
+  min-width: 4rem;
+  max-width: min(28rem, 42vw);
+  overflow: hidden;
+  color: #667184;
+  font-weight: 540;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-body-breadcrumbs--desktop {
+    display: none;
+  }
+
+  body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current {
+    max-width: 9.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current {
+    max-width: 6.75rem;
+  }
+}
+
+body.page-event-detail .ed-ticket-gallery {
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+body.page-event-detail .ed-ticket-gallery .ed-body-breadcrumbs {
+  margin: 0.52rem 0 0.85rem;
+  padding: 0 0.1rem;
+  background: transparent;
+}
+
+body.page-event-detail .ed-ticket-gallery__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10.6;
+  height: auto;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgba(30, 37, 50, 0.09);
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-card--gallery.ed-section--media {
+    display: none;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-gallery {
+    margin-top: 1.02rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-gallery__img {
+    border-radius: 14px;
+    box-shadow: 0 8px 18px rgba(30, 37, 50, 0.085);
+  }
+}
+
+/* Event detail — editorial description rhythm */
+body.page-event-detail .ed-info-card--quickfacts {
+  margin-bottom: 0.85rem;
+}
+
+body.page-event-detail .ed-info-card--description {
+  margin-top: 0.55rem;
+  margin-bottom: 1.75rem;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-info-card__body--description {
+  padding: 0.35rem clamp(0.35rem, 1.25vw, 0.7rem) 0;
+  background: transparent;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content {
+  max-width: 68ch;
+  color: #2b3444;
+  font-size: clamp(0.95rem, 0.9vw, 1rem);
+  font-weight: 430;
+  line-height: 1.62;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content p {
+  margin: 0 0 0.72rem;
+  color: #2f3a4a;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content p:first-child {
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.86rem;
+  border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  color: #111827;
+  font-size: clamp(1.02rem, 1.15vw, 1.14rem);
+  font-weight: 650;
+  line-height: 1.34;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content p:last-child {
+  margin-top: 0.95rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(30, 37, 50, 0.07);
+  color: #7a8494;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content strong,
+body.page-event-detail .ed-info-card--description .summernote-content b {
+  color: #172131;
+  font-weight: 680;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content p:first-child strong,
+body.page-event-detail .ed-info-card--description .summernote-content p:first-child b {
+  font-weight: 760;
+}
+
+body.page-event-detail .ed-info-card--description .summernote-content br {
+  line-height: 1.45;
+}
+
+body.page-event-detail .ed-info-card--description .ed-refund-band--highlight {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.72rem;
+  align-items: flex-start;
+  margin-top: 1.05rem;
+  padding: 0.88rem 0 0;
+  border: 0;
+  border-top: 1px solid rgba(249, 115, 22, 0.18);
+  border-radius: 0;
+  background: transparent;
+}
+
+body.page-event-detail .ed-info-card--description .ed-refund-band--highlight .ed-refund-band__icon {
+  width: 1.45rem;
+  height: 1.45rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #ea580c;
+}
+
+body.page-event-detail .ed-info-card--description .ed-refund-band__lead {
+  margin-bottom: 0.28rem;
+  color: #172131;
+  font-size: 0.93rem;
+  font-weight: 680;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-info-card--description .ed-refund-band__desc {
+  color: #647085;
+  font-size: 0.82rem;
+  font-weight: 430;
+  line-height: 1.48;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail #event-booking-card {
+    margin-bottom: 0;
+  }
+
+  body.page-event-detail #main-content {
+    padding-top: 0.5rem;
+  }
+
+  body.page-event-detail .ed-body {
+    border-top: 0;
+  }
+
+  body.page-event-detail .ed-info-card--description {
+    margin-top: 0.72rem;
+    margin-bottom: 1.35rem;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-info-card__body--description {
+    padding: 0.2rem 0.72rem 0;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content {
+    font-size: 0.93rem;
+    line-height: 1.58;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content p {
+    margin-bottom: 0.66rem;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content p:first-child {
+    font-size: 1rem;
+    line-height: 1.32;
+  }
+
+  body.page-event-detail .ed-info-card--description .ed-refund-band--highlight {
+    margin-top: 0.92rem;
+    padding: 0.78rem 0 0;
+  }
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-info-card__body--description {
+    padding-left: 0.62rem;
+    padding-right: 0.62rem;
+  }
+}
+
+/* Event detail — clean legal note */
+body.page-event-detail .ed-refund-band--policy {
+  scroll-margin-top: 5.4rem;
+  margin: clamp(1.45rem, 2.5vw, 2.15rem) 0 0;
+  padding: clamp(1rem, 2vw, 1.2rem) 0;
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid rgba(30, 37, 50, 0.1);
+  border-bottom: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.72rem;
+  padding: 0 0 0.88rem;
+  border: 0;
+  border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  background: transparent;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(249, 115, 22, 0.18);
+  border-radius: 10px;
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__title {
+  margin: 0;
+  color: #1e2532;
+  font-size: clamp(0.98rem, 1vw, 1.08rem);
+  font-weight: 680;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__kicker {
+  margin: 0.18rem 0 0;
+  color: #687386;
+  font-size: 0.78rem;
+  font-weight: 430;
+  line-height: 1.38;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.9rem, 1.8vw, 1.35rem);
+  margin: 0;
+  padding: 0.95rem 0 0.9rem;
+  border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  list-style: none;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__point {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: flex-start;
+  gap: 0.56rem;
+  padding: 0;
+  border: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.1rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #f97316;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-icon svg {
+  width: 0.84rem;
+  height: 0.84rem;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy {
+  gap: 0.18rem;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy strong {
+  color: #232b39;
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.24;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy > span {
+  color: #667286;
+  font-size: 0.76rem;
+  font-weight: 420;
+  line-height: 1.43;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-details {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.1rem;
+  cursor: pointer;
+  color: #536075;
+  font-size: 0.76rem;
+  font-weight: 560;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-summary::before {
+  content: "+";
+  width: 1rem;
+  margin-right: 0.24rem;
+  color: #f97316;
+  font-size: 0.92rem;
+  font-weight: 620;
+  line-height: 1;
+  text-align: left;
+  transition: transform 0.16s ease;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-details[open] .ed-refund-band__legal-summary::before {
+  transform: rotate(45deg);
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-summary:focus-visible {
+  outline: 2px solid rgba(249, 115, 22, 0.32);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-text {
+  max-width: 76ch;
+  margin: 0.35rem 0 0;
+  padding-top: 0.72rem;
+  border-top: 1px solid rgba(30, 37, 50, 0.08);
+  color: #647085;
+  font-size: 0.76rem;
+  font-weight: 420;
+  line-height: 1.58;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.58rem 0.9rem;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0 0.78rem;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 0.75rem;
+  font-weight: 620;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-decoration: none !important;
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:hover,
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:focus-visible {
+  border-color: rgba(249, 115, 22, 0.32);
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:focus-visible {
+  outline: 2px solid rgba(249, 115, 22, 0.32);
+  outline-offset: 3px;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact {
+  color: #69758a;
+  font-size: 0.75rem;
+  font-weight: 520;
+  line-height: 1.3;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact:hover,
+body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact:focus-visible {
+  color: #ea580c;
+  text-decoration: underline;
+  text-underline-offset: 0.18rem;
+}
+
+@media (max-width: 767.98px) {
+  body.page-event-detail .ed-refund-band--policy {
+    margin-top: 1.15rem;
+    padding: 0.95rem 0;
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__head {
+    padding-bottom: 0.78rem;
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__points {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0.78rem 0 0.72rem;
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__point {
+    gap: 0.5rem;
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__point + .ed-refund-band__point {
+    margin-top: 0.68rem;
+    padding-top: 0.68rem;
+    border-top: 1px solid rgba(30, 37, 50, 0.07);
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__footer {
+    align-items: flex-start;
+    margin-top: 0.58rem;
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta {
+    width: auto;
+    min-height: 2rem;
+  }
+
+  body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact {
+    text-align: left;
+  }
+}
+
+/* Event detail — compact organizer/location/calendar and related rhythm */
+body.page-event-detail .ei-card {
+  display: grid;
+  gap: 0;
+  overflow: visible;
+  border: 0;
+  border-top: 1px solid rgba(30, 37, 50, 0.09);
+  border-bottom: 1px solid rgba(30, 37, 50, 0.09);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.page-event-detail .ei-org,
+body.page-event-detail .ei-meta,
+body.page-event-detail .ei-cal {
+  padding: 0.82rem 0;
+  border-color: rgba(30, 37, 50, 0.08);
+}
+
+body.page-event-detail .ei-org {
+  gap: 0.72rem;
+}
+
+body.page-event-detail .ei-org__avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid rgba(30, 37, 50, 0.1);
+}
+
+body.page-event-detail .ei-label {
+  margin-bottom: 0.22rem;
+  color: #8490a3;
+  font-size: 0.68rem;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+body.page-event-detail .ei-org__name,
+body.page-event-detail .ei-meta__text {
+  color: #263041;
+  font-size: 0.9rem;
+  font-weight: 620;
+  line-height: 1.36;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ei-org__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  margin-top: 0.1rem;
+  color: #ea580c;
+  font-size: 0.75rem;
+  font-weight: 560;
+  line-height: 1.25;
+}
+
+body.page-event-detail .ei-meta {
+  gap: 0.62rem;
+}
+
+body.page-event-detail .ei-meta__icon,
+body.page-event-detail .ei-cal__icon {
+  color: #f97316;
+  font-size: 0.78rem;
+}
+
+body.page-event-detail .ei-cal {
+  padding-bottom: 0.92rem;
+}
+
+body.page-event-detail .ei-cal .ei-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.58rem;
+}
+
+body.page-event-detail .ei-cal__btns {
+  gap: 0.48rem;
+}
+
+body.page-event-detail .ei-cal__btn {
+  min-height: 2.18rem;
+  padding: 0 0.78rem;
+  border-radius: 999px;
+  border-color: rgba(30, 37, 50, 0.1);
+  background: #ffffff;
+  color: #314052;
+  font-size: 0.75rem;
+  font-weight: 620;
+  line-height: 1;
+  box-shadow: none;
+}
+
+body.page-event-detail .ei-cal__btn:hover,
+body.page-event-detail .ei-cal__btn:focus-visible {
+  border-color: rgba(249, 115, 22, 0.28);
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+body.page-event-detail .ed-body {
+  padding-bottom: clamp(0.8rem, 1.6vw, 1.25rem);
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-body {
+    padding-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ei-card {
+    margin-top: 0.1rem;
+  }
+
+  body.page-event-detail .ei-org,
+  body.page-event-detail .ei-meta,
+  body.page-event-detail .ei-cal {
+    padding: 0.72rem 0;
+  }
+
+  body.page-event-detail .ei-cal__btns {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  body.page-event-detail .ei-cal__btn {
+    justify-content: center;
+    min-width: 0;
+  }
+
+}
+
+/* Event detail — desktop adaptation of the cleaner mobile booking flow */
+@media (min-width: 992px) {
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    min-height: 0;
+    background-color: #111827;
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    width: calc(100% - var(--ed-hero-aside-w) - clamp(1.45rem, 2.8vw, 2.35rem));
+    max-width: 46rem;
+    padding-top: clamp(2.5rem, 3.8vw, 3.85rem);
+    padding-right: 0;
+    padding-bottom: clamp(1.15rem, 2vw, 1.6rem);
+  }
+
+  body.page-event-detail #main-content {
+    padding-top: clamp(1rem, 1.8vw, 1.45rem);
+  }
+
+  body.page-event-detail .ed-ev-title {
+    max-width: 10.4em;
+  }
+
+  body.page-event-detail .ed-section--hero-media {
+    margin-top: clamp(1.15rem, 2vw, 1.55rem);
+    margin-bottom: 0;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-wrap {
+    display: grid;
+    gap: 0.72rem;
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-main {
+    overflow: hidden;
+    border-radius: 20px;
+    background: #0f172a;
+    box-shadow: 0 22px 58px rgba(2, 6, 23, 0.34);
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-main__link {
+    display: block;
+    border-radius: inherit;
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-main__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9.45;
+    height: auto;
+    max-height: clamp(17rem, 31vw, 24rem);
+    border-radius: inherit;
+    object-fit: cover;
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-count {
+    right: 0.9rem;
+    bottom: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(15, 23, 42, 0.72);
+    box-shadow: 0 10px 24px rgba(2, 6, 23, 0.24);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
+    gap: 0.5rem;
+    max-width: 100%;
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-thumb {
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    top: clamp(2.55rem, 3.8vw, 3.85rem);
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card,
+  body.page-event-detail #event-booking-card {
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.96);
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 24px 54px rgba(2, 6, 23, 0.24);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.page-event-detail .ed-ticket-card__head,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+    padding: 1.05rem 1.08rem 0.95rem;
+    border: 0;
+    border-bottom: 1px solid #edf0f4;
+    border-radius: 0;
+    background: #ffffff;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.page-event-detail .ed-head-top {
+    margin-bottom: 0.68rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-title {
+    color: #7b8797 !important;
+    font-size: 0.68rem;
+    font-weight: 680;
+  }
+
+  body.page-event-detail .ed-ticket-card__head-price {
+    color: #1e2532;
+    font-size: clamp(1.78rem, 2.45vw, 2.08rem) !important;
+    font-weight: 780;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-head-stock {
+    margin-top: 0.62rem !important;
+    color: #64748b !important;
+    font-size: 0.78rem;
+    font-weight: 520;
+  }
+
+  body.page-event-detail .ed-ticket-card__body,
+  body.page-event-detail .ed-ticket-card__body--premium,
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
+    padding: 1rem 1.05rem 1.08rem;
+    border: 0;
+    border-radius: 0;
+    background: #ffffff;
+  }
+
+  body.page-event-detail .ed-ticket-picker__intro {
+    display: block;
+    margin: 0 0 0.85rem;
+    padding: 0 0 0.8rem;
+    border: 0;
+    border-bottom: 1px solid #edf0f4;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.42rem;
+    margin: 0;
+    color: #1e2532;
+    font-size: 1.04rem;
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__title-icon {
+    flex: 0 0 auto;
+    color: #f97316;
+    transform: translateY(0.02em);
+  }
+
+  body.page-event-detail .ed-ticket-picker__sub {
+    max-width: 20.5rem;
+    margin-top: 0.34rem;
+    color: #667184;
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list {
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #e4e8ee;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: #ffffff;
+    box-shadow: 0 4px 18px rgba(30, 37, 50, 0.045);
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option,
+  body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+    display: grid;
+    gap: 0.28rem;
+    margin: 0;
+    padding: 0.82rem 0.92rem;
+    border: 0;
+    border-radius: 0;
+    background: #ffffff;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option:not(:first-of-type) {
+    margin-top: 0;
+  }
+
+  body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option:not(:last-of-type) {
+    border-bottom: 1px solid #eef1f5;
+  }
+
+  body.page-event-detail .ed-ticket-option:hover,
+  body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+    border-color: transparent;
+    background: #fffaf6;
+    box-shadow: inset 3px 0 0 rgba(249, 115, 22, 0.5);
+  }
+
+  body.page-event-detail .ed-ticket-option__head {
+    min-width: 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title {
+    margin: 0;
+    color: #1f2430;
+    font-size: 0.92rem;
+    font-weight: 680;
+    line-height: 1.22;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__title strong {
+    font: inherit;
+    color: inherit;
+  }
+
+  body.page-event-detail .ed-ticket-option .click-show.ed-ticket-option__desc,
+  body.page-event-detail .ed-ticket-option__desc {
+    margin: 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-ticket-option__desc .show-content {
+    color: #667184;
+    font-size: 0.78rem;
+    font-weight: 400;
+    line-height: 1.32;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.68rem;
+    margin: 0.08rem 0 0;
+    padding: 0;
+  }
+
+  body.page-event-detail .event-details-information .price-count h6.ed-ticket-option__price,
+  body.page-event-detail .event-details-information .price-count .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price,
+  body.page-event-detail .ed-ticket-option__price--free {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    width: fit-content;
+    min-height: 1.82rem;
+    margin: 0;
+    padding: 0.33rem 0.56rem;
+    border: 1px solid rgba(249, 115, 22, 0.18);
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #1f2430;
+    font-size: 0.88rem;
+    font-weight: 760;
+    line-height: 1;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+    white-space: normal;
+  }
+
+  body.page-event-detail .ed-ticket-option__price--free {
+    color: #c2410c;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
+    min-height: 2.58rem;
+    border-color: #dfe4ea;
+    border-radius: 999px;
+    background: #fbfcfd;
+    box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    height: 2.58rem;
+    min-height: 2.58rem;
+    color: #334155;
+    background: transparent;
+    font-size: 0.88rem;
+    font-weight: 760;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
+  body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
+    width: 2.58rem;
+    min-width: 2.58rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .quantity {
+    width: 2.3rem;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 0.28rem 0.75rem;
+    margin: 0;
+    padding: 0.95rem 0.92rem 1rem;
+    border: 1px solid #e4e8ee;
+    border-top: 0;
+    border-radius: 0 0 16px 16px;
+    background: #f8fafc;
+    box-shadow: 0 10px 22px rgba(30, 37, 50, 0.06);
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium::before {
+    content: "";
+    grid-column: 1 / -1;
+    height: 1px;
+    margin: -0.95rem 0 0.58rem;
+    background: #eef1f5;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-label {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+    color: #667184;
+    font-size: 0.68rem;
+    font-weight: 720;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-protection {
+    grid-column: 1;
+    grid-row: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    width: fit-content;
+    margin: 0.14rem 0 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #15803d;
+    font-size: 0.72rem;
+    font-weight: 560;
+    line-height: 1.2;
+    letter-spacing: 0;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-value,
+  body.page-event-detail .ed-total-row--premium .ed-total-value__currency,
+  body.page-event-detail .ed-total-row--premium .ed-total-value__amount,
+  body.page-event-detail .ed-total-row--premium .ed-total-value #total_price {
+    grid-column: 2;
+    grid-row: 2 / 4;
+    align-self: center;
+    justify-self: end;
+    margin: 0;
+    color: #1f2430;
+    font-size: 1.58rem;
+    font-weight: 760;
+    line-height: 0.95;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__note {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    max-width: 23rem;
+    margin: 0.22rem 0 0.3rem;
+    color: #687386;
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.34;
+    letter-spacing: 0;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__action {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    margin: 0.25rem 0 0;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust {
+    grid-column: 1 / -1;
+    grid-row: 6;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.34rem 0.5rem;
+    margin: 0.66rem 0 0;
+    padding: 0.64rem 0 0;
+    border-top: 1px solid rgba(30, 37, 50, 0.08);
+    background: transparent;
+    list-style: none;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust .ed-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    min-width: 0;
+    color: #64748b;
+    font-size: 0.66rem;
+    font-weight: 540;
+    line-height: 1.15;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.page-event-detail .ed-total-row--premium .ed-total-row__trust .ed-trust-item__icon {
+    flex: 0 0 auto;
+    width: 0.7rem;
+    height: 0.7rem;
+    color: #16a34a;
+  }
+}
+
+@media (min-width: 1200px) {
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    max-width: 45rem;
+  }
+}
+
+/* Event detail — controlled desktop no-hero trial */
+@media (min-width: 992px) {
+  body.page-event-detail .ed-hero-event.hero-collage-section,
+  body.page-event-detail .hero-collage-section--premium.ed-hero-event {
+    border-top: 0;
+    background: var(--ed-page) !important;
+    background-image: none !important;
+  }
+
+  body.page-event-detail .ed-hero-event .hero-slideshow,
+  body.page-event-detail .ed-hero-event .hero-overlay,
+  body.page-event-detail .ed-hero-event .hero-vignette,
+  body.page-event-detail .ed-hero-event .hero-ambient,
+  body.page-event-detail .ed-hero-event .hero-noise {
+    display: none !important;
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: clamp(2.05rem, 3vw, 2.75rem);
+    padding-bottom: clamp(1.05rem, 1.8vw, 1.45rem);
+  }
+
+  body.page-event-detail .ed-hero-grid__main .ed-ev-title,
+  body.page-event-detail .ed-hero-grid__main .ed-hero-nudge,
+  body.page-event-detail .ed-hero-grid__main .ed-ev-kicker {
+    text-shadow: none !important;
+  }
+
+  body.page-event-detail .ed-ev-kicker {
+    margin-bottom: 0.95rem;
+  }
+
+  body.page-event-detail .ed-ev-kicker__chip {
+    background: #ffffff;
+    border-color: #dfe4ea;
+    box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
+  }
+
+  body.page-event-detail .ed-ev-kicker__chip--category {
+    border-color: rgba(249, 115, 22, 0.32);
+    background: #fff7ed;
+    color: #c2410c;
+  }
+
+  body.page-event-detail .ed-hero__status-pill {
+    border-color: rgba(37, 99, 235, 0.24);
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    max-width: 10.8em;
+    color: #1e2532;
+    font-size: clamp(3.15rem, 4.35vw, 4.45rem);
+    font-weight: 780;
+    line-height: 1.02;
+    letter-spacing: 0;
+    hyphens: none;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    min-height: 1.45rem;
+    margin-top: 0.95rem;
+    color: #536174;
+  }
+
+  body.page-event-detail .ed-hero-nudge::before {
+    top: 0.64em;
+    background: #f97316;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-hero-nudge__item {
+    color: #536174;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  body.page-event-detail .ed-hero-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin-top: clamp(1rem, 1.8vw, 1.35rem);
+    overflow: hidden;
+    border: 1px solid #e4e8ee;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(30, 37, 50, 0.055);
+  }
+
+  body.page-event-detail .ed-hero-fact {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.68rem;
+    min-width: 0;
+    padding: 0.9rem 0.92rem;
+  }
+
+  body.page-event-detail .ed-hero-fact + .ed-hero-fact {
+    border-left: 1px solid #eef1f5;
+  }
+
+  body.page-event-detail .ed-hero-fact__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 2.05rem;
+    width: 2.05rem;
+    height: 2.05rem;
+    border-radius: 999px;
+    background: #f8fafc;
+    box-shadow: inset 0 0 0 1px rgba(30, 37, 50, 0.06);
+  }
+
+  body.page-event-detail .ed-hero-fact__icon--date {
+    color: #f97316;
+  }
+
+  body.page-event-detail .ed-hero-fact__icon--place {
+    color: #2563eb;
+  }
+
+  body.page-event-detail .ed-hero-fact__icon--stock {
+    color: #16a34a;
+  }
+
+  body.page-event-detail .ed-hero-fact__copy {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  body.page-event-detail .ed-hero-fact__label {
+    color: #7b8797;
+    font-size: 0.67rem;
+    font-weight: 560;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  body.page-event-detail .ed-hero-fact__value {
+    color: #1e2532;
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  body.page-event-detail .ed-hero-fact__value--available {
+    color: #15803d;
+  }
+
+  body.page-event-detail .ed-hero-fact__value--low {
+    color: #b45309;
+  }
+
+  body.page-event-detail .ed-hero-fact__meta {
+    color: #667184;
+    font-size: 0.73rem;
+    font-weight: 440;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: 0.95rem;
+  }
+
+  body.page-event-detail .ed-hero__btn {
+    width: 2.72rem;
+    height: 2.72rem;
+    border: 1px solid #dfe4ea;
+    background: #ffffff;
+    color: #334155;
+    box-shadow: 0 6px 18px rgba(30, 37, 50, 0.08);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.page-event-detail .ed-hero__btn:hover,
+  body.page-event-detail .ed-hero__btn:focus-visible {
+    border-color: rgba(249, 115, 22, 0.38);
+    background: #fff7ed;
+    color: #c2410c;
+    transform: translateY(-1px);
+  }
+
+  body.page-event-detail .ed-section--hero-media {
+    margin-top: clamp(1rem, 1.8vw, 1.35rem);
+  }
+
+  body.page-event-detail .ed-section--hero-media .ed-gallery-main {
+    background: #ffffff;
+    box-shadow: 0 18px 42px rgba(30, 37, 50, 0.12);
+  }
+
+  body.page-event-detail .ed-hero-grid__aside {
+    top: clamp(2.05rem, 3vw, 2.75rem);
+  }
+
+  body.page-event-detail .ed-hero-grid__aside .ed-ticket-card,
+  body.page-event-detail #event-booking-card {
+    box-shadow: 0 18px 44px rgba(30, 37, 50, 0.12);
+  }
+
+  body.page-event-detail .ed-body {
+    border-top: 0;
+    background: var(--ed-page);
+  }
+
+  body.page-event-detail #main-content {
+    background: var(--ed-page);
+    padding-top: clamp(1.15rem, 2vw, 1.65rem);
+  }
+
+  body.page-event-detail .ed-event-cover {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 0.72rem;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(30, 37, 50, 0.08);
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 16px 38px rgba(30, 37, 50, 0.1);
+  }
+
+  body.page-event-detail .ed-event-cover__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+  }
+
+  body.page-event-detail .ed-event-cover + .ed-body-breadcrumbs {
+    margin-top: 0;
+    margin-bottom: 0.92rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-event-cover {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  body.page-event-detail .ed-hero-facts {
+    grid-template-columns: 1fr;
+  }
+
+  body.page-event-detail .ed-hero-fact + .ed-hero-fact {
+    border-top: 1px solid #eef1f5;
+    border-left: 0;
+  }
+}
+
+body.page-event-detail .ed-hero-info {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  body.page-event-detail .ed-hero-info {
+    display: block;
+    margin-top: clamp(1rem, 1.8vw, 1.35rem);
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.15rem;
+    border-top: 1px solid rgba(30, 37, 50, 0.08);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item {
+    align-items: flex-start;
+    gap: 0.74rem;
+    min-height: 0;
+    padding: 0.86rem 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item:nth-child(n + 3) {
+    border-top: 1px solid #eef1f5;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-icon {
+    width: 2rem;
+    height: 2rem;
+    min-width: 2rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgba(30, 37, 50, 0.06);
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item__label {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0 0 0.12rem;
+    padding: 0;
+    overflow: visible;
+    clip: auto;
+    color: #7b8797;
+    font-size: 0.67rem;
+    font-weight: 560;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    white-space: normal;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item__value {
+    margin: 0 0 0.1rem;
+    color: #1e2532;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.22;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item__value--available {
+    color: #15803d;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item__value--low {
+    color: #b45309;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item__meta {
+    color: #667184;
+    font-size: 0.73rem;
+    font-weight: 440;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  body.page-event-detail .ed-hero-facts,
+  body.page-event-detail .ed-hero-facts--mobile,
+  body.page-event-detail .ed-body .ed-info-card--quickfacts {
+    display: none !important;
+  }
+}
+
+/* Event detail — desktop rhythm correction */
+@media (min-width: 992px) {
+  body.page-event-detail {
+    --ed-desktop-step-1: 0.75rem;
+    --ed-desktop-step-2: 1rem;
+    --ed-desktop-step-3: 1.25rem;
+    --ed-desktop-step-4: 1.5rem;
+  }
+
+  body.page-event-detail .ed-hero-grid__main.hero-content {
+    padding-top: clamp(1.75rem, 2.6vw, 2.35rem);
+    padding-bottom: var(--ed-desktop-step-2);
+  }
+
+  body.page-event-detail .ed-ev-kicker {
+    margin-bottom: var(--ed-desktop-step-1);
+  }
+
+  body.page-event-detail .ed-ev-title {
+    max-width: 11.45em;
+    font-size: clamp(2.85rem, 3.65vw, 3.7rem);
+    font-weight: 760;
+    line-height: 1.035;
+  }
+
+  body.page-event-detail .ed-hero-nudge {
+    margin-top: var(--ed-desktop-step-1);
+    margin-bottom: 0;
+  }
+
+  body.page-event-detail .ed-hero-info {
+    margin-top: var(--ed-desktop-step-3);
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-grid {
+    gap: 0 1.25rem;
+  }
+
+  body.page-event-detail .ed-hero-info .ed-info-item {
+    padding: 0.8rem 0;
+  }
+
+  body.page-event-detail .ed-ev-actions {
+    margin-top: var(--ed-desktop-step-3);
+  }
+
+  body.page-event-detail #main-content {
+    padding-top: var(--ed-desktop-step-2);
+  }
+
+  body.page-event-detail .ed-event-cover {
+    margin-bottom: var(--ed-desktop-step-1);
+  }
+
+  body.page-event-detail .ed-event-cover + .ed-body-breadcrumbs {
+    margin-top: 0;
+    margin-bottom: var(--ed-desktop-step-2);
+    padding-bottom: var(--ed-desktop-step-2);
+    border-bottom: 1px solid rgba(30, 37, 50, 0.08);
+  }
+
+  body.page-event-detail .ed-body-breadcrumbs + .ed-info-card--description {
+    margin-top: 0;
+  }
+
+  body.page-event-detail .ed-info-card--description {
+    margin-bottom: var(--ed-desktop-step-4);
+  }
+
+  body.page-event-detail .ed-info-card__body--description {
+    padding: 0;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content {
+    width: 100%;
+    max-width: none;
+    font-size: 0.97rem;
+    line-height: 1.6;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content p {
+    margin-bottom: 0.68rem;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content p:first-child {
+    margin-bottom: 0.88rem;
+    padding-bottom: 0.88rem;
+  }
+
+  body.page-event-detail .ed-info-card--description .summernote-content p:last-child {
+    margin-top: var(--ed-desktop-step-2);
+    padding-top: 0;
+    border-top: 0;
+    color: #536174;
+    font-size: 0.93rem;
+    line-height: 1.55;
+  }
+
+  body.page-event-detail .ed-info-card--description .ed-refund-band--highlight {
+    width: 100%;
+    margin-top: var(--ed-desktop-step-4);
+    padding-top: var(--ed-desktop-step-2);
+  }
+
+  body.page-event-detail .ed-info-card--description .ed-refund-band--highlight + .ed-description-map {
+    margin-top: var(--ed-desktop-step-3);
+  }
+
+  body.page-event-detail .ed-description-map {
+    width: 100%;
+    margin-bottom: var(--ed-desktop-step-4);
+  }
+
+  body.page-event-detail .ed-description-map__title {
+    margin-bottom: 0.68rem;
+    font-size: 1.05rem;
+    font-weight: 660;
+  }
+
+  body.page-event-detail .ed-description-map__iframe {
+    height: clamp(280px, 28vw, 320px);
+  }
+
+  body.page-event-detail .ed-refund-band--policy {
+    margin-top: var(--ed-desktop-step-4);
+  }
+}
+
+body.page-event-detail .ed-ticket-card__head--interest,
+body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head--interest {
+  position: relative;
+  min-height: 6.6rem;
+  padding: 1rem 1.08rem 1.12rem;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.86) 0%, rgba(255, 255, 255, 0.96) 54%, rgba(248, 250, 252, 0.98) 100%);
+}
+
+body.page-event-detail .ed-ticket-signal__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  margin-bottom: 0.5rem;
+  color: #ea580c;
+  font-size: 0.68rem;
+  font-weight: 740;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+body.page-event-detail .ed-ticket-signal__dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: #f97316;
+  box-shadow: 0 0 0 0.22rem rgba(249, 115, 22, 0.12);
+}
+
+body.page-event-detail .ed-ticket-signal__rail {
+  position: relative;
+  display: block;
+  min-height: 3.55rem;
+}
+
+body.page-event-detail .ed-ticket-signal__item {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  opacity: 0;
+  transform: translateY(0.45rem);
+  transition: opacity 0.34s ease, transform 0.34s ease;
+}
+
+body.page-event-detail .ed-ticket-signal__item--active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.page-event-detail .ed-ticket-signal__item strong {
+  display: block;
+  color: #1e2532;
+  font-size: clamp(1.32rem, 1.75vw, 1.7rem);
+  font-weight: 780;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ticket-signal__item span {
+  display: block;
+  max-width: 17.5rem;
+  color: #5f6b7d;
+  font-size: 0.84rem;
+  font-weight: 520;
+  line-height: 1.32;
+  letter-spacing: 0;
+}
+
+body.page-event-detail .ed-ticket-signal__progress {
+  position: absolute;
+  right: 1.08rem;
+  bottom: 0.72rem;
+  left: 1.08rem;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(249, 115, 22, 0.13);
+}
+
+body.page-event-detail .ed-ticket-signal__progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: #f97316;
+  transform-origin: left center;
+  animation: ed-ticket-signal-progress 5.2s linear infinite;
+}
+
+@keyframes ed-ticket-signal-progress {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-event-detail .ed-ticket-signal__item,
+  body.page-event-detail .ed-ticket-signal__progress span {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail #event-booking-card > .ed-ticket-card__head--signal,
+  body.page-event-detail .ed-hero-grid__aside #event-booking-card > .ed-ticket-card__head--signal {
+    --ed-signal-mobile-bleed: min(1rem, 4vw);
+    display: block !important;
+    box-sizing: border-box;
+    width: calc(100% + var(--ed-signal-mobile-bleed) + var(--ed-signal-mobile-bleed));
+    min-height: 5.85rem;
+    margin-left: calc(0px - var(--ed-signal-mobile-bleed));
+    margin-right: calc(0px - var(--ed-signal-mobile-bleed));
+    padding: 0.92rem calc(1rem + var(--ed-signal-mobile-bleed)) 1rem;
+    border-bottom: 1px solid #edf0f4;
+    border-radius: 0;
+    background:
+      linear-gradient(135deg, rgba(255, 247, 237, 0.9) 0%, rgba(255, 255, 255, 0.98) 58%, rgba(248, 250, 252, 0.98) 100%);
+  }
+
+  body.page-event-detail #event-booking-card > .ed-ticket-card__head--signal + .ed-ticket-card__body,
+  body.page-event-detail #event-booking-card > .ed-ticket-card__head--signal + .ed-ticket-card__body--premium {
+    padding-top: 0.95rem;
+  }
+
+  body.page-event-detail .ed-ticket-signal__eyebrow {
+    margin-bottom: 0.44rem;
+    font-size: 0.64rem;
+  }
+
+  body.page-event-detail .ed-ticket-signal__rail {
+    min-height: 3.1rem;
+  }
+
+  body.page-event-detail .ed-ticket-signal__item strong {
+    font-size: 1.42rem;
+  }
+
+  body.page-event-detail .ed-ticket-signal__item span {
+    max-width: 18rem;
+    font-size: 0.8rem;
+    line-height: 1.32;
+  }
+
+  body.page-event-detail .ed-ev-title {
+    -webkit-hyphens: none;
+    hyphens: none;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
+
+/* Event detail — countdown refinement */
+body.page-event-detail .ed-countdown-wrap {
+  display: grid;
+  align-content: center;
+  row-gap: 0.62rem;
+  margin: 0;
+  padding: 0.95rem;
+  border: 1px solid rgba(249, 115, 22, 0.14);
+  border-left: 0;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 247, 237, 0.78) 0%, rgba(255, 255, 255, 0.98) 56%, rgba(248, 250, 252, 0.96) 100%);
+  box-shadow: none;
+}
+
+body.page-event-detail .ed-countdown-label {
+  justify-content: flex-start;
+  gap: 0.45rem;
+  margin: 0;
+  color: #c2410c;
+  font-size: 0.72rem;
+  font-weight: 680;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+}
+
+body.page-event-detail .ed-countdown-label svg {
+  width: 0.88rem;
+  height: 0.88rem;
+  color: #f97316;
+  stroke-width: 2.2;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer__head,
+body.page-event-detail .ed-countdown-wrap .syotimer__footer {
+  display: none;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer__body {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid rgba(30, 37, 50, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer-cell {
+  display: grid !important;
+  place-items: center !important;
+  min-width: 0 !important;
+  min-height: 3.7rem !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0.56rem 0.18rem 0.5rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer-cell + .syotimer-cell {
+  border-left: 1px solid rgba(30, 37, 50, 0.08) !important;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer-cell__value {
+  margin: 0 0 0.12rem !important;
+  color: #1e2532 !important;
+  font-size: clamp(1.62rem, 2.25vw, 2rem) !important;
+  font-weight: 880 !important;
+  line-height: 0.92 !important;
+  letter-spacing: 0 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit {
+  max-width: 100%;
+  color: #7a8494 !important;
+  font-size: 0.56rem !important;
+  font-weight: 650 !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-body .col-lg-4 .sidebar-sticky > .ed-countdown-wrap:first-child {
+    margin-top: 0.95rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body.page-event-detail .ed-countdown-wrap {
+    row-gap: 0.58rem;
+    padding: 0.9rem 0.78rem;
+    border-radius: 14px;
+  }
+
+  body.page-event-detail .ed-countdown-wrap .syotimer-cell {
+    min-height: 3.55rem !important;
+    padding-inline: 0.12rem !important;
+  }
+
+  body.page-event-detail .ed-countdown-wrap .syotimer-cell__value {
+    font-size: clamp(1.48rem, 7.3vw, 1.78rem) !important;
+  }
+
+  body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit {
+    font-size: 0.5rem !important;
+  }
+}
+
+@media (min-width: 992px) {
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium {
+    border-top: 1px solid #eef1f5;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium::before {
+    display: none;
+  }
+
+  body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-picker__list > p.text-warning[class*="max_error"] {
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 0.92rem !important;
+    background: #ffffff;
+    font-size: 0.72rem;
+    line-height: 1.25;
   }
 }

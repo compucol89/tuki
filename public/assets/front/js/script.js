@@ -411,16 +411,17 @@
         var ticking    = false;
         var wasFixed   = false;
 
-        // Medir la altura natural ANTES de cualquier cambio de clase
-        var naturalH = headerEl.offsetHeight;
-        var headerStyles = window.getComputedStyle(headerEl);
-        var reservedH = Math.max(0, naturalH - parseFloat(headerStyles.paddingTop || 0) - parseFloat(headerStyles.paddingBottom || 0));
+        var upperEl = headerEl.querySelector('.header-upper');
+
+        function getReservedHeaderHeight() {
+            return Math.max(0, upperEl ? upperEl.offsetHeight : headerEl.offsetHeight);
+        }
 
         function applyHeader(shouldFix) {
             if (shouldFix === wasFixed) return;
             if (shouldFix) {
                 // Reservar el espacio ANTES de sacar el header del flujo
-                headerEl.style.paddingBottom = reservedH + 'px';
+                headerEl.style.paddingBottom = getReservedHeaderHeight() + 'px';
                 headerEl.classList.remove('header-instant');
                 headerEl.classList.add('fixed-header');
                 $scrollBtn.fadeIn(300);
@@ -699,22 +700,27 @@ $('.event-countdown').each(function () {
     function updateCountdownMessage() {
         var days = $this.find('.syotimer-cell_type_day .syotimer-cell__value').text();
         var labelEl = $this.closest('.ed-countdown-wrap').find('.ed-countdown-label');
+        var labelText = labelEl.find('span').first();
         var dayNum = parseInt(days) || 0;
-        var message = 'El evento comienza en';
+        var message = 'Comienza en';
 
         if (dayNum === 0) {
-            message = '\u00A1Hoy es el d\u00EDa!';
+            message = 'Hoy es el d\u00EDa';
         } else if (dayNum === 1) {
-            message = '\u00A1Ma\u00F1ana! No te lo pierdas';
+            message = 'Ma\u00F1ana es el evento';
         } else if (dayNum <= 7) {
-            message = '\u00A1Esta semana! Asegur\u00E1 tu lugar';
+            message = 'Esta semana';
         } else if (dayNum <= 30) {
-            message = '\u00A1En ' + dayNum + ' d\u00EDas! No te quedes afuera';
+            message = 'Faltan ' + dayNum + ' d\u00EDas';
         } else if (dayNum <= 60) {
-            message = 'Falta poco \u2014 compr\u00E1 con anticipaci\u00F3n';
+            message = 'Reserv\u00E1 con anticipaci\u00F3n';
         }
 
-        labelEl.text(message);
+        if (labelText.length) {
+            labelText.text(message);
+        } else {
+            labelEl.text(message);
+        }
     }
 
     setTimeout(updateCountdownMessage, 100);
@@ -802,4 +808,3 @@ $('body').on('submit', '#vendorContactForm', function (e) {
 
 
 })
-

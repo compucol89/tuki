@@ -11,6 +11,7 @@ const cssFiles = [
   'public/assets/front/css/style.css',
   'public/assets/front/css/responsive.css',
   'public/assets/front/css/home.css',
+  'public/assets/front/css/events.css',
 ];
 
 const jsFiles = [

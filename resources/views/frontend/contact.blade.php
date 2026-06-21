@@ -422,6 +422,296 @@
     transform: none;
   }
 }
+
+/* Contacto — Tangerine refresh */
+body.contact-page-premium {
+  --ctp-bg: var(--tk-bg, #e8ebed);
+  --ctp-ink: var(--tk-ink, #1e2532);
+  --ctp-muted: var(--tk-muted, #687386);
+  --ctp-subtle: #8a95a6;
+  --ctp-line: rgba(30, 37, 50, 0.1);
+  --ctp-line-strong: rgba(30, 37, 50, 0.16);
+  --ctp-accent: var(--tk-primary, #e05d38);
+  --ctp-accent-hover: var(--tk-primary-dark, #bf4424);
+  --ctp-accent-soft: #fff2ec;
+  --ctp-surface: #ffffff;
+  --ctp-radius: 8px;
+  --ctp-shadow: 0 14px 32px rgba(30, 37, 50, 0.08);
+  background: var(--ctp-bg);
+  color: var(--ctp-ink);
+}
+
+body.contact-page-premium .page-wrapper,
+body.contact-page-premium main {
+  background: var(--ctp-bg);
+}
+
+.contact-page-premium .ctp-premium {
+  --ctp-sec-pt: 62px;
+  --ctp-sec-pb: 44px;
+  background: var(--ctp-bg);
+}
+
+.contact-page-premium .ctp-grid {
+  gap: clamp(34px, 4vw, 56px);
+}
+
+.contact-page-premium .ctp-info__label,
+.contact-page-premium .ctp-card__label,
+.contact-page-premium .ctp-social__label {
+  font-family: var(--base-font);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.contact-page-premium .ctp-info__label {
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ctp-accent);
+}
+
+.contact-page-premium .ctp-info__heading {
+  max-width: 11ch;
+  margin-bottom: 14px;
+  font-family: var(--heading-font, var(--base-font));
+  font-size: clamp(42px, 4.5vw, 62px);
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 0.98;
+  color: var(--ctp-ink);
+}
+
+.contact-page-premium .ctp-info__desc {
+  max-width: 42ch;
+  margin-bottom: 30px;
+  color: var(--ctp-muted);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.contact-page-premium .ctp-cards {
+  gap: 10px;
+}
+
+.contact-page-premium .ctp-card {
+  gap: 14px;
+  padding: 16px 17px;
+  border-radius: var(--ctp-radius);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  box-shadow: 0 8px 20px rgba(30, 37, 50, 0.06);
+}
+
+.contact-page-premium .ctp-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(224, 93, 56, 0.22);
+  box-shadow: 0 14px 28px rgba(30, 37, 50, 0.08);
+}
+
+.contact-page-premium .ctp-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--ctp-accent);
+  background: var(--ctp-accent-soft);
+  border: 1px solid rgba(224, 93, 56, 0.16);
+  box-shadow: none;
+}
+
+.contact-page-premium .ctp-card__label {
+  margin-bottom: 3px;
+  color: var(--ctp-subtle);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.contact-page-premium .ctp-card__value {
+  color: var(--ctp-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.48;
+}
+
+.contact-page-premium .ctp-divider {
+  margin: 24px 0 18px;
+  background: var(--ctp-line);
+}
+
+.contact-page-premium .ctp-social__label {
+  margin-bottom: 10px;
+  color: var(--ctp-subtle);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.contact-page-premium .ctp-social a {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  color: var(--ctp-accent);
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: 0 8px 18px rgba(30, 37, 50, 0.07);
+}
+
+.contact-page-premium .ctp-social a:hover {
+  color: #fff;
+  background: var(--ctp-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(224, 93, 56, 0.18);
+}
+
+.contact-page-premium .ctp-form-wrap {
+  border-radius: var(--ctp-radius);
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  box-shadow: var(--ctp-shadow);
+  overflow: hidden;
+}
+
+.contact-page-premium .ctp-form-wrap::before,
+.contact-page-premium .ctp-form-wrap::after {
+  display: none;
+}
+
+.contact-page-premium .ctp-form-wrap__title {
+  margin-bottom: 7px;
+  color: var(--ctp-ink);
+  font-size: clamp(24px, 2vw, 32px);
+  font-weight: 760;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+.contact-page-premium .ctp-form-wrap__sub {
+  color: var(--ctp-muted);
+}
+
+.contact-page-premium .ctp-field label {
+  color: var(--ctp-ink);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.contact-page-premium .ctp-field input,
+.contact-page-premium .ctp-field textarea {
+  border-radius: var(--ctp-radius);
+  border-color: rgba(30, 37, 50, 0.1);
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ctp-ink);
+  font-size: 14px;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+.contact-page-premium .ctp-field input:focus,
+.contact-page-premium .ctp-field textarea:focus {
+  border-color: rgba(224, 93, 56, 0.42);
+  box-shadow: 0 0 0 3px rgba(224, 93, 56, 0.12);
+}
+
+.contact-page-premium .ctp-submit .theme-btn {
+  min-height: 50px;
+  border-radius: var(--ctp-radius);
+  background: var(--ctp-accent);
+  box-shadow: none;
+  color: #fff;
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.contact-page-premium .ctp-submit .theme-btn:hover {
+  background: var(--ctp-accent-hover);
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.contact-page-premium .ctp-submit__note {
+  color: var(--ctp-muted);
+  font-weight: 650;
+}
+
+.contact-page-premium .ctp-map {
+  border-top: 0;
+  background: transparent;
+}
+
+.contact-page-premium .ctp-map-section {
+  margin: 0;
+  padding: 0;
+  background: var(--ctp-bg);
+}
+
+.contact-page-premium .ctp-map-address-line {
+  margin: 0;
+  padding: 10px clamp(15px, 4vw, 56px);
+  color: var(--ctp-muted);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-page-premium .ctp-map-frame {
+  width: 100%;
+  background: #dfe4e8;
+  line-height: 0;
+}
+
+.contact-page-premium .ctp-map iframe {
+  width: 100%;
+  height: min(52vh, 460px);
+  min-height: 340px;
+  filter: grayscale(8%) contrast(1.03) saturate(0.96);
+}
+
+@media (max-width: 767px) {
+  .contact-page-premium .ctp-premium {
+    --ctp-sec-pt: 34px;
+    --ctp-sec-pb: 28px;
+  }
+
+  .contact-page-premium .ctp-info__heading {
+    max-width: 12ch;
+    font-size: 36px;
+  }
+
+  .contact-page-premium .ctp-info__desc {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .contact-page-premium .ctp-card {
+    padding: 14px;
+  }
+
+  .contact-page-premium .ctp-form-wrap {
+    padding: 24px 18px;
+  }
+
+  .contact-page-premium .ctp-submit {
+    gap: 14px;
+  }
+
+  .contact-page-premium .ctp-map-section {
+    padding: 0;
+  }
+
+  .contact-page-premium .ctp-map-address-line {
+    padding: 9px 15px;
+    font-size: 12px;
+  }
+
+  .contact-page-premium .ctp-map iframe {
+    height: 360px;
+    min-height: 360px;
+  }
+}
 </style>
 @endpush
 
@@ -431,6 +721,7 @@
   $contactAddresses = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $info->contact_addresses ?? ''))));
   $contactMails = array_values(array_filter(array_map('trim', explode(',', $info->contact_mails ?? ''))));
   $contactPhones = array_values(array_filter(array_map('trim', explode(',', $info->contact_numbers ?? ''))));
+  $mapAddress = 'Av. Pueyrredón 1357 local 63 Capital Federal, Buenos Aires, Argentina';
   $validSocials = collect($socialMediaInfos ?? [])->filter(function ($social) {
       $url = trim((string) ($social->url ?? ''));
       return $url !== '';
@@ -444,8 +735,8 @@
       {{-- ── COLUMNA INFO ── --}}
       <div class="ctp-info">
         <p class="ctp-info__label">Información de contacto</p>
-        <h2 class="ctp-info__heading">Contactanos</h2>
-        <p class="ctp-info__desc">¿Tenés una consulta? Escribinos y te respondemos lo antes posible.</p>
+        <h2 class="ctp-info__heading">Contacto</h2>
+        <p class="ctp-info__desc">Estamos para ayudarte. Te respondemos a la brevedad.</p>
 
         <div class="ctp-cards">
           @if(!empty($contactAddresses))
@@ -468,7 +759,7 @@
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
             <div>
-              <p class="ctp-card__label">Email</p>
+              <p class="ctp-card__label">Correo electrónico</p>
               @foreach($contactMails as $mail)
                 <p class="ctp-card__value"><a href="mailto:{{ $mail }}">{{ $mail }}</a></p>
               @endforeach
@@ -494,7 +785,7 @@
 
         @if($validSocials->isNotEmpty())
         <div class="ctp-divider"></div>
-        <p class="ctp-social__label">Seguinos</p>
+        <p class="ctp-social__label">Redes sociales</p>
         <div class="ctp-social">
           @foreach($validSocials as $social)
             <a href="{{ trim((string) $social->url) === '#' ? 'javascript:void(0)' : $social->url }}" target="_blank" rel="noopener" aria-label="{{ $social->title ?? 'Social' }}" title="{{ $social->url }}">
@@ -507,8 +798,8 @@
 
       {{-- ── COLUMNA FORMULARIO ── --}}
       <div class="ctp-form-wrap">
-        <h3 class="ctp-form-wrap__title">Envianos un mensaje</h3>
-        <p class="ctp-form-wrap__sub">Completá el formulario y te escribimos en cuanto podamos.</p>
+        <h3 class="ctp-form-wrap__title">Formulario de contacto</h3>
+        <p class="ctp-form-wrap__sub">Completá el formulario y te respondemos a la brevedad.</p>
 
         @if(Session::has('success'))
           <div class="ctp-alert ctp-alert--success">
@@ -537,7 +828,7 @@
             </div>
 
             <div class="ctp-field">
-              <label for="ctp-email">Email</label>
+              <label for="ctp-email">Correo electrónico</label>
               <input type="email" id="ctp-email" name="email"
                 placeholder="tu@email.com"
                 value="{{ old('email') }}">
@@ -547,7 +838,7 @@
             <div class="ctp-field ctp-field--full">
               <label for="ctp-subject">Asunto</label>
               <input type="text" id="ctp-subject" name="subject"
-                placeholder="¿Sobre qué nos escribís?"
+                placeholder="¿Cuál es el motivo de tu consulta?"
                 value="{{ old('subject') }}">
               @error('subject')<p class="ctp-error">{{ $message }}</p>@enderror
             </div>
@@ -555,7 +846,7 @@
             <div class="ctp-field ctp-field--full">
               <label for="ctp-message">Mensaje</label>
               <textarea id="ctp-message" name="message" rows="5"
-                placeholder="Contanos en qué podemos ayudarte...">{{ old('message') }}</textarea>
+                placeholder="Escribí tu mensaje">{{ old('message') }}</textarea>
               @error('message')<p class="ctp-error">{{ $message }}</p>@enderror
             </div>
 
@@ -570,7 +861,7 @@
             <div class="ctp-submit">
               <span class="ctp-submit__note">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                Tus datos están seguros
+                Tus datos están protegidos
               </span>
               <button type="submit" class="theme-btn showLoader">
                 Enviar mensaje
@@ -592,16 +883,16 @@
 </section>
 
 {{-- ── MAPA ── --}}
-@if(!empty($contact_info->latitude) && !empty($contact_info->longitude))
-<div class="ctp-map">
-  <iframe
-    loading="lazy"
-    src="https://maps.google.com/maps?width=100%25&height=420&hl=es&q={{ $contact_info->latitude }},%20{{ $contact_info->longitude }}+({{ $websiteInfo->website_title }})&t=&z=14&ie=UTF8&iwloc=B&output=embed"
-    title="Ubicación {{ $websiteInfo->website_title }}"
-    frameborder="0"
-    scrolling="no"
-    aria-hidden="true">
-  </iframe>
-</div>
-@endif
+<section class="ctp-map-section" aria-label="Ubicación Tukipass">
+  <p class="ctp-map-address-line">{{ $mapAddress }}</p>
+  <div class="ctp-map ctp-map-frame">
+    <iframe
+      src="https://www.google.com/maps?q={{ urlencode($mapAddress) }}&amp;z=16&amp;hl=es&amp;output=embed"
+      title="Ubicación Tukipass: {{ $mapAddress }}"
+      frameborder="0"
+      scrolling="no"
+      allowfullscreen>
+    </iframe>
+  </div>
+</section>
 @endsection

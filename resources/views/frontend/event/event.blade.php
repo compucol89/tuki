@@ -1,10 +1,121 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/events.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/events.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css') }}"></noscript>
   <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
+@endpush
+
+@section('body-class', 'events-page')
+
+@push('critical-styles')
+<style>
+  body.events-page {
+    background: #eef1f3;
+  }
+
+  body.events-page .hs-search-wrap--events {
+    background: #eef1f3;
+    padding: 30px 0 18px;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-search-form {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(30, 37, 50, 0.08);
+    border-radius: 12px;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    min-width: 0;
+    padding: 0 14px;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__field--grow {
+    flex: 1 1 320px;
+    max-width: none;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__field--location {
+    flex: 0 1 190px;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__field--select {
+    flex: 0 1 210px;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__field--dates {
+    flex: 1 1 240px;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__divider {
+    width: 1px;
+    height: 30px;
+    flex-shrink: 0;
+    background: rgba(30, 37, 50, 0.08);
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__icon {
+    flex-shrink: 0;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__input,
+  body.events-page .hs-search-wrap--events .hs-sf__select {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex: 0 0 clamp(138px, 11vw, 164px);
+    margin-left: 0;
+    background: #f97316;
+    color: #1e2532;
+    font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    font-size: 14px;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+  }
+
+  body.events-page .hs-search-wrap--events .hs-sf__btn-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  @media (max-width: 991px) {
+    body.events-page .hs-search-wrap--events .hs-search-form {
+      flex-wrap: wrap;
+    }
+
+    body.events-page .hs-search-wrap--events .hs-sf__divider {
+      display: none;
+    }
+
+    body.events-page .hs-search-wrap--events .hs-sf__field--grow,
+    body.events-page .hs-search-wrap--events .hs-sf__btn {
+      flex: 1 0 100%;
+    }
+  }
+</style>
 @endpush
 
 @section('hero-preload')
@@ -17,7 +128,7 @@
 
 @php
   $metaKeywords    = !empty($seo->meta_keyword_event)    ? $seo->meta_keyword_event    : 'eventos, entradas, tickets, conciertos, shows, teatro, Argentina';
-  $metaDescription = !empty($seo->meta_description_event) ? $seo->meta_description_event : 'Encontrá los mejores eventos en Argentina. Comprá entradas y tickets online de forma fácil, rápida y segura en Tukipass.';
+  $metaDescription = !empty($seo->meta_description_event) ? $seo->meta_description_event : 'Encontrá los mejores eventos en Argentina. Reservá entradas online de forma fácil, rápida y segura en Tukipass.';
   $ogImage = asset('assets/admin/img/' . $basicInfo->breadcrumb);
 @endphp
 
@@ -32,7 +143,7 @@
 
 {{-- ─── HERO — premium (collage + capas editoriales) ─── --}}
 @section('hero-section')
-<section class="hero-section hero-collage-section hero-collage-section--premium" id="heroSection" aria-labelledby="heroHeading">
+<section class="hero-section hero-collage-section hero-collage-section--premium hero-collage-section--events" id="heroSection" aria-labelledby="heroHeading">
 
   <div class="hero-slideshow" id="heroCollageBg">
     @forelse($heroSlideUrls ?? [] as $slideUrl)
@@ -53,10 +164,11 @@
 
   <div class="container hero-content-wrapper">
     <div class="hero-content hero-content--premium text-center">
-      <h1 id="heroHeading">Todos los eventos,<br>en un solo lugar</h1>
-      <p class="hero-lede">Conciertos, shows, teatro, deportes y más. Comprá tus entradas fácil, rápido y seguro.</p>
+      <span class="hero-kicker">{{ __('Catálogo Tukipass') }}</span>
+      <h1 id="heroHeading">Eventos para elegir<br>sin perder tiempo</h1>
+      <p class="hero-lede">Filtrá la agenda real, compará opciones y reservá tu entrada con una experiencia clara y segura.</p>
       <ul class="hero-trust" aria-label="{{ __('Beneficios') }}">
-        <li>{{ __('Compra segura') }}</li>
+        <li>{{ __('Reserva segura') }}</li>
         <li>{{ __('Entradas oficiales') }}</li>
         <li>{{ __('Soporte en tu idioma') }}</li>
       </ul>
@@ -69,24 +181,38 @@
 
 {{-- ─── CONTENT ─── --}}
 @section('content')
+<main id="main-content" class="events-page-main" tabindex="-1">
 
 @php
   $evf_total = $information['events']->total();
   $evf_base  = request()->except(['event', 'pricing']);
   $evf_has_filters = request()->hasAny(['search-input', 'category', 'location', 'dates', 'event', 'pricing', 'min', 'max']);
+  $today = \Carbon\Carbon::now();
+  $weekendStart = $today->copy()->next(\Carbon\Carbon::FRIDAY);
+  $weekendEnd = $weekendStart->copy()->addDays(2);
 @endphp
 
 <section class="hs-search-wrap hs-search-wrap--events" aria-labelledby="evf-form-heading">
   <div class="container">
     <div class="hs-search-head">
-      <div>
-        <h2 class="hs-search-head__title" id="evf-form-heading">{{ __('Filtrá y encontrá eventos') }}</h2>
-        <p class="hs-search-head__sub">{{ __('Buscá por evento, ciudad o categoría.') }}</p>
+      <div class="hs-search-head__copy">
+        <h2 class="hs-search-head__title" id="evf-form-heading">{{ __('Encontrá tu próxima salida') }}</h2>
+        <p class="hs-search-head__sub">{{ __('Buscá por nombre, ciudad o categoría y reservá sin vueltas.') }}</p>
       </div>
-      <p class="hs-search-head__count" aria-live="polite">
-        <span class="hs-search-head__count-num">{{ $evf_total }}</span>
-        {{ $evf_total === 1 ? __('evento') : __('eventos') }}
-      </p>
+
+      <div class="ev-catalog-summary" aria-live="polite">
+        <p class="ev-catalog-count">
+          <span class="ev-catalog-count__main">
+            <span class="ev-catalog-count__num">{{ $evf_total }}</span>
+            {{ $evf_total === 1 ? __('evento disponible') : __('eventos disponibles') }}
+          </span>
+          @if ($evf_has_filters)
+            <span class="ev-catalog-count__meta">{{ __('Filtros activos') }}</span>
+          @else
+            <span class="ev-catalog-count__meta">{{ __('Agenda para explorar') }}</span>
+          @endif
+        </p>
+      </div>
     </div>
 
     <form action="{{ route('events') }}" method="GET" class="hs-search-form" id="evfForm" role="search">
@@ -139,7 +265,7 @@
 
       <div class="hs-sf__divider" aria-hidden="true"></div>
 
-      <div class="hs-sf__field hs-sf__field--dates hs-sf__field--location">
+      <div class="hs-sf__field hs-sf__field--dates">
         <label for="evf-dates" class="sr-only">{{ __('Rango de fechas') }}</label>
         <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         <input type="text" name="dates" id="evf-dates" class="hs-sf__input"
@@ -159,60 +285,34 @@
     </form>
 
     <div class="hs-search-chips" aria-label="{{ __('Filtros rápidos') }}">
-      <span class="hs-search-chips__label">{{ __('Explorá rápido:') }}</span>
+      <span class="hs-search-chips__label">{{ __('Explorá:') }}</span>
       @if ($evf_has_filters)
         <a href="{{ route('events') }}" class="hs-chip">{{ __('Limpiar filtros') }}</a>
       @endif
       <a href="{{ route('events', array_merge($evf_base, ['event' => ''])) }}"
          class="hs-chip {{ ! request('event') ? 'hs-chip--active' : '' }}"
          @if (! request('event')) aria-current="true" @endif>{{ __('Todos') }}</a>
-      <a href="{{ route('events', array_merge($evf_base, ['event' => 'venue'])) }}"
-         class="hs-chip {{ request('event') == 'venue' ? 'hs-chip--active' : '' }}"
-         @if (request('event') == 'venue') aria-current="true" @endif>{{ __('Presenciales') }}</a>
-      <a href="{{ route('events', array_merge($evf_base, ['event' => 'online'])) }}"
-         class="hs-chip {{ request('event') == 'online' ? 'hs-chip--active' : '' }}"
-         @if (request('event') == 'online') aria-current="true" @endif>{{ __('En línea') }}</a>
       <a href="{{ route('events', array_merge(request()->except('pricing'), ['pricing' => 'free'])) }}"
          class="hs-chip hs-chip--free {{ request('pricing') == 'free' ? 'hs-chip--active' : '' }}"
          @if (request('pricing') == 'free') aria-current="true" @endif>{{ __('Gratis') }}</a>
       <a href="{{ route('events', array_merge(request()->except('pricing'), ['pricing' => 'paid'])) }}"
          class="hs-chip {{ request('pricing') == 'paid' ? 'hs-chip--active' : '' }}"
          @if (request('pricing') == 'paid') aria-current="true" @endif>{{ __('Pagos') }}</a>
+      <a href="{{ route('events', array_merge(request()->except('dates'), ['dates' => $today->format('Y-m-d') . ' a ' . $today->format('Y-m-d')])) }}"
+         class="hs-chip {{ request('dates') == $today->format('Y-m-d') . ' a ' . $today->format('Y-m-d') ? 'hs-chip--active' : '' }}"
+         @if (request('dates') == $today->format('Y-m-d') . ' a ' . $today->format('Y-m-d')) aria-current="true" @endif>{{ __('Hoy') }}</a>
+      <a href="{{ route('events', array_merge(request()->except('dates'), ['dates' => $weekendStart->format('Y-m-d') . ' a ' . $weekendEnd->format('Y-m-d')])) }}"
+         class="hs-chip {{ request('dates') == $weekendStart->format('Y-m-d') . ' a ' . $weekendEnd->format('Y-m-d') ? 'hs-chip--active' : '' }}"
+         @if (request('dates') == $weekendStart->format('Y-m-d') . ' a ' . $weekendEnd->format('Y-m-d')) aria-current="true" @endif>{{ __('Este finde') }}</a>
+      @foreach ($categories->take(4) as $cat)
+        <a href="{{ route('events', array_merge(request()->except('category'), ['category' => $cat->slug])) }}"
+           class="hs-chip hs-chip--category {{ request('category') == $cat->slug ? 'hs-chip--active' : '' }}"
+           @if (request('category') == $cat->slug) aria-current="true" @endif>{{ $cat->name }}</a>
+      @endforeach
     </div>
+
   </div>
 </section>
-
-{{-- Sort options --}}
-<div class="container ev-sort-container">
-  <form action="{{ route('events') }}" method="GET" id="evfSortForm">
-    @foreach (app('request')->except('sort') as $key => $value)
-      @if (is_array($value))
-        @foreach ($value as $k => $v)
-          <input type="hidden" name="{{ $key }}[{{ $k }}]" value="{{ $v }}">
-        @endforeach
-      @else
-        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-      @endif
-    @endforeach
-    <div class="ev-sort">
-      <label for="ev-sort-select" class="ev-sort__label">Ordenar por:</label>
-      <select id="ev-sort-select" class="ev-sort__select" name="sort" onchange="this.form.submit()">
-        <option value="start_date" {{ request('sort') == 'start_date' || !request('sort') ? 'selected' : '' }}>Fecha (más próximos)</option>
-        <option value="-start_date" {{ request('sort') == '-start_date' ? 'selected' : '' }}>Fecha (más lejanos)</option>
-        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Precio (menor a mayor)</option>
-        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Precio (mayor a menor)</option>
-        <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>Nombre (A-Z)</option>
-      </select>
-    </div>
-  </form>
-</div>
-
-<style>
-.ev-sort-container { margin-bottom: 16px; }
-.ev-sort { display: flex; align-items: center; gap: 8px; }
-.ev-sort__label { font-size: 14px; color: #6b7280; white-space: nowrap; }
-.ev-sort__select { padding: 6px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; background: white; cursor: pointer; }
-</style>
 
 <section class="ev-listing ev-listing--premium">
   <div class="container ev-listing__inner">
@@ -234,7 +334,7 @@
     @endif
 
     {{-- Paginación --}}
-    <div class="ev-pagination mt-5">
+    <div class="ev-pagination">
       {{ $information['events']->links() }}
     </div>
 
@@ -245,9 +345,12 @@
   </div>
 </section>
 
+</main>
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/front/js/moment.min.js') }}" defer></script>
+<script src="{{ asset('assets/front/js/daterangepicker.min.js') }}" defer></script>
 <script>
   // Hero: misma lógica que home (crossfade + parallax con IntersectionObserver)
   (function() {
@@ -321,6 +424,39 @@
     if (evfCategory) {
       evfCategory.addEventListener('change', function() {
         if (evfForm) evfForm.submit();
+      });
+    }
+
+    var evfDates = document.getElementById('evf-dates');
+    if (evfDates && window.jQuery && jQuery.fn.daterangepicker && window.moment) {
+      var initialDates = (evfDates.value || '').split(' ');
+      var pickerOptions = {
+        autoUpdateInput: false,
+        locale: {
+          format: 'YYYY-MM-DD',
+          separator: ' a ',
+          applyLabel: '{{ __('Aplicar') }}',
+          cancelLabel: '{{ __('Limpiar') }}',
+          fromLabel: '{{ __('Desde') }}',
+          toLabel: '{{ __('Hasta') }}',
+          customRangeLabel: '{{ __('Personalizado') }}',
+          daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+          monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          firstDay: 1
+        }
+      };
+
+      if (initialDates.length >= 3 && initialDates[0] && initialDates[2]) {
+        pickerOptions.startDate = initialDates[0];
+        pickerOptions.endDate = initialDates[2];
+      }
+
+      jQuery(evfDates).daterangepicker(pickerOptions);
+      jQuery(evfDates).on('apply.daterangepicker', function(event, picker) {
+        this.value = picker.startDate.format('YYYY-MM-DD') + ' a ' + picker.endDate.format('YYYY-MM-DD');
+      });
+      jQuery(evfDates).on('cancel.daterangepicker', function() {
+        this.value = '';
       });
     }
   });

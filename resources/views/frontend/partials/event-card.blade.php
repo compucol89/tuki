@@ -138,7 +138,6 @@
         @if(!empty($ev_bar_badge['fa']))
           <i class="{{ $ev_bar_badge['fa'] }} ev-card__dtbar-badge-icon" aria-hidden="true"></i>
         @endif
-        <span class="ev-card__dtbar-badge-label">{{ $ev_bar_badge['label'] }}</span>
       </div>
 
       {{-- CTA hover --}}

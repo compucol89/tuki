@@ -1,12 +1,22 @@
 @extends('frontend.layout')
 
+@php
+  $frontCssAsset = static function (string $path): string {
+    $fullPath = public_path($path);
+
+    return asset($path) . (is_file($fullPath) ? '?v=' . filemtime($fullPath) : '');
+  };
+  $eventsCssPath = app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css';
+  $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';
+@endphp
+
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}"></noscript>
-  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css') }}"></noscript>
-  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/daterangepicker.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/daterangepicker.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ $frontCssAsset($eventsCssPath) }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $frontCssAsset($eventsCssPath) }}"></noscript>
+  <link rel="stylesheet" href="{{ $frontCssAsset($homeCssPath) }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $frontCssAsset($homeCssPath) }}"></noscript>
 @endpush
 
 @section('body-class', 'events-page')

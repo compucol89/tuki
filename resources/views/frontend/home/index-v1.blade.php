@@ -6,9 +6,14 @@
   @endif
 @endsection
 
+@php
+  $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';
+  $homeCssUrl = asset($homeCssPath) . (is_file(public_path($homeCssPath)) ? '?v=' . filemtime(public_path($homeCssPath)) : '');
+@endphp
+
 @push('styles')
-  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ $homeCssUrl }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $homeCssUrl }}"></noscript>
 @endpush
 
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')

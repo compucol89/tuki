@@ -9,14 +9,16 @@
 @php
   $metaKeywords = !empty($seo->meta_keyword_organizer) ? $seo->meta_keyword_organizer : '';
   $metaDescription = !empty($seo->meta_description_organizer) ? $seo->meta_description_organizer : '';
+  $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';
+  $homeCssUrl = asset($homeCssPath) . (is_file(public_path($homeCssPath)) ? '?v=' . filemtime(public_path($homeCssPath)) : '');
 @endphp
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
 @section('body-class', 'organizers-page')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ $homeCssUrl }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $homeCssUrl }}"></noscript>
 @endpush
 
 @section('hero-section')

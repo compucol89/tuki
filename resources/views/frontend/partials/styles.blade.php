@@ -1,29 +1,40 @@
+@php
+  $frontCssAsset = static function (string $path): string {
+    $fullPath = public_path($path);
+
+    return asset($path) . (is_file($fullPath) ? '?v=' . filemtime($fullPath) : '');
+  };
+
+  $menuCssPath = app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css';
+  $styleCssPath = app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css';
+  $responsiveCssPath = app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css';
+@endphp
 <!-- app.css -->
 <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ mix('css/app.css') }}"></noscript>
 <!-- FlatIcon Font -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/front/css/flaticon.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/flaticon.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/flaticon.css') }}"></noscript>
 <!-- Font Awesome 6 (self-hosted via Laravel Mix) -->
 <link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}">
 <!-- Bootstrap css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/front/css/bootstrap.4.5.3.min.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}"></noscript>
 <!-- Padding Margin -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/spacing.min.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/spacing.min.css') }}"></noscript>
 <!-- Menu css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}"></noscript>
 <!-- Main css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}"></noscript>
 <!-- Responsive css -->
-<link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}" media="print" onload="this.onload=null; this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset(app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}" media="print" onload="this.onload=null; this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}"></noscript>
 <!-- Toastr css -->
-<link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/front/css/toastr.css') }}"></noscript>
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/toastr.css') }}"></noscript>
 <style>
   @font-face {
     font-display: swap;

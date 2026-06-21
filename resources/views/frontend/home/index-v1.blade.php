@@ -12,8 +12,7 @@
 @endphp
 
 @push('styles')
-  <link rel="stylesheet" href="{{ $homeCssUrl }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ $homeCssUrl }}"></noscript>
+  <link rel="stylesheet" href="{{ $homeCssUrl }}">
 @endpush
 
 @section('pageHeading', 'Entradas y Tickets Online para Eventos en Argentina')

@@ -4570,3 +4570,119 @@ body.home-page .hs-chip--free {
     height: 27px;
   }
 }
+
+/* ================================================
+   MOBILE OVERRIDES CONSOLIDADOS - SOLO SPACING (2026-06-21)
+   Gana por cascada. Solo aplica a body.home-page.
+   No toca /eventos ni estructura interna de cards.
+   ================================================ */
+
+@media (max-width: 767px) {
+  body.home-page .hero-collage-section,
+  body.home-page .hero-collage-section--premium {
+    padding-top: 42px !important;
+    padding-bottom: 38px !important;
+    min-height: clamp(430px, 78svh, 486px) !important;
+  }
+
+  body.home-page .hero-content-wrapper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  body.home-page #heroHeadingHome,
+  body.home-page .hero-content--premium h1 {
+    font-size: 36px;
+    line-height: 1.04;
+  }
+
+  body.home-page .hero-content .hero-lede,
+  body.home-page .hero-content p.hero-lede {
+    font-size: 15px;
+  }
+
+  body.home-page .hero-actions {
+    gap: 8px;
+    margin-top: 16px !important;
+  }
+
+  body.home-page .hero-slideshow {
+    width: calc(100% - 28px);
+    margin-top: 26px;
+  }
+
+  body.home-page .events-marquee {
+    padding-top: 26px !important;
+    padding-bottom: 14px !important;
+  }
+
+  body.home-page .hs-search-wrap,
+  body.home-page .events-section,
+  body.home-page .category-section,
+  body.home-page .about-section,
+  body.home-page .feature-section,
+  body.home-page .testimonial-section,
+  body.home-page .client-logo-area {
+    padding-top: var(--home-section-space-mobile, 48px) !important;
+    padding-bottom: var(--home-section-space-mobile, 48px) !important;
+  }
+
+  body.home-page .hs-search-wrap {
+    padding-bottom: 20px !important;
+  }
+
+  body.home-page .events-section {
+    padding-top: 26px !important;
+  }
+
+  body.home-page .hs-search-form {
+    margin-bottom: 12px !important;
+  }
+
+  body.home-page .hs-header,
+  body.home-page .hs-search-head {
+    align-items: flex-start;
+  }
+
+  body.home-page .hs-header__title,
+  body.home-page .hs-search-head__title,
+  body.home-page .section-title h2 {
+    font-size: 24px;
+  }
+
+  body.home-page .events-section .ev-card-col {
+    margin-bottom: 14px !important;
+  }
+
+  body.home-page .events-marquee-item {
+    width: 278px;
+    height: 184px;
+  }
+}
+
+@media (max-width: 575px) {
+  body.home-page .events-marquee-item {
+    width: 250px;
+    height: 170px;
+  }
+
+  body.home-page .hero-content--premium h1,
+  body.home-page #heroHeadingHome {
+    font-size: 34px;
+    line-height: 1.04;
+  }
+}
+
+@media (max-width: 360px) {
+  body.home-page .hero-collage-section,
+  body.home-page .hero-collage-section--premium {
+    min-height: clamp(410px, 76svh, 458px) !important;
+    padding-top: 38px !important;
+    padding-bottom: 30px !important;
+  }
+
+  body.home-page .events-marquee-item {
+    width: 230px;
+    height: 152px;
+  }
+}

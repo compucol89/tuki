@@ -424,16 +424,16 @@ $(document).ready(function () {
           <div class="from-group mt-1">
             <input type="checkbox" checked name="v_max_ticket_buy_type[]" value="limited"
               class="max_ticket_buy_type" id="buy_limited_${id}" data-id="${id}">
-            <label for="buy_limited_${id}" class="buy_limited_${id} ">Limited'</label>
+            <label for="buy_limited_${id}" class="buy_limited_${id} ">Limitado</label>
 
             <input type="checkbox" name="v_max_ticket_buy_type[]" value="unlimited"
               class="max_ticket_buy_type d-none" id="buy_unlimited_${id}" data-id="${id}">
             <label for="buy_unlimited_${id}"
-              class="buy_unlimited_${id} d-none">Unlimited</label>
+              class="buy_unlimited_${id} d-none">Ilimitado</label>
           </div>
 
           <div class="form-group" id="input2_${id}">
-            <label for="">Max ticket for each customer * </label>
+            <label for="">Máximo por cliente * </label>
             <input type="text" name="v_max_ticket_buy[]" class="form-control">
           </div>
         </td>`;
@@ -447,7 +447,7 @@ $(document).ready(function () {
         </td>
         <td>
           <div class="form-group">
-            <label for="">Price (${BaseCTxt}) *</label>
+            <label for="">Precio (${BaseCTxt}) *</label>
             <input type="text" name="variation_price[]" class="form-control">
           </div>
         </td>
@@ -457,18 +457,18 @@ $(document).ready(function () {
               class="ticket_available_type" id="limited_${id}"
               data-id="${id}">
             <label for="limited_${id}"
-              class="limited_${id}">Limited</label>
+              class="limited_${id}">Limitado</label>
 
             <input type="checkbox" name="v_ticket_available_type[]" value="unlimited"
               class="ticket_available_type d-none" id="unlimited_${id}"
               data-id="${id}">
             <label for="unlimited_${id}"
-              class="unlimited_${id} d-none">Unlimited</label>
+              class="unlimited_${id} d-none">Ilimitado</label>
 
           </div>
 
           <div class="form-group" id="input_${id}">
-            <label for="">Ticket Available * </label>
+            <label for="">Entradas disponibles * </label>
             <input type="text" name="v_ticket_available[]"
               value="" class="form-control">
           </div>

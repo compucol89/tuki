@@ -158,22 +158,20 @@
                   <p class="mb-0">{{ __('Prueba con otro idioma, otro filtro o crea un evento nuevo.') }}</p>
                 </div>
               @else
-                <div class="table-responsive event-index-table-wrap">
+                <div class="table-responsive event-index-table-wrap d-none d-lg-block">
                   <table class="table event-index-table mt-3">
                     <thead>
                       <tr>
-                        <th scope="col">
-                          <input type="checkbox" class="bulk-check" data-val="all">
+                        <th scope="col" class="event-index-col-check">
+                          <input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}">
                         </th>
-                        <th scope="col" width="30%">{{ __('Title') }}</th>
-                        <th scope="col">{{ __('Organizer') }}</th>
-                        <th scope="col">{{ __('Type') }}</th>
-                        <th scope="col">{{ __('Category') }}</th>
-                        <th scope="col">{{ __('Ticket') }}</th>
-                        <th scope="col">{{ __('Status') }}</th>
-                        <th scope="col">{{ __('Featured') }}</th>
-                        <th scope="col">{{ __('Liquidación') }}</th>
-                        <th scope="col">{{ __('Actions') }}</th>
+                        <th scope="col" class="event-index-col-event">{{ __('Evento') }}</th>
+                        <th scope="col" class="event-index-col-entry">{{ __('Entrada') }}</th>
+                        <th scope="col" class="event-index-col-status">{{ __('Estado') }}</th>
+                        <th scope="col" class="event-index-col-featured">{{ __('Destacada') }}</th>
+                        <th scope="col" class="event-index-col-settlement">{{ __('Liquidación') }}</th>
+                        <th scope="col" class="event-index-col-amounts">{{ __('Montos') }}</th>
+                        <th scope="col" class="event-index-col-actions">{{ __('Acciones') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -185,38 +183,40 @@
                               : $settlementStatusLabels['no_balance'];
                         @endphp
                         <tr>
-                          <td>
-                            <input type="checkbox" class="bulk-check" data-val="{{ $event->id }}">
-                          </td>
-                          <td width="20%">
-                            <a target="_blank"
-                              href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}" class="event-index-title-link">{{ strlen($event->title) > 30 ? mb_substr($event->title, 0, 30, 'UTF-8') . '....' : $event->title }}</a>
+                          <td class="event-index-col-check">
+                            <input type="checkbox" class="bulk-check" data-val="{{ $event->id }}"
+                              aria-label="{{ __('Seleccionar evento') }} {{ $event->title }}">
                           </td>
                           <td>
-                            @if ($event->organizer)
-                              <a target="_blank"
-                                href="{{ route('admin.organizer_management.organizer_details', ['id' => $event->organizer_id, 'language' => $defaultLang->code]) }}">
-                                {{ strlen($event->organizer->username) > 20 ? mb_substr($event->organizer->username, 0, 20, 'UTF-8') . '....' : $event->organizer->username }}</a>
-                            @else
-                              <span class="badge badge-success">{{ __('Admin') }}</span>
-                            @endif
-                          </td>
-                          <td>
-                            @if ($event->event_type === 'venue')
-                              {{ __('Presencial') }}
-                            @elseif ($event->event_type === 'online')
-                              {{ __('Online') }}
-                            @else
-                              {{ ucfirst($event->event_type) }}
-                            @endif
-                          </td>
-                          <td>
-                            {{ $event->category }}
+                            <a target="_blank" rel="noopener"
+                              href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
+                              class="event-index-title-link">{{ $event->title }}</a>
+                            <span class="event-index-subline event-index-event-meta">
+                              {{ __('Organizador') }}:
+                              @if ($event->organizer)
+                                <a target="_blank" rel="noopener"
+                                  href="{{ route('admin.organizer_management.organizer_details', ['id' => $event->organizer_id, 'language' => $defaultLang->code]) }}">
+                                  {{ $event->organizer->username }}
+                                </a>
+                              @else
+                                <strong>{{ __('Admin') }}</strong>
+                              @endif
+                              <span class="event-index-type-pill">
+                                @if ($event->event_type === 'venue')
+                                  {{ __('Presencial') }}
+                                @elseif ($event->event_type === 'online')
+                                  {{ __('Online') }}
+                                @else
+                                  {{ ucfirst($event->event_type) }}
+                                @endif
+                              </span>
+                              <span class="event-index-category-chip">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
+                            </span>
                           </td>
                           <td>
                             @if ($event->event_type == 'venue')
                               <a href="{{ route('admin.event.ticket', ['language' => request()->input('language'), 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
-                                class="btn btn-success btn-sm">{{ __('Manage') }}</a>
+                                class="btn btn-success btn-sm event-index-ticket-btn">{{ __('Gestionar') }}</a>
                             @endif
                           </td>
                           <td>
@@ -259,16 +259,34 @@
                             </form>
                           </td>
                           <td>
+                            @if ($event->organizer && $settlementSummary && $settlementSummary['pending_organizer_amount'] > 0)
+                              <button type="button"
+                                class="btn btn-sm event-index-settlement-btn event-index-settlement-state--{{ $settlementSummary['status'] ?? 'pending' }}"
+                                data-toggle="modal" data-target="#eventSettlementModal-{{ $event->id }}">
+                                {{ $settlementStatus['label'] }}
+                              </button>
+                            @elseif ($event->organizer && $settlementSummary)
+                              <span class="event-index-settlement-state event-index-settlement-state--{{ $settlementSummary['status'] ?? 'no_balance' }}">
+                                {{ $settlementStatus['label'] }}
+                              </span>
+                            @else
+                              <span class="event-index-settlement-state event-index-settlement-state--muted">{{ __('No aplica') }}</span>
+                            @endif
+                          </td>
+                          <td>
                             @if ($event->organizer && $settlementSummary)
-                              <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                              <div class="small text-muted mt-1">
-                                {{ __('Pendiente') }}: {{ $formatSettlementMoney($settlementSummary['pending_organizer_amount']) }}
-                              </div>
-                              <div class="small text-muted">
-                                {{ __('Liquidado') }}: {{ $formatSettlementMoney($settlementSummary['covered_organizer_amount']) }}
+                              <div class="event-index-money-stack">
+                                <div class="event-index-money-row event-index-money-row--pending">
+                                  <span>{{ __('Pendiente') }}</span>
+                                  <strong>{{ $formatSettlementMoney($settlementSummary['pending_organizer_amount']) }}</strong>
+                                </div>
+                                <div class="event-index-money-row event-index-money-row--settled">
+                                  <span>{{ __('Liquidado') }}</span>
+                                  <strong>{{ $formatSettlementMoney($settlementSummary['covered_organizer_amount']) }}</strong>
+                                </div>
                               </div>
                             @else
-                              <span class="badge badge-secondary">{{ __('No aplica') }}</span>
+                              <span class="event-index-subline">{{ __('Sin montos') }}</span>
                             @endif
                           </td>
                           <td>
@@ -290,13 +308,6 @@
                                   {{ __('Ticket Settings') }}
                                 </a>
 
-                                @if ($event->organizer && $settlementSummary && $settlementSummary['pending_organizer_amount'] > 0)
-                                  <button type="button" class="dropdown-item" data-toggle="modal"
-                                    data-target="#eventSettlementModal-{{ $event->id }}">
-                                    {{ __('Marcar como liquidado') }}
-                                  </button>
-                                @endif
-
                                 <form class="deleteForm d-block"
                                   action="{{ route('admin.event_management.delete_event', ['id' => $event->id]) }}"
                                   method="post">
@@ -313,6 +324,124 @@
                       @endforeach
                     </tbody>
                   </table>
+                </div>
+
+                <div class="event-index-mobile-list d-lg-none">
+                  @foreach ($events as $event)
+                    @php
+                      $settlementSummary = $settlementSummaries[$event->id] ?? null;
+                      $settlementStatus = $settlementSummary
+                          ? ($settlementStatusLabels[$settlementSummary['status']] ?? $settlementStatusLabels['pending'])
+                          : $settlementStatusLabels['no_balance'];
+                    @endphp
+                    <article class="event-index-mobile-card">
+                      <div class="event-index-mobile-head">
+                        <label class="event-index-mobile-check">
+                          <input type="checkbox" class="bulk-check" data-val="{{ $event->id }}"
+                            aria-label="{{ __('Seleccionar evento') }} {{ $event->title }}">
+                        </label>
+                        <div class="event-index-mobile-title">
+                          <a target="_blank" rel="noopener"
+                            href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
+                            class="event-index-title-link">{{ $event->title }}</a>
+                          <span class="event-index-subline">
+                            {{ __('Organizador') }}:
+                            @if ($event->organizer)
+                              <a target="_blank" rel="noopener"
+                                href="{{ route('admin.organizer_management.organizer_details', ['id' => $event->organizer_id, 'language' => $defaultLang->code]) }}">
+                                {{ $event->organizer->username }}
+                              </a>
+                            @else
+                              <strong>{{ __('Admin') }}</strong>
+                            @endif
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="event-index-mobile-grid">
+                        <div>
+                          <span class="event-index-mobile-label">{{ __('Tipo') }}</span>
+                          <span class="event-index-type-pill">
+                            @if ($event->event_type === 'venue')
+                              {{ __('Presencial') }}
+                            @elseif ($event->event_type === 'online')
+                              {{ __('Online') }}
+                            @else
+                              {{ ucfirst($event->event_type) }}
+                            @endif
+                          </span>
+                          <span class="event-index-subline">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
+                        </div>
+                        <div>
+                          <span class="event-index-mobile-label">{{ __('Liquidación') }}</span>
+                          @if ($event->organizer && $settlementSummary)
+                            <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
+                            <span class="event-index-subline">{{ __('Pendiente') }}:
+                              {{ $formatSettlementMoney($settlementSummary['pending_organizer_amount']) }}</span>
+                            <span class="event-index-subline">{{ __('Liquidado') }}:
+                              {{ $formatSettlementMoney($settlementSummary['covered_organizer_amount']) }}</span>
+                          @else
+                            <span class="badge badge-secondary">{{ __('No aplica') }}</span>
+                          @endif
+                        </div>
+                      </div>
+
+                      <div class="event-index-mobile-controls">
+                        @if ($event->event_type == 'venue')
+                          <a href="{{ route('admin.event.ticket', ['language' => request()->input('language'), 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
+                            class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-ticket-alt mr-1" aria-hidden="true"></i>{{ __('Entradas') }}
+                          </a>
+                        @endif
+                        <form id="statusFormMobile-{{ $event->id }}" class="event-index-mobile-form"
+                          action="{{ route('admin.event_management.event.event_status', ['id' => $event->id, 'language' => request()->input('language')]) }}"
+                          method="post">
+                          @csrf
+                          <select
+                            class="form-control form-control-sm event-index-pill-select {{ $event->status == 0 ? 'bg-warning text-dark' : 'bg-primary' }}"
+                            name="status" onchange="document.getElementById('statusFormMobile-{{ $event->id }}').submit()">
+                            <option value="1" {{ $event->status == 1 ? 'selected' : '' }}>{{ __('Activo') }}</option>
+                            <option value="0" {{ $event->status == 0 ? 'selected' : '' }}>{{ __('Inactivo') }}</option>
+                          </select>
+                        </form>
+                        <form id="featuredFormMobile-{{ $event->id }}" class="event-index-mobile-form"
+                          action="{{ route('admin.event_management.event.update_featured', ['id' => $event->id]) }}"
+                          method="post">
+                          @csrf
+                          <select
+                            class="form-control form-control-sm event-index-pill-select {{ $event->is_featured == 'yes' ? 'bg-success' : 'bg-danger' }}"
+                            name="is_featured" onchange="document.getElementById('featuredFormMobile-{{ $event->id }}').submit()">
+                            <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>{{ __('Destacado') }}</option>
+                            <option value="no" {{ $event->is_featured == 'no' ? 'selected' : '' }}>{{ __('No destacado') }}</option>
+                          </select>
+                        </form>
+                        <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle btn-sm event-index-actions-btn" type="button"
+                            id="dropdownMobileMenuButton-{{ $event->id }}" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            {{ __('Acciones') }}
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMobileMenuButton-{{ $event->id }}">
+                            <a href="{{ route('admin.event_management.edit_event', ['id' => $event->id]) }}"
+                              class="dropdown-item">{{ __('Editar') }}</a>
+                            <a href="{{ route('admin.event_management.ticket_setting', ['id' => $event->id]) }}"
+                              class="dropdown-item">{{ __('Diseño de entrada') }}</a>
+                            @if ($event->organizer && $settlementSummary && $settlementSummary['pending_organizer_amount'] > 0)
+                              <button type="button" class="dropdown-item" data-toggle="modal"
+                                data-target="#eventSettlementModal-{{ $event->id }}">
+                                {{ __('Marcar como liquidado') }}
+                              </button>
+                            @endif
+                            <form class="deleteForm d-block"
+                              action="{{ route('admin.event_management.delete_event', ['id' => $event->id]) }}" method="post">
+                              @csrf
+                              <button type="submit" class="btn btn-sm deleteBtn">{{ __('Eliminar') }}</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  @endforeach
                 </div>
 
                 @foreach ($events as $event)
@@ -570,7 +699,7 @@
     .event-index-table-wrap {
       border: 1px solid #e5e7eb;
       border-radius: 18px;
-      overflow-x: auto;
+      overflow-x: visible;
       overflow-y: visible;
       background: #fff;
     }
@@ -578,6 +707,8 @@
     .event-index-table {
       margin-top: 0 !important;
       margin-bottom: 0;
+      table-layout: fixed;
+      width: 100%;
     }
 
     .event-index-table thead th {
@@ -588,6 +719,7 @@
       font-size: 12px;
       font-weight: 700;
       letter-spacing: .04em;
+      padding: 14px 8px;
       text-transform: uppercase;
       vertical-align: middle;
     }
@@ -595,17 +727,103 @@
     .event-index-table tbody td {
       vertical-align: middle;
       border-top: 1px solid #eef2f7;
+      padding: 12px 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .event-index-table .event-index-col-check,
+    .event-index-col-check {
+      width: 34px;
+      max-width: 34px;
+      padding-left: 6px !important;
+      padding-right: 6px !important;
+      text-align: center;
+      overflow-wrap: normal;
+    }
+
+    .event-index-col-event {
+      width: 34%;
+    }
+
+    .event-index-col-entry {
+      width: 9%;
+    }
+
+    .event-index-col-status,
+    .event-index-col-featured {
+      width: 9%;
+    }
+
+    .event-index-col-settlement {
+      width: 10%;
+    }
+
+    .event-index-col-amounts {
+      width: 14%;
+    }
+
+    .event-index-col-actions {
+      width: 10%;
     }
 
     .event-index-title-link {
+      display: block;
       color: #0f172a;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
       text-decoration: none;
     }
 
     .event-index-title-link:hover {
       color: #2563eb;
       text-decoration: none;
+    }
+
+    .event-index-subline {
+      display: block;
+      margin-top: 4px;
+      color: #64748b;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .event-index-subline a {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .event-index-event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-index-type-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #fff7ed;
+      color: #9a3412;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .event-index-category-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
     .event-index-pill-select {
@@ -621,6 +839,162 @@
       padding-inline: 14px;
     }
 
+    .event-index-ticket-btn {
+      min-width: 86px;
+      border-radius: 10px;
+      font-weight: 700;
+      overflow-wrap: normal;
+      white-space: nowrap;
+    }
+
+    .event-index-settlement-btn,
+    .event-index-settlement-state {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 88px;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 0;
+      border-radius: 999px;
+      background: #ecfdf5;
+      color: #047857;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .event-index-settlement-btn:hover,
+    .event-index-settlement-btn:focus {
+      color: inherit;
+      filter: brightness(.97);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, .12);
+    }
+
+    .event-index-settlement-state--pending {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .event-index-settlement-state--partial {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .event-index-settlement-state--settled {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .event-index-settlement-state--no_balance,
+    .event-index-settlement-state--muted {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .event-index-money-stack {
+      display: grid;
+      gap: 4px;
+      min-width: 118px;
+    }
+
+    .event-index-money-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0;
+      color: #64748b;
+      font-size: 11px;
+      line-height: 1.2;
+    }
+
+    .event-index-money-row--pending strong {
+      color: #9a3412;
+    }
+
+    .event-index-money-row--settled strong {
+      color: #047857;
+    }
+
+    .event-index-money-row strong {
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .event-index-mobile-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .event-index-mobile-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .06);
+    }
+
+    .event-index-mobile-head {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .event-index-mobile-check {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      min-height: 44px;
+      margin: 0;
+    }
+
+    .event-index-mobile-title {
+      min-width: 0;
+    }
+
+    .event-index-mobile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid #eef2f7;
+    }
+
+    .event-index-mobile-label {
+      display: block;
+      margin-bottom: 6px;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .event-index-mobile-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .event-index-mobile-controls > .btn,
+    .event-index-mobile-controls > .dropdown,
+    .event-index-mobile-form {
+      flex: 1 1 132px;
+      min-width: 0;
+    }
+
+    .event-index-mobile-controls .btn,
+    .event-index-mobile-controls .dropdown-toggle,
+    .event-index-mobile-form .form-control {
+      width: 100%;
+      min-height: 40px;
+    }
+
     @media (max-width: 991px) {
       .event-index-search {
         width: 100%;
@@ -628,6 +1002,22 @@
 
       .event-index-search__field {
         min-width: 100%;
+      }
+    }
+
+    @media (max-width: 575px) {
+      .event-index-mobile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .event-index-mobile-card {
+        padding: 12px;
+      }
+
+      .event-index-mobile-controls > .btn,
+      .event-index-mobile-controls > .dropdown,
+      .event-index-mobile-form {
+        flex-basis: 100%;
       }
     }
   </style>

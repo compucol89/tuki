@@ -456,7 +456,7 @@
               <tr>
                 <th scope="col"><input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}"></th>
                 <th scope="col">{{ __('Evento') }}</th>
-                <th scope="col">{{ __('Tipo / fecha') }}</th>
+                <th scope="col">{{ __('Tipo / categoría') }}</th>
                 <th scope="col">{{ __('Ventas') }}</th>
                 <th scope="col">{{ __('Liquidación') }}</th>
                 <th scope="col">{{ __('Publicación') }}</th>
@@ -483,13 +483,13 @@
                       <div>
                         <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
                           class="oe-title">{{ $event->title }}</a>
-                        <span class="oe-muted">{{ $event->category }}</span>
+                        <span class="oe-muted">{{ __('Función') }}: {{ $metrics['date_label'] ?? '-' }}</span>
                       </div>
                     </div>
                   </td>
                   <td>
                     <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
-                    <span class="oe-muted mt-1">{{ __('Función') }}: {{ $metrics['date_label'] ?? '-' }}</span>
+                    <span class="oe-muted mt-1">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                   </td>
                   <td>
                     <div class="oe-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</div>
@@ -567,7 +567,6 @@
                 <div>
                   <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
                     class="oe-title">{{ $event->title }}</a>
-                  <span class="oe-muted">{{ $event->category }}</span>
                   <span class="oe-muted">{{ __('Función') }}: {{ $metrics['date_label'] ?? '-' }}</span>
                 </div>
               </div>
@@ -591,6 +590,7 @@
                 <div>
                   <span class="oe-label">{{ __('Tipo') }}</span>
                   <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
+                  <span class="oe-muted">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                 </div>
               </div>
               <div class="oe-mobile-controls">

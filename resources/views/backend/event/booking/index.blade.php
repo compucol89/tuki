@@ -75,7 +75,98 @@
     }
 
     .eb-type-summary__body {
-      padding: 0 18px 18px;
+      padding: 18px;
+    }
+
+    .eb-event-summary-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .eb-event-summary-card {
+      overflow: hidden;
+      border: 1px solid #e7eaf0;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .eb-event-summary-card__head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: start;
+      padding: 16px 18px;
+      border-bottom: 1px solid #eef1f5;
+      background: linear-gradient(180deg, #fbfcfe 0%, #fff 100%);
+    }
+
+    .eb-event-summary-card__title {
+      margin: 0 0 7px;
+      color: #1e2532;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .eb-event-summary-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: #667085;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .eb-event-summary-card__date {
+      color: #f05a28;
+      font-weight: 800;
+    }
+
+    .eb-event-summary-card__status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 5px 9px;
+      border: 1px solid rgba(240, 90, 40, .22);
+      border-radius: 999px;
+      background: #fff7f2;
+      color: #d94a1e;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .eb-event-summary-stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border-bottom: 1px solid #eef1f5;
+      background: #fbfcfe;
+    }
+
+    .eb-event-summary-stat {
+      padding: 12px 14px;
+      border-right: 1px solid #eef1f5;
+    }
+
+    .eb-event-summary-stat:last-child {
+      border-right: 0;
+    }
+
+    .eb-event-summary-stat span {
+      display: block;
+      color: #667085;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .eb-event-summary-stat strong {
+      display: block;
+      margin-top: 3px;
+      color: #1e2532;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.15;
     }
 
     .eb-type-summary__formula {
@@ -387,15 +478,25 @@
 
     @media (max-width: 1199px) {
       .eb-summary,
-      .eb-detail-grid {
+      .eb-detail-grid,
+      .eb-event-summary-stats {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 767px) {
       .eb-summary,
-      .eb-detail-grid {
+      .eb-detail-grid,
+      .eb-event-summary-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .eb-event-summary-card__head {
+        grid-template-columns: 1fr;
+      }
+
+      .eb-event-summary-stat {
+        border-bottom: 1px solid #eef1f5;
       }
 
       .eb-mini-row {
@@ -419,6 +520,7 @@
     @media (max-width: 480px) {
       .eb-summary,
       .eb-detail-grid,
+      .eb-event-summary-stats,
       .eb-mobile-booking__grid {
         grid-template-columns: 1fr;
       }
@@ -545,55 +647,95 @@
     <section class="eb-type-summary" aria-labelledby="ticketTypeSummaryTitle">
       <div class="eb-type-summary__head">
         <div>
-          <h2 id="ticketTypeSummaryTitle" class="eb-type-summary__title">{{ __('Ventas por tipo de entrada') }}</h2>
-          <div class="eb-muted">{{ __('Agrupado por evento y tipo; respeta los filtros aplicados.') }}</div>
+          <h2 id="ticketTypeSummaryTitle" class="eb-type-summary__title">{{ __('Ventas por evento y tipo de entrada') }}</h2>
+          <div class="eb-muted">{{ __('Ordenado por fecha del evento; respeta los filtros aplicados.') }}</div>
         </div>
         <div class="eb-muted">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
       </div>
       <div class="eb-type-summary__body">
-        @if (empty($ticketSalesSummary))
+        @if (empty($ticketSalesByEvent ?? []))
           <div class="eb-empty py-3">
             <p class="text-muted mb-0">{{ __('No hay entradas para resumir con estos filtros.') }}</p>
           </div>
         @else
-          <table class="table eb-type-table">
-            <colgroup>
-              <col class="eb-type-table__ticket">
-              <col class="eb-type-table__counts">
-              <col class="eb-type-table__counts">
-              <col class="eb-type-table__counts">
-              <col class="eb-type-table__scan">
-              <col class="eb-type-table__money">
-            </colgroup>
-            <thead>
-              <tr>
-                <th scope="col">{{ __('Tipo') }}</th>
-                <th scope="col">{{ __('Vendidas') }}</th>
-                <th scope="col">{{ __('Pendientes') }}</th>
-                <th scope="col">{{ __('Rechazadas') }}</th>
-                <th scope="col">{{ __('Escaneo') }}</th>
-                <th scope="col">{{ __('Ingresos') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($ticketSalesSummary as $summaryRow)
-                <tr>
-                  <td data-label="{{ __('Tipo') }}">
-                    <span class="eb-type-name">{{ $summaryRow['ticket_name'] }}</span>
-                    <span class="eb-type-event">{{ $summaryRow['event_title'] }}</span>
-                  </td>
-                  <td data-label="{{ __('Vendidas') }}"><span class="eb-pill">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
-                  <td data-label="{{ __('Pendientes') }}">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
-                  <td data-label="{{ __('Rechazadas') }}">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
-                  <td data-label="{{ __('Escaneo') }}">
-                    <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
-                    <div class="eb-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
-                  </td>
-                  <td data-label="{{ __('Ingresos') }}"><span class="eb-money">{{ $formatBaseMoney($summaryRow['revenue']) }}</span></td>
-                </tr>
-              @endforeach
-            </tbody>
-          </table>
+          <div class="eb-event-summary-list">
+            @foreach ($ticketSalesByEvent as $eventSummary)
+              <article class="eb-event-summary-card">
+                <div class="eb-event-summary-card__head">
+                  <div>
+                    <h3 class="eb-event-summary-card__title">{{ $eventSummary['event_title'] }}</h3>
+                    <div class="eb-event-summary-card__meta">
+                      <span class="eb-event-summary-card__date">{{ $eventSummary['date_label'] }}</span>
+                      <span>{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                      <span>{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+                    </div>
+                  </div>
+                  <span class="eb-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
+                </div>
+
+                <div class="eb-event-summary-stats" aria-label="{{ __('Totales del evento') }}">
+                  <div class="eb-event-summary-stat">
+                    <span>{{ __('Entradas vendidas') }}</span>
+                    <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong>
+                  </div>
+                  <div class="eb-event-summary-stat">
+                    <span>{{ __('Pendientes') }}</span>
+                    <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong>
+                  </div>
+                  <div class="eb-event-summary-stat">
+                    <span>{{ __('Rechazadas') }}</span>
+                    <strong>{{ number_format($eventSummary['rejected'], 0, ',', '.') }}</strong>
+                  </div>
+                  <div class="eb-event-summary-stat">
+                    <span>{{ __('Escaneadas') }}</span>
+                    <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
+                  </div>
+                  <div class="eb-event-summary-stat">
+                    <span>{{ __('Base entradas') }}</span>
+                    <strong>{{ $formatBaseMoney($eventSummary['revenue']) }}</strong>
+                  </div>
+                </div>
+
+                <table class="table eb-type-table">
+                  <colgroup>
+                    <col class="eb-type-table__ticket">
+                    <col class="eb-type-table__counts">
+                    <col class="eb-type-table__counts">
+                    <col class="eb-type-table__counts">
+                    <col class="eb-type-table__scan">
+                    <col class="eb-type-table__money">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th scope="col">{{ __('Entrada') }}</th>
+                      <th scope="col">{{ __('Vendidas') }}</th>
+                      <th scope="col">{{ __('Pendientes') }}</th>
+                      <th scope="col">{{ __('Rechazadas') }}</th>
+                      <th scope="col">{{ __('Escaneo') }}</th>
+                      <th scope="col">{{ __('Ingresos') }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach ($eventSummary['tickets'] as $summaryRow)
+                      <tr>
+                        <td data-label="{{ __('Entrada') }}">
+                          <span class="eb-type-name">{{ $summaryRow['ticket_name'] }}</span>
+                        </td>
+                        <td data-label="{{ __('Vendidas') }}"><span class="eb-pill">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
+                        <td data-label="{{ __('Pendientes') }}">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
+                        <td data-label="{{ __('Rechazadas') }}">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
+                        <td data-label="{{ __('Escaneo') }}">
+                          <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
+                          <div class="eb-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
+                        </td>
+                        <td data-label="{{ __('Ingresos') }}"><span class="eb-money">{{ $formatBaseMoney($summaryRow['revenue']) }}</span></td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </article>
+            @endforeach
+          </div>
         @endif
       </div>
     </section>

@@ -111,10 +111,11 @@ class EventBookingController extends Controller
         return $language ? ($items->firstWhere('language_id', $language->id) ?: $items->first()) : $items->first();
       })
       ->all();
-    $ticketSalesSummary = app(EventTicketSalesSummaryService::class)
-      ->summarize($ticketSummaryBookings, $eventInfos);
+    $summaryEvents = Event::with('dates')->whereIn('id', $eventIdsForInfo)->get();
+    $ticketSummaryService = app(EventTicketSalesSummaryService::class);
+    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents);
 
-    return view('organizer.event.booking.index', compact('bookings', 'eventInfos', 'kpis', 'ticketSalesSummary', 'currencySettings'));
+    return view('organizer.event.booking.index', compact('bookings', 'eventInfos', 'kpis', 'ticketSalesByEvent', 'currencySettings'));
   }
   //updatePaymentStatus
   public function updatePaymentStatus(Request $request, $id)

@@ -232,7 +232,7 @@ class EventBookingController extends Controller
                   $ticket_variations =  json_decode($ticket->variations, true);
                   $update_variation = [];
                   foreach ($ticket_variations as $ticket_variation) {
-                    if ($ticket_variation['name']  == $variation['name']) {
+                    if (Booking::ticketNameMatches($variation['ticket_id'], $ticket_variation['name'] ?? null, $variation['name'] ?? null)) {
 
                       if ($ticket_variation['ticket_available_type'] == 'limited') {
                         $ticket_available = intval($ticket_variation['ticket_available']) + intval($variation['qty']);

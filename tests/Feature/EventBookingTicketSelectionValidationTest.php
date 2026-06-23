@@ -6,6 +6,7 @@ use App\Http\Controllers\FrontEnd\Event\BookingController;
 use App\Http\Controllers\BackEnd\AdminController;
 use App\Models\Event\Booking;
 use App\Models\Event\Ticket;
+use App\Models\Event\TicketContent;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     Session::flush();
 
     Schema::dropIfExists('event_contents');
+    Schema::dropIfExists('ticket_contents');
     Schema::dropIfExists('bookings');
     Schema::dropIfExists('tickets');
     Schema::dropIfExists('events');
@@ -100,6 +102,49 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     $this->assertSame('Sat, Jun 27, 2026 06:30pm', $booking->event_date);
     $this->assertNotEmpty($booking->variation);
     $this->assertSame('Entrada', json_decode($booking->variation, true)[0]['name']);
+  }
+
+  public function test_store_data_uses_ticket_title_when_selected_variation_name_is_empty(): void
+  {
+    $event = $this->createEvent(['event_type' => 'venue']);
+    $ticket = Ticket::create([
+      'event_id' => $event,
+      'title' => null,
+      'pricing_type' => 'variation',
+      'variations' => json_encode([[
+        'name' => null,
+        'price' => 14000,
+        'ticket_available_type' => 'limited',
+        'ticket_available' => 46,
+        'max_ticket_buy_type' => 'unlimited',
+        'v_max_ticket_buy' => null,
+      ]]),
+    ]);
+
+    TicketContent::create([
+      'ticket_id' => $ticket->id,
+      'language_id' => 1,
+      'title' => 'Entrada general 2x1',
+    ]);
+
+    Session::put('selTickets', [[
+      'ticket_id' => $ticket->id,
+      'name' => null,
+      'qty' => 1,
+      'price' => 14000,
+      'early_bird_dicount' => 0,
+    ]]);
+
+    $booking = (new BookingController())->storeData($this->bookingInfo($event, [
+      'quantity' => 1,
+      'price' => 14000,
+      'selTickets' => Session::get('selTickets'),
+    ]));
+
+    $variation = json_decode($booking->variation, true)[0];
+
+    $this->assertSame('Entrada general 2x1', $variation['name']);
+    $this->assertSame(45, json_decode($ticket->fresh()->variations, true)[0]['ticket_available']);
   }
 
   public function test_store_data_rejects_ticketed_venue_booking_without_selected_tickets(): void
@@ -192,6 +237,15 @@ class EventBookingTicketSelectionValidationTest extends TestCase
       $table->unsignedBigInteger('language_id')->nullable();
       $table->string('title')->nullable();
       $table->string('slug')->nullable();
+      $table->timestamps();
+    });
+
+    Schema::create('ticket_contents', function (Blueprint $table) {
+      $table->id();
+      $table->unsignedBigInteger('ticket_id')->nullable();
+      $table->unsignedBigInteger('language_id')->nullable();
+      $table->string('title')->nullable();
+      $table->text('description')->nullable();
       $table->timestamps();
     });
 

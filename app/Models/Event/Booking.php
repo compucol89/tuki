@@ -271,6 +271,18 @@ class Booking extends Model
     return $ticketTitle ?: 'Entrada';
   }
 
+  public static function ticketNameMatches($ticketId, $sourceName = null, $targetName = null)
+  {
+    $sourceName = trim((string) ($sourceName ?? ''));
+    $targetName = trim((string) ($targetName ?? ''));
+
+    if ($sourceName === $targetName) {
+      return true;
+    }
+
+    return static::displayTicketName($ticketId, $sourceName) === $targetName;
+  }
+
   private static function ticketContentTitle($ticketId, $languageId = null)
   {
     if (empty($ticketId)) {

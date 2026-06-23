@@ -520,7 +520,7 @@ if (!function_exists('TicketStockCheck')) {
       } elseif ($ticket->pricing_type == 'variation') {
         $variations = json_decode($ticket->variations);
         foreach ($variations as $variation) {
-          if ($variation->name  == $name) {
+          if (Booking::ticketNameMatches($ticket_id, $variation->name ?? null, $name)) {
             if ($variation->ticket_available_type == 'unlimited') {
               $data =  'success';
             } elseif ($variation->ticket_available == 0 || $variation->ticket_available < $quantity) {
@@ -669,7 +669,7 @@ if (!function_exists('isTicketPurchaseVenue')) {
     } elseif ($ticket->pricing_type == 'variation') {
       $variations = json_decode($ticket->variations);
       foreach ($variations as $variation) {
-        if ($variation->name == $variation_name) {
+        if (Booking::ticketNameMatches($ticket_id, $variation->name ?? null, $variation_name)) {
           if ($variation->max_ticket_buy_type == 'unlimited') {
             $max_buy_ticket = 999999;
           } else {
@@ -689,7 +689,7 @@ if (!function_exists('isTicketPurchaseVenue')) {
       foreach ($bookings as $booking) {
         $variations = json_decode($booking->variation);
         foreach ($variations as $variation) {
-          if ($variation_name == $variation->name && $variation->ticket_id == $ticket_id) {
+          if (Booking::ticketNameMatches($ticket_id, $variation_name, $variation->name ?? null) && $variation->ticket_id == $ticket_id) {
             $qty += $variation->qty;
           }
         }
@@ -722,7 +722,7 @@ if (!function_exists('isTicketPurchaseVenueBackend')) {
     } elseif ($ticket->pricing_type == 'variation') {
       $variations = json_decode($ticket->variations);
       foreach ($variations as $variation) {
-        if ($variation->name == $variation_name) {
+        if (Booking::ticketNameMatches($ticket_id, $variation->name ?? null, $variation_name)) {
           if ($variation->max_ticket_buy_type == 'unlimited') {
             $max_buy_ticket = 999999;
           } else {
@@ -741,7 +741,7 @@ if (!function_exists('isTicketPurchaseVenueBackend')) {
       foreach ($bookings as $booking) {
         $variations = json_decode($booking->variation);
         foreach ($variations as $variation) {
-          if ($variation_name == $variation->name && $variation->ticket_id == $ticket_id) {
+          if (Booking::ticketNameMatches($ticket_id, $variation_name, $variation->name ?? null) && $variation->ticket_id == $ticket_id) {
             $qty += $variation->qty;
           }
         }

@@ -98,6 +98,19 @@ class EventBookingInvoiceFileTest extends TestCase
     $this->assertSame('Entrada general 2x1', $name);
   }
 
+  public function test_ticket_name_match_accepts_empty_variation_name_and_ticket_title(): void
+  {
+    $this->createTicketContentsTable();
+
+    TicketContent::create([
+      'ticket_id' => 203,
+      'language_id' => 1,
+      'title' => 'Entrada general 2x1',
+    ]);
+
+    $this->assertTrue(Booking::ticketNameMatches(203, null, 'Entrada general 2x1'));
+  }
+
   public function test_addon_breakdown_uses_loaded_addons_without_database_queries(): void
   {
     $booking = new Booking();

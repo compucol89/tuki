@@ -226,7 +226,7 @@ class BookingController extends Controller
               $ticket_variations = json_decode($ticket->variations, true);
               $update_variation = [];
               foreach ($ticket_variations as $ticket_variation) {
-                if ($ticket_variation['name'] == $variation['name']) {
+                if (Booking::ticketNameMatches($variation['ticket_id'], $ticket_variation['name'] ?? null, $variation['name'] ?? null)) {
                   if ($ticket_variation['ticket_available_type'] == 'limited') {
                     $ticket_available = intval($ticket_variation['ticket_available']) - intval($variation['qty']);
                   } else {
@@ -267,7 +267,7 @@ class BookingController extends Controller
             $c_variations[] = [
               'ticket_id' => $variation['ticket_id'],
               'early_bird_dicount' => $variation['early_bird_dicount'],
-              'name' => $variation['name'],
+              'name' => Booking::displayTicketName($variation['ticket_id'], $variation['name'] ?? null),
               'qty' => 1,
               'price' => $variation['price'],
               'scan_status' => 0,

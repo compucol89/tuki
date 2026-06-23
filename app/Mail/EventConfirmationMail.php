@@ -127,7 +127,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
                 foreach ($variations as $i => $variation) {
                     $tickets[] = [
                         'index'     => $i + 1,
-                        'name'      => $variation['name'] ?? 'Entrada general',
+                        'name'      => Booking::displayTicketName($variation['ticket_id'] ?? null, $variation['name'] ?? null),
                         'unique_id' => $variation['unique_id'] ?? ($this->booking->booking_id . '__' . ($i + 1)),
                         'qty'       => $variation['qty'] ?? 1,
                         'price'     => $variation['price'] ?? 0,
@@ -139,7 +139,7 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
             for ($i = 1; $i <= $quantity; $i++) {
                 $tickets[] = [
                     'index'     => $i,
-                    'name'      => 'Entrada general',
+                    'name'      => Booking::displayTicketName($this->booking->ticket_id ?? null),
                     'unique_id' => $this->booking->booking_id . '__' . $i,
                     'qty'       => 1,
                     'price'     => $quantity > 0 ? ($this->booking->price ?? 0) / $quantity : 0,

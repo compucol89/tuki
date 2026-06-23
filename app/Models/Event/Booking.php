@@ -185,7 +185,7 @@ class Booking extends Model
       $discount = (float) ($variation['early_bird_dicount'] ?? ($variation['early_bird_discount'] ?? 0));
       $unitPrice = $price / $quantity;
       $unitDiscount = $discount / $quantity;
-      $name = (string) ($variation['name'] ?? 'Entrada');
+      $name = static::displayTicketName($variation['ticket_id'] ?? null, $variation['name'] ?? null);
       $key = implode('|', [
         $variation['ticket_id'] ?? '',
         $name,
@@ -249,6 +249,47 @@ class Booking extends Model
       ];
     })->values()->all();
   }
+
+  public static function displayTicketName($ticketId, $selectedName = null, $pricingType = null, $languageId = null)
+  {
+    $selectedName = trim((string) ($selectedName ?? ''));
+
+    if ($selectedName !== '' && $pricingType !== 'variation') {
+      return $selectedName;
+    }
+
+    $ticketTitle = static::ticketContentTitle($ticketId, $languageId);
+
+    if ($pricingType === 'variation' && $ticketTitle && $selectedName && strcasecmp($ticketTitle, $selectedName) !== 0) {
+      return $ticketTitle . ' — ' . $selectedName;
+    }
+
+    if ($selectedName !== '') {
+      return $selectedName;
+    }
+
+    return $ticketTitle ?: 'Entrada';
+  }
+
+  private static function ticketContentTitle($ticketId, $languageId = null)
+  {
+    if (empty($ticketId)) {
+      return null;
+    }
+
+    $query = TicketContent::where('ticket_id', $ticketId);
+
+    if (!empty($languageId)) {
+      $title = (clone $query)->where('language_id', $languageId)->value('title');
+
+      if (!empty($title)) {
+        return $title;
+      }
+    }
+
+    return $query->whereNotNull('title')->value('title');
+  }
+
   protected function decodeJsonArray($value)
   {
     if (empty($value)) {

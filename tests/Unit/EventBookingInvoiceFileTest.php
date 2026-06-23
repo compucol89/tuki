@@ -4,6 +4,9 @@ namespace Tests\Unit;
 
 use App\Models\Event\Booking;
 use App\Models\Event\BookingAddon;
+use App\Models\Event\TicketContent;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class EventBookingInvoiceFileTest extends TestCase
@@ -65,6 +68,36 @@ class EventBookingInvoiceFileTest extends TestCase
     $this->assertSame(0, $breakdown[1]['scanned']);
   }
 
+  public function test_ticket_display_name_uses_selected_ticket_name_for_normal_entries(): void
+  {
+    $this->createTicketContentsTable();
+
+    TicketContent::create([
+      'ticket_id' => 193,
+      'language_id' => 1,
+      'title' => 'Mesa VIP 4 personas',
+    ]);
+
+    $name = Booking::displayTicketName(193, 'Mesa VIP 4 personas', 'normal', 1);
+
+    $this->assertSame('Mesa VIP 4 personas', $name);
+  }
+
+  public function test_ticket_display_name_falls_back_to_ticket_title_when_variation_name_is_empty(): void
+  {
+    $this->createTicketContentsTable();
+
+    TicketContent::create([
+      'ticket_id' => 203,
+      'language_id' => 1,
+      'title' => 'Entrada general 2x1',
+    ]);
+
+    $name = Booking::displayTicketName(203, null, 'variation', 1);
+
+    $this->assertSame('Entrada general 2x1', $name);
+  }
+
   public function test_addon_breakdown_uses_loaded_addons_without_database_queries(): void
   {
     $booking = new Booking();
@@ -89,5 +122,18 @@ class EventBookingInvoiceFileTest extends TestCase
         'redeemed' => true,
       ],
     ], $breakdown);
+  }
+
+  private function createTicketContentsTable(): void
+  {
+    Schema::dropIfExists('ticket_contents');
+    Schema::create('ticket_contents', function (Blueprint $table): void {
+      $table->id();
+      $table->unsignedBigInteger('language_id')->nullable();
+      $table->unsignedBigInteger('ticket_id');
+      $table->string('title')->nullable();
+      $table->text('description')->nullable();
+      $table->timestamps();
+    });
   }
 }

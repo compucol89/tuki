@@ -417,11 +417,8 @@
 @if ($tickets)
   @foreach ($tickets as $idx => $variation)
     @php
-      $ticket_content = App\Models\Event\TicketContent::where([
-        ['ticket_id', $variation['ticket_id']],
-        ['language_id', $language->id],
-      ])->first();
       $ticket  = App\Models\Event\Ticket::where('id', $variation['ticket_id'])->select('pricing_type')->first();
+      $ticketTypeName = App\Models\Event\Booking::displayTicketName($variation['ticket_id'] ?? null, $variation['name'] ?? null, $ticket->pricing_type ?? null, $language->id);
       $qrPath  = storage_path('app/qrcodes/tmp/' . $bookingInfo->booking_id . '__' . $variation['unique_id'] . '.svg');
       $isPaid  = in_array($bookingInfo->paymentStatus, ['completed', 'paid']);
       $isFree  = $bookingInfo->paymentStatus == 'free';
@@ -466,13 +463,7 @@
           <!-- Ticket Type -->
           <div class="ticket-type">
             <div class="ticket-type-label">Tipo de Entrada</div>
-            <div class="ticket-type-name">
-              @if ($ticket_content && $ticket && $ticket->pricing_type == 'variation')
-                {{ $ticket_content->title }} — {{ $variation['name'] }}
-              @else
-                Entrada General
-              @endif
-            </div>
+            <div class="ticket-type-name">{{ $ticketTypeName }}</div>
           </div>
 
           <!-- Attendee -->
@@ -601,6 +592,9 @@
   @endforeach
 
 @else
+  @php
+    $ticketTypeName = App\Models\Event\Booking::displayTicketName($bookingInfo->ticket_id ?? null, null, null, $language->id);
+  @endphp
   @for ($i = 1; $i <= $bookingInfo->quantity; $i++)
     @php
       $qrPath   = storage_path('app/qrcodes/tmp/' . $bookingInfo->booking_id . '__' . $i . '.svg');
@@ -647,7 +641,7 @@
           <!-- Ticket Type -->
           <div class="ticket-type">
             <div class="ticket-type-label">Tipo de Entrada</div>
-            <div class="ticket-type-name">Entrada General</div>
+            <div class="ticket-type-name">{{ $ticketTypeName }}</div>
           </div>
 
           <!-- Attendee -->

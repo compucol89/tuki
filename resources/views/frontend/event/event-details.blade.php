@@ -61,8 +61,9 @@
 @section('og-description', $seoDescription)
 @section('og-image', $og_image ?? asset('assets/admin/img/event/thumbnail/' . $content->thumbnail))
 @section('og-image-alt', $og_image_alt ?? $eventName)
-@section('og-image-width', '1200')
-@section('og-image-height', '630')
+@section('og-image-width', $og_image_width ?? '1200')
+@section('og-image-height', $og_image_height ?? '630')
+@section('og-image-type', $og_image_type ?? 'image/jpeg')
 @section('og-url', $eventUrl)
 @section('og-type', 'event')
 @section('canonical', $eventUrl)
@@ -2326,11 +2327,7 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
 
           {{-- YouTube card --}}
           @php
-            $youtubeEmbedUrl = null;
-            if (!empty($content->youtube_url)) {
-              preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $content->youtube_url, $ym);
-              if (!empty($ym[1])) $youtubeEmbedUrl = 'https://www.youtube.com/embed/' . $ym[1];
-            }
+            $youtubeEmbedUrl = \App\Support\YoutubeEmbedUrl::from($content->youtube_url ?? null);
           @endphp
           @if($youtubeEmbedUrl)
 	            <div class="ed-card ed-section ed-section--media">

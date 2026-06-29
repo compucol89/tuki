@@ -18,6 +18,7 @@ use App\Models\Event\Wishlist;
 use App\Models\Organizer;
 use App\Services\HeroSlideUrlsService;
 use App\Support\DemoEventExclusion;
+use App\Support\EventSocialImage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -383,14 +384,15 @@ class EventController extends Controller
         $seoDescription = Str::limit($cleanText($seoDescription), 158, '');
       }
       $officialEventUrl = route('event.details', ['slug' => $content->eventSlug, 'id' => $content->id], true);
-      $ogImage = $images->isNotEmpty()
-        ? asset('assets/admin/img/event-gallery/' . $images->first()->image)
-        : asset('assets/admin/img/event/thumbnail/' . $content->thumbnail);
+      $socialImage = EventSocialImage::from($content, $images);
 
       $information['seo_title'] = $normalizedTitle;
       $information['og_title'] = $normalizedTitle . ' | ' . $websiteTitle;
       $information['og_description'] = $seoDescription;
-      $information['og_image'] = $ogImage;
+      $information['og_image'] = $socialImage['url'] ?? null;
+      $information['og_image_width'] = $socialImage['width'] ?? 1200;
+      $information['og_image_height'] = $socialImage['height'] ?? 630;
+      $information['og_image_type'] = $socialImage['type'] ?? 'image/jpeg';
       $information['og_image_alt'] = $normalizedTitle . ' — ' . __('evento en Tukipass');
       $information['og_url'] = $officialEventUrl;
       $information['canonical'] = $officialEventUrl;

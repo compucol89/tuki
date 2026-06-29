@@ -2325,31 +2325,6 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
             </div>
           @endif
 
-          {{-- YouTube card --}}
-          @php
-            $youtubeEmbedUrl = \App\Support\YoutubeEmbedUrl::from($content->youtube_url ?? null);
-          @endphp
-          @if($youtubeEmbedUrl)
-	            <div class="ed-card ed-section ed-section--media">
-	              <div class="ed-card__head">
-	                <div>
-	                  <span class="ed-card__eyebrow">{{ __('Contenido') }}</span>
-	                  <h2 class="ed-card__title ed-card__title--with-icon">
-                    <span class="ed-card__title-icon" aria-hidden="true"><i class="fab fa-youtube"></i></span>{{ __('Video') }}
-                  </h2>
-	                </div>
-	              </div>
-              <div class="ed-card__body ed-card__body--embed">
-                <div class="ed-card__video-wrap">
-                  <iframe src="{{ $youtubeEmbedUrl }}"
-                    class="ed-card__video-iframe"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                    loading="lazy" title="{{ $content->title }}"></iframe>
-                </div>
-              </div>
-            </div>
-          @endif
-
           {{-- Refund policy card (siempre visible: evento u política general Tukipass) --}}
           <section class="ed-refund-band ed-refund-band--policy" role="note" aria-labelledby="ed-refund-band-title">
             <div class="ed-refund-band__head">

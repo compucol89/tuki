@@ -35,7 +35,7 @@ class EventSocialImageTest extends TestCase
 
     $socialImage = EventSocialImage::from($event, $images);
 
-    $this->assertStringEndsWith('/assets/admin/img/event/thumbnail/test-social-thumb.png', $socialImage['url']);
+    $this->assertStringContainsString('/assets/admin/img/event/thumbnail/test-social-thumb.png?v=', $socialImage['url']);
     $this->assertSame(320, $socialImage['width']);
     $this->assertSame(640, $socialImage['height']);
     $this->assertSame('image/png', $socialImage['type']);
@@ -56,7 +56,7 @@ class EventSocialImageTest extends TestCase
 
     $socialImage = EventSocialImage::from($event, new Collection());
 
-    $this->assertStringEndsWith('/assets/admin/img/event-ai/121/test-social-og.jpg', $socialImage['url']);
+    $this->assertStringContainsString('/assets/admin/img/event-ai/121/test-social-og.jpg?v=', $socialImage['url']);
     $this->assertSame(1200, $socialImage['width']);
     $this->assertSame(630, $socialImage['height']);
     $this->assertSame('image/jpeg', $socialImage['type']);

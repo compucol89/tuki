@@ -38,7 +38,7 @@ final class EventSocialImage
     $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
     return [
-      'url' => asset($directory . $filename),
+      'url' => asset($directory . $filename) . '?v=' . filemtime($path),
       'width' => (int) ($size[0] ?? 1200),
       'height' => (int) ($size[1] ?? 630),
       'type' => self::mimeType($size['mime'] ?? null, $extension),

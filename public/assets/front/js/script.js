@@ -562,29 +562,35 @@ function animateQty(el) {
 }
 
 $('.quantity-up').on('click', function () {
-    let max_qty = parseInt($(this).prev().attr('data-max_buy_ticket'));
-    let stock = Number($(this).prev().attr('data-stock'));
-    let ticket_id = $(this).prev().attr('data-ticket_id');
-    let purchase = $(this).prev().attr('data-purchase');
-    let p_qty = parseInt($(this).prev().attr('data-p_qty'));
-    var numProduct = Number($(this).prev().val());
+    let input = $(this).prev();
+    let max_qty_attr = input.attr('data-max_buy_ticket');
+    let max_qty = max_qty_attr == 'unlimited' ? 'unlimited' : parseInt(max_qty_attr);
+    let stock_attr = input.attr('data-stock');
+    let stock_is_limited = stock_attr != 'unlimited' && stock_attr !== undefined && stock_attr !== '';
+    let stock = stock_is_limited ? parseInt(stock_attr) : 'unlimited';
+    let ticket_id = input.attr('data-ticket_id');
+    let purchase = input.attr('data-purchase');
+    let p_qty = parseInt(input.attr('data-p_qty')) || 0;
+    var numProduct = Number(input.val()) || 0;
+    let error_suffix = max_qty_attr != 'unlimited' && max_qty_attr !== undefined ? max_qty_attr : '';
+    let errorSelector = '.max_error_' + ticket_id + error_suffix;
 
-    $('.max_error_' + ticket_id + max_qty).text('');
+    $(errorSelector).text('');
 
     if (max_qty != 'unlimited' && (numProduct + p_qty) >= max_qty) {
-        $('.max_error_' + ticket_id + max_qty).text(`No podés comprar más entradas.`);
+        $(errorSelector).text(`No podés comprar más entradas.`);
     } else if (purchase == 'true') {
-        $('.max_error_' + ticket_id + max_qty).text(`Ya compraste esta entrada.`);
-    } else if (stock < (numProduct)) {
-        $('.max_error_' + ticket_id + max_qty).text(`No podés comprar más entradas.`);
-    } else if (stock != 'unlimited' && stock < numProduct + 1) {
-        $('.max_error_' + ticket_id + max_qty).text('Sin stock');
+        $(errorSelector).text(`Ya compraste esta entrada.`);
+    } else if (stock_is_limited && stock < numProduct) {
+        $(errorSelector).text(`No podés comprar más entradas.`);
+    } else if (stock_is_limited && stock < numProduct + 1) {
+        $(errorSelector).text('Sin stock');
     } else if (max_qty != 'unlimited' && (numProduct >= max_qty && max_qty != '')) {
-        $('.max_error_' + ticket_id + max_qty).text('Podés comprar máximo ' + max_qty + ' entradas');
+        $(errorSelector).text('Podés comprar máximo ' + max_qty + ' entradas');
     } else {
 
-        $(this).prev().val(numProduct + 1);
-        animateQty($(this).prev()[0]);
+        input.val(numProduct + 1);
+        animateQty(input[0]);
         calcTotal();
     }
 });
@@ -592,10 +598,11 @@ $('.quantity-down').on('click', function () {
     var numProduct = Number($(this).next().val());
     let max_qty = $(this).next().attr('data-max_buy_ticket');
     let ticket_id = $(this).next().attr('data-ticket_id');
+    let error_suffix = max_qty != 'unlimited' && max_qty !== undefined ? max_qty : '';
     if (numProduct > 0) { $(this).next().val(numProduct - 1); animateQty($(this).next()[0]); }
     calcTotal();
 
-    $('.max_error_' + ticket_id + max_qty).text('');
+    $('.max_error_' + ticket_id + error_suffix).text('');
 });
 $('.quantity-down_variation').on('click', function () {
     var numProduct = Number($(this).next().next().val());
@@ -604,7 +611,16 @@ $('.quantity-down_variation').on('click', function () {
 
     let max_qty = $(this).next().next().attr('data-max_buy_ticket');
     let ticket_id = $(this).next().next().attr('data-ticket_id');
-    $('.max_error_' + ticket_id + max_qty).text('');
+    let error_suffix = max_qty != 'unlimited' && max_qty !== undefined ? max_qty : '';
+    $('.max_error_' + ticket_id + error_suffix).text('');
+});
+
+$('.quantity[data-stock]').each(function () {
+    let stock_attr = $(this).attr('data-stock');
+    if (stock_attr != 'unlimited' && parseInt(stock_attr) <= 0) {
+        $(this).val(0);
+        $(this).closest('.quantity-input').find('.quantity-up, .quantity-down, .quantity-down_variation').prop('disabled', true).attr('aria-disabled', 'true');
+    }
 });
 
 /** Total en UI: miles con punto, sin decimales (es-AR). El hidden #total sigue siendo entero sin separadores. */

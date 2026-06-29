@@ -170,6 +170,36 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     ]));
   }
 
+  public function test_store_data_rejects_selected_ticket_when_stock_is_exhausted(): void
+  {
+    $event = $this->createEvent(['event_type' => 'venue']);
+    $ticket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Free Pass',
+      'pricing_type' => 'free',
+      'ticket_available_type' => 'limited',
+      'ticket_available' => 0,
+      'price' => 0,
+    ]);
+
+    Session::put('selTickets', [[
+      'ticket_id' => $ticket->id,
+      'name' => 'Free Pass',
+      'qty' => 1,
+      'price' => 0,
+      'early_bird_dicount' => 0,
+    ]]);
+
+    $this->expectException(RuntimeException::class);
+    $this->expectExceptionMessage('No hay stock disponible para la entrada seleccionada.');
+
+    (new BookingController())->storeData($this->bookingInfo($event, [
+      'quantity' => 1,
+      'price' => 0,
+      'selTickets' => Session::get('selTickets'),
+    ]));
+  }
+
   public function test_admin_scanner_rejects_code_when_booking_has_no_issued_ticket_ids(): void
   {
     Booking::create([

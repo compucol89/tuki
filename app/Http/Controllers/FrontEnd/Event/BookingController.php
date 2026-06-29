@@ -217,18 +217,25 @@ class BookingController extends Controller
           DB::transaction(function () use ($variation) {
             $ticket = Ticket::where('id', $variation['ticket_id'])->lockForUpdate()->first();
             if (!$ticket) return;
+            $requestedQty = (int) ($variation['qty'] ?? 0);
             if ($ticket->pricing_type == 'normal' && $ticket->ticket_available_type == 'limited') {
-              if ($ticket->ticket_available - $variation['qty'] >= 0) {
-                $ticket->ticket_available = $ticket->ticket_available - $variation['qty'];
-                $ticket->save();
+              if ((int) $ticket->ticket_available < $requestedQty) {
+                throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
               }
+              $ticket->ticket_available = (int) $ticket->ticket_available - $requestedQty;
+              $ticket->save();
             } elseif ($ticket->pricing_type == 'variation') {
               $ticket_variations = json_decode($ticket->variations, true);
               $update_variation = [];
+              $matchedVariation = false;
               foreach ($ticket_variations as $ticket_variation) {
                 if (Booking::ticketNameMatches($variation['ticket_id'], $ticket_variation['name'] ?? null, $variation['name'] ?? null)) {
+                  $matchedVariation = true;
                   if ($ticket_variation['ticket_available_type'] == 'limited') {
-                    $ticket_available = intval($ticket_variation['ticket_available']) - intval($variation['qty']);
+                    if ((int) $ticket_variation['ticket_available'] < $requestedQty) {
+                      throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
+                    }
+                    $ticket_available = (int) $ticket_variation['ticket_available'] - $requestedQty;
                   } else {
                     $ticket_available = $ticket_variation['ticket_available'];
                   }
@@ -251,13 +258,17 @@ class BookingController extends Controller
                   ];
                 }
               }
+              if (!$matchedVariation) {
+                throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+              }
               $ticket->variations = json_encode($update_variation, true);
               $ticket->save();
             } elseif ($ticket->pricing_type == 'free' && $ticket->ticket_available_type == 'limited') {
-              if ($ticket->ticket_available - $variation['qty'] >= 0) {
-                $ticket->ticket_available = $ticket->ticket_available - $variation['qty'];
-                $ticket->save();
+              if ((int) $ticket->ticket_available < $requestedQty) {
+                throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
               }
+              $ticket->ticket_available = (int) $ticket->ticket_available - $requestedQty;
+              $ticket->save();
             }
           });
         }

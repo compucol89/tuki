@@ -10,12 +10,18 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 
 class StoreRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
+    if (Auth::guard('organizer')->check()) {
+      $this->merge([
+        'organizer_id' => Auth::guard('organizer')->id(),
+      ]);
+    }
   }
 
 use ValidatesVenueGeocoding;

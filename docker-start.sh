@@ -56,4 +56,4 @@ php artisan storage:link --force
 php artisan migrate --force
 
 mkdir -p /app/.router-root
-php -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php
+php -d upload_max_filesize=8M -d post_max_size=12M -d memory_limit=256M -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php

@@ -31,6 +31,12 @@ RUN apk add --no-cache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo pdo_mysql mbstring xml gd bcmath zip soap
 
+RUN printf '%s\n' \
+    'upload_max_filesize=8M' \
+    'post_max_size=12M' \
+    'memory_limit=256M' \
+    > /usr/local/etc/php/conf.d/tukipass-uploads.ini
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Event;
 use App\Http\Requests\Event\Concerns\ValidatesVenueGeocoding;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Event\EventContent;
 use App\Models\Event\EventImage;
@@ -17,6 +18,11 @@ class UpdateRequest extends FormRequest
 {
   protected function prepareForValidation(): void
   {
+    if (Auth::guard('organizer')->check()) {
+      $this->merge([
+        'organizer_id' => Auth::guard('organizer')->id(),
+      ]);
+    }
   }
 
 use ValidatesVenueGeocoding;

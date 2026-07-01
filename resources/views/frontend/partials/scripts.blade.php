@@ -1,6 +1,53 @@
     <!-- Global vars (sync — needed before deferred scripts) -->
     <script>
       var baseUrl = "{{ url('/') }}";
+      var csrfRefreshUrl = "{{ route('csrf-token', [], false) }}";
+      window.TukiPassCsrf = {
+        refresh: function() {
+          if (!window.fetch || !csrfRefreshUrl) {
+            return Promise.resolve(null);
+          }
+
+          return fetch(csrfRefreshUrl, {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store',
+            headers: {
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('csrf-refresh-failed');
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            if (!data || !data.token) {
+              throw new Error('csrf-refresh-empty');
+            }
+            window.TukiPassCsrf.update(data.token);
+            return data.token;
+          });
+        },
+        update: function(token) {
+          var meta = document.querySelector('meta[name="csrf-token"]');
+          if (meta) {
+            meta.setAttribute('content', token);
+          }
+          document.querySelectorAll('input[name="_token"]').forEach(function(input) {
+            input.value = token;
+          });
+          if (window.jQuery && window.jQuery.ajaxSetup) {
+            window.jQuery.ajaxSetup({
+              headers: {
+                'X-CSRF-TOKEN': token
+              }
+            });
+          }
+        }
+      };
     </script>
     <!-- jQuery + Bootstrap core (defer, order preserved) -->
     <script src="{{ asset('assets/front/js/jquery.min.js') }}" defer></script>

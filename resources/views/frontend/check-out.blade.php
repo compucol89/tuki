@@ -610,6 +610,26 @@
             this.classList.toggle('co-coupon__toggle--open');
           });
         }
+
+        var paymentForm = document.getElementById('payment-form');
+        if (paymentForm) {
+          paymentForm.addEventListener('submit', function(e) {
+            if (paymentForm.dataset.csrfRefreshing === '1') {
+              delete paymentForm.dataset.csrfRefreshing;
+              return;
+            }
+            if (!window.TukiPassCsrf || typeof window.TukiPassCsrf.refresh !== 'function') {
+              return;
+            }
+            e.preventDefault();
+            paymentForm.dataset.csrfRefreshing = '1';
+            window.TukiPassCsrf.refresh()
+              .catch(function() { return null; })
+              .then(function() {
+                paymentForm.submit();
+              });
+          });
+        }
       } catch (e) {
         // No bloquear el countdown si algo falla acá
         console && console.warn && console.warn('Checkout UI init warning:', e);

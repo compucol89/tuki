@@ -3,6 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +48,30 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (TokenMismatchException $e, Request $request) {
+            $sessionCookie = (string) config('session.cookie');
+
+            Log::warning('csrf_token_mismatch', [
+                'method' => $request->method(),
+                'path' => $request->path(),
+                'route' => optional($request->route())->getName(),
+                'ip' => $request->ip(),
+                'referer' => $request->headers->get('referer'),
+                'user_agent' => $request->userAgent(),
+                'has_session_cookie' => $sessionCookie !== '' && $request->cookies->has($sessionCookie),
+                'has_xsrf_cookie' => $request->cookies->has('XSRF-TOKEN'),
+                'has_request_token' => $request->has('_token') || $request->headers->has('X-CSRF-TOKEN') || $request->headers->has('X-XSRF-TOKEN'),
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Tu sesión expiró. Actualizá la página e intentá nuevamente.',
+                ], 419);
+            }
+
+            return response()->view('errors.419', [], 419);
         });
     }
 }

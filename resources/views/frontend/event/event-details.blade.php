@@ -3007,6 +3007,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (skipBtn) { skipBtn.disabled = isBusy; }
   }
 
+  function refreshCsrfToken() {
+    if (window.TukiPassCsrf && typeof window.TukiPassCsrf.refresh === 'function') {
+      return window.TukiPassCsrf.refresh();
+    }
+    return Promise.resolve(null);
+  }
+
+  function submitWithFreshCsrf() {
+    setModalBusy(true);
+    refreshCsrfToken()
+      .catch(function() { return null; })
+      .then(function() {
+        form.submit();
+      });
+  }
+
   function collectSelectedAddons() {
     var addons = {};
     modalEl.querySelectorAll('.addon-modal-card__qty-input').forEach(function(inp) {
@@ -3032,22 +3048,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     setModalBusy(true);
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': csrfToken.content,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      body: JSON.stringify({ addons: addons })
+    refreshCsrfToken()
+    .catch(function() { return null; })
+    .then(function() {
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrfToken.content,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ addons: addons })
+      });
     })
     .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
     .then(function(result) {
       if (result.ok && result.data && result.data.status === 'success') {
         if (shouldSubmit) {
           $modal.modal('hide');
-          form.submit();
+          submitWithFreshCsrf();
         } else {
           setModalBusy(false);
         }
@@ -3069,12 +3089,12 @@ document.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     if (form.dataset.eventAddonsEnabled === '0') {
-      form.submit();
+      submitWithFreshCsrf();
       return;
     }
     var hasAddons = modalEl.querySelectorAll('.addon-modal-card').length > 0;
     if (!hasAddons) {
-      form.submit();
+      submitWithFreshCsrf();
       return;
     }
     clearModalError();
@@ -3102,7 +3122,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (confirmBtn) {
     confirmBtn.addEventListener('click', function() {
       if (!addonsDirty) {
-        form.submit();
+        submitWithFreshCsrf();
         return;
       }
       syncAddonsAndSubmit(collectSelectedAddons());
@@ -3114,7 +3134,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var shouldClearPersistedAddons = hasPersistedAddons || addonsDirty || hasSelectedAddons();
       clearSelectedAddons();
       if (!shouldClearPersistedAddons) {
-        form.submit();
+        submitWithFreshCsrf();
         return;
       }
       syncAddonsAndSubmit({});

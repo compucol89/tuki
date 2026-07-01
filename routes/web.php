@@ -3,6 +3,12 @@
 use App\Http\Controllers\FrontEnd\SitemapController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/csrf-token', function () {
+  return response()
+    ->json(['token' => csrf_token()])
+    ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+})->middleware('throttle:60,1')->name('csrf-token');
+
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/robots.txt', function () {

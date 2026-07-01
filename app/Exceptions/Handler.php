@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (TokenMismatchException $e, Request $request) {
             $sessionCookie = (string) config('session.cookie');
 
-            Log::warning('csrf_token_mismatch', [
+            Log::error('csrf_token_mismatch', [
                 'method' => $request->method(),
                 'path' => $request->path(),
                 'route' => optional($request->route())->getName(),

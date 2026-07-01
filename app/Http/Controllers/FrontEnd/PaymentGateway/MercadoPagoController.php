@@ -77,7 +77,7 @@ class MercadoPagoController extends Controller
     }
 
     if ($event->event_type == 'venue' && empty($selectedTickets)) {
-      Log::warning('MercadoPago bookingProcess blocked: missing selected tickets.', [
+      Log::error('MercadoPago bookingProcess blocked: missing selected tickets.', [
         'event_id' => $eventId,
         'email' => $request->email,
       ]);
@@ -89,7 +89,7 @@ class MercadoPagoController extends Controller
     }
 
     if ((int) $quantity <= 0 || $eventDate === null || $eventDate === '') {
-      Log::warning('MercadoPago bookingProcess blocked: incomplete booking context.', [
+      Log::error('MercadoPago bookingProcess blocked: incomplete booking context.', [
         'event_id' => $eventId,
         'quantity' => $quantity,
         'event_date' => $eventDate,
@@ -107,7 +107,7 @@ class MercadoPagoController extends Controller
 
     $tax_amount = Session::get('tax');
     if ($total === null || $tax_amount === null) {
-      Log::warning('MercadoPago bookingProcess blocked: missing checkout totals.', [
+      Log::error('MercadoPago bookingProcess blocked: missing checkout totals.', [
         'event_id' => $eventId,
         'total' => $total,
         'tax' => $tax_amount,
@@ -217,13 +217,23 @@ class MercadoPagoController extends Controller
     curl_setopt_array($curl, $curlOPT);
 
     $response = curl_exec($curl);
-    $responseInfo = json_decode($response, true);
-    if (array_key_exists('error', $responseInfo)) {
-      Session::flash('error', $responseInfo['message']);
+    $curlError = curl_error($curl);
+    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+    curl_close($curl);
+
+    $responseInfo = json_decode($response ?: '', true);
+    $redirectUrlKey = $this->sandbox_status == 1 ? 'sandbox_init_point' : 'init_point';
+
+    if ($response === false || !is_array($responseInfo) || $httpStatus >= 400 || array_key_exists('error', $responseInfo) || empty($responseInfo[$redirectUrlKey])) {
+      Log::error('MercadoPago bookingProcess: no se pudo crear preferencia', [
+        'event_id' => $eventId,
+        'http_status' => $httpStatus,
+        'curl_error' => $curlError,
+        'response' => is_string($response) ? substr($response, 0, 1000) : null,
+      ]);
+      Session::flash('error', $responseInfo['message'] ?? 'No pudimos iniciar el pago con Mercado Pago. Por favor intentá nuevamente.');
       return redirect()->route('check-out');
     }
-
-    curl_close($curl);
 
     // Guardar datos en sesión y en DB antes de redirigir a MercadoPago
     // (DB actúa como fallback si la sesión se pierde durante el redirect cross-site)
@@ -277,7 +287,7 @@ class MercadoPagoController extends Controller
 
       // Abortar si falta payment_id
       if (empty($paymentId)) {
-        Log::warning('MercadoPago notify: payment_id vacío');
+        Log::error('MercadoPago notify: payment_id vacío');
         $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
         return redirect()->route('event_booking.cancel', ['id' => $eventId ?? 0]);
       }
@@ -294,8 +304,22 @@ class MercadoPagoController extends Controller
           'Content-Type: application/json',
         ],
       ]);
-      $apiResponse = json_decode(curl_exec($curl), true);
+      $apiRawResponse = curl_exec($curl);
+      $apiCurlError = curl_error($curl);
+      $apiHttpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      $apiResponse = json_decode($apiRawResponse ?: '', true);
       curl_close($curl);
+
+      if ($apiRawResponse === false || !is_array($apiResponse) || $apiHttpStatus >= 400) {
+        Log::error('MercadoPago notify: error consultando pago', [
+          'payment_id' => $paymentId,
+          'http_status' => $apiHttpStatus,
+          'curl_error' => $apiCurlError,
+          'response' => is_string($apiRawResponse) ? substr($apiRawResponse, 0, 1000) : null,
+        ]);
+        $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
+        return redirect()->route('event_booking.cancel', ['id' => $eventId ?? 0]);
+      }
 
       $mpStatus = $apiResponse['status'] ?? 'unknown';
       $mpStatusDetail = $apiResponse['status_detail'] ?? 'unknown';
@@ -351,7 +375,7 @@ class MercadoPagoController extends Controller
 
       // Validar external_reference para evitar reutilización de pagos ajenos
       if (!empty($paymentToken) && $mpExternalRef !== $paymentToken) {
-        Log::warning('MercadoPago notify: external_reference no coincide', [
+        Log::error('MercadoPago notify: external_reference no coincide', [
           'expected' => $paymentToken,
           'received' => $mpExternalRef,
         ]);
@@ -362,7 +386,7 @@ class MercadoPagoController extends Controller
       // Validar monto cobrado ≥ monto esperado (evita manipulación de precio)
       $paidAmount = (float)($apiResponse['transaction_amount'] ?? 0);
       if (!empty($expectedAmount) && $paidAmount < (float)$expectedAmount) {
-        Log::warning('MercadoPago notify: monto insuficiente', [
+        Log::error('MercadoPago notify: monto insuficiente', [
           'expected' => $expectedAmount,
           'paid' => $paidAmount,
         ]);
@@ -404,7 +428,7 @@ class MercadoPagoController extends Controller
       try {
         $bookingInfo = $enrol->storeData($arrData);
       } catch (\RuntimeException $e) {
-        Log::warning('MercadoPago notify: booking validation failed', [
+        Log::error('MercadoPago notify: booking validation failed', [
           'payment_id' => $paymentId,
           'error' => $e->getMessage(),
         ]);
@@ -536,7 +560,7 @@ class MercadoPagoController extends Controller
       }
 
       if (!$this->hasValidWebhookSignature($request, (string) $paymentId)) {
-        Log::warning('MercadoPago webhook: firma inválida', [
+        Log::error('MercadoPago webhook: firma inválida', [
           'payment_id' => $paymentId,
           'ip' => $request->ip(),
         ]);
@@ -555,8 +579,21 @@ class MercadoPagoController extends Controller
           'Content-Type: application/json',
         ],
       ]);
-      $apiResponse = json_decode(curl_exec($curl), true);
+      $apiRawResponse = curl_exec($curl);
+      $apiCurlError = curl_error($curl);
+      $apiHttpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+      $apiResponse = json_decode($apiRawResponse ?: '', true);
       curl_close($curl);
+
+      if ($apiRawResponse === false || !is_array($apiResponse) || $apiHttpStatus >= 400) {
+        Log::error('MercadoPago webhook: error consultando pago', [
+          'payment_id' => $paymentId,
+          'http_status' => $apiHttpStatus,
+          'curl_error' => $apiCurlError,
+          'response' => is_string($apiRawResponse) ? substr($apiRawResponse, 0, 1000) : null,
+        ]);
+        return response('OK', 200);
+      }
 
       $mpStatus = $apiResponse['status'] ?? 'unknown';
       $mpExternalRef = $apiResponse['external_reference'] ?? null;
@@ -587,7 +624,7 @@ class MercadoPagoController extends Controller
       // Recuperar pending booking (ahora con status = processing)
       $pending = PendingBooking::where('token', $mpExternalRef)->first();
       if (!$pending) {
-        Log::warning('MercadoPago webhook: no se encontró pending booking después de claim', [
+        Log::error('MercadoPago webhook: no se encontró pending booking después de claim', [
           'payment_id' => $paymentId,
           'external_reference' => $mpExternalRef,
         ]);
@@ -597,7 +634,7 @@ class MercadoPagoController extends Controller
       // Validar monto
       $paidAmount = (float)($apiResponse['transaction_amount'] ?? 0);
       if ($paidAmount < (float)$pending->amount) {
-        Log::warning('MercadoPago webhook: monto insuficiente', [
+        Log::error('MercadoPago webhook: monto insuficiente', [
           'expected' => $pending->amount,
           'paid' => $paidAmount,
         ]);
@@ -616,7 +653,7 @@ class MercadoPagoController extends Controller
       try {
         $bookingInfo = $enrol->storeData($arrData);
       } catch (\RuntimeException $e) {
-        Log::warning('MercadoPago webhook: booking validation failed', [
+        Log::error('MercadoPago webhook: booking validation failed', [
           'payment_id' => $paymentId ?? 'unknown',
           'error' => $e->getMessage(),
         ]);

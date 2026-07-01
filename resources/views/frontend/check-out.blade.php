@@ -611,6 +611,14 @@
           });
         }
 
+        var refreshCheckoutCsrf = function() {
+          if (!window.TukiPassCsrf || typeof window.TukiPassCsrf.refresh !== 'function') {
+            return Promise.resolve(null);
+          }
+
+          return window.TukiPassCsrf.refresh().catch(function() { return null; });
+        };
+
         var paymentForm = document.getElementById('payment-form');
         if (paymentForm) {
           paymentForm.addEventListener('submit', function(e) {
@@ -623,11 +631,29 @@
             }
             e.preventDefault();
             paymentForm.dataset.csrfRefreshing = '1';
-            window.TukiPassCsrf.refresh()
-              .catch(function() { return null; })
-              .then(function() {
+            refreshCheckoutCsrf().then(function() {
+              if (typeof paymentForm.requestSubmit === 'function') {
+                paymentForm.requestSubmit();
+              } else {
                 paymentForm.submit();
-              });
+              }
+            });
+          });
+        }
+
+        var csrfKeepAliveInterval = setInterval(refreshCheckoutCsrf, 5 * 60 * 1000);
+        if (typeof window !== 'undefined' && window.addEventListener) {
+          window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+              refreshCheckoutCsrf();
+            }
+          });
+        }
+        if (typeof document !== 'undefined' && document.addEventListener) {
+          document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+              refreshCheckoutCsrf();
+            }
           });
         }
       } catch (e) {

@@ -23,4 +23,13 @@ class CsrfRecoveryTest extends TestCase
     $this->assertStringContainsString('Tu reserva expiró', $html);
     $this->assertStringContainsString('Volver a intentar', $html);
   }
+
+  public function test_checkout_page_keeps_csrf_token_fresh_while_open(): void
+  {
+    $html = file_get_contents(resource_path('views/frontend/check-out.blade.php'));
+
+    $this->assertStringContainsString('csrfKeepAliveInterval', $html);
+    $this->assertStringContainsString('visibilitychange', $html);
+    $this->assertStringContainsString('pageshow', $html);
+  }
 }

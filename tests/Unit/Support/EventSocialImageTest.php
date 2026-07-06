@@ -16,6 +16,11 @@ class EventSocialImageTest extends TestCase
       @unlink($file);
     }
 
+    foreach (glob(public_path('assets/admin/img/event-social/122/*')) ?: [] as $file) {
+      @unlink($file);
+    }
+    @rmdir(public_path('assets/admin/img/event-social/122'));
+
     parent::tearDown();
   }
 
@@ -62,6 +67,26 @@ class EventSocialImageTest extends TestCase
     $this->assertSame('image/jpeg', $socialImage['type']);
   }
 
+  public function test_large_png_thumbnail_uses_optimized_social_jpeg(): void
+  {
+    $thumbnail = public_path('assets/admin/img/event/thumbnail/test-social-heavy.png');
+    $this->makeNoisyPng($thumbnail, 900, 900);
+
+    $event = (object) [
+      'id' => 122,
+      'og_image' => null,
+      'thumbnail' => basename($thumbnail),
+    ];
+
+    $socialImage = EventSocialImage::from($event, new Collection());
+    $path = public_path(parse_url($socialImage['url'], PHP_URL_PATH));
+
+    $this->assertStringContainsString('/assets/admin/img/event-social/122/', $socialImage['url']);
+    $this->assertStringEndsWith('.jpg?v=' . filemtime($path), $socialImage['url']);
+    $this->assertSame('image/jpeg', $socialImage['type']);
+    $this->assertLessThanOrEqual(300000, filesize($path));
+  }
+
   private function makePng(string $path, int $width, int $height): void
   {
     $this->ensureDirectory($path);
@@ -76,6 +101,23 @@ class EventSocialImageTest extends TestCase
     $this->ensureDirectory($path);
     $image = imagecreatetruecolor($width, $height);
     imagejpeg($image, $path);
+    imagedestroy($image);
+    $this->files[] = $path;
+  }
+
+  private function makeNoisyPng(string $path, int $width, int $height): void
+  {
+    $this->ensureDirectory($path);
+    $image = imagecreatetruecolor($width, $height);
+
+    for ($x = 0; $x < $width; $x++) {
+      for ($y = 0; $y < $height; $y++) {
+        $color = imagecolorallocate($image, ($x * 17 + $y * 7) % 256, ($x * 5 + $y * 13) % 256, ($x * 11 + $y * 3) % 256);
+        imagesetpixel($image, $x, $y, $color);
+      }
+    }
+
+    imagepng($image, $path, 0);
     imagedestroy($image);
     $this->files[] = $path;
   }

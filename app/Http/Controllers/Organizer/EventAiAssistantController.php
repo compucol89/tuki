@@ -50,19 +50,20 @@ class EventAiAssistantController extends Controller
       'end_date' => 'nullable|string|max:30',
       'end_time' => 'nullable|string|max:30',
       'generate_content' => 'nullable|boolean',
-      'ai_tone' => 'nullable|string|max:60',
-      'ai_intensity' => 'nullable|string|max:30',
-      'ai_audience_location' => 'nullable|array',
+      'ai_tone' => 'required_if:generate_content,1|string|max:60',
+      'ai_intensity' => 'required_if:generate_content,1|string|max:30',
+      'ai_audience_location' => 'required_if:generate_content,1|array|min:1',
       'ai_audience_location.*' => 'nullable|string|max:80',
-      'ai_community' => 'nullable|array',
+      'ai_community' => 'required_if:generate_content,1|array|min:1',
       'ai_community.*' => 'nullable|string|max:80',
-      'ai_age_range' => 'nullable|array',
+      'ai_age_range' => 'required_if:generate_content,1|array|min:1',
       'ai_age_range.*' => 'nullable|string|max:80',
-      'ai_interests' => 'nullable|array',
+      'ai_interests' => 'required_if:generate_content,1|array|min:1',
       'ai_interests.*' => 'nullable|string|max:80',
-      'ai_language_style' => 'nullable|string|max:80',
+      'ai_language_style' => 'required_if:generate_content,1|string|max:80',
+      'ai_event_brief' => 'required_if:generate_content,1|string|min:20|max:700',
       'ai_audience' => 'nullable|string|max:700',
-      'ai_goal' => 'nullable|string|max:80',
+      'ai_goal' => 'required_if:generate_content,1|string|max:80',
       'ai_selling_angle' => 'nullable|string|max:240',
       'ai_notes' => 'nullable|string|max:1200',
     ]);
@@ -124,7 +125,7 @@ class EventAiAssistantController extends Controller
     $draft = null;
     $draftError = null;
 
-    if ($request->boolean('generate_content', true)) {
+    if ($request->boolean('generate_content', false)) {
       try {
         $generated = $this->generateContentWithQualityGate($assistant, $canonicalFacts, $this->temporaryPreferences($request));
         $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
@@ -703,6 +704,7 @@ class EventAiAssistantController extends Controller
     return [
       'tone' => $request->input('ai_tone', 'cercano_rioplatense'),
       'intensity' => $request->input('ai_intensity', 'equilibrado'),
+      'event_brief' => $request->input('ai_event_brief'),
       'audience' => [
         'locations' => $this->temporaryPreferenceArray($request, 'ai_audience_location', ['argentina']),
         'communities' => $this->temporaryPreferenceArray($request, 'ai_community', ['publico_argentino']),

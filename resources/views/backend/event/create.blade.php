@@ -121,9 +121,7 @@
                             <span>{{ __('Podemos leer la imagen y ayudarte a mejorar título, fecha, lugar, promociones, descripción y SEO.') }}</span>
                           </div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze>
-                          <i class="fas fa-magic mr-1"></i>{{ __('Armar evento con IA') }}
-                        </button>
+                        <span class="event-cover-box__next-step">{{ __('Siguiente paso: completá la orientación del copy debajo para activar la IA.') }}</span>
                         <small>{{ __('El asistente propone datos, copy y SEO antes de guardar. Vos revisás y decidís qué aplicar.') }}</small>
                       </div>
                     </div>
@@ -925,12 +923,63 @@
       line-height: 1.6;
     }
 
+    .event-cover-box__next-step {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
     .create-cover-ai-panel {
       padding: 18px;
       border: 1px solid #dbeafe;
       border-left: 4px solid #2563eb;
       border-radius: 14px;
       background: #f8fbff;
+    }
+
+    .create-cover-ai-requirements {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .create-cover-ai-requirement {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      background: #fff;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .create-cover-ai-requirement.is-ready {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .create-cover-ai-requirement.is-missing {
+      border-color: #fed7aa;
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .create-cover-ai-actionbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
     }
 
     .create-cover-ai-facts {
@@ -1009,6 +1058,11 @@
     }
 
     @media (max-width: 575px) {
+      .create-cover-ai-actionbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
       .create-cover-ai-fact {
         grid-template-columns: 1fr;
       }
@@ -1285,6 +1339,9 @@
       const draftTitleOptions = panel ? panel.querySelector('[data-create-ai-title-options]') : null;
       const draftDescriptionPreview = panel ? panel.querySelector('[data-create-ai-description-preview]') : null;
       const draftPackagePreview = panel ? panel.querySelector('[data-create-ai-package-preview]') : null;
+      const readinessText = panel ? panel.querySelector('[data-create-ai-readiness-text]') : null;
+      const requiredPreferenceFields = panel ? Array.from(panel.querySelectorAll('[data-create-ai-required]')) : [];
+      const preferenceFields = panel ? Array.from(panel.querySelectorAll('[name^="ai_"]')) : [];
       let active = false;
       let lastReview = null;
       let lastDraft = null;
@@ -1299,6 +1356,8 @@
 
         if (emptyState) emptyState.classList.toggle('d-none', hasCover);
         if (readyState) readyState.classList.toggle('d-none', !hasCover);
+        if (panel) panel.classList.toggle('d-none', !hasCover);
+        updateAiReadiness();
 
       };
 
@@ -1309,7 +1368,8 @@
         if (results) results.classList.add('d-none');
         if (draftBox) draftBox.classList.add('d-none');
         if (progressPanel) progressPanel.classList.add('d-none');
-        setStatus('Portada lista. Podés armar una propuesta de evento con IA antes de completar el resto del formulario.', 'light');
+        setStatus('Portada lista. Completá la orientación del copy para activar la generación con IA.', 'light');
+        updateAiReadiness();
       });
 
       if (analyzeButton) {
@@ -1325,10 +1385,33 @@
         });
       }
 
+      preferenceFields.forEach(function (field) {
+        field.addEventListener('input', handlePreferenceChange);
+        field.addEventListener('change', handlePreferenceChange);
+      });
+
+      function handlePreferenceChange() {
+        if (lastReview || lastDraft) {
+          lastReview = null;
+          lastDraft = null;
+          if (results) results.classList.add('d-none');
+          if (draftBox) draftBox.classList.add('d-none');
+          setStatus('Cambiaste la orientación del copy. Volvé a armar el evento con IA para usar estos datos.', 'light');
+        }
+        updateAiReadiness();
+      }
+
       function analyzeTemporaryCover() {
         if (active) return;
         if (!panel || !thumbnailInput.files || !thumbnailInput.files.length) {
           setStatus('Subí una portada antes de analizarla con IA.', 'warning');
+          return;
+        }
+
+        const missing = missingAiRequirements();
+        if (missing.length) {
+          setStatus('Completá estos datos antes de generar con IA: ' + missing.join(', ') + '.', 'warning');
+          updateAiReadiness();
           return;
         }
 
@@ -1365,9 +1448,71 @@
           setStatus(errorMessage(xhr, 'No pudimos analizar la portada en este momento.'), 'danger');
         }).always(function () {
           active = false;
-          analyzeButton.disabled = false;
           analyzeButton.innerHTML = '<i class="fas fa-magic mr-1"></i>Armar evento con IA';
+          updateAiReadiness();
         });
+      }
+
+      function missingAiRequirements() {
+        const missing = [];
+        if (!thumbnailInput.files || !thumbnailInput.files.length) {
+          missing.push('portada');
+        }
+        requiredPreferenceFields.forEach(function (field) {
+          if (!fieldHasValue(field)) {
+            missing.push(field.getAttribute('data-create-ai-label') || 'campo obligatorio');
+          }
+        });
+        return uniqueItems(missing);
+      }
+
+      function fieldHasValue(field) {
+        if (!field) return false;
+        if (field.multiple) {
+          return Array.from(field.selectedOptions || []).some(function (option) {
+            return $.trim(option.value || '') !== '';
+          });
+        }
+        const value = $.trim(field.value || '');
+        const minLength = parseInt(field.getAttribute('data-create-ai-min-length') || '1', 10);
+        return value.length >= minLength;
+      }
+
+      function updateAiReadiness() {
+        const hasCover = thumbnailInput.files && thumbnailInput.files.length > 0;
+        const briefField = panel ? panel.querySelector('[data-create-ai-event-brief]') : null;
+        const preferencesReady = requiredPreferenceFields.filter(function (field) {
+          return !field.hasAttribute('data-create-ai-event-brief');
+        }).every(fieldHasValue);
+        const briefReady = fieldHasValue(briefField);
+        const missing = missingAiRequirements();
+        const ready = missing.length === 0;
+
+        updateRequirementPill('cover', hasCover);
+        updateRequirementPill('preferences', preferencesReady);
+        updateRequirementPill('brief', briefReady);
+
+        if (readinessText) {
+          readinessText.textContent = ready
+            ? 'Listo: la IA va a usar la portada, tus preferencias y tu descripción breve.'
+            : 'Falta completar: ' + missing.join(', ') + '.';
+        }
+
+        if (analyzeButton) {
+          analyzeButton.disabled = active || !ready;
+          if (!active) {
+            analyzeButton.innerHTML = ready
+              ? '<i class="fas fa-magic mr-1"></i>Armar evento con IA'
+              : '<i class="fas fa-lock mr-1"></i>Completá la orientación';
+          }
+        }
+      }
+
+      function updateRequirementPill(key, ready) {
+        const item = panel ? panel.querySelector('[data-create-ai-requirement="' + key + '"]') : null;
+        if (!item) return;
+        item.classList.toggle('is-ready', !!ready);
+        item.classList.toggle('is-missing', !ready);
       }
 
       function buildAnalysisPayload(file) {
@@ -1763,7 +1908,80 @@
         if (match) return match[1] + '-' + match[2] + '-' + match[3];
         match = value.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
         if (match) return match[3] + '-' + String(match[2]).padStart(2, '0') + '-' + String(match[1]).padStart(2, '0');
+        match = value.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2})\b/);
+        if (match) return '20' + match[3] + '-' + String(match[2]).padStart(2, '0') + '-' + String(match[1]).padStart(2, '0');
+
+        const normalized = normalizeText(value);
+        const months = {
+          enero: 1,
+          febrero: 2,
+          marzo: 3,
+          abril: 4,
+          mayo: 5,
+          junio: 6,
+          julio: 7,
+          agosto: 8,
+          septiembre: 9,
+          setiembre: 9,
+          octubre: 10,
+          noviembre: 11,
+          diciembre: 12
+        };
+        const weekdays = {
+          domingo: 0,
+          lunes: 1,
+          martes: 2,
+          miercoles: 3,
+          jueves: 4,
+          viernes: 5,
+          sabado: 6
+        };
+
+        match = normalized.match(/\b(\d{1,2})\s*(?:de\s*)?(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?:\s*(?:de\s*)?(\d{2,4}))?\b/);
+        if (match) {
+          const year = match[3] ? normalizeYear(match[3]) : inferYearForMonth(months[match[2]], parseInt(match[1], 10));
+          return formatDateParts(year, months[match[2]], parseInt(match[1], 10));
+        }
+
+        const weekday = Object.keys(weekdays).find(function (dayName) {
+          return normalized.indexOf(dayName) !== -1;
+        });
+        match = normalized.match(/\b(\d{1,2})\b/);
+        if (match) {
+          return inferUpcomingDay(parseInt(match[1], 10), weekday ? weekdays[weekday] : null);
+        }
         return '';
+      }
+
+      function normalizeYear(value) {
+        value = String(value || '');
+        return value.length === 2 ? parseInt('20' + value, 10) : parseInt(value, 10);
+      }
+
+      function inferYearForMonth(month, day) {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const candidate = new Date(currentYear, month - 1, day);
+        const startOfToday = new Date(currentYear, today.getMonth(), today.getDate());
+        return candidate >= startOfToday ? currentYear : currentYear + 1;
+      }
+
+      function inferUpcomingDay(day, expectedWeekday) {
+        if (!day || day < 1 || day > 31) return '';
+        const today = new Date();
+        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        for (let offset = 0; offset <= 12; offset++) {
+          const candidate = new Date(today.getFullYear(), today.getMonth() + offset, day);
+          if (candidate.getDate() !== day || candidate < startOfToday) continue;
+          if (expectedWeekday !== null && candidate.getDay() !== expectedWeekday) continue;
+          return formatDateParts(candidate.getFullYear(), candidate.getMonth() + 1, candidate.getDate());
+        }
+        return '';
+      }
+
+      function formatDateParts(year, month, day) {
+        if (!year || !month || !day) return '';
+        return String(year) + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
       }
 
       function parseTime(value) {

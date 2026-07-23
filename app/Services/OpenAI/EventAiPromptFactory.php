@@ -53,7 +53,8 @@ Reglas absolutas:
 - Mantené seo_title cerca de 50-60 caracteres, meta_description y google_short_description cerca de 140-160 caracteres, y tags útiles sin repetir variantes artificiales.
 - La descripción para schema, OG y Google debe coincidir con contenido visible.
 - El contenido debe ser útil para personas primero y fácil de extraer por buscadores con IA: bloques claros, answer-first, FAQs concretas.
-- Usá audience.locations, audience.communities, audience.age_ranges, audience.interests, audience.language_style, audience.description, audience.goal, audience.selling_angle y audience.organizer_notes para orientar ángulo, objeciones, intensidad y enfoque comercial.
+- Usá event_brief, audience.locations, audience.communities, audience.age_ranges, audience.interests, audience.language_style, audience.description, audience.goal, audience.selling_angle y audience.organizer_notes para orientar ángulo, objeciones, intensidad y enfoque comercial.
+- Dale prioridad al event_brief como criterio del organizador: debe complementar la portada y guiar el copy final, no quedar como nota secundaria.
 - El público elegido solo adapta lenguaje, tono y enfoque; nunca limita quién puede ver, reservar o asistir.
 - Si el público es argentino o el language_style pide voseo, usá voseo consistente: "reservá", "viví", "disfrutá". Si el público es colombiano, venezolano o latino neutro, usá tuteo consistente: "reserva", "vive", "disfruta". Para público mixto o internacional, usá español latino neutro sin mezclar voseo y tuteo.
 - Si las notas del organizador agregan datos nuevos, podés usarlos como información provista por el organizador. No digas que el flyer los confirma ni inventes detalles derivados.

@@ -5,7 +5,7 @@
     data-analysis-url="{{ $temporaryAnalysisUrl }}"
   >
     <div class="alert alert-light border mb-3" data-create-ai-status>
-      {{ __('Cuando subas la portada, el asistente puede leer el flyer, proponer mejoras y ayudarte a completar la publicación. Revisás todo antes de aplicarlo.') }}
+      {{ __('Subí la portada y completá la orientación del copy antes de generar. Así la IA usa el flyer más tu criterio como organizador.') }}
     </div>
 
     <div class="create-cover-ai-preferences border rounded p-3 mb-3" data-create-ai-preferences>
@@ -17,13 +17,20 @@
         <span class="badge badge-light border mt-2 mt-lg-0">{{ __('Revisión humana obligatoria') }}</span>
       </div>
 
+      <div class="create-cover-ai-requirements mb-3" data-create-ai-readiness>
+        <span class="create-cover-ai-requirement" data-create-ai-requirement="cover">{{ __('Portada cargada') }}</span>
+        <span class="create-cover-ai-requirement" data-create-ai-requirement="preferences">{{ __('Preferencias completas') }}</span>
+        <span class="create-cover-ai-requirement" data-create-ai-requirement="brief">{{ __('Descripción breve') }}</span>
+      </div>
+
       <div class="row">
         <div class="form-group col-md-6 col-lg-4 mb-2">
-          <label class="small mb-1">{{ __('Tono de venta') }}</label>
-          <select class="form-control form-control-sm" name="ai_tone" data-create-ai-tone>
+          <label class="small mb-1">{{ __('Tono de venta') }}*</label>
+          <select class="form-control form-control-sm" name="ai_tone" data-create-ai-tone data-create-ai-required data-create-ai-label="{{ __('tono de venta') }}">
+            <option value="">{{ __('Elegí un tono') }}</option>
             <option value="cercano_rioplatense">{{ __('Cercano y rioplatense') }}</option>
             <option value="directo_vendedor">{{ __('Directo y vendedor') }}</option>
-            <option value="energico_festivo" selected>{{ __('Energético y festivo') }}</option>
+            <option value="energico_festivo">{{ __('Energético y festivo') }}</option>
             <option value="emotivo_inspirador">{{ __('Emotivo e inspirador') }}</option>
             <option value="profesional_institucional">{{ __('Profesional e institucional') }}</option>
             <option value="exclusivo_premium">{{ __('Exclusivo y premium') }}</option>
@@ -32,17 +39,19 @@
           </select>
         </div>
         <div class="form-group col-md-6 col-lg-4 mb-2">
-          <label class="small mb-1">{{ __('Intensidad comercial') }}</label>
-          <select class="form-control form-control-sm" name="ai_intensity" data-create-ai-intensity>
-            <option value="equilibrado" selected>{{ __('Equilibrado') }}</option>
+          <label class="small mb-1">{{ __('Intensidad comercial') }}*</label>
+          <select class="form-control form-control-sm" name="ai_intensity" data-create-ai-intensity data-create-ai-required data-create-ai-label="{{ __('intensidad comercial') }}">
+            <option value="">{{ __('Elegí una intensidad') }}</option>
+            <option value="equilibrado">{{ __('Equilibrado') }}</option>
             <option value="informativo">{{ __('Informativo') }}</option>
             <option value="alta_conversion">{{ __('Alta conversión') }}</option>
           </select>
         </div>
         <div class="form-group col-md-6 col-lg-4 mb-2">
-          <label class="small mb-1">{{ __('Forma de comunicar') }}</label>
-          <select class="form-control form-control-sm" name="ai_language_style" data-create-ai-language-style>
-            <option value="automatico" selected>{{ __('Automático según el público') }}</option>
+          <label class="small mb-1">{{ __('Forma de comunicar') }}*</label>
+          <select class="form-control form-control-sm" name="ai_language_style" data-create-ai-language-style data-create-ai-required data-create-ai-label="{{ __('forma de comunicar') }}">
+            <option value="">{{ __('Elegí una forma') }}</option>
+            <option value="automatico">{{ __('Automático según el público') }}</option>
             <option value="es_ar_voseo">{{ __('Argentino con voseo') }}</option>
             <option value="es_latam_tuteo">{{ __('Latino neutro con tuteo') }}</option>
             <option value="es_co_natural">{{ __('Colombiano natural') }}</option>
@@ -50,9 +59,9 @@
           </select>
         </div>
         <div class="form-group col-md-6 col-lg-4 mb-2">
-          <label class="small mb-1">{{ __('Ubicación del público') }}</label>
-          <select class="form-control form-control-sm" name="ai_audience_location[]" multiple data-create-ai-audience-location>
-            <option value="argentina" selected>{{ __('Argentina') }}</option>
+          <label class="small mb-1">{{ __('Ubicación del público') }}*</label>
+          <select class="form-control form-control-sm" name="ai_audience_location[]" multiple data-create-ai-audience-location data-create-ai-required data-create-ai-label="{{ __('ubicación del público') }}">
+            <option value="argentina">{{ __('Argentina') }}</option>
             <option value="caba">{{ __('CABA') }}</option>
             <option value="gran_buenos_aires">{{ __('Gran Buenos Aires') }}</option>
             <option value="provincia_buenos_aires">{{ __('Provincia de Buenos Aires') }}</option>
@@ -61,9 +70,9 @@
           </select>
         </div>
         <div class="form-group col-md-6 col-lg-4 mb-2">
-          <label class="small mb-1">{{ __('Comunidad principal') }}</label>
-          <select class="form-control form-control-sm" name="ai_community[]" multiple data-create-ai-community>
-            <option value="publico_argentino" selected>{{ __('Público argentino') }}</option>
+          <label class="small mb-1">{{ __('Comunidad principal') }}*</label>
+          <select class="form-control form-control-sm" name="ai_community[]" multiple data-create-ai-community data-create-ai-required data-create-ai-label="{{ __('comunidad principal') }}">
+            <option value="publico_argentino">{{ __('Público argentino') }}</option>
             <option value="colombianos_en_argentina">{{ __('Colombianos en Argentina') }}</option>
             <option value="venezolanos_en_argentina">{{ __('Venezolanos en Argentina') }}</option>
             <option value="chilenos_en_argentina">{{ __('Chilenos en Argentina') }}</option>
@@ -73,10 +82,10 @@
           </select>
         </div>
         <div class="form-group col-md-6 col-lg-4 mb-2">
-          <label class="small mb-1">{{ __('Rango de edad') }}</label>
-          <select class="form-control form-control-sm" name="ai_age_range[]" multiple data-create-ai-age-range>
+          <label class="small mb-1">{{ __('Rango de edad') }}*</label>
+          <select class="form-control form-control-sm" name="ai_age_range[]" multiple data-create-ai-age-range data-create-ai-required data-create-ai-label="{{ __('rango de edad') }}">
             <option value="18_24">{{ __('18 a 24') }}</option>
-            <option value="25_34" selected>{{ __('25 a 34') }}</option>
+            <option value="25_34">{{ __('25 a 34') }}</option>
             <option value="35_44">{{ __('35 a 44') }}</option>
             <option value="45_54">{{ __('45 a 54') }}</option>
             <option value="publico_adulto">{{ __('Público adulto') }}</option>
@@ -84,9 +93,9 @@
           </select>
         </div>
         <div class="form-group col-lg-6 mb-2">
-          <label class="small mb-1">{{ __('Intereses') }}</label>
-          <select class="form-control form-control-sm" name="ai_interests[]" multiple data-create-ai-interests>
-            <option value="fiestas" selected>{{ __('Fiestas') }}</option>
+          <label class="small mb-1">{{ __('Intereses') }}*</label>
+          <select class="form-control form-control-sm" name="ai_interests[]" multiple data-create-ai-interests data-create-ai-required data-create-ai-label="{{ __('intereses') }}">
+            <option value="fiestas">{{ __('Fiestas') }}</option>
             <option value="vida_nocturna">{{ __('Vida nocturna') }}</option>
             <option value="reggaeton">{{ __('Reggaetón') }}</option>
             <option value="musica_latina">{{ __('Música latina') }}</option>
@@ -98,13 +107,19 @@
           </select>
         </div>
         <div class="form-group col-lg-6 mb-2">
-          <label class="small mb-1">{{ __('Objetivo principal') }}</label>
-          <select class="form-control form-control-sm" name="ai_goal" data-create-ai-goal>
-            <option value="reservas_equilibradas" selected>{{ __('Generar reservas con claridad') }}</option>
+          <label class="small mb-1">{{ __('Objetivo principal') }}*</label>
+          <select class="form-control form-control-sm" name="ai_goal" data-create-ai-goal data-create-ai-required data-create-ai-label="{{ __('objetivo principal') }}">
+            <option value="">{{ __('Elegí un objetivo') }}</option>
+            <option value="reservas_equilibradas">{{ __('Generar reservas con claridad') }}</option>
             <option value="alta_demanda_responsable">{{ __('Impulsar demanda sin falsa urgencia') }}</option>
             <option value="posicionamiento_marca">{{ __('Posicionar el evento o la marca') }}</option>
             <option value="experiencia_premium">{{ __('Comunicar experiencia premium') }}</option>
           </select>
+        </div>
+        <div class="form-group col-12 mb-2">
+          <label class="small mb-1">{{ __('Descripción breve del organizador') }}*</label>
+          <textarea class="form-control form-control-sm" name="ai_event_brief" rows="3" data-create-ai-event-brief data-create-ai-required data-create-ai-label="{{ __('descripción breve') }}" data-create-ai-min-length="20" placeholder="{{ __('Ej: Esta es una noche de reggaetón viejo en La Troja, con rumba colombiana, mujeres gratis hasta las 2 AM y promos reales en barra.') }}"></textarea>
+          <small class="text-muted">{{ __('Sumá tu idea, detalles importantes, enfoque de venta o copy propio. La IA lo usa junto con la portada.') }}</small>
         </div>
         <div class="form-group col-md-6 mb-2">
           <label class="small mb-1">{{ __('Público objetivo adicional') }}</label>
@@ -118,6 +133,15 @@
           <label class="small mb-1">{{ __('Notas para la IA') }}</label>
           <textarea class="form-control form-control-sm" name="ai_notes" rows="2" data-create-ai-notes placeholder="{{ __('Promos reales, artistas, ambiente, aclaraciones o datos que no aparecen en el flyer.') }}"></textarea>
         </div>
+      </div>
+
+      <div class="create-cover-ai-actionbar mt-3">
+        <div class="small text-muted" data-create-ai-readiness-text>
+          {{ __('Completá los campos obligatorios para activar la generación con IA.') }}
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze disabled>
+          <i class="fas fa-magic mr-1"></i>{{ __('Armar evento con IA') }}
+        </button>
       </div>
     </div>
 

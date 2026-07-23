@@ -102,11 +102,11 @@
     <div class="col-md-12">
       <div class="card border-0 shadow-none bg-transparent">
         <div class="card-header p-0 bg-transparent border-0 mb-4">
-          <div class="d-flex justify-content-between align-items-center">
+          <div class="event-edit-actions">
             <a class="btn btn-secondary btn-sm" href="{{ url()->previous() }}">
               <span class="btn-label"><i class="fas fa-backward"></i></span> {{ __('Back') }}
             </a>
-            <div>
+            <div class="event-edit-actions__group">
               <a class="btn btn-success btn-sm mr-2"
                 href="{{ route('event.details', ['slug' => eventSlug($defaultLang->id, $event->id), 'id' => $event->id]) }}"
                 target="_blank">
@@ -133,46 +133,46 @@
                 <button type="button" class="close" data-dismiss="alert">x</button>
                 <ul></ul>
               </div>
-              <div class="card border mb-4">
+              <div class="card border mb-4 event-quick-guide-card">
                 <div class="card-body py-3">
-                  <div class="mb-3">
+                  <div class="event-quick-guide__intro">
                     <span class="badge badge-primary mb-2">{{ __('Guía rápida') }}</span>
                     <h5 class="mb-1">{{ __('Editá tu evento paso a paso') }}</h5>
                     <p class="text-muted mb-0">{{ __('Seguí este orden para no perderte: portada, análisis IA, fechas, contenido y extras.') }}</p>
                   </div>
-                  <div class="row">
-                    <div class="col-md-6 col-xl-4 mb-2">
-                      <a href="#section-media" class="btn btn-light btn-block text-left py-3">
+                  <div class="event-step-grid">
+                    <div>
+                      <a href="#section-media" class="btn btn-light btn-block text-left event-step-link">
                         <span class="badge badge-primary mr-2">1</span>{{ __('Portada e IA') }}
                         <small class="d-block text-muted mt-1">{{ __('Imagen principal y análisis') }}</small>
                       </a>
                     </div>
-                    <div class="col-md-6 col-xl-4 mb-2">
-                      <a href="#section-schedule" class="btn btn-light btn-block text-left py-3">
+                    <div>
+                      <a href="#section-schedule" class="btn btn-light btn-block text-left event-step-link">
                         <span class="badge badge-primary mr-2">2</span>{{ __('Fechas') }}
                         <small class="d-block text-muted mt-1">{{ __('Fecha única o múltiples funciones') }}</small>
                       </a>
                     </div>
-                    <div class="col-md-6 col-xl-4 mb-2">
-                      <a href="#section-settings" class="btn btn-light btn-block text-left py-3">
+                    <div>
+                      <a href="#section-settings" class="btn btn-light btn-block text-left event-step-link">
                         <span class="badge badge-primary mr-2">3</span>{{ __('Configuración') }}
                         <small class="d-block text-muted mt-1">{{ __('Estado, visibilidad y venta') }}</small>
                       </a>
                     </div>
-                    <div class="col-md-6 col-xl-4 mb-2">
-                      <a href="#section-content" class="btn btn-light btn-block text-left py-3">
+                    <div>
+                      <a href="#section-content" class="btn btn-light btn-block text-left event-step-link">
                         <span class="badge badge-primary mr-2">4</span>{{ __('Contenido') }}
                         <small class="d-block text-muted mt-1">{{ __('Títulos, descripción y SEO') }}</small>
                       </a>
                     </div>
-                    <div class="col-md-6 col-xl-4 mb-2">
-                      <a href="#section-media-links" class="btn btn-light btn-block text-left py-3">
+                    <div>
+                      <a href="#section-media-links" class="btn btn-light btn-block text-left event-step-link">
                         <span class="badge badge-primary mr-2">5</span>{{ __('Multimedia') }}
                         <small class="d-block text-muted mt-1">{{ __('Spotify y YouTube') }}</small>
                       </a>
                     </div>
-                    <div class="col-md-6 col-xl-4 mb-2">
-                      <a href="#section-tracking" class="btn btn-light btn-block text-left py-3">
+                    <div>
+                      <a href="#section-tracking" class="btn btn-light btn-block text-left event-step-link">
                         <span class="badge badge-primary mr-2">6</span>{{ __('Píxeles') }}
                         <small class="d-block text-muted mt-1">{{ __('Meta, Google y TikTok') }}</small>
                       </a>
@@ -232,31 +232,28 @@
                     </div>
                     @if ($publicationScore < 85)
                       <div class="alert alert-light border mb-0">
-                        <strong>{{ __('Consejo rapido:') }}</strong>
+                        <strong>{{ __('Consejo rápido:') }}</strong>
                         {{ __('Antes de publicar, priorizá imágenes, descripción y fechas. Son las tres cosas que más ayudan a vender y evitar dudas.') }}
                       </div>
                     @endif
                   @endif
                 </div>
               </div>
-              <div class="card ev-section-card">
+              <div class="card ev-section-card event-media-card" id="section-media">
                 <div class="card-header ev-section-header">
                   <h4 class="card-title"><i class="fas fa-images mr-2 text-primary"></i>{{ __('Imágenes del evento') }}</h4>
                 </div>
-              <div class="card-body">
-              <div id="section-media" class="mb-3">
-                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar">
-                  <div class="pr-lg-3 mb-2 mb-lg-0">
-                    <p class="text-muted mb-1">{{ __('Revisá primero la portada principal. Desde ahí podés analizarla con IA y completar mejor el evento.') }}</p>
-                    <small class="text-muted">{{ __('Las imágenes adicionales son opcionales y complementan la publicación.') }}</small>
+                <div class="card-body">
+                  <div class="event-media-intro">
+                    <div>
+                      <p class="text-muted mb-1">{{ __('Revisá primero la portada principal. Desde ahí podés analizarla con IA y completar mejor el evento.') }}</p>
+                      <small class="text-muted">{{ __('Las imágenes adicionales son opcionales y complementan la publicación.') }}</small>
+                    </div>
+                    <div class="event-media-meta">
+                      <span class="badge badge-light border px-3 py-2">{{ $galleryCount }} {{ __('imágenes cargadas') }}</span>
+                      <small class="text-muted">{{ __('Portada recomendada: 1170x570 o más, sin recortar el flyer') }}</small>
+                    </div>
                   </div>
-                  <div class="d-flex flex-wrap align-items-center">
-                    <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imágenes cargadas') }}</span>
-                    <small class="text-muted mb-0">{{ __('Recomendado para portada: 1170x570 o más, sin recortar el flyer') }}</small>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-12 px-0">
                 <div class="event-cover-box mb-4">
                   <div class="event-cover-box__intro">
                     <span class="event-cover-box__eyebrow">{{ __('Paso 1 · Portada principal') }}</span>
@@ -311,8 +308,7 @@
 
                 </div>
 	                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Mínimo aceptado: 600x450. Estas imágenes no reemplazan la portada.') }}</p>
-              </div>
-              </div>
+                </div>
               </div>
 
               @include('organizer.event.partials.ai-assistant-panel', ['event' => $event])

@@ -81,11 +81,11 @@
     <div class="col-lg-8 offset-lg-2">
 
       {{-- Botones de acción --}}
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="event-edit-actions">
         <a class="btn btn-secondary btn-sm" href="{{ url()->previous() }}">
           <span class="btn-label"><i class="fas fa-backward"></i></span> {{ __('Back') }}
         </a>
-        <div>
+        <div class="event-edit-actions__group">
           <a class="btn btn-success btn-sm mr-2"
             href="{{ route('event.details', ['slug' => eventSlug($defaultLang->id, $event->id), 'id' => $event->id]) }}"
             target="_blank">
@@ -165,19 +165,19 @@
       </div>
 
       {{-- ===== CARD: IMÁGENES ===== --}}
-      <div class="card ev-section-card">
+      <div class="card ev-section-card event-media-card" id="section-media">
         <div class="card-header ev-section-header">
           <h4 class="card-title"><i class="fas fa-images mr-2 text-primary"></i>{{ __('Imágenes del evento') }}</h4>
         </div>
         <div class="card-body">
-          <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar mb-3">
-            <div class="pr-lg-3 mb-2 mb-lg-0">
+          <div class="event-media-intro">
+            <div>
               <p class="text-muted mb-1">{{ __('Revisá primero la portada principal. Desde ahí podés analizarla con IA y completar mejor el evento.') }}</p>
               <small class="text-muted">{{ __('Las imágenes adicionales son opcionales y complementan la publicación.') }}</small>
             </div>
-            <div class="d-flex flex-wrap align-items-center">
-              <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imágenes cargadas') }}</span>
-              <small class="text-muted mb-0">{{ __('Recomendado para portada: 1170x570 o más, sin recortar el flyer') }}</small>
+            <div class="event-media-meta">
+              <span class="badge badge-light border px-3 py-2">{{ $galleryCount }} {{ __('imágenes cargadas') }}</span>
+              <small class="text-muted">{{ __('Portada recomendada: 1170x570 o más, sin recortar el flyer') }}</small>
             </div>
           </div>
 
@@ -188,7 +188,7 @@
               <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la página del evento y cuando se comparte.') }}</p>
             </div>
             <div class="event-cover-box__body">
-            <div class="thumb-preview event-cover-box__preview mr-4">
+            <div class="thumb-preview event-cover-box__preview">
               <img src="{{ $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg') }}"
                 alt="..." class="uploaded-img ev-thumbnail-preview">
             </div>

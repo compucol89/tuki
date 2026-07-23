@@ -183,7 +183,7 @@
 
           <div class="event-cover-box mb-4">
             <div class="event-cover-box__intro">
-              <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
+              <span class="event-cover-box__eyebrow">{{ __('Paso 1 · Portada principal') }}</span>
               <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
               <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la pagina del evento y cuando se comparte.') }}</p>
             </div>

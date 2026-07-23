@@ -17,6 +17,10 @@
         apply: '<i class="fas fa-check mr-1"></i>Aplicar campos seleccionados'
       };
       var analysisInitiallyDisabled = root.find('[data-ai-action="analysis"]').is(':disabled');
+      var hasCover = String(root.data('has-cover')) === '1' || !analysisInitiallyDisabled;
+      var hasReview = false;
+      var manualMode = false;
+      var requiredBriefFields = root.find('[data-ai-required]');
 
       if ($.fn.select2) {
         root.find('.ai-assistant-multiselect').select2({
@@ -40,6 +44,109 @@
       function selectedValues(selector) {
         var value = root.find(selector).val();
         return Array.isArray(value) ? value : (value ? [value] : []);
+      }
+
+      function fieldHasValue(field) {
+        var value = $(field).val();
+        var minLength = parseInt($(field).attr('data-ai-min-length') || '1', 10);
+
+        if (Array.isArray(value)) {
+          return value.some(function (item) { return $.trim(item || '') !== ''; });
+        }
+
+        return $.trim(value || '').length >= minLength;
+      }
+
+      function missingBriefRequirements(includeAnalysis) {
+        var missing = [];
+
+        if (!hasCover) missing.push('portada');
+        if (includeAnalysis && !hasReview) missing.push('análisis de portada');
+
+        requiredBriefFields.each(function () {
+          if (!fieldHasValue(this)) {
+            missing.push($(this).attr('data-ai-label') || 'campo obligatorio');
+          }
+        });
+
+        return uniqueItems(missing);
+      }
+
+      function updateRequirement(key, ready) {
+        var item = root.find('[data-ai-requirement="' + key + '"]');
+        item.toggleClass('is-ready', !!ready);
+        item.toggleClass('is-missing', !ready);
+      }
+
+      function briefReady() {
+        var ready = true;
+        requiredBriefFields.each(function () {
+          if (!fieldHasValue(this)) ready = false;
+        });
+        return ready;
+      }
+
+      function updateAiReadiness(response) {
+        var contentAllowed = !response || !response.content_usage || response.content_usage.allowed;
+        var canDraft = hasCover && hasReview && briefReady() && contentAllowed && !manualMode && !activeProcessType;
+        var missing = missingBriefRequirements(true);
+
+        updateRequirement('cover', hasCover);
+        updateRequirement('analysis', hasReview);
+        updateRequirement('brief', briefReady());
+
+        root.find('[data-ai-readiness-text]').text(manualMode
+          ? 'Modo manual activo. Podés volver a usar IA si querés mejorar SEO y descripción.'
+          : (canDraft
+            ? 'Listo: la IA va a usar la portada, el análisis y tu brief para generar copy y SEO.'
+            : (missing.length
+              ? 'Falta completar: ' + missing.join(', ') + '.'
+              : (response && response.content_usage && response.content_usage.message
+                ? response.content_usage.message
+                : 'Hay un proceso IA en curso o el copy no está disponible en este momento.'))));
+
+        root.find('[data-ai-action="draft"]').prop('disabled', !canDraft);
+      }
+
+      function selectedLabels(selector) {
+        return root.find(selector).find('option:selected').map(function () {
+          return $.trim($(this).text() || '');
+        }).get().filter(Boolean);
+      }
+
+      function compactBrief() {
+        var summary = []
+          .concat(selectedLabels('[data-ai-community]').slice(0, 2))
+          .concat(selectedLabels('[data-ai-age-range]').slice(0, 2))
+          .concat(selectedLabels('[data-ai-interests]').slice(0, 2));
+
+        root.addClass('is-brief-compact');
+        root.find('[data-ai-brief-summary]').removeClass('d-none');
+        root.find('[data-ai-brief-summary-text]').text(summary.length
+          ? 'Enfoque usado: ' + summary.join(' · ') + '.'
+          : 'La IA ya usó tus preferencias y la descripción breve.');
+      }
+
+      function expandBrief() {
+        root.removeClass('is-brief-compact');
+        root.find('[data-ai-brief-summary]').addClass('d-none');
+      }
+
+      function setManualMode(enabled) {
+        manualMode = !!enabled;
+        root.toggleClass('is-manual', manualMode);
+        root.find('[data-ai-manual]').toggleClass('d-none', !manualMode);
+        if (manualMode) {
+          expandBrief();
+          root.find('[data-ai-results]').addClass('d-none');
+          root.find('[data-async-progress]').addClass('d-none');
+          setStatus('Modo manual activado. Podés completar y guardar el evento sin usar IA.', 'light');
+        } else {
+          setStatus('Asistente IA activado. Analizá la portada y completá el brief para generar una propuesta.', 'light');
+          if (hasReview) root.find('[data-ai-results]').removeClass('d-none');
+        }
+        root.find('[data-ai-action="analysis"]').prop('disabled', manualMode || analysisInitiallyDisabled);
+        updateAiReadiness({});
       }
 
       function isRunningStatus(status) {
@@ -176,9 +283,10 @@
         var draftButton = root.find('[data-ai-action="draft"]');
         var applyButton = root.find('[data-ai-action="apply"]');
         var contentAllowed = !response.content_usage || response.content_usage.allowed;
-        var canDraft = !!response.review && contentAllowed;
+        if (response.review) hasReview = true;
+        var canDraft = hasCover && hasReview && briefReady() && contentAllowed && !manualMode;
 
-        analysisButton.html(actionLabels.analysis).prop('disabled', analysisInitiallyDisabled);
+        analysisButton.html(actionLabels.analysis).prop('disabled', analysisInitiallyDisabled || manualMode);
         draftButton.html(actionLabels.draft).prop('disabled', !canDraft);
         applyButton.html(actionLabels.apply).prop('disabled', false);
 
@@ -191,6 +299,8 @@
         } else if (type === 'apply') {
           applyButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Aplicando...').prop('disabled', true);
         }
+
+        updateAiReadiness(response);
       }
 
       function scrollToAssistantResult(selector) {
@@ -333,7 +443,9 @@
           .removeClass('badge-light badge-warning badge-success')
           .addClass(draft.needs_human_review ? 'badge-warning' : 'badge-success')
           .text(draft.needs_human_review ? 'Conviene revisar' : 'Listo para aplicar');
+        root.find('[data-ai-results]').removeClass('d-none');
         root.find('[data-ai-draft]').removeClass('d-none');
+        compactBrief();
       }
 
       function hydrateFormFromDraft(fields) {
@@ -418,6 +530,7 @@
       function loadStatus(scheduleNext) {
         $.get(root.data('status-url')).done(function (response) {
           renderUsage(response.usage, response.content_usage);
+          hasReview = !!response.review;
           renderFacts(response.review);
           renderDraft(response.draft);
           var processActive = renderProgressFromStatus(response);
@@ -425,12 +538,13 @@
 
           if (response.review) {
             root.find('[data-ai-results]').removeClass('d-none');
-            var canGenerateDraft = (!response.content_usage || response.content_usage.allowed) && !processActive;
+            var canGenerateDraft = hasCover && hasReview && briefReady() && (!response.content_usage || response.content_usage.allowed) && !processActive && !manualMode;
             root.find('[data-ai-action="draft"]').prop('disabled', !canGenerateDraft);
             root.find('[data-ai-draft-help]').text(canGenerateDraft
               ? 'Usá la generación cuando quieras completar descripción, SEO, tags y textos sociales.'
-              : (response.content_usage.message || 'Ya usaste la generación disponible para este evento.'));
+              : ((response.content_usage && response.content_usage.message) || 'Completá el brief para activar la generación de copy y SEO.'));
           }
+          updateAiReadiness(response);
 
           if (response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) {
             setStatus('Analizando portada y datos del evento...', 'info');
@@ -470,8 +584,27 @@
         });
       }
 
+      requiredBriefFields.on('input change', function () {
+        expandBrief();
+        updateAiReadiness({});
+      });
+
+      root.on('click', '[data-ai-skip]', function () {
+        setManualMode(true);
+      });
+
+      root.on('click', '[data-ai-restore]', function () {
+        setManualMode(false);
+      });
+
+      root.on('click', '[data-ai-edit-brief]', function () {
+        expandBrief();
+        updateAiReadiness({});
+        scrollToAssistantResult('[data-ai-step="brief"]');
+      });
+
       root.on('click', '[data-ai-action="analysis"]', function () {
-        if (activeProcessType) return;
+        if (activeProcessType || manualMode) return;
         showLocalProgress('analysis', 'Analizando portada', 'Enviando portada al asistente IA', 'Estamos iniciando el análisis. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
         setStatus('Enviando portada al asistente IA...', 'info');
         $.post(root.data('analysis-url'), {_token: csrf})
@@ -497,7 +630,13 @@
       });
 
       root.on('click', '[data-ai-action="draft"]', function () {
-        if (activeProcessType) return;
+        if (activeProcessType || manualMode) return;
+        var missing = missingBriefRequirements(true);
+        if (missing.length) {
+          setStatus('Completá estos pasos antes de generar copy y SEO: ' + missing.join(', ') + '.', 'warning');
+          updateAiReadiness({});
+          return;
+        }
         showLocalProgress('draft', 'Generando copy y SEO', 'Preparando información', 'Estamos iniciando la generación. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
         setStatus('Preparando generación de copy...', 'info');
         $.post(root.data('draft-url'), {
@@ -588,6 +727,7 @@
         return '';
       });
 
+      updateAiReadiness({});
       loadStatus(true);
     })(jQuery);
   </script>

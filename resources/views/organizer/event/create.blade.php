@@ -87,7 +87,7 @@
                 <input type="hidden" name="event_type" value="{{ request()->input('type') }}">
                 <div class="event-cover-box mb-4">
                   <div class="event-cover-box__intro">
-                    <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
+                    <span class="event-cover-box__eyebrow">{{ __('Paso 1 · Portada principal') }}</span>
                     <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
                     <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la página del evento y cuando se comparte.') }}</p>
                   </div>
@@ -1408,6 +1408,9 @@
       const draftDescriptionPreview = panel ? panel.querySelector('[data-create-ai-description-preview]') : null;
       const draftPackagePreview = panel ? panel.querySelector('[data-create-ai-package-preview]') : null;
       const readinessText = panel ? panel.querySelector('[data-create-ai-readiness-text]') : null;
+      const briefSummary = panel ? panel.querySelector('[data-create-ai-brief-summary]') : null;
+      const briefSummaryText = panel ? panel.querySelector('[data-create-ai-brief-summary-text]') : null;
+      const editBriefButton = panel ? panel.querySelector('[data-create-ai-edit-brief]') : null;
       const requiredPreferenceFields = panel ? Array.from(panel.querySelectorAll('[data-create-ai-required]')) : [];
       const preferenceFields = panel ? Array.from(panel.querySelectorAll('[name^="ai_"]')) : [];
       let active = false;
@@ -1439,6 +1442,7 @@
         if (results) results.classList.add('d-none');
         if (draftBox) draftBox.classList.add('d-none');
         if (progressPanel) progressPanel.classList.add('d-none');
+        expandBrief();
         setStatus('Portada lista. Completá la orientación del copy para activar la generación con IA.', 'light');
         updateAiReadiness();
       });
@@ -1456,6 +1460,13 @@
         });
       }
 
+      if (editBriefButton) {
+        editBriefButton.addEventListener('click', function () {
+          expandBrief();
+          if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
       if (skipAiButton) {
         skipAiButton.addEventListener('click', function () {
           manualMode = true;
@@ -1464,6 +1475,7 @@
           if (results) results.classList.add('d-none');
           if (draftBox) draftBox.classList.add('d-none');
           if (progressPanel) progressPanel.classList.add('d-none');
+          expandBrief();
           toggleCoverState();
           setStatus('Modo manual activado. Podés completar el evento sin IA; el asistente queda disponible si querés mejorar SEO y descripción.', 'light');
         });
@@ -1484,6 +1496,7 @@
       });
 
       function handlePreferenceChange() {
+        expandBrief();
         if (lastReview || lastDraft) {
           lastReview = null;
           lastDraft = null;
@@ -1608,6 +1621,37 @@
         if (!item) return;
         item.classList.toggle('is-ready', !!ready);
         item.classList.toggle('is-missing', !ready);
+      }
+
+      function compactBrief() {
+        if (!panel) return;
+        const labels = []
+          .concat(selectedLabels('[data-create-ai-community]').slice(0, 2))
+          .concat(selectedLabels('[data-create-ai-age-range]').slice(0, 2))
+          .concat(selectedLabels('[data-create-ai-interests]').slice(0, 2));
+
+        panel.classList.add('is-brief-compact');
+        if (briefSummary) briefSummary.classList.remove('d-none');
+        if (briefSummaryText) {
+          briefSummaryText.textContent = labels.length
+            ? 'Enfoque usado: ' + labels.join(' · ') + '.'
+            : 'La IA ya usó la portada, tus preferencias y la descripción breve.';
+        }
+      }
+
+      function expandBrief() {
+        if (!panel) return;
+        panel.classList.remove('is-brief-compact');
+        if (briefSummary) briefSummary.classList.add('d-none');
+      }
+
+      function selectedLabels(selector) {
+        const field = panel ? panel.querySelector(selector) : null;
+        if (!field) return [];
+
+        return Array.from(field.selectedOptions || []).map(function (option) {
+          return $.trim(option.text || '');
+        }).filter(Boolean);
       }
 
       function buildAnalysisPayload(file) {
@@ -1756,6 +1800,7 @@
 
         const content = lastDraft.content || {};
         draftBox.classList.remove('d-none');
+        compactBrief();
         if (draftTitle) draftTitle.textContent = content.public_title || 'Propuesta generada';
         if (draftSummary) draftSummary.textContent = content.short_description || '';
         renderTitleOptions(content);

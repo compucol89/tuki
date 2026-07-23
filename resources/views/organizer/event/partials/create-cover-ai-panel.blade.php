@@ -11,7 +11,7 @@
     <div class="create-cover-ai-preferences mb-3" data-create-ai-preferences>
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start mb-2">
         <div class="pr-lg-3">
-          <h5 class="mb-1">{{ __('Armar evento con asistente IA') }}</h5>
+          <h5 class="mb-1">{{ __('Paso 2 · Brief del evento con IA') }}</h5>
           <p class="text-muted mb-0">{{ __('Elegí cómo querés orientar el copy. Esto solo adapta el texto; no limita quién puede reservar o asistir.') }}</p>
         </div>
         <span class="badge badge-light border mt-2 mt-lg-0">{{ __('Revisión humana obligatoria') }}</span>
@@ -23,7 +23,7 @@
         <span class="create-cover-ai-requirement" data-create-ai-requirement="brief"><strong>3</strong>{{ __('Descripción breve') }}</span>
       </div>
 
-      <div class="row">
+      <div class="row create-cover-ai-fields" data-create-ai-fields>
         <div class="form-group col-md-6 col-lg-4 mb-2">
           <label class="small mb-1">{{ __('Tono de venta') }}*</label>
           <select class="form-control form-control-sm" name="ai_tone" data-create-ai-tone data-create-ai-required data-create-ai-label="{{ __('tono de venta') }}">
@@ -135,6 +135,16 @@
         </div>
       </div>
 
+      <div class="create-cover-ai-brief-summary d-none" data-create-ai-brief-summary>
+        <div>
+          <strong>{{ __('Brief listo para esta propuesta') }}</strong>
+          <span data-create-ai-brief-summary-text>{{ __('La IA ya usó la portada, las preferencias y la descripción breve.') }}</span>
+        </div>
+        <button type="button" class="btn btn-outline-primary btn-sm" data-create-ai-edit-brief>
+          {{ __('Editar brief') }}
+        </button>
+      </div>
+
       <div class="create-cover-ai-actionbar mt-3">
         <div class="small text-muted" data-create-ai-readiness-text>
           {{ __('Completá los campos obligatorios para activar la generación con IA.') }}
@@ -155,7 +165,7 @@
     <div class="create-cover-ai-results d-none mt-3" data-create-ai-results>
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start mb-3">
         <div class="pr-md-3">
-          <h5 class="mb-1">{{ __('Propuesta para completar el evento') }}</h5>
+          <h5 class="mb-1">{{ __('Paso 3 · Propuesta IA para completar el evento') }}</h5>
           <p class="text-muted mb-0" data-create-ai-summary></p>
         </div>
         <button type="button" class="btn btn-success btn-sm mt-3 mt-md-0" data-create-ai-apply>

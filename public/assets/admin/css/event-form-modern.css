@@ -607,7 +607,7 @@ body.dark .event-form-modern,
   display: flex;
   justify-content: center;
   margin: 0 !important;
-  min-height: 190px;
+  min-height: 240px;
   overflow: hidden;
   padding: 12px;
   position: relative;
@@ -641,8 +641,8 @@ body.dark .event-form-modern,
   background: var(--event-card);
   border-radius: 8px;
   box-shadow: 0 8px 18px hsl(219 29% 15% / 0.12);
-  height: auto !important;
-  max-height: 230px;
+  height: 100% !important;
+  max-height: 100%;
   max-width: 100%;
   object-fit: contain;
   opacity: 1;
@@ -653,8 +653,8 @@ body.dark .event-form-modern,
 
 .event-form-modern.event-form-modern--edit .event-cover-box__preview .ev-thumbnail-preview {
   border: 0 !important;
-  height: auto !important;
-  max-height: 230px !important;
+  height: 100% !important;
+  max-height: 100% !important;
   object-fit: contain !important;
   width: 100% !important;
 }

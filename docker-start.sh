@@ -37,6 +37,12 @@ if [ -z "$ARCA_KEY_PATH" ] && { [ -n "$ARCA_KEY_B64" ] || [ -n "$ARCA_KEY_B64_1"
     echo "ARCA_KEY_PATH=/app/storage/app/arca/private.key" >> .env
 fi
 
+php artisan config:clear || true
+php artisan cache:clear || true
+php artisan view:clear || true
+php artisan route:clear || true
+php artisan event:clear || true
+
 # Restaurar imágenes seed del repositorio al volumen persistente.
 # EasyPanel monta /app/public/assets/admin/img/ como volumen, por eso los
 # assets versionados en esa carpeta pueden quedar ocultos. Copiamos solo

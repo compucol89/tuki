@@ -127,6 +127,15 @@
                   </div>
                 </div>
 
+                @if(config('features.event_ai_assistant_enabled'))
+                  <div class="alert alert-info border mb-4">
+                    <strong>{{ __('Asistente IA disponible después de guardar') }}</strong>
+                    <p class="mb-0 small">
+                      {{ __('Primero guardá el evento con organizador, portada, fecha y contenido base. Después, desde editar evento, el admin puede analizar el flyer y generar copy/SEO sin consumir el límite del organizador.') }}
+                    </p>
+                  </div>
+                @endif
+
                 <div class="row">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">

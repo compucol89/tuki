@@ -33,12 +33,14 @@ class EventAiUsageLimiter
     $maxEventRuns = max($maxEventRuns, 0);
     $maxDailyRuns = max($maxDailyRuns, 0);
 
-    $eventRuns = EventAiAssistantRun::where('event_id', $eventId)
+    $eventRuns = $this->billableRunQuery()
+      ->where('event_id', $eventId)
       ->where('organizer_id', $organizerId)
       ->where('type', $type)
       ->count();
 
-    $dailyRuns = EventAiAssistantRun::where('organizer_id', $organizerId)
+    $dailyRuns = $this->billableRunQuery()
+      ->where('organizer_id', $organizerId)
       ->where('type', $type)
       ->where('created_at', '>=', now()->startOfDay())
       ->count();
@@ -84,5 +86,14 @@ class EventAiUsageLimiter
         ? "Ya usaste el límite de {$label} para este evento."
         : "Ya usaste el límite diario de {$label} para tu cuenta.",
     ];
+  }
+
+  private function billableRunQuery()
+  {
+    return EventAiAssistantRun::query()
+      ->where(function ($query) {
+        $query->whereNull('input_payload->actor_guard')
+          ->orWhere('input_payload->actor_guard', '!=', 'admin');
+      });
   }
 }

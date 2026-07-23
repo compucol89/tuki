@@ -60,7 +60,16 @@ class EventAiAssistantController extends Controller
       return response()->json($imageError, 422);
     }
 
-    $result = DB::transaction(function () use ($event, $imagePath, $limiter) {
+    if (empty($event->organizer_id)) {
+      return response()->json([
+        'error' => 'organizer_required',
+        'message' => 'Asigná un organizador al evento antes de usar el asistente IA.',
+      ], 422);
+    }
+
+    $isAdminRequest = $this->isAdminRequest();
+
+    $result = DB::transaction(function () use ($event, $imagePath, $limiter, $isAdminRequest) {
       Event::whereKey($event->id)->lockForUpdate()->first();
 
       $active = EventAiAssistantRun::where('event_id', $event->id)
@@ -76,8 +85,10 @@ class EventAiAssistantController extends Controller
         ], 409)];
       }
 
-      $usage = $limiter->check($event->id, $event->organizer_id);
-      if (!$usage['allowed']) {
+      $usage = $isAdminRequest
+        ? $this->unlimitedUsagePayload('analysis')
+        : $limiter->check($event->id, $event->organizer_id);
+      if (!$isAdminRequest && !$usage['allowed']) {
         return ['response' => response()->json([
           'error' => $usage['reason'],
           'message' => $usage['message'],
@@ -95,6 +106,8 @@ class EventAiAssistantController extends Controller
         'source_image_path' => 'assets/admin/img/event/thumbnail/' . $event->thumbnail,
         'source_image_hash' => hash_file('sha256', $imagePath),
         'input_payload' => [
+          'actor_guard' => $isAdminRequest ? 'admin' : 'organizer',
+          'actor_id' => optional(Auth::guard($isAdminRequest ? 'admin' : 'organizer')->user())->id,
           'progress' => [
             'percent' => 0,
             'stage' => 'Esperando turno de procesamiento',
@@ -107,7 +120,7 @@ class EventAiAssistantController extends Controller
 
       return [
         'run' => $run,
-        'usage' => $limiter->check($event->id, $event->organizer_id),
+        'usage' => $usage,
       ];
     });
 
@@ -151,8 +164,12 @@ class EventAiAssistantController extends Controller
 
     return response()->json([
       'enabled' => (bool) config('features.event_ai_assistant_enabled', false),
-      'usage' => $limiter->check($event->id, $event->organizer_id),
-      'content_usage' => $limiter->checkContent($event->id, $event->organizer_id),
+      'usage' => $this->isAdminRequest()
+        ? $this->unlimitedUsagePayload('analysis')
+        : $limiter->check($event->id, $event->organizer_id),
+      'content_usage' => $this->isAdminRequest()
+        ? $this->unlimitedUsagePayload('content')
+        : $limiter->checkContent($event->id, $event->organizer_id),
       'analysis' => $this->runPayload($analysisRun),
       'review' => $review ? [
         'id' => $review->id,
@@ -242,7 +259,16 @@ class EventAiAssistantController extends Controller
       ], 422);
     }
 
-    $result = DB::transaction(function () use ($event, $review, $data, $limiter) {
+    if (empty($event->organizer_id)) {
+      return response()->json([
+        'error' => 'organizer_required',
+        'message' => 'Asigná un organizador al evento antes de generar copy IA.',
+      ], 422);
+    }
+
+    $isAdminRequest = $this->isAdminRequest();
+
+    $result = DB::transaction(function () use ($event, $review, $data, $limiter, $isAdminRequest) {
       Event::whereKey($event->id)->lockForUpdate()->first();
 
       $active = EventAiContentDraft::where('event_id', $event->id)
@@ -257,8 +283,10 @@ class EventAiAssistantController extends Controller
         ], 409)];
       }
 
-      $usage = $limiter->checkContent($event->id, $event->organizer_id);
-      if (!$usage['allowed']) {
+      $usage = $isAdminRequest
+        ? $this->unlimitedUsagePayload('content')
+        : $limiter->checkContent($event->id, $event->organizer_id);
+      if (!$isAdminRequest && !$usage['allowed']) {
         return ['response' => response()->json([
           'error' => $usage['reason'],
           'message' => $usage['message'],
@@ -282,6 +310,8 @@ class EventAiAssistantController extends Controller
         'model' => config('openai.event_assistant.models.generate', 'gpt-5.6-terra'),
         'prompt_version' => config('openai.event_assistant.prompt_version', '2026-07-23-v2'),
         'input_payload' => [
+          'actor_guard' => $isAdminRequest ? 'admin' : 'organizer',
+          'actor_id' => optional(Auth::guard($isAdminRequest ? 'admin' : 'organizer')->user())->id,
           'review_id' => $review->id,
           'tone' => $data['tone'],
           'intensity' => $data['intensity'],
@@ -387,9 +417,34 @@ class EventAiAssistantController extends Controller
 
   private function canManageEvent(Event $event): bool
   {
+    if (Auth::guard('admin')->check()) {
+      return true;
+    }
+
     $organizer = Auth::guard('organizer')->user();
 
     return $organizer && (int) $event->organizer_id === (int) $organizer->id;
+  }
+
+  private function isAdminRequest(): bool
+  {
+    return Auth::guard('admin')->check();
+  }
+
+  private function unlimitedUsagePayload(string $type): array
+  {
+    return [
+      'allowed' => true,
+      'is_unlimited' => true,
+      'reason' => null,
+      'max_event_runs' => 999,
+      'used_event_runs' => 0,
+      'remaining_event_runs' => 999,
+      'max_daily_runs' => 999,
+      'used_daily_runs' => 0,
+      'remaining_daily_runs' => 999,
+      'message' => 'Modo admin: IA sin límites para pruebas.',
+    ];
   }
 
   private function runPayload(?EventAiAssistantRun $run): ?array

@@ -109,6 +109,13 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
 
     Route::get('/event-images/{id}', 'BackEnd\Event\EventController@images')->name('admin.event.images');
     Route::post('/event-update', 'BackEnd\Event\EventController@update')->name('admin.event.update');
+    Route::prefix('/events/{event}/ai-assistant')->group(function () {
+      Route::post('/analysis', 'Organizer\EventAiAssistantController@startAnalysis')->name('admin.events.ai-assistant.analysis');
+      Route::get('/status', 'Organizer\EventAiAssistantController@status')->name('admin.events.ai-assistant.status');
+      Route::post('/review', 'Organizer\EventAiAssistantController@updateReview')->name('admin.events.ai-assistant.review');
+      Route::post('/draft', 'Organizer\EventAiAssistantController@generateDraft')->name('admin.events.ai-assistant.draft');
+      Route::post('/drafts/{draft}/apply', 'Organizer\EventAiAssistantController@applyDraft')->name('admin.events.ai-assistant.apply');
+    });
     Route::post('bulk/delete/event', 'BackEnd\Event\EventController@bulk_delete')->name('admin.event_management.bulk_delete_event');
 
     Route::get('event/ticket', 'BackEnd\Event\TicketController@index')->name('admin.event.ticket');

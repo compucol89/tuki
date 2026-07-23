@@ -1,13 +1,14 @@
 @if(config('features.event_ai_assistant_enabled'))
   @php
-    $aiApplyUrl = route('organizer.events.ai-assistant.apply', [$event->id, '__DRAFT__']);
+    $aiRoutePrefix = $aiRoutePrefix ?? 'organizer.events.ai-assistant';
+    $aiApplyUrl = route($aiRoutePrefix . '.apply', [$event->id, '__DRAFT__']);
   @endphp
   <div
     class="card ai-assistant-card mb-4"
     id="event-ai-assistant"
-    data-analysis-url="{{ route('organizer.events.ai-assistant.analysis', $event->id) }}"
-    data-status-url="{{ route('organizer.events.ai-assistant.status', $event->id) }}"
-    data-draft-url="{{ route('organizer.events.ai-assistant.draft', $event->id) }}"
+    data-analysis-url="{{ route($aiRoutePrefix . '.analysis', $event->id) }}"
+    data-status-url="{{ route($aiRoutePrefix . '.status', $event->id) }}"
+    data-draft-url="{{ route($aiRoutePrefix . '.draft', $event->id) }}"
     data-apply-url="{{ $aiApplyUrl }}"
   >
     <div class="card-body">

@@ -231,6 +231,11 @@
         </div>
       </div>
 
+      @include('organizer.event.partials.ai-assistant-panel', [
+        'event' => $event,
+        'aiRoutePrefix' => 'admin.events.ai-assistant',
+      ])
+
       {{-- ===== FORM PRINCIPAL ===== --}}
       <form id="eventForm" action="{{ route('admin.event.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -1036,6 +1041,124 @@
       background: #ffe4e6;
     }
 
+    .ai-assistant-card {
+      border: 1px solid #dcdfe2;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(30, 37, 50, .06);
+    }
+
+    .ai-assistant-facts {
+      max-height: 260px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .async-progress-panel {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #dbeafe;
+      border-left: 4px solid #3b82f6;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #1e2532;
+    }
+
+    .async-progress-panel.is-success {
+      border-color: #bbf7d0;
+      border-left-color: #16a34a;
+      background: #f7fef9;
+    }
+
+    .async-progress-panel.is-warning {
+      border-color: #fed7aa;
+      border-left-color: #f97316;
+      background: #fffaf5;
+    }
+
+    .async-progress-panel.is-danger {
+      border-color: #fecaca;
+      border-left-color: #dc2626;
+      background: #fff7f7;
+    }
+
+    .async-progress-panel__percent {
+      font-weight: 700;
+      color: #1e40af;
+      white-space: nowrap;
+    }
+
+    .async-progress-panel__bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #dbeafe;
+      overflow: hidden;
+    }
+
+    .async-progress-panel__bar .progress-bar {
+      background-color: #3b82f6;
+      transition: width .35s ease;
+    }
+
+    .async-progress-panel.is-success .progress-bar {
+      background-color: #16a34a;
+    }
+
+    .async-progress-panel.is-warning .progress-bar {
+      background-color: #f97316;
+    }
+
+    .async-progress-panel.is-danger .progress-bar {
+      background-color: #dc2626;
+    }
+
+    .async-progress-panel.is-indeterminate .progress-bar {
+      width: 100% !important;
+    }
+
+    .async-progress-panel__meta {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .ai-assistant-highlight {
+      animation: aiAssistantHighlight 1.8s ease;
+    }
+
+    @keyframes aiAssistantHighlight {
+      0% {
+        box-shadow: 0 0 0 0 rgba(249, 115, 22, .35);
+      }
+      55% {
+        box-shadow: 0 0 0 6px rgba(249, 115, 22, .12);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+      }
+    }
+
+    .ai-assistant-multiselect {
+      min-height: 82px;
+    }
+
+    .ai-assistant-fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .ai-assistant-fact:last-child {
+      border-bottom: 0;
+    }
+
+    .ai-assistant-fact__value {
+      color: #1e2532;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
     @media (max-width: 575.98px) {
       #img-table .table-row {
         width: 100%;
@@ -1056,6 +1179,7 @@
       $('.js-example-basic-single').select2();
     });
   </script>
+  @include('partials.event-ai-assistant-script')
 @endsection
 
 @section('variables')

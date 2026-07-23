@@ -15,7 +15,7 @@
         <div class="mb-3 mb-lg-0 pr-lg-3">
           <span class="badge badge-primary mb-2">{{ __('Asistente IA') }}</span>
           <h5 class="mb-1">{{ __('Analizar flyer y crear copy') }}</h5>
-          <p class="text-muted mb-0">{{ __('Extrae datos del flyer, marca conflictos y genera descripción, SEO y textos para compartir. Nada se aplica sin confirmación.') }}</p>
+          <p class="text-muted mb-0">{{ __('Lee el flyer, complementa los datos del formulario y genera descripción, SEO y textos para compartir. Nada se aplica sin confirmación.') }}</p>
         </div>
         <div class="text-lg-right">
           <button type="button" class="btn btn-outline-primary btn-sm" data-ai-action="analysis" {{ empty($event->thumbnail) ? 'disabled' : '' }}>
@@ -36,7 +36,7 @@
       <div class="ai-assistant-results mt-3 d-none" data-ai-results>
         <div class="row">
           <div class="col-lg-7">
-            <h6 class="mb-2">{{ __('Datos detectados para revisar') }}</h6>
+            <h6 class="mb-2">{{ __('Datos detectados para completar el evento') }}</h6>
             <div class="ai-assistant-facts border rounded" data-ai-facts></div>
             <div class="ai-assistant-guidance mt-2" data-ai-guidance></div>
           </div>
@@ -65,7 +65,91 @@
               </select>
             </div>
             <div class="form-group mb-2">
-              <label class="small mb-1">{{ __('Público objetivo') }}</label>
+              <label class="small mb-1">{{ __('Ubicación del público') }}</label>
+              <select class="form-control form-control-sm ai-assistant-multiselect" multiple data-ai-audience-location>
+                <option value="argentina" selected>{{ __('Argentina') }}</option>
+                <option value="caba">{{ __('CABA') }}</option>
+                <option value="gran_buenos_aires">{{ __('Gran Buenos Aires') }}</option>
+                <option value="provincia_buenos_aires">{{ __('Provincia de Buenos Aires') }}</option>
+                <option value="otras_provincias">{{ __('Otras provincias') }}</option>
+                <option value="turistas_en_argentina">{{ __('Turistas en Argentina') }}</option>
+                <option value="publico_internacional">{{ __('Público internacional') }}</option>
+                <option value="personalizado">{{ __('Personalizado') }}</option>
+              </select>
+            </div>
+            <div class="form-group mb-2">
+              <label class="small mb-1">{{ __('Comunidad principal') }}</label>
+              <select class="form-control form-control-sm ai-assistant-multiselect" multiple data-ai-community>
+                <option value="publico_argentino" selected>{{ __('Público argentino') }}</option>
+                <option value="colombianos_en_argentina">{{ __('Colombianos en Argentina') }}</option>
+                <option value="venezolanos_en_argentina">{{ __('Venezolanos en Argentina') }}</option>
+                <option value="chilenos_en_argentina">{{ __('Chilenos en Argentina') }}</option>
+                <option value="peruanos_en_argentina">{{ __('Peruanos en Argentina') }}</option>
+                <option value="ecuatorianos_en_argentina">{{ __('Ecuatorianos en Argentina') }}</option>
+                <option value="bolivianos_en_argentina">{{ __('Bolivianos en Argentina') }}</option>
+                <option value="paraguayos_en_argentina">{{ __('Paraguayos en Argentina') }}</option>
+                <option value="uruguayos_en_argentina">{{ __('Uruguayos en Argentina') }}</option>
+                <option value="brasilenos_en_argentina">{{ __('Brasileños en Argentina') }}</option>
+                <option value="comunidad_latinoamericana">{{ __('Comunidad latinoamericana') }}</option>
+                <option value="publico_internacional">{{ __('Público internacional') }}</option>
+                <option value="publico_mixto">{{ __('Público mixto') }}</option>
+                <option value="otra_comunidad">{{ __('Otra comunidad') }}</option>
+              </select>
+              <small class="text-muted">{{ __('Solo adapta el lenguaje y el enfoque del copy; no limita quién puede reservar o asistir.') }}</small>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-sm-6 mb-2">
+                <label class="small mb-1">{{ __('Rango de edad') }}</label>
+                <select class="form-control form-control-sm ai-assistant-multiselect" multiple data-ai-age-range>
+                  <option value="menores_18">{{ __('Menores de 18') }}</option>
+                  <option value="18_24">{{ __('18 a 24') }}</option>
+                  <option value="25_34">{{ __('25 a 34') }}</option>
+                  <option value="35_44">{{ __('35 a 44') }}</option>
+                  <option value="45_54">{{ __('45 a 54') }}</option>
+                  <option value="55_plus">{{ __('55+') }}</option>
+                  <option value="familias">{{ __('Familias') }}</option>
+                  <option value="todas_las_edades">{{ __('Todas las edades') }}</option>
+                  <option value="publico_adulto">{{ __('Público adulto') }}</option>
+                  <option value="personalizado">{{ __('Personalizado') }}</option>
+                </select>
+              </div>
+              <div class="form-group col-sm-6 mb-2">
+                <label class="small mb-1">{{ __('Estilo de comunicación') }}</label>
+                <select class="form-control form-control-sm" data-ai-language-style>
+                  <option value="automatico">{{ __('Automático según el público') }}</option>
+                  <option value="es_ar_voseo">{{ __('Español argentino con voseo') }}</option>
+                  <option value="es_latam_tuteo">{{ __('Español latino neutro con tuteo') }}</option>
+                  <option value="es_co_natural">{{ __('Español colombiano natural') }}</option>
+                  <option value="es_ve_natural">{{ __('Español venezolano natural') }}</option>
+                  <option value="es_cl_neutral">{{ __('Español chileno neutral') }}</option>
+                  <option value="internacional">{{ __('Comunicación internacional') }}</option>
+                  <option value="personalizado">{{ __('Personalizado') }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group mb-2">
+              <label class="small mb-1">{{ __('Intereses') }}</label>
+              <select class="form-control form-control-sm ai-assistant-multiselect" multiple data-ai-interests>
+                <option value="reggaeton">{{ __('Reggaetón') }}</option>
+                <option value="cumbia">{{ __('Cumbia') }}</option>
+                <option value="salsa">{{ __('Salsa') }}</option>
+                <option value="musica_colombiana">{{ __('Música colombiana') }}</option>
+                <option value="musica_venezolana">{{ __('Música venezolana') }}</option>
+                <option value="musica_latina">{{ __('Música latina') }}</option>
+                <option value="fiestas">{{ __('Fiestas') }}</option>
+                <option value="vida_nocturna">{{ __('Vida nocturna') }}</option>
+                <option value="gastronomia">{{ __('Gastronomía') }}</option>
+                <option value="deportes">{{ __('Deportes') }}</option>
+                <option value="cultura">{{ __('Cultura') }}</option>
+                <option value="networking">{{ __('Networking') }}</option>
+                <option value="formacion">{{ __('Formación') }}</option>
+                <option value="familias">{{ __('Familias') }}</option>
+                <option value="turismo">{{ __('Turismo') }}</option>
+                <option value="otro">{{ __('Otro') }}</option>
+              </select>
+            </div>
+            <div class="form-group mb-2">
+              <label class="small mb-1">{{ __('Público objetivo adicional') }}</label>
               <textarea class="form-control form-control-sm" rows="2" data-ai-audience placeholder="{{ __('Ej: jóvenes de CABA, familias, profesionales, fans del artista...') }}"></textarea>
             </div>
             <div class="form-group mb-2">
@@ -89,6 +173,7 @@
             <button type="button" class="btn btn-primary btn-sm" data-ai-action="draft" disabled>
               <i class="fas fa-pen-nib mr-1"></i>{{ __('Generar copy y SEO') }}
             </button>
+            <div class="small text-muted mt-2" data-ai-draft-help></div>
           </div>
         </div>
       </div>

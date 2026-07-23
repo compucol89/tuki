@@ -41,16 +41,20 @@ class EventFactsBuilder
     return [
       'source_priority' => [
         'confirmed_form_fields',
-        'organizer_review',
         'organizer_free_text',
+        'organizer_notes',
+        'organizer_review',
         'accepted_image_fields',
-        'category_suggestions',
         'marketing_inference',
       ],
       'form_facts' => $this->fromEvent($event),
       'image_analysis' => [
         'summary' => $analysis['summary'] ?? '',
         'extracted_fields' => $analysis['extracted_fields'] ?? [],
+        'found_information' => $analysis['found_information'] ?? [],
+        'complementary_information' => $analysis['complementary_information'] ?? [],
+        'optional_suggestions' => $analysis['optional_suggestions'] ?? [],
+        'critical_differences' => $analysis['critical_differences'] ?? [],
         'conflicts' => $analysis['conflicts'] ?? [],
         'missing_information' => $analysis['missing_information'] ?? [],
         'sensitive_fields' => $analysis['sensitive_fields'] ?? [],

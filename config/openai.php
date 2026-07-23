@@ -58,7 +58,7 @@ return [
 
     'event_assistant' => [
         'queue' => env('AI_EVENT_ASSISTANT_QUEUE', 'ai-content'),
-        'prompt_version' => env('AI_EVENT_ASSISTANT_PROMPT_VERSION', '2026-07-23-v1'),
+        'prompt_version' => env('AI_EVENT_ASSISTANT_PROMPT_VERSION', '2026-07-23-v2'),
         'store_responses' => env('AI_EVENT_ASSISTANT_STORE_RESPONSES', false),
         'models' => [
             'extract' => env('AI_EVENT_ASSISTANT_MODEL_EXTRACT', 'gpt-5.6-luna'),

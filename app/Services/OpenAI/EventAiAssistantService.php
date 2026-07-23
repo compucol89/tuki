@@ -208,10 +208,14 @@ class EventAiAssistantService
     return [
       'type' => 'object',
       'additionalProperties' => false,
-      'required' => ['summary', 'extracted_fields', 'conflicts', 'missing_information', 'sensitive_fields', 'sponsors', 'warnings'],
+      'required' => ['summary', 'extracted_fields', 'found_information', 'complementary_information', 'optional_suggestions', 'critical_differences', 'conflicts', 'missing_information', 'sensitive_fields', 'sponsors', 'warnings'],
       'properties' => [
         'summary' => ['type' => 'string'],
         'extracted_fields' => ['type' => 'array', 'items' => $this->fieldSchema()],
+        'found_information' => ['type' => 'array', 'items' => ['type' => 'string']],
+        'complementary_information' => ['type' => 'array', 'items' => ['type' => 'string']],
+        'optional_suggestions' => ['type' => 'array', 'items' => ['type' => 'string']],
+        'critical_differences' => ['type' => 'array', 'items' => ['type' => 'string']],
         'conflicts' => ['type' => 'array', 'items' => ['type' => 'string']],
         'missing_information' => ['type' => 'array', 'items' => ['type' => 'string']],
         'sensitive_fields' => ['type' => 'array', 'items' => ['type' => 'string']],

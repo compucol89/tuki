@@ -47,11 +47,11 @@ class EventAiUsageLimiter
     $remainingDailyRuns = max($maxDailyRuns - $dailyRuns, 0);
 
     if ($maxEventRuns > 0 && $eventRuns >= $maxEventRuns) {
-      return $this->blocked('event_limit_reached', $maxEventRuns, $eventRuns, $remainingEventRuns, $maxDailyRuns, $dailyRuns, $remainingDailyRuns);
+      return $this->blocked($type, 'event_limit_reached', $maxEventRuns, $eventRuns, $remainingEventRuns, $maxDailyRuns, $dailyRuns, $remainingDailyRuns);
     }
 
     if ($maxDailyRuns > 0 && $dailyRuns >= $maxDailyRuns) {
-      return $this->blocked('organizer_daily_limit_reached', $maxEventRuns, $eventRuns, $remainingEventRuns, $maxDailyRuns, $dailyRuns, $remainingDailyRuns);
+      return $this->blocked($type, 'organizer_daily_limit_reached', $maxEventRuns, $eventRuns, $remainingEventRuns, $maxDailyRuns, $dailyRuns, $remainingDailyRuns);
     }
 
     return [
@@ -67,8 +67,10 @@ class EventAiUsageLimiter
     ];
   }
 
-  private function blocked(string $reason, int $maxEventRuns, int $eventRuns, int $remainingEventRuns, int $maxDailyRuns, int $dailyRuns, int $remainingDailyRuns): array
+  private function blocked(string $type, string $reason, int $maxEventRuns, int $eventRuns, int $remainingEventRuns, int $maxDailyRuns, int $dailyRuns, int $remainingDailyRuns): array
   {
+    $label = $type === 'content' ? 'generaciones de copy IA' : 'análisis IA';
+
     return [
       'allowed' => false,
       'reason' => $reason,
@@ -79,8 +81,8 @@ class EventAiUsageLimiter
       'used_daily_runs' => $dailyRuns,
       'remaining_daily_runs' => $remainingDailyRuns,
       'message' => $reason === 'event_limit_reached'
-        ? 'Ya usaste el limite de asistencias IA para este evento.'
-        : 'Ya usaste el limite diario del asistente IA para tu cuenta.',
+        ? "Ya usaste el límite de {$label} para este evento."
+        : "Ya usaste el límite diario de {$label} para tu cuenta.",
     ];
   }
 }

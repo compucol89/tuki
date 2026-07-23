@@ -1257,6 +1257,10 @@
       background: #fff;
     }
 
+    .ai-assistant-multiselect {
+      min-height: 82px;
+    }
+
     .ai-assistant-fact {
       display: flex;
       justify-content: space-between;
@@ -1303,6 +1307,14 @@
       var lastDraft = null;
       var pollTimer = null;
 
+      if ($.fn.select2) {
+        root.find('.ai-assistant-multiselect').select2({
+          width: '100%',
+          placeholder: 'Elegí una o más opciones',
+          dropdownParent: root
+        });
+      }
+
       function setStatus(message, type) {
         var box = root.find('[data-ai-status]');
         box.removeClass('alert-light alert-info alert-success alert-warning alert-danger')
@@ -1312,6 +1324,11 @@
 
       function errorMessage(xhr, fallback) {
         return (xhr.responseJSON && (xhr.responseJSON.message || xhr.responseJSON.error)) || fallback;
+      }
+
+      function selectedValues(selector) {
+        var value = root.find(selector).val();
+        return Array.isArray(value) ? value : (value ? [value] : []);
       }
 
       function renderUsage(analysisUsage, contentUsage) {
@@ -1332,36 +1349,83 @@
         box.empty();
         guidance.empty();
 
-        facts.concat(sponsors).slice(0, 24).forEach(function (field) {
-          var confidence = Math.round((Number(field.confidence || 0)) * 100);
+        var visibleFields = facts.concat(sponsors).filter(function (field) {
+          var value = $.trim(field.value || field.raw_text || '');
+          var label = String(field.label || field.key || '').toLowerCase();
+          return value && value !== '-' && label.indexOf('comparación') === -1 && label.indexOf('comparacion') === -1;
+        });
+
+        visibleFields.slice(0, 24).forEach(function (field) {
           $('<div class="ai-assistant-fact"></div>')
-            .append('<div><strong>' + $('<div>').text(field.label || field.key).html() + '</strong><br><small class="text-muted">' + confidence + '% · ' + (field.needs_review ? 'revisar' : 'coincide') + '</small></div>')
-            .append('<div class="ai-assistant-fact__value">' + $('<div>').text(field.value || field.raw_text || '-').html() + '</div>')
+            .append('<div><strong>' + escapeHtml(field.label || field.key) + '</strong><br><small class="text-muted">' + fieldMeta(field) + '</small></div>')
+            .append('<div class="ai-assistant-fact__value">' + escapeHtml(field.value || field.raw_text) + '</div>')
             .appendTo(box);
         });
 
-        if (!facts.length && !sponsors.length) {
+        if (!visibleFields.length) {
           box.html('<div class="p-3 text-muted">Todavía no hay datos detectados.</div>');
         }
 
         renderGuidance(guidance, imageAnalysis);
       }
 
-      function renderGuidance(target, imageAnalysis) {
-        var items = [];
-        (imageAnalysis.conflicts || []).forEach(function (item) { items.push('Conflicto: ' + item); });
-        (imageAnalysis.missing_information || []).forEach(function (item) { items.push('Falta revisar: ' + item); });
-        (imageAnalysis.warnings || []).forEach(function (item) { items.push('Aviso: ' + item); });
+      function fieldMeta(field) {
+        var confidence = Math.round((Number(field.confidence || 0)) * 100);
+        var relation = String(field.category || '').toLowerCase();
+        var label = 'detectado';
 
-        if (!items.length) return;
+        if (relation.indexOf('diferencia') !== -1 || relation.indexOf('critica') !== -1 || relation.indexOf('crítica') !== -1 || field.needs_review) {
+          label = 'conviene confirmar';
+        } else if (relation.indexOf('compatible') !== -1) {
+          label = 'compatible';
+        } else if (relation.indexOf('complement') !== -1) {
+          label = 'complementa';
+        } else if (relation.indexOf('sponsor') !== -1 || relation.indexOf('marca') !== -1) {
+          label = 'marca visible';
+        } else if (relation.indexOf('coincid') !== -1) {
+          label = 'coincide';
+        }
+
+        return (confidence > 0 ? confidence + '% · ' : '') + label;
+      }
+
+      function renderGuidance(target, imageAnalysis) {
+        var found = imageAnalysis.found_information || [];
+        var complementary = imageAnalysis.complementary_information || [];
+        var suggestions = (imageAnalysis.optional_suggestions || []).concat(imageAnalysis.missing_information || [], imageAnalysis.warnings || []);
+        var critical = (imageAnalysis.critical_differences || []).concat(imageAnalysis.conflicts || []);
+        var html = '';
+
+        html += guidanceSection('Información encontrada', found);
+        html += guidanceSection('Información que complementa', complementary);
+        html += guidanceSection('Sugerencias opcionales', suggestions);
+        html += guidanceSection('Datos sensibles para confirmar', critical);
+
+        if (!html) return;
 
         target.html(
-          '<div class="alert alert-warning mb-0 small"><strong>Guía de revisión</strong><ul class="mb-0 pl-3">' +
-          items.slice(0, 8).map(function (item) {
-            return '<li>' + escapeHtml(item) + '</li>';
-          }).join('') +
-          '</ul></div>'
+          '<div class="alert alert-info mb-0 small"><strong>Información y sugerencias de la IA</strong>' + html + '</div>'
         );
+      }
+
+      function guidanceSection(title, items) {
+        items = uniqueItems(items || []).slice(0, 5);
+        if (!items.length) return '';
+
+        return '<div class="mt-2"><span class="font-weight-bold">' + escapeHtml(title) + '</span><ul class="mb-0 pl-3">' +
+          items.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') +
+          '</ul></div>';
+      }
+
+      function uniqueItems(items) {
+        var seen = {};
+        return items.filter(function (item) {
+          if (!item) return false;
+          var key = String(item).toLowerCase();
+          if (seen[key]) return false;
+          seen[key] = true;
+          return true;
+        });
       }
 
       function renderDraft(draft) {
@@ -1373,7 +1437,10 @@
         lastDraft = draft.generated_payload;
         root.find('[data-ai-draft-title]').text(draft.generated_payload.content.public_title || 'Copy generado');
         root.find('[data-ai-draft-summary]').text(draft.generated_payload.content.short_description || '');
-        root.find('[data-ai-audit]').text(draft.needs_human_review ? 'Requiere revisión' : 'Auditoría OK');
+        root.find('[data-ai-audit]')
+          .removeClass('badge-light badge-warning badge-success')
+          .addClass(draft.needs_human_review ? 'badge-warning' : 'badge-success')
+          .text(draft.needs_human_review ? 'Conviene revisar' : 'Listo para aplicar');
         root.find('[data-ai-draft]').removeClass('d-none');
       }
 
@@ -1437,7 +1504,11 @@
 
           if (response.review) {
             root.find('[data-ai-results]').removeClass('d-none');
-            root.find('[data-ai-action="draft"]').prop('disabled', false);
+            var canGenerateDraft = !response.content_usage || response.content_usage.allowed;
+            root.find('[data-ai-action="draft"]').prop('disabled', !canGenerateDraft);
+            root.find('[data-ai-draft-help]').text(canGenerateDraft
+              ? 'Usá la generación cuando quieras completar descripción, SEO, tags y textos sociales.'
+              : (response.content_usage.message || 'Ya usaste la generación disponible para este evento.'));
           }
 
           if (response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) {
@@ -1445,13 +1516,13 @@
           } else if (response.analysis && response.analysis.status === 'failed') {
             setStatus(response.analysis.error_message || 'No se pudo analizar el flyer.', 'danger');
           } else if (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1) {
-            setStatus('Generando copy, SEO y auditoría...', 'info');
+            setStatus('Generando copy, SEO y sugerencias...', 'info');
           } else if (response.draft && response.draft.status === 'failed') {
             setStatus('No se pudo generar el copy. Podés seguir editando manualmente.', 'danger');
           } else if (response.draft && response.draft.status === 'completed') {
             setStatus('Copy listo para revisar y aplicar.', response.draft.needs_human_review ? 'warning' : 'success');
           } else if (response.review) {
-            setStatus('Análisis listo. Revisá los datos detectados antes de generar el copy.', 'success');
+            setStatus('Análisis listo. Mirá los datos detectados y ajustá las preferencias antes de generar el copy.', 'success');
           }
 
           if (scheduleNext && ((response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) || (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1))) {
@@ -1475,6 +1546,11 @@
           tone: root.find('[data-ai-tone]').val(),
           intensity: root.find('[data-ai-intensity]').val(),
           audience: {
+            locations: selectedValues('[data-ai-audience-location]'),
+            communities: selectedValues('[data-ai-community]'),
+            age_ranges: selectedValues('[data-ai-age-range]'),
+            interests: selectedValues('[data-ai-interests]'),
+            language_style: root.find('[data-ai-language-style]').val(),
             description: root.find('[data-ai-audience]').val(),
             goal: root.find('[data-ai-goal]').val(),
             selling_angle: root.find('[data-ai-selling-angle]').val(),

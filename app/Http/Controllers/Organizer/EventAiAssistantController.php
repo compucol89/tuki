@@ -91,7 +91,7 @@ class EventAiAssistantController extends Controller
         'type' => 'analysis',
         'status' => 'pending',
         'model' => config('openai.event_assistant.models.extract', 'gpt-5.6-luna'),
-        'prompt_version' => config('openai.event_assistant.prompt_version', '2026-07-23-v1'),
+        'prompt_version' => config('openai.event_assistant.prompt_version', '2026-07-23-v2'),
         'source_image_path' => 'assets/admin/img/event/thumbnail/' . $event->thumbnail,
         'source_image_hash' => hash_file('sha256', $imagePath),
       ]);
@@ -269,7 +269,7 @@ class EventAiAssistantController extends Controller
         'type' => 'content',
         'status' => 'pending',
         'model' => config('openai.event_assistant.models.generate', 'gpt-5.6-terra'),
-        'prompt_version' => config('openai.event_assistant.prompt_version', '2026-07-23-v1'),
+        'prompt_version' => config('openai.event_assistant.prompt_version', '2026-07-23-v2'),
         'input_payload' => [
           'review_id' => $review->id,
           'tone' => $data['tone'],

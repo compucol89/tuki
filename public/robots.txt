@@ -1,5 +1,5 @@
 # Tukipass robots.txt
-# Permite indexacion de paginas publicas y bloquea areas privadas o transaccionales.
+# Permite indexación de páginas públicas y bloquea áreas privadas o transaccionales.
 
 # Previews sociales: Facebook, Instagram, Messenger y WhatsApp.
 User-agent: facebookexternalhit
@@ -23,7 +23,7 @@ Disallow: /product-order/
 Disallow: /product-order-complete/
 Disallow: /csrf-token
 
-# Meta AI, anuncios y recuperacion solicitada por usuarios: permitir contenido publico.
+# Meta AI, anuncios y recuperación solicitada por usuarios: permitir contenido público.
 User-agent: meta-webindexer
 User-agent: meta-externalads
 User-agent: meta-externalfetcher
@@ -46,7 +46,7 @@ Disallow: /product-order/
 Disallow: /product-order-complete/
 Disallow: /csrf-token
 
-# IA y buscadores con resultados/citas en tiempo real.
+# IA y buscadores con resultados y citas en tiempo real.
 User-agent: OAI-SearchBot
 User-agent: ChatGPT-User
 User-agent: OAI-AdsBot
@@ -89,7 +89,7 @@ Disallow: /
 User-agent: meta-externalagent
 Disallow: /
 
-# Politica general: abrir el sitio publico y cerrar paneles, cuenta y checkout.
+# Política general: abrir el sitio público y cerrar paneles, cuenta y checkout.
 User-agent: *
 Allow: /
 Allow: /organizer/details/

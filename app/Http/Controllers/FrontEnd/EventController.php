@@ -346,10 +346,12 @@ class EventController extends Controller
       $rawDescription = $cleanText($content->description);
       $rawMetaDescription = $cleanText($content->meta_description);
       $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
-      $seoParts = [];
       $locationText = $content->event_type == 'online'
         ? __('Evento online')
         : collect([$content->city, $content->state, $content->country])->filter()->implode(', ');
+      $locationSearchText = $content->event_type == 'online'
+        ? __('online')
+        : $locationText;
       $eventDateText = null;
       if (!empty($statusMeta['start_date_time'])) {
         try {
@@ -360,22 +362,26 @@ class EventController extends Controller
       }
 
       if ($rawMetaDescription !== '' && !Str::contains(Str::lower($rawMetaDescription), $placeholderPatterns)) {
-        $seoDescription = $rawMetaDescription;
+        $seoBaseDescription = $rawMetaDescription;
+      } elseif ($rawDescription !== '' && !Str::contains(Str::lower($rawDescription), $placeholderPatterns)) {
+        $seoBaseDescription = $rawDescription;
       } else {
-        if ($rawDescription !== '') {
-          $seoParts[] = $rawDescription;
-        }
-        if (!empty($locationText)) {
-          $seoParts[] = __('Ubicación: :location', ['location' => $locationText]);
-        }
-        if (!empty($eventDateText)) {
-          $seoParts[] = __('Fecha: :date', ['date' => $eventDateText]);
-        }
-
-        $seoDescription = Str::limit(implode('. ', $seoParts), 158, '');
+        $seoBaseDescription = '';
       }
 
-      if ($seoDescription === '') {
+      if ($seoBaseDescription !== '') {
+        $seoLead = collect([
+          $normalizedTitle,
+          $locationSearchText !== '' ? ($content->event_type == 'online' ? __('online') : __('en :location', ['location' => $locationSearchText])) : null,
+          !empty($eventDateText) ? __('el :date', ['date' => $eventDateText]) : null,
+        ])->filter()->implode(' ');
+        $seoBaseLower = Str::lower($seoBaseDescription);
+        $needsSeoLead = ($normalizedTitle !== '' && !Str::contains($seoBaseLower, Str::lower($normalizedTitle)))
+          || ($locationSearchText !== '' && !Str::contains($seoBaseLower, Str::lower($locationSearchText)))
+          || (!empty($eventDateText) && !Str::contains($seoBaseLower, Str::lower($eventDateText)));
+        $seoDescription = $needsSeoLead && $seoLead !== '' ? $seoLead . '. ' . $seoBaseDescription : $seoBaseDescription;
+        $seoDescription = Str::limit($cleanText($seoDescription), 158, '');
+      } else {
         $seoDescription = __(':title es un evento :mode en TukiPass. Reservá tu lugar para :date y accedé a la información del evento.', [
           'title' => $normalizedTitle,
           'mode' => $content->event_type == 'online' ? __('online') : __('presencial'),

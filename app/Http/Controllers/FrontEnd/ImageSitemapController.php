@@ -14,6 +14,7 @@ use App\Models\ShopManagement\Product;
 use App\Models\ShopManagement\ProductImage;
 use App\Services\FileUploadService;
 use App\Support\DemoEventExclusion;
+use App\Support\EventSocialImage;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -73,12 +74,15 @@ class ImageSitemapController extends Controller
         ->groupBy('event_id');
 
       return $events->map(function ($event) use ($galleryImages) {
+        $eventGalleryImages = $galleryImages->get($event->id, collect());
+        $socialImage = EventSocialImage::from($event, $eventGalleryImages);
         $images = collect([
+          $socialImage['url'] ?? null,
           $this->imageUrlIfExists('assets/admin/img/event-ai/' . $event->id . '/', $event->og_image),
           $this->imageUrlIfExists('assets/admin/img/event/thumbnail/', $event->thumbnail),
         ]);
 
-        foreach ($galleryImages->get($event->id, collect()) as $galleryImage) {
+        foreach ($eventGalleryImages as $galleryImage) {
           $images->push($this->imageUrlIfExists('assets/admin/img/event-gallery/', $galleryImage->image));
         }
 

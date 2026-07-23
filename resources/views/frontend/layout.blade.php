@@ -27,6 +27,11 @@
     $canonicalUrl = trim($__env->yieldContent('canonical')) ?: url()->current();
     $facebookAppId = trim((string) config('services.facebook.client_id'));
     $facebookDomainVerification = trim((string) config('services.facebook.domain_verification'));
+    $faviconPath = 'assets/admin/img/' . ($websiteInfo->favicon ?? 'favicon.png');
+    $faviconUrl = asset($faviconPath) . (is_file(public_path($faviconPath)) ? '?v=' . filemtime(public_path($faviconPath)) : '');
+    $rootAsset = function (string $path) {
+      return asset($path) . (is_file(public_path($path)) ? '?v=' . filemtime(public_path($path)) : '');
+    };
   @endphp
   <!-- Required meta tags -->
   <meta charset="utf-8" />
@@ -128,8 +133,15 @@
   <script type="application/ld+json">{!! json_encode($schemaWebsite, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
   @stack('schema')
   @stack('head-scripts')
-  <!-- Favicon Icon -->
-  <link rel="shortcut icon" href="{{ asset('assets/admin/img/' . $websiteInfo->favicon) }}" type="image/x-icon">
+  <!-- Favicon / App Icons -->
+  <link rel="icon" href="{{ $rootAsset('favicon.ico') }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ $rootAsset('favicon-16x16.png') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ $rootAsset('favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="48x48" href="{{ $rootAsset('favicon-48x48.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ $rootAsset('apple-touch-icon.png') }}">
+  <link rel="manifest" href="{{ $rootAsset('site.webmanifest') }}">
+  <meta name="theme-color" content="#F97316">
+  <link rel="shortcut icon" href="{{ $faviconUrl }}" type="image/png">
   @hasSection('hero-preload')
     @yield('hero-preload')
   @endif

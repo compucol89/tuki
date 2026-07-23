@@ -22,14 +22,6 @@
       var manualMode = false;
       var requiredBriefFields = root.find('[data-ai-required]');
 
-      if ($.fn.select2) {
-        root.find('.ai-assistant-multiselect').select2({
-          width: '100%',
-          placeholder: 'Elegí una o más opciones',
-          dropdownParent: root
-        });
-      }
-
       function setStatus(message, type) {
         var box = root.find('[data-ai-status]');
         box.removeClass('alert-light alert-info alert-success alert-warning alert-danger')
@@ -644,6 +636,7 @@
           tone: root.find('[data-ai-tone]').val(),
           intensity: root.find('[data-ai-intensity]').val(),
           audience: {
+            event_brief: root.find('[data-ai-audience]').val(),
             locations: selectedValues('[data-ai-audience-location]'),
             communities: selectedValues('[data-ai-community]'),
             age_ranges: selectedValues('[data-ai-age-range]'),

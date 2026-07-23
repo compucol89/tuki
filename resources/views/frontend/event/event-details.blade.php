@@ -17,6 +17,9 @@
   $eventDateLabel = !empty($startDateTime)
     ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)->locale('es')->translatedFormat('j \d\e F \d\e Y')
     : 'próximamente';
+  $eventLocationLabel = $content->event_type == 'online'
+    ? 'online'
+    : collect([$content->city, $content->state, $content->country])->filter()->implode(', ');
 
   $metaDescriptionSource = $cleanSeoText($content->meta_description ?? '');
   $descriptionSource = $cleanSeoText($content->description ?? '');
@@ -38,9 +41,26 @@
   $hasValidEventDescription = $descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns);
 
   if ($metaDescriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($metaDescriptionSource), $placeholderPatterns)) {
-    $seoDescription = $metaDescriptionSource;
+    $seoBaseDescription = $metaDescriptionSource;
   } elseif ($descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns)) {
-    $seoDescription = $descriptionSource;
+    $seoBaseDescription = $descriptionSource;
+  } else {
+    $seoBaseDescription = '';
+  }
+
+  $seoLead = collect([
+    $eventName,
+    $eventLocationLabel !== '' ? ($content->event_type == 'online' ? 'online' : 'en ' . $eventLocationLabel) : null,
+    $eventDateLabel !== 'próximamente' ? 'el ' . $eventDateLabel : null,
+  ])->filter()->implode(' ');
+  $seoBaseLower = \Illuminate\Support\Str::lower($seoBaseDescription);
+  $needsSeoLead = $seoBaseDescription === ''
+    || ($eventName !== '' && !\Illuminate\Support\Str::contains($seoBaseLower, \Illuminate\Support\Str::lower($eventName)))
+    || ($eventLocationLabel !== '' && !\Illuminate\Support\Str::contains($seoBaseLower, \Illuminate\Support\Str::lower($eventLocationLabel)))
+    || ($eventDateLabel !== 'próximamente' && !\Illuminate\Support\Str::contains($seoBaseLower, \Illuminate\Support\Str::lower($eventDateLabel)));
+
+  if ($seoBaseDescription !== '') {
+    $seoDescription = $needsSeoLead && $seoLead !== '' ? $seoLead . '. ' . $seoBaseDescription : $seoBaseDescription;
   } else {
     $seoDescription = "{$eventName} es un evento {$eventMode} en TukiPass. Reservá tu lugar para el {$eventDateLabel} y accedé a toda la información.";
   }
@@ -889,7 +909,6 @@
   });
   $shouldEmitEventJsonLd = $eventName !== ''
     && $schemaStartDate !== null
-    && $content->event_type != 'online'
     && !empty($schemaLocation);
 
   $breadcrumbJsonLd = [

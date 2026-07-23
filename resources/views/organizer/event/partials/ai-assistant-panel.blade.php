@@ -3,6 +3,11 @@
     $aiRoutePrefix = $aiRoutePrefix ?? 'organizer.events.ai-assistant';
     $aiApplyUrl = route($aiRoutePrefix . '.apply', [$event->id, '__DRAFT__']);
     $hasCover = !empty($event->thumbnail);
+    $aiInitialBrief = trim(preg_replace(
+      '/\s+/u',
+      ' ',
+      html_entity_decode(strip_tags((string) ($aiInitialBrief ?? optional($defaultEventContent ?? null)->description ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8')
+    ));
   @endphp
   <div
     class="card ai-assistant-card mb-4"
@@ -191,7 +196,7 @@
                 </div>
                 <div class="form-group col-12 mb-2">
                   <label class="small mb-1">{{ __('Descripción breve del organizador') }}*</label>
-                  <textarea class="form-control form-control-sm" rows="3" data-ai-audience data-ai-required data-ai-label="{{ __('descripción breve') }}" data-ai-min-length="20" placeholder="{{ __('Ej: After office en Palermo con música en vivo, entrada anticipada, promos en barra y capacidad limitada.') }}"></textarea>
+                  <textarea class="form-control form-control-sm" rows="4" data-ai-audience data-ai-required data-ai-label="{{ __('descripción breve') }}" data-ai-min-length="20" placeholder="{{ __('Ej: After office en Palermo con música en vivo, entrada anticipada, promos en barra y capacidad limitada.') }}">{{ $aiInitialBrief }}</textarea>
                   <small class="text-muted">{{ __('Sumá tu idea, detalles importantes, enfoque de venta o copy propio. La IA lo usa junto con la portada y los datos del evento.') }}</small>
                 </div>
                 <div class="form-group col-md-6 mb-2">

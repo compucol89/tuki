@@ -67,18 +67,18 @@ class AiIndexController extends Controller
       '# Tukipass',
       '',
       '> Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online.',
-      '> Este archivo orienta a agentes IA hacia las paginas publicas canonicas del sitio.',
+      '> Este archivo orienta a agentes IA hacia las páginas públicas canónicas del sitio.',
       '',
-      'Tukipass opera comercialmente por TAYRONA GROUP SAS, CUIT 30-71885087-4. Tukipass no organiza ni produce los eventos publicados, salvo indicacion expresa; la realizacion, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares son responsabilidad exclusiva del organizador.',
+      'Tukipass opera comercialmente por TAYRONA GROUP SAS, CUIT 30-71885087-4. Tukipass no organiza ni produce los eventos publicados, salvo indicación expresa; la realización, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares son responsabilidad exclusiva del organizador.',
       '',
-      'Ultima actualizacion automatica: ' . Carbon::now()->toDateString(),
+      'Última actualización automática: ' . Carbon::now()->toDateString(),
       '',
-      '## Mapas de indexacion',
+      '## Mapas de indexación',
       '',
-      '- [Sitemap XML](' . $this->url('/sitemap.xml') . '): inventario canonico para buscadores y crawlers.',
-      '- [Sitemap de imagenes](' . $this->url('/sitemap-images.xml') . '): inventario de imagenes publicas de eventos, organizadores, blog y tienda.',
-      '- [Referencia completa para agentes IA](' . $this->url('/llms-full.txt') . '): listado ampliado de URLs publicas indexables.',
-      '- [Robots.txt](' . $this->url('/robots.txt') . '): politica de acceso para crawlers.',
+      '- [Sitemap XML](' . $this->url('/sitemap.xml') . '): inventario canónico para buscadores y crawlers.',
+      '- [Sitemap de imágenes](' . $this->url('/sitemap-images.xml') . '): inventario de imágenes públicas de eventos, organizadores, blog y tienda.',
+      '- [Referencia completa para agentes IA](' . $this->url('/llms-full.txt') . '): listado ampliado de URLs públicas indexables.',
+      '- [Robots.txt](' . $this->url('/robots.txt') . '): política de acceso para crawlers.',
       '',
     ];
 
@@ -110,20 +110,20 @@ class AiIndexController extends Controller
       '# Tukipass',
       '',
       '> Tukipass es una plataforma argentina para descubrir eventos, revisar organizadores y reservar entradas online.',
-      '> Esta referencia completa enumera las URLs publicas que pueden ser usadas por buscadores y agentes IA.',
+      '> Esta referencia completa enumera las URLs públicas que pueden ser usadas por buscadores y agentes IA.',
       '',
       'Entidad operadora: TAYRONA GROUP SAS, CUIT 30-71885087-4.',
       '',
-      'Importante: Tukipass no organiza ni produce los eventos publicados, salvo indicacion expresa. Tukipass presta un servicio tecnologico de publicacion, gestion y venta online de entradas. La realizacion, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.',
+      'Importante: Tukipass no organiza ni produce los eventos publicados, salvo indicación expresa. Tukipass presta un servicio tecnológico de publicación, gestión y venta online de entradas. La realización, calidad, accesos, horarios, cambios, cancelaciones, reembolsos y condiciones particulares del evento son responsabilidad exclusiva del organizador.',
       '',
-      'Al utilizar el sitio o reservar una entrada, el usuario acepta los Terminos y Condiciones de Tukipass y las politicas aplicables de cada evento.',
+      'Al utilizar el sitio o reservar una entrada, el usuario acepta los Términos y Condiciones de Tukipass y las políticas aplicables de cada evento.',
       '',
-      'Ultima actualizacion automatica: ' . Carbon::now()->toDateString(),
+      'Última actualización automática: ' . Carbon::now()->toDateString(),
       '',
-      '## Politica de rastreo IA',
+      '## Política de rastreo IA',
       '',
-      '- OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, Bingbot y Applebot pueden rastrear contenido publico.',
-      '- GPTBot, ClaudeBot y Google-Extended estan bloqueados para entrenamiento de modelos.',
+      '- OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, Bingbot y Applebot pueden rastrear contenido público.',
+      '- GPTBot, ClaudeBot y Google-Extended están bloqueados para entrenamiento de modelos.',
       '- Admin, cuenta de cliente, panel de organizador, checkout, reservas, facturas y rutas transaccionales no son indexables.',
       '',
       '## URLs públicas indexables',
@@ -153,16 +153,16 @@ class AiIndexController extends Controller
   {
     $records = [
       $this->record('Páginas principales', 'Inicio', '/', 'Resumen de Tukipass, eventos destacados y acceso a la reserva de entradas.'),
-      $this->record('Páginas principales', 'Eventos', '/eventos', 'Agenda publica de eventos en Argentina con filtros por busqueda, ubicacion, fecha y categoria.'),
-      $this->record('Páginas principales', 'Organizadores', '/organizadores', 'Listado publico de organizadores y productores con perfil en Tukipass.'),
-      $this->record('Páginas informativas', 'Sobre nosotros', '/sobre-nosotros', 'Informacion institucional sobre Tukipass.'),
-      $this->record('Páginas informativas', 'Blog', '/blog', 'Contenido editorial y novedades relacionadas con eventos y tecnologia de entradas.'),
+      $this->record('Páginas principales', 'Eventos', '/eventos', 'Agenda pública de eventos en Argentina con filtros por búsqueda, ubicación, fecha y categoría.'),
+      $this->record('Páginas principales', 'Organizadores', '/organizadores', 'Listado público de organizadores y productores con perfil en Tukipass.'),
+      $this->record('Páginas informativas', 'Sobre nosotros', '/sobre-nosotros', 'Información institucional sobre Tukipass.'),
+      $this->record('Páginas informativas', 'Blog', '/blog', 'Contenido editorial y novedades relacionadas con eventos y tecnología de entradas.'),
       $this->record('Páginas informativas', 'Preguntas frecuentes', '/preguntas-frecuentes', 'Respuestas para usuarios, compradores y organizadores.'),
-      $this->record('Páginas informativas', 'Contacto', '/contacto', 'Canal publico de contacto con Tukipass.'),
+      $this->record('Páginas informativas', 'Contacto', '/contacto', 'Canal público de contacto con Tukipass.'),
     ];
 
     if ($this->shopIsActive()) {
-      $records[] = $this->record('Tienda', 'Tienda', '/tienda', 'Catalogo publico de productos disponibles en Tukipass.');
+      $records[] = $this->record('Tienda', 'Tienda', '/tienda', 'Catálogo público de productos disponibles en Tukipass.');
     }
 
     return $records;
@@ -181,21 +181,55 @@ class AiIndexController extends Controller
         ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
           return $query->where('event_contents.language_id', $defaultLanguageId);
         })
-        ->select('events.id', 'events.updated_at', 'events.end_date_time', 'event_contents.slug', 'event_contents.title', 'event_contents.meta_description', 'event_contents.description')
+        ->select('events.id', 'events.updated_at', 'events.start_date', 'events.end_date_time', 'events.event_type', 'event_contents.slug', 'event_contents.title', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.meta_description', 'event_contents.description')
         ->orderBy('events.updated_at', 'desc')
         ->get()
         ->map(function ($event) {
           $title = $this->cleanText($event->title, 90);
-          $description = $this->cleanText($event->meta_description ?: $event->description, 180);
+          $sourceDescription = $this->cleanText($event->meta_description ?: $event->description, 180);
+          $description = $this->eventSearchDescription($event, $title, $sourceDescription);
 
           return [
             'section' => 'Eventos vigentes',
             'title' => $title !== '' ? $title : 'Evento ' . $event->id,
             'url' => $this->routeUrl('event.details', ['slug' => $event->slug, 'id' => $event->id], '/' . $event->slug . '/' . $event->id),
-            'description' => $description !== '' ? $description : 'Detalle publico del evento, fechas, ubicacion y opciones para reservar entradas.',
+            'description' => $description !== '' ? $description : 'Detalle público del evento, fechas, ubicación y opciones para reservar entradas.',
           ];
         });
     });
+  }
+
+  private function eventSearchDescription(object $event, string $title, string $sourceDescription): string
+  {
+    $location = $event->event_type === 'online'
+      ? 'online'
+      : collect([$event->city, $event->state, $event->country])->filter()->implode(', ');
+    $date = '';
+
+    if (!empty($event->start_date)) {
+      try {
+        $date = Carbon::parse($event->start_date)->locale('es')->translatedFormat('j \d\e F \d\e Y');
+      } catch (Throwable $e) {
+        $date = '';
+      }
+    }
+
+    $lead = collect([
+      $title,
+      $location !== '' ? ($event->event_type === 'online' ? 'online' : 'en ' . $location) : null,
+      $date !== '' ? 'el ' . $date : null,
+    ])->filter()->implode(' ');
+
+    if ($sourceDescription !== '') {
+      $sourceLower = Str::lower($sourceDescription);
+      $needsLead = ($title !== '' && !Str::contains($sourceLower, Str::lower($title)))
+        || ($location !== '' && !Str::contains($sourceLower, Str::lower($location)))
+        || ($date !== '' && !Str::contains($sourceLower, Str::lower($date)));
+
+      return $this->cleanText($needsLead && $lead !== '' ? $lead . '. ' . $sourceDescription : $sourceDescription, 180);
+    }
+
+    return $this->cleanText($lead !== '' ? $lead . '. Reservá tu entrada en Tukipass.' : 'Detalle público del evento, fechas, ubicación y opciones para reservar entradas.', 180);
   }
 
   private function organizerRecords(): Collection
@@ -224,7 +258,7 @@ class AiIndexController extends Controller
             'section' => 'Organizadores públicos',
             'title' => $profileName !== '' ? $profileName : $organizer->username,
             'url' => $this->routeUrl('frontend.organizer.details', [$organizer->id, $profileSlug !== '' ? $profileSlug : $usernameSlug], '/organizer/details/' . $organizer->id . '/' . ($profileSlug !== '' ? $profileSlug : $usernameSlug)),
-            'description' => $this->cleanText($organizer->details, 170) ?: 'Perfil publico del organizador en Tukipass.',
+            'description' => $this->cleanText($organizer->details, 170) ?: 'Perfil público del organizador en Tukipass.',
           ];
         });
     });
@@ -251,9 +285,9 @@ class AiIndexController extends Controller
         ->map(function ($blog) {
           return [
             'section' => 'Contenido editorial',
-            'title' => $this->cleanText($blog->title, 90) ?: 'Articulo de Tukipass',
+            'title' => $this->cleanText($blog->title, 90) ?: 'Artículo de Tukipass',
             'url' => $this->routeUrl('blog_details', ['slug' => $blog->slug], '/blog/' . $blog->slug),
-            'description' => $this->cleanText($blog->meta_description ?: $blog->content, 180) ?: 'Articulo editorial publicado por Tukipass.',
+            'description' => $this->cleanText($blog->meta_description ?: $blog->content, 180) ?: 'Artículo editorial publicado por Tukipass.',
           ];
         });
     });
@@ -279,7 +313,7 @@ class AiIndexController extends Controller
             'section' => 'Páginas informativas',
             'title' => $this->cleanText($page->title, 90) ?: Str::headline((string) $page->slug),
             'url' => $this->routeUrl('dynamic_page', ['slug' => $page->slug], '/' . $page->slug),
-            'description' => $this->cleanText($page->meta_description ?: $page->content, 180) ?: 'Pagina informativa publica de Tukipass.',
+            'description' => $this->cleanText($page->meta_description ?: $page->content, 180) ?: 'Página informativa pública de Tukipass.',
           ];
         });
     });

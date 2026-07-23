@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Exceptions\OpenAiNonRetryableException;
 use App\Models\Event\EventAiContentDraft;
 use App\Services\OpenAI\EventAiAssistantService;
+use App\Support\EventAiDraftPreferences;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,13 +35,7 @@ class GenerateEventContentDraftJob implements ShouldQueue
       $draft->run?->markRunning();
       $draft->run?->markProgress(5, 'Preparando información', 'Estamos reuniendo datos del evento, flyer y preferencias del copy.');
 
-      $preferences = [
-        'tone' => $draft->review->tone,
-        'intensity' => $draft->review->intensity,
-        'audience' => $draft->review->audience_payload ?? [],
-        'locale' => 'es-AR',
-        'timezone' => config('app.timezone', 'America/Argentina/Buenos_Aires'),
-      ];
+      $preferences = EventAiDraftPreferences::fromReview($draft->review);
 
       $draft->run?->markProgress(25, 'Adaptando el enfoque comercial', 'Tomamos público, tono, objetivo e intereses para orientar el mensaje.');
       $generated = $assistant->generateContent($draft->review->canonical_event_facts ?? [], $preferences);

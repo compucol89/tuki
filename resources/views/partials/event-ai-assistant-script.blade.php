@@ -10,6 +10,8 @@
       var progressTimer = null;
       var activeProcessType = null;
       var activeProgressStartedAtMs = null;
+      var pendingDraftHydration = false;
+      var lastHydratedDraftId = null;
       var autoStartAnalysis = new URLSearchParams(window.location.search).get('ai_action') === 'analyze_cover';
       var actionLabels = {
         analysis: '<i class="fas fa-search mr-1"></i>Analizar portada existente',
@@ -465,6 +467,17 @@
         root.find('[data-ai-results]').removeClass('d-none');
         root.find('[data-ai-draft]').removeClass('d-none');
         compactBrief();
+
+        if (pendingDraftHydration && draft.id && lastHydratedDraftId !== draft.id) {
+          hydrateFormFromDraft(selectedDraftFields());
+          lastHydratedDraftId = draft.id;
+          pendingDraftHydration = false;
+          setStatus('Copy generado y copiado al formulario. Revisá los campos y guardá el evento cuando estés conforme.', 'success');
+        }
+      }
+
+      function selectedDraftFields() {
+        return root.find('[data-ai-field]:checked').map(function () { return this.value; }).get();
       }
 
       function hydrateFormFromDraft(fields) {
@@ -574,7 +587,9 @@
           } else if (response.draft && response.draft.status === 'failed') {
             setStatus('No se pudo generar el copy. Podés seguir editando manualmente.', 'danger');
           } else if (response.draft && response.draft.status === 'completed') {
-            setStatus('Copy listo para revisar y aplicar.', response.draft.needs_human_review ? 'warning' : 'success');
+            setStatus(lastHydratedDraftId === response.draft.id
+              ? 'Copy generado y copiado al formulario. Revisá los campos y guardá el evento cuando estés conforme.'
+              : 'Copy listo para revisar y aplicar.', response.draft.needs_human_review ? 'warning' : 'success');
           } else if (response.review) {
             setStatus('Análisis listo. Mirá los datos detectados y ajustá las preferencias antes de generar el copy.', 'success');
           }
@@ -656,6 +671,7 @@
           updateAiReadiness({});
           return;
         }
+        pendingDraftHydration = true;
         showLocalProgress('draft', 'Generando copy y SEO', 'Preparando información', 'Estamos iniciando la generación. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
         setStatus('Preparando generación de copy...', 'info');
         $.post(root.data('draft-url'), {
@@ -690,6 +706,7 @@
               }
             }, 'draft');
             activeProcessType = null;
+            pendingDraftHydration = false;
             syncProcessButtons(null, {});
             setStatus(errorMessage(xhr, 'No se pudo generar el copy IA.'), 'danger');
             loadStatus(false);
@@ -698,7 +715,7 @@
 
       root.on('click', '[data-ai-action="apply"]', function () {
         if (!draftId || activeProcessType) return;
-        var fields = root.find('[data-ai-field]:checked').map(function () { return this.value; }).get();
+        var fields = selectedDraftFields();
         var url = root.data('apply-url').replace('__DRAFT__', draftId);
 
         showLocalProgress('apply', 'Aplicando contenido', 'Actualizando campos seleccionados', 'Estamos pasando el copy generado al formulario del evento.', 25);

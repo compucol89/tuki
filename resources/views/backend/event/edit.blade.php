@@ -1,6 +1,7 @@
 @extends('backend.layout')
 
 @section('content')
+  <div class="event-form-modern event-form-modern--edit">
   <div class="page-header">
     <h4 class="page-title">{{ __('Edit Event') }}</h4>
     <ul class="breadcrumbs">
@@ -790,6 +791,7 @@
 
     </div>
   </div>
+  </div>
 @endsection
 
 @section('style')
@@ -1164,6 +1166,8 @@
       }
     }
   </style>
+  @php($eventFormModernCss = 'assets/admin/css/event-form-modern.css')
+  <link rel="stylesheet" href="{{ asset($eventFormModernCss) }}{{ is_file(public_path($eventFormModernCss)) ? '?v=' . filemtime(public_path($eventFormModernCss)) : '' }}">
 @endsection
 
 @section('script')

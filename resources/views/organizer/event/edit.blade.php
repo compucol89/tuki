@@ -1257,6 +1257,89 @@
       background: #fff;
     }
 
+    .async-progress-panel {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #dbeafe;
+      border-left: 4px solid #3b82f6;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #1e2532;
+    }
+
+    .async-progress-panel.is-success {
+      border-color: #bbf7d0;
+      border-left-color: #16a34a;
+      background: #f7fef9;
+    }
+
+    .async-progress-panel.is-warning {
+      border-color: #fed7aa;
+      border-left-color: #f97316;
+      background: #fffaf5;
+    }
+
+    .async-progress-panel.is-danger {
+      border-color: #fecaca;
+      border-left-color: #dc2626;
+      background: #fff7f7;
+    }
+
+    .async-progress-panel__percent {
+      font-weight: 700;
+      color: #1e40af;
+      white-space: nowrap;
+    }
+
+    .async-progress-panel__bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #dbeafe;
+      overflow: hidden;
+    }
+
+    .async-progress-panel__bar .progress-bar {
+      background-color: #3b82f6;
+      transition: width .35s ease;
+    }
+
+    .async-progress-panel.is-success .progress-bar {
+      background-color: #16a34a;
+    }
+
+    .async-progress-panel.is-warning .progress-bar {
+      background-color: #f97316;
+    }
+
+    .async-progress-panel.is-danger .progress-bar {
+      background-color: #dc2626;
+    }
+
+    .async-progress-panel.is-indeterminate .progress-bar {
+      width: 100% !important;
+    }
+
+    .async-progress-panel__meta {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .ai-assistant-highlight {
+      animation: aiAssistantHighlight 1.8s ease;
+    }
+
+    @keyframes aiAssistantHighlight {
+      0% {
+        box-shadow: 0 0 0 0 rgba(249, 115, 22, .35);
+      }
+      55% {
+        box-shadow: 0 0 0 6px rgba(249, 115, 22, .12);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+      }
+    }
+
     .ai-assistant-multiselect {
       min-height: 82px;
     }
@@ -1306,6 +1389,15 @@
       var draftId = null;
       var lastDraft = null;
       var pollTimer = null;
+      var progressTimer = null;
+      var activeProcessType = null;
+      var activeProgressStartedAtMs = null;
+      var actionLabels = {
+        analysis: '<i class="fas fa-search mr-1"></i>Analizar flyer',
+        draft: '<i class="fas fa-pen-nib mr-1"></i>Generar copy y SEO',
+        apply: '<i class="fas fa-check mr-1"></i>Aplicar campos seleccionados'
+      };
+      var analysisInitiallyDisabled = root.find('[data-ai-action="analysis"]').is(':disabled');
 
       if ($.fn.select2) {
         root.find('.ai-assistant-multiselect').select2({
@@ -1329,6 +1421,183 @@
       function selectedValues(selector) {
         var value = root.find(selector).val();
         return Array.isArray(value) ? value : (value ? [value] : []);
+      }
+
+      function isRunningStatus(status) {
+        return ['pending', 'running'].indexOf(status) !== -1;
+      }
+
+      function formatDuration(seconds) {
+        seconds = Math.max(0, Number(seconds || 0));
+        var minutes = Math.floor(seconds / 60);
+        var remaining = seconds % 60;
+        return minutes ? (minutes + 'm ' + String(remaining).padStart(2, '0') + 's') : (remaining + 's');
+      }
+
+      function startElapsedTimer() {
+        clearInterval(progressTimer);
+        progressTimer = setInterval(function () {
+          if (!activeProgressStartedAtMs) return;
+          var elapsed = Math.floor((Date.now() - activeProgressStartedAtMs) / 1000);
+          root.find('[data-progress-elapsed]').text('Tiempo transcurrido: ' + formatDuration(elapsed));
+        }, 1000);
+      }
+
+      function stopElapsedTimer() {
+        clearInterval(progressTimer);
+        progressTimer = null;
+      }
+
+      function renderProgress(run, type) {
+        if (!run || !run.progress) return;
+
+        var progress = run.progress;
+        var status = run.status || 'running';
+        var percent = progress.percent;
+        var hasPercent = typeof percent === 'number' && !isNaN(percent);
+        var panel = root.find('[data-async-progress]');
+        var fill = panel.find('[data-progress-fill]');
+        var bar = panel.find('[data-progressbar]');
+        var stateClass = status === 'completed' ? 'is-success' : (status === 'failed' ? 'is-danger' : (progress.delayed ? 'is-warning' : ''));
+        var message = progress.message || 'El proceso sigue activo. Normalmente tarda entre 20 segundos y 2 minutos.';
+
+        if (progress.delayed && isRunningStatus(status)) {
+          message = 'Esta tarea está tomando un poco más de tiempo, pero seguimos procesándola. No necesitás volver a iniciarla.';
+        }
+        if (status === 'failed' && progress.support_id) {
+          message += ' Código de soporte: ' + progress.support_id + '.';
+        }
+
+        panel.removeClass('d-none is-success is-warning is-danger is-indeterminate').addClass(stateClass);
+        panel.find('[data-progress-title]').text(progress.title || (type === 'draft' ? 'Generando copy y SEO' : 'Procesando'));
+        panel.find('[data-progress-stage]').text(progress.stage || 'Procesando');
+        panel.find('[data-progress-message]').text(message);
+        panel.find('[data-progress-estimate]').text('Normalmente tarda entre 20 segundos y 2 minutos.');
+
+        if (hasPercent) {
+          percent = Math.max(0, Math.min(100, Math.round(percent)));
+          panel.find('[data-progress-percent]').text(percent + '%' + (progress.is_estimated && status !== 'completed' ? ' estimado' : ''));
+          fill.removeClass('progress-bar-striped progress-bar-animated').css('width', percent + '%');
+          bar.attr('aria-valuenow', percent);
+        } else {
+          panel.addClass('is-indeterminate');
+          panel.find('[data-progress-percent]').text('En curso');
+          fill.addClass('progress-bar-striped progress-bar-animated').css('width', '100%');
+          bar.removeAttr('aria-valuenow');
+        }
+
+        activeProgressStartedAtMs = Date.now() - (Number(progress.elapsed_seconds || 0) * 1000);
+        panel.find('[data-progress-elapsed]').text('Tiempo transcurrido: ' + formatDuration(progress.elapsed_seconds || 0));
+
+        if (isRunningStatus(status)) {
+          startElapsedTimer();
+        } else {
+          stopElapsedTimer();
+        }
+      }
+
+      function renderProgressFromStatus(response) {
+        var analysis = response.analysis || null;
+        var draftRun = response.draft && response.draft.run ? response.draft.run : null;
+        var active = null;
+
+        if (analysis && isRunningStatus(analysis.status)) {
+          active = {type: 'analysis', run: analysis};
+        } else if (draftRun && isRunningStatus(draftRun.status)) {
+          active = {type: 'draft', run: draftRun};
+        }
+
+        if (active) {
+          activeProcessType = active.type;
+          renderProgress(active.run, active.type);
+          syncProcessButtons(active.type, response);
+          return true;
+        }
+
+        if (activeProcessType === 'analysis' && analysis && analysis.status === 'completed') {
+          renderProgress(analysis, 'analysis');
+          finishActiveProcess('analysis');
+          scrollToAssistantResult('[data-ai-results]');
+          return false;
+        }
+
+        if (activeProcessType === 'draft' && draftRun && draftRun.status === 'completed') {
+          renderProgress(draftRun, 'draft');
+          finishActiveProcess('draft');
+          scrollToAssistantResult('[data-ai-draft]');
+          return false;
+        }
+
+        if (analysis && analysis.status === 'failed' && (!response.review || activeProcessType === 'analysis')) {
+          renderProgress(analysis, 'analysis');
+          finishActiveProcess('analysis');
+          syncProcessButtons(null, response);
+          return false;
+        }
+
+        if (draftRun && draftRun.status === 'failed' && (activeProcessType === 'draft' || !response.draft.generated_payload)) {
+          renderProgress(draftRun, 'draft');
+          finishActiveProcess('draft');
+          syncProcessButtons(null, response);
+          return false;
+        }
+
+        syncProcessButtons(null, response);
+        return false;
+      }
+
+      function finishActiveProcess(type) {
+        activeProcessType = null;
+        activeProgressStartedAtMs = null;
+        syncProcessButtons(null, {});
+      }
+
+      function syncProcessButtons(type, response) {
+        var analysisButton = root.find('[data-ai-action="analysis"]');
+        var draftButton = root.find('[data-ai-action="draft"]');
+        var applyButton = root.find('[data-ai-action="apply"]');
+        var contentAllowed = !response.content_usage || response.content_usage.allowed;
+        var canDraft = !!response.review && contentAllowed;
+
+        analysisButton.html(actionLabels.analysis).prop('disabled', analysisInitiallyDisabled);
+        draftButton.html(actionLabels.draft).prop('disabled', !canDraft);
+        applyButton.html(actionLabels.apply).prop('disabled', false);
+
+        if (type === 'analysis') {
+          analysisButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Analizando flyer...').prop('disabled', true);
+          draftButton.prop('disabled', true);
+        } else if (type === 'draft') {
+          draftButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Generando copy...').prop('disabled', true);
+          analysisButton.prop('disabled', true);
+        } else if (type === 'apply') {
+          applyButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Aplicando...').prop('disabled', true);
+        }
+      }
+
+      function scrollToAssistantResult(selector) {
+        var target = root.find(selector);
+        if (!target.length || target.hasClass('d-none')) return;
+
+        $('html, body').animate({scrollTop: Math.max(target.offset().top - 90, 0)}, 450);
+        target.addClass('ai-assistant-highlight');
+        setTimeout(function () { target.removeClass('ai-assistant-highlight'); }, 2000);
+      }
+
+      function showLocalProgress(type, title, stage, message, percent) {
+        activeProcessType = type;
+        renderProgress({
+          status: 'running',
+          progress: {
+            title: title,
+            stage: stage,
+            message: message,
+            percent: percent,
+            is_estimated: true,
+            elapsed_seconds: 0,
+            delayed: false
+          }
+        }, type);
+        syncProcessButtons(type, {});
       }
 
       function renderUsage(analysisUsage, contentUsage) {
@@ -1501,10 +1770,11 @@
           renderUsage(response.usage, response.content_usage);
           renderFacts(response.review);
           renderDraft(response.draft);
+          var processActive = renderProgressFromStatus(response);
 
           if (response.review) {
             root.find('[data-ai-results]').removeClass('d-none');
-            var canGenerateDraft = !response.content_usage || response.content_usage.allowed;
+            var canGenerateDraft = (!response.content_usage || response.content_usage.allowed) && !processActive;
             root.find('[data-ai-action="draft"]').prop('disabled', !canGenerateDraft);
             root.find('[data-ai-draft-help]').text(canGenerateDraft
               ? 'Usá la generación cuando quieras completar descripción, SEO, tags y textos sociales.'
@@ -1525,21 +1795,49 @@
             setStatus('Análisis listo. Mirá los datos detectados y ajustá las preferencias antes de generar el copy.', 'success');
           }
 
-          if (scheduleNext && ((response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) || (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1))) {
+          if (scheduleNext && processActive) {
             clearTimeout(pollTimer);
             pollTimer = setTimeout(function () { loadStatus(true); }, 3000);
+          }
+        }).fail(function (xhr) {
+          setStatus(errorMessage(xhr, 'No pudimos consultar el estado del proceso IA.'), 'danger');
+          if (activeProcessType) {
+            root.find('[data-progress-message]').text('Perdimos conexión momentáneamente. No vuelvas a iniciar el proceso; intentaremos recuperar el estado.');
+            clearTimeout(pollTimer);
+            pollTimer = setTimeout(function () { loadStatus(true); }, 5000);
           }
         });
       }
 
       root.on('click', '[data-ai-action="analysis"]', function () {
+        if (activeProcessType) return;
+        showLocalProgress('analysis', 'Analizando flyer', 'Enviando flyer al asistente IA', 'Estamos iniciando el análisis. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
         setStatus('Enviando flyer al asistente IA...', 'info');
         $.post(root.data('analysis-url'), {_token: csrf})
           .done(function () { loadStatus(true); })
-          .fail(function (xhr) { setStatus(errorMessage(xhr, 'No se pudo iniciar el análisis IA.'), 'danger'); });
+          .fail(function (xhr) {
+            renderProgress({
+              status: 'failed',
+              progress: {
+                title: 'No se pudo iniciar el análisis',
+                stage: 'Error al iniciar',
+                message: errorMessage(xhr, 'No se pudo iniciar el análisis IA. Los datos del evento están seguros.'),
+                percent: null,
+                is_estimated: false,
+                elapsed_seconds: 0,
+                delayed: false
+              }
+            }, 'analysis');
+            activeProcessType = null;
+            syncProcessButtons(null, {});
+            setStatus(errorMessage(xhr, 'No se pudo iniciar el análisis IA.'), 'danger');
+            loadStatus(false);
+          });
       });
 
       root.on('click', '[data-ai-action="draft"]', function () {
+        if (activeProcessType) return;
+        showLocalProgress('draft', 'Generando copy y SEO', 'Preparando información', 'Estamos iniciando la generación. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
         setStatus('Preparando generación de copy...', 'info');
         $.post(root.data('draft-url'), {
           _token: csrf,
@@ -1558,23 +1856,78 @@
           }
         })
           .done(function () { loadStatus(true); })
-          .fail(function (xhr) { setStatus(errorMessage(xhr, 'No se pudo generar el copy IA.'), 'danger'); });
+          .fail(function (xhr) {
+            renderProgress({
+              status: 'failed',
+              progress: {
+                title: 'No se pudo iniciar el copy',
+                stage: 'Error al iniciar',
+                message: errorMessage(xhr, 'No se pudo generar el copy IA. Los datos del evento están seguros.'),
+                percent: null,
+                is_estimated: false,
+                elapsed_seconds: 0,
+                delayed: false
+              }
+            }, 'draft');
+            activeProcessType = null;
+            syncProcessButtons(null, {});
+            setStatus(errorMessage(xhr, 'No se pudo generar el copy IA.'), 'danger');
+            loadStatus(false);
+          });
       });
 
       root.on('click', '[data-ai-action="apply"]', function () {
-        if (!draftId) return;
+        if (!draftId || activeProcessType) return;
         var fields = root.find('[data-ai-field]:checked').map(function () { return this.value; }).get();
         var url = root.data('apply-url').replace('__DRAFT__', draftId);
 
+        showLocalProgress('apply', 'Aplicando contenido', 'Actualizando campos seleccionados', 'Estamos pasando el copy generado al formulario del evento.', 25);
         $.post(url, {_token: csrf, fields: fields})
           .done(function () {
             hydrateFormFromDraft(fields);
+            renderProgress({
+              status: 'completed',
+              progress: {
+                title: 'Contenido aplicado',
+                stage: 'Completado',
+                message: 'Campos aplicados. Revisalos y guardá el evento cuando estés conforme.',
+                percent: 100,
+                is_estimated: false,
+                elapsed_seconds: 0,
+                delayed: false
+              }
+            }, 'apply');
+            activeProcessType = null;
+            syncProcessButtons(null, {});
             setStatus('Campos aplicados. Revisalos y guardá el evento cuando estés conforme.', 'success');
           })
-          .fail(function (xhr) { setStatus(errorMessage(xhr, 'No se pudieron aplicar los campos.'), 'danger'); });
+          .fail(function (xhr) {
+            renderProgress({
+              status: 'failed',
+              progress: {
+                title: 'No se pudo aplicar',
+                stage: 'Error al aplicar',
+                message: 'Los datos del evento están seguros. Podés intentarlo nuevamente.',
+                percent: null,
+                is_estimated: false,
+                elapsed_seconds: 0,
+                delayed: false
+              }
+            }, 'apply');
+            activeProcessType = null;
+            syncProcessButtons(null, {});
+            setStatus(errorMessage(xhr, 'No se pudieron aplicar los campos.'), 'danger');
+          });
       });
 
-      loadStatus(false);
+      $(window).on('beforeunload', function (event) {
+        if (!activeProcessType) return undefined;
+        event.preventDefault();
+        event.returnValue = '';
+        return '';
+      });
+
+      loadStatus(true);
     })(jQuery);
   </script>
 @endsection

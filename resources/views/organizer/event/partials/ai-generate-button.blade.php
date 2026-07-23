@@ -96,6 +96,11 @@
     background-size: 200% 100%;
     animation: aiBarPulse 1.1s linear infinite;
   }
+  .ai-status-card.is-indeterminate .ai-status-card__bar {
+    width: 100% !important;
+    background-size: 200% 100%;
+    animation: aiBarPulse 1.1s linear infinite;
+  }
   @keyframes aiBarPulse {
     from { background-position: 0 0; }
     to { background-position: 200% 0; }
@@ -142,6 +147,11 @@
     margin: .5rem 0 0;
     color: #b91c1c;
     font-size: .75rem;
+  }
+  .ai-status-card__meta {
+    margin: -.25rem 0 .65rem;
+    color: #64748b;
+    font-size: .72rem;
   }
   .ai-apply-row {
     display: none;
@@ -208,6 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
         og: 'Redes sociales'
     };
     let pollTimer = null;
+    let aiImagesActive = false;
 
     if (!btn || !container || !applyBtn) return;
 
@@ -216,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         selected.clear();
+        aiImagesActive = true;
         setGeneratingState(true);
 
         fetch('{{ $aiGenerateRoute }}', {
@@ -227,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.error) {
                 alert(data.message || data.error);
+                aiImagesActive = false;
                 setGeneratingState(false);
                 return;
             }
@@ -234,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             alert('Error de red: ' + err.message);
+            aiImagesActive = false;
             setGeneratingState(false);
         });
     });
@@ -241,6 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyBtn.addEventListener('click', function() {
         const ids = Array.from(selected);
         if (!ids.length) return;
+        aiImagesActive = true;
         applyBtn.disabled = true;
         applyBtn.textContent = 'Aplicando...';
 
@@ -253,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.error) {
                 alert(data.message || data.error);
+                aiImagesActive = false;
                 updateApplyButton();
                 return;
             }
@@ -261,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(err => {
             alert('Error de red: ' + err.message);
+            aiImagesActive = false;
             updateApplyButton();
         });
     });
@@ -282,6 +299,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!button) return;
 
         const format = button.getAttribute('data-ai-regenerate');
+        aiImagesActive = true;
+        setGeneratingState(true);
         button.disabled = true;
         button.textContent = 'Regenerando...';
         selected.delete(button.getAttribute('data-generation-id'));
@@ -295,11 +314,19 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.error) {
                 alert(data.message || data.error);
+                aiImagesActive = false;
+                setGeneratingState(false);
+                pollStatus(false);
                 return;
             }
             pollStatus(true);
         })
-        .catch(err => alert('Error de red: ' + err.message));
+        .catch(err => {
+            alert('Error de red: ' + err.message);
+            aiImagesActive = false;
+            setGeneratingState(false);
+            pollStatus(false);
+        });
     });
 
     pollStatus(false);
@@ -314,6 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const status = data.formats && data.formats[fmt] ? data.formats[fmt].status : null;
                     return status === 'pending' || status === 'running';
                 });
+                aiImagesActive = isActive;
                 setGeneratingState(isActive);
                 if (isActive || forcePolling) {
                     pollTimer = setTimeout(() => pollStatus(false), 2500);
@@ -325,6 +353,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
     }
+
+    window.addEventListener('beforeunload', function(event) {
+        if (!aiImagesActive) return;
+        event.preventDefault();
+        event.returnValue = '';
+    });
 
     function renderStatus(data) {
         const payload = data.formats || {};
@@ -342,6 +376,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const status = item.status || 'not_started';
         const card = document.createElement('article');
         card.className = 'ai-status-card is-' + status;
+        if (item.is_indeterminate) {
+            card.className += ' is-indeterminate';
+        }
 
         const top = document.createElement('div');
         top.className = 'ai-status-card__top';
@@ -365,11 +402,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const progress = document.createElement('div');
         progress.className = 'ai-status-card__progress';
+        progress.setAttribute('role', 'progressbar');
+        progress.setAttribute('aria-valuemin', '0');
+        progress.setAttribute('aria-valuemax', '100');
+        progress.setAttribute('aria-label', 'Progreso de ' + (labels[format] || format));
         const bar = document.createElement('div');
         bar.className = 'ai-status-card__bar';
-        bar.style.width = (item.progress || progressFor(status)) + '%';
+        const hasProgress = typeof item.progress === 'number';
+        if (hasProgress) {
+            const value = Math.max(0, Math.min(100, Math.round(item.progress)));
+            bar.style.width = value + '%';
+            progress.setAttribute('aria-valuenow', String(value));
+        } else {
+            bar.style.width = '100%';
+        }
         progress.appendChild(bar);
         card.appendChild(progress);
+
+        if (status === 'pending' || status === 'running') {
+            const meta = document.createElement('p');
+            meta.className = 'ai-status-card__meta';
+            meta.textContent = (item.message || 'Proceso activo.') + ' Tiempo transcurrido: ' + formatDuration(item.elapsed_seconds || 0) + '.';
+            card.appendChild(meta);
+        }
 
         const preview = document.createElement('div');
         preview.className = 'ai-status-card__preview';
@@ -469,14 +524,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }[status] || status;
     }
 
-    function progressFor(status) {
-        return {
-            not_started: 0,
-            pending: 12,
-            running: 68,
-            completed: 100,
-            failed: 100
-        }[status] || 0;
+    function formatDuration(seconds) {
+        seconds = Math.max(0, Number(seconds || 0));
+        const minutes = Math.floor(seconds / 60);
+        const remaining = seconds % 60;
+        return minutes ? (minutes + 'm ' + String(remaining).padStart(2, '0') + 's') : (remaining + 's');
     }
 
     function emptyText(status) {

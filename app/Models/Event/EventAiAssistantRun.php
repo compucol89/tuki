@@ -58,10 +58,34 @@ class EventAiAssistantRun extends Model
     $this->update(['status' => 'running']);
   }
 
+  public function markProgress(int $percent, string $stage, ?string $message = null): void
+  {
+    $payload = $this->input_payload ?: [];
+    $payload['progress'] = [
+      'percent' => max(0, min($percent, 99)),
+      'stage' => $stage,
+      'message' => $message,
+      'is_estimated' => true,
+      'updated_at' => now()->toIso8601String(),
+    ];
+
+    $this->update(['input_payload' => $payload]);
+  }
+
   public function markCompleted(array $outputPayload, int $durationMs, ?array $auditPayload = null): void
   {
+    $payload = $this->input_payload ?: [];
+    $payload['progress'] = [
+      'percent' => 100,
+      'stage' => 'Completado',
+      'message' => 'El proceso terminó correctamente.',
+      'is_estimated' => false,
+      'updated_at' => now()->toIso8601String(),
+    ];
+
     $this->update([
       'status' => 'completed',
+      'input_payload' => $payload,
       'output_payload' => $outputPayload,
       'audit_payload' => $auditPayload,
       'duration_ms' => $durationMs,
@@ -71,8 +95,18 @@ class EventAiAssistantRun extends Model
 
   public function markFailed(string $message): void
   {
+    $payload = $this->input_payload ?: [];
+    $payload['progress'] = [
+      'percent' => data_get($payload, 'progress.percent'),
+      'stage' => 'No se pudo completar',
+      'message' => 'La información del evento está segura. Podés intentarlo nuevamente.',
+      'is_estimated' => false,
+      'updated_at' => now()->toIso8601String(),
+    ];
+
     $this->update([
       'status' => 'failed',
+      'input_payload' => $payload,
       'error_message' => mb_substr($message, 0, 2000),
     ]);
   }

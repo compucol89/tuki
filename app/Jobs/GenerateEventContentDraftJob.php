@@ -32,6 +32,7 @@ class GenerateEventContentDraftJob implements ShouldQueue
     try {
       $draft->update(['status' => 'running']);
       $draft->run?->markRunning();
+      $draft->run?->markProgress(5, 'Preparando información', 'Estamos reuniendo datos del evento, flyer y preferencias del copy.');
 
       $preferences = [
         'tone' => $draft->review->tone,
@@ -41,12 +42,16 @@ class GenerateEventContentDraftJob implements ShouldQueue
         'timezone' => config('app.timezone', 'America/Argentina/Buenos_Aires'),
       ];
 
+      $draft->run?->markProgress(25, 'Adaptando el enfoque comercial', 'Tomamos público, tono, objetivo e intereses para orientar el mensaje.');
       $generated = $assistant->generateContent($draft->review->canonical_event_facts ?? [], $preferences);
+
+      $draft->run?->markProgress(75, 'Revisando copy y SEO', 'Validamos consistencia, políticas y textos para Google y redes.');
       $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
       $audit = $generated['audit'] ?? [];
       $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
       $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
 
+      $draft->run?->markProgress(95, 'Guardando resultado', 'Estamos dejando listo el copy para revisar y aplicar.');
       $draft->update([
         'status' => 'completed',
         'generated_payload' => $generated,

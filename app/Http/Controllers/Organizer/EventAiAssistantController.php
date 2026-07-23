@@ -94,6 +94,15 @@ class EventAiAssistantController extends Controller
         'prompt_version' => config('openai.event_assistant.prompt_version', '2026-07-23-v2'),
         'source_image_path' => 'assets/admin/img/event/thumbnail/' . $event->thumbnail,
         'source_image_hash' => hash_file('sha256', $imagePath),
+        'input_payload' => [
+          'progress' => [
+            'percent' => 0,
+            'stage' => 'Esperando turno de procesamiento',
+            'message' => 'El análisis quedó en cola y empezará en unos segundos.',
+            'is_estimated' => true,
+            'updated_at' => now()->toIso8601String(),
+          ],
+        ],
       ]);
 
       return [
@@ -134,7 +143,8 @@ class EventAiAssistantController extends Controller
       ->latest()
       ->first();
 
-    $draft = EventAiContentDraft::where('event_id', $event->id)
+    $draft = EventAiContentDraft::with('run')
+      ->where('event_id', $event->id)
       ->where('organizer_id', $event->organizer_id)
       ->latest()
       ->first();
@@ -158,6 +168,7 @@ class EventAiAssistantController extends Controller
         'audit_status' => $draft->audit_status,
         'generated_payload' => $draft->generated_payload,
         'audit_payload' => $draft->audit_payload,
+        'run' => $this->runPayload($draft->run),
       ] : null,
     ]);
   }
@@ -275,6 +286,13 @@ class EventAiAssistantController extends Controller
           'tone' => $data['tone'],
           'intensity' => $data['intensity'],
           'audience' => $data['audience'] ?? [],
+          'progress' => [
+            'percent' => 0,
+            'stage' => 'Esperando turno de procesamiento',
+            'message' => 'La generación de copy quedó en cola y empezará en unos segundos.',
+            'is_estimated' => true,
+            'updated_at' => now()->toIso8601String(),
+          ],
         ],
       ]);
 
@@ -385,10 +403,49 @@ class EventAiAssistantController extends Controller
       'type' => $run->type,
       'status' => $run->status,
       'model' => $run->model,
+      'progress' => $this->progressPayload($run),
       'output_payload' => $run->output_payload,
       'error_message' => $run->error_message,
       'duration_ms' => $run->duration_ms,
       'created_at' => optional($run->created_at)->toIso8601String(),
+      'updated_at' => optional($run->updated_at)->toIso8601String(),
+    ];
+  }
+
+  private function progressPayload(EventAiAssistantRun $run): array
+  {
+    $stored = data_get($run->input_payload, 'progress', []);
+    $status = $run->status;
+    $type = $run->type;
+    $elapsedSeconds = $run->duration_ms
+      ? (int) ceil($run->duration_ms / 1000)
+      : ($run->created_at ? max(0, now()->diffInSeconds($run->created_at)) : 0);
+    $estimateSeconds = (int) config("openai.event_assistant.progress.{$type}_estimate_seconds", 90);
+    $delayedAfter = (int) config('openai.event_assistant.progress.delayed_after_seconds', 120);
+    $defaultStage = $status === 'pending'
+      ? 'Esperando turno de procesamiento'
+      : ($status === 'completed' ? 'Completado' : ($status === 'failed' ? 'No se pudo completar' : 'Procesando'));
+    $defaultMessage = $status === 'pending'
+      ? 'El proceso quedó en cola y empezará en unos segundos.'
+      : 'El proceso sigue activo. Normalmente tarda entre 20 segundos y 2 minutos.';
+    $percent = data_get($stored, 'percent');
+
+    if ($status === 'completed') {
+      $percent = 100;
+    }
+
+    return [
+      'title' => $type === 'content' ? 'Generando copy y SEO' : 'Analizando flyer',
+      'stage' => data_get($stored, 'stage', $defaultStage),
+      'message' => data_get($stored, 'message', $defaultMessage),
+      'percent' => is_numeric($percent) ? (int) $percent : null,
+      'is_estimated' => (bool) data_get($stored, 'is_estimated', true),
+      'is_indeterminate' => !is_numeric($percent),
+      'elapsed_seconds' => $elapsedSeconds,
+      'estimate_seconds' => $estimateSeconds,
+      'delayed' => in_array($status, ['pending', 'running'], true) && $elapsedSeconds >= $delayedAfter,
+      'support_id' => 'AI-' . $run->id,
+      'updated_at' => data_get($stored, 'updated_at', optional($run->updated_at)->toIso8601String()),
     ];
   }
 

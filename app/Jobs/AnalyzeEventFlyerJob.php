@@ -33,6 +33,7 @@ class AnalyzeEventFlyerJob implements ShouldQueue
 
     try {
       $run->markRunning();
+      $run->markProgress(5, 'Preparando la imagen', 'Estamos preparando el flyer para analizarlo.');
 
       $event = $run->event;
       $imagePath = public_path('assets/admin/img/event/thumbnail/' . $event->thumbnail);
@@ -40,17 +41,25 @@ class AnalyzeEventFlyerJob implements ShouldQueue
         throw new OpenAiNonRetryableException('La imagen de portada del evento no está disponible.');
       }
 
+      $run->markProgress(15, 'Validando calidad y formato', 'Verificamos que la imagen esté disponible y sea legible.');
+
       $formFacts = $factsBuilder->fromEvent($event);
+      $run->markProgress(25, 'Preparando datos del formulario', 'Tomamos título, fecha, dirección y descripción como base del evento.');
+
       $moderation = $assistant->moderateImageAndText($imagePath, implode("\n", array_filter([
         $formFacts['title'] ?? null,
         $formFacts['description'] ?? null,
         $formFacts['address'] ?? null,
       ])));
+      $run->markProgress(40, 'Moderando contenido', 'Revisamos que la imagen y el texto puedan procesarse con seguridad.');
+
+      $inputPayload = $run->input_payload ?: [];
+      $inputPayload['form_facts'] = $formFacts;
 
       $run->update([
         'source_image_path' => 'assets/admin/img/event/thumbnail/' . $event->thumbnail,
         'source_image_hash' => hash_file('sha256', $imagePath),
-        'input_payload' => ['form_facts' => $formFacts],
+        'input_payload' => $inputPayload,
         'moderation_payload' => $moderation,
       ]);
 
@@ -58,9 +67,13 @@ class AnalyzeEventFlyerJob implements ShouldQueue
         throw new OpenAiNonRetryableException('La imagen o el texto necesitan revisión antes de usar el asistente IA.');
       }
 
+      $run->markProgress(55, 'Leyendo el contenido del flyer', 'Estamos identificando textos, fechas, ubicación, promociones y datos útiles.');
       $analysis = $assistant->analyzeFlyer($imagePath, $formFacts);
+
+      $run->markProgress(80, 'Organizando información detectada', 'Ordenamos lo encontrado para que complemente los datos del formulario.');
       $canonicalFacts = $factsBuilder->canonicalFromAnalysis($event, $analysis);
 
+      $run->markProgress(95, 'Guardando sugerencias', 'Estamos preparando el resultado para que puedas revisarlo.');
       $run->markCompleted($analysis, (int) ((microtime(true) - $startedAt) * 1000));
 
       EventAiAssistantReview::create([

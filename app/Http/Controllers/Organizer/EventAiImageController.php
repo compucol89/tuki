@@ -103,6 +103,9 @@ class EventAiImageController extends Controller
                     'label' => $this->formatLabel($format),
                     'description' => $this->formatDescription($format),
                     'progress' => 0,
+                    'is_indeterminate' => false,
+                    'elapsed_seconds' => 0,
+                    'message' => 'Todavía no se inició la generación.',
                     'can_apply' => false,
                 ];
                 continue;
@@ -113,6 +116,9 @@ class EventAiImageController extends Controller
                 'label' => $this->formatLabel($format),
                 'description' => $this->formatDescription($format),
                 'progress' => $this->statusProgress($g->status),
+                'is_indeterminate' => in_array($g->status, ['pending', 'running'], true),
+                'elapsed_seconds' => $g->duration_ms ? (int) ceil($g->duration_ms / 1000) : max(0, now()->diffInSeconds($g->created_at)),
+                'message' => $this->statusMessage($g->status),
                 'can_apply' => $g->status === 'completed' && !empty($g->output_path),
             ];
             if ($g->status === 'completed' && $g->output_path) {
@@ -342,13 +348,23 @@ class EventAiImageController extends Controller
         ][$format] ?? '';
     }
 
-    private function statusProgress(string $status): int
+    private function statusProgress(string $status): ?int
     {
         return [
-            'pending' => 12,
-            'running' => 68,
+            'pending' => null,
+            'running' => null,
             'completed' => 100,
             'failed' => 100,
         ][$status] ?? 0;
+    }
+
+    private function statusMessage(string $status): string
+    {
+        return [
+            'pending' => 'La variante está en cola y empezará en unos segundos.',
+            'running' => 'La variante se está generando. Puede tardar algunos segundos o minutos.',
+            'completed' => 'La variante ya está lista para revisar.',
+            'failed' => 'No se pudo generar esta variante. Podés reintentar.',
+        ][$status] ?? 'Todavía no se inició la generación.';
     }
 }

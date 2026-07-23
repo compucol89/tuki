@@ -33,6 +33,8 @@
         {{ __('El asistente todavia no se inicio para este evento.') }}
       </div>
 
+      @include('organizer.partials.async-progress', ['progressId' => 'event-ai-assistant-progress'])
+
       <div class="ai-assistant-results mt-3 d-none" data-ai-results>
         <div class="row">
           <div class="col-lg-7">

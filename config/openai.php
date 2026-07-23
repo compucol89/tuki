@@ -74,5 +74,10 @@ return [
             'max_content_drafts_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_ORGANIZER_DAY', 10),
             'max_repair_attempts' => (int) env('AI_EVENT_ASSISTANT_MAX_REPAIR_ATTEMPTS', 1),
         ],
+        'progress' => [
+            'analysis_estimate_seconds' => (int) env('AI_EVENT_ASSISTANT_ANALYSIS_ESTIMATE_SECONDS', 90),
+            'content_estimate_seconds' => (int) env('AI_EVENT_ASSISTANT_CONTENT_ESTIMATE_SECONDS', 90),
+            'delayed_after_seconds' => (int) env('AI_EVENT_ASSISTANT_DELAYED_AFTER_SECONDS', 120),
+        ],
     ],
 ];

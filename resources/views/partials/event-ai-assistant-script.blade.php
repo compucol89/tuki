@@ -354,6 +354,8 @@
           if (tinyEditor) {
             tinyEditor.setContent(description);
             tinyEditor.save();
+          } else if (setTinyIframeContent(descriptionField.get(0), description)) {
+            descriptionField.val(description);
           } else if ($.fn.summernote && descriptionField.next('.note-editor').length) {
             descriptionField.summernote('code', description);
           }
@@ -391,6 +393,15 @@
         }
         if (content.cta) html += '<p><strong>' + escapeHtml(content.cta) + '</strong></p>';
         return html;
+      }
+
+      function setTinyIframeContent(field, html) {
+        if (!field || !field.id) return false;
+        var frame = document.getElementById(field.id + '_ifr');
+        var body = frame && frame.contentDocument ? frame.contentDocument.body : null;
+        if (!body) return false;
+        body.innerHTML = html;
+        return true;
       }
 
       function loadStatus(scheduleNext) {

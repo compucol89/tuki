@@ -1630,11 +1630,22 @@
         if (tinyEditor) {
           tinyEditor.setContent(html);
           tinyEditor.save();
+        } else if (setTinyIframeContent(field, html)) {
+          field.value = html;
         } else if ($.fn.summernote && $(field).next('.note-editor').length) {
           $(field).summernote('code', html);
         }
         field.dispatchEvent(new Event('input', { bubbles: true }));
         field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function setTinyIframeContent(field, html) {
+        if (!field || !field.id) return false;
+        const frame = document.getElementById(field.id + '_ifr');
+        const body = frame && frame.contentDocument ? frame.contentDocument.body : null;
+        if (!body) return false;
+        body.innerHTML = html;
+        return true;
       }
 
       function buildDescriptionHtml(content) {

@@ -2095,13 +2095,17 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
         {{-- Left column --}}
         <div class="col-lg-8">
 
-          @if(!empty($content->thumbnail))
+          @if($images->count() > 0 || !empty($content->thumbnail))
+          @php
+            $eventDetailCoverUrl = $images->count() > 0
+              ? \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image)
+              : \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail);
+          @endphp
           <figure class="ed-event-cover" aria-label="{{ __('Imagen de portada del evento') }}">
             <img id="edMainImg"
-                 src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail) }}"
+                 src="{{ $eventDetailCoverUrl }}"
                  alt="{{ $content->title }}"
                  class="ed-event-cover__img"
-                 width="800" height="800"
                  fetchpriority="high">
           </figure>
           @endif

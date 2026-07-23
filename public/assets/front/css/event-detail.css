@@ -5130,9 +5130,8 @@ body.page-event-detail .ed-gallery-main {
 
 body.page-event-detail .ed-gallery-main__img {
   width: 100%;
-  aspect-ratio: 16 / 9;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 body.page-event-detail .ed-gallery-thumbs {
@@ -7877,9 +7876,9 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-section--hero-media .ed-gallery-main {
-    overflow: hidden;
+    overflow: visible;
     border-radius: 20px;
-    background: #0f172a;
+    background: transparent;
     box-shadow: 0 22px 58px rgba(2, 6, 23, 0.34);
   }
 
@@ -7891,11 +7890,9 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-section--hero-media .ed-gallery-main__img {
     display: block;
     width: 100%;
-    aspect-ratio: 16 / 9.45;
     height: auto;
-    max-height: clamp(17rem, 31vw, 24rem);
     border-radius: inherit;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   body.page-event-detail .ed-section--hero-media .ed-gallery-count {
@@ -8517,7 +8514,7 @@ body.page-event-detail .ed-body {
     max-width: 100%;
     margin: 0 auto 0.72rem;
     padding: 0;
-    overflow: hidden;
+    overflow: visible;
     border: 1px solid rgba(30, 37, 50, 0.08);
     border-radius: 22px;
     background: #ffffff;
@@ -8527,9 +8524,9 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-event-cover__img {
     display: block;
     width: 100%;
-    aspect-ratio: 1 / 1;
     height: auto;
-    object-fit: cover;
+    border-radius: inherit;
+    object-fit: contain;
   }
 
   body.page-event-detail .ed-event-cover + .ed-body-breadcrumbs {

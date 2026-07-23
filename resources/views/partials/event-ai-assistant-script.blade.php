@@ -20,7 +20,34 @@
       var hasCover = String(root.data('has-cover')) === '1' || !analysisInitiallyDisabled;
       var hasReview = false;
       var manualMode = false;
-      var requiredBriefFields = root.find('[data-ai-required]');
+      var requiredBriefFields = $();
+
+      function normalizeAiMultiselects() {
+        root.find('.ai-assistant-multiselect').each(function () {
+          var field = $(this);
+          var selected = field.val() || [];
+
+          if ($.fn.select2 && field.data('select2')) {
+            try {
+              field.select2('destroy');
+            } catch (e) {
+              field.next('.select2-container').remove();
+            }
+          }
+
+          field.next('.select2-container').remove();
+          field
+            .removeClass('select2-hidden-accessible')
+            .removeAttr('data-select2-id aria-hidden tabindex')
+            .css({display: '', width: ''})
+            .val(selected);
+        });
+
+        requiredBriefFields = root.find('[data-ai-required]');
+      }
+
+      normalizeAiMultiselects();
+      setTimeout(normalizeAiMultiselects, 250);
 
       function setStatus(message, type) {
         var box = root.find('[data-ai-status]');

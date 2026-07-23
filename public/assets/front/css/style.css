@@ -4077,6 +4077,11 @@ body.page-event-detail .footer-section.footer-section--premium {
     box-shadow: none;
   }
 
+  body.mobile-drawer-open .main-header.main-header--premium,
+  body.mobile-drawer-open .main-header--premium .header-upper {
+    z-index: 11050;
+  }
+
   .main-header--premium .main-menu .navbar-header {
     order: 1;
     display: flex;

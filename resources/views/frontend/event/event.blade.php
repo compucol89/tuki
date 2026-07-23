@@ -137,7 +137,7 @@
 @php
   $metaKeywords    = !empty($seo->meta_keyword_event)    ? $seo->meta_keyword_event    : 'eventos, entradas, tickets, conciertos, shows, teatro, Argentina';
   $metaDescription = !empty($seo->meta_description_event) ? $seo->meta_description_event : 'Encontrá los mejores eventos en Argentina. Reservá entradas online de forma fácil, rápida y segura en Tukipass.';
-  $ogImage = asset('assets/admin/img/' . $basicInfo->breadcrumb);
+  $ogImage = asset('assets/front/img/og/tukipass-og.jpg');
 @endphp
 
 @section('meta-keywords', $metaKeywords)
@@ -193,6 +193,7 @@
 
 @php
   $evf_total = $information['events']->total();
+  $evf_count = $information['events']->count();
   $evf_base  = request()->except(['event', 'pricing']);
   $evf_has_filters = request()->hasAny(['search-input', 'category', 'location', 'dates', 'event', 'pricing', 'min', 'max']);
   $today = \Carbon\Carbon::now();
@@ -322,10 +323,10 @@
   </div>
 </section>
 
-<section class="ev-listing ev-listing--premium">
+<section class="ev-listing ev-listing--premium {{ $evf_count > 0 ? '' : 'ev-listing--empty' }}">
   <div class="container ev-listing__inner">
 
-    @if (count($information['events']) > 0)
+    @if ($evf_count > 0)
       <div class="row">
         @foreach ($information['events'] as $event)
           <div class="col-lg-4 col-md-6 ev-card-col item motivational">
@@ -336,15 +337,19 @@
     @else
       <div class="ev-empty">
         <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <p>{{ __('No se encontraron eventos con esos filtros') }}</p>
-        <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Limpiar filtros') }}</a>
+        <p>{{ $evf_has_filters ? __('No se encontraron eventos con esos filtros') : __('No hay eventos publicados por ahora') }}</p>
+        @if ($evf_has_filters)
+          <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Limpiar filtros') }}</a>
+        @endif
       </div>
     @endif
 
-    {{-- Paginación --}}
-    <div class="ev-pagination">
-      {{ $information['events']->links() }}
-    </div>
+    @if ($evf_total > 0)
+      {{-- Paginación --}}
+      <div class="ev-pagination">
+        {{ $information['events']->links() }}
+      </div>
+    @endif
 
     @if (!empty(showAd(3)))
       <div class="text-center mt-4">{!! showAd(3) !!}</div>

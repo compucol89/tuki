@@ -20,7 +20,7 @@
     : __('customer.login.seo.meta_description_default');
 
   $loginSeoCanonical = route('customer.login', [], true);
-  $loginOgImage = asset('assets/admin/img/' . $websiteInfo->logo);
+  $loginOgImage = asset('assets/front/img/og/tukipass-og.jpg');
   $loginOgTitle = $loginPageTitle . ' | ' . $websiteInfo->website_title;
 
   $redirectPath = request()->input('redirectPath');

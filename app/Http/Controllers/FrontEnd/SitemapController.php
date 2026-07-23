@@ -14,6 +14,7 @@ use App\Support\DemoEventExclusion;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 
 class SitemapController extends Controller
 {
@@ -186,15 +187,24 @@ class SitemapController extends Controller
         ];
       });
 
-    $organizers = Organizer::where('status', 1)
-      ->whereNotNull('username')
-      ->where('username', '!=', '')
-      ->select('id', 'username', 'updated_at')
-      ->orderBy('updated_at', 'desc')
+    $organizers = Organizer::leftJoin('organizer_infos', function ($join) use ($defaultLanguageId) {
+        $join->on('organizer_infos.organizer_id', '=', 'organizers.id');
+        if ($defaultLanguageId) {
+          $join->where('organizer_infos.language_id', $defaultLanguageId);
+        }
+      })
+      ->where('organizers.status', 1)
+      ->whereNotNull('organizers.username')
+      ->where('organizers.username', '!=', '')
+      ->select('organizers.id', 'organizers.username', 'organizers.updated_at', 'organizer_infos.name as profile_name')
+      ->orderBy('organizers.updated_at', 'desc')
       ->get()
       ->map(function ($organizer) {
+        $profileName = trim((string) ($organizer->profile_name ?: $organizer->username));
+        $profileSlug = Str::slug($profileName);
+
         return [
-          'loc' => route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)], true),
+          'loc' => route('frontend.organizer.details', [$organizer->id, $profileSlug !== '' ? $profileSlug : str_replace(' ', '-', $organizer->username)], true),
           'lastmod' => $this->formatLastmod($organizer->updated_at),
           'changefreq' => 'weekly',
           'priority' => '0.5',
@@ -212,7 +222,8 @@ class SitemapController extends Controller
 
     return response()
       ->view('frontend.sitemap', compact('urls'))
-      ->header('Content-Type', 'application/xml; charset=UTF-8');
+      ->header('Content-Type', 'application/xml; charset=UTF-8')
+      ->header('Cache-Control', 'public, max-age=900');
   }
 
   private function formatLastmod($value)

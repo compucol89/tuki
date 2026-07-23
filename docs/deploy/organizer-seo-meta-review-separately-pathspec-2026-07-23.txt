@@ -1,0 +1,15 @@
+app/Http/Controllers/FrontEnd/PaymentGateway/MercadoPagoController.php
+app/Http/Controllers/FrontEnd/Shop/PaymentGateway/MercadoPagoController.php
+app/Http/Requests/Event/StoreRequest.php
+app/Http/Requests/Event/UpdateRequest.php
+app/Mail/EventConfirmationMail.php
+app/Services/Billing/ArcaInvoicePdfGenerator.php
+app/Support/EventSocialImage.php
+resources/views/frontend/event/event-details.blade.php
+resources/views/frontend/home/index-v1.blade.php
+resources/views/frontend/journal/blog-details.blade.php
+resources/views/frontend/journal/blogs.blade.php
+resources/views/frontend/partials/modals.blade.php
+resources/views/frontend/payment/success.blade.php
+resources/views/frontend/shop/details.blade.php
+resources/views/pdf/arca_invoice.blade.php

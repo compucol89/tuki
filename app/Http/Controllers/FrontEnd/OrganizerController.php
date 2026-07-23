@@ -4,8 +4,6 @@ namespace App\Http\Controllers\FrontEnd;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\Event;
-use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
 use App\Models\HomePage\EventFeature;
 use App\Models\HomePage\EventFeatureSection;
@@ -15,12 +13,14 @@ use App\Models\HomePage\Testimonial;
 use App\Models\HomePage\TestimonialSection;
 use App\Models\Organizer;
 use App\Models\OrganizerInfo;
-use Exception;
+use App\Support\DemoEventExclusion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class OrganizerController extends Controller
@@ -122,11 +122,8 @@ class OrganizerController extends Controller
         $admin = Admin::first();
         $information['organizer'] = $admin;
         $information['admin'] = true;
-
-        $events = Event::with(['tickets', 'information' => function ($query) use ($language) {
-          return $query->where('language_id', $language->id);
-        }])->where('organizer_id', NULL)->get();
-        $information['organizer_info'] = [];
+        $information['organizer_info'] = null;
+        $organizerEventColumn = null;
       } else {
         $organizer = Organizer::where('id', $id)->first();
         if (!$organizer) {
@@ -137,19 +134,51 @@ class OrganizerController extends Controller
 
         $information['organizer'] = $organizer;
         $information['admin'] = false;
-
-        $events = Event::with(['tickets', 'information' => function ($query) use ($language) {
-          return $query->where('language_id', $language->id);
-        }])->where('organizer_id', $organizer->id)->get();
+        $organizerEventColumn = $organizer->id;
       }
 
-      $categories = EventCategory::where('status', 1)
-        ->where('language_id', $language->id)
-        ->orderBy('serial_number', 'asc')->get();
-      $information['categories'] = $categories;
+      $ticketSub = DB::raw("(SELECT event_id,
+        COUNT(*) as ticket_count,
+        MIN(CASE WHEN pricing_type != 'free' AND price > 0 THEN CAST(price AS DECIMAL(10,2)) END) as min_price,
+        MAX(CASE WHEN pricing_type = 'free' THEN 1 ELSE 0 END) as has_free,
+        MAX(CASE WHEN pricing_type = 'variation' OR (pricing_type != 'free' AND price > 0) THEN 1 ELSE 0 END) as has_paid
+        FROM tickets GROUP BY event_id) as tk");
 
+      $baseEventsQuery = EventContent::join('events', 'events.id', '=', 'event_contents.event_id')
+        ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
+        ->where('event_contents.language_id', $language->id)
+        ->where('events.status', 1)
+        ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
+        ->when($organizerEventColumn === null, function ($query) {
+          return $query->whereNull('events.organizer_id');
+        }, function ($query) use ($organizerEventColumn) {
+          return $query->where('events.organizer_id', $organizerEventColumn);
+        })
+        ->select('event_contents.*', 'events.*', 'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid');
 
-      $information['events'] = $events;
+      $nowDateTime = Carbon::now();
+      $upcomingEvents = (clone $baseEventsQuery)
+        ->where('events.end_date_time', '>=', $nowDateTime)
+        ->orderBy('events.start_date', 'asc')
+        ->orderBy('events.start_time', 'asc')
+        ->get();
+      $pastEvents = (clone $baseEventsQuery)
+        ->where('events.end_date_time', '<', $nowDateTime)
+        ->orderBy('events.end_date_time', 'desc')
+        ->limit(6)
+        ->get();
+      $information['upcomingEvents'] = $upcomingEvents;
+      $information['pastEvents'] = $pastEvents;
+      $information['events'] = $upcomingEvents->concat($pastEvents);
+      $information['publicOrganizerName'] = trim((string) ($information['organizer_info']->name ?? $information['organizer']->username ?? config('app.name', 'Tukipass')));
+      $information['publicOrganizerDescription'] = trim(strip_tags((string) ($information['organizer_info']->details ?? '')));
+      $profileSlug = Str::slug($information['publicOrganizerName']);
+      $routeParameters = [$id, $profileSlug !== '' ? $profileSlug : Str::slug($name)];
+      if (filled($request->admin)) {
+        $routeParameters['admin'] = 'true';
+      }
+      $information['publicOrganizerUrl'] = route('frontend.organizer.details', $routeParameters, true);
+
       return view('frontend.organizer.details', $information); //code...
     } catch (\Throwable $th) {
       return response()->view('errors.404', [], 404);

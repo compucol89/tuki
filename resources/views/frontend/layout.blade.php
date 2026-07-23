@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html lang="es-AR" dir="ltr">
+<html lang="es-AR" dir="ltr" prefix="og: https://ogp.me/ns#">
 
 <head>
   @php
-    $metaDescription = trim($__env->yieldContent('meta-description'));
+    $siteName = trim((string) ($websiteInfo->website_title ?? config('app.name', 'Tukipass'))) ?: 'Tukipass';
+    $siteDefaultDescription = 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online de forma segura.';
+    $defaultOgImagePath = 'assets/front/img/og/tukipass-og.jpg';
+    $defaultOgImageBase = asset($defaultOgImagePath);
+    $defaultOgImage = $defaultOgImageBase . (is_file(public_path($defaultOgImagePath)) ? '?v=' . filemtime(public_path($defaultOgImagePath)) : '');
+    $metaDescription = trim($__env->yieldContent('meta-description')) ?: $siteDefaultDescription;
     $metaKeywords = trim($__env->yieldContent('meta-keywords'));
     $metaRobots = trim($__env->yieldContent('meta-robots')) ?: 'index,follow,max-image-preview:large';
-    $ogTitle = trim($__env->yieldContent('og-title')) ?: trim($__env->yieldContent('pageHeading'));
+    $ogTitle = trim($__env->yieldContent('og-title')) ?: trim($__env->yieldContent('pageHeading')) ?: $siteName;
     $ogDescription = trim($__env->yieldContent('og-description')) ?: $metaDescription;
     $ogImage = trim($__env->yieldContent('og-image'));
-    if ($ogImage === '' && !empty($websiteInfo->logo)) {
-      $ogImage = asset('assets/admin/img/' . $websiteInfo->logo);
+    if ($ogImage === '' || $ogImage === $defaultOgImageBase) {
+      $ogImage = $defaultOgImage;
     }
     $ogImageSecure = trim($__env->yieldContent('og-image-secure')) ?: $ogImage;
     $ogImageWidth = trim($__env->yieldContent('og-image-width')) ?: '1200';
@@ -20,6 +25,8 @@
     $ogUrl = trim($__env->yieldContent('og-url')) ?: url()->current();
     $ogType = trim($__env->yieldContent('og-type')) ?: 'website';
     $canonicalUrl = trim($__env->yieldContent('canonical')) ?: url()->current();
+    $facebookAppId = trim((string) config('services.facebook.client_id'));
+    $facebookDomainVerification = trim((string) config('services.facebook.domain_verification'));
   @endphp
   <!-- Required meta tags -->
   <meta charset="utf-8" />
@@ -31,6 +38,7 @@
   <meta property="og:title" content="{{ $ogTitle }}" />
   <meta property="og:description" content="{{ $ogDescription }}" />
   <meta property="og:image" content="{{ $ogImage }}" />
+  <meta property="og:image:url" content="{{ $ogImage }}" />
   <meta property="og:image:secure_url" content="{{ $ogImageSecure }}" />
   <meta property="og:image:width" content="{{ $ogImageWidth }}" />
   <meta property="og:image:height" content="{{ $ogImageHeight }}" />
@@ -38,8 +46,14 @@
   <meta property="og:image:alt" content="{{ $ogImageAlt }}" />
   <meta property="og:url" content="{{ $ogUrl }}" />
   <meta property="og:type" content="{{ $ogType }}" />
-  <meta property="og:site_name" content="{{ $websiteInfo->website_title }}" />
+  <meta property="og:site_name" content="{{ $siteName }}" />
   <meta property="og:locale" content="es_AR" />
+  @if ($facebookAppId !== '')
+  <meta property="fb:app_id" content="{{ $facebookAppId }}" />
+  @endif
+  @if ($facebookDomainVerification !== '')
+  <meta name="facebook-domain-verification" content="{{ $facebookDomainVerification }}" />
+  @endif
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{ $ogTitle }}" />
   <meta name="twitter:description" content="{{ $ogDescription }}" />
@@ -50,6 +64,8 @@
   <link rel="preconnect" href="https://www.tukipass.com">
   <link rel="dns-prefetch" href="https://www.tukipass.com">
   <link rel="canonical" href="{{ $canonicalUrl }}" />
+  <link rel="alternate" type="text/plain" title="Mapa para agentes IA" href="{{ url('/llms.txt') }}" />
+  <link rel="alternate" type="text/plain" title="Referencia completa para agentes IA" href="{{ url('/llms-full.txt') }}" />
   <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-400-normal.woff2') }}?eca1e21531598d5db58f56b3ba23a8cc" type="font/woff2" crossorigin>
   <link rel="preload" as="font" href="{{ asset('fonts/vendor/@fontsource/inter/files/inter-latin-800-normal.woff2') }}?d2cf8417dfce77f8f2bea87245ce39ee" type="font/woff2" crossorigin>
 
@@ -77,9 +93,11 @@
     $schemaOrganization = array_filter([
       '@context' => 'https://schema.org',
       '@type' => 'Organization',
+      '@id' => url('/#organization'),
       'name' => $websiteInfo->website_title ?? 'Tukipass',
       'url' => url('/'),
       'logo' => !empty($websiteInfo->logo) ? asset('assets/admin/img/' . $websiteInfo->logo) : null,
+      'description' => 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online.',
       'sameAs' => collect($socialMediaInfos ?? [])
         ->pluck('url')
         ->filter(fn ($url) => is_string($url) && filter_var($url, FILTER_VALIDATE_URL))
@@ -91,9 +109,11 @@
     $schemaWebsite = [
       '@context' => 'https://schema.org',
       '@type' => 'WebSite',
+      '@id' => url('/#website'),
       'name' => $websiteInfo->website_title ?? 'Tukipass',
       'url' => url('/'),
       'inLanguage' => 'es-AR',
+      'publisher' => ['@id' => url('/#organization')],
       'potentialAction' => [
         '@type' => 'SearchAction',
         'target' => [

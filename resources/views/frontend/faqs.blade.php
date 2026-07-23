@@ -21,7 +21,7 @@
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
-@section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
+@section('og-image', asset('assets/front/img/og/tukipass-og.jpg'))
 
 @push('schema')
 <script type="application/ld+json">

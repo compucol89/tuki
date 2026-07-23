@@ -20,7 +20,7 @@
     : __('customer.signup.seo.meta_description_default');
 
   $signupCanonical = route('customer.signup', [], true);
-  $signupOgImage = asset('assets/admin/img/' . $websiteInfo->logo);
+  $signupOgImage = asset('assets/front/img/og/tukipass-og.jpg');
   $signupOgTitle = $signupPageTitle . ' | ' . $websiteInfo->website_title;
 
   $signupStats = trans('customer.signup.stats');

@@ -38,7 +38,7 @@
 
 
         // 02. Dropdown menu
-        var mobileWidth = 992;
+        var mobileWidth = 1200;
         var navcollapse = $('.navigation li.dropdown');
         var viewportW   = window.innerWidth;
         window.addEventListener('resize', function () { viewportW = window.innerWidth; }, { passive: true });
@@ -391,7 +391,7 @@
        ========================================================================== */
 
     $(window).on('resize', function () {
-        var mobileWidth = 992;
+        var mobileWidth = 1200;
         var navcollapse = $('.navigation li.dropdown');
         navcollapse.children('ul').hide();
         navcollapse.children('.megamenu').hide();

@@ -13,6 +13,7 @@ class Organizer extends Model implements AuthenticatableContract
   use HasFactory, Authenticatable;
   protected $fillable = [
     'photo',
+    'cover_photo',
     'email',
     'phone',
     'username',
@@ -20,6 +21,10 @@ class Organizer extends Model implements AuthenticatableContract
     'facebook',
     'twitter',
     'linkedin',
+    'website',
+    'instagram',
+    'tiktok',
+    'meta_pixel_id',
     'email_verification_token',
     'email_verification_sent_at'
   ];

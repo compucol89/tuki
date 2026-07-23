@@ -380,6 +380,10 @@
       min-height: auto;
       padding: 14px 0;
     }
+    body.mobile-drawer-open .main-header.main-header--premium,
+    body.mobile-drawer-open .main-header--premium .header-upper {
+      z-index: 11050;
+    }
     .main-header--premium .main-menu {
       flex-wrap: nowrap;
       justify-content: flex-start;

@@ -4686,3 +4686,168 @@ body.home-page .hs-chip--free {
     height: 152px;
   }
 }
+
+/* Home mobile event rows: no card container, image-aligned hierarchy */
+@media (max-width: 767px) {
+  body.home-page .events-section .ev-card {
+    --ev-mobile-media: clamp(126px, 34vw, 148px);
+    position: relative;
+    grid-template-columns: var(--ev-mobile-media) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 0;
+    align-items: start;
+    align-content: stretch;
+    min-height: var(--ev-mobile-media);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  body.home-page .events-section .ev-card__visual {
+    grid-row: 1 / 5;
+    border-radius: 14px;
+    box-shadow: none;
+  }
+
+  body.home-page .events-section .ev-card__body-panel {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    max-width: 100%;
+    padding-top: 0;
+  }
+
+  body.home-page .events-section .ev-card__body {
+    gap: 7px;
+  }
+
+  body.home-page .events-section .ev-card__loc-row,
+  body.home-page .events-section .ev-card__loc-row span {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  body.home-page .events-section .ev-card__title {
+    max-width: 100%;
+    color: #1e2532;
+    font-size: clamp(16px, 4.15vw, 18px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: 0;
+    -webkit-line-clamp: 3;
+    overflow-wrap: break-word;
+  }
+
+  body.home-page .events-section .ev-card__datetime-bar {
+    grid-column: 2;
+    grid-row: 3;
+    align-self: start;
+    justify-self: start;
+    display: inline-flex;
+    width: auto;
+    margin-top: 8px;
+    padding-right: 0;
+  }
+
+  body.home-page .events-section .ev-card__dtbar-content {
+    flex: 0 0 auto;
+  }
+
+  body.home-page .events-section .ev-card__dtbar-left {
+    gap: 11px;
+  }
+
+  body.home-page .events-section .ev-card__datetime-bar .ev-card__img-day {
+    font-size: 24px;
+  }
+
+  body.home-page .events-section .ev-card__datetime-bar .ev-card__img-month-text {
+    color: #f97316;
+    font-size: 10px;
+  }
+
+  body.home-page .events-section .ev-card__datetime-bar .ev-card__img-year-text {
+    font-size: 9px;
+  }
+
+  body.home-page .events-section .ev-card__dtbar-cta,
+  body.home-page .events-section .ev-card:hover .ev-card__dtbar-cta,
+  body.home-page .events-section .ev-card:focus-within .ev-card__dtbar-cta {
+    position: static;
+    inset: auto;
+    display: flex;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 11px;
+    opacity: 1;
+    pointer-events: none;
+    color: #c2410c;
+  }
+
+  body.home-page .events-section .ev-card__dtbar-cta-arrow {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(249, 115, 22, .18);
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #c2410c;
+    box-shadow: 0 6px 16px rgba(194, 65, 12, .10);
+  }
+
+  body.home-page .events-section .ev-card__dtbar-cta-arrow svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2.6;
+  }
+
+  body.home-page .events-section .ev-card-col {
+    margin-bottom: 16px !important;
+    padding-bottom: 0;
+  }
+
+  body.home-page .events-section .ev-card-col:not(:last-child)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  body.home-page .events-section .ev-card {
+    --ev-mobile-media: 112px;
+    column-gap: 12px;
+    padding: 0;
+  }
+
+  body.home-page .events-section .ev-card__title {
+    font-size: 15px;
+  }
+
+  body.home-page .events-section .ev-card__datetime-bar {
+    padding-right: 0;
+  }
+
+  body.home-page .events-section .ev-card__dtbar-cta,
+  body.home-page .events-section .ev-card:hover .ev-card__dtbar-cta,
+  body.home-page .events-section .ev-card:focus-within .ev-card__dtbar-cta {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    margin-left: 9px;
+  }
+
+  body.home-page .events-section .ev-card__dtbar-cta-arrow {
+    width: 32px;
+    height: 32px;
+  }
+}

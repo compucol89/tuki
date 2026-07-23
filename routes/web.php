@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\FrontEnd\AiIndexController;
+use App\Http\Controllers\FrontEnd\ImageSitemapController;
 use App\Http\Controllers\FrontEnd\SitemapController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,10 +12,14 @@ Route::get('/csrf-token', function () {
 })->middleware('throttle:60,1')->name('csrf-token');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/sitemap-images.xml', [ImageSitemapController::class, 'index'])->name('sitemap.images');
+Route::get('/llms.txt', [AiIndexController::class, 'llms'])->name('llms');
+Route::get('/llms-full.txt', [AiIndexController::class, 'full'])->name('llms.full');
 
 Route::get('/robots.txt', function () {
   return response()->file(public_path('robots.txt'), [
     'Content-Type' => 'text/plain; charset=UTF-8',
+    'Cache-Control' => 'public, max-age=300',
   ]);
 })->name('robots');
 

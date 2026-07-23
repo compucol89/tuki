@@ -44,7 +44,7 @@
                             </div>
 
                             <form id="eventForm" action="{{ route('admin.organizer_management.save-organizer') }}"
-                                method="post">
+                                method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -62,6 +62,25 @@
                                                 </div>
                                                 <p class="mt-1 mb-0 text-warning em">{{ __('Image Size 300x300') }}</p>
                                                 <p id="editErr_photo" class="mt-1 mb-0 text-danger em"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label>{{ __('Foto de portada') }}</label>
+                                            <br>
+                                            <div class="thumb-preview">
+                                                <img src="{{ asset('assets/admin/img/noimage.jpg') }}" alt="..."
+                                                    class="uploaded-img">
+                                            </div>
+                                            <div class="mt-3">
+                                                <div role="button" class="btn btn-primary btn-sm upload-btn">
+                                                    {{ __('Elegir portada') }}
+                                                    <input type="file" class="img-input" name="cover_photo">
+                                                </div>
+                                                <p class="mt-1 mb-0 text-warning em">{{ __('Imagen recomendada 1600x600 en JPG, PNG o WebP') }}</p>
+                                                <p id="editErr_cover_photo" class="mt-1 mb-0 text-danger em"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -109,7 +128,7 @@
 
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <label>{{ __('Twitter') }}</label>
+                                            <label>{{ __('X / Twitter') }}</label>
                                             <input type="text" class="form-control" name="twitter" value="">
                                         </div>
                                     </div>
@@ -118,6 +137,35 @@
                                         <div class="form-group">
                                             <label>{{ __('Linkedin') }}</label>
                                             <input type="text" class="form-control" name="linkedin" value="">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>{{ __('Sitio web') }}</label>
+                                            <input type="url" class="form-control" name="website" value="" placeholder="https://">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>{{ __('Instagram') }}</label>
+                                            <input type="url" class="form-control" name="instagram" value="" placeholder="https://www.instagram.com/...">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>{{ __('TikTok') }}</label>
+                                            <input type="url" class="form-control" name="tiktok" value="" placeholder="https://www.tiktok.com/@...">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <label>{{ __('Meta Pixel ID') }}</label>
+                                            <input type="text" class="form-control" name="meta_pixel_id" value="" placeholder="Ej: 1234567890123456">
+                                            <small class="form-text text-muted">{{ __('Opcional. Se usa sólo en la página pública del perfil para PageView y ViewContent, sin datos personales.') }}</small>
                                         </div>
                                     </div>
 

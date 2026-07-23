@@ -16,6 +16,20 @@
   RewriteRule ^ index.php [L]
 </IfModule>
 
+# ─── Cache corto para archivos de descubrimiento SEO/IA ───
+<IfModule mod_expires.c>
+  ExpiresActive On
+  <FilesMatch "^(robots\.txt|llms(-full)?\.txt|sitemap.*\.xml)$">
+    ExpiresDefault "access plus 5 minutes"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "^(robots\.txt|llms(-full)?\.txt|sitemap.*\.xml)$">
+    Header set Cache-Control "public, max-age=300"
+  </FilesMatch>
+</IfModule>
+
 # ─── Cache headers para assets estáticos ───
 <IfModule mod_expires.c>
   ExpiresActive On

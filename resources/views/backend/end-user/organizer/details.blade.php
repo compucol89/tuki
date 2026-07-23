@@ -1,5 +1,181 @@
 @extends('backend.layout')
 
+@section('style')
+  <style>
+    .admin-profile-diagnostic {
+      display: grid;
+      grid-template-columns: minmax(160px, 220px) minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 16px 18px;
+      border: 1px solid #dcdfe2;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 12px 26px rgba(30, 37, 50, .06);
+    }
+
+    .admin-profile-diagnostic__score strong {
+      display: block;
+      color: #1e2532;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .admin-profile-diagnostic__score span {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .admin-profile-diagnostic__score span.is-strong {
+      background: rgba(22, 163, 74, .12);
+      color: #15803d;
+    }
+
+    .admin-profile-diagnostic__score span.is-mid {
+      background: rgba(224, 93, 56, .12);
+      color: #bf4424;
+    }
+
+    .admin-profile-diagnostic__score span.is-low {
+      background: rgba(220, 38, 38, .1);
+      color: #b91c1c;
+    }
+
+    .admin-profile-diagnostic__bar {
+      height: 8px;
+      margin-top: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf0f2;
+    }
+
+    .admin-profile-diagnostic__bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: #e05d38;
+    }
+
+    .admin-profile-diagnostic__signals {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .admin-profile-diagnostic__signals h5 {
+      margin: 0 0 8px;
+      color: #1e2532;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .admin-profile-diagnostic__signals ul {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .admin-profile-diagnostic__signals li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      color: #1e2532;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .admin-profile-diagnostic__signals i {
+      margin-top: 2px;
+      color: #16a34a;
+      font-size: 12px;
+    }
+
+    .admin-profile-diagnostic__signals .is-gap i {
+      color: #e05d38;
+    }
+
+    .admin-profile-diagnostic__signals strong,
+    .admin-profile-diagnostic__signals span {
+      display: block;
+    }
+
+    .admin-profile-diagnostic__signals span {
+      margin-top: 2px;
+      color: #64748b;
+      font-size: 11px;
+    }
+
+    .admin-profile-diagnostic__actions {
+      display: grid;
+      gap: 8px;
+      min-width: 150px;
+    }
+
+    .admin-profile-diagnostic__actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 9px 12px;
+      border: 1px solid #dcdfe2;
+      border-radius: 9px;
+      background: #fff;
+      color: #1e2532;
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .admin-profile-diagnostic__actions a:first-child {
+      border-color: #e05d38;
+      background: #e05d38;
+      color: #fff;
+    }
+
+    .admin-profile-diagnostic__actions a:hover,
+    .admin-profile-diagnostic__actions a:focus {
+      border-color: #bf4424;
+      color: #bf4424;
+      text-decoration: none;
+    }
+
+    .admin-profile-diagnostic__actions a:first-child:hover,
+    .admin-profile-diagnostic__actions a:first-child:focus {
+      background: #bf4424;
+      color: #fff;
+    }
+
+    @media (max-width: 991.98px) {
+      .admin-profile-diagnostic,
+      .admin-profile-diagnostic__signals {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-profile-diagnostic__actions {
+        display: flex;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+@endsection
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Organizer Details') }}</h4>
@@ -32,6 +208,70 @@
 
   <div class="row">
     <div class="col-md-12">
+      @if(!empty($profileQualityDetail))
+        <section class="admin-profile-diagnostic" aria-labelledby="admin-profile-diagnostic-title">
+          <div class="admin-profile-diagnostic__score">
+            <p class="mb-1 text-uppercase font-weight-bold text-muted">{{ __('Perfil público') }}</p>
+            <strong>{{ $profileQualityDetail['percent'] }}%</strong>
+            <span class="{{ $profileQualityDetail['tone'] }}">{{ $profileQualityDetail['label'] }}</span>
+            <div class="admin-profile-diagnostic__bar" aria-hidden="true">
+              <span style="width: {{ $profileQualityDetail['percent'] }}%;"></span>
+            </div>
+          </div>
+
+          <div class="admin-profile-diagnostic__signals">
+            <div>
+              <h5 id="admin-profile-diagnostic-title">{{ __('Bien resuelto') }}</h5>
+              @if($profileQualityDetail['complete']->isNotEmpty())
+                <ul>
+                  @foreach($profileQualityDetail['complete']->take(3) as $signal)
+                    <li>
+                      <i class="fas fa-check-circle" aria-hidden="true"></i>
+                      <span>
+                        <strong>{{ $signal['label'] }}</strong>
+                        <span><b>{{ __('Impacto') }}:</b> {{ $signal['impact'] }}</span>
+                      </span>
+                    </li>
+                  @endforeach
+                </ul>
+              @else
+                <p class="mb-0 text-muted">{{ __('Todavía no hay señales fuertes en el perfil.') }}</p>
+              @endif
+            </div>
+
+            <div>
+              <h5>{{ __('Por mejorar') }}</h5>
+              @if($profileQualityDetail['gaps']->isNotEmpty())
+                <ul>
+                  @foreach($profileQualityDetail['gaps']->take(3) as $signal)
+                    <li class="is-gap">
+                      <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                      <span>
+                        <strong>{{ $signal['label'] }}</strong>
+                        <span><b>{{ __('Impacto') }}:</b> {{ $signal['impact'] }}</span>
+                      </span>
+                    </li>
+                  @endforeach
+                </ul>
+              @else
+                <p class="mb-0 text-muted">{{ __('Sin faltantes críticos para soporte/comercial.') }}</p>
+              @endif
+            </div>
+          </div>
+
+          <div class="admin-profile-diagnostic__actions">
+            <a href="{{ $profileQualityDetail['edit_url'] }}">
+              <i class="fas fa-user-edit" aria-hidden="true"></i>
+              {{ __('Editar perfil') }}
+            </a>
+            <a href="{{ $profileQualityDetail['public_url'] }}" target="_blank" rel="noopener">
+              <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+              {{ __('Ver público') }}
+            </a>
+          </div>
+        </section>
+      @endif
+
       <div class="row">
         <div class="col-md-5">
           <div class="card">

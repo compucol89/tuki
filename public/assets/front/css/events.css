@@ -2309,6 +2309,11 @@ body.events-page .ev-listing--premium {
   background: #eef1f3;
 }
 
+body.events-page .ev-listing--empty {
+  min-height: 0;
+  padding-bottom: clamp(28px, 5vw, 48px);
+}
+
 body.events-page .ev-listing__inner > .row {
   row-gap: 4px;
 }
@@ -2333,6 +2338,11 @@ body.events-page .ev-listing--premium .ev-empty p {
 
 body.events-page .ev-listing--premium .ev-pagination {
   margin-top: 18px !important;
+}
+
+body.events-page .ev-listing--empty .ev-pagination:empty {
+  display: none;
+  margin-top: 0 !important;
 }
 
 body.events-page .ev-listing--premium .ev-pagination .pagination {
@@ -2514,6 +2524,10 @@ body.events-page .ev-listing--premium .ev-pagination .page-item .page-link:hover
 
   body.events-page .ev-listing--premium {
     padding-top: 12px;
+  }
+
+  body.events-page .ev-listing--empty {
+    padding-bottom: 28px;
   }
 }
 

@@ -48,6 +48,7 @@ return [
     'client_id' => env('FACEBOOK_CLIENT_ID'),
     'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
     'redirect' => env('FACEBOOK_CALLBACK_URL'),
+    'domain_verification' => env('FACEBOOK_DOMAIN_VERIFICATION'),
   ],
   'google' => [
     'client_id' => env('GOOGLE_CLIENT_ID'),

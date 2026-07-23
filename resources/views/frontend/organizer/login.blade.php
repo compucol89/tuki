@@ -21,7 +21,7 @@
     : __('organizer.login.seo.meta_description_default');
 
   $loginCanonical = route('organizer.login', [], true);
-  $loginOgImage = asset('assets/admin/img/' . $websiteInfo->logo);
+  $loginOgImage = asset('assets/front/img/og/tukipass-og.jpg');
   $loginOgTitle = $loginPageTitle . ' | ' . $websiteInfo->website_title;
 
   $organizerStats = __('organizer.login.stats');

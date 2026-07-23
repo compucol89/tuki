@@ -52,6 +52,11 @@
     : ($ev_is_mixed ? __('Ver entradas') : __('Reservar entradas'));
 
   $ev_card_title_id = 'ev-card-title-' . $event->id;
+  $ev_image_url = \App\Services\FileUploadService::eventVisualUrl(null, $event->thumbnail ?? null);
+  $ev_image_fallback_url = $eventImageFallbackUrl ?? null;
+  if (!empty($ev_image_fallback_url) && $ev_image_url === asset('assets/admin/img/noimage.jpg')) {
+    $ev_image_url = $ev_image_fallback_url;
+  }
 @endphp
 
 <article class="ev-card"
@@ -65,7 +70,7 @@
 
     <div class="ev-card__img">
       <img class="lazy"
-           data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $event->thumbnail) }}"
+           data-src="{{ $ev_image_url }}"
            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
            alt="{{ $event->title }}"
            loading="lazy"

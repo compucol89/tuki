@@ -40,11 +40,19 @@ class OrganizerController extends Controller
   //index
   public function index(EventSettlementService $eventSettlementService)
   {
-    $organizerId = Auth::guard('organizer')->user()->id;
+    $organizer = Auth::guard('organizer')->user();
+    $organizerId = $organizer->id;
     $information['total_events'] = Event::where('organizer_id', $organizerId)->get()->count();
     $information['total_event_bookings'] = Booking::where('organizer_id', $organizerId)->get()->count();
     $information['transcation_count'] = Transaction::where('organizer_id', $organizerId)->get()->count();
     $information['settlementSummary'] = $eventSettlementService->dashboardSummaryForOrganizer($organizerId);
+    $publishedEvents = Event::where('organizer_id', $organizerId)->where('status', 1);
+    $profileEventStats = [
+      'total' => (clone $publishedEvents)->count(),
+      'upcoming' => (clone $publishedEvents)->where('end_date_time', '>=', now())->count(),
+      'past' => (clone $publishedEvents)->where('end_date_time', '<', now())->count(),
+    ];
+    $information['profileDashboard'] = $this->profileDashboard($organizer, $profileEventStats);
 
     //income of event bookings 
     $eventBookingTotalIncomes = DB::table('bookings')
@@ -118,6 +126,96 @@ class OrganizerController extends Controller
 
 
     return view('organizer.index', $information);
+  }
+
+  private function profileDashboard(Organizer $organizer, array $profileEventStats): array
+  {
+    $defaultLanguage = Language::where('is_default', 1)->first() ?: Language::first();
+    $defaultInfo = $defaultLanguage
+      ? OrganizerInfo::where('organizer_id', $organizer->id)->where('language_id', $defaultLanguage->id)->first()
+      : null;
+    $profileName = trim((string) ($defaultInfo->name ?? $organizer->username ?? __('Organizador')));
+    $profileBio = trim(strip_tags((string) ($defaultInfo->details ?? '')));
+    $profileLocation = trim(implode(', ', array_filter([
+      $defaultInfo->city ?? null,
+      $defaultInfo->country ?? null,
+    ])));
+    $metaPixelValid = preg_match('/^\d{6,32}$/', trim((string) $organizer->meta_pixel_id));
+    $editProfileUrl = route('organizer.edit.profile');
+    $profileSlug = Str::slug($profileName);
+    $publicProfileUrl = route('frontend.organizer.details', [
+      $organizer->id,
+      $profileSlug !== '' ? $profileSlug : Str::slug($organizer->username ?: 'organizador'),
+    ], true);
+    $createEventUrl = route('choose-event-type');
+    $publishedTotal = $profileEventStats['total'] ?? 0;
+    $checks = [
+      [
+        'label' => $publishedTotal > 0 ? __('Publicá una nueva fecha') : __('Publicá tu primer evento'),
+        'complete' => ($profileEventStats['upcoming'] ?? 0) > 0,
+        'hint' => __('La agenda activa es lo primero que mira quien entra al perfil.'),
+        'href' => $createEventUrl,
+        'icon' => 'fas fa-calendar-plus',
+      ],
+      [
+        'label' => __('Subí portada'),
+        'complete' => !empty($organizer->cover_photo),
+        'hint' => __('Dale contexto visual a tu marca y a tus próximos eventos.'),
+        'href' => $editProfileUrl . '#opb-media-title',
+        'icon' => 'fas fa-image',
+      ],
+      [
+        'label' => __('Agregá Instagram'),
+        'complete' => trim((string) $organizer->instagram) !== '',
+        'hint' => __('Es la red que más valida eventos, comunidad y convocatorias.'),
+        'href' => $editProfileUrl . '#opb-social-title',
+        'icon' => 'fab fa-instagram',
+      ],
+      [
+        'label' => __('Subí foto de perfil'),
+        'complete' => !empty($organizer->photo),
+        'hint' => __('Usá logo o imagen reconocible para que te identifiquen rápido.'),
+        'href' => $editProfileUrl . '#opb-media-title',
+        'icon' => 'fas fa-user-circle',
+      ],
+      [
+        'label' => __('Escribí una bio clara'),
+        'complete' => mb_strlen($profileBio) >= 80,
+        'hint' => __('Explicá qué hacés, dónde y por qué seguir tu agenda.'),
+        'href' => $editProfileUrl . '#opb-content-title',
+        'icon' => 'fas fa-align-left',
+      ],
+      [
+        'label' => __('Completá ciudad y país'),
+        'complete' => $profileLocation !== '',
+        'hint' => __('Ayuda a que te encuentren por ciudad o país.'),
+        'href' => $editProfileUrl . '#opb-content-title',
+        'icon' => 'fas fa-map-marker-alt',
+      ],
+      [
+        'label' => __('Agregá Meta Pixel'),
+        'complete' => $metaPixelValid,
+        'hint' => __('Medí visitas, interés y contactos del perfil.'),
+        'href' => $editProfileUrl . '#opb-measurement-title',
+        'icon' => 'fas fa-chart-line',
+      ],
+    ];
+    $done = collect($checks)->where('complete', true)->count();
+    $percent = (int) round(($done / max(count($checks), 1)) * 100);
+
+    return [
+      'percent' => $percent,
+      'done' => $done,
+      'total' => count($checks),
+      'label' => $percent >= 84 ? __('Listo para compartir') : ($percent >= 50 ? __('Buen avance') : __('Perfil por completar')),
+      'copy' => $percent >= 84
+        ? __('Tu perfil ya tiene las señales principales para presentarse y medir resultados.')
+        : __('Completá estos puntos para que tu perfil público venda mejor tu agenda.'),
+      'next_actions' => collect($checks)->filter(fn ($check) => !$check['complete'])->take(3)->values(),
+      'public_url' => $publicProfileUrl,
+      'edit_url' => $editProfileUrl,
+      'upcoming' => $profileEventStats['upcoming'] ?? 0,
+    ];
   }
   //login
   public function login()
@@ -531,7 +629,15 @@ class OrganizerController extends Controller
   public function edit_profile()
   {
     $languages = Language::get();
-    return view('organizer.edit-profile', compact('languages'));
+    $organizer = Auth::guard('organizer')->user();
+    $publishedEvents = Event::where('organizer_id', $organizer->id)->where('status', 1);
+    $profileEventStats = [
+      'total' => (clone $publishedEvents)->count(),
+      'upcoming' => (clone $publishedEvents)->where('end_date_time', '>=', now())->count(),
+      'past' => (clone $publishedEvents)->where('end_date_time', '<', now())->count(),
+    ];
+
+    return view('organizer.edit-profile', compact('languages', 'profileEventStats'));
   }
   //update_profile
   public function update_profile(Request $request)
@@ -541,7 +647,8 @@ class OrganizerController extends Controller
     $rules = [
       'email' => [
         'required',
-        Rule::unique('organizers', 'username')->ignore(Auth::guard('organizer')->user()->id)
+        'email',
+        Rule::unique('organizers', 'email')->ignore(Auth::guard('organizer')->user()->id)
       ],
       'username' => [
         'required',
@@ -549,19 +656,38 @@ class OrganizerController extends Controller
         "not_in:$this->admin_user_name",
         Rule::unique('organizers', 'username')->ignore(Auth::guard('organizer')->user()->id)
       ],
+      'phone' => 'nullable|string|max:50',
+      'facebook' => 'nullable|url|max:255',
+      'twitter' => 'nullable|url|max:255',
+      'linkedin' => 'nullable|url|max:255',
+      'website' => 'nullable|url|max:255',
+      'instagram' => 'nullable|url|max:255',
+      'tiktok' => 'nullable|url|max:255',
+      'meta_pixel_id' => ['nullable', 'regex:/^\d{6,32}$/'],
     ];
 
     $languages = Language::get();
 
     $messages = [];
+    $messages['meta_pixel_id.regex'] = __('El Meta Pixel ID debe tener sólo números, entre 6 y 32 dígitos.');
 
     foreach ($languages as $language) {
       $rules[$language->code . '_name'] = 'required';
+      $rules[$language->code . '_designation'] = 'nullable|string|max:255';
+      $rules[$language->code . '_country'] = 'nullable|string|max:255';
+      $rules[$language->code . '_city'] = 'nullable|string|max:255';
+      $rules[$language->code . '_state'] = 'nullable|string|max:255';
+      $rules[$language->code . '_zip_code'] = 'nullable|string|max:50';
+      $rules[$language->code . '_address'] = 'nullable|string';
+      $rules[$language->code . '_details'] = 'nullable|string';
       $messages[$language->code . '_name'] = __('organizer.validation.name_required_for_language', ['language' => $language->name]);
     }
 
     if ($request->hasFile('photo')) {
-      $rules['photo']  = 'dimensions:width=300,height=300|mimes:jpg,jpeg,png';
+      $rules['photo'] = 'image|mimes:jpg,jpeg,png|max:2048|dimensions:width=300,height=300';
+    }
+    if ($request->hasFile('cover_photo')) {
+      $rules['cover_photo'] = 'image|mimes:jpg,jpeg,png,webp|max:4096';
     }
 
     $validator = Validator::make($request->all(), $rules, $messages);
@@ -574,18 +700,43 @@ class OrganizerController extends Controller
       );
     }
 
-    $in = $request->all();
+    $validated = $validator->validated();
+    $in = array_intersect_key($validated, array_flip([
+      'email',
+      'phone',
+      'username',
+      'facebook',
+      'twitter',
+      'linkedin',
+      'website',
+      'instagram',
+      'tiktok',
+      'meta_pixel_id',
+    ]));
     $organizer = Organizer::find(Auth::guard('organizer')->user()->id);
     $file = $request->file('photo');
     if ($file) {
-      $extension = $file->getClientOriginalExtension();
       $directory = public_path('assets/admin/img/organizer-photo/');
-      $fileName = uniqid() . '.' . $extension;
+      $fileName = $file->hashName();
       @mkdir($directory, 0775, true);
       $file->move($directory, $fileName);
 
-      @unlink(public_path('assets/admin/img/organizer-photo/') . $organizer->photo);
+      if (!empty($organizer->photo)) {
+        @unlink(public_path('assets/admin/img/organizer-photo/') . $organizer->photo);
+      }
       $in['photo'] = $fileName;
+    }
+    $coverFile = $request->file('cover_photo');
+    if ($coverFile) {
+      $directory = public_path('assets/admin/img/organizer-cover-photo/');
+      $fileName = $coverFile->hashName();
+      @mkdir($directory, 0775, true);
+      $coverFile->move($directory, $fileName);
+
+      if (!empty($organizer->cover_photo)) {
+        @unlink(public_path('assets/admin/img/organizer-cover-photo/') . $organizer->cover_photo);
+      }
+      $in['cover_photo'] = $fileName;
     }
     $organizer->update($in);
 
@@ -597,14 +748,14 @@ class OrganizerController extends Controller
         $organizer_info->language_id = $language->id;
         $organizer_info->organizer_id = $organizer->id;
       }
-      $organizer_info->name = $request[$language->code . '_name'];
-      $organizer_info->designation = $request[$language->code . '_designation'];
-      $organizer_info->country = $request[$language->code . '_country'];
-      $organizer_info->city = $request[$language->code . '_city'];
-      $organizer_info->state = $request[$language->code . '_state'];
-      $organizer_info->zip_code = $request[$language->code . '_zip_code'];
-      $organizer_info->address = $request[$language->code . '_address'];
-      $organizer_info->details = $request[$language->code . '_details'];
+      $organizer_info->name = $validated[$language->code . '_name'];
+      $organizer_info->designation = $validated[$language->code . '_designation'] ?? null;
+      $organizer_info->country = $validated[$language->code . '_country'] ?? null;
+      $organizer_info->city = $validated[$language->code . '_city'] ?? null;
+      $organizer_info->state = $validated[$language->code . '_state'] ?? null;
+      $organizer_info->zip_code = $validated[$language->code . '_zip_code'] ?? null;
+      $organizer_info->address = $validated[$language->code . '_address'] ?? null;
+      $organizer_info->details = $validated[$language->code . '_details'] ?? null;
       $organizer_info->save();
     }
 

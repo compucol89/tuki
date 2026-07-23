@@ -324,6 +324,7 @@
                     </div>
                   </div>
                 </div>
+                @include('organizer.event.partials.ai-assistant-panel', ['event' => $event])
                 <div id="section-schedule" class="mb-3">
                   <p class="text-muted mb-0">{{ __('Define si el evento tiene una sola fecha o varias funciones.') }}</p>
                 </div>
@@ -1244,6 +1245,37 @@
       background: #ffe4e6;
     }
 
+    .ai-assistant-card {
+      border: 1px solid #dcdfe2;
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(30, 37, 50, .06);
+    }
+
+    .ai-assistant-facts {
+      max-height: 260px;
+      overflow: auto;
+      background: #fff;
+    }
+
+    .ai-assistant-fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef0f3;
+    }
+
+    .ai-assistant-fact:last-child {
+      border-bottom: 0;
+    }
+
+    .ai-assistant-fact__value {
+      color: #1e2532;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+
     @media (max-width: 575.98px) {
       #img-table .table-row {
         width: 100%;
@@ -1261,6 +1293,214 @@
   </script>
   <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
   <script src="{{ asset('assets/admin/js/admin_dropzone.js') }}"></script>
+  <script>
+    (function ($) {
+      var root = $('#event-ai-assistant');
+      if (!root.length) return;
+
+      var csrf = $('meta[name="csrf-token"]').attr('content');
+      var draftId = null;
+      var lastDraft = null;
+      var pollTimer = null;
+
+      function setStatus(message, type) {
+        var box = root.find('[data-ai-status]');
+        box.removeClass('alert-light alert-info alert-success alert-warning alert-danger')
+          .addClass('alert-' + (type || 'light'))
+          .text(message);
+      }
+
+      function errorMessage(xhr, fallback) {
+        return (xhr.responseJSON && (xhr.responseJSON.message || xhr.responseJSON.error)) || fallback;
+      }
+
+      function renderUsage(analysisUsage, contentUsage) {
+        if (!analysisUsage) return;
+        var message = 'Análisis: ' + analysisUsage.remaining_event_runs + ' por evento · ' + analysisUsage.remaining_daily_runs + ' hoy';
+        if (contentUsage) {
+          message += ' | Copy: ' + contentUsage.remaining_event_runs + ' por evento · ' + contentUsage.remaining_daily_runs + ' hoy';
+        }
+        root.find('[data-ai-usage]').text(message);
+      }
+
+      function renderFacts(review) {
+        var imageAnalysis = (((review || {}).canonical_event_facts || {}).image_analysis || {});
+        var facts = imageAnalysis.extracted_fields || [];
+        var sponsors = imageAnalysis.sponsors || [];
+        var box = root.find('[data-ai-facts]');
+        var guidance = root.find('[data-ai-guidance]');
+        box.empty();
+        guidance.empty();
+
+        facts.concat(sponsors).slice(0, 24).forEach(function (field) {
+          var confidence = Math.round((Number(field.confidence || 0)) * 100);
+          $('<div class="ai-assistant-fact"></div>')
+            .append('<div><strong>' + $('<div>').text(field.label || field.key).html() + '</strong><br><small class="text-muted">' + confidence + '% · ' + (field.needs_review ? 'revisar' : 'coincide') + '</small></div>')
+            .append('<div class="ai-assistant-fact__value">' + $('<div>').text(field.value || field.raw_text || '-').html() + '</div>')
+            .appendTo(box);
+        });
+
+        if (!facts.length && !sponsors.length) {
+          box.html('<div class="p-3 text-muted">Todavía no hay datos detectados.</div>');
+        }
+
+        renderGuidance(guidance, imageAnalysis);
+      }
+
+      function renderGuidance(target, imageAnalysis) {
+        var items = [];
+        (imageAnalysis.conflicts || []).forEach(function (item) { items.push('Conflicto: ' + item); });
+        (imageAnalysis.missing_information || []).forEach(function (item) { items.push('Falta revisar: ' + item); });
+        (imageAnalysis.warnings || []).forEach(function (item) { items.push('Aviso: ' + item); });
+
+        if (!items.length) return;
+
+        target.html(
+          '<div class="alert alert-warning mb-0 small"><strong>Guía de revisión</strong><ul class="mb-0 pl-3">' +
+          items.slice(0, 8).map(function (item) {
+            return '<li>' + escapeHtml(item) + '</li>';
+          }).join('') +
+          '</ul></div>'
+        );
+      }
+
+      function renderDraft(draft) {
+        if (!draft || draft.status !== 'completed' || !draft.generated_payload) {
+          return;
+        }
+
+        draftId = draft.id;
+        lastDraft = draft.generated_payload;
+        root.find('[data-ai-draft-title]').text(draft.generated_payload.content.public_title || 'Copy generado');
+        root.find('[data-ai-draft-summary]').text(draft.generated_payload.content.short_description || '');
+        root.find('[data-ai-audit]').text(draft.needs_human_review ? 'Requiere revisión' : 'Auditoría OK');
+        root.find('[data-ai-draft]').removeClass('d-none');
+      }
+
+      function hydrateFormFromDraft(fields) {
+        if (!lastDraft) return;
+        var content = lastDraft.content || {};
+        var seo = lastDraft.seo || {};
+
+        if (fields.indexOf('title') !== -1 && content.public_title) {
+          $('input[name$="_title"]').first().val(content.public_title);
+        }
+        if (fields.indexOf('description') !== -1) {
+          var description = buildDescriptionHtml(content);
+          var descriptionField = $('textarea[name$="_description"]').first();
+          if ($.fn.summernote && descriptionField.next('.note-editor').length) {
+            descriptionField.summernote('code', description);
+          } else {
+            descriptionField.val(description);
+          }
+        }
+        if (fields.indexOf('meta_description') !== -1 && (seo.google_short_description || seo.meta_description)) {
+          $('textarea[name$="_meta_description"]').first().val(seo.google_short_description || seo.meta_description);
+        }
+        if (fields.indexOf('meta_keywords') !== -1) {
+          var keywords = (seo.tags || []).concat(seo.secondary_keywords || []);
+          if (keywords.length) {
+            $('input[name$="_meta_keywords"]').first().val(keywords.join(','));
+          }
+        }
+      }
+
+      function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+      }
+
+      function listHtml(items) {
+        return (items || []).filter(Boolean).map(function (item) {
+          return '<li>' + escapeHtml(item) + '</li>';
+        }).join('');
+      }
+
+      function buildDescriptionHtml(content) {
+        var html = '';
+        if (content.short_description) html += '<p>' + escapeHtml(content.short_description) + '</p>';
+        if (content.main_description) html += '<p>' + escapeHtml(content.main_description).replace(/\n/g, '<br>') + '</p>';
+        if ((content.what_you_will_experience || []).length) {
+          html += '<h3>Qué vas a vivir</h3><ul>' + listHtml(content.what_you_will_experience) + '</ul>';
+        }
+        if ((content.important_information || []).length) {
+          html += '<h3>Información importante</h3><ul>' + listHtml(content.important_information) + '</ul>';
+        }
+        if (content.cta) html += '<p><strong>' + escapeHtml(content.cta) + '</strong></p>';
+        return html;
+      }
+
+      function loadStatus(scheduleNext) {
+        $.get(root.data('status-url')).done(function (response) {
+          renderUsage(response.usage, response.content_usage);
+          renderFacts(response.review);
+          renderDraft(response.draft);
+
+          if (response.review) {
+            root.find('[data-ai-results]').removeClass('d-none');
+            root.find('[data-ai-action="draft"]').prop('disabled', false);
+          }
+
+          if (response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) {
+            setStatus('Analizando flyer y datos del evento...', 'info');
+          } else if (response.analysis && response.analysis.status === 'failed') {
+            setStatus(response.analysis.error_message || 'No se pudo analizar el flyer.', 'danger');
+          } else if (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1) {
+            setStatus('Generando copy, SEO y auditoría...', 'info');
+          } else if (response.draft && response.draft.status === 'failed') {
+            setStatus('No se pudo generar el copy. Podés seguir editando manualmente.', 'danger');
+          } else if (response.draft && response.draft.status === 'completed') {
+            setStatus('Copy listo para revisar y aplicar.', response.draft.needs_human_review ? 'warning' : 'success');
+          } else if (response.review) {
+            setStatus('Análisis listo. Revisá los datos detectados antes de generar el copy.', 'success');
+          }
+
+          if (scheduleNext && ((response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) || (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1))) {
+            clearTimeout(pollTimer);
+            pollTimer = setTimeout(function () { loadStatus(true); }, 3000);
+          }
+        });
+      }
+
+      root.on('click', '[data-ai-action="analysis"]', function () {
+        setStatus('Enviando flyer al asistente IA...', 'info');
+        $.post(root.data('analysis-url'), {_token: csrf})
+          .done(function () { loadStatus(true); })
+          .fail(function (xhr) { setStatus(errorMessage(xhr, 'No se pudo iniciar el análisis IA.'), 'danger'); });
+      });
+
+      root.on('click', '[data-ai-action="draft"]', function () {
+        setStatus('Preparando generación de copy...', 'info');
+        $.post(root.data('draft-url'), {
+          _token: csrf,
+          tone: root.find('[data-ai-tone]').val(),
+          intensity: root.find('[data-ai-intensity]').val(),
+          audience: {
+            description: root.find('[data-ai-audience]').val(),
+            goal: root.find('[data-ai-goal]').val(),
+            selling_angle: root.find('[data-ai-selling-angle]').val(),
+            organizer_notes: root.find('[data-ai-notes]').val()
+          }
+        })
+          .done(function () { loadStatus(true); })
+          .fail(function (xhr) { setStatus(errorMessage(xhr, 'No se pudo generar el copy IA.'), 'danger'); });
+      });
+
+      root.on('click', '[data-ai-action="apply"]', function () {
+        if (!draftId) return;
+        var fields = root.find('[data-ai-field]:checked').map(function () { return this.value; }).get();
+        var url = root.data('apply-url').replace('__DRAFT__', draftId);
+
+        $.post(url, {_token: csrf, fields: fields})
+          .done(function () {
+            hydrateFormFromDraft(fields);
+            setStatus('Campos aplicados. Revisalos y guardá el evento cuando estés conforme.', 'success');
+          })
+          .fail(function (xhr) { setStatus(errorMessage(xhr, 'No se pudieron aplicar los campos.'), 'danger'); });
+      });
+
+      loadStatus(false);
+    })(jQuery);
+  </script>
 @endsection
 
 @section('variables')

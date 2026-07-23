@@ -21,6 +21,13 @@ Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deact
   Route::post('/update-ticket-setting', 'BackEnd\Organizer\EventController@updateTicketSetting')->name('organizer.event_management.update_ticket_setting');
   Route::get('/event-images/{id}', 'BackEnd\Organizer\EventController@images')->name('organizer.event.images');
   Route::post('/event-update', 'BackEnd\Organizer\EventController@update')->name('organizer.event.update');
+  Route::prefix('/events/{event}/ai-assistant')->middleware('throttle:20,1')->group(function () {
+    Route::post('/analysis', 'Organizer\EventAiAssistantController@startAnalysis')->middleware('throttle:6,1')->name('organizer.events.ai-assistant.analysis');
+    Route::get('/status', 'Organizer\EventAiAssistantController@status')->name('organizer.events.ai-assistant.status');
+    Route::post('/review', 'Organizer\EventAiAssistantController@updateReview')->name('organizer.events.ai-assistant.review');
+    Route::post('/draft', 'Organizer\EventAiAssistantController@generateDraft')->middleware('throttle:6,1')->name('organizer.events.ai-assistant.draft');
+    Route::post('/drafts/{draft}/apply', 'Organizer\EventAiAssistantController@applyDraft')->name('organizer.events.ai-assistant.apply');
+  });
   Route::post('bulk/delete/event', 'BackEnd\Organizer\EventController@bulk_delete')->name('organizer.event_management.bulk_delete_event');
   Route::get('event/ticket', 'BackEnd\Organizer\TicketController@index')->name('organizer.event.ticket');
   Route::get('event/add-ticket', 'BackEnd\Organizer\TicketController@create')->name('organizer.event.add.ticket');

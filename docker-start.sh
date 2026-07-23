@@ -15,7 +15,7 @@ quote_dotenv_value() {
 }
 
 printenv | while IFS='=' read -r key value; do
-    if [[ "$key" =~ ^(APP_|DB_|MAIL_|SESSION_|CACHE_|QUEUE_|LOG_|BROADCAST_|VAPID_|FACEBOOK_|GOOGLE_|ARCA_|MERCADOPAGO_|STRIPE_|PAYPAL_) ]]; then
+    if [[ "$key" =~ ^(APP_|DB_|MAIL_|SESSION_|CACHE_|QUEUE_|LOG_|BROADCAST_|VAPID_|FACEBOOK_|GOOGLE_|OPENAI_|AI_EVENT_|ARCA_|MERCADOPAGO_|STRIPE_|PAYPAL_) ]]; then
         printf '%s=' "$key"
         quote_dotenv_value "$value"
         printf '\n'

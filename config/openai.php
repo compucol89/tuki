@@ -55,4 +55,24 @@ return [
         'max_size_kb' => 10240,
         'allowed_mimes' => ['image/png', 'image/jpeg', 'image/webp'],
     ],
+
+    'event_assistant' => [
+        'queue' => env('AI_EVENT_ASSISTANT_QUEUE', 'ai-content'),
+        'prompt_version' => env('AI_EVENT_ASSISTANT_PROMPT_VERSION', '2026-07-23-v1'),
+        'store_responses' => env('AI_EVENT_ASSISTANT_STORE_RESPONSES', false),
+        'models' => [
+            'extract' => env('AI_EVENT_ASSISTANT_MODEL_EXTRACT', 'gpt-5.6-luna'),
+            'generate' => env('AI_EVENT_ASSISTANT_MODEL_GENERATE', 'gpt-5.6-terra'),
+            'audit' => env('AI_EVENT_ASSISTANT_MODEL_AUDIT', 'gpt-5.6-terra'),
+            'escalate' => env('AI_EVENT_ASSISTANT_MODEL_ESCALATE', 'gpt-5.6-sol'),
+            'moderation' => env('AI_EVENT_ASSISTANT_MODERATION_MODEL', 'omni-moderation-latest'),
+        ],
+        'limits' => [
+            'max_runs_per_event' => (int) env('AI_EVENT_ASSISTANT_MAX_RUNS_PER_EVENT', 2),
+            'max_runs_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_RUNS_PER_ORGANIZER_DAY', 10),
+            'max_content_drafts_per_event' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_EVENT', 2),
+            'max_content_drafts_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_ORGANIZER_DAY', 10),
+            'max_repair_attempts' => (int) env('AI_EVENT_ASSISTANT_MAX_REPAIR_ATTEMPTS', 1),
+        ],
+    ],
 ];

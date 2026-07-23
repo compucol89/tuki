@@ -82,11 +82,11 @@ class AppServiceProvider extends ServiceProvider
           }
         }
 
-        $language = Language::where('code', 'es')->first();
+        $language = $this->defaultLanguage();
 
         $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol_position', 'base_currency_symbol', 'base_currency_text')->first();
 
-        $footerText = $language->footerContent()->first();
+        $footerText = $language ? $language->footerContent()->first() : null;
 
         if (Auth::guard('admin')->check() == true) {
           $view->with('roleInfo', $role);
@@ -101,12 +101,12 @@ class AppServiceProvider extends ServiceProvider
       View::composer('organizer.*', function ($view) {
 
 
-        $language = Language::where('code', 'es')->first();
+        $language = $this->defaultLanguage();
 
         //$websiteSettings = DB::table('basic_settings')->select('admin_theme_version')->first();
         $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate', 'organizer_email_verification')->first();
 
-        $footerText = $language->footerContent()->first();
+        $footerText = $language ? $language->footerContent()->first() : null;
 
 
         $view->with('defaultLang', $language);
@@ -149,7 +149,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $cachedLanguage = Cache::remember('frontend_language', $cacheTTL, function () {
-          return Language::where('code', 'es')->first();
+          return $this->defaultLanguage();
         });
 
         $language = $cachedLanguage;
@@ -244,5 +244,12 @@ class AppServiceProvider extends ServiceProvider
       // send this information to both front-end & back-end view files
       View::share(['websiteInfo' => $data]);
     }
+  }
+
+  private function defaultLanguage()
+  {
+    return Language::where('is_default', 1)->first()
+      ?: Language::where('code', 'es')->first()
+      ?: Language::first();
   }
 }

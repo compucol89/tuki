@@ -35,7 +35,9 @@ class Controller extends BaseController
 
   public function getLanguage()
   {
-    return Language::where('code', 'es')->first();
+    return Language::where('is_default', 1)->first()
+      ?: Language::where('code', 'es')->first()
+      ?: Language::first();
   }
 
 

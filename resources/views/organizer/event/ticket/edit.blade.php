@@ -56,7 +56,7 @@
             <div class="ticket-form-header__intro">
               <span class="ticket-form-header__eyebrow">{{ __('Venta') }}</span>
               <h3 class="ticket-form-header__title">{{ __('Editar entrada') }}</h3>
-              <p class="ticket-form-header__text">{{ __('Ajusta precio, cupo, limite por comprador o descuento anticipado sin perder claridad comercial.') }}</p>
+              <p class="ticket-form-header__text">{{ __('Ajustá precio, cupo, límite por comprador o descuento anticipado sin perder claridad comercial.') }}</p>
             </div>
             <div class="ticket-form-header__actions">
               <a href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => request()->input('event_id'), 'event_type' => request()->input('event_type')]) }}"
@@ -86,8 +86,8 @@
                 <input type="hidden" name="event_id" value="{{ request()->input('event_id') }}">
                 <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
                 <div class="ticket-form-intro">
-                  <span class="ticket-form-intro__eyebrow">{{ __('Revision') }}</span>
-                  <p class="ticket-form-intro__text">{{ __('Revisa precio, stock y limites antes de guardar. Un cambio aca impacta directo en la venta de esta entrada.') }}</p>
+                  <span class="ticket-form-intro__eyebrow">{{ __('Revisión') }}</span>
+                  <p class="ticket-form-intro__text">{{ __('Revisá precio, stock y límites antes de guardar. Un cambio acá impacta directo en la venta de esta entrada.') }}</p>
                 </div>
                 @if (request()->input('event_type') == 'venue')
                   <div class="row ">
@@ -95,7 +95,7 @@
                     {{-- /*****--variationwise ticket & early bird discount--****** --}}
                     <div class="col-lg-12">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Pricing') . '*' }}</label>
+                        <label for="">{{ __('Tipo de precio') . '*' }}</label>
                         <div class="selectgroup w-100">
                           <label class="selectgroup-item">
                             <input type="radio" name="pricing_type_2"
@@ -443,7 +443,7 @@
                 @endif
                 <div class="col-lg-12">
                 <div class="ticket-form-content-intro mt-3">
-                  <h4 class="ticket-form-content-intro__title">{{ __('Nombre y descripcion de la entrada') }}</h4>
+                  <h4 class="ticket-form-content-intro__title">{{ __('Nombre y descripción de la entrada') }}</h4>
                   <p class="ticket-form-content-intro__text">{{ __('Asegurate de que el nombre siga siendo claro para quien compra y para quien administra la venta.') }}</p>
                 </div>
                 <div id="accordion" class="mt-3 ticket-form-language">
@@ -455,8 +455,8 @@
                               data-target="#collapse{{ $language->id }}"
                               aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
                               aria-controls="collapse{{ $language->id }}">
-                              {{ $language->name . __(' Language') }}
-                              {{ $language->is_default == 1 ? '(Default)' : '' }}
+                              {{ $language->name }}
+                              {{ $language->is_default == 1 ? '(' . __('Principal') . ')' : '' }}
                             </button>
                           </h5>
                         </div>
@@ -471,9 +471,9 @@
                             <div class="row">
                               <div class="col-lg-12">
                                 <div class="form-group">
-                                  <label>{{ __('Ticket Name') . '*' }}</label>
+                                  <label>{{ __('Nombre de la entrada') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_title"
-                                    placeholder="{{ __('Enter Ticket Name') }}" value="{{ @$ticket_content->title }}"
+                                    placeholder="{{ __('Ej: General, Preventa o VIP') }}" value="{{ @$ticket_content->title }}"
                                     class="form-control">
                                 </div>
                               </div>
@@ -482,8 +482,8 @@
                             <div class="row">
                               <div class="col">
                                 <div class="form-group">
-                                  <label>{{ __('Description') }}</label>
-                                  <textarea class="form-control" name="{{ $language->code }}_description" placeholder="{{ __('Enter Description') }}">{{ @$ticket_content->description }}</textarea>
+                                  <label>{{ __('Descripción') }}</label>
+                                  <textarea class="form-control" name="{{ $language->code }}_description" placeholder="{{ __('Ej: Incluye acceso general al evento.') }}">{{ @$ticket_content->description }}</textarea>
                                 </div>
                               </div>
                             </div>
@@ -520,7 +520,7 @@
 
         <div class="card-footer">
           <div class="ticket-form-footer">
-            <p class="ticket-form-footer__text">{{ __('Guarda cuando termines. Si algun dato esta incompleto, el sistema te lo va a marcar antes de actualizar la entrada.') }}</p>
+            <p class="ticket-form-footer__text">{{ __('Guardá cuando termines. Si algún dato está incompleto, el sistema te lo va a marcar antes de actualizar la entrada.') }}</p>
             <button type="submit" id="EventSubmit" class="btn btn-success ticket-form-footer__btn">
               {{ __('Guardar cambios') }}
             </button>

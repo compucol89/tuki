@@ -53,20 +53,20 @@
 
         $publicationChecks = [
             ['done' => $hasThumbnail, 'label' => __('Miniatura cargada'), 'help' => __('Una buena portada mejora mucho la confianza del comprador.')],
-            ['done' => $hasGallery, 'label' => __('Galeria con imagenes'), 'help' => __('Sube al menos una imagen adicional para que la publicacion se vea mas completa.')],
+            ['done' => $hasGallery, 'label' => __('Galería con imágenes'), 'help' => __('Subí al menos una imagen adicional para que la publicación se vea más completa.')],
             ['done' => $hasDates, 'label' => __('Fechas configuradas'), 'help' => __('El comprador necesita ver claramente cuando ocurre el evento.')],
-            ['done' => $hasTitle, 'label' => __('Titulo claro'), 'help' => __('Intenta usar nombre del evento, artista o ciudad si aplica.')],
-            ['done' => $hasDescription, 'label' => __('Descripcion util'), 'help' => __('Explica que incluye la entrada, horarios, acceso y detalles importantes.')],
-            ['done' => $hasSalesSetup, 'label' => __('Venta configurada'), 'help' => __('Revisa precio, disponibilidad o tickets antes de publicar.')],
+            ['done' => $hasTitle, 'label' => __('Título claro'), 'help' => __('Intentá usar nombre del evento, artista o ciudad si aplica.')],
+            ['done' => $hasDescription, 'label' => __('Descripción útil'), 'help' => __('Explicá qué incluye la entrada, horarios, acceso y detalles importantes.')],
+            ['done' => $hasSalesSetup, 'label' => __('Venta configurada'), 'help' => __('Revisá precio, disponibilidad o entradas antes de publicar.')],
             ['done' => $hasRefundPolicy, 'label' => __('Política de reembolsos'), 'help' => __('Aclará qué pasa si alguien no puede asistir o necesita cambios.')],
-            ['done' => $isPublishedReady, 'label' => __('Estado activo'), 'help' => __('Cuando todo este listo, activa el evento para que pueda verse.')],
+            ['done' => $isPublishedReady, 'label' => __('Estado activo'), 'help' => __('Cuando todo esté listo, activá el evento para que pueda verse.')],
         ];
 
         $completedChecks = collect($publicationChecks)->where('done', true)->count();
         $totalChecks = count($publicationChecks);
         $publicationScore = (int) round(($completedChecks / max($totalChecks, 1)) * 100);
         $publicationTone = $publicationScore >= 85 ? 'success' : ($publicationScore >= 60 ? 'warning' : 'danger');
-        $publicationHeadline = $publicationScore >= 85 ? __('Muy bien encaminado') : ($publicationScore >= 60 ? __('Vas bien, pero aun falta') : __('Todavia le falta informacion clave'));
+        $publicationHeadline = $publicationScore >= 85 ? __('Muy bien encaminado') : ($publicationScore >= 60 ? __('Vas bien, pero aún falta') : __('Todavía le falta información clave'));
         $singleLanguageMode = isset($languages) && count($languages) === 1;
       @endphp
       <li class="nav-item">
@@ -112,19 +112,19 @@
 
       <div class="card ev-section-card">
         <div class="card-header ev-section-header">
-          <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicacion') }}</h4>
+          <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicación') }}</h4>
         </div>
         <div class="card-body">
           @if ($publicationScore >= 100)
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
               <div class="mb-3 mb-md-0">
                 <span class="badge badge-success mb-2">{{ __('Listo para vender') }}</span>
-                <h5 class="mb-1">{{ __('El evento ya esta bien armado') }}</h5>
-                <p class="text-muted mb-0">{{ __('En esta etapa ya no necesitas una checklist larga. Solo revisa cambios puntuales y guarda cuando termines.') }}</p>
+                <h5 class="mb-1">{{ __('El evento ya está bien armado') }}</h5>
+                <p class="text-muted mb-0">{{ __('En esta etapa ya no necesitás una checklist larga. Solo revisá cambios puntuales y guardá cuando termines.') }}</p>
               </div>
               <div class="text-md-right">
                 <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos completos') }}</div>
-                <small class="text-muted">{{ __('La checklist detallada tiene mas sentido durante la creacion.') }}</small>
+                <small class="text-muted">{{ __('La checklist detallada tiene más sentido durante la creación.') }}</small>
               </div>
             </div>
           @else
@@ -132,7 +132,7 @@
               <div class="mb-3 mb-md-0">
                 <span class="badge badge-{{ $publicationTone }} mb-2">{{ $publicationScore }}% {{ __('completo') }}</span>
                 <h5 class="mb-1">{{ $publicationHeadline }}</h5>
-                <p class="text-muted mb-0">{{ __('Usa esta guia para revisar rapido si el evento ya se entiende bien y esta listo para vender.') }}</p>
+                <p class="text-muted mb-0">{{ __('Usá esta guía para revisar rápido si el evento ya se entiende bien y está listo para vender.') }}</p>
               </div>
               <div class="text-md-right">
                 <div class="font-weight-bold">{{ $completedChecks }}/{{ $totalChecks }} {{ __('puntos listos') }}</div>
@@ -172,12 +172,12 @@
         <div class="card-body">
           <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar mb-3">
             <div class="pr-lg-3 mb-2 mb-lg-0">
-              <p class="text-muted mb-1">{{ __('Revisa primero la portada principal. Desde ahi podes analizarla con IA y completar mejor el evento.') }}</p>
-              <small class="text-muted">{{ __('Las imagenes adicionales son opcionales y complementan la publicacion.') }}</small>
+              <p class="text-muted mb-1">{{ __('Revisá primero la portada principal. Desde ahí podés analizarla con IA y completar mejor el evento.') }}</p>
+              <small class="text-muted">{{ __('Las imágenes adicionales son opcionales y complementan la publicación.') }}</small>
             </div>
             <div class="d-flex flex-wrap align-items-center">
-              <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
-              <small class="text-muted mb-0">{{ __('Recomendado para portada: 1170x570 o mas, sin recortar el flyer') }}</small>
+              <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imágenes cargadas') }}</span>
+              <small class="text-muted mb-0">{{ __('Recomendado para portada: 1170x570 o más, sin recortar el flyer') }}</small>
             </div>
           </div>
 
@@ -185,7 +185,7 @@
             <div class="event-cover-box__intro">
               <span class="event-cover-box__eyebrow">{{ __('Paso 1 · Portada principal') }}</span>
               <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
-              <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la pagina del evento y cuando se comparte.') }}</p>
+              <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la página del evento y cuando se comparte.') }}</p>
             </div>
             <div class="event-cover-box__body">
             <div class="thumb-preview event-cover-box__preview mr-4">
@@ -199,11 +199,11 @@
                 </span>
                 <span class="event-cover-box__upload-copy">
                   <strong>{{ __('Elegir imagen de portada') }}</strong>
-                  <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
+                  <small>{{ __('Hacé clic para subir tu flyer o reemplazarlo') }}</small>
                 </span>
                 <input type="file" class="img-input" name="thumbnail" form="eventForm" accept="image/jpeg,image/png,image/webp">
               </label>
-              <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
+              <small class="event-cover-box__hint">{{ __('Podés usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
             </div>
           </div>
           </div>
@@ -218,7 +218,7 @@
             </div>
           </div>
           <div class="media-upload-separator d-flex align-items-center my-4">
-            <span class="text-muted small pr-3">{{ __('Agregar imagenes adicionales') }}</span>
+            <span class="text-muted small pr-3">{{ __('Agregar imágenes adicionales') }}</span>
             <div class="flex-grow-1 border-top"></div>
           </div>
           <form action="{{ route('admin.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata" class="dropzone create">
@@ -227,7 +227,7 @@
             <input type="hidden" value="{{ $event->id }}" name="event_id">
           </form>
           <div class="mb-0" id="errpreimg"></div>
-          <p class="text-muted small mt-2 mb-4">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Estas imagenes no reemplazan la portada.') }}</p>
+          <p class="text-muted small mt-2 mb-4">{{ __('JPG, PNG o WebP. Mínimo aceptado: 600x450. Estas imágenes no reemplazan la portada.') }}</p>
         </div>
       </div>
 
@@ -258,12 +258,12 @@
                     <label class="selectgroup-item">
                       <input type="radio" name="date_type" {{ $event->date_type == 'single' ? 'checked' : '' }}
                         value="single" class="selectgroup-input eventDateType" checked>
-                      <span class="selectgroup-button">{{ __('Single') }}</span>
+                      <span class="selectgroup-button">{{ __('Fecha única') }}</span>
                     </label>
                     <label class="selectgroup-item">
                       <input type="radio" name="date_type" {{ $event->date_type == 'multiple' ? 'checked' : '' }}
                         value="multiple" class="selectgroup-input eventDateType">
-                      <span class="selectgroup-button">{{ __('Multiple') }}</span>
+                      <span class="selectgroup-button">{{ __('Varias fechas') }}</span>
                     </label>
                   </div>
                 </div>
@@ -278,12 +278,12 @@
                     <label class="selectgroup-item">
                       <input type="radio" name="countdown_status" value="1" class="selectgroup-input"
                         {{ $event->countdown_status == 1 ? 'checked' : '' }}>
-                      <span class="selectgroup-button">{{ __('Active') }}</span>
+                      <span class="selectgroup-button">{{ __('Activo') }}</span>
                     </label>
                     <label class="selectgroup-item">
                       <input type="radio" name="countdown_status" value="0" class="selectgroup-input"
                         {{ $event->countdown_status == 0 ? 'checked' : '' }}>
-                      <span class="selectgroup-button">{{ __('Deactive') }}</span>
+                      <span class="selectgroup-button">{{ __('Inactivo') }}</span>
                     </label>
                   </div>
                 </div>
@@ -294,25 +294,25 @@
             <div class="row {{ $event->date_type == 'multiple' ? 'd-none' : '' }}" id="single_dates">
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label>{{ __('Start Date') }}*</label>
+                  <label>{{ __('Fecha de inicio') }}*</label>
                   <input type="date" name="start_date" value="{{ $event->start_date }}" class="form-control">
                 </div>
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label>{{ __('Start Time') }}*</label>
+                  <label>{{ __('Hora de inicio') }}*</label>
                   <input type="time" name="start_time" value="{{ $event->start_time }}" class="form-control">
                 </div>
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label>{{ __('End Date') }}*</label>
+                  <label>{{ __('Fecha de fin') }}*</label>
                   <input type="date" name="end_date" value="{{ $event->end_date }}" class="form-control">
                 </div>
               </div>
               <div class="col-lg-3">
                 <div class="form-group">
-                  <label>{{ __('End Time') }}*</label>
+                  <label>{{ __('Hora de fin') }}*</label>
                   <input type="time" name="end_time" value="{{ $event->end_time }}" class="form-control">
                 </div>
               </div>
@@ -331,10 +331,10 @@
                     <table class="table table-bordered">
                       <thead>
                         <tr>
-                          <th>{{ __('Start Date') }}</th>
-                          <th>{{ __('Start Time') }}</th>
-                          <th>{{ __('End Date') }}</th>
-                          <th>{{ __('End Time') }}</th>
+                          <th>{{ __('Fecha de inicio') }}</th>
+                          <th>{{ __('Hora de inicio') }}</th>
+                          <th>{{ __('Fecha de fin') }}</th>
+                          <th>{{ __('Hora de fin') }}</th>
                           <th><a href="javascript:void(0)" class="btn btn-success addDateRow"><i class="fas fa-plus-circle"></i></a></th>
                         </tr>
                       </thead>
@@ -381,9 +381,9 @@
                 <div class="form-group">
                   <label>{{ __('Estado') }}*</label>
                   <select name="status" class="form-control">
-                    <option selected disabled>{{ __('Selecciona un estado') }}</option>
-                    <option {{ $event->status == '1' ? 'selected' : '' }} value="1">{{ __('Active') }}</option>
-                    <option {{ $event->status == '0' ? 'selected' : '' }} value="0">{{ __('Deactive') }}</option>
+                    <option selected disabled>{{ __('Seleccioná un estado') }}</option>
+                    <option {{ $event->status == '1' ? 'selected' : '' }} value="1">{{ __('Activo') }}</option>
+                    <option {{ $event->status == '0' ? 'selected' : '' }} value="0">{{ __('Inactivo') }}</option>
                   </select>
                 </div>
               </div>
@@ -391,8 +391,8 @@
                 <div class="form-group">
                   <label>{{ __('Evento destacado') }}*</label>
                   <select name="is_featured" class="form-control">
-                    <option selected disabled>{{ __('Selecciona una opcion') }}</option>
-                    <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>{{ __('Yes') }}</option>
+                    <option selected disabled>{{ __('Seleccioná una opción') }}</option>
+                    <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>{{ __('Sí') }}</option>
                     <option value="no" {{ $event->is_featured == 'no' ? 'selected' : '' }}>{{ __('No') }}</option>
                   </select>
                 </div>
@@ -412,7 +412,7 @@
                 <div class="form-group">
                   <label>{{ __('Organizador') . '*' }}</label>
                   <select name="organizer_id" class="form-control js-example-basic-single" required>
-                    <option value="" selected>{{ __('Selecciona un organizador') }}</option>
+                    <option value="" selected>{{ __('Seleccioná un organizador') }}</option>
                     @foreach ($organizers as $organizer)
                       <option {{ $organizer->id == $event->organizer_id ? 'selected' : '' }} value="{{ $organizer->id }}">{{ $organizer->username }}</option>
                     @endforeach
@@ -425,8 +425,8 @@
               <hr class="ev-divider">
               <p class="ev-subsection-title"><i class="fas fa-ticket-alt mr-1"></i> {{ __('Tickets y precio') }}</p>
               <div class="event-sales-note mb-5 mt-2">
-                <div class="event-sales-note-title">{{ __('Como vender este evento') }}</div>
-                <p class="mb-0">{{ __('Primero define si el evento va a ser gratis o pago. Despues ajusta cupos, limite por persona y, si te sirve, un descuento anticipado para mover las primeras ventas.') }}</p>
+                <div class="event-sales-note-title">{{ __('Cómo vender este evento') }}</div>
+                <p class="mb-0">{{ __('Primero definí si el evento va a ser gratis o pago. Después ajustá cupos, límite por persona y, si te sirve, un descuento anticipado para mover las primeras ventas.') }}</p>
               </div>
               <div class="row">
                 <div class="col-lg-6">
@@ -436,12 +436,12 @@
                       <label class="selectgroup-item">
                         <input type="radio" name="ticket_available_type" value="unlimited" class="selectgroup-input"
                           {{ @$event->ticket->ticket_available_type == 'unlimited' ? 'checked' : '' }}>
-                        <span class="selectgroup-button">{{ __('Unlimited') }}</span>
+                        <span class="selectgroup-button">{{ __('Sin límite') }}</span>
                       </label>
                       <label class="selectgroup-item">
                         <input type="radio" name="ticket_available_type" value="limited" class="selectgroup-input"
                           {{ @$event->ticket->ticket_available_type == 'limited' ? 'checked' : '' }}>
-                        <span class="selectgroup-button">{{ __('Limited') }}</span>
+                        <span class="selectgroup-button">{{ __('Con límite') }}</span>
                       </label>
                     </div>
                   </div>
@@ -455,24 +455,24 @@
                 @if ($websiteInfo->event_guest_checkout_status != 1)
                   <div class="col-lg-6">
                     <div class="form-group">
-                      <label>{{ __('Limite por comprador') }}*</label>
+                      <label>{{ __('Límite por comprador') }}*</label>
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="max_ticket_buy_type" value="unlimited" class="selectgroup-input"
                             {{ @$event->ticket->max_ticket_buy_type == 'unlimited' ? 'checked' : '' }}>
-                          <span class="selectgroup-button">{{ __('Unlimited') }}</span>
+                          <span class="selectgroup-button">{{ __('Sin límite') }}</span>
                         </label>
                         <label class="selectgroup-item">
                           <input type="radio" name="max_ticket_buy_type" value="limited" class="selectgroup-input"
                             {{ @$event->ticket->max_ticket_buy_type == 'limited' ? 'checked' : '' }}>
-                          <span class="selectgroup-button">{{ __('Limited') }}</span>
+                          <span class="selectgroup-button">{{ __('Con límite') }}</span>
                         </label>
                       </div>
                     </div>
                   </div>
                   <div class="col-lg-6 {{ @$event->ticket->max_ticket_buy_type == 'limited' ? '' : 'd-none' }}" id="max_buy_ticket">
                     <div class="form-group">
-                      <label>{{ __('Cantidad maxima por comprador') }}*</label>
+                      <label>{{ __('Cantidad máxima por comprador') }}*</label>
                       <input type="number" name="max_buy_ticket" class="form-control" value="{{ @$event->ticket->max_buy_ticket }}">
                     </div>
                   </div>
@@ -523,29 +523,29 @@
                   <div class="row">
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label>{{ __('Discount') }}*</label>
+                        <label>{{ __('Descuento') }}*</label>
                         <select name="discount_type" class="form-control discount_type">
-                          <option disabled>{{ __('Select Discount Type') }}</option>
-                          <option {{ optional($event->ticket)->early_bird_discount_type == 'fixed' ? 'selected' : '' }} value="fixed">{{ __('Fixed') }}</option>
-                          <option {{ optional($event->ticket)->early_bird_discount_type == 'percentage' ? 'selected' : '' }} value="percentage">{{ __('Percentage') }}</option>
+                          <option disabled>{{ __('Seleccioná el tipo de descuento') }}</option>
+                          <option {{ optional($event->ticket)->early_bird_discount_type == 'fixed' ? 'selected' : '' }} value="fixed">{{ __('Monto fijo') }}</option>
+                          <option {{ optional($event->ticket)->early_bird_discount_type == 'percentage' ? 'selected' : '' }} value="percentage">{{ __('Porcentaje') }}</option>
                         </select>
                       </div>
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label>{{ __('Amount') }}*</label>
+                        <label>{{ __('Importe') }}*</label>
                         <input type="number" name="early_bird_discount_amount" value="{{ optional($event->ticket)->early_bird_discount_amount }}" class="form-control early_bird_discount_amount">
                       </div>
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label>{{ __('Discount End Date') }}*</label>
+                        <label>{{ __('Fecha límite del descuento') }}*</label>
                         <input type="date" name="early_bird_discount_date" value="{{ optional($event->ticket)->early_bird_discount_date }}" class="form-control">
                       </div>
                     </div>
                     <div class="col-lg-3">
                       <div class="form-group">
-                        <label>{{ __('Discount End Time') }}*</label>
+                        <label>{{ __('Hora límite del descuento') }}*</label>
                         <input type="time" name="early_bird_discount_time" value="{{ optional($event->ticket)->early_bird_discount_time }}" class="form-control">
                       </div>
                     </div>
@@ -561,7 +561,7 @@
         <div class="mb-3">
           <h5 class="mb-1">{{ $singleLanguageMode ? __('Contenido principal') : __('Contenido por idioma') }}</h5>
           <p class="text-muted mb-0">
-            {{ $singleLanguageMode ? __('Aqui editas el contenido principal del evento en espanol.') : __('Aqui editas titulo, categoria, descripcion, politica de reembolso y SEO para cada idioma.') }}
+            {{ $singleLanguageMode ? __('Acá editás el contenido principal del evento en español.') : __('Acá editás título, categoría, descripción, política de reembolso y SEO para cada idioma.') }}
           </p>
         </div>
         <div id="accordion" class="mt-2">
@@ -595,9 +595,9 @@
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label>{{ __('Event Title') }}*</label>
+                        <label>{{ __('Título del evento') }}*</label>
                         <input type="text" class="form-control" name="{{ $language->code }}_title"
-                          value="{{ @$event_content->title }}" placeholder="{{ __('Enter Event Name') }}">
+                          value="{{ @$event_content->title }}" placeholder="{{ __('Ej: Fiesta de música en vivo en Buenos Aires') }}">
                       </div>
                     </div>
                     <div class="col-lg-6">
@@ -609,9 +609,9 @@
                               ->orderBy('serial_number', 'asc')
                               ->get();
                         @endphp
-                        <label>{{ __('Category') }}*</label>
+                        <label>{{ __('Categoría') }}*</label>
                         <select name="{{ $language->code }}_category_id" class="form-control">
-                          <option selected disabled>{{ __('Select Category') }}</option>
+                          <option selected disabled>{{ __('Seleccioná una categoría') }}</option>
                           @foreach ($categories as $category)
                             <option value="{{ $category->id }}" {{ @$event_content->event_category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                           @endforeach
@@ -624,40 +624,40 @@
                     <div class="row">
                       <div class="col-lg-8">
                         <div class="form-group">
-                          <label>{{ __('Address') }}*</label>
+                          <label>{{ __('Dirección') }}*</label>
                           <input type="text" name="{{ $language->code }}_address"
                             class="form-control"
-                            placeholder="{{ __('Enter Address') }}" value="{{ @$event_content->address }}">
+                            placeholder="{{ __('Ej: Av. Corrientes 1234') }}" value="{{ @$event_content->address }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label>{{ __('County') }}*</label>
+                          <label>{{ __('País') }}*</label>
                           <input type="text" name="{{ $language->code }}_country"
                             class="form-control"
-                            placeholder="{{ __('Enter Country') }}" value="{{ @$event_content->country }}">
+                            placeholder="{{ __('Ej: Argentina') }}" value="{{ @$event_content->country }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label>{{ __('Sate') }}</label>
+                          <label>{{ __('Provincia') }}</label>
                           <input type="text" name="{{ $language->code }}_state"
                             class="form-control"
-                            placeholder="{{ __('Enter State') }}" value="{{ @$event_content->state }}">
+                            placeholder="{{ __('Ej: Buenos Aires') }}" value="{{ @$event_content->state }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label>{{ __('City') }}*</label>
+                          <label>{{ __('Ciudad') }}*</label>
                           <input type="text" name="{{ $language->code }}_city"
                             class="form-control"
-                            placeholder="{{ __('Enter City') }}" value="{{ @$event_content->city }}">
+                            placeholder="{{ __('Ej: CABA') }}" value="{{ @$event_content->city }}">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label>{{ __('Zip/Post Code') }}</label>
-                          <input type="text" placeholder="{{ __('Enter Zip/Post Code') }}" name="{{ $language->code }}_zip_code"
+                          <label>{{ __('Código postal') }}</label>
+                          <input type="text" placeholder="{{ __('Ej: C1043') }}" name="{{ $language->code }}_zip_code"
                             class="form-control"
                             value="{{ @$event_content->zip_code }}">
                         </div>
@@ -675,9 +675,9 @@
                   @endif
 
                   <div class="form-group">
-                    <label>{{ __('Description') }}*</label>
+                    <label>{{ __('Descripción') }}*</label>
                     <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
-                      name="{{ $language->code }}_description" placeholder="{{ __('Enter Event Description') }}"
+                      name="{{ $language->code }}_description" placeholder="{{ __('Contá de qué se trata el evento, qué incluye la entrada y cualquier dato importante.') }}"
                       data-height="300">{!! @$event_content->description !!}</textarea>
                   </div>
 
@@ -804,7 +804,7 @@
         {{-- Botón guardar --}}
         <div class="text-center mt-4 mb-5">
           <p class="text-muted mb-3 mx-auto" style="max-width: 640px;">
-            {{ __('Guarda al final. Si falta un dato obligatorio, el sistema te mostrara el error arriba.') }}
+            {{ __('Guardá al final. Si falta un dato obligatorio, el sistema te mostrará el error arriba.') }}
           </p>
           <button type="submit" id="EventSubmit" class="btn btn-primary btn-lg px-5">
             <i class="fas fa-save mr-2"></i>{{ __('Actualizar evento') }}
@@ -880,7 +880,7 @@
     }
 
     #my-dropzone .dz-message span::before {
-      content: "{{ addslashes(__('Agregar imagenes adicionales')) }}";
+      content: "{{ addslashes(__('Agregar imágenes adicionales')) }}";
       display: block;
       font-size: 15px;
       margin-bottom: 6px;
@@ -893,7 +893,7 @@
     }
 
     #my-dropzone .dz-message span::after {
-      content: "{{ addslashes(__('Arrastralas aqui o hace clic para elegirlas. Son opcionales y complementan la portada.')) }}";
+      content: "{{ addslashes(__('Arrastralas acá o hacé clic para elegirlas. Son opcionales y complementan la portada.')) }}";
       display: block;
       font-size: 12px;
       font-weight: 500;

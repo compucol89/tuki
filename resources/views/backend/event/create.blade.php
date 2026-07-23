@@ -55,7 +55,7 @@
               </div>
               <div class="card ev-section-card mb-4" id="createChecklistCard">
                 <div class="card-header ev-section-header">
-                  <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicacion') }}</h4>
+                  <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicación') }}</h4>
                 </div>
                 <div class="card-body">
                   <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
@@ -66,7 +66,7 @@
                     </div>
                     <div class="text-md-right">
                       <div class="font-weight-bold" id="createChecklistCount">0/6 {{ __('puntos listos') }}</div>
-                      <small class="text-muted">{{ __('Ideal para la primera publicacion.') }}</small>
+                      <small class="text-muted">{{ __('Ideal para la primera publicación.') }}</small>
                     </div>
                   </div>
                   <div class="progress mb-4" style="height: 10px;">
@@ -104,7 +104,7 @@
                         </span>
                         <span class="event-cover-box__upload-copy">
                           <strong>{{ __('Elegir imagen de portada') }}</strong>
-                          <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
+                          <small>{{ __('Hacé clic para subir tu flyer o reemplazarlo') }}</small>
                         </span>
                         <input type="file" class="img-input" name="thumbnail" accept="image/jpeg,image/png,image/webp">
                       </label>
@@ -147,7 +147,7 @@
                         <label class="selectgroup-item">
                           <input type="radio" name="date_type" value="single" class="selectgroup-input eventDateType"
                             checked>
-                          <span class="selectgroup-button">{{ __('Fecha unica') }}</span>
+                          <span class="selectgroup-button">{{ __('Fecha única') }}</span>
                         </label>
 
                         <label class="selectgroup-item">
@@ -166,7 +166,7 @@
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="countdown_status" value="1" class="selectgroup-input" checked>
-                          <span class="selectgroup-button">{{ __('Active') }}</span>
+                          <span class="selectgroup-button">{{ __('Activo') }}</span>
                         </label>
 
                         <label class="selectgroup-item">
@@ -181,27 +181,27 @@
                 <div class="row" id="single_dates">
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label>{{ __('Start Date') . '*' }}</label>
+                      <label>{{ __('Fecha de inicio') . '*' }}</label>
                       <input type="date" name="start_date" placeholder="{{ __('Fecha de inicio') }}" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label for="">{{ __('Start Time') . '*' }}</label>
+                      <label for="">{{ __('Hora de inicio') . '*' }}</label>
                       <input type="time" name="start_time" class="form-control">
                     </div>
                   </div>
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label>{{ __('End Date') . '*' }}</label>
-                      <input type="date" name="end_date" placeholder="{{ __('Fecha de finalizacion') }}" class="form-control">
+                      <label>{{ __('Fecha de fin') . '*' }}</label>
+                      <input type="date" name="end_date" placeholder="{{ __('Fecha de finalización') }}" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label for="">{{ __('End Time') . '*' }}</label>
+                      <label for="">{{ __('Hora de fin') . '*' }}</label>
                       <input type="time" name="end_time" class="form-control">
                     </div>
                   </div>
@@ -213,10 +213,10 @@
                       <table class="table table-bordered ">
                         <thead>
                           <tr>
-                            <th>{{ __('Start Date') }}</th>
-                            <th>{{ __('Start Time') }}</th>
-                            <th>{{ __('End Date') }}</th>
-                            <th>{{ __('End Time') }}</th>
+                            <th>{{ __('Fecha de inicio') }}</th>
+                            <th>{{ __('Hora de inicio') }}</th>
+                            <th>{{ __('Fecha de fin') }}</th>
+                            <th>{{ __('Hora de fin') }}</th>
                             <th><a href="javascrit:void(0)" class="btn btn-success addDateRow"><i
                                   class="fas fa-plus-circle"></i></a></th>
                           </tr>
@@ -225,25 +225,25 @@
                           <tr>
                             <td>
                               <div class="form-group">
-                                <label for="">{{ __('Start Date') . '*' }}</label>
+                                <label for="">{{ __('Fecha de inicio') . '*' }}</label>
                                 <input type="date" name="m_start_date[]" class="form-control">
                               </div>
                             </td>
                             <td>
                               <div class="form-group">
-                                <label for="">{{ __('Start Time') . '*' }}</label>
+                                <label for="">{{ __('Hora de inicio') . '*' }}</label>
                                 <input type="time" name="m_start_time[]" class="form-control">
                               </div>
                             </td>
                             <td>
                               <div class="form-group">
-                                <label for="">{{ __('End Date') . '*' }} </label>
+                                <label for="">{{ __('Fecha de fin') . '*' }} </label>
                                 <input type="date" name="m_end_date[]" class="form-control">
                               </div>
                             </td>
                             <td>
                               <div class="form-group">
-                                <label for="">{{ __('End Time') . '*' }} </label>
+                                <label for="">{{ __('Hora de fin') . '*' }} </label>
                                 <input type="time" name="m_end_time[]" class="form-control">
                               </div>
                             </td>
@@ -264,7 +264,7 @@
                       <label for="">{{ __('Estado') . '*' }}</label>
                       <select name="status" class="form-control">
                         <option disabled>{{ __('Seleccioná un estado') }}</option>
-                        <option value="1" selected>{{ __('Active') }}</option>
+                        <option value="1" selected>{{ __('Activo') }}</option>
                         <option value="0">{{ __('Oculto') }}</option>
                       </select>
                     </div>
@@ -274,7 +274,7 @@
                       <label for="">{{ __('Evento destacado') . '*' }}</label>
                       <select name="is_featured" class="form-control">
                         <option disabled>{{ __('Seleccioná una opción') }}</option>
-                        <option value="yes">{{ __('Si') }}</option>
+                        <option value="yes">{{ __('Sí') }}</option>
                         <option value="no" selected>{{ __('No') }}</option>
                       </select>
                     </div>
@@ -302,13 +302,13 @@
                           <label class="selectgroup-item">
                             <input type="radio" name="ticket_available_type" value="unlimited"
                               class="selectgroup-input" checked>
-                            <span class="selectgroup-button">{{ __('Sin limite') }}</span>
+                            <span class="selectgroup-button">{{ __('Sin límite') }}</span>
                           </label>
 
                           <label class="selectgroup-item">
                             <input type="radio" name="ticket_available_type" value="limited"
                               class="selectgroup-input">
-                            <span class="selectgroup-button">{{ __('Con limite') }}</span>
+                            <span class="selectgroup-button">{{ __('Con límite') }}</span>
                           </label>
                         </div>
                       </div>
@@ -323,18 +323,18 @@
                     @if ($websiteInfo->event_guest_checkout_status != 1)
                       <div class="col-lg-6">
                         <div class="form-group mt-1">
-                          <label for="">{{ __('Limite por comprador') . '*' }}</label>
+                          <label for="">{{ __('Límite por comprador') . '*' }}</label>
                           <div class="selectgroup w-100">
                             <label class="selectgroup-item">
                               <input type="radio" name="max_ticket_buy_type" value="unlimited"
                                 class="selectgroup-input" checked>
-                              <span class="selectgroup-button">{{ __('Sin limite') }}</span>
+                              <span class="selectgroup-button">{{ __('Sin límite') }}</span>
                             </label>
 
                             <label class="selectgroup-item">
                               <input type="radio" name="max_ticket_buy_type" value="limited"
                                 class="selectgroup-input">
-                              <span class="selectgroup-button">{{ __('Con limite') }}</span>
+                              <span class="selectgroup-button">{{ __('Con límite') }}</span>
                             </label>
                           </div>
                         </div>
@@ -345,7 +345,7 @@
 
                     <div class="col-lg-6 d-none" id="max_buy_ticket">
                       <div class="form-group">
-                        <label>{{ __('Cantidad maxima por comprador') . '*' }}</label>
+                        <label>{{ __('Cantidad máxima por comprador') . '*' }}</label>
                         <input type="number" name="max_buy_ticket"
                           placeholder="{{ __('Ej: 4') }}" class="form-control">
                       </div>
@@ -399,29 +399,29 @@
                       <div class="row">
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Discount') }} * </label>
+                            <label for="">{{ __('Descuento') }} * </label>
                             <select name="discount_type" class="form-control">
                               <option disabled>{{ __('Seleccioná el tipo de descuento') }}</option>
-                              <option value="fixed">{{ __('Fixed') }}</option>
-                              <option value="percentage">{{ __('Percentage') }}</option>
+                              <option value="fixed">{{ __('Monto fijo') }}</option>
+                              <option value="percentage">{{ __('Porcentaje') }}</option>
                             </select>
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Amount') }} * </label>
+                            <label for="">{{ __('Importe') }} * </label>
                             <input type="number" name="early_bird_discount_amount" class="form-control">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Fecha limite del descuento') }} *</label>
+                            <label for="">{{ __('Fecha límite del descuento') }} *</label>
                             <input type="date" name="early_bird_discount_date" class="form-control">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Hora limite del descuento') }} *</label>
+                            <label for="">{{ __('Hora límite del descuento') }} *</label>
                             <input type="time" name="early_bird_discount_time" class="form-control">
                           </div>
                         </div>
@@ -480,7 +480,7 @@
                                   $categories = $categoriesByLang->get($language->id, collect());
                                 @endphp
 
-                                <label for="">{{ __('Categoria') . '*' }}</label>
+                                <label for="">{{ __('Categoría') . '*' }}</label>
                                 <select name="{{ $language->code }}_category_id" class="form-control">
                                   <option selected disabled>{{ __('Seleccioná una categoría') }}</option>
 
@@ -496,7 +496,7 @@
                             <div class="row">
                               <div class="col-lg-8">
                                 <div class="form-group">
-                                  <label for="">{{ __('Direccion') . '*' }}</label>
+                                  <label for="">{{ __('Dirección') . '*' }}</label>
                                   <input type="text" name="{{ $language->code }}_address"
                                     class="form-control"
                                     placeholder="{{ __('Ej: Av. Corrientes 1234') }}">
@@ -528,7 +528,7 @@
                               </div>
                               <div class="col-lg-4">
                                 <div class="form-group">
-                                  <label for="">{{ __('Codigo postal') }}</label>
+                                  <label for="">{{ __('Código postal') }}</label>
                                   <input type="text" placeholder="{{ __('Ej: C1043') }}"
                                     name="{{ $language->code }}_zip_code"
                                     class="form-control">
@@ -568,7 +568,7 @@
                                   </div>
                                 </div>
                                 <div class="mb-0" id="errpreimg"></div>
-                                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
+                                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Mínimo aceptado: 600x450. Recomendado: 1170x570 o más para mejor calidad.') }}</p>
                               </div>
                             @endif
 
@@ -778,14 +778,14 @@
     }
 
     #my-dropzone .dz-message span::before {
-      content: "Agregar imagenes adicionales";
+      content: "Agregar imágenes adicionales";
       display: block;
       font-size: 15px;
       margin-bottom: 6px;
     }
 
     #my-dropzone .dz-message span::after {
-      content: "Arrastralas aqui o hace clic para elegirlas. Son opcionales y complementan la portada.";
+      content: "Arrastralas acá o hacé clic para elegirlas. Son opcionales y complementan la portada.";
       display: block;
       font-size: 12px;
       font-weight: 500;

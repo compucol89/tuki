@@ -118,20 +118,20 @@
         </div>
         <div class="form-group col-12 mb-2">
           <label class="small mb-1">{{ __('Descripción breve del organizador') }}*</label>
-          <textarea class="form-control form-control-sm" name="ai_event_brief" rows="3" data-create-ai-event-brief data-create-ai-required data-create-ai-label="{{ __('descripción breve') }}" data-create-ai-min-length="20" placeholder="{{ __('Ej: Esta es una noche de reggaetón viejo en La Troja, con rumba colombiana, mujeres gratis hasta las 2 AM y promos reales en barra.') }}"></textarea>
+          <textarea class="form-control form-control-sm" name="ai_event_brief" rows="3" data-create-ai-event-brief data-create-ai-required data-create-ai-label="{{ __('descripción breve') }}" data-create-ai-min-length="20" placeholder="{{ __('Ej: Fiesta de música latina en Palermo, entrada gratis hasta la 1 AM, promos en barra y cupos limitados.') }}"></textarea>
           <small class="text-muted">{{ __('Sumá tu idea, detalles importantes, enfoque de venta o copy propio. La IA lo usa junto con la portada.') }}</small>
         </div>
         <div class="form-group col-md-6 mb-2">
           <label class="small mb-1">{{ __('Público objetivo adicional') }}</label>
-          <textarea class="form-control form-control-sm" name="ai_audience" rows="2" data-create-ai-audience placeholder="{{ __('Ej: jóvenes de CABA, comunidad colombiana, fans del reggaetón viejo...') }}"></textarea>
+          <textarea class="form-control form-control-sm" name="ai_audience" rows="2" data-create-ai-audience placeholder="{{ __('Ej: jóvenes de CABA y GBA, grupos de amigos, estudiantes o personas que buscan salir el fin de semana.') }}"></textarea>
         </div>
         <div class="form-group col-md-6 mb-2">
           <label class="small mb-1">{{ __('Diferencial o dato fuerte') }}</label>
-          <input class="form-control form-control-sm" name="ai_selling_angle" data-create-ai-selling-angle placeholder="{{ __('Ej: entrada gratis hasta cierta hora, cupos reales, artista invitado...') }}">
+          <input class="form-control form-control-sm" name="ai_selling_angle" data-create-ai-selling-angle placeholder="{{ __('Ej: entrada gratis hasta cierta hora, 2x1 en barra, cupos limitados o artista invitado.') }}">
         </div>
         <div class="form-group col-12 mb-0">
           <label class="small mb-1">{{ __('Notas para la IA') }}</label>
-          <textarea class="form-control form-control-sm" name="ai_notes" rows="2" data-create-ai-notes placeholder="{{ __('Promos reales, artistas, ambiente, aclaraciones o datos que no aparecen en el flyer.') }}"></textarea>
+          <textarea class="form-control form-control-sm" name="ai_notes" rows="2" data-create-ai-notes placeholder="{{ __('Promos, artistas, horarios, acceso, restricciones o datos que no aparecen en la portada.') }}"></textarea>
         </div>
       </div>
 

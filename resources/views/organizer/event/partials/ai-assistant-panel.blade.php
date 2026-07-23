@@ -191,16 +191,16 @@
                 </div>
                 <div class="form-group col-12 mb-2">
                   <label class="small mb-1">{{ __('Descripción breve del organizador') }}*</label>
-                  <textarea class="form-control form-control-sm" rows="3" data-ai-audience data-ai-required data-ai-label="{{ __('descripción breve') }}" data-ai-min-length="20" placeholder="{{ __('Ej: Esta es una noche de reggaetón viejo en La Troja, con rumba colombiana, mujeres gratis hasta las 2 AM y promos reales en barra.') }}"></textarea>
+                  <textarea class="form-control form-control-sm" rows="3" data-ai-audience data-ai-required data-ai-label="{{ __('descripción breve') }}" data-ai-min-length="20" placeholder="{{ __('Ej: After office en Palermo con música en vivo, entrada anticipada, promos en barra y capacidad limitada.') }}"></textarea>
                   <small class="text-muted">{{ __('Sumá tu idea, detalles importantes, enfoque de venta o copy propio. La IA lo usa junto con la portada y los datos del evento.') }}</small>
                 </div>
                 <div class="form-group col-md-6 mb-2">
                   <label class="small mb-1">{{ __('Diferencial o dato clave') }}</label>
-                  <input type="text" class="form-control form-control-sm" data-ai-selling-angle placeholder="{{ __('Ej: cupos limitados reales, artista invitado, experiencia familiar...') }}">
+                  <input type="text" class="form-control form-control-sm" data-ai-selling-angle placeholder="{{ __('Ej: cupos limitados, artista invitado, plan familiar, degustación o beneficio por compra anticipada.') }}">
                 </div>
                 <div class="form-group col-md-6 mb-2">
                   <label class="small mb-1">{{ __('Notas para la IA') }}</label>
-                  <textarea class="form-control form-control-sm" rows="2" data-ai-notes placeholder="{{ __('Datos confirmados que no aparecen en la portada o aclaraciones importantes.') }}"></textarea>
+                  <textarea class="form-control form-control-sm" rows="2" data-ai-notes placeholder="{{ __('Horarios, promos, accesos, restricciones o datos confirmados que no aparecen en la portada.') }}"></textarea>
                 </div>
               </div>
             </div>

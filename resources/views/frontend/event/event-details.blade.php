@@ -2057,7 +2057,6 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                       src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image) }}"
                       alt="{{ $content->title }}"
                       class="ed-ticket-gallery__img"
-                      width="800" height="533"
                       loading="lazy">
                     <nav class="ed-body-breadcrumbs ed-body-breadcrumbs--under-image" aria-label="{{ __('Ruta de navegación') }}">
                       <ol class="ed-breadcrumbs__list">

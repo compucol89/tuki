@@ -7258,10 +7258,9 @@ body.page-event-detail .ed-ticket-gallery .ed-body-breadcrumbs {
 body.page-event-detail .ed-ticket-gallery__img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10.6;
   height: auto;
   border-radius: 14px;
-  object-fit: cover;
+  object-fit: contain;
   box-shadow: 0 10px 24px rgba(30, 37, 50, 0.09);
 }
 

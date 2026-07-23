@@ -44,7 +44,7 @@ use ValidatesVenueGeocoding;
   {
     $request = $this->request->all();
     $ruleArray = [
-      'slider_images' => 'required',
+      'slider_images' => 'nullable|array',
       'thumbnail' => [
         'required',
         new ImageMimeTypeRule(),

@@ -137,7 +137,7 @@ class EventController extends Controller
 
   public function store(StoreRequest $request)
   {
-    DB::transaction(function () use ($request) {
+    $event = DB::transaction(function () use ($request) {
 
       //calculate duration 
       if ($request->date_type == 'single') {
@@ -200,7 +200,7 @@ class EventController extends Controller
         Ticket::create($in);
       }
 
-      $slders = $request->slider_images;
+      $slders = $request->slider_images ?? [];
 
       foreach ($slders as $key => $id) {
         $event_image = EventImage::where('id', $id)->first();
@@ -231,9 +231,19 @@ class EventController extends Controller
         $event_content->meta_description = $request[$language->code . '_meta_description'];
         $event_content->save();
       }
+
+      return $event;
     });
+
     Session::flash('success', __('admin.flash.added_successfully'));
-    return response()->json(['status' => 'success'], 200);
+
+    $response = ['status' => 'success'];
+
+    if (config('features.event_ai_assistant_enabled') && $request->input('after_save_action') === 'analyze_cover') {
+      $response['redirect_url'] = route('admin.event_management.edit_event', ['id' => $event->id]) . '?ai_action=analyze_cover#event-ai-assistant';
+    }
+
+    return response()->json($response, 200);
   }
 
   /**

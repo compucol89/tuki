@@ -1084,6 +1084,11 @@ $("#EventSubmit").on('click', function (e) {
       });
 
       if (data.status == 'success') {
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+
         location.reload();
       }
     },

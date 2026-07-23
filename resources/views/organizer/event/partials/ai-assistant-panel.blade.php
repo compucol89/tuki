@@ -15,12 +15,12 @@
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start">
         <div class="mb-3 mb-lg-0 pr-lg-3">
           <span class="badge badge-primary mb-2">{{ __('Asistente IA') }}</span>
-          <h5 class="mb-1">{{ __('Analizar flyer y crear copy') }}</h5>
-          <p class="text-muted mb-0">{{ __('Lee el flyer, complementa los datos del formulario y genera descripción, SEO y textos para compartir. Nada se aplica sin confirmación.') }}</p>
+          <h5 class="mb-1">{{ __('Analizar portada y crear copy') }}</h5>
+          <p class="text-muted mb-0">{{ __('Lee la portada, complementa los datos del formulario y genera descripción, SEO y textos para compartir. Nada se aplica sin confirmación.') }}</p>
         </div>
         <div class="text-lg-right">
           <button type="button" class="btn btn-outline-primary btn-sm" data-ai-action="analysis" {{ empty($event->thumbnail) ? 'disabled' : '' }}>
-            <i class="fas fa-search mr-1"></i>{{ __('Analizar flyer') }}
+            <i class="fas fa-search mr-1"></i>{{ empty($event->thumbnail) ? __('Analizar portada') : __('Analizar portada existente') }}
           </button>
           <div class="small text-muted mt-2" data-ai-usage>{{ __('Cargando límite disponible...') }}</div>
         </div>
@@ -28,6 +28,8 @@
 
       @if(empty($event->thumbnail))
         <div class="alert alert-warning mt-3 mb-0">{{ __('Subí y guardá una imagen de portada para activar el asistente IA.') }}</div>
+      @else
+        <div class="alert alert-info mt-3 mb-0">{{ __('Esta portada se puede analizar sin volver a subirla. Si ya la cambiaste, volvé a analizarla para actualizar las sugerencias.') }}</div>
       @endif
 
       <div class="ai-assistant-status alert alert-light border mt-3 mb-0" data-ai-status>
@@ -171,7 +173,7 @@
             </div>
             <div class="form-group mb-2">
               <label class="small mb-1">{{ __('Notas para la IA') }}</label>
-              <textarea class="form-control form-control-sm" rows="2" data-ai-notes placeholder="{{ __('Datos confirmados que no aparecen en el flyer o aclaraciones importantes.') }}"></textarea>
+              <textarea class="form-control form-control-sm" rows="2" data-ai-notes placeholder="{{ __('Datos confirmados que no aparecen en la portada o aclaraciones importantes.') }}"></textarea>
             </div>
             <button type="button" class="btn btn-primary btn-sm" data-ai-action="draft" disabled>
               <i class="fas fa-pen-nib mr-1"></i>{{ __('Generar copy y SEO') }}

@@ -137,13 +137,13 @@
                   <div class="mb-3">
                     <span class="badge badge-primary mb-2">{{ __('Guia rapida') }}</span>
                     <h5 class="mb-1">{{ __('Edita tu evento paso a paso') }}</h5>
-                    <p class="text-muted mb-0">{{ __('Sigue este orden para no perderte: imagenes, fechas, configuracion, contenido y extras.') }}</p>
+                    <p class="text-muted mb-0">{{ __('Sigue este orden para no perderte: portada, analisis IA, fechas, contenido y extras.') }}</p>
                   </div>
                   <div class="row">
                     <div class="col-md-6 col-xl-4 mb-2">
                       <a href="#section-media" class="btn btn-light btn-block text-left py-3">
-                        <span class="badge badge-primary mr-2">1</span>{{ __('Imagenes') }}
-                        <small class="d-block text-muted mt-1">{{ __('Galeria y miniatura') }}</small>
+                        <span class="badge badge-primary mr-2">1</span>{{ __('Portada e IA') }}
+                        <small class="d-block text-muted mt-1">{{ __('Imagen principal y analisis') }}</small>
                       </a>
                     </div>
                     <div class="col-md-6 col-xl-4 mb-2">
@@ -246,62 +246,21 @@
               <div id="section-media" class="mb-3">
                 <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar">
                   <div class="pr-lg-3 mb-2 mb-lg-0">
-                    <p class="text-muted mb-1">{{ __('Carga galeria y miniatura antes de seguir con el resto del formulario.') }}</p>
-                    <small class="text-muted">{{ __('Usa imagenes limpias y evita flyers con texto demasiado chico.') }}</small>
+                    <p class="text-muted mb-1">{{ __('Revisa primero la portada principal. Desde ahi podes analizarla con IA y completar mejor el evento.') }}</p>
+                    <small class="text-muted">{{ __('Las imagenes adicionales son opcionales y complementan la publicacion.') }}</small>
                   </div>
                   <div class="d-flex flex-wrap align-items-center">
                     <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
-                    <small class="text-muted mb-0">{{ __('Recomendado: 1170x570 o mas, sin recortar el flyer') }}</small>
+                    <small class="text-muted mb-0">{{ __('Recomendado para portada: 1170x570 o mas, sin recortar el flyer') }}</small>
                   </div>
                 </div>
               </div>
               <div class="col-lg-12 px-0">
-                <label class="ev-label-section">{{ __('Imagenes de la galeria') }} <span class="text-warning">**</span></label>
-                <div id="reload-slider-div">
-                  <div class="row mt-2">
-                    <div class="col">
-                      <table class="table mb-0" id="img-table">
-
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                <div class="media-upload-separator d-flex align-items-center my-4">
-                  <span class="text-muted small pr-3">{{ __('Agregar mas imagenes') }}</span>
-                  <div class="flex-grow-1 border-top"></div>
-                </div>
-                <form action="{{ route('organizer.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata"
-                  class="dropzone create">
-                  @csrf
-                  <div class="fallback">
-                    <input name="file" type="file" multiple />
-                  </div>
-                  <input type="hidden" value="{{ $event->id }}" name="event_id">
-                </form>
-                <div class=" mb-0" id="errpreimg">
-
-                </div>
-                <p class="text-warning small mt-2 mb-0">{{ __('La galeria acepta imagenes JPG, PNG o WebP, horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
-              </div>
-              </div>
-              </div>
-
-              <form id="eventForm" action="{{ route('organizer.event.update') }}" method="POST"
-                enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="event_id" value="{{ $event->id }}">
-                <input type="hidden" name="event_type" value="{{ $event->event_type }}">
-                <input type="hidden" name="gallery_images" value="0">
-                <div class="card ev-section-card">
-                  <div class="card-header ev-section-header">
-                    <h4 class="card-title"><i class="fas fa-calendar-alt mr-2 text-primary"></i>{{ __('Fechas y horarios') }}</h4>
-                  </div>
-                  <div class="card-body">
                 <div class="event-cover-box mb-4">
                   <div class="event-cover-box__intro">
                     <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
                     <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
-                    <p class="event-cover-box__text">{{ __('El sistema acepta cualquier tamano. Se respeta la proporcion original del flyer para que no se corte ni se deforme.') }}</p>
+                    <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la pagina del evento y cuando se comparte.') }}</p>
                   </div>
                   <div class="event-cover-box__body">
                     <div class="thumb-preview event-cover-box__preview">
@@ -318,13 +277,56 @@
                           <strong>{{ __('Elegir imagen de portada') }}</strong>
                           <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
                         </span>
-                        <input type="file" class="img-input" name="thumbnail">
+                        <input type="file" class="img-input" name="thumbnail" form="eventForm" accept="image/jpeg,image/png,image/webp">
                       </label>
                       <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
                     </div>
                   </div>
                 </div>
-                @include('organizer.event.partials.ai-assistant-panel', ['event' => $event])
+
+                <label class="ev-label-section">{{ __('Imagenes adicionales') }} <span class="text-muted">{{ __('Opcional') }}</span></label>
+                <div id="reload-slider-div">
+                  <div class="row mt-2">
+                    <div class="col">
+                      <table class="table mb-0" id="img-table">
+
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="media-upload-separator d-flex align-items-center my-4">
+                  <span class="text-muted small pr-3">{{ __('Agregar imagenes adicionales') }}</span>
+                  <div class="flex-grow-1 border-top"></div>
+                </div>
+                <form action="{{ route('organizer.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata"
+                  class="dropzone create">
+                  @csrf
+                  <div class="fallback">
+                    <input name="file" type="file" multiple />
+                  </div>
+                  <input type="hidden" value="{{ $event->id }}" name="event_id">
+                </form>
+                <div class=" mb-0" id="errpreimg">
+
+                </div>
+                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Estas imagenes no reemplazan la portada.') }}</p>
+              </div>
+              </div>
+              </div>
+
+              @include('organizer.event.partials.ai-assistant-panel', ['event' => $event])
+
+              <form id="eventForm" action="{{ route('organizer.event.update') }}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="event_id" value="{{ $event->id }}">
+                <input type="hidden" name="event_type" value="{{ $event->event_type }}">
+                <input type="hidden" name="gallery_images" value="0">
+                <div class="card ev-section-card">
+                  <div class="card-header ev-section-header">
+                    <h4 class="card-title"><i class="fas fa-calendar-alt mr-2 text-primary"></i>{{ __('Fechas y horarios') }}</h4>
+                  </div>
+                  <div class="card-body">
                 <div id="section-schedule" class="mb-3">
                   <p class="text-muted mb-0">{{ __('Define si el evento tiene una sola fecha o varias funciones.') }}</p>
                 </div>
@@ -1003,8 +1005,8 @@
       border: 2px dashed #d6d9e6;
       border-radius: 14px;
       background: #f8f9fc;
-      min-height: 160px;
-      padding: 24px;
+      min-height: 128px;
+      padding: 18px;
     }
 
     #my-dropzone .dz-message {
@@ -1018,15 +1020,15 @@
     #my-dropzone .dz-message::before {
       content: "";
       display: block;
-      width: 68px;
-      height: 68px;
+      width: 52px;
+      height: 52px;
       margin: 0 auto 14px;
-      border-radius: 20px;
+      border-radius: 16px;
       background-color: #e8f1ff;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232564eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3Cpath d='M8 15a4 4 0 0 1 .9-7.9A5 5 0 0 1 18.8 8A3.5 3.5 0 0 1 19 15'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 34px 34px;
+      background-size: 28px 28px;
       box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
     }
 
@@ -1035,9 +1037,9 @@
     }
 
     #my-dropzone .dz-message span::before {
-      content: "Subi las imagenes del evento";
+      content: "Agregar imagenes adicionales";
       display: block;
-      font-size: 17px;
+      font-size: 15px;
       margin-bottom: 6px;
     }
 
@@ -1048,9 +1050,9 @@
     }
 
     #my-dropzone .dz-message span::after {
-      content: "Arrastralas aqui o hace clic para elegirlas. Puedes seguir sumando imagenes aunque ya hayas cargado una.";
+      content: "Arrastralas aqui o hace clic para elegirlas. Son opcionales y complementan la portada.";
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       color: #64748b;
       max-width: 440px;
@@ -1392,8 +1394,9 @@
       var progressTimer = null;
       var activeProcessType = null;
       var activeProgressStartedAtMs = null;
+      var autoStartAnalysis = new URLSearchParams(window.location.search).get('ai_action') === 'analyze_cover';
       var actionLabels = {
-        analysis: '<i class="fas fa-search mr-1"></i>Analizar flyer',
+        analysis: '<i class="fas fa-search mr-1"></i>Analizar portada existente',
         draft: '<i class="fas fa-pen-nib mr-1"></i>Generar copy y SEO',
         apply: '<i class="fas fa-check mr-1"></i>Aplicar campos seleccionados'
       };
@@ -1564,7 +1567,7 @@
         applyButton.html(actionLabels.apply).prop('disabled', false);
 
         if (type === 'analysis') {
-          analysisButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Analizando flyer...').prop('disabled', true);
+          analysisButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Analizando portada...').prop('disabled', true);
           draftButton.prop('disabled', true);
         } else if (type === 'draft') {
           draftButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Generando copy...').prop('disabled', true);
@@ -1771,6 +1774,7 @@
           renderFacts(response.review);
           renderDraft(response.draft);
           var processActive = renderProgressFromStatus(response);
+          var analysisStatus = response.analysis ? response.analysis.status : null;
 
           if (response.review) {
             root.find('[data-ai-results]').removeClass('d-none');
@@ -1782,9 +1786,9 @@
           }
 
           if (response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) {
-            setStatus('Analizando flyer y datos del evento...', 'info');
+            setStatus('Analizando portada y datos del evento...', 'info');
           } else if (response.analysis && response.analysis.status === 'failed') {
-            setStatus(response.analysis.error_message || 'No se pudo analizar el flyer.', 'danger');
+            setStatus(response.analysis.error_message || 'No se pudo analizar la portada.', 'danger');
           } else if (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1) {
             setStatus('Generando copy, SEO y sugerencias...', 'info');
           } else if (response.draft && response.draft.status === 'failed') {
@@ -1799,6 +1803,16 @@
             clearTimeout(pollTimer);
             pollTimer = setTimeout(function () { loadStatus(true); }, 3000);
           }
+
+          if (autoStartAnalysis && !processActive && !response.review && ['pending', 'running'].indexOf(analysisStatus) === -1) {
+            autoStartAnalysis = false;
+            if (window.history && window.history.replaceState) {
+              var cleanUrl = new URL(window.location.href);
+              cleanUrl.searchParams.delete('ai_action');
+              window.history.replaceState({}, document.title, cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+            }
+            root.find('[data-ai-action="analysis"]:not(:disabled)').trigger('click');
+          }
         }).fail(function (xhr) {
           setStatus(errorMessage(xhr, 'No pudimos consultar el estado del proceso IA.'), 'danger');
           if (activeProcessType) {
@@ -1811,8 +1825,8 @@
 
       root.on('click', '[data-ai-action="analysis"]', function () {
         if (activeProcessType) return;
-        showLocalProgress('analysis', 'Analizando flyer', 'Enviando flyer al asistente IA', 'Estamos iniciando el análisis. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
-        setStatus('Enviando flyer al asistente IA...', 'info');
+        showLocalProgress('analysis', 'Analizando portada', 'Enviando portada al asistente IA', 'Estamos iniciando el análisis. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
+        setStatus('Enviando portada al asistente IA...', 'info');
         $.post(root.data('analysis-url'), {_token: csrf})
           .done(function () { loadStatus(true); })
           .fail(function (xhr) {

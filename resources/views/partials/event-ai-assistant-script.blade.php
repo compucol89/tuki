@@ -10,8 +10,9 @@
       var progressTimer = null;
       var activeProcessType = null;
       var activeProgressStartedAtMs = null;
+      var autoStartAnalysis = new URLSearchParams(window.location.search).get('ai_action') === 'analyze_cover';
       var actionLabels = {
-        analysis: '<i class="fas fa-search mr-1"></i>Analizar flyer',
+        analysis: '<i class="fas fa-search mr-1"></i>Analizar portada existente',
         draft: '<i class="fas fa-pen-nib mr-1"></i>Generar copy y SEO',
         apply: '<i class="fas fa-check mr-1"></i>Aplicar campos seleccionados'
       };
@@ -182,7 +183,7 @@
         applyButton.html(actionLabels.apply).prop('disabled', false);
 
         if (type === 'analysis') {
-          analysisButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Analizando flyer...').prop('disabled', true);
+          analysisButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Analizando portada...').prop('disabled', true);
           draftButton.prop('disabled', true);
         } else if (type === 'draft') {
           draftButton.html('<i class="fas fa-spinner fa-spin mr-1"></i>Generando copy...').prop('disabled', true);
@@ -393,6 +394,7 @@
           renderFacts(response.review);
           renderDraft(response.draft);
           var processActive = renderProgressFromStatus(response);
+          var analysisStatus = response.analysis ? response.analysis.status : null;
 
           if (response.review) {
             root.find('[data-ai-results]').removeClass('d-none');
@@ -404,9 +406,9 @@
           }
 
           if (response.analysis && ['pending', 'running'].indexOf(response.analysis.status) !== -1) {
-            setStatus('Analizando flyer y datos del evento...', 'info');
+            setStatus('Analizando portada y datos del evento...', 'info');
           } else if (response.analysis && response.analysis.status === 'failed') {
-            setStatus(response.analysis.error_message || 'No se pudo analizar el flyer.', 'danger');
+            setStatus(response.analysis.error_message || 'No se pudo analizar la portada.', 'danger');
           } else if (response.draft && ['pending', 'running'].indexOf(response.draft.status) !== -1) {
             setStatus('Generando copy, SEO y sugerencias...', 'info');
           } else if (response.draft && response.draft.status === 'failed') {
@@ -421,6 +423,16 @@
             clearTimeout(pollTimer);
             pollTimer = setTimeout(function () { loadStatus(true); }, 3000);
           }
+
+          if (autoStartAnalysis && !processActive && !response.review && ['pending', 'running'].indexOf(analysisStatus) === -1) {
+            autoStartAnalysis = false;
+            if (window.history && window.history.replaceState) {
+              var cleanUrl = new URL(window.location.href);
+              cleanUrl.searchParams.delete('ai_action');
+              window.history.replaceState({}, document.title, cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+            }
+            root.find('[data-ai-action="analysis"]:not(:disabled)').trigger('click');
+          }
         }).fail(function (xhr) {
           setStatus(errorMessage(xhr, 'No pudimos consultar el estado del proceso IA.'), 'danger');
           if (activeProcessType) {
@@ -433,8 +445,8 @@
 
       root.on('click', '[data-ai-action="analysis"]', function () {
         if (activeProcessType) return;
-        showLocalProgress('analysis', 'Analizando flyer', 'Enviando flyer al asistente IA', 'Estamos iniciando el análisis. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
-        setStatus('Enviando flyer al asistente IA...', 'info');
+        showLocalProgress('analysis', 'Analizando portada', 'Enviando portada al asistente IA', 'Estamos iniciando el análisis. Normalmente tarda entre 20 segundos y 2 minutos.', 0);
+        setStatus('Enviando portada al asistente IA...', 'info');
         $.post(root.data('analysis-url'), {_token: csrf})
           .done(function () { loadStatus(true); })
           .fail(function (xhr) {

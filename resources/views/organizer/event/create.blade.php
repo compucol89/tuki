@@ -62,7 +62,7 @@
                       <p class="text-muted mb-0">{{ __('Esta guia se completa sola mientras agregas la informacion principal.') }}</p>
                     </div>
                     <div class="text-md-right">
-                      <div class="font-weight-bold" id="createChecklistCount">0/7 {{ __('puntos listos') }}</div>
+                      <div class="font-weight-bold" id="createChecklistCount">0/6 {{ __('puntos listos') }}</div>
                       <small class="text-muted">{{ __('Ideal para la primera publicacion.') }}</small>
                     </div>
                   </div>
@@ -71,7 +71,6 @@
                   </div>
                   <div class="row">
                     <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-thumbnail"><div class="font-weight-bold mb-1">{{ __('Imagen de portada') }}</div><small class="text-muted">{{ __('Sube una portada clara y facil de reconocer.') }}</small></div></div>
-                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-gallery"><div class="font-weight-bold mb-1">{{ __('Galeria') }}</div><small class="text-muted">{{ __('Suma imagenes extra para que la publicacion se vea mas completa.') }}</small></div></div>
                     <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-dates"><div class="font-weight-bold mb-1">{{ __('Fechas') }}</div><small class="text-muted">{{ __('Define bien cuando ocurre el evento.') }}</small></div></div>
                     <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-title"><div class="font-weight-bold mb-1">{{ __('Titulo') }}</div><small class="text-muted">{{ __('Usa un nombre claro y facil de entender.') }}</small></div></div>
                     <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-description"><div class="font-weight-bold mb-1">{{ __('Descripcion') }}</div><small class="text-muted">{{ __('Cuenta que incluye la entrada, horarios y datos clave.') }}</small></div></div>
@@ -81,29 +80,16 @@
                 </div>
               </div>
 
-              <div class="col-lg-12">
-                <label for="" class="mb-2"><strong>{{ __('Gallery Images') }} **</strong></label>
-                <form action="{{ route('organizer.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata"
-                  class="dropzone create">
-                  @csrf
-                  <div class="fallback">
-                    <input name="file" type="file" multiple />
-                  </div>
-                </form>
-                <div class=" mb-0" id="errpreimg">
-
-                </div>
-                <p class="text-warning">{{ __('La galeria acepta imagenes JPG, PNG o WebP, horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
-              </div>
               <form id="eventForm" action="{{ route('organizer.event_management.store_event') }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="event_type" value="{{ request()->input('type') }}">
+                <input type="hidden" name="after_save_action" value="">
                 <div class="event-cover-box mb-4">
                   <div class="event-cover-box__intro">
                     <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
                     <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
-                    <p class="event-cover-box__text">{{ __('El sistema acepta cualquier tamano. Se respeta la proporcion original del flyer para que no se corte ni se deforme.') }}</p>
+                    <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la pagina del evento y cuando se comparte.') }}</p>
                   </div>
                   <div class="event-cover-box__body">
                     <div class="thumb-preview event-cover-box__preview">
@@ -118,9 +104,26 @@
                           <strong>{{ __('Elegir imagen de portada') }}</strong>
                           <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
                         </span>
-                        <input type="file" class="img-input" name="thumbnail">
+                        <input type="file" class="img-input" name="thumbnail" accept="image/jpeg,image/png,image/webp">
                       </label>
                       <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
+                      <div class="event-cover-box__empty" data-cover-ai-empty>
+                        <strong>{{ __('Subi una portada para empezar.') }}</strong>
+                        <span>{{ __('Despues vas a poder analizarla con IA para completar el evento mas rapido.') }}</span>
+                      </div>
+                      <div class="event-cover-box__ai d-none" data-cover-ai-ready>
+                        <div class="event-cover-box__state">
+                          <i class="fas fa-check-circle"></i>
+                          <div>
+                            <strong>{{ __('Imagen de portada cargada correctamente.') }}</strong>
+                            <span>{{ __('Podemos leer la imagen y ayudarte a completar titulo, fecha, lugar, promociones y descripcion.') }}</span>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze>
+                          <i class="fas fa-magic mr-1"></i>{{ __('Guardar y analizar portada con IA') }}
+                        </button>
+                        <small>{{ __('Guardamos el evento y abrimos el asistente. Si falta algun dato obligatorio, te lo marcamos arriba antes de continuar.') }}</small>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -656,6 +659,23 @@
                 </div>
 
               </form>
+
+              <div class="event-gallery-secondary mt-4">
+                <div class="event-gallery-secondary__header">
+                  <span>{{ __('Opcional') }}</span>
+                  <h4>{{ __('Imagenes adicionales') }}</h4>
+                  <p>{{ __('Agrega fotos complementarias para mostrar mejor el ambiente, los artistas, el lugar o experiencias de ediciones anteriores. No reemplazan la portada.') }}</p>
+                </div>
+                <form action="{{ route('organizer.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata"
+                  class="dropzone create">
+                  @csrf
+                  <div class="fallback">
+                    <input name="file" type="file" multiple />
+                  </div>
+                </form>
+                <div class="mb-0" id="errpreimg"></div>
+                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -685,8 +705,8 @@
       border: 2px dashed #d6d9e6;
       border-radius: 14px;
       background: #f8f9fc;
-      min-height: 170px;
-      padding: 24px;
+      min-height: 128px;
+      padding: 18px;
     }
 
     #my-dropzone .dz-message {
@@ -700,15 +720,15 @@
     #my-dropzone .dz-message::before {
       content: "";
       display: block;
-      width: 68px;
-      height: 68px;
+      width: 52px;
+      height: 52px;
       margin: 0 auto 14px;
-      border-radius: 20px;
+      border-radius: 16px;
       background-color: #e8f1ff;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232564eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3Cpath d='M8 15a4 4 0 0 1 .9-7.9A5 5 0 0 1 18.8 8A3.5 3.5 0 0 1 19 15'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 34px 34px;
+      background-size: 28px 28px;
       box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
     }
 
@@ -723,16 +743,16 @@
     }
 
     #my-dropzone .dz-message span::before {
-      content: "Subi las imagenes del evento";
+      content: "Agregar imagenes adicionales";
       display: block;
-      font-size: 17px;
+      font-size: 15px;
       margin-bottom: 6px;
     }
 
     #my-dropzone .dz-message span::after {
-      content: "Arrastralas aqui o hace clic para elegirlas. Puedes seguir sumando imagenes aunque ya hayas cargado una.";
+      content: "Arrastralas aqui o hace clic para elegirlas. Son opcionales y complementan la portada.";
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       color: #64748b;
       max-width: 440px;
@@ -795,7 +815,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 12px;
-      max-width: 360px;
+      max-width: 430px;
     }
 
     .event-cover-box__upload {
@@ -843,6 +863,93 @@
     .event-cover-box__upload-copy small {
       color: #64748b;
       font-size: 12px;
+    }
+
+    .event-cover-box__empty,
+    .event-cover-box__ai {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+    }
+
+    .event-cover-box__empty strong,
+    .event-cover-box__empty span,
+    .event-cover-box__ai small {
+      display: block;
+    }
+
+    .event-cover-box__empty span,
+    .event-cover-box__ai small {
+      margin-top: 4px;
+      line-height: 1.6;
+      color: #9a3412;
+    }
+
+    .event-cover-box__ai {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+
+    .event-cover-box__state {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .event-cover-box__state i {
+      margin-top: 2px;
+      color: #16a34a;
+    }
+
+    .event-cover-box__state strong,
+    .event-cover-box__state span {
+      display: block;
+    }
+
+    .event-cover-box__state span {
+      margin-top: 3px;
+      color: #166534;
+      line-height: 1.6;
+    }
+
+    .event-gallery-secondary {
+      padding: 18px;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      background: #ffffff;
+    }
+
+    .event-gallery-secondary__header {
+      margin-bottom: 14px;
+    }
+
+    .event-gallery-secondary__header span {
+      display: inline-flex;
+      margin-bottom: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .event-gallery-secondary__header h4 {
+      margin-bottom: 6px;
+      color: #0f172a;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .event-gallery-secondary__header p {
+      margin-bottom: 0;
+      color: #64748b;
+      line-height: 1.6;
     }
 
     .event-content-shell__eyebrow {
@@ -985,7 +1092,6 @@
       const descriptionInput = document.querySelector('textarea[name$="_description"]');
       const statusInput = document.querySelector('select[name="status"]');
       const thumbnailInput = document.querySelector('input[name="thumbnail"]');
-      const galleryInputs = document.querySelectorAll('#sliders input[name="slider_images[]"]');
       const isSingle = document.querySelector('input[name="date_type"]:checked')?.value === 'single';
       const priceInput = document.querySelector('input[name="price"]');
       const freeInput = document.getElementById('free_ticket');
@@ -995,7 +1101,6 @@
       const descriptionText = descriptionInput ? descriptionInput.value.replace(/<[^>]*>/g, '').trim() : '';
       const descriptionOk = descriptionText.length >= 80;
       const thumbnailOk = thumbnailInput && thumbnailInput.files && thumbnailInput.files.length > 0;
-      const galleryOk = galleryInputs.length > 0;
       const statusOk = statusInput && statusInput.value !== '';
       const singleDatesOk = document.querySelector('input[name="start_date"]')?.value && document.querySelector('input[name="start_time"]')?.value && document.querySelector('input[name="end_date"]')?.value && document.querySelector('input[name="end_time"]')?.value;
       const multipleDatesOk = Array.from(document.querySelectorAll('input[name="m_start_date[]"]')).some((input, index) => {
@@ -1011,7 +1116,6 @@
 
       const checks = {
         thumbnail: !!thumbnailOk,
-        gallery: !!galleryOk,
         dates: !!datesOk,
         title: !!titleOk,
         description: !!descriptionOk,
@@ -1027,7 +1131,7 @@
         completed += checks[key] ? 1 : 0;
       });
 
-      const total = 7;
+      const total = 6;
       const score = Math.round((completed / total) * 100);
       const badge = document.getElementById('createChecklistBadge');
       const title = document.getElementById('createChecklistTitle');
@@ -1043,12 +1147,53 @@
           title.textContent = 'Muy bien encaminado';
         } else if (score >= 50) {
           title.textContent = 'Vas bien, sigue completando';
+        } else if (thumbnailOk) {
+          title.textContent = 'Portada lista para analizar';
         } else {
           title.textContent = 'Empieza a cargar tu evento';
         }
       }
     }
 
+    function bindCoverAiCreateFlow() {
+      const form = document.getElementById('eventForm');
+      const thumbnailInput = document.querySelector('input[name="thumbnail"]');
+      const actionInput = document.querySelector('input[name="after_save_action"]');
+      const emptyState = document.querySelector('[data-cover-ai-empty]');
+      const readyState = document.querySelector('[data-cover-ai-ready]');
+      const analyzeButton = document.querySelector('[data-cover-save-analyze]');
+      const submitButton = document.getElementById('EventSubmit');
+
+      if (!form || !thumbnailInput || !actionInput || !submitButton) return;
+
+      const toggleCoverState = function () {
+        const hasCover = thumbnailInput.files && thumbnailInput.files.length > 0;
+
+        if (emptyState) emptyState.classList.toggle('d-none', hasCover);
+        if (readyState) readyState.classList.toggle('d-none', !hasCover);
+      };
+
+      thumbnailInput.addEventListener('change', toggleCoverState);
+
+      submitButton.addEventListener('click', function () {
+        if (submitButton.getAttribute('data-cover-analyze') !== '1') {
+          actionInput.value = '';
+        }
+      }, true);
+
+      if (analyzeButton) {
+        analyzeButton.addEventListener('click', function () {
+          actionInput.value = 'analyze_cover';
+          submitButton.setAttribute('data-cover-analyze', '1');
+          submitButton.click();
+          submitButton.removeAttribute('data-cover-analyze');
+        });
+      }
+
+      toggleCoverState();
+    }
+
+    bindCoverAiCreateFlow();
     document.addEventListener('input', updateCreateChecklist);
     document.addEventListener('change', updateCreateChecklist);
     setInterval(updateCreateChecklist, 1200);

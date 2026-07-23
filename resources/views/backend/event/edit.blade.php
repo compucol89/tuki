@@ -171,42 +171,20 @@
         <div class="card-body">
           <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center compact-media-toolbar mb-3">
             <div class="pr-lg-3 mb-2 mb-lg-0">
-              <p class="text-muted mb-1">{{ __('Carga galeria y miniatura antes de seguir con el resto del formulario.') }}</p>
-              <small class="text-muted">{{ __('Usa imagenes limpias y evita flyers con texto demasiado chico.') }}</small>
+              <p class="text-muted mb-1">{{ __('Revisa primero la portada principal. Desde ahi podes analizarla con IA y completar mejor el evento.') }}</p>
+              <small class="text-muted">{{ __('Las imagenes adicionales son opcionales y complementan la publicacion.') }}</small>
             </div>
             <div class="d-flex flex-wrap align-items-center">
               <span class="badge badge-light border px-3 py-2 mr-2 mb-2 mb-lg-0">{{ $galleryCount }} {{ __('imagenes cargadas') }}</span>
-              <small class="text-muted mb-0">{{ __('Recomendado: 1170x570 o mas, sin recortar el flyer') }}</small>
+              <small class="text-muted mb-0">{{ __('Recomendado para portada: 1170x570 o mas, sin recortar el flyer') }}</small>
             </div>
           </div>
 
-          {{-- Galería (form propio — dropzone AJAX) --}}
-          <label class="ev-label-section">{{ __('Imagenes de la galeria') }} <span class="text-warning">**</span></label>
-          <div id="reload-slider-div">
-            <div class="row mt-1 mb-2">
-              <div class="col">
-                <table class="table mb-0" id="img-table"></table>
-              </div>
-            </div>
-          </div>
-          <div class="media-upload-separator d-flex align-items-center my-4">
-            <span class="text-muted small pr-3">{{ __('Agregar mas imagenes') }}</span>
-            <div class="flex-grow-1 border-top"></div>
-          </div>
-          <form action="{{ route('admin.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata" class="dropzone create">
-            @csrf
-            <div class="fallback"><input name="file" type="file" multiple /></div>
-            <input type="hidden" value="{{ $event->id }}" name="event_id">
-          </form>
-          <div class="mb-0" id="errpreimg"></div>
-          <p class="text-warning small mt-2 mb-4">{{ __('La galeria acepta imagenes JPG, PNG o WebP, horizontales, cuadradas o verticales. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
-
-          {{-- Miniatura (pertenece al form principal via form="eventForm") --}}
-          <div class="event-cover-box mt-4">
+          <div class="event-cover-box mb-4">
             <div class="event-cover-box__intro">
               <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
               <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
-              <p class="event-cover-box__text">{{ __('El sistema acepta cualquier tamano. Se respeta la proporcion original del flyer para que no se corte ni se deforme.') }}</p>
+              <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la pagina del evento y cuando se comparte.') }}</p>
             </div>
             <div class="event-cover-box__body">
             <div class="thumb-preview event-cover-box__preview mr-4">
@@ -222,12 +200,33 @@
                   <strong>{{ __('Elegir imagen de portada') }}</strong>
                   <small>{{ __('Haz clic para subir tu flyer o reemplazarlo') }}</small>
                 </span>
-                <input type="file" class="img-input" name="thumbnail" form="eventForm">
+                <input type="file" class="img-input" name="thumbnail" form="eventForm" accept="image/jpeg,image/png,image/webp">
               </label>
               <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
             </div>
           </div>
           </div>
+
+          {{-- Galería (form propio — dropzone AJAX) --}}
+          <label class="ev-label-section">{{ __('Imagenes adicionales') }} <span class="text-muted">{{ __('Opcional') }}</span></label>
+          <div id="reload-slider-div">
+            <div class="row mt-1 mb-2">
+              <div class="col">
+                <table class="table mb-0" id="img-table"></table>
+              </div>
+            </div>
+          </div>
+          <div class="media-upload-separator d-flex align-items-center my-4">
+            <span class="text-muted small pr-3">{{ __('Agregar imagenes adicionales') }}</span>
+            <div class="flex-grow-1 border-top"></div>
+          </div>
+          <form action="{{ route('admin.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata" class="dropzone create">
+            @csrf
+            <div class="fallback"><input name="file" type="file" multiple /></div>
+            <input type="hidden" value="{{ $event->id }}" name="event_id">
+          </form>
+          <div class="mb-0" id="errpreimg"></div>
+          <p class="text-muted small mt-2 mb-4">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Estas imagenes no reemplazan la portada.') }}</p>
         </div>
       </div>
 
@@ -820,8 +819,8 @@
       border: 2px dashed #d6d9e6;
       border-radius: 14px;
       background: #f8f9fc;
-      min-height: 160px;
-      padding: 24px;
+      min-height: 128px;
+      padding: 18px;
     }
 
     #my-dropzone .dz-message {
@@ -835,15 +834,15 @@
     #my-dropzone .dz-message::before {
       content: "";
       display: block;
-      width: 68px;
-      height: 68px;
+      width: 52px;
+      height: 52px;
       margin: 0 auto 14px;
-      border-radius: 20px;
+      border-radius: 16px;
       background-color: #e8f1ff;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232564eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3Cpath d='M8 15a4 4 0 0 1 .9-7.9A5 5 0 0 1 18.8 8A3.5 3.5 0 0 1 19 15'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 34px 34px;
+      background-size: 28px 28px;
       box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
     }
 
@@ -852,9 +851,9 @@
     }
 
     #my-dropzone .dz-message span::before {
-      content: "{{ addslashes(__('Subí las imágenes del evento')) }}";
+      content: "{{ addslashes(__('Agregar imagenes adicionales')) }}";
       display: block;
-      font-size: 17px;
+      font-size: 15px;
       margin-bottom: 6px;
     }
 
@@ -865,9 +864,9 @@
     }
 
     #my-dropzone .dz-message span::after {
-      content: "{{ addslashes(__('Arrastralas aquí o hacé clic para elegirlas. Podés seguir sumando imágenes aunque ya hayas cargado una.')) }}";
+      content: "{{ addslashes(__('Arrastralas aqui o hace clic para elegirlas. Son opcionales y complementan la portada.')) }}";
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
       color: #64748b;
       max-width: 440px;

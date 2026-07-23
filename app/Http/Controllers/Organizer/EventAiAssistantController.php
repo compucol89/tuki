@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Exceptions\OpenAiNonRetryableException;
 use App\Jobs\AnalyzeEventFlyerJob;
 use App\Jobs\GenerateEventContentDraftJob;
 use App\Models\Event;
@@ -12,14 +13,107 @@ use App\Models\Event\EventAiContentDraft;
 use App\Models\Event\EventContent;
 use App\Models\Language;
 use App\Services\EventAi\EventAiUsageLimiter;
+use App\Services\OpenAI\EventAiAssistantService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Mews\Purifier\Facades\Purifier;
+use Throwable;
 
 class EventAiAssistantController extends Controller
 {
+  public function analyzeTemporaryCover(Request $request, EventAiAssistantService $assistant): JsonResponse
+  {
+    if (!config('features.event_ai_assistant_enabled', false)) {
+      return response()->json([
+        'error' => 'ai_assistant_disabled',
+        'message' => 'El asistente IA para eventos no está habilitado.',
+      ], 503);
+    }
+
+    if (empty(config('openai.api_key'))) {
+      return response()->json([
+        'error' => 'openai_not_configured',
+        'message' => 'Falta configurar OPENAI_API_KEY.',
+      ], 503);
+    }
+
+    $data = $request->validate([
+      'thumbnail' => 'required|file|mimes:jpeg,jpg,png,webp|max:' . (int) config('openai.reference.max_size_kb', 10240),
+      'event_type' => 'nullable|string|max:30',
+      'date_type' => 'nullable|string|max:30',
+      'start_date' => 'nullable|string|max:30',
+      'start_time' => 'nullable|string|max:30',
+      'end_date' => 'nullable|string|max:30',
+      'end_time' => 'nullable|string|max:30',
+    ]);
+
+    $imagePath = $request->file('thumbnail')->getRealPath();
+    if (!$imagePath || !is_file($imagePath)) {
+      return response()->json([
+        'error' => 'thumbnail_not_found',
+        'message' => 'No pudimos leer la imagen de portada.',
+      ], 422);
+    }
+
+    $imageError = $this->validateAnalysisImage($imagePath);
+    if ($imageError) {
+      return response()->json($imageError, 422);
+    }
+
+    $quota = $this->consumeTemporaryAnalysisQuota();
+    if (!$quota['allowed']) {
+      return response()->json([
+        'error' => 'temporary_analysis_limit_reached',
+        'message' => $quota['message'],
+        'usage' => $quota,
+      ], 429);
+    }
+
+    $formFacts = $this->temporaryFormFacts($request, $data);
+
+    try {
+      $moderation = $assistant->moderateImageAndText($imagePath, implode("\n", array_filter([
+        $formFacts['title'] ?? null,
+        $formFacts['description'] ?? null,
+        $formFacts['address'] ?? null,
+      ])));
+
+      if ((bool) data_get($moderation, 'results.0.flagged', false)) {
+        return response()->json([
+          'error' => 'content_needs_review',
+          'message' => 'La imagen o el texto necesitan revisión antes de usar el asistente IA.',
+        ], 422);
+      }
+
+      $analysis = $assistant->analyzeFlyer($imagePath, $formFacts);
+    } catch (OpenAiNonRetryableException $e) {
+      return response()->json([
+        'error' => 'ai_analysis_failed',
+        'message' => $e->getMessage(),
+      ], 422);
+    } catch (Throwable $e) {
+      report($e);
+
+      return response()->json([
+        'error' => 'ai_analysis_failed',
+        'message' => 'No pudimos analizar la portada en este momento. Intentá de nuevo en unos minutos.',
+      ], 503);
+    }
+
+    return response()->json([
+      'status' => 'completed',
+      'usage' => $quota,
+      'review' => [
+        'id' => null,
+        'status' => 'temporary',
+        'canonical_event_facts' => $this->temporaryCanonicalFacts($formFacts, $analysis),
+      ],
+    ]);
+  }
+
   public function startAnalysis(Request $request, Event $event, EventAiUsageLimiter $limiter): JsonResponse
   {
     if (!$this->canManageEvent($event)) {
@@ -444,6 +538,114 @@ class EventAiAssistantController extends Controller
       'used_daily_runs' => 0,
       'remaining_daily_runs' => 999,
       'message' => 'Modo admin: IA sin límites para pruebas.',
+    ];
+  }
+
+  private function consumeTemporaryAnalysisQuota(): array
+  {
+    if ($this->isAdminRequest()) {
+      return $this->unlimitedUsagePayload('analysis');
+    }
+
+    $organizer = Auth::guard('organizer')->user();
+    $limit = max(0, (int) config('openai.event_assistant.limits.max_temp_cover_analysis_per_organizer_day', 2));
+
+    if (!$organizer || $limit === 0) {
+      return [
+        'allowed' => false,
+        'message' => 'No hay análisis IA disponibles para esta cuenta.',
+      ];
+    }
+
+    $key = 'event_ai_temp_cover_analysis:' . $organizer->id . ':' . now()->toDateString();
+    $used = (int) Cache::get($key, 0);
+
+    if ($used >= $limit) {
+      return [
+        'allowed' => false,
+        'max_daily_runs' => $limit,
+        'used_daily_runs' => $used,
+        'remaining_daily_runs' => 0,
+        'message' => 'Ya usaste los análisis IA disponibles para crear eventos hoy.',
+      ];
+    }
+
+    Cache::put($key, $used + 1, now()->endOfDay());
+
+    return [
+      'allowed' => true,
+      'max_daily_runs' => $limit,
+      'used_daily_runs' => $used + 1,
+      'remaining_daily_runs' => max($limit - ($used + 1), 0),
+      'message' => null,
+    ];
+  }
+
+  private function temporaryFormFacts(Request $request, array $data): array
+  {
+    $defaultLanguage = Language::where('is_default', 1)->first();
+    $code = $defaultLanguage?->code ?: 'es';
+
+    return [
+      'event_id' => null,
+      'event_type' => $data['event_type'] ?? $request->input('event_type'),
+      'date_type' => $data['date_type'] ?? $request->input('date_type'),
+      'start_date' => $data['start_date'] ?? $request->input('start_date'),
+      'start_time' => $data['start_time'] ?? $request->input('start_time'),
+      'end_date' => $data['end_date'] ?? $request->input('end_date'),
+      'end_time' => $data['end_time'] ?? $request->input('end_time'),
+      'duration' => null,
+      'category' => $this->categoryName($request->input($code . '_category_id')),
+      'title' => $request->input($code . '_title'),
+      'description' => $request->input($code . '_description') ? trim(strip_tags($request->input($code . '_description'))) : null,
+      'address' => $request->input($code . '_address'),
+      'city' => $request->input($code . '_city'),
+      'state' => $request->input($code . '_state'),
+      'country' => $request->input($code . '_country'),
+      'zip_code' => $request->input($code . '_zip_code'),
+      'has_thumbnail' => true,
+      'timezone' => config('app.timezone', 'America/Argentina/Buenos_Aires'),
+    ];
+  }
+
+  private function categoryName($categoryId): ?string
+  {
+    if (empty($categoryId)) {
+      return null;
+    }
+
+    return \App\Models\Event\EventCategory::whereKey($categoryId)->value('name');
+  }
+
+  private function temporaryCanonicalFacts(array $formFacts, array $analysis): array
+  {
+    return [
+      'source_priority' => [
+        'confirmed_form_fields',
+        'organizer_free_text',
+        'organizer_notes',
+        'organizer_review',
+        'accepted_image_fields',
+        'marketing_inference',
+      ],
+      'form_facts' => $formFacts,
+      'image_analysis' => [
+        'summary' => $analysis['summary'] ?? '',
+        'extracted_fields' => $analysis['extracted_fields'] ?? [],
+        'found_information' => $analysis['found_information'] ?? [],
+        'complementary_information' => $analysis['complementary_information'] ?? [],
+        'optional_suggestions' => $analysis['optional_suggestions'] ?? [],
+        'critical_differences' => $analysis['critical_differences'] ?? [],
+        'conflicts' => $analysis['conflicts'] ?? [],
+        'missing_information' => $analysis['missing_information'] ?? [],
+        'sensitive_fields' => $analysis['sensitive_fields'] ?? [],
+        'sponsors' => $analysis['sponsors'] ?? [],
+        'warnings' => $analysis['warnings'] ?? [],
+      ],
+      'confirmed_fields' => [],
+      'ignored_fields' => [],
+      'locale' => 'es-AR',
+      'timezone' => config('app.timezone', 'America/Argentina/Buenos_Aires'),
     ];
   }
 

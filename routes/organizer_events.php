@@ -21,6 +21,7 @@ Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deact
   Route::post('/update-ticket-setting', 'BackEnd\Organizer\EventController@updateTicketSetting')->name('organizer.event_management.update_ticket_setting');
   Route::get('/event-images/{id}', 'BackEnd\Organizer\EventController@images')->name('organizer.event.images');
   Route::post('/event-update', 'BackEnd\Organizer\EventController@update')->name('organizer.event.update');
+  Route::post('/events/ai-assistant/temporary-cover-analysis', 'Organizer\EventAiAssistantController@analyzeTemporaryCover')->middleware('throttle:4,1')->name('organizer.events.ai-assistant.temporary_cover_analysis');
   Route::prefix('/events/{event}/ai-assistant')->middleware('throttle:20,1')->group(function () {
     Route::post('/analysis', 'Organizer\EventAiAssistantController@startAnalysis')->middleware('throttle:6,1')->name('organizer.events.ai-assistant.analysis');
     Route::get('/status', 'Organizer\EventAiAssistantController@status')->name('organizer.events.ai-assistant.status');

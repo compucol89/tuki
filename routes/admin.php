@@ -109,6 +109,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
 
     Route::get('/event-images/{id}', 'BackEnd\Event\EventController@images')->name('admin.event.images');
     Route::post('/event-update', 'BackEnd\Event\EventController@update')->name('admin.event.update');
+    Route::post('/events/ai-assistant/temporary-cover-analysis', 'Organizer\EventAiAssistantController@analyzeTemporaryCover')->name('admin.events.ai-assistant.temporary_cover_analysis');
     Route::prefix('/events/{event}/ai-assistant')->group(function () {
       Route::post('/analysis', 'Organizer\EventAiAssistantController@startAnalysis')->name('admin.events.ai-assistant.analysis');
       Route::get('/status', 'Organizer\EventAiAssistantController@status')->name('admin.events.ai-assistant.status');

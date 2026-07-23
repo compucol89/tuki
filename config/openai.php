@@ -72,6 +72,7 @@ return [
             'max_runs_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_RUNS_PER_ORGANIZER_DAY', 10),
             'max_content_drafts_per_event' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_EVENT', 2),
             'max_content_drafts_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_ORGANIZER_DAY', 10),
+            'max_temp_cover_analysis_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_TEMP_COVER_ANALYSIS_PER_ORGANIZER_DAY', 2),
             'max_repair_attempts' => (int) env('AI_EVENT_ASSISTANT_MAX_REPAIR_ATTEMPTS', 1),
         ],
         'progress' => [

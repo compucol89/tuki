@@ -239,10 +239,6 @@ class EventController extends Controller
 
     $response = ['status' => 'success'];
 
-    if (config('features.event_ai_assistant_enabled') && $request->input('after_save_action') === 'analyze_cover') {
-      $response['redirect_url'] = route('admin.event_management.edit_event', ['id' => $event->id]) . '?ai_action=analyze_cover#event-ai-assistant';
-    }
-
     return response()->json($response, 200);
   }
 

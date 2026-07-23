@@ -86,7 +86,6 @@
                 enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="event_type" value="{{ request()->input('type') }}">
-                <input type="hidden" name="after_save_action" value="">
                 <div class="event-cover-box mb-4">
                   <div class="event-cover-box__intro">
                     <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
@@ -122,13 +121,17 @@
                           </div>
                         </div>
                         <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze>
-                          <i class="fas fa-magic mr-1"></i>{{ __('Guardar y analizar portada con IA') }}
+                          <i class="fas fa-magic mr-1"></i>{{ __('Analizar portada con IA') }}
                         </button>
-                        <small>{{ __('Guardamos el evento y abrimos el asistente. Si falta algun dato obligatorio, te lo marcamos arriba antes de continuar.') }}</small>
+                        <small>{{ __('Analizamos la imagen antes de guardar para ayudarte a completar titulo, fecha, lugar y descripcion.') }}</small>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                @include('organizer.event.partials.create-cover-ai-panel', [
+                  'temporaryAnalysisUrl' => route('admin.events.ai-assistant.temporary_cover_analysis'),
+                ])
 
                 <div class="row">
                   <div class="col-lg-12">
@@ -254,8 +257,8 @@
                     <div class="form-group">
                       <label for="">{{ __('Estado') . '*' }}</label>
                       <select name="status" class="form-control">
-                        <option selected disabled>{{ __('Selecciona un estado') }}</option>
-                        <option value="1">{{ __('Active') }}</option>
+                        <option disabled>{{ __('Selecciona un estado') }}</option>
+                        <option value="1" selected>{{ __('Active') }}</option>
                         <option value="0">{{ __('Oculto') }}</option>
                       </select>
                     </div>
@@ -264,9 +267,9 @@
                     <div class="form-group">
                       <label for="">{{ __('Evento destacado') . '*' }}</label>
                       <select name="is_featured" class="form-control">
-                        <option selected disabled>{{ __('Selecciona una opcion') }}</option>
+                        <option disabled>{{ __('Selecciona una opcion') }}</option>
                         <option value="yes">{{ __('Si') }}</option>
-                        <option value="no">{{ __('No') }}</option>
+                        <option value="no" selected>{{ __('No') }}</option>
                       </select>
                     </div>
                   </div>
@@ -920,6 +923,95 @@
       line-height: 1.6;
     }
 
+    .create-cover-ai-panel {
+      padding: 18px;
+      border: 1px solid #dbeafe;
+      border-left: 4px solid #2563eb;
+      border-radius: 14px;
+      background: #f8fbff;
+    }
+
+    .create-cover-ai-facts {
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .create-cover-ai-fact {
+      display: grid;
+      grid-template-columns: minmax(160px, 240px) 1fr;
+      gap: 14px;
+      padding: 12px 14px;
+      border-bottom: 1px solid #eef2f7;
+    }
+
+    .create-cover-ai-fact:last-child {
+      border-bottom: 0;
+    }
+
+    .create-cover-ai-fact__value {
+      font-weight: 700;
+      color: #1e2532;
+    }
+
+    .async-progress-panel {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #dbeafe;
+      border-left: 4px solid #3b82f6;
+      border-radius: 8px;
+      background: #f8fbff;
+      color: #1e2532;
+    }
+
+    .async-progress-panel.is-success {
+      border-color: #bbf7d0;
+      border-left-color: #16a34a;
+      background: #f7fef9;
+    }
+
+    .async-progress-panel.is-danger {
+      border-color: #fecaca;
+      border-left-color: #dc2626;
+      background: #fff7f7;
+    }
+
+    .async-progress-panel__percent {
+      font-weight: 700;
+      color: #1e40af;
+      white-space: nowrap;
+    }
+
+    .async-progress-panel__bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #dbeafe;
+      overflow: hidden;
+    }
+
+    .async-progress-panel__bar .progress-bar {
+      background-color: #3b82f6;
+      transition: width .35s ease;
+    }
+
+    .async-progress-panel.is-success .progress-bar {
+      background-color: #16a34a;
+    }
+
+    .async-progress-panel.is-danger .progress-bar {
+      background-color: #dc2626;
+    }
+
+    .async-progress-panel__meta {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    @media (max-width: 575px) {
+      .create-cover-ai-fact {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .event-gallery-secondary {
       padding: 18px;
       border: 1px solid #e5e7eb;
@@ -1166,36 +1258,351 @@
     function bindCoverAiCreateFlow() {
       const form = document.getElementById('eventForm');
       const thumbnailInput = document.querySelector('input[name="thumbnail"]');
-      const actionInput = document.querySelector('input[name="after_save_action"]');
       const emptyState = document.querySelector('[data-cover-ai-empty]');
       const readyState = document.querySelector('[data-cover-ai-ready]');
       const analyzeButton = document.querySelector('[data-cover-save-analyze]');
-      const submitButton = document.getElementById('EventSubmit');
+      const panel = document.getElementById('event-cover-ai-create');
+      const statusBox = panel ? panel.querySelector('[data-create-ai-status]') : null;
+      const progressPanel = panel ? panel.querySelector('[data-async-progress]') : null;
+      const progressFill = panel ? panel.querySelector('[data-progress-fill]') : null;
+      const progressBar = panel ? panel.querySelector('[data-progressbar]') : null;
+      const results = panel ? panel.querySelector('[data-create-ai-results]') : null;
+      const factsBox = panel ? panel.querySelector('[data-create-ai-facts]') : null;
+      const guidanceBox = panel ? panel.querySelector('[data-create-ai-guidance]') : null;
+      const summaryBox = panel ? panel.querySelector('[data-create-ai-summary]') : null;
+      const applyButton = panel ? panel.querySelector('[data-create-ai-apply]') : null;
+      let active = false;
+      let lastReview = null;
+      let progressTimer = null;
+      let elapsedTimer = null;
+      let startedAt = null;
 
-      if (!form || !thumbnailInput || !actionInput || !submitButton) return;
+      if (!form || !thumbnailInput) return;
 
       const toggleCoverState = function () {
         const hasCover = thumbnailInput.files && thumbnailInput.files.length > 0;
 
         if (emptyState) emptyState.classList.toggle('d-none', hasCover);
         if (readyState) readyState.classList.toggle('d-none', !hasCover);
+
       };
 
       thumbnailInput.addEventListener('change', toggleCoverState);
-
-      submitButton.addEventListener('click', function () {
-        if (submitButton.getAttribute('data-cover-analyze') !== '1') {
-          actionInput.value = '';
-        }
-      }, true);
+      thumbnailInput.addEventListener('change', function () {
+        lastReview = null;
+        if (results) results.classList.add('d-none');
+        if (progressPanel) progressPanel.classList.add('d-none');
+        setStatus('Portada lista. Podés analizarla antes de completar el resto del evento.', 'light');
+      });
 
       if (analyzeButton) {
-        analyzeButton.addEventListener('click', function () {
-          actionInput.value = 'analyze_cover';
-          submitButton.setAttribute('data-cover-analyze', '1');
-          submitButton.click();
-          submitButton.removeAttribute('data-cover-analyze');
+        analyzeButton.addEventListener('click', function (event) {
+          event.preventDefault();
+          analyzeTemporaryCover();
         });
+      }
+
+      if (applyButton) {
+        applyButton.addEventListener('click', function () {
+          applyDetectedFields();
+        });
+      }
+
+      function analyzeTemporaryCover() {
+        if (active) return;
+        if (!panel || !thumbnailInput.files || !thumbnailInput.files.length) {
+          setStatus('Subí una portada antes de analizarla con IA.', 'warning');
+          return;
+        }
+
+        const file = thumbnailInput.files[0];
+        const payload = buildAnalysisPayload(file);
+        active = true;
+        lastReview = null;
+        panel.classList.remove('d-none');
+        if (results) results.classList.add('d-none');
+        analyzeButton.disabled = true;
+        analyzeButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Analizando portada...';
+        setStatus('Estamos leyendo la portada. No recargues la pagina; esto puede tardar unos segundos.', 'info');
+        startProgress();
+
+        $.ajax({
+          url: panel.getAttribute('data-analysis-url'),
+          method: 'POST',
+          data: payload,
+          processData: false,
+          contentType: false
+        }).done(function (response) {
+          stopProgress();
+          setProgress(100, 'Analisis listo', 'Ya organizamos los datos detectados en la portada.', 'success');
+          lastReview = response.review || null;
+          renderReview(lastReview);
+          setStatus('Análisis listo. Revisá los datos detectados y aplicalos si te sirven.', 'success');
+        }).fail(function (xhr) {
+          stopProgress();
+          setProgress(null, 'No se pudo analizar', errorMessage(xhr, 'No pudimos analizar la portada en este momento.'), 'danger');
+          setStatus(errorMessage(xhr, 'No pudimos analizar la portada en este momento.'), 'danger');
+        }).always(function () {
+          active = false;
+          analyzeButton.disabled = false;
+          analyzeButton.innerHTML = '<i class="fas fa-magic mr-1"></i>Analizar portada con IA';
+        });
+      }
+
+      function buildAnalysisPayload(file) {
+        const payload = new FormData();
+        const csrf = document.querySelector('meta[name="csrf-token"]');
+        if (csrf) payload.append('_token', csrf.getAttribute('content'));
+        payload.append('thumbnail', file);
+
+        form.querySelectorAll('input, textarea, select').forEach(function (field) {
+          if (!field.name || field.type === 'file') return;
+          if ((field.type === 'radio' || field.type === 'checkbox') && !field.checked) return;
+          payload.append(field.name, field.value || '');
+        });
+
+        return payload;
+      }
+
+      function startProgress() {
+        startedAt = Date.now();
+        let percent = 8;
+        setProgress(percent, 'Preparando imagen', 'Validamos formato, tamaño y legibilidad de la portada.', 'info');
+        clearInterval(progressTimer);
+        clearInterval(elapsedTimer);
+
+        progressTimer = setInterval(function () {
+          percent = Math.min(percent + Math.floor(Math.random() * 7) + 3, 92);
+          const stage = percent < 35 ? 'Leyendo textos del flyer' : (percent < 70 ? 'Detectando datos utiles' : 'Ordenando sugerencias');
+          const message = percent < 35
+            ? 'Buscamos titulo, fecha, lugar, horarios, promos y datos relevantes.'
+            : (percent < 70 ? 'Separamos informacion util de marcas, logos y textos secundarios.' : 'Preparamos una guia para completar el formulario sin inventar datos.');
+          setProgress(percent, stage, message, 'info');
+        }, 1800);
+
+        elapsedTimer = setInterval(function () {
+          const elapsed = Math.floor((Date.now() - startedAt) / 1000);
+          if (progressPanel) {
+            progressPanel.querySelector('[data-progress-elapsed]').textContent = 'Tiempo transcurrido: ' + formatDuration(elapsed);
+          }
+        }, 1000);
+      }
+
+      function stopProgress() {
+        clearInterval(progressTimer);
+        clearInterval(elapsedTimer);
+        progressTimer = null;
+        elapsedTimer = null;
+      }
+
+      function setProgress(percent, stage, message, state) {
+        if (!progressPanel) return;
+        progressPanel.classList.remove('d-none', 'is-success', 'is-danger', 'is-indeterminate');
+        if (state === 'success') progressPanel.classList.add('is-success');
+        if (state === 'danger') progressPanel.classList.add('is-danger');
+        progressPanel.querySelector('[data-progress-title]').textContent = state === 'success' ? 'Analisis de portada completado' : 'Analizando portada';
+        progressPanel.querySelector('[data-progress-stage]').textContent = stage;
+        progressPanel.querySelector('[data-progress-message]').textContent = message;
+        progressPanel.querySelector('[data-progress-estimate]').textContent = 'Normalmente tarda entre 20 segundos y 2 minutos.';
+
+        if (typeof percent === 'number') {
+          progressPanel.querySelector('[data-progress-percent]').textContent = Math.round(percent) + '% estimado';
+          progressFill.style.width = Math.max(0, Math.min(100, percent)) + '%';
+          progressBar.setAttribute('aria-valuenow', Math.round(percent));
+        } else {
+          progressPanel.classList.add('is-indeterminate');
+          progressPanel.querySelector('[data-progress-percent]').textContent = 'Revisar';
+          progressFill.style.width = '100%';
+          progressBar.removeAttribute('aria-valuenow');
+        }
+      }
+
+      function renderReview(review) {
+        const imageAnalysis = review && review.canonical_event_facts ? review.canonical_event_facts.image_analysis || {} : {};
+        const facts = (imageAnalysis.extracted_fields || []).concat(imageAnalysis.sponsors || []).filter(function (field) {
+          const value = $.trim(field.value || field.raw_text || '');
+          const label = String(field.label || field.key || '').toLowerCase();
+          return value && value !== '-' && label.indexOf('comparacion') === -1 && label.indexOf('comparación') === -1;
+        });
+
+        if (summaryBox) summaryBox.textContent = imageAnalysis.summary || 'Encontramos informacion que puede ayudarte a completar el evento.';
+        if (factsBox) {
+          factsBox.innerHTML = '';
+          facts.slice(0, 18).forEach(function (field) {
+            const row = document.createElement('div');
+            row.className = 'create-cover-ai-fact';
+            row.innerHTML = '<div><strong>' + escapeHtml(field.label || field.key) + '</strong><br><small class="text-muted">' + fieldMeta(field) + '</small></div>'
+              + '<div class="create-cover-ai-fact__value">' + escapeHtml(field.value || field.raw_text) + '</div>';
+            factsBox.appendChild(row);
+          });
+          if (!facts.length) factsBox.innerHTML = '<div class="p-3 text-muted">No encontramos datos claros para aplicar automaticamente.</div>';
+        }
+        if (guidanceBox) renderGuidance(guidanceBox, imageAnalysis);
+        if (results) results.classList.remove('d-none');
+      }
+
+      function applyDetectedFields() {
+        if (!lastReview || !lastReview.canonical_event_facts) return;
+
+        const imageAnalysis = lastReview.canonical_event_facts.image_analysis || {};
+        const fields = (imageAnalysis.extracted_fields || []).concat(imageAnalysis.sponsors || []);
+        const title = pickField(fields, [/titulo del evento/i, /título del evento/i, /nombre del evento/i, /event.*title/i], [/subtitulo/i, /subtítulo/i]);
+        const address = pickField(fields, [/direccion/i, /dirección/i, /ubicacion/i, /ubicación/i]);
+        const startTime = pickField(fields, [/horario de inicio/i, /hora de inicio/i, /^inicio$/i]);
+        const endTime = pickField(fields, [/horario de cierre/i, /hora de cierre/i, /hora de fin/i, /^cierre$/i]);
+        const dateValue = pickField(fields, [/fecha/i], [/promocion/i, /promoción/i]);
+
+        setIfEmpty('input[name$="_title"]', title);
+        setIfEmpty('input[name$="_address"]', address);
+        setIfEmpty('input[name$="_country"]', address ? 'Argentina' : '');
+        setIfEmpty('input[name="start_time"]', parseTime(startTime));
+        setIfEmpty('input[name="end_time"]', parseTime(endTime));
+        setIfEmpty('input[name="start_date"]', parseDate(dateValue));
+        setIfEmpty('input[name="end_date"]', parseDate(dateValue));
+        setDescriptionIfEmpty(buildStarterDescription(imageAnalysis, title, address));
+        setCategoryFromText([title, imageAnalysis.summary].concat(imageAnalysis.found_information || []).join(' '));
+
+        updateCreateChecklist();
+        setStatus('Aplicamos los datos claros en campos vacios. Revisalos y completá lo que falte antes de guardar.', 'success');
+      }
+
+      function setIfEmpty(selector, value) {
+        if (!value) return;
+        const field = document.querySelector(selector);
+        if (!field || $.trim(field.value || '') !== '') return;
+        field.value = value;
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function setDescriptionIfEmpty(value) {
+        if (!value) return;
+        const field = document.querySelector('textarea[name$="_description"]');
+        if (!field || $.trim(field.value || '') !== '') return;
+        const html = '<p>' + escapeHtml(value).replace(/\n/g, '<br>') + '</p>';
+        if ($.fn.summernote && $(field).next('.note-editor').length) {
+          $(field).summernote('code', html);
+        } else {
+          field.value = value;
+        }
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function setCategoryFromText(text) {
+        const select = document.querySelector('select[name$="_category_id"]');
+        if (!select || select.value) return;
+
+        const normalizedText = normalizeText(text);
+        let fallback = null;
+        Array.from(select.options).forEach(function (option) {
+          if (!option.value || option.disabled) return;
+          const optionText = normalizeText(option.textContent || '');
+          if (!fallback && /fiesta|show|concierto|musica|música|festival|rumba|reggaeton|boliche/.test(normalizedText) && /fiesta|show|concierto|musica|festival|evento/.test(optionText)) {
+            fallback = option.value;
+          }
+          if (!select.value && optionText && normalizedText.indexOf(optionText) !== -1) {
+            select.value = option.value;
+          }
+        });
+
+        if (!select.value && fallback) select.value = fallback;
+        if (select.value) select.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function buildStarterDescription(imageAnalysis, title, address) {
+        const lines = [];
+        if (title) lines.push(title);
+        (imageAnalysis.found_information || []).slice(0, 4).forEach(function (item) { if (item) lines.push(item); });
+        (imageAnalysis.complementary_information || []).slice(0, 2).forEach(function (item) { if (item) lines.push(item); });
+        if (address && !lines.join(' ').includes(address)) lines.push('Lugar: ' + address + '.');
+        return lines.join('\n');
+      }
+
+      function pickField(fields, patterns, exclusions) {
+        exclusions = exclusions || [];
+        const field = fields.find(function (candidate) {
+          const haystack = String((candidate.key || '') + ' ' + (candidate.label || '')).toLowerCase();
+          const value = $.trim(candidate.value || candidate.raw_text || '');
+          if (!value || value === '-') return false;
+          if (exclusions.some(function (pattern) { return pattern.test(haystack); })) return false;
+          return patterns.some(function (pattern) { return pattern.test(haystack); });
+        });
+        return field ? $.trim(field.value || field.raw_text || '') : '';
+      }
+
+      function parseDate(value) {
+        value = $.trim(value || '');
+        let match = value.match(/(\d{4})-(\d{2})-(\d{2})/);
+        if (match) return match[1] + '-' + match[2] + '-' + match[3];
+        match = value.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})\b/);
+        if (match) return match[3] + '-' + String(match[2]).padStart(2, '0') + '-' + String(match[1]).padStart(2, '0');
+        return '';
+      }
+
+      function parseTime(value) {
+        value = $.trim(value || '').toLowerCase();
+        const match = value.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm|hs|h)?\b/);
+        if (!match) return '';
+        let hour = parseInt(match[1], 10);
+        const minute = match[2] || '00';
+        const suffix = match[3] || '';
+        if (suffix === 'pm' && hour < 12) hour += 12;
+        if (suffix === 'am' && hour === 12) hour = 0;
+        if (hour > 23) return '';
+        return String(hour).padStart(2, '0') + ':' + minute;
+      }
+
+      function renderGuidance(target, imageAnalysis) {
+        const items = []
+          .concat(imageAnalysis.found_information || [])
+          .concat(imageAnalysis.complementary_information || [])
+          .concat(imageAnalysis.optional_suggestions || [])
+          .concat(imageAnalysis.missing_information || [])
+          .slice(0, 8);
+
+        target.innerHTML = items.length
+          ? '<div class="alert alert-info mb-0 small"><strong>Guia para completar el evento</strong><ul class="mb-0 mt-2 pl-3">' + items.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>'
+          : '';
+      }
+
+      function fieldMeta(field) {
+        const confidence = Math.round((Number(field.confidence || 0)) * 100);
+        const relation = String(field.category || '').toLowerCase();
+        let label = 'detectado';
+        if (field.needs_review || relation.indexOf('critica') !== -1 || relation.indexOf('crítica') !== -1) label = 'conviene confirmar';
+        else if (relation.indexOf('compatible') !== -1) label = 'compatible';
+        else if (relation.indexOf('complement') !== -1) label = 'complementa';
+        else if (relation.indexOf('sponsor') !== -1 || relation.indexOf('marca') !== -1) label = 'marca visible';
+        else if (relation.indexOf('coincid') !== -1) label = 'coincide';
+        return (confidence > 0 ? confidence + '% · ' : '') + label;
+      }
+
+      function setStatus(message, type) {
+        if (!panel || !statusBox) return;
+        panel.classList.remove('d-none');
+        statusBox.className = 'alert mb-3 alert-' + (type || 'light');
+        if (type === 'light') statusBox.className += ' border';
+        statusBox.textContent = message;
+      }
+
+      function errorMessage(xhr, fallback) {
+        return (xhr.responseJSON && (xhr.responseJSON.message || xhr.responseJSON.error)) || fallback;
+      }
+
+      function escapeHtml(value) {
+        return $('<div>').text(value || '').html();
+      }
+
+      function formatDuration(seconds) {
+        seconds = Math.max(0, Number(seconds || 0));
+        const minutes = Math.floor(seconds / 60);
+        const remaining = seconds % 60;
+        return minutes ? (minutes + 'm ' + String(remaining).padStart(2, '0') + 's') : (remaining + 's');
+      }
+
+      function normalizeText(value) {
+        return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       }
 
       toggleCoverState();

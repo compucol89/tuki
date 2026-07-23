@@ -459,6 +459,7 @@
                         @else
                           <input type="hidden" name="max_ticket_buy_type" value="unlimited">
                         @endif
+                        @include('partials.free-ticket-limit', ['eventModel' => $eventModel, 'ticket' => $ticket])
                       </div>
                     </div>
                     <!---======-Ticekt limtit & ticket for each customer end--======= --->

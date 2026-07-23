@@ -38,6 +38,8 @@ class TicketRequest extends FormRequest
       'max_ticket_buy_type' => 'required',
       'early_bird_discount_type' => 'required',
       'pricing_type_2' => 'required',
+      'limit_free_tickets_per_person' => 'nullable|in:0,1',
+      'free_tickets_per_person_limit' => 'nullable|integer|min:1|max:10',
     ];
 
     $ruleArray['ticket_available'] = 'required_if:ticket_available_type,limited';

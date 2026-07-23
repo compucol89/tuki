@@ -16,6 +16,21 @@ use Illuminate\Support\Facades\Session;
 
 class TicketController extends Controller
 {
+  private function syncFreeTicketLimitFromRequest(Event $event, Request $request): void
+  {
+    $normalPriceIsZero = $request->pricing_type_2 === 'normal'
+      && $request->filled('price')
+      && (float) $request->price <= 0;
+
+    if (!$request->has('free_ticket_limit_settings_present') || ($request->pricing_type_2 !== 'free' && !$normalPriceIsZero)) {
+      return;
+    }
+
+    $event->limit_free_tickets_per_person = (string) $request->input('limit_free_tickets_per_person') === '1';
+    $event->free_tickets_per_person_limit = min(max((int) ($request->free_tickets_per_person_limit ?: 2), 1), 10);
+    $event->save();
+  }
+
   public function index(Request $request)
   {
     $languages = Language::all();
@@ -63,8 +78,9 @@ class TicketController extends Controller
     }
 
     $information['languages'] = $languages;
-    $eventType = Event::where('id', $request->event_id)->select('event_type')->first();
-    $information['eventType'] = $eventType;
+    $eventModel = Event::where('id', $request->event_id)->firstOrFail();
+    $information['eventType'] = $eventModel;
+    $information['eventModel'] = $eventModel;
     $information['event'] = $event;
     $information['getCurrencyInfo']  = $this->getCurrencyInfo();
     return view('backend.event.ticket.create', $information);
@@ -72,6 +88,9 @@ class TicketController extends Controller
   //store
   public function store(TicketRequest $request)
   {
+    $event = Event::where('id', $request->event_id)->firstOrFail();
+    $this->syncFreeTicketLimitFromRequest($event, $request);
+
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;
     $in['early_bird_discount_type'] = $request->discount_type;
@@ -157,6 +176,7 @@ class TicketController extends Controller
       $event = EventContent::where('event_id', $request->event_id)->first();
     }
     $information['event'] = $event;
+    $information['eventModel'] = Event::where('id', $request->event_id)->firstOrFail();
     $ticket = Ticket::where('id', $request->id)->firstOrFail();
     $information['ticket'] = $ticket;
     $information['variations'] = json_decode($ticket->variations, true);
@@ -166,6 +186,9 @@ class TicketController extends Controller
   //update
   public function update(TicketRequest $request)
   {
+    $event = Event::where('id', $request->event_id)->firstOrFail();
+    $this->syncFreeTicketLimitFromRequest($event, $request);
+
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;
     $in['early_bird_discount_type'] = $request->discount_type;

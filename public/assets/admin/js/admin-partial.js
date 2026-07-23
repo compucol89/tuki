@@ -394,6 +394,27 @@ $(document).ready(function () {
       $('#early_bird_dicount').addClass('d-none');
     }
   });
+
+  function syncFreeTicketLimitBox() {
+    const box = $('#free_ticket_limit_box');
+    if (!box.length) {
+      return;
+    }
+
+    const pricingType = $('input:radio[name="pricing_type_2"]:checked').val();
+    const rawPrice = $('input[name="price"]').val();
+    const normalPriceIsZero = pricingType === 'normal' && rawPrice !== '' && Number(rawPrice) <= 0;
+    const isNoCost = pricingType === 'free' || normalPriceIsZero;
+
+    box.toggleClass('d-none', !isNoCost);
+
+    const freeLimitEnabled = $('input:radio[name="limit_free_tickets_per_person"]:checked').val() === '1';
+    $('#free_ticket_limit_value').toggleClass('d-none', !freeLimitEnabled);
+  }
+
+  $('body').on('change input', 'input:radio[name="pricing_type_2"], input[name="price"], input:radio[name="limit_free_tickets_per_person"]', syncFreeTicketLimitBox);
+  syncFreeTicketLimitBox();
+
   // event price type
   $('input:radio[name="pricing_type_2"]').on('change', function () {
     let radioBtnVal = $('input:radio[name="pricing_type_2"]:checked').val();
@@ -414,6 +435,8 @@ $(document).ready(function () {
       $('.hideInvariatinwiseTicket').removeClass('d-none');
       $('#early_bird_discount_free').addClass('d-none');
     }
+
+    syncFreeTicketLimitBox();
   });
 
   $('thead').on('click', '.addRow', function () {

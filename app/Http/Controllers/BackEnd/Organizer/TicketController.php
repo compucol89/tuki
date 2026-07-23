@@ -20,6 +20,21 @@ use Purifier;
 
 class TicketController extends Controller
 {
+  private function syncFreeTicketLimitFromRequest(Event $event, Request $request): void
+  {
+    $normalPriceIsZero = $request->pricing_type_2 === 'normal'
+      && $request->filled('price')
+      && (float) $request->price <= 0;
+
+    if (!$request->has('free_ticket_limit_settings_present') || ($request->pricing_type_2 !== 'free' && !$normalPriceIsZero)) {
+      return;
+    }
+
+    $event->limit_free_tickets_per_person = (string) $request->input('limit_free_tickets_per_person') === '1';
+    $event->free_tickets_per_person_limit = min(max((int) ($request->free_tickets_per_person_limit ?: 2), 1), 10);
+    $event->save();
+  }
+
   private function getOwnedEventOrFail($eventId)
   {
     return Event::where('id', $eventId)
@@ -75,7 +90,7 @@ class TicketController extends Controller
   //create
   public function create(Request $request)
   {
-    $this->getOwnedEventOrFail($request->event_id);
+    $eventModel = $this->getOwnedEventOrFail($request->event_id);
 
     $languages = Language::get();
     $language = Language::where('code', $request->language)->firstOrFail();
@@ -85,15 +100,16 @@ class TicketController extends Controller
     }
     $information['languages'] = $languages;
     $information['event'] = $event;
-    $eventType = Event::where('id', $request->event_id)->select('event_type')->first();
-    $information['eventType'] = $eventType;
+    $information['eventType'] = $eventModel;
+    $information['eventModel'] = $eventModel;
     $information['getCurrencyInfo']  = $this->getCurrencyInfo();
     return view('organizer.event.ticket.create', $information);
   }
   //store
   public function store(TicketRequest $request)
   {
-    $this->getOwnedEventOrFail($request->event_id);
+    $event = $this->getOwnedEventOrFail($request->event_id);
+    $this->syncFreeTicketLimitFromRequest($event, $request);
 
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;
@@ -168,7 +184,7 @@ class TicketController extends Controller
   //edit
   public function edit(Request $request)
   {
-    $this->getOwnedEventOrFail($request->event_id);
+    $eventModel = $this->getOwnedEventOrFail($request->event_id);
 
     $language = Language::where('code', $request->language)->firstOrFail();
     $languages = Language::get();
@@ -179,6 +195,7 @@ class TicketController extends Controller
       $event = EventContent::where('event_id', $request->event_id)->first();
     }
     $information['event'] = $event;
+    $information['eventModel'] = $eventModel;
     $ticket = $this->getOwnedTicketOrFail($request->id);
     abort_unless((int) $ticket->event_id === (int) $request->event_id, 404);
     $information['ticket'] = $ticket;
@@ -192,6 +209,8 @@ class TicketController extends Controller
   {
     $ticket = $this->getOwnedTicketOrFail($request->ticket_id);
     abort_unless((int) $ticket->event_id === (int) $request->event_id, 404);
+    $event = $this->getOwnedEventOrFail($request->event_id);
+    $this->syncFreeTicketLimitFromRequest($event, $request);
 
     $in = $request->all();
     $in['early_bird_discount'] = $request->early_bird_discount_type;

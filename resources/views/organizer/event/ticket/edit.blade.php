@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Edit Ticket') }}</h4>
+    <h4 class="page-title">{{ __('Editar entrada') }}</h4>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -36,14 +36,14 @@
       </li>
       <li class="nav-item">
         <a
-          href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => request()->input('event_id'), 'event_type' => request()->input('event_type')]) }}">{{ __('Tickets') }}</a>
+          href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => request()->input('event_id'), 'event_type' => request()->input('event_type')]) }}">{{ __('Entradas') }}</a>
       </li>
 
       <li class="separator">
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Edit Ticket') }}</a>
+        <a href="#">{{ __('Editar entrada') }}</a>
       </li>
     </ul>
   </div>
@@ -101,19 +101,19 @@
                             <input type="radio" name="pricing_type_2"
                               {{ $ticket->pricing_type == 'free' ? 'checked' : '' }} value="free"
                               class="selectgroup-input" checked>
-                            <span class="selectgroup-button">{{ __('Free Tickets') }}</span>
+                            <span class="selectgroup-button">{{ __('Entrada gratis') }}</span>
                           </label>
 
                           <label class="selectgroup-item">
                             <input type="radio" name="pricing_type_2" value="variation"
                               {{ $ticket->pricing_type == 'variation' ? 'checked' : '' }} class="selectgroup-input">
-                            <span class="selectgroup-button">{{ __('Variation Wise') }}</span>
+                            <span class="selectgroup-button">{{ __('Por variaciones') }}</span>
                           </label>
 
                           <label class="selectgroup-item">
                             <input type="radio" name="pricing_type_2" value="normal"
                               {{ $ticket->pricing_type == 'normal' ? 'checked' : '' }} class="selectgroup-input">
-                            <span class="selectgroup-button">{{ __('Without Variation') }}</span>
+                            <span class="selectgroup-button">{{ __('Precio fijo') }}</span>
                           </label>
                         </div>
                       </div>
@@ -125,11 +125,11 @@
                           <table class="table table-bordered">
                             <thead>
                               <tr>
-                                <th>{{ __('Variation Name') }}</th>
-                                <th>{{ __('Price') }}</th>
-                                <th>{{ __('Available Tickets') }}</th>
+                                <th>{{ __('Nombre de la variación') }}</th>
+                                <th>{{ __('Precio') }}</th>
+                                <th>{{ __('Entradas disponibles') }}</th>
                                 @if ($websiteInfo->event_guest_checkout_status != 1)
-                                  <th>{{ __('Max ticket for each customer') }}</th>
+                                  <th>{{ __('Máximo por cliente') }}</th>
                                 @endif
                                 <th><a href="javascrit:void(0)" class="btn btn-success btn-sm addRow"><i
                                       class="fas fa-plus-circle"></i></a></th>
@@ -149,7 +149,7 @@
                                           $language = App\Models\Language::where('id', $variation_content->language_id)->first();
                                         @endphp
                                         <div class="form-group">
-                                          <label for="">{{ __('Variation Name') . '*' }}
+                                          <label for="">{{ __('Nombre de la variación') . '*' }}
                                             ({{ $language->name }})
                                           </label>
                                           <input type="text" name="{{ $language->code }}_variation_name[]"
@@ -160,7 +160,7 @@
                                     <td>
                                       <div class="form-group">
                                         <label
-                                          for="">{{ __('Price') }}({{ $getCurrencyInfo->base_currency_text }})
+                                          for="">{{ __('Precio') }}({{ $getCurrencyInfo->base_currency_text }})
                                           *</label>
                                         <input type="text" name="variation_price[]" value="{{ $item['price'] }}"
                                           class="form-control">
@@ -173,21 +173,21 @@
                                           class="ticket_available_type {{ $item['ticket_available_type'] == 'unlimited' ? 'd-none' : '' }}"
                                           id="limited_{{ $loop->iteration }}" data-id="{{ $loop->iteration }}">
                                         <label for="limited_{{ $loop->iteration }}"
-                                          class="limited_{{ $loop->iteration }} {{ $item['ticket_available_type'] == 'unlimited' ? 'd-none' : '' }}">{{ __('Limited') }}</label>
+                                          class="limited_{{ $loop->iteration }} {{ $item['ticket_available_type'] == 'unlimited' ? 'd-none' : '' }}">{{ __('Limitado') }}</label>
 
                                         <input type="checkbox" @checked($item['ticket_available_type'] == 'unlimited')
                                           name="v_ticket_available_type[]" value="unlimited"
                                           class="ticket_available_type {{ $item['ticket_available_type'] == 'limited' ? 'd-none' : '' }}"
                                           id="unlimited_{{ $loop->iteration }}" data-id="{{ $loop->iteration }}">
                                         <label for="unlimited_{{ $loop->iteration }}"
-                                          class="unlimited_{{ $loop->iteration }} {{ $item['ticket_available_type'] == 'limited' ? 'd-none' : '' }}">{{ __('Unlimited') }}</label>
+                                          class="unlimited_{{ $loop->iteration }} {{ $item['ticket_available_type'] == 'limited' ? 'd-none' : '' }}">{{ __('Ilimitado') }}</label>
 
                                       </div>
 
                                       <div
                                         class="form-group {{ $item['ticket_available_type'] == 'unlimited' ? 'd-none' : '' }}"
                                         id="input_{{ $loop->iteration }}">
-                                        <label for="">{{ __('Ticket Available') . '*' }} </label>
+                                        <label for="">{{ __('Entradas disponibles') . '*' }} </label>
                                         <input type="text" name="v_ticket_available[]"
                                           value="{{ $item['ticket_available'] }}" class="form-control">
                                       </div>
@@ -200,7 +200,7 @@
                                             class="max_ticket_buy_type {{ $item['max_ticket_buy_type'] == 'unlimited' ? 'd-none' : '' }}"
                                             id="buy_limited_{{ $loop->iteration }}" data-id="{{ $loop->iteration }}">
                                           <label for="buy_limited_{{ $loop->iteration }}"
-                                            class="buy_limited_{{ $loop->iteration }} {{ $item['max_ticket_buy_type'] == 'unlimited' ? 'd-none' : '' }}">{{ __('Limited') }}</label>
+                                            class="buy_limited_{{ $loop->iteration }} {{ $item['max_ticket_buy_type'] == 'unlimited' ? 'd-none' : '' }}">{{ __('Limitado') }}</label>
 
                                           <input type="checkbox" @checked($item['max_ticket_buy_type'] == 'unlimited')
                                             name="v_max_ticket_buy_type[]" value="unlimited"
@@ -208,13 +208,13 @@
                                             id="buy_unlimited_{{ $loop->iteration }}"
                                             data-id="{{ $loop->iteration }}">
                                           <label for="buy_unlimited_{{ $loop->iteration }}"
-                                            class="buy_unlimited_{{ $loop->iteration }} {{ $item['max_ticket_buy_type'] == 'limited' ? 'd-none' : '' }}">{{ __('Unlimited') }}</label>
+                                            class="buy_unlimited_{{ $loop->iteration }} {{ $item['max_ticket_buy_type'] == 'limited' ? 'd-none' : '' }}">{{ __('Ilimitado') }}</label>
                                         </div>
 
                                         <div
                                           class="form-group {{ $item['max_ticket_buy_type'] == 'unlimited' ? 'd-none' : '' }}"
                                           id="input2_{{ $loop->iteration }}">
-                                          <label for="">{{ __('Max ticket for each customer') . '*' }} </label>
+                                          <label for="">{{ __('Máximo por cliente') . '*' }} </label>
                                           <input type="text" name="v_max_ticket_buy[]" class="form-control"
                                             value="{{ $item['v_max_ticket_buy'] }}">
                                         </div>
@@ -234,7 +234,7 @@
                                   <td>
                                     @foreach ($languages as $language)
                                       <div class="form-group">
-                                        <label for="">{{ __('Variation Name') . '*' }}
+                                        <label for="">{{ __('Nombre de la variación') . '*' }}
                                           ({{ $language['name'] }})
                                         </label>
                                         <input type="text" name="{{ $language['code'] }}_variation_name[]"
@@ -244,7 +244,7 @@
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <label for="">{{ __('Price') . '*' }}
+                                      <label for="">{{ __('Precio') . '*' }}
                                         ({{ $getCurrencyInfo->base_currency_text }}) </label>
                                       <input type="text" name="variation_price[]" class="form-control">
                                     </div>
@@ -253,15 +253,15 @@
                                     <div class="from-group mt-1">
                                       <input type="checkbox" checked name="v_ticket_available_type[]" value="limited"
                                         class="ticket_available_type" id="limited_1" data-id="1">
-                                      <label for="limited_1" class="limited_1 ">{{ __('Limited') }}</label>
+                                      <label for="limited_1" class="limited_1 ">{{ __('Limitado') }}</label>
 
                                       <input type="checkbox" name="v_ticket_available_type[]" value="unlimited"
                                         class="ticket_available_type d-none" id="unlimited_1" data-id="1">
-                                      <label for="unlimited_1" class="unlimited_1 d-none">{{ __('Unlimited') }}</label>
+                                      <label for="unlimited_1" class="unlimited_1 d-none">{{ __('Ilimitado') }}</label>
                                     </div>
 
                                     <div class="form-group" id="input_1">
-                                      <label for="">{{ __('Ticket Available') }} * </label>
+                                      <label for="">{{ __('Entradas disponibles') }} * </label>
                                       <input type="text" name="v_ticket_available[]" value=""
                                         class="form-control">
                                     </div>
@@ -271,16 +271,16 @@
                                       <div class="from-group mt-1">
                                         <input type="checkbox" checked name="v_max_ticket_buy_type[]" value="limited"
                                           class="max_ticket_buy_type" id="buy_limited_1" data-id="1">
-                                        <label for="buy_limited_1" class="buy_limited_1 ">{{ __('Limited') }}</label>
+                                        <label for="buy_limited_1" class="buy_limited_1 ">{{ __('Limitado') }}</label>
 
                                         <input type="checkbox" name="v_max_ticket_buy_type[]" value="unlimited"
                                           class="max_ticket_buy_type d-none" id="buy_unlimited_1" data-id="1">
                                         <label for="buy_unlimited_1"
-                                          class="buy_unlimited_1 d-none">{{ __('Unlimited') }}</label>
+                                          class="buy_unlimited_1 d-none">{{ __('Ilimitado') }}</label>
                                       </div>
 
                                       <div class="form-group" id="input2_1">
-                                        <label for="">{{ __('Max ticket for each customer') . '*' }} </label>
+                                        <label for="">{{ __('Máximo por cliente') . '*' }} </label>
                                         <input type="text" name="v_max_ticket_buy[]" class="form-control">
                                       </div>
                                     </td>
@@ -302,30 +302,30 @@
                     </div>
                     <div class="col-lg-6 {{ $ticket->pricing_type == 'normal' ? '' : 'd-none' }}" id="normal_pricing">
                       <div class="form-group">
-                        <label for="">{{ __('Price') }}
+                        <label for="">{{ __('Precio') }}
                           ({{ $getCurrencyInfo->base_currency_text }}) *</label>
                         <input type="number" name="price" value="{{ $ticket->price }}" class="form-control"
-                          placeholder="{{ __('Enter Price') }}">
+                          placeholder="{{ __('Ingresá el precio') }}">
                       </div>
                     </div>
 
                     <div class="col-lg-12  {{ $ticket->pricing_type == 'free' ? 'd-none' : '' }}"
                       id="early_bird_discount_free">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Early Bird Discount') . '*' }}</label>
+                        <label for="">{{ __('Descuento anticipado') . '*' }}</label>
                         <div class="selectgroup w-100">
                           <label class="selectgroup-item">
                             <input type="radio" name="early_bird_discount_type"
                               {{ $ticket->early_bird_discount == 'disable' ? 'checked' : '' }} value="disable"
                               class="selectgroup-input" checked>
-                            <span class="selectgroup-button">{{ __('Disable') }}</span>
+                            <span class="selectgroup-button">{{ __('Desactivado') }}</span>
                           </label>
 
                           <label class="selectgroup-item">
                             <input type="radio" name="early_bird_discount_type"
                               {{ $ticket->early_bird_discount == 'enable' ? 'checked' : '' }} value="enable"
                               class="selectgroup-input">
-                            <span class="selectgroup-button">{{ __('Enable') }}</span>
+                            <span class="selectgroup-button">{{ __('Activado') }}</span>
                           </label>
                         </div>
                       </div>
@@ -335,33 +335,33 @@
                       <div class="row">
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Discount') }}</label>
+                            <label for="">{{ __('Descuento') }}</label>
                             <select name="discount_type" class="form-control">
-                              <option disabled>{{ __('Select Discount Type') }}</option>
+                              <option disabled>{{ __('Seleccioná el tipo de descuento') }}</option>
                               <option {{ $ticket->early_bird_discount_type == 'fixed' ? 'selected' : '' }}
-                                value="fixed">{{ __('Fixed') }}</option>
+                                value="fixed">{{ __('Fijo') }}</option>
                               <option {{ $ticket->early_bird_discount_type == 'percentage' ? 'selected' : '' }}
-                                value="percentage">{{ __('Percentage') }}</option>
+                                value="percentage">{{ __('Porcentaje') }}</option>
                             </select>
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Amount') }}</label>
+                            <label for="">{{ __('Importe') }}</label>
                             <input type="number" name="early_bird_discount_amount"
                               value="{{ $ticket->early_bird_discount_amount }}" class="form-control">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Discount End Date') }}</label>
+                            <label for="">{{ __('Fecha límite del descuento') }}</label>
                             <input type="date" name="early_bird_discount_date"
                               value="{{ $ticket->early_bird_discount_date }}" class="form-control">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Discount End Time') }}</label>
+                            <label for="">{{ __('Hora límite del descuento') }}</label>
                             <input type="time" name="early_bird_discount_time"
                               value="{{ $ticket->early_bird_discount_time }}"class="form-control">
                           </div>
@@ -377,20 +377,20 @@
                       <div class="row">
                         <div class="col-lg-6">
                           <div class="form-group mt-1">
-                            <label for="">{{ __('Total Number of Available Tickets') . '*' }}</label>
+                            <label for="">{{ __('Total de entradas disponibles') . '*' }}</label>
                             <div class="selectgroup w-100">
                               <label class="selectgroup-item">
                                 <input type="radio" name="ticket_available_type"
                                   {{ $ticket->ticket_available_type == 'unlimited' ? 'checked' : '' }}
                                   value="unlimited" class="selectgroup-input">
-                                <span class="selectgroup-button">{{ __('Unlimited') }}</span>
+                                <span class="selectgroup-button">{{ __('Ilimitado') }}</span>
                               </label>
 
                               <label class="selectgroup-item">
                                 <input type="radio" name="ticket_available_type"
                                   {{ $ticket->ticket_available_type == 'limited' ? 'checked' : '' }} value="limited"
                                   class="selectgroup-input">
-                                <span class="selectgroup-button">{{ __('Limited') }}</span>
+                                <span class="selectgroup-button">{{ __('Limitado') }}</span>
                               </label>
                             </div>
                           </div>
@@ -398,29 +398,29 @@
                         <div class="col-lg-6 {{ $ticket->ticket_available_type == 'limited' ? '' : 'd-none' }}"
                           id="ticket_available">
                           <div class="form-group">
-                            <label>{{ __('Enter total number of available tickets') . '*' }}</label>
+                            <label>{{ __('Ingresá el total de entradas disponibles') . '*' }}</label>
                             <input type="number" name="ticket_available" value="{{ $ticket->ticket_available }}"
-                              placeholder="{{ __('Enter total number of available tickets') }}" class="form-control">
+                              placeholder="{{ __('Ingresá el total de entradas disponibles') }}" class="form-control">
                           </div>
                         </div>
                         @if ($websiteInfo->event_guest_checkout_status != 1)
                           <div class="col-lg-6">
                             <div class="form-group mt-1">
                               <label
-                                for="">{{ __('Maximum number of tickets for each customer') . '*' }}</label>
+                                for="">{{ __('Máximo de entradas por cliente') . '*' }}</label>
                               <div class="selectgroup w-100">
                                 <label class="selectgroup-item">
                                   <input type="radio" name="max_ticket_buy_type" value="unlimited"
                                     class="selectgroup-input"
                                     {{ $ticket->max_ticket_buy_type == 'unlimited' ? 'checked' : '' }}>
-                                  <span class="selectgroup-button">{{ __('Unlimited') }}</span>
+                                  <span class="selectgroup-button">{{ __('Ilimitado') }}</span>
                                 </label>
 
                                 <label class="selectgroup-item">
                                   <input type="radio" name="max_ticket_buy_type" value="limited"
                                     class="selectgroup-input"
                                     {{ $ticket->max_ticket_buy_type == 'limited' ? 'checked' : '' }}>
-                                  <span class="selectgroup-button">{{ __('Limited') }}</span>
+                                  <span class="selectgroup-button">{{ __('Limitado') }}</span>
                                 </label>
                               </div>
                             </div>
@@ -428,14 +428,15 @@
                           <div class="col-lg-6 {{ $ticket->max_ticket_buy_type == 'unlimited' ? 'd-none' : '' }}"
                             id="max_buy_ticket">
                             <div class="form-group">
-                              <label>{{ __('Enter Maximum number of tickets for each customer') . '*' }}</label>
+                              <label>{{ __('Ingresá el máximo de entradas por cliente') . '*' }}</label>
                               <input type="number" name="max_buy_ticket" value="{{ $ticket->max_buy_ticket }}"
-                                placeholder="{{ __('Enter Maximum number of tickets for each customer') }}" class="form-control">
+                                placeholder="{{ __('Ingresá el máximo de entradas por cliente') }}" class="form-control">
                             </div>
                           </div>
                         @else
                           <input type="hidden" name="max_ticket_buy_type" value="unlimited">
                         @endif
+                        @include('partials.free-ticket-limit', ['eventModel' => $eventModel, 'ticket' => $ticket])
                       </div>
                     </div>
                     <!---======-Ticekt limtit & ticket for each customer end--======= --->
@@ -537,7 +538,7 @@
     $names = '';
     foreach ($languages as $language) {
         $varitaion_name = $language->code . '_variation_name[]';
-        $names .= "<div class='form-group'><label for=''>" . __('Variation Name') . " *($language->name)</label><input type='text' name='$varitaion_name' class='form-control'></div>";
+        $names .= "<div class='form-group'><label for=''>" . __('Nombre de la variación') . " *($language->name)</label><input type='text' name='$varitaion_name' class='form-control'></div>";
     }
   @endphp
   <script>

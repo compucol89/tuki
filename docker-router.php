@@ -11,7 +11,7 @@ if ($requestedFile !== false
     $extension = strtolower(pathinfo($requestedFile, PATHINFO_EXTENSION));
     $cacheableExtensions = [
         'avif', 'css', 'eot', 'gif', 'ico', 'jpg', 'jpeg', 'js', 'otf', 'png',
-        'svg', 'ttf', 'txt', 'webp', 'woff', 'woff2',
+        'svg', 'ttf', 'txt', 'webmanifest', 'webp', 'woff', 'woff2',
     ];
     $mimeTypes = [
         'avif' => 'image/avif',
@@ -27,6 +27,7 @@ if ($requestedFile !== false
         'svg' => 'image/svg+xml',
         'ttf' => 'font/ttf',
         'txt' => 'text/plain; charset=UTF-8',
+        'webmanifest' => 'application/manifest+json; charset=UTF-8',
         'webp' => 'image/webp',
         'woff' => 'font/woff',
         'woff2' => 'font/woff2',

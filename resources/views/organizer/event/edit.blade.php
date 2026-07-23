@@ -1778,6 +1778,17 @@
         if ((content.important_information || []).length) {
           html += '<h3>Información importante</h3><ul>' + listHtml(content.important_information) + '</ul>';
         }
+        var seo = lastDraft && lastDraft.seo ? lastDraft.seo : {};
+        if (seo.ai_search_summary) {
+          html += '<h3>Resumen para buscadores e IA</h3><p>' + escapeHtml(seo.ai_search_summary).replace(/\n/g, '<br>') + '</p>';
+        }
+        if (lastDraft && Array.isArray(lastDraft.faq) && lastDraft.faq.length) {
+          html += '<h3>Preguntas frecuentes</h3>' + lastDraft.faq.filter(function (item) {
+            return item && item.question && item.answer;
+          }).map(function (item) {
+            return '<h4>' + escapeHtml(item.question) + '</h4><p>' + escapeHtml(item.answer).replace(/\n/g, '<br>') + '</p>';
+          }).join('');
+        }
         if (content.cta) html += '<p><strong>' + escapeHtml(content.cta) + '</strong></p>';
         return html;
       }

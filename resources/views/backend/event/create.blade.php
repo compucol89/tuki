@@ -1284,6 +1284,7 @@
       const draftAudit = panel ? panel.querySelector('[data-create-ai-audit]') : null;
       const draftTitleOptions = panel ? panel.querySelector('[data-create-ai-title-options]') : null;
       const draftDescriptionPreview = panel ? panel.querySelector('[data-create-ai-description-preview]') : null;
+      const draftPackagePreview = panel ? panel.querySelector('[data-create-ai-package-preview]') : null;
       let active = false;
       let lastReview = null;
       let lastDraft = null;
@@ -1519,6 +1520,7 @@
         if (draftSummary) draftSummary.textContent = content.short_description || '';
         renderTitleOptions(content);
         renderDescriptionPreview(content);
+        renderPackagePreview(lastDraft);
         if (draftAudit) {
           const needsReview = !!(draft && draft.needs_human_review);
           draftAudit.className = 'badge mb-2 mb-lg-0 ' + (needsReview ? 'badge-warning' : 'badge-success');
@@ -1583,6 +1585,32 @@
         draftDescriptionPreview.innerHTML = html
           ? '<div class="font-weight-bold mb-2">Descripción que se aplicará</div>' + html
           : '<div class="text-muted">La IA no devolvió una descripción completa. Probá ajustar las preferencias y volver a armar el evento.</div>';
+      }
+
+      function renderPackagePreview(draft) {
+        if (!draftPackagePreview) return;
+        const seo = draft && draft.seo ? draft.seo : {};
+        const social = draft && draft.social ? draft.social : {};
+        const faq = draft && Array.isArray(draft.faq) ? draft.faq : [];
+        const checklist = draft && Array.isArray(draft.review_checklist) ? draft.review_checklist : [];
+
+        let html = '<div class="font-weight-bold mb-2">Paquete SEO, redes e IA</div>';
+        if (seo.seo_title) html += '<p class="mb-1"><strong>SEO title:</strong> ' + escapeHtml(seo.seo_title) + '</p>';
+        if (seo.ai_search_summary) html += '<p class="mb-1"><strong>Resumen IA:</strong> ' + escapeHtml(seo.ai_search_summary) + '</p>';
+        if (social.open_graph_title || social.open_graph_description) {
+          html += '<p class="mb-1"><strong>Open Graph:</strong> ' + escapeHtml([social.open_graph_title, social.open_graph_description].filter(Boolean).join(' - ')) + '</p>';
+        }
+        if (faq.length) {
+          html += '<div class="mt-2"><strong>FAQ:</strong><ul class="mb-1">' + faq.slice(0, 5).map(function (item) {
+            return '<li>' + escapeHtml(item.question || '') + '</li>';
+          }).join('') + '</ul></div>';
+        }
+        if (checklist.length) {
+          html += '<div class="mt-2"><strong>Checklist humano:</strong><ul class="mb-0">' + checklist.slice(0, 8).map(function (item) {
+            return '<li>' + escapeHtml(item.label || '') + ': ' + escapeHtml(item.note || '') + '</li>';
+          }).join('') + '</ul></div>';
+        }
+        draftPackagePreview.innerHTML = html;
       }
 
       function setFieldValue(selector, value) {
@@ -1665,6 +1693,17 @@
         }
         if ((content.important_information || []).length) {
           html += '<h3>Información importante</h3><ul>' + listHtml(content.important_information) + '</ul>';
+        }
+        const seo = lastDraft && lastDraft.seo ? lastDraft.seo : {};
+        if (seo.ai_search_summary) {
+          html += '<h3>Resumen para buscadores e IA</h3><p>' + escapeHtml(seo.ai_search_summary).replace(/\n/g, '<br>') + '</p>';
+        }
+        if (lastDraft && Array.isArray(lastDraft.faq) && lastDraft.faq.length) {
+          html += '<h3>Preguntas frecuentes</h3>' + lastDraft.faq.filter(function (item) {
+            return item && item.question && item.answer;
+          }).map(function (item) {
+            return '<h4>' + escapeHtml(item.question) + '</h4><p>' + escapeHtml(item.answer).replace(/\n/g, '<br>') + '</p>';
+          }).join('');
         }
         if (content.cta) html += '<p><strong>' + escapeHtml(content.cta) + '</strong></p>';
         return html;

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Mews\Purifier\Facades\Purifier;
+use RuntimeException;
 use Throwable;
 
 class EventAiAssistantController extends Controller
@@ -125,7 +126,7 @@ class EventAiAssistantController extends Controller
 
     if ($request->boolean('generate_content', true)) {
       try {
-        $generated = $this->strengthenGeneratedDraft($assistant->generateContent($canonicalFacts, $this->temporaryPreferences($request)), $canonicalFacts);
+        $generated = $this->generateContentWithQualityGate($assistant, $canonicalFacts, $this->temporaryPreferences($request));
         $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
         $audit = $generated['audit'] ?? [];
         $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
@@ -141,6 +142,8 @@ class EventAiAssistantController extends Controller
         ];
       } catch (OpenAiNonRetryableException $e) {
         $draftError = $e->getMessage();
+      } catch (RuntimeException $e) {
+        $draftError = 'La IA devolvió una propuesta incompleta y no la aplicamos. Probá ajustar las preferencias o volver a generar el evento.';
       } catch (Throwable $e) {
         report($e);
         $draftError = 'No pudimos generar el copy y SEO en este momento. Podés aplicar los datos detectados y completar el texto manualmente.';
@@ -728,7 +731,7 @@ class EventAiAssistantController extends Controller
     return array_values(array_unique(array_filter(array_map(fn($item) => mb_substr((string) $item, 0, 80), $value))));
   }
 
-  private function strengthenGeneratedDraft(array $generated, array $canonicalFacts): array
+  private function strengthenGeneratedDraft(array $generated, array $canonicalFacts, bool $allowFallback = true): array
   {
     $content = $generated['content'] ?? [];
     $sourceTitle = data_get($canonicalFacts, 'form_facts.title') ?: $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']);
@@ -752,11 +755,124 @@ class EventAiAssistantController extends Controller
       $this->fallbackTitleOptions($sourceTitle, $venue, $style, $city)
     ))));
 
-    if (empty(trim(strip_tags($content['main_description'] ?? ''))) || mb_strlen(trim(strip_tags($content['main_description'] ?? ''))) < 260) {
+    if ($allowFallback && (empty(trim(strip_tags($content['main_description'] ?? ''))) || mb_strlen(trim(strip_tags($content['main_description'] ?? ''))) < 450)) {
       $generated['content']['main_description'] = $this->fallbackMainDescription($generated, $canonicalFacts);
     }
 
+    return $allowFallback ? $this->normalizeGeneratedPackage($generated, $canonicalFacts) : $generated;
+  }
+
+  private function generateContentWithQualityGate(EventAiAssistantService $assistant, array $canonicalFacts, array $preferences): array
+  {
+    $lastFailures = [];
+
+    for ($attempt = 1; $attempt <= 2; $attempt++) {
+      $attemptPreferences = $preferences;
+      if ($attempt > 1) {
+        $attemptPreferences['quality_retry'] = [
+          'previous_failures' => $lastFailures,
+          'instruction' => 'Regenerá el paquete completo. No devuelvas una propuesta mínima ni OCR. Cumplí título fuerte, descripción completa, FAQ, OG, resumen IA, tags y checklist.',
+        ];
+      }
+
+      $generated = $this->strengthenGeneratedDraft($assistant->generateContent($canonicalFacts, $attemptPreferences), $canonicalFacts, $attempt > 1);
+      $failures = $this->draftQualityFailures($generated);
+
+      if (empty($failures)) {
+        return $this->normalizeGeneratedPackage($generated, $canonicalFacts);
+      }
+
+      $lastFailures = $failures;
+    }
+
+    throw new RuntimeException('La IA devolvió una propuesta incompleta: ' . implode(' ', $lastFailures));
+  }
+
+  private function normalizeGeneratedPackage(array $generated, array $canonicalFacts): array
+  {
+    $content = $generated['content'] ?? [];
+    $seo = $generated['seo'] ?? [];
+    $social = $generated['social'] ?? [];
+
+    $title = $content['public_title'] ?? $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']) ?? 'Evento en Tukipass';
+    $short = trim((string) ($content['short_description'] ?? ''));
+    $main = trim((string) ($content['main_description'] ?? ''));
+    $address = $this->canonicalFactValue($canonicalFacts, ['direccion', 'dirección', 'ubicacion', 'ubicación']);
+    $promo = $this->canonicalFactValue($canonicalFacts, ['promocion', 'promoción', 'acceso']);
+
+    if (empty($seo['ai_search_summary'])) {
+      $generated['seo']['ai_search_summary'] = trim($title . ' es una publicación de evento en Tukipass. ' . ($short ?: strip_tags($main)) . ($address ? ' Dirección: ' . $address . '.' : '') . ($promo ? ' Dato destacado: ' . $promo . '.' : ''));
+    }
+
+    if (empty($social['open_graph_title'])) {
+      $generated['social']['open_graph_title'] = mb_substr($title, 0, 70);
+    }
+
+    if (empty($social['open_graph_description'])) {
+      $generated['social']['open_graph_description'] = mb_substr($short ?: strip_tags($main), 0, 220);
+    }
+
+    if (empty($generated['faq']) || !is_array($generated['faq'])) {
+      $generated['faq'] = $this->fallbackFaq($generated, $canonicalFacts);
+    }
+
+    if (count($generated['faq']) < 4) {
+      $generated['faq'] = array_slice(array_merge($generated['faq'], $this->fallbackFaq($generated, $canonicalFacts)), 0, 5);
+    }
+
+    if (empty($generated['review_checklist']) || !is_array($generated['review_checklist'])) {
+      $generated['review_checklist'] = $this->fallbackReviewChecklist();
+    }
+
+    if (count($generated['review_checklist']) < 6) {
+      $generated['review_checklist'] = array_slice(array_merge($generated['review_checklist'], $this->fallbackReviewChecklist()), 0, 8);
+    }
+
     return $generated;
+  }
+
+  private function draftQualityFailures(array $generated): array
+  {
+    $content = $generated['content'] ?? [];
+    $seo = $generated['seo'] ?? [];
+    $social = $generated['social'] ?? [];
+    $failures = [];
+
+    if (mb_strlen(trim((string) ($content['public_title'] ?? ''))) < 24) {
+      $failures[] = 'El título público es demasiado corto o genérico.';
+    }
+    if (count(array_filter($content['title_options'] ?? [])) < 4) {
+      $failures[] = 'Faltan opciones de título.';
+    }
+    if (mb_strlen(trim(strip_tags((string) ($content['main_description'] ?? '')))) < 450) {
+      $failures[] = 'La descripción principal es demasiado breve.';
+    }
+    if (count(array_filter($content['what_you_will_experience'] ?? [])) < 3) {
+      $failures[] = 'Faltan beneficios o experiencia del evento.';
+    }
+    if (count(array_filter($content['important_information'] ?? [])) < 3) {
+      $failures[] = 'Falta información importante para decidir la reserva.';
+    }
+    if (count(array_filter($seo['tags'] ?? [])) < 8) {
+      $failures[] = 'Faltan tags SEO útiles.';
+    }
+    if (mb_strlen(trim((string) ($seo['google_short_description'] ?? ''))) < 110) {
+      $failures[] = 'La descripción corta para Google es insuficiente.';
+    }
+    if (mb_strlen(trim((string) ($seo['ai_search_summary'] ?? ''))) < 160) {
+      $failures[] = 'El resumen para agentes IA es insuficiente.';
+    }
+    if (mb_strlen(trim((string) ($social['open_graph_description'] ?? ''))) < 80) {
+      $failures[] = 'La descripción Open Graph es insuficiente.';
+    }
+    if (count(array_filter($generated['faq'] ?? [])) < 4) {
+      $failures[] = 'Faltan preguntas frecuentes para IA y Google.';
+    }
+    if (count(array_filter($generated['review_checklist'] ?? [])) < 6) {
+      $failures[] = 'Falta checklist de revisión humana.';
+    }
+
+    return $failures;
   }
 
   private function canonicalFactValue(array $canonicalFacts, array $needles): ?string
@@ -850,6 +966,51 @@ class EventAiAssistantController extends Controller
     ];
 
     return implode("\n\n", array_values(array_filter($sentences)));
+  }
+
+  private function fallbackFaq(array $generated, array $canonicalFacts): array
+  {
+    $title = data_get($generated, 'content.public_title') ?: $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']) ?: 'este evento';
+    $address = $this->canonicalFactValue($canonicalFacts, ['direccion', 'dirección', 'ubicacion', 'ubicación']);
+    $date = $this->canonicalFactValue($canonicalFacts, ['fecha']);
+    $promo = $this->canonicalFactValue($canonicalFacts, ['promocion', 'promoción', 'acceso']);
+    $style = $this->canonicalFactValue($canonicalFacts, ['subtitulo', 'subtítulo', 'estilo', 'musical']);
+
+    return [
+      [
+        'question' => '¿Qué es ' . $title . '?',
+        'answer' => $title . ' es una publicación de evento en Tukipass. La descripción del evento reúne los datos confirmados por el organizador y la información visible de la portada para ayudar a decidir la reserva.',
+      ],
+      [
+        'question' => '¿Dónde se realiza el evento?',
+        'answer' => $address ? 'El evento se realiza en ' . $address . '. Revisá la publicación final para confirmar indicaciones de ingreso, piso, sala o referencias adicionales.' : 'La ubicación debe confirmarse en la publicación final antes de reservar.',
+      ],
+      [
+        'question' => '¿Cuándo es el evento?',
+        'answer' => $date ? 'La fecha visible o informada para el evento es ' . $date . '. Antes de reservar, revisá que la publicación final incluya día, mes, año y horario.' : 'La fecha y el horario deben confirmarse en la publicación final antes de reservar.',
+      ],
+      [
+        'question' => '¿Qué incluye la propuesta del evento?',
+        'answer' => $style ? 'La propuesta comunica ' . mb_strtolower($style) . ' y una experiencia pensada para quienes buscan una salida clara y fácil de reservar.' : 'La propuesta del evento debe revisarse en la descripción final, donde el organizador informa experiencia, acceso, artistas, horarios y condiciones.',
+      ],
+      [
+        'question' => '¿Hay promociones o condiciones especiales?',
+        'answer' => $promo ? 'La promoción visible o informada es: ' . $promo . '. Las condiciones finales dependen del organizador y deben revisarse antes de reservar.' : 'Las promociones, precios y condiciones de acceso deben revisarse en la publicación final del evento.',
+      ],
+    ];
+  }
+
+  private function fallbackReviewChecklist(): array
+  {
+    return [
+      ['label' => 'Título', 'status' => 'revisar', 'note' => 'Confirmá que el título sea claro, vendible y coherente con el flyer.'],
+      ['label' => 'Fecha y horario', 'status' => 'revisar', 'note' => 'Validá día, mes, año, hora de inicio y hora de cierre antes de publicar.'],
+      ['label' => 'Dirección', 'status' => 'revisar', 'note' => 'Revisá dirección, ciudad, provincia, piso o referencias de ingreso.'],
+      ['label' => 'Acceso o precio', 'status' => 'revisar', 'note' => 'Confirmá precios, gratuidades, cupos o condiciones especiales.'],
+      ['label' => 'Descripción', 'status' => 'revisar', 'note' => 'Leé la descripción completa y ajustá cualquier dato propio del organizador.'],
+      ['label' => 'SEO y Google', 'status' => 'revisar', 'note' => 'Validá palabras clave y descripción corta para Google.'],
+      ['label' => 'Imagen', 'status' => 'revisar', 'note' => 'Confirmá que la portada se vea clara y represente correctamente el evento.'],
+    ];
   }
 
   private function runPayload(?EventAiAssistantRun $run): ?array
@@ -969,6 +1130,24 @@ class EventAiAssistantController extends Controller
 
     if (!empty($content['important_information']) && is_array($content['important_information'])) {
       $parts[] = '<h3>Información importante</h3><ul>' . $this->htmlList($content['important_information']) . '</ul>';
+    }
+
+    if (!empty($payload['seo']['ai_search_summary'])) {
+      $parts[] = '<h3>Resumen para buscadores e IA</h3><p>' . nl2br(e($payload['seo']['ai_search_summary'])) . '</p>';
+    }
+
+    if (!empty($payload['faq']) && is_array($payload['faq'])) {
+      $faq = [];
+      foreach ($payload['faq'] as $item) {
+        $question = trim((string) ($item['question'] ?? ''));
+        $answer = trim((string) ($item['answer'] ?? ''));
+        if ($question !== '' && $answer !== '') {
+          $faq[] = '<h4>' . e($question) . '</h4><p>' . nl2br(e($answer)) . '</p>';
+        }
+      }
+      if (!empty($faq)) {
+        $parts[] = '<h3>Preguntas frecuentes</h3>' . implode("\n", $faq);
+      }
     }
 
     if (!empty($content['cta'])) {

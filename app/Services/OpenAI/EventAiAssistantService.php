@@ -230,7 +230,7 @@ class EventAiAssistantService
     return [
       'type' => 'object',
       'additionalProperties' => false,
-      'required' => ['content', 'seo', 'social', 'faq', 'missing_information', 'audit'],
+      'required' => ['content', 'seo', 'social', 'faq', 'review_checklist', 'missing_information', 'audit'],
       'properties' => [
         'content' => [
           'type' => 'object',
@@ -287,6 +287,19 @@ class EventAiAssistantService
             'properties' => [
               'question' => ['type' => 'string'],
               'answer' => ['type' => 'string'],
+            ],
+          ],
+        ],
+        'review_checklist' => [
+          'type' => 'array',
+          'items' => [
+            'type' => 'object',
+            'additionalProperties' => false,
+            'required' => ['label', 'status', 'note'],
+            'properties' => [
+              'label' => ['type' => 'string'],
+              'status' => ['type' => 'string'],
+              'note' => ['type' => 'string'],
             ],
           ],
         ],

@@ -60,7 +60,7 @@
                     <div class="mb-3 mb-md-0">
                       <span class="badge badge-warning mb-2" id="createChecklistBadge">{{ __('0% completo') }}</span>
                       <h5 class="mb-1" id="createChecklistTitle">{{ __('Empieza a cargar tu evento') }}</h5>
-                      <p class="text-muted mb-0">{{ __('Esta guia se completa sola mientras agregas la informacion principal.') }}</p>
+                      <p class="text-muted mb-0">{{ __('Esta guía se completa sola mientras agregás la información principal.') }}</p>
                     </div>
                     <div class="text-md-right">
                       <div class="font-weight-bold" id="createChecklistCount">0/6 {{ __('puntos listos') }}</div>
@@ -71,12 +71,12 @@
                     <div class="progress-bar bg-warning" id="createChecklistProgress" role="progressbar" style="width: 0%;"></div>
                   </div>
                   <div class="row">
-                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-thumbnail"><div class="font-weight-bold mb-1">{{ __('Imagen de portada') }}</div><small class="text-muted">{{ __('Sube una portada clara y facil de reconocer.') }}</small></div></div>
-                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-dates"><div class="font-weight-bold mb-1">{{ __('Fechas') }}</div><small class="text-muted">{{ __('Define bien cuando ocurre el evento.') }}</small></div></div>
-                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-title"><div class="font-weight-bold mb-1">{{ __('Titulo') }}</div><small class="text-muted">{{ __('Usa un nombre claro y facil de entender.') }}</small></div></div>
-                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-description"><div class="font-weight-bold mb-1">{{ __('Descripcion') }}</div><small class="text-muted">{{ __('Cuenta que incluye la entrada, horarios y datos clave.') }}</small></div></div>
-                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-sales"><div class="font-weight-bold mb-1">{{ __('Venta o acceso') }}</div><small class="text-muted">{{ __('Revisa precio, gratuidad o acceso online segun el tipo de evento.') }}</small></div></div>
-                    <div class="col-lg-6 mb-0"><div class="border rounded p-3 h-100" id="check-status"><div class="font-weight-bold mb-1">{{ __('Estado') }}</div><small class="text-muted">{{ __('Elige si quieres dejarlo activo o seguir trabajandolo.') }}</small></div></div>
+                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-thumbnail"><div class="font-weight-bold mb-1">{{ __('Imagen de portada') }}</div><small class="text-muted">{{ __('Subí una portada clara y fácil de reconocer.') }}</small></div></div>
+                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-dates"><div class="font-weight-bold mb-1">{{ __('Fechas') }}</div><small class="text-muted">{{ __('Definí bien cuándo ocurre el evento.') }}</small></div></div>
+                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-title"><div class="font-weight-bold mb-1">{{ __('Título') }}</div><small class="text-muted">{{ __('Usá un nombre claro y fácil de entender.') }}</small></div></div>
+                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-description"><div class="font-weight-bold mb-1">{{ __('Descripción') }}</div><small class="text-muted">{{ __('Cuenta que incluye la entrada, horarios y datos clave.') }}</small></div></div>
+                    <div class="col-lg-6 mb-3"><div class="border rounded p-3 h-100" id="check-sales"><div class="font-weight-bold mb-1">{{ __('Venta o acceso') }}</div><small class="text-muted">{{ __('Revisá precio, gratuidad o acceso online según el tipo de evento.') }}</small></div></div>
+                    <div class="col-lg-6 mb-0"><div class="border rounded p-3 h-100" id="check-status"><div class="font-weight-bold mb-1">{{ __('Estado') }}</div><small class="text-muted">{{ __('Elegí si querés dejarlo activo o seguir trabajándolo.') }}</small></div></div>
                   </div>
                 </div>
               </div>
@@ -89,7 +89,7 @@
                   <div class="event-cover-box__intro">
                     <span class="event-cover-box__eyebrow">{{ __('Portada principal') }}</span>
                     <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
-                    <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la pagina del evento y cuando se comparte.') }}</p>
+                    <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la página del evento y cuando se comparte.') }}</p>
                   </div>
                   <div class="event-cover-box__body">
                     <div class="thumb-preview event-cover-box__preview">
@@ -106,23 +106,23 @@
                         </span>
                         <input type="file" class="img-input" name="thumbnail" accept="image/jpeg,image/png,image/webp">
                       </label>
-                      <small class="event-cover-box__hint">{{ __('Puedes usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
+                      <small class="event-cover-box__hint">{{ __('Podés usar una imagen horizontal, cuadrada o vertical. Lo importante es que se vea bien y se lea claro.') }}</small>
                       <div class="event-cover-box__empty" data-cover-ai-empty>
-                        <strong>{{ __('Subi una portada para empezar.') }}</strong>
-                        <span>{{ __('Despues vas a poder analizarla con IA para completar el evento mas rapido.') }}</span>
+                        <strong>{{ __('Subí una portada para empezar.') }}</strong>
+                        <span>{{ __('Después vas a poder armar el evento con IA para completarlo más rápido.') }}</span>
                       </div>
                       <div class="event-cover-box__ai d-none" data-cover-ai-ready>
                         <div class="event-cover-box__state">
                           <i class="fas fa-check-circle"></i>
                           <div>
                             <strong>{{ __('Imagen de portada cargada correctamente.') }}</strong>
-                            <span>{{ __('Podemos leer la imagen y ayudarte a completar titulo, fecha, lugar, promociones y descripcion.') }}</span>
+                            <span>{{ __('Podemos leer la imagen y ayudarte a mejorar título, fecha, lugar, promociones, descripción y SEO.') }}</span>
                           </div>
                         </div>
                         <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze>
-                          <i class="fas fa-magic mr-1"></i>{{ __('Analizar portada con IA') }}
+                          <i class="fas fa-magic mr-1"></i>{{ __('Armar evento con IA') }}
                         </button>
-                        <small>{{ __('Analizamos la imagen antes de guardar para ayudarte a completar titulo, fecha, lugar y descripcion.') }}</small>
+                        <small>{{ __('El asistente propone datos, copy y SEO antes de guardar. Vos revisás y decidís qué aplicar.') }}</small>
                       </div>
                     </div>
                   </div>
@@ -419,7 +419,7 @@
                   <div class="event-content-shell__intro mt-4">
                     <span class="event-content-shell__eyebrow">{{ __('Paso 4') }}</span>
                     <h4 class="event-content-shell__title">{{ __('Contenido del evento') }}</h4>
-                    <p class="event-content-shell__text">{{ __('Primero carga lo esencial para vender: titulo, categoria, ubicacion y descripcion. Lo de Google va aparte y es opcional.') }}</p>
+                    <p class="event-content-shell__text">{{ __('Primero cargá lo esencial para vender: título, categoría, ubicación y descripción. Lo de Google va aparte y es opcional.') }}</p>
                   </div>
 
                 <div id="accordion" class="mt-3">
@@ -445,7 +445,7 @@
                             <div class="event-content-block__head">
                               <span class="event-content-block__kicker">{{ __('Lo principal') }}</span>
                               <h5 class="event-content-block__title">{{ __('Lo que ve primero el comprador') }}</h5>
-                              <p class="event-content-block__text">{{ __('Aqui defines nombre, categoria, ubicacion y una descripcion clara del evento.') }}</p>
+                              <p class="event-content-block__text">{{ __('Acá definís nombre, categoría, ubicación y una descripción clara del evento.') }}</p>
                             </div>
                           <div class="row">
                             <div class="col-lg-6">
@@ -545,8 +545,8 @@
 
                           <div class="event-content-block event-content-block--soft">
                             <div class="event-content-block__head">
-                              <span class="event-content-block__kicker">{{ __('Extras utiles') }}</span>
-                              <h5 class="event-content-block__title">{{ __('Politicas y datos para Google') }}</h5>
+                              <span class="event-content-block__kicker">{{ __('Extras útiles') }}</span>
+                              <h5 class="event-content-block__title">{{ __('Políticas y datos para Google') }}</h5>
                               <p class="event-content-block__text">{{ __('Sirve para responder dudas frecuentes y para que el evento se vea mejor cuando lo comparten o lo encuentran en Google.') }}</p>
                             </div>
                             <div class="row">
@@ -558,9 +558,9 @@
                             <div class="row">
                               <div class="col-lg-12">
                                 <div class="form-group">
-                                  <label>{{ __('Meta Keywords') }}</label>
+                                  <label>{{ __('Palabras clave para Google') }}</label>
                                   <input class="form-control" name="{{ $language->code }}_meta_keywords"
-                                    placeholder="{{ __('Enter Meta Keywords') }}" data-role="tagsinput">
+                                    placeholder="{{ __('Ej: festival, buenos aires, música en vivo') }}" data-role="tagsinput">
                                 </div>
                               </div>
                             </div>
@@ -568,9 +568,9 @@
                             <div class="row">
                               <div class="col-lg-12">
                                 <div class="form-group">
-                                  <label>{{ __('Meta Description') }}</label>
+                                  <label>{{ __('Descripción corta para Google') }}</label>
                                   <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
-                                    placeholder="{{ __('Enter Meta Description') }}"></textarea>
+                                    placeholder="{{ __('Una descripción breve y clara para buscadores y enlaces compartidos.') }}"></textarea>
                                 </div>
                               </div>
                             </div>
@@ -1270,8 +1270,13 @@
       const guidanceBox = panel ? panel.querySelector('[data-create-ai-guidance]') : null;
       const summaryBox = panel ? panel.querySelector('[data-create-ai-summary]') : null;
       const applyButton = panel ? panel.querySelector('[data-create-ai-apply]') : null;
+      const draftBox = panel ? panel.querySelector('[data-create-ai-draft]') : null;
+      const draftTitle = panel ? panel.querySelector('[data-create-ai-draft-title]') : null;
+      const draftSummary = panel ? panel.querySelector('[data-create-ai-draft-summary]') : null;
+      const draftAudit = panel ? panel.querySelector('[data-create-ai-audit]') : null;
       let active = false;
       let lastReview = null;
+      let lastDraft = null;
       let progressTimer = null;
       let elapsedTimer = null;
       let startedAt = null;
@@ -1289,9 +1294,11 @@
       thumbnailInput.addEventListener('change', toggleCoverState);
       thumbnailInput.addEventListener('change', function () {
         lastReview = null;
+        lastDraft = null;
         if (results) results.classList.add('d-none');
+        if (draftBox) draftBox.classList.add('d-none');
         if (progressPanel) progressPanel.classList.add('d-none');
-        setStatus('Portada lista. Podés analizarla antes de completar el resto del evento.', 'light');
+        setStatus('Portada lista. Podés armar una propuesta de evento con IA antes de completar el resto del formulario.', 'light');
       });
 
       if (analyzeButton) {
@@ -1320,9 +1327,10 @@
         lastReview = null;
         panel.classList.remove('d-none');
         if (results) results.classList.add('d-none');
+        if (draftBox) draftBox.classList.add('d-none');
         analyzeButton.disabled = true;
-        analyzeButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Analizando portada...';
-        setStatus('Estamos leyendo la portada. No recargues la pagina; esto puede tardar unos segundos.', 'info');
+        analyzeButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Armando evento...';
+        setStatus('Estamos leyendo la portada y preparando una propuesta editable. No recargues la página.', 'info');
         startProgress();
 
         $.ajax({
@@ -1333,10 +1341,13 @@
           contentType: false
         }).done(function (response) {
           stopProgress();
-          setProgress(100, 'Analisis listo', 'Ya organizamos los datos detectados en la portada.', 'success');
+          setProgress(100, 'Propuesta lista', 'Ya organizamos datos, copy, descripción y SEO para que puedas revisar.', 'success');
           lastReview = response.review || null;
-          renderReview(lastReview);
-          setStatus('Análisis listo. Revisá los datos detectados y aplicalos si te sirven.', 'success');
+          lastDraft = response.draft && response.draft.generated_payload ? response.draft.generated_payload : null;
+          renderReview(lastReview, response.draft || null, response.draft_error || null);
+          setStatus(lastDraft
+            ? 'Propuesta lista. Revisá el copy, SEO y datos detectados antes de aplicar.'
+            : 'Análisis listo. No se generó copy automático, pero podés usar los datos detectados como guía.', lastDraft ? 'success' : 'warning');
         }).fail(function (xhr) {
           stopProgress();
           setProgress(null, 'No se pudo analizar', errorMessage(xhr, 'No pudimos analizar la portada en este momento.'), 'danger');
@@ -1344,7 +1355,7 @@
         }).always(function () {
           active = false;
           analyzeButton.disabled = false;
-          analyzeButton.innerHTML = '<i class="fas fa-magic mr-1"></i>Analizar portada con IA';
+          analyzeButton.innerHTML = '<i class="fas fa-magic mr-1"></i>Armar evento con IA';
         });
       }
 
@@ -1353,10 +1364,17 @@
         const csrf = document.querySelector('meta[name="csrf-token"]');
         if (csrf) payload.append('_token', csrf.getAttribute('content'));
         payload.append('thumbnail', file);
+        payload.append('generate_content', '1');
 
         form.querySelectorAll('input, textarea, select').forEach(function (field) {
           if (!field.name || field.type === 'file') return;
           if ((field.type === 'radio' || field.type === 'checkbox') && !field.checked) return;
+          if (field.multiple) {
+            Array.from(field.selectedOptions || []).forEach(function (option) {
+              payload.append(field.name, option.value || '');
+            });
+            return;
+          }
           payload.append(field.name, field.value || '');
         });
 
@@ -1372,10 +1390,10 @@
 
         progressTimer = setInterval(function () {
           percent = Math.min(percent + Math.floor(Math.random() * 7) + 3, 92);
-          const stage = percent < 35 ? 'Leyendo textos del flyer' : (percent < 70 ? 'Detectando datos utiles' : 'Ordenando sugerencias');
+          const stage = percent < 30 ? 'Leyendo textos del flyer' : (percent < 62 ? 'Detectando datos útiles' : 'Generando copy y SEO');
           const message = percent < 35
-            ? 'Buscamos titulo, fecha, lugar, horarios, promos y datos relevantes.'
-            : (percent < 70 ? 'Separamos informacion util de marcas, logos y textos secundarios.' : 'Preparamos una guia para completar el formulario sin inventar datos.');
+            ? 'Buscamos título, fecha, lugar, horarios, promos y datos relevantes.'
+            : (percent < 70 ? 'Separamos información útil de marcas, logos y textos secundarios.' : 'Creamos una propuesta editable con descripción, tags y descripción corta para Google.');
           setProgress(percent, stage, message, 'info');
         }, 1800);
 
@@ -1399,10 +1417,10 @@
         progressPanel.classList.remove('d-none', 'is-success', 'is-danger', 'is-indeterminate');
         if (state === 'success') progressPanel.classList.add('is-success');
         if (state === 'danger') progressPanel.classList.add('is-danger');
-        progressPanel.querySelector('[data-progress-title]').textContent = state === 'success' ? 'Analisis de portada completado' : 'Analizando portada';
+        progressPanel.querySelector('[data-progress-title]').textContent = state === 'success' ? 'Evento preparado con IA' : 'Armando evento con IA';
         progressPanel.querySelector('[data-progress-stage]').textContent = stage;
         progressPanel.querySelector('[data-progress-message]').textContent = message;
-        progressPanel.querySelector('[data-progress-estimate]').textContent = 'Normalmente tarda entre 20 segundos y 2 minutos.';
+        progressPanel.querySelector('[data-progress-estimate]').textContent = 'Normalmente tarda entre 30 segundos y 3 minutos.';
 
         if (typeof percent === 'number') {
           progressPanel.querySelector('[data-progress-percent]').textContent = Math.round(percent) + '% estimado';
@@ -1416,7 +1434,7 @@
         }
       }
 
-      function renderReview(review) {
+      function renderReview(review, draft, draftError) {
         const imageAnalysis = review && review.canonical_event_facts ? review.canonical_event_facts.image_analysis || {} : {};
         const facts = (imageAnalysis.extracted_fields || []).concat(imageAnalysis.sponsors || []).filter(function (field) {
           const value = $.trim(field.value || field.raw_text || '');
@@ -1424,7 +1442,10 @@
           return value && value !== '-' && label.indexOf('comparacion') === -1 && label.indexOf('comparación') === -1;
         });
 
-        if (summaryBox) summaryBox.textContent = imageAnalysis.summary || 'Encontramos informacion que puede ayudarte a completar el evento.';
+        renderDraft(draft, draftError);
+        if (summaryBox) summaryBox.textContent = lastDraft
+          ? 'El asistente creó una propuesta editable con copy, descripción, palabras clave y descripción corta para Google.'
+          : (draftError || imageAnalysis.summary || 'Encontramos información que puede ayudarte a completar el evento.');
         if (factsBox) {
           factsBox.innerHTML = '';
           facts.slice(0, 18).forEach(function (field) {
@@ -1434,7 +1455,7 @@
               + '<div class="create-cover-ai-fact__value">' + escapeHtml(field.value || field.raw_text) + '</div>';
             factsBox.appendChild(row);
           });
-          if (!facts.length) factsBox.innerHTML = '<div class="p-3 text-muted">No encontramos datos claros para aplicar automaticamente.</div>';
+          if (!facts.length) factsBox.innerHTML = '<div class="p-3 text-muted">No encontramos datos claros para aplicar automáticamente.</div>';
         }
         if (guidanceBox) renderGuidance(guidanceBox, imageAnalysis);
         if (results) results.classList.remove('d-none');
@@ -1451,18 +1472,102 @@
         const endTime = pickField(fields, [/horario de cierre/i, /hora de cierre/i, /hora de fin/i, /^cierre$/i]);
         const dateValue = pickField(fields, [/fecha/i], [/promocion/i, /promoción/i]);
 
-        setIfEmpty('input[name$="_title"]', title);
+        if (lastDraft) {
+          applyDraftFields(lastDraft);
+        } else {
+          setIfEmpty('input[name$="_title"]', title);
+          setDescriptionIfEmpty(buildStarterDescription(imageAnalysis, title, address));
+        }
+
         setIfEmpty('input[name$="_address"]', address);
         setIfEmpty('input[name$="_country"]', address ? 'Argentina' : '');
         setIfEmpty('input[name="start_time"]', parseTime(startTime));
         setIfEmpty('input[name="end_time"]', parseTime(endTime));
         setIfEmpty('input[name="start_date"]', parseDate(dateValue));
         setIfEmpty('input[name="end_date"]', parseDate(dateValue));
-        setDescriptionIfEmpty(buildStarterDescription(imageAnalysis, title, address));
-        setCategoryFromText([title, imageAnalysis.summary].concat(imageAnalysis.found_information || []).join(' '));
+        setCategoryFromText([title, imageAnalysis.summary].concat(imageAnalysis.found_information || [], lastDraft && lastDraft.seo ? lastDraft.seo.tags || [] : []).join(' '));
 
         updateCreateChecklist();
-        setStatus('Aplicamos los datos claros en campos vacios. Revisalos y completá lo que falte antes de guardar.', 'success');
+        setStatus(lastDraft
+          ? 'Aplicamos la propuesta seleccionada y los datos claros. Revisá y ajustá antes de guardar.'
+          : 'Aplicamos los datos claros en campos vacíos. Revisalos y completá lo que falte antes de guardar.', 'success');
+      }
+
+      function renderDraft(draft, draftError) {
+        if (!draftBox) return;
+        lastDraft = draft && draft.generated_payload ? draft.generated_payload : lastDraft;
+
+        if (!lastDraft) {
+          draftBox.classList.add('d-none');
+          if (draftError && summaryBox) summaryBox.textContent = draftError;
+          return;
+        }
+
+        const content = lastDraft.content || {};
+        draftBox.classList.remove('d-none');
+        if (draftTitle) draftTitle.textContent = content.public_title || 'Propuesta generada';
+        if (draftSummary) draftSummary.textContent = content.short_description || '';
+        if (draftAudit) {
+          const needsReview = !!(draft && draft.needs_human_review);
+          draftAudit.className = 'badge mb-2 mb-lg-0 ' + (needsReview ? 'badge-warning' : 'badge-success');
+          draftAudit.textContent = needsReview ? 'Revisar antes de aplicar' : 'Listo para revisar';
+        }
+      }
+
+      function applyDraftFields(draft) {
+        const content = draft.content || {};
+        const seo = draft.seo || {};
+        const fields = selectedDraftFields();
+
+        if (fields.indexOf('title') !== -1 && content.public_title) {
+          setFieldValue('input[name$="_title"]', content.public_title);
+        }
+
+        if (fields.indexOf('description') !== -1) {
+          setDescriptionValue(buildDescriptionHtml(content));
+        }
+
+        if (fields.indexOf('meta_description') !== -1 && (seo.google_short_description || seo.meta_description)) {
+          setFieldValue('textarea[name$="_meta_description"]', seo.google_short_description || seo.meta_description);
+        }
+
+        if (fields.indexOf('meta_keywords') !== -1) {
+          const keywords = (seo.tags || []).concat(seo.secondary_keywords || []);
+          setTagsValue('input[name$="_meta_keywords"]', keywords);
+        }
+      }
+
+      function selectedDraftFields() {
+        if (!panel) return [];
+        return Array.from(panel.querySelectorAll('[data-create-ai-field]:checked')).map(function (field) {
+          return field.value;
+        });
+      }
+
+      function setFieldValue(selector, value) {
+        if (!value) return;
+        const field = document.querySelector(selector);
+        if (!field) return;
+        field.value = value;
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function setTagsValue(selector, values) {
+        values = uniqueItems(values || []).slice(0, 14);
+        if (!values.length) return;
+        const field = document.querySelector(selector);
+        if (!field) return;
+
+        if ($.fn.tagsinput && $(field).data('tagsinput')) {
+          $(field).tagsinput('removeAll');
+          values.forEach(function (value) { $(field).tagsinput('add', value); });
+        } else {
+          field.value = values.join(',');
+        }
+
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+        field.dispatchEvent(new Event('change', { bubbles: true }));
       }
 
       function setIfEmpty(selector, value) {
@@ -1479,13 +1584,40 @@
         const field = document.querySelector('textarea[name$="_description"]');
         if (!field || $.trim(field.value || '') !== '') return;
         const html = '<p>' + escapeHtml(value).replace(/\n/g, '<br>') + '</p>';
+        setDescriptionValue(html);
+      }
+
+      function setDescriptionValue(html) {
+        if (!html) return;
+        const field = document.querySelector('textarea[name$="_description"]');
+        if (!field) return;
         if ($.fn.summernote && $(field).next('.note-editor').length) {
           $(field).summernote('code', html);
         } else {
-          field.value = value;
+          field.value = html;
         }
         field.dispatchEvent(new Event('input', { bubbles: true }));
         field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+
+      function buildDescriptionHtml(content) {
+        let html = '';
+        if (content.short_description) html += '<p>' + escapeHtml(content.short_description) + '</p>';
+        if (content.main_description) html += '<p>' + escapeHtml(content.main_description).replace(/\n/g, '<br>') + '</p>';
+        if ((content.what_you_will_experience || []).length) {
+          html += '<h3>Qué vas a vivir</h3><ul>' + listHtml(content.what_you_will_experience) + '</ul>';
+        }
+        if ((content.important_information || []).length) {
+          html += '<h3>Información importante</h3><ul>' + listHtml(content.important_information) + '</ul>';
+        }
+        if (content.cta) html += '<p><strong>' + escapeHtml(content.cta) + '</strong></p>';
+        return html;
+      }
+
+      function listHtml(items) {
+        return (items || []).filter(Boolean).map(function (item) {
+          return '<li>' + escapeHtml(item) + '</li>';
+        }).join('');
       }
 
       function setCategoryFromText(text) {
@@ -1561,7 +1693,7 @@
           .slice(0, 8);
 
         target.innerHTML = items.length
-          ? '<div class="alert alert-info mb-0 small"><strong>Guia para completar el evento</strong><ul class="mb-0 mt-2 pl-3">' + items.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>'
+          ? '<div class="alert alert-info mb-0 small"><strong>Guía para completar el evento</strong><ul class="mb-0 mt-2 pl-3">' + items.map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>'
           : '';
       }
 
@@ -1602,6 +1734,18 @@
 
       function normalizeText(value) {
         return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+
+      function uniqueItems(items) {
+        const seen = {};
+        return (items || []).filter(function (item) {
+          item = $.trim(item || '');
+          if (!item) return false;
+          const key = normalizeText(item);
+          if (seen[key]) return false;
+          seen[key] = true;
+          return true;
+        });
       }
 
       toggleCoverState();

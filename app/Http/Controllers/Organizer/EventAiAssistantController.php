@@ -48,6 +48,22 @@ class EventAiAssistantController extends Controller
       'start_time' => 'nullable|string|max:30',
       'end_date' => 'nullable|string|max:30',
       'end_time' => 'nullable|string|max:30',
+      'generate_content' => 'nullable|boolean',
+      'ai_tone' => 'nullable|string|max:60',
+      'ai_intensity' => 'nullable|string|max:30',
+      'ai_audience_location' => 'nullable|array',
+      'ai_audience_location.*' => 'nullable|string|max:80',
+      'ai_community' => 'nullable|array',
+      'ai_community.*' => 'nullable|string|max:80',
+      'ai_age_range' => 'nullable|array',
+      'ai_age_range.*' => 'nullable|string|max:80',
+      'ai_interests' => 'nullable|array',
+      'ai_interests.*' => 'nullable|string|max:80',
+      'ai_language_style' => 'nullable|string|max:80',
+      'ai_audience' => 'nullable|string|max:700',
+      'ai_goal' => 'nullable|string|max:80',
+      'ai_selling_angle' => 'nullable|string|max:240',
+      'ai_notes' => 'nullable|string|max:1200',
     ]);
 
     $imagePath = $request->file('thumbnail')->getRealPath();
@@ -103,14 +119,44 @@ class EventAiAssistantController extends Controller
       ], 503);
     }
 
+    $canonicalFacts = $this->temporaryCanonicalFacts($formFacts, $analysis);
+    $draft = null;
+    $draftError = null;
+
+    if ($request->boolean('generate_content', true)) {
+      try {
+        $generated = $assistant->generateContent($canonicalFacts, $this->temporaryPreferences($request));
+        $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
+        $audit = $generated['audit'] ?? [];
+        $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
+        $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
+
+        $draft = [
+          'id' => null,
+          'status' => 'temporary',
+          'needs_human_review' => $needsHumanReview,
+          'audit_status' => $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed')),
+          'generated_payload' => $generated,
+          'audit_payload' => array_merge($audit, ['moderation' => $moderation]),
+        ];
+      } catch (OpenAiNonRetryableException $e) {
+        $draftError = $e->getMessage();
+      } catch (Throwable $e) {
+        report($e);
+        $draftError = 'No pudimos generar el copy y SEO en este momento. Podés aplicar los datos detectados y completar el texto manualmente.';
+      }
+    }
+
     return response()->json([
       'status' => 'completed',
       'usage' => $quota,
       'review' => [
         'id' => null,
         'status' => 'temporary',
-        'canonical_event_facts' => $this->temporaryCanonicalFacts($formFacts, $analysis),
+        'canonical_event_facts' => $canonicalFacts,
       ],
+      'draft' => $draft,
+      'draft_error' => $draftError,
     ]);
   }
 
@@ -647,6 +693,39 @@ class EventAiAssistantController extends Controller
       'locale' => 'es-AR',
       'timezone' => config('app.timezone', 'America/Argentina/Buenos_Aires'),
     ];
+  }
+
+  private function temporaryPreferences(Request $request): array
+  {
+    return [
+      'tone' => $request->input('ai_tone', 'cercano_rioplatense'),
+      'intensity' => $request->input('ai_intensity', 'equilibrado'),
+      'audience' => [
+        'locations' => $this->temporaryPreferenceArray($request, 'ai_audience_location', ['argentina']),
+        'communities' => $this->temporaryPreferenceArray($request, 'ai_community', ['publico_argentino']),
+        'age_ranges' => $this->temporaryPreferenceArray($request, 'ai_age_range'),
+        'interests' => $this->temporaryPreferenceArray($request, 'ai_interests'),
+        'language_style' => $request->input('ai_language_style', 'automatico'),
+        'description' => $request->input('ai_audience'),
+        'goal' => $request->input('ai_goal', 'reservas_equilibradas'),
+        'selling_angle' => $request->input('ai_selling_angle'),
+        'organizer_notes' => $request->input('ai_notes'),
+      ],
+      'locale' => 'es-AR',
+      'timezone' => config('app.timezone', 'America/Argentina/Buenos_Aires'),
+      'creation_flow' => true,
+      'human_review_required' => true,
+    ];
+  }
+
+  private function temporaryPreferenceArray(Request $request, string $key, array $default = []): array
+  {
+    $value = $request->input($key, $default);
+    if (!is_array($value)) {
+      $value = array_filter(array_map('trim', explode(',', (string) $value)));
+    }
+
+    return array_values(array_unique(array_filter(array_map(fn($item) => mb_substr((string) $item, 0, 80), $value))));
   }
 
   private function runPayload(?EventAiAssistantRun $run): ?array

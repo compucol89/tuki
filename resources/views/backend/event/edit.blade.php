@@ -1166,8 +1166,11 @@
       }
     }
   </style>
-  @php($eventFormModernCss = 'assets/admin/css/event-form-modern.css')
-  <link rel="stylesheet" href="{{ asset($eventFormModernCss) }}{{ is_file(public_path($eventFormModernCss)) ? '?v=' . filemtime(public_path($eventFormModernCss)) : '' }}">
+  @php
+    $eventFormModernCss = 'assets/admin/css/event-form-modern.css';
+    $eventFormModernCssVersion = is_file(public_path($eventFormModernCss)) ? '?v=' . filemtime(public_path($eventFormModernCss)) : '';
+  @endphp
+  <link rel="stylesheet" href="{{ asset($eventFormModernCss) }}{{ $eventFormModernCssVersion }}">
 @endsection
 
 @section('script')

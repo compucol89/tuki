@@ -322,9 +322,21 @@
               <td class="text-right">${{ number_format($ticket['price'] * $ticket['qty'], 2, ',', '.') }}</td>
             </tr>
             @endforeach
+            @if(($serviceFee ?? 0) > 0)
+            <tr>
+              <td colspan="3">Costo de servicio</td>
+              <td class="text-right">${{ number_format($serviceFee, 2, ',', '.') }}</td>
+            </tr>
+            @endif
+            @if(($discountTotal ?? 0) > 0)
+            <tr>
+              <td colspan="3">Descuentos</td>
+              <td class="text-right">-${{ number_format($discountTotal, 2, ',', '.') }}</td>
+            </tr>
+            @endif
 	            <tr class="total-row">
-	              <td colspan="3">Total</td>
-	              <td class="text-right">${{ number_format($booking->price ?? 0, 2, ',', '.') }}</td>
+	              <td colspan="3">Total cobrado</td>
+	              <td class="text-right">${{ number_format($amountCharged ?? 0, 2, ',', '.') }}</td>
 	            </tr>
 	          </tbody>
 	        </table>

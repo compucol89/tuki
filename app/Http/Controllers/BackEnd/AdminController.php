@@ -283,14 +283,14 @@ class AdminController extends Controller
 
     $productIncome = [];
     $totalOders = [];
+    $monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
 
     //event icome calculation
     for ($i = 1; $i <= 12; $i++) {
       // get all 12 months name
       $monthNum = $i;
-      $dateObj = DateTime::createFromFormat('!m', $monthNum);
-      $monthName = $dateObj->format('M');
+      $monthName = $monthNames[$monthNum - 1];
       array_push($eventMonths, $monthName);
 
       // get all 12 months's income
@@ -498,16 +498,169 @@ class AdminController extends Controller
   //transcation 
   public function transcation(Request $request)
   {
-    $transcation_id = null;
-    if ($request->filled('transcation_id')) {
-      $transcation_id = $request->transcation_id;
+    $filters = [
+      'q' => $request->input('q', $request->input('transcation_id')),
+      'event_id' => $request->input('event_id'),
+      'period' => $request->input('period'),
+      'from_date' => $request->input('from_date'),
+      'to_date' => $request->input('to_date'),
+      'payment_method' => $request->input('payment_method'),
+      'payment_status' => $request->input('payment_status'),
+      'transcation_type' => $request->input('transcation_type'),
+      'gateway_type' => $request->input('gateway_type'),
+    ];
+
+    $defaultLanguage = Language::where('is_default', 1)->first();
+
+    $query = Transaction::query();
+
+    if (!empty($filters['q'])) {
+      $search = $filters['q'];
+
+      $query->where(function ($query) use ($search) {
+        $query->where('transcation_id', 'like', '%' . $search . '%')
+          ->orWhere('booking_id', 'like', '%' . $search . '%')
+          ->orWhereHas('organizer', function ($query) use ($search) {
+            $query->where('username', 'like', '%' . $search . '%')
+              ->orWhere('email', 'like', '%' . $search . '%');
+          })
+          ->orWhereHas('event_booking', function ($query) use ($search) {
+            $query->where('booking_id', 'like', '%' . $search . '%')
+              ->orWhere('conversation_id', 'like', '%' . $search . '%')
+              ->orWhere('fname', 'like', '%' . $search . '%')
+              ->orWhere('lname', 'like', '%' . $search . '%')
+              ->orWhere('email', 'like', '%' . $search . '%')
+              ->orWhere('phone', 'like', '%' . $search . '%')
+              ->orWhereHas('event', function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%');
+              });
+          })
+          ->orWhereHas('product_order', function ($query) use ($search) {
+            $query->where('order_number', 'like', '%' . $search . '%')
+              ->orWhere('conversation_id', 'like', '%' . $search . '%')
+              ->orWhere('tnxid', 'like', '%' . $search . '%')
+              ->orWhere('charge_id', 'like', '%' . $search . '%')
+              ->orWhere('billing_fname', 'like', '%' . $search . '%')
+              ->orWhere('billing_lname', 'like', '%' . $search . '%')
+              ->orWhere('billing_email', 'like', '%' . $search . '%')
+              ->orWhere('billing_phone', 'like', '%' . $search . '%');
+          });
+      });
     }
 
-    $transcations = Transaction::when($transcation_id, function ($query) use ($transcation_id) {
-      return $query->where('transcation_id', 'like', '%' . $transcation_id . '%');
-    })
-      ->orderBy('id', 'desc')->paginate(10);
-    return view('backend.admin.transaction', compact('transcations'));
+    if (!empty($filters['event_id'])) {
+      $query->whereHas('event_booking', function ($query) use ($filters) {
+        $query->where('event_id', $filters['event_id']);
+      });
+    }
+
+    if (!empty($filters['payment_method'])) {
+      $query->where('payment_method', $filters['payment_method']);
+    }
+
+    if (!empty($filters['payment_status'])) {
+      if ($filters['payment_status'] === 'legacy_paid') {
+        $query->where('payment_status', 1);
+      } elseif ($filters['payment_status'] === 'legacy_declined') {
+        $query->where('payment_status', 2);
+      } elseif ($filters['payment_status'] === 'legacy_unpaid') {
+        $query->where(function ($query) {
+          $query->where('payment_status', 0)->orWhereNull('payment_status')->orWhere('payment_status', '');
+        });
+      } else {
+        $query->where('payment_status', $filters['payment_status']);
+      }
+    }
+
+    if (!empty($filters['transcation_type'])) {
+      $query->where('transcation_type', $filters['transcation_type']);
+    }
+
+    if (!empty($filters['gateway_type'])) {
+      $query->where('gateway_type', $filters['gateway_type']);
+    }
+
+    if ($filters['period'] === 'today') {
+      $query->whereDate('created_at', now()->toDateString());
+    } elseif ($filters['period'] === 'week') {
+      $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+    } elseif ($filters['period'] === 'month') {
+      $query->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()]);
+    } else {
+      if (!empty($filters['from_date'])) {
+        $query->whereDate('created_at', '>=', $filters['from_date']);
+      }
+
+      if (!empty($filters['to_date'])) {
+        $query->whereDate('created_at', '<=', $filters['to_date']);
+      }
+    }
+
+    $summaryRows = (clone $query)
+      ->select('transcation_type', 'grand_total', 'commission', 'payment_method')
+      ->get();
+    $transactionSummary = [
+      'count' => $summaryRows->count(),
+      'income' => 0,
+      'expenses' => 0,
+      'net' => 0,
+      'commission' => 0,
+      'mercadopago_total' => 0,
+      'mercadopago_count' => 0,
+    ];
+
+    foreach ($summaryRows as $row) {
+      $amount = (float) $row->grand_total - (float) $row->commission;
+      $signedAmount = in_array((int) $row->transcation_type, [3, 5], true) ? -$amount : $amount;
+
+      if ($signedAmount >= 0) {
+        $transactionSummary['income'] += $signedAmount;
+      } else {
+        $transactionSummary['expenses'] += abs($signedAmount);
+      }
+
+      $transactionSummary['net'] += $signedAmount;
+      $transactionSummary['commission'] += (float) $row->commission;
+
+      if (str_replace(' ', '', strtolower((string) $row->payment_method)) === 'mercadopago') {
+        $transactionSummary['mercadopago_total'] += $signedAmount;
+        $transactionSummary['mercadopago_count']++;
+      }
+    }
+
+    $eventOptions = DB::table('bookings')
+      ->join('transactions', function ($join) {
+        $join->on('transactions.booking_id', '=', 'bookings.id')
+          ->where('transactions.transcation_type', 1);
+      })
+      ->join('event_contents', 'event_contents.event_id', '=', 'bookings.event_id')
+      ->when($defaultLanguage, function ($query) use ($defaultLanguage) {
+        return $query->where('event_contents.language_id', $defaultLanguage->id);
+      })
+      ->select('bookings.event_id', 'event_contents.title')
+      ->distinct()
+      ->orderBy('event_contents.title')
+      ->get();
+
+    $paymentMethods = Transaction::query()
+      ->whereNotNull('payment_method')
+      ->where('payment_method', '!=', '')
+      ->distinct()
+      ->orderBy('payment_method')
+      ->pluck('payment_method');
+
+    $transcations = $query->with([
+      'organizer',
+      'event_booking.event' => function ($query) use ($defaultLanguage) {
+        if ($defaultLanguage) {
+          $query->where('language_id', $defaultLanguage->id);
+        }
+      },
+      'product_order',
+      'method'
+    ])->orderBy('id', 'desc')->paginate(15);
+
+    return view('backend.admin.transaction', compact('transcations', 'transactionSummary', 'eventOptions', 'paymentMethods', 'filters'));
   }
   //destroy
   public function destroy(Request $request)

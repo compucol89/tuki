@@ -184,7 +184,7 @@ body.home-page #heroHeadingHome { font-size: 36px; }
 | `frontend/customer/reset-password.blade.php:72` | `style="display:none"` (rpMatchError) | Sí | Misma clase |
 | `backend/mercadopago/diagnostico.blade.php:125,148` | `style="display:none"` (result divs) | Sí | `.d-none` |
 
-**Recomendación**: Crear clase utilitaria `.u-hidden { display: none !important; }` en `style.css` y reemplazar las ~12 ocurrencias no-checkout. El `!important` asegura que no haya conflicto con estilos que muestren el elemento vía JS.
+**Recomendación original** (corregida en revisión): Crear clase utilitaria `.u-hidden { display: none; }` **sin `!important`** en `style.css` y reemplazar las ~7 ocurrencias no-checkout. El `!important` rompería el JS que muestra los elementos con `element.style.display = 'flex'/'block'`. Sin `!important`, el style inline del JS gana sobre la clase, igual que antes.
 
 ### 8.3 Tabla de quick wins — estilos estáticos repetidos
 
@@ -303,143 +303,128 @@ Usar `style="display:none"` directamente en el HTML es válido como estado inici
 
 ---
 
-## 15. Recomendación mínima segura
+## 15. Recomendación mínima segura (corregida post-revisión)
 
-### Tarea 1 — Mobile duplicado
+### Tanda 1 — Solo spacing mobile de home
 
-**Acción más segura**: Crear **un solo bloque `@media (max-width: 767px)` al final de home.css** (línea ~4572) que consolide SOLO los overrides de spacing conflictivos (padding-top, padding-bottom, margin-top, margin-bottom). No tocar las reglas originales — el nuevo bloque gana por cascada (igual especificidad, último en el archivo).
+Crear un bloque `@media (max-width: 767px)` + `575px` + `360px` al final de `home.css` que consolide SOLO overrides de spacing (padding-top, padding-bottom, margin). Sin tocar:
+- `body.events-page` (impactaría `/eventos` mobile)
+- `.ev-card` estructural (grid, datetime-bar, CTA — requiere decisión visual)
+- `responsive.css` ni `style.css`
 
-**Selectores a incluir en el bloque consolidado** (solo spacing):
-- `body.home-page .hero-collage-section` → `padding-top: 42px !important; padding-bottom: 38px !important`
-- `body.home-page .events-marquee` → `padding-top: 26px; padding-bottom: 14px`
-- `body.home-page .hs-search-wrap` → `padding-top: 16px; padding-bottom: 20px`
-- `body.home-page .events-section` → `padding-top: 26px; padding-bottom: var(--home-section-space-mobile)`
-- `body.home-page .category-section, .about-section, .feature-section, .testimonial-section, .client-logo-area` → `padding-top: var(--home-section-space-mobile); padding-bottom: var(--home-section-space-mobile)`
-- `.ev-card-col` → `margin-bottom: 14px`
+**Superficie de cambio**: ~55 líneas añadidas al final de `home.css`. Rollback: `git checkout -- home.css home.min.css`.
 
-**Superficie de cambio**: ~30 líneas añadidas al final del archivo. Rollback trivial (borrar el bloque).
+### Tanda 2 — Inline style quick wins
 
-### Tarea 2 — Inline styles
+Crear `.u-hidden { display: none; }` **SIN `!important`** (el JS usa `element.style.display` y debe poder pisar la clase). Reemplazar ~7 `style="display:none"` estáticos en signup/reset-password/change-password. Mejoras cosméticas con clases Bootstrap existentes en ~5 archivos más.
 
-**Acción más segura**: Crear clase utilitaria `.u-hidden { display: none !important; }` en `style.css` y reemplazar SOLO las ocurrencias de `style="display:none"` que NO estén en checkout/emails/template-view. Esto son ~10 reemplazos en ~8 archivos.
-
-**Quick wins adicionales sin riesgo**:
-- `style="text-align:right"` → `class="text-right"` (Bootstrap ya existe)
-- `style="text-align:center"` → `class="text-center"` (Bootstrap ya existe)
-- `style="color:#FF0000"` → `class="text-danger"` (Bootstrap ya existe)
-- `style="color:#1DB954"` → `class="text-success"` (Bootstrap ya existe)
-
-Estos son reemplazos mecánicos de `style="X"` por `class="Y"` donde la clase YA EXISTE en Bootstrap 4.
+**Corrección clave vs versión original**: `!important` en `.u-hidden` rompería el JS que muestra los elementos con `element.style.display = 'flex'`. Sin `!important`, el style inline del JS gana sobre la clase, igual que antes.
 
 ---
 
 ## 16. Checklist de validación post-implementación
 
-- [ ] `php -l` sobre todos los archivos Blade modificados
-- [ ] `git diff --stat` limpio, solo archivos autorizados
-- [ ] Home page en 360px: verificar spacing consistente entre secciones
+### Tanda 1 — Spacing mobile home
+
+- [ ] `git diff --stat` muestra solo `home.css` y `home.min.css`
+- [ ] El diff de `home.css` solo tiene adiciones al final, sin modificar reglas anteriores
+- [ ] `grep 'body.events-page' public/assets/front/css/home.css` no devuelve resultados en el bloque nuevo
+- [ ] `npm run production` exitoso
+- [ ] Home page en 360px: spacing consistente entre secciones
 - [ ] Home page en 575px: ídem
 - [ ] Home page en 767px: ídem
 - [ ] Home page en 991px: ídem
 - [ ] Home page en 1200px+: sin cambios visuales
-- [ ] Event cards en home: layout correcto en todos los breakpoints
 - [ ] Hero section: padding, tipografía, botones correctos
 - [ ] Marquee de eventos: width y spacing correcto
-- [ ] Password strength meter: se oculta/muestra correctamente
-- [ ] Error messages (signup, reset password): se ocultan/muestran correctamente
-- [ ] Coupon body en checkout: se oculta/muestra correctamente (NO TOCADO)
-- [ ] `npm run production` exitoso (si se tocó CSS)
+- [ ] Event cards en home: layout intacto (solo cambió `margin-bottom` en `.ev-card-col`)
+
+### Tanda 2 — Inline quick wins
+
+- [ ] `php -l` exitoso en todos los Blade modificados
+- [ ] `git diff` no muestra `!important` en `.u-hidden`
+- [ ] `.u-hidden` en `style.css` es exactamente `.u-hidden { display: none; }`
+- [ ] Password strength meter: se oculta al cargar y se muestra al escribir (signup, reset, change-password)
+- [ ] Error messages: se ocultan al cargar y se muestran en error (signup, org signup, reset password)
+- [ ] Organizer login: layout del alert de "Estás ingresando al panel" intacto
+- [ ] Support ticket messages/create: layout intacto
+- [ ] Booking details: layout intacto
+- [ ] Coupon body en checkout: NO TOCADO, funciona igual
 
 ---
 
 ## 17. Decisión de avance
 
-**APTO PARA IMPLEMENTACIÓN QUIRÚRGICA**
+**APTO PARA IMPLEMENTACIÓN QUIRÚRGICA — EN DOS TANDAS INDEPENDIENTES**
 
-Ambas tareas son viables con riesgo controlado:
-- **Tarea 1**: Riesgo MEDIO. Requiere QA visual. Superficie de cambio mínima (~30 líneas al final de home.css).
-- **Tarea 2**: Riesgo BAJO. Quick wins mecánicos. Los inline styles críticos (emails, checkout, dinámicos) están identificados y excluidos.
+La auditoría confirma los problemas, pero el primer Prompt Maestro era demasiado agresivo. Correcciones aplicadas:
+
+| Problema detectado | Corrección |
+|--------------------|------------|
+| `.u-hidden { !important }` rompe JS que usa `element.style.display` | Quitar `!important`. En Tanda 2 se audita si el JS debe cambiar a clases. |
+| Bloque consolidado incluía `body.events-page` → impactaba `/eventos` | Quitar. Tanda 1 solo toca `body.home-page`. |
+| `.ev-card` estructural (grid, datetime-bar, CTA) no es mecánico | Quitar. Es una decisión visual que requiere screenshot QA. Solo queda spacing. |
+| Prompt decía "NO ejecutar npm run production" | Corregir: `npm run production` es **OBLIGATORIO** al final de Tanda 1. Sin minificar, producción no ve el cambio. |
+
+**Tandas**:
+- **Tanda 1** (riesgo MEDIO-BAJO): Solo spacing mobile de home. Sin cards. Sin `/eventos`. Sin `responsive.css`. Build obligatorio. ~40 líneas netas al final de `home.css`.
+- **Tanda 2** (riesgo BAJO): Inline quick wins con `.u-hidden` sin `!important`. Sin tocar checkout. QA de signup/reset/change-password.
 
 **Stop conditions activas**: SC1, SC2, SC3 (ver §13). El Ejecutor debe respetarlas.
 
 ---
 
-## 18. PROMPT MAESTRO PARA EJECUTOR
+## 18. PROMPT MAESTRO PARA EJECUTOR — TUKIPASS (v2 corregida)
 
 ---
 
-# PROMPT MAESTRO PARA EJECUTOR — TUKIPASS
+# TANDA 1 — SPACING MOBILE DE HOME (QUIRÚRGICO)
 
 ## 1. Superpowers obligatorio
 
-- **Skill de implementación**: `frontend-design` o `responsive-design` (para entender el sistema de breakpoints y no romper la cascada).
-- **Skill de verificación**: `verification-before-completion` (validar cada cambio antes de declarar "hecho").
-- **Si existe skill de debugging**: `systematic-debugging` — invocarla antes de modificar si algo no cuadra.
+- `verification-before-completion`: validar cada cambio con `git diff` ANTES de declarar "hecho".
+- `frontend-design` o `responsive-design`: entender el sistema de breakpoints y no romper la cascada.
 
 ## 2. Bibliografía obligatoria
 
-- `.opencode/agents/tuki_context.md` §3 (Frontend — Blade, CSS, JS) y §13 (Design System)
-- Este informe de auditoría: `docs/audits/home-mobile-inline-audit-2026-06-21.md`
+- `.opencode/agents/tuki_context.md` §3 y §13
+- Este informe: `docs/audits/home-mobile-inline-audit-2026-06-21.md` §7 (tabla de conflictos)
 
-## 3. Objetivo de implementación
+## 3. Objetivo
 
-**Fase A (Mobile CSS)**: Consolidar overrides de spacing mobile en un solo bloque al final de `home.css`, ganando por cascada sin tocar las reglas originales.
+Consolidar SOLO los overrides de **spacing mobile** (padding-top, padding-bottom, margin) en un único bloque al final de `home.css`. El bloque gana por cascada (misma especificidad, último en el archivo) sin tocar las reglas originales.
 
-**Fase B (Inline styles)**: Migrar inline styles estáticos y repetidos a clases CSS existentes o nuevas, excluyendo emails, PDFs, template-view, checkout/booking con JS, y dinámicos.
+**Qué NO se toca**:
+- ❌ `body.events-page` — no impactar `/eventos` mobile
+- ❌ `.ev-card` estructural (grid, datetime-bar, título, CTA) — requiere decisión visual con screenshots
+- ❌ `responsive.css`, `style.css`
+- ❌ Checkout, emails, PDFs, template-view
 
-## 4. Contexto validado por auditoría
+## 4. Archivos autorizados
 
-- `home.css`: 4,572 líneas, 42 bloques @media, 26 mobile. Mismos selectores reciben valores distintos en múltiples bloques del mismo breakpoint.
-- `responsive.css`: Existe con 10 bloques @media. **NO TOCAR.**
-- `style.css`: 24 bloques @media. **NO TOCAR.**
-- 498 inline styles en 48 archivos Blade. ~94 candidatos a migración, ~20 quick wins.
+- `public/assets/front/css/home.css` — SOLO añadir al final (línea ~4572)
+- `public/assets/front/css/home.min.css` — **OBLIGATORIO regenerar** con `npm run production`
 
-## 5. Archivos autorizados para modificar
+Si se necesita otro archivo: **DETENERSE**.
 
-### Fase A (Mobile CSS):
-- `public/assets/front/css/home.css` — SOLO añadir bloque al final (línea ~4572)
-- `public/assets/front/css/home.min.css` — regenerar con `npm run production` tras el cambio
+## 5. Archivos prohibidos
 
-### Fase B (Inline styles — QUICK WINS):
-- `public/assets/front/css/style.css` — añadir clase `.u-hidden`
-- `resources/views/frontend/customer/signup.blade.php`
-- `resources/views/frontend/customer/reset-password.blade.php`
-- `resources/views/frontend/customer/dashboard/change-password.blade.php`
-- `resources/views/frontend/organizer/signup.blade.php`
-- `resources/views/frontend/customer/dashboard/support_ticket/create.blade.php`
-- `resources/views/frontend/customer/dashboard/support_ticket/messages.blade.php`
-- `resources/views/frontend/customer/dashboard/booking/details.blade.php`
+- ❌ `responsive.css`, `style.css`
+- ❌ Cualquier Blade, PHP, JS
+- ❌ `.env`, `config/*`
 
-Si se necesita otro archivo: **DETENERSE y pedir confirmación.**
-
-## 6. Archivos prohibidos
-
-- ❌ `.env`, `config/*`, `routes/*`
-- ❌ `public/assets/front/css/responsive.css` — NO TOCAR
-- ❌ `public/assets/front/css/style.css` — SOLO añadir `.u-hidden`, no modificar reglas existentes
-- ❌ `resources/views/emails/**` — NO TOCAR (email deliverability)
-- ❌ `resources/views/pdf/**` — NO TOCAR (DOMPDF rendering)
-- ❌ `resources/views/backend/template-view/**` — NO TOCAR (email builder)
-- ❌ `resources/views/frontend/check-out.blade.php` — NO TOCAR (zona roja checkout)
-- ❌ `resources/views/payments/**` — NO TOCAR
-- ❌ Cualquier archivo con inline styles dinámicos (`{{ }}`) — NO TOCAR
-- ❌ `resources/views/frontend/payment/success.blade.php` — NO TOCAR (tiene Meta Pixel y estilos de confirmación, riesgo medio)
-
-## 7. Cambios requeridos
-
-### Fase A — Bloque de overrides mobile consolidado
-
-Añadir al final de `home.css` (después de la línea 4572):
+## 6. Bloque a añadir al final de `home.css`
 
 ```css
 /* ================================================
-   MOBILE OVERRIDES CONSOLIDADOS (2026-06-21)
+   MOBILE OVERRIDES CONSOLIDADOS — SOLO SPACING (2026-06-21)
    Gana por cascada — último en el archivo.
    NO modificar las reglas originales arriba.
+   Solo aplica a body.home-page. No toca /eventos.
    ================================================ */
 
 @media (max-width: 767px) {
-  /* Hero section — unified spacing */
+  /* ── Hero section: unified padding ── */
   body.home-page .hero-collage-section,
   body.home-page .hero-collage-section--premium {
     padding-top: 42px !important;
@@ -473,7 +458,7 @@ Añadir al final de `home.css` (después de la línea 4572):
     margin-top: 26px;
   }
 
-  /* Home sections — unified vertical rhythm */
+  /* ── Home sections: unified vertical rhythm ── */
   body.home-page .events-marquee {
     padding-top: 26px !important;
     padding-bottom: 14px !important;
@@ -502,7 +487,7 @@ Añadir al final de `home.css` (después de la línea 4572):
     margin-bottom: 12px;
   }
 
-  /* Section headers */
+  /* ── Section headers ── */
   body.home-page .hs-header,
   body.home-page .hs-search-head {
     align-items: flex-start;
@@ -514,132 +499,12 @@ Añadir al final de `home.css` (después de la línea 4572):
     font-size: 24px;
   }
 
-  /* Event cards — unified grid layout (horizontal compact) */
-  body.home-page .events-section .ev-card-col,
-  body.events-page .ev-listing__inner .ev-card-col {
+  /* ── Event cards: solo spacing entre columnas ── */
+  body.home-page .events-section .ev-card-col {
     margin-bottom: 14px;
   }
 
-  body.home-page .events-section .ev-card,
-  body.events-page .ev-listing__inner .ev-card {
-    --ev-mobile-media: clamp(118px, 36vw, 150px);
-    --ev-ticket-height: 38px;
-    display: grid;
-    grid-template-columns: var(--ev-mobile-media) minmax(0, 1fr);
-    grid-template-rows: minmax(8px, 1fr) auto var(--ev-ticket-height) minmax(8px, 1fr);
-    column-gap: 11px;
-    gap: 8px 11px;
-    align-items: start;
-    min-height: var(--ev-mobile-media);
-    height: auto;
-  }
-
-  /* Event card visual — takes left column, full height */
-  body.home-page .events-section .ev-card__visual,
-  body.events-page .ev-listing__inner .ev-card__visual {
-    grid-column: 1;
-    grid-row: 1 / 5;
-    width: var(--ev-mobile-media);
-    height: var(--ev-mobile-media);
-    min-height: 0;
-    aspect-ratio: 1;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  body.home-page .events-section .ev-card__body-panel,
-  body.events-page .ev-listing__inner .ev-card__body-panel {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: start;
-    width: auto;
-    max-width: calc(100vw - var(--ev-mobile-media) - 64px);
-    min-width: 0;
-    margin: 0;
-    border: 0;
-    overflow: hidden;
-  }
-
-  body.home-page .events-section .ev-card__body,
-  body.events-page .ev-listing__inner .ev-card__body {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-
-  body.home-page .events-section .ev-card__datetime-bar,
-  body.events-page .ev-listing__inner .ev-card__datetime-bar {
-    grid-column: 2;
-    grid-row: 3;
-    justify-self: start;
-    width: auto;
-    height: var(--ev-ticket-height);
-    min-height: var(--ev-ticket-height);
-    max-height: var(--ev-ticket-height);
-    margin: 0;
-  }
-
-  /* Event card title */
-  body.home-page .events-section .ev-card__title,
-  body.events-page .ev-listing__inner .ev-card__title {
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-    max-height: none;
-    margin-bottom: 0;
-    color: #333333;
-    font-size: clamp(14px, 3.7vw, 15px);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: 0;
-    -webkit-line-clamp: 3;
-    text-wrap: auto;
-  }
-
-  /* Event card location row */
-  body.home-page .events-section .ev-card__loc-row,
-  body.events-page .ev-listing__inner .ev-card__loc-row,
-  body.home-page .events-section .ev-card__loc-row span,
-  body.events-page .ev-listing__inner .ev-card__loc-row span {
-    font-size: 10px;
-  }
-
-  /* Event card CTA arrow */
-  body.home-page .events-section .ev-card__dtbar-cta,
-  body.home-page .events-section .ev-card:hover .ev-card__dtbar-cta,
-  body.home-page .events-section .ev-card:focus-within .ev-card__dtbar-cta,
-  body.events-page .ev-listing__inner .ev-card__dtbar-cta,
-  body.events-page .ev-listing__inner .ev-card:hover .ev-card__dtbar-cta,
-  body.events-page .ev-listing__inner .ev-card:focus-within .ev-card__dtbar-cta {
-    position: static;
-    display: flex;
-    flex: 0 0 32px;
-    align-items: center;
-    justify-content: flex-end;
-    width: 32px;
-    height: 32px;
-    margin-left: auto;
-    opacity: 1;
-    color: var(--tk-primary, #e05d38);
-    pointer-events: none;
-  }
-
-  body.home-page .events-section .ev-card__dtbar-cta-arrow,
-  body.events-page .ev-listing__inner .ev-card__dtbar-cta-arrow {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 999px;
-    background: rgba(224, 93, 56, 0.10);
-    color: var(--tk-primary, #e05d38);
-  }
-
-  /* Marquee items */
+  /* ── Marquee items ── */
   body.home-page .events-marquee-item {
     width: 278px;
     height: 184px;
@@ -657,10 +522,6 @@ Añadir al final de `home.css` (después de la línea 4572):
     font-size: 34px;
     line-height: 1.04;
   }
-
-  .ev-card__datetime-bar .ev-card__img-day {
-    font-size: 30px;
-  }
 }
 
 @media (max-width: 360px) {
@@ -671,12 +532,6 @@ Añadir al final de `home.css` (después de la línea 4572):
     padding-bottom: 30px !important;
   }
 
-  body.home-page .events-section .ev-card,
-  body.events-page .ev-listing__inner .ev-card {
-    --ev-mobile-media: 112px;
-    --ev-ticket-height: 36px;
-  }
-
   body.home-page .events-marquee-item {
     width: 230px;
     height: 152px;
@@ -684,101 +539,177 @@ Añadir al final de `home.css` (después de la línea 4572):
 }
 ```
 
-### Fase B — Quick wins inline styles
+## 7. Plan de implementación
 
-#### B1: Añadir clase utilitaria en `style.css`
+1. `pwd`, `git status --short`, `git diff --stat`
+2. Leer últimas 10 líneas de `home.css` para confirmar punto de inserción
+3. Añadir el bloque CSS arriba al final de `home.css`
+4. Validar: `wc -l public/assets/front/css/home.css`
+5. **`npm run production`** — OBLIGATORIO. Sin esto, `home.min.css` no se actualiza y producción no ve el cambio.
+6. `git diff --stat` — debe mostrar solo `home.css` y `home.min.css`
+7. `git diff public/assets/front/css/home.css` — verificar que solo se añadió el bloque al final
 
-Al final del archivo, añadir:
-```css
-/* Utility: force hide (for JS-controlled elements initialized hidden) */
-.u-hidden { display: none !important; }
-```
-
-#### B2: Reemplazar `style="display:none"` por `class="u-hidden"`
-
-En cada uno de estos archivos, reemplazar EXACTAMENTE:
-
-| Archivo | Línea | Cambio |
-|---------|-------|--------|
-| `frontend/customer/signup.blade.php` | 194 | `style="display:none"` → añadir `class="u-hidden"` (ya tiene `class="cp-strength-wrap"`) |
-| `frontend/customer/signup.blade.php` | 212 | `style="display:none"` → añadir `class="u-hidden"` (ya tiene `class="ep-field__error"`) |
-| `frontend/customer/reset-password.blade.php` | 53 | `style="display:none"` → añadir `class="u-hidden"` |
-| `frontend/customer/reset-password.blade.php` | 72 | `style="display:none"` → añadir `class="u-hidden"` |
-| `frontend/organizer/signup.blade.php` | 165 | `style="display:none"` → añadir `class="u-hidden"` |
-| `frontend/organizer/signup.blade.php` | 183 | `style="display:none"` → añadir `class="u-hidden"` |
-| `frontend/customer/dashboard/change-password.blade.php` | 125 | `style="display:none"` → añadir `class="u-hidden"` |
-
-#### B3: Reemplazar estilos con clases Bootstrap existentes
-
-| Archivo | Línea | Cambio |
-|---------|-------|--------|
-| `frontend/customer/dashboard/support_ticket/messages.blade.php` | 46 | `style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"` → `class="d-flex align-items-center" style="gap:10px;flex-wrap:wrap"` (el `gap` y `flex-wrap` requieren style inline o clase custom) |
-| `frontend/customer/dashboard/support_ticket/create.blade.php` | 39 | `style="display:flex;align-items:center;gap:10px"` → `class="d-flex align-items-center" style="gap:10px"` |
-| `frontend/customer/dashboard/change-password.blade.php` | 43 | `style="display:flex;align-items:center;gap:10px"` → `class="d-flex align-items-center" style="gap:10px"` |
-| `frontend/customer/dashboard/booking/details.blade.php` | 202 | `style="align-items:flex-start"` → `class="align-items-start"` (ya tiene `class="cd-info-row"`) |
-| `frontend/organizer/login.blade.php` | 112 | `style="gap: 10px"` → añadir a clase existente (necesita clase custom para `gap`, Bootstrap 4 no tiene) |
-
-**NOTA**: `gap` no tiene clase utilitaria en Bootstrap 4. Para esos casos, mantener el `style="gap:10px"` inline o crear clase `.u-gap-10 { gap: 10px; }`. Recomendación: mantener el style inline para `gap` en este sprint — es una propiedad moderna que requiere CSS Grid/Flexbox y Bootstrap 4 no la soporta nativamente.
-
-## 8. Restricciones técnicas
-
-- No agregar dependencias npm/composer.
-- No cambiar el stack (Bootstrap 4, jQuery, Laravel Mix).
-- No modificar `responsive.css`, `style.css` (salvo añadir `.u-hidden`).
-- No tocar reglas originales de home.css — solo añadir al final.
-- No tocar inline styles en emails, PDFs, template-view, checkout, o dinámicos.
-- Mantener español rioplatense en cualquier texto visible.
-- Si un `style="display:none"` está en un archivo de checkout/booking: **SALTARLO**.
-
-## 9. Plan de implementación
-
-1. **Verificar estado**: `pwd`, `git status --short`, `git diff --stat`
-2. **Leer archivos autorizados**: Confirmar que las líneas indicadas en este informe coinciden con el código real.
-3. **Fase A**: Añadir bloque de overrides mobile al final de `home.css`.
-4. **Validar Fase A**: `wc -l public/assets/front/css/home.css` (debe ser ~4572 + líneas añadidas).
-5. **Fase B1**: Añadir `.u-hidden` al final de `style.css`.
-6. **Fase B2**: Reemplazar `style="display:none"` por `class="u-hidden"` en los 7 archivos listados.
-7. **Fase B3**: Reemplazar estilos inline por clases Bootstrap en los archivos listados (solo donde la clase equivalente existe).
-8. **Validar sintaxis**: `php -l` sobre cada archivo Blade modificado.
-9. **Mostrar diff**: `git diff --stat` y `git diff` de cada archivo.
-10. **NO ejecutar `npm run production`** a menos que se pida explícitamente.
-
-## 10. Comandos permitidos
+## 8. Comandos
 
 ```bash
+# Permitidos
 pwd
 git status --short
 git diff --stat
-git diff -- path/autorizado
-php -l archivo.php
+git diff -- public/assets/front/css/home.css
 wc -l public/assets/front/css/home.css
-```
+npm run production
 
-## 11. Comandos prohibidos
-
-```bash
+# Prohibidos
 git checkout, git reset, git clean, rm -rf
 php artisan migrate, php artisan db:seed
 php artisan queue:work, php artisan schedule:run
 php artisan config:cache, php artisan optimize
 composer install, composer update
-npm install, npm run production (sin autorización explícita)
+npm install
 ```
 
-## 12. Validación esperada
+## 9. Validación esperada
 
-- [ ] `git diff --stat` muestra solo archivos autorizados
-- [ ] `php -l` exitoso en todos los Blade modificados
-- [ ] `home.css` tiene el bloque consolidado al final, sin modificar reglas anteriores
-- [ ] `style.css` tiene `.u-hidden` al final
-- [ ] Los `style="display:none"` reemplazados usan `class="u-hidden"`, no perdieron otras clases
-- [ ] Ningún archivo de checkout, emails, PDF, o template-view fue modificado
-- [ ] Ningún inline style dinámico (`{{ }}`) fue tocado
+- [ ] Solo `home.css` y `home.min.css` modificados
+- [ ] Bloque añadido al final, reglas anteriores intactas
+- [ ] Sin `body.events-page` en el diff
+- [ ] Sin `.ev-card__visual`, `.ev-card__body-panel`, `.ev-card__datetime-bar`, `.ev-card__dtbar-cta` en el diff
+- [ ] `npm run production` exitoso
+- [ ] `home.min.css` actualizado (timestamp nuevo)
 
-## 13. Rollback
+## 10. Rollback
 
 ```bash
 git checkout -- public/assets/front/css/home.css
+git checkout -- public/assets/front/css/home.min.css
+```
+
+## 11. Stop conditions
+
+Detenerse si:
+- El diff toca algo que no sea `home.css` / `home.min.css`
+- El diff muestra `body.events-page`
+- El diff muestra reglas `.ev-card` estructurales
+- `npm run production` falla
+- Las reglas originales de `home.css` fueron modificadas (no solo añadidas al final)
+
+## 12. Entrega Tanda 1
+
+- `git diff --stat`
+- `git diff public/assets/front/css/home.css` (solo el bloque añadido)
+- Confirmación: `npm run production` exitoso
+- Riesgo restante: requiere QA visual en 360/575/767/991 px
+
+---
+
+# TANDA 2 — INLINE STYLES QUICK WINS (INDEPENDIENTE DE TANDA 1)
+
+## 1. Superpowers obligatorio
+
+- `verification-before-completion`
+- `laravel-patterns` (para entender el ciclo de vistas Blade)
+
+## 2. Objetivo
+
+Migrar inline styles estáticos repetidos a clases CSS, excluyendo emails, PDFs, template-view, checkout, y dinámicos.
+
+## 3. Corrección crítica vs primera versión del Prompt Maestro
+
+**`.u-hidden` NO lleva `!important`.** El JS de password strength y error messages muestra los elementos con `element.style.display = 'flex'` / `'block'`. Si la clase CSS tiene `!important`, gana sobre el style inline del JS y los elementos quedan permanentemente ocultos.
+
+```css
+/* CORRECTO — sin !important */
+.u-hidden { display: none; }
+```
+
+Si en el futuro se quiere migrar el JS a class toggling (`.classList.add('u-hidden')` / `.classList.remove('u-hidden')`), eso es otra tarea. Por ahora, con `display: none` sin `!important`, el `element.style.display = 'flex'` del JS pisa la clase correctamente.
+
+## 4. Archivos autorizados
+
+- `public/assets/front/css/style.css` — añadir `.u-hidden` al final
+- `resources/views/frontend/customer/signup.blade.php` — 2 reemplazos
+- `resources/views/frontend/customer/reset-password.blade.php` — 2 reemplazos
+- `resources/views/frontend/organizer/signup.blade.php` — 2 reemplazos
+- `resources/views/frontend/customer/dashboard/change-password.blade.php` — 1 reemplazo (línea 125) + 1 mejora (línea 43)
+- `resources/views/frontend/customer/dashboard/support_ticket/messages.blade.php` — 1 mejora
+- `resources/views/frontend/customer/dashboard/support_ticket/create.blade.php` — 1 mejora
+- `resources/views/frontend/customer/dashboard/booking/details.blade.php` — 1 mejora
+
+## 5. Archivos prohibidos
+
+- ❌ `check-out.blade.php` — NO TOCAR (especialmente `#couponBody style="display:none"`)
+- ❌ `emails/**`, `pdf/**`, `template-view/**`
+- ❌ `payments/**`, `payment/success.blade.php`
+- ❌ Cualquier archivo con `{{ }}` en el style
+
+## 6. Cambios requeridos
+
+### B1: Añadir en `style.css` (al final)
+
+```css
+/* Utility: initial hidden state for JS-controlled elements.
+   Sin !important para que element.style.display del JS pueda pisarlo. */
+.u-hidden { display: none; }
+```
+
+### B2: Reemplazos `style="display:none"` → `class="u-hidden"`
+
+Cada elemento YA tiene una clase existente. Solo se **quita** el `style="display:none"` y se **añade** `u-hidden` a la clase existente.
+
+| Archivo | Línea aprox | Clase existente | Cambio |
+|---------|------------|-----------------|--------|
+| `frontend/customer/signup.blade.php` | 194 | `cp-strength-wrap` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+| `frontend/customer/signup.blade.php` | 212 | `ep-field__error` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+| `frontend/customer/reset-password.blade.php` | 53 | `cp-strength-wrap` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+| `frontend/customer/reset-password.blade.php` | 72 | `ep-field__error` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+| `frontend/organizer/signup.blade.php` | 165 | `cp-strength-wrap` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+| `frontend/organizer/signup.blade.php` | 183 | `ep-field__error` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+| `frontend/customer/dashboard/change-password.blade.php` | 125 | `cp-strength-wrap` | Quitar `style="display:none"`, añadir `u-hidden` al `class` |
+
+**Ejemplo concreto del cambio**:
+```blade
+<!-- ANTES -->
+<div class="cp-strength-wrap" id="suStrengthWrap" style="display:none;">
+
+<!-- DESPUÉS -->
+<div class="cp-strength-wrap u-hidden" id="suStrengthWrap">
+```
+
+### B3: Mejoras con clases Bootstrap existentes
+
+| Archivo | Cambio |
+|---------|--------|
+| `support_ticket/messages.blade.php` L46 | `style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"` → `class="d-flex align-items-center flex-wrap" style="gap:10px"` |
+| `support_ticket/create.blade.php` L39 | `style="display:flex;align-items:center;gap:10px"` → `class="d-flex align-items-center" style="gap:10px"` |
+| `dashboard/change-password.blade.php` L43 | `style="display:flex;align-items:center;gap:10px"` → `class="d-flex align-items-center" style="gap:10px"` |
+| `dashboard/booking/details.blade.php` L202 | `style="align-items:flex-start"` → quitar style, añadir `align-items-start` a la clase `cd-info-row` |
+| `organizer/login.blade.php` L112 | `style="gap: 10px"` → mantener inline (Bootstrap 4 no tiene clase para `gap`) |
+
+**Nota sobre `gap`**: Bootstrap 4 no tiene utilitarias `gap-*`. Se mantiene `style="gap:10px"` inline. No vale la pena crear una clase custom para 3 ocurrencias en este sprint.
+
+## 7. Plan de implementación
+
+1. `pwd`, `git status --short`
+2. Añadir `.u-hidden` al final de `style.css`
+3. Aplicar los 7 reemplazos B2 (display:none → u-hidden)
+4. Aplicar los 5 reemplazos B3 (clases Bootstrap)
+5. `php -l` sobre cada Blade modificado
+6. `git diff --stat` — verificar archivos exactos
+7. `git diff` — revisar cada cambio
+
+## 8. Validación esperada
+
+- [ ] `php -l` exitoso en TODOS los Blade modificados
+- [ ] `git diff` no muestra `!important`
+- [ ] Ningún `check-out.blade.php` modificado
+- [ ] Ningún `emails/` o `pdf/` modificado
+- [ ] Los `id="..."` de los elementos con `u-hidden` no cambiaron (el JS los referencia por ID)
+- [ ] `.u-hidden` en `style.css` no tiene `!important`
+
+## 9. Rollback
+
+```bash
 git checkout -- public/assets/front/css/style.css
 git checkout -- resources/views/frontend/customer/signup.blade.php
 git checkout -- resources/views/frontend/customer/reset-password.blade.php
@@ -789,27 +720,21 @@ git checkout -- resources/views/frontend/customer/dashboard/support_ticket/messa
 git checkout -- resources/views/frontend/customer/dashboard/booking/details.blade.php
 ```
 
-## 14. Stop conditions
+## 10. Stop conditions
 
 Detenerse si:
-- El código real no coincide con las líneas indicadas en este informe → reportar discrepancia.
-- Un `style="display:none"` está en un archivo NO listado en §7 → no migrar sin consultar.
-- El bloque consolidado de home.css rompe la sintaxis (`php -l` no aplica a CSS, pero verificar llaves balanceadas).
-- Aparece una dependencia inesperada o hace falta modificar `responsive.css`.
-- Cualquier cambio involucra `check-out.blade.php`, `emails/`, `pdf/`, `template-view/`, `payments/`.
-- El diff toca más líneas de las autorizadas.
+- El código real no coincide con las líneas indicadas
+- Un `style="display:none"` está en checkout o archivo no listado
+- `php -l` falla en algún Blade
+- El diff muestra `!important` en `.u-hidden`
 
-## 15. Entrega final del Ejecutor
+## 11. Entrega Tanda 2
 
-- Resumen de cambios: "Fase A: X líneas añadidas a home.css. Fase B: Y archivos modificados, Z inline styles migrados."
-- Archivos modificados (lista exacta).
-- Diff resumido (output REAL de `git diff --stat`).
-- Pruebas ejecutadas: `php -l` sobre cada Blade.
-- Pruebas no ejecutadas: QA visual (requiere entorno con datos).
-- Riesgos restantes: SC2 (modelo de ev-card requiere confirmación visual), SC3 (responsive.css pisa algunos selectores).
-- Checklist final (§16 del informe de auditoría).
-- Recomendación go/no-go.
+- `git diff --stat`
+- `git diff` completo
+- `php -l` output de cada Blade
+- Riesgo: testear signup, reset password, change password — los strength meters y error messages deben mostrarse/ocultarse igual que antes
 
 ---
 
-**Fin del Prompt Maestro.**
+**Fin del Prompt Maestro v2.**

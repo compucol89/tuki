@@ -37,6 +37,7 @@
 	  $bookingAddons = $booking->addons;
 	  $bookingAddonsTotal = $bookingAddons->sum('subtotal');
 	  $successMetaPixelId = trim((string) ($event->meta_pixel_id ?? ''));
+	  $successMetaPixelId = preg_match('/^\d{6,32}$/', $successMetaPixelId) ? $successMetaPixelId : '';
 	  $purchaseEventId = 'event-booking-' . $booking->id;
 	  $purchaseQuantity = $variations ? collect($variations)->sum('qty') : (int) ($booking->quantity ?? 1);
 	  $purchaseValue = round(max(
@@ -96,7 +97,6 @@ fbq('track', 'Purchase', {
   value: {{ number_format($purchaseValue, 2, '.', '') }},
   order_id: {!! json_encode($booking->booking_id, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
 }, {eventID: {!! json_encode($purchaseEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
-new Image().src = {!! json_encode($metaPixelPurchaseUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="{{ $metaPixelPurchaseUrl }}"/></noscript>
 <!-- End Meta Pixel Purchase -->

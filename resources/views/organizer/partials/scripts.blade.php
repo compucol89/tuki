@@ -111,7 +111,11 @@
 
 
 {{-- admin-main js --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/admin-main.js') }}"></script>
+@php
+  $adminMainJsPath = 'assets/admin/js/admin-main.js';
+  $adminMainJsFullPath = public_path($adminMainJsPath);
+@endphp
+<script type="text/javascript" src="{{ asset($adminMainJsPath) }}{{ is_file($adminMainJsFullPath) ? '?v=' . filemtime($adminMainJsFullPath) : '' }}"></script>
 
 @yield('variables')
 

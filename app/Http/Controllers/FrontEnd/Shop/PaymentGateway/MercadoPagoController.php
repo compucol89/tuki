@@ -357,6 +357,7 @@ class MercadoPagoController extends Controller
     // y descuenta stock. Si storeOders() lanza (por carrera o validación),
     // toda la orden se rollback, sin registros huérfanos.
     $orderInfo = null;
+    $arrData['conversation_id'] = $paymentId;
     try {
       DB::transaction(function () use ($enrol, $arrData, &$orderInfo) {
         $orderInfo = $enrol->storeData($arrData);
@@ -486,6 +487,7 @@ class MercadoPagoController extends Controller
 
       // Crear orden
       $arrData = $pending->data;
+      $arrData['conversation_id'] = $paymentId;
       $enrol = new OrderController();
       $orderInfo = null;
 

@@ -11,6 +11,17 @@
     if (!is_null($roleInfo)) {
         $rolePermissions = json_decode($roleInfo->permissions);
     }
+
+    $formatDashboardMoney = static function ($amount) use ($settings) {
+        $formattedAmount = number_format((int) ($amount ?? 0), 0, ',', '.');
+        $symbol = (string) ($settings->base_currency_symbol ?? '$');
+
+        if ($settings->base_currency_symbol_position == 'right') {
+            return $formattedAmount . $symbol;
+        }
+
+        return $symbol . $formattedAmount;
+    };
   @endphp
 
   <div class="row dashboard-items">
@@ -29,12 +40,9 @@
 
                 <div class="col-7 col-stats">
                   <div class="numbers">
-                    <p class="card-category">{{ __('Life Time Earning') }}</p>
+                    <p class="card-category">{{ __('Total cobrado') }}</p>
                     <h4 class="card-title">
-                      {{ $settings->base_currency_symbol_position == 'left' ? $settings->base_currency_symbol : '' }}
-                      {{ $total_earning->total_revenue }}
-                      {{ $settings->base_currency_symbol_position == 'right' ? $settings->base_currency_symbol : '' }}
-
+                      {{ $formatDashboardMoney($total_earning->total_revenue) }}
                     </h4>
                   </div>
                 </div>
@@ -53,18 +61,15 @@
               <div class="row">
                 <div class="col-5">
                   <div class="icon-big text-center">
-                    <i class="fas fa-usd-square"></i>
+                    <i class="fas fa-chart-line"></i>
                   </div>
                 </div>
 
                 <div class="col-7 col-stats">
                   <div class="numbers">
-                    <p class="card-category">{{ __('Total Profit') }}</p>
+                    <p class="card-category">{{ __('Ganancia neta') }}</p>
                     <h4 class="card-title">
-                      {{ $settings->base_currency_symbol_position == 'left' ? $settings->base_currency_symbol : '' }}
-                      {{ $total_earning->total_earning }}
-                      {{ $settings->base_currency_symbol_position == 'right' ? $settings->base_currency_symbol : '' }}
-
+                      {{ $formatDashboardMoney($total_earning->total_earning) }}
                     </h4>
                   </div>
                 </div>
@@ -164,7 +169,7 @@
                 </div>
                 <div class="col-7 col-stats">
                   <div class="numbers">
-                    <p class="card-category">{{ __('Total Event Booking') }}</p>
+                    <p class="card-category">{{ __('Total Reservas') }}</p>
                     <h4 class="card-title">{{ $totalEventBookings }}</h4>
                   </div>
                 </div>
@@ -306,7 +311,7 @@
       <div class="col-lg-6">
         <div class="card">
           <div class="card-header">
-            <div class="card-title">{{ __('Event Booking Monthly Earning') }} ({{ date('Y') }})</div>
+            <div class="card-title">{{ __('Ganancia mensual de reservas de eventos') }} ({{ date('Y') }})</div>
           </div>
 
           <div class="card-body">
@@ -320,7 +325,7 @@
       <div class="col-lg-6">
         <div class="card">
           <div class="card-header">
-            <div class="card-title">{{ __('Monthly Event Bookings') }} ({{ date('Y') }})</div>
+            <div class="card-title">{{ __('Reservas mensuales de eventos') }} ({{ date('Y') }})</div>
           </div>
 
           <div class="card-body">
@@ -337,7 +342,7 @@
     <div class="col-lg-6">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">{{ __('Product Order Monthly Income') }} ({{ date('Y') }})</div>
+          <div class="card-title">{{ __('Ingresos mensuales de productos') }} ({{ date('Y') }})</div>
         </div>
 
         <div class="card-body">
@@ -353,7 +358,7 @@
     <div class="col-lg-6">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">{{ __('Monthly Product Orders') }} ({{ date('Y') }})</div>
+          <div class="card-title">{{ __('Pedidos mensuales de productos') }} ({{ date('Y') }})</div>
         </div>
 
         <div class="card-body">

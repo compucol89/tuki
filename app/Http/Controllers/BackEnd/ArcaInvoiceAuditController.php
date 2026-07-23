@@ -14,7 +14,7 @@ class ArcaInvoiceAuditController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ArcaInvoice::with(['booking', 'organizer', 'customer'])
+        $query = ArcaInvoice::with(['booking', 'organizer', 'customer', 'items'])
             ->orderByDesc('created_at');
 
         if ($request->filled('status')) {
@@ -71,7 +71,7 @@ class ArcaInvoiceAuditController extends Controller
         return redirect()->back()->with('success', __('Emisión reintentada. El job se procesará en segundo plano.'));
     }
 
-    public function downloadPdf($id)
+    public function downloadPdf(Request $request, $id)
     {
         $invoice = ArcaInvoice::with('items')->findOrFail($id);
 
@@ -85,6 +85,15 @@ class ArcaInvoiceAuditController extends Controller
             . str_pad((string) ($invoice->point_of_sale ?? 0), 5, '0', STR_PAD_LEFT) . '-'
             . str_pad((string) ($invoice->cbte_nro ?? 0), 8, '0', STR_PAD_LEFT);
 
-        return response()->download($pdfPath, 'Factura_' . $invoiceNumber . '.pdf');
+        $fileName = 'Factura_' . $invoiceNumber . '.pdf';
+
+        if ($request->boolean('inline')) {
+            return response()->file($pdfPath, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+            ]);
+        }
+
+        return response()->download($pdfPath, $fileName);
     }
 }

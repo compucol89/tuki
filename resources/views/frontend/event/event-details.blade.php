@@ -59,13 +59,13 @@
 @section('meta-description', $seoDescription)
 @section('og-title', $eventName . ' | ' . $websiteInfo->website_title)
 @section('og-description', $seoDescription)
-@section('og-image', $og_image ?? asset('assets/admin/img/event/thumbnail/' . $content->thumbnail))
+@section('og-image', $og_image ?? asset('assets/front/img/og/tukipass-og.jpg'))
 @section('og-image-alt', $og_image_alt ?? $eventName)
 @section('og-image-width', $og_image_width ?? '1200')
 @section('og-image-height', $og_image_height ?? '630')
 @section('og-image-type', $og_image_type ?? 'image/jpeg')
 @section('og-url', $eventUrl)
-@section('og-type', 'event')
+@section('og-type', 'website')
 @section('canonical', $eventUrl)
 
 @section('custom-style')
@@ -802,7 +802,7 @@
   </style>
 @endsection
 
-@push('scripts')
+@push('schema')
 @php
   $schemaStart = !empty($startDateTime)
     ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)
@@ -854,7 +854,7 @@
     'eventStatus' => 'https://schema.org/EventScheduled',
     'eventAttendanceMode' => 'https://schema.org/' . ($content->event_type == 'online' ? 'OnlineEventAttendanceMode' : 'OfflineEventAttendanceMode'),
     'location' => $schemaLocation,
-    'image' => !empty($og_image) ? [$og_image] : null,
+    'image' => [!empty($og_image) ? $og_image : asset('assets/front/img/og/tukipass-og.jpg')],
     'url' => $eventUrl,
     'organizer' => [
       '@type' => 'Organization',
@@ -887,6 +887,10 @@
   $jsonLd = array_filter($jsonLd, function ($value) {
     return !is_null($value) && $value !== '';
   });
+  $shouldEmitEventJsonLd = $eventName !== ''
+    && $schemaStartDate !== null
+    && $content->event_type != 'online'
+    && !empty($schemaLocation);
 
   $breadcrumbJsonLd = [
     '@context' => 'https://schema.org',
@@ -923,9 +927,13 @@
     'item' => $eventUrl,
   ];
 @endphp
+@if($shouldEmitEventJsonLd)
 <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endif
 <script type="application/ld+json">{!! json_encode($breadcrumbJsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endpush
 
+@push('scripts')
 @if(!empty($content->google_analytics_id))
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ $content->google_analytics_id }}"></script>
@@ -950,8 +958,8 @@ ttq.page();
 
 @php
   $eventMetaPixelId = trim((string) ($content->meta_pixel_id ?? ''));
+  $eventMetaPixelId = preg_match('/^\d{6,32}$/', $eventMetaPixelId) ? $eventMetaPixelId : '';
   $metaPixelPageViewUrl = '';
-  $metaPixelViewContentUrl = '';
   $metaPixelPageViewEventId = '';
   $metaPixelViewContentEventId = '';
   $metaPixelInitiateCheckoutEventId = '';
@@ -966,17 +974,6 @@ ttq.page();
       'noscript' => 1,
       'dl' => $eventUrl,
       'eid' => $metaPixelPageViewEventId,
-    ]);
-    $metaPixelViewContentUrl = 'https://www.facebook.com/tr?' . http_build_query([
-      'id' => $eventMetaPixelId,
-      'ev' => 'ViewContent',
-      'noscript' => 1,
-      'dl' => $eventUrl,
-      'eid' => $metaPixelViewContentEventId,
-      'cd' => [
-        'content_name' => $content->title,
-        'content_type' => 'event',
-      ],
     ]);
   }
 @endphp
@@ -995,10 +992,7 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '{{ $eventMetaPixelId }}');
 fbq('track', 'PageView', {}, {eventID: {!! json_encode($metaPixelPageViewEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
 fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) !!}, content_type: 'event'}, {eventID: {!! json_encode($metaPixelViewContentEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}});
-new Image().src = {!! json_encode($metaPixelPageViewUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
-new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASHES | JSON_HEX_AMP) !!};
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="{{ $metaPixelPageViewUrl }}"/></noscript>
 <!-- End Meta Pixel Code -->
 @endpush
 @endif
@@ -1162,6 +1156,9 @@ new Image().src = {!! json_encode($metaPixelViewContentUrl, JSON_UNESCAPED_SLASH
 
 @section('content')
   <!-- Event Details V2 -->
+  @if($metaPixelPageViewUrl !== '')
+    <noscript><img height="1" width="1" alt="" style="display:none" src="{{ $metaPixelPageViewUrl }}"/></noscript>
+  @endif
   @php
     $map_address = preg_replace('/\s+/u', ' ', trim($content->address));
     $map_address = str_replace('/', ' ', $map_address);
@@ -2534,7 +2531,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var bookingForm = document.querySelector('form[action*="check-out2"]');
   @if($eventMetaPixelId !== '')
   var metaPixelInitiateTracked = false;
-  var metaPixelId = {!! json_encode($eventMetaPixelId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   var metaPixelEventName = {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   var metaPixelCurrency = {!! json_encode($basicInfo->base_currency_text ?? 'ARS', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   var metaPixelInitiateEventId = {!! json_encode($metaPixelInitiateCheckoutEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
@@ -2627,18 +2623,6 @@ document.addEventListener('DOMContentLoaded', function() {
       window.fbq('track', 'InitiateCheckout', params, {eventID: metaPixelInitiateEventId});
     }
 
-    var query = new URLSearchParams();
-    query.set('id', metaPixelId);
-    query.set('ev', 'InitiateCheckout');
-    query.set('noscript', '1');
-    query.set('dl', window.location.href);
-    query.set('eid', metaPixelInitiateEventId);
-    query.set('cd[content_name]', metaPixelEventName);
-    query.set('cd[content_type]', 'event');
-    query.set('cd[currency]', metaPixelCurrency);
-    query.set('cd[num_items]', String(qty));
-    query.set('cd[value]', String(Math.round(value)));
-    new Image().src = 'https://www.facebook.com/tr?' + query.toString();
   }
 
   if (bookingForm) {

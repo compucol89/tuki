@@ -422,6 +422,7 @@ class MercadoPagoController extends Controller
         $request->session()->put('cart_addons', $arrData['cart_addons']);
       }
 
+      $arrData['conversation_id'] = $paymentId;
       $bookingInfo['transcation_type'] = 1;
 
       // store the course enrolment information in database
@@ -650,6 +651,7 @@ class MercadoPagoController extends Controller
       // Crear booking
       $enrol = new BookingController();
       $arrData = $pending->data;
+      $arrData['conversation_id'] = $paymentId;
       try {
         $bookingInfo = $enrol->storeData($arrData);
       } catch (\RuntimeException $e) {

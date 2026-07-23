@@ -21,9 +21,7 @@
 @php
   $metaKeywords    = !empty($seo->meta_keyword_home)    ? $seo->meta_keyword_home    : 'eventos, entradas, tickets, conciertos, shows, teatro, deportes, Argentina, Tukipass';
   $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'Tukipass — Descubrí y comprá entradas para conciertos, teatro, deportes y más en Argentina. Si organizás eventos, también podés vender online con Tukipass.';
-  $ogImage = !empty($firstHeroSlideUrl)
-    ? $firstHeroSlideUrl
-    : asset('assets/admin/img/' . $basicInfo->breadcrumb);
+  $ogImage = asset('assets/front/img/og/tukipass-og.jpg');
 @endphp
 @section('meta-keywords',    $metaKeywords)
 @section('meta-description', $metaDescription)
@@ -515,7 +513,7 @@
       $mq_min_items = max(10, $mq_source_count);
       $mq_items = collect(range(0, $mq_min_items - 1))->map(function ($index) use ($mq_source, $mq_source_count, $badgeMap) {
         $ev = $mq_source[$index % $mq_source_count];
-        $eventImage = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $ev->thumbnail);
+        $eventImage = \App\Services\FileUploadService::eventVisualUrl(null, $ev->thumbnail ?? null);
 
         return [
           'event'  => $ev,

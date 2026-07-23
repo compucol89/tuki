@@ -14,7 +14,7 @@ const myIncomeChart = new Chart(chartOne, {
   data: {
     labels: monthArr,
     datasets: [{
-      label: 'Monthly Income',
+      label: 'Ingresos mensuales',
       data: incomeArr,
       borderColor: '#f97316',
       pointBorderColor: '#fff',
@@ -53,7 +53,7 @@ const myEventBookingChart = new Chart(chartTwo, {
   data: {
     labels: monthArr,
     datasets: [{
-      label: 'Monthly Event Bookings',
+      label: 'Reservas mensuales',
       data: totalBookings,
       borderColor: '#6366f1',
       pointBorderColor: '#fff',
@@ -92,7 +92,7 @@ const ProductOrderChart = new Chart(chartThree, {
   data: {
     labels: monthArr,
     datasets: [{
-      label: 'Monthly Income',
+      label: 'Ingresos mensuales',
       data: productIncome,
       borderColor: '#10b981',
       pointBorderColor: '#fff',
@@ -131,7 +131,7 @@ const TotalProductOrderChart = new Chart(chartFour, {
   data: {
     labels: monthArr,
     datasets: [{
-      label: 'Monthly Product Order',
+      label: 'Pedidos mensuales',
       data: totalOders,
       borderColor: '#3b82f6',
       pointBorderColor: '#fff',

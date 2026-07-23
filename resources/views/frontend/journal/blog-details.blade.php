@@ -16,7 +16,7 @@
 @php
   $og_title       = $details->title;
   $og_description = strip_tags($details->content);
-  $og_image       = asset('assets/admin/img/blogs/' . $details->image);
+  $og_image       = asset('assets/front/img/og/tukipass-og.jpg');
   $readTime       = max(1, round(str_word_count(strip_tags($details->content)) / 200));
 
   // Demo blog posts: no deben indexarse
@@ -96,17 +96,17 @@
 
         <div class="bl-share">
           <span class="bl-share__label">{{ __('Compartir') }}</span>
-          <a href="//www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"
              target="_blank" rel="noopener noreferrer" class="bl-share__btn bl-share__btn--fb">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
             Facebook
           </a>
-          <a href="//twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($details->title) }}"
+          <a href="https://twitter.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($details->title) }}"
              target="_blank" rel="noopener noreferrer" class="bl-share__btn bl-share__btn--tw">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
             Twitter
           </a>
-          <a href="//www.linkedin.com/shareArticle?mini=true&url={{ urlencode(url()->current()) }}&title={{ urlencode($details->title) }}"
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(url()->current()) }}&title={{ urlencode($details->title) }}"
              target="_blank" rel="noopener noreferrer" class="bl-share__btn bl-share__btn--li">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
             LinkedIn

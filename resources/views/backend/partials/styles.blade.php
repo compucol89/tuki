@@ -46,8 +46,12 @@
 {{-- admin-main css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-main.css') }}">
 
+@php
+  $adminSkinPath = 'assets/admin/css/admin-skin.css';
+  $adminSkinFullPath = public_path($adminSkinPath);
+@endphp
 {{-- admin skin: Modern SaaS UI override --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/admin-skin.css') }}">
+<link rel="stylesheet" href="{{ asset($adminSkinPath) }}{{ is_file($adminSkinFullPath) ? '?v=' . filemtime($adminSkinFullPath) : '' }}">
 <?php /* v11 */ ?>
 
 {{-- legacy flaticon / simple-line-icons → Font Awesome --}}

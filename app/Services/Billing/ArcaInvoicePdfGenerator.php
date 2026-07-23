@@ -8,19 +8,22 @@ use App\Models\Arca\ArcaInvoice;
 use App\Models\BillingSetting;
 use App\Models\Event\Booking;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class ArcaInvoicePdfGenerator
 {
     public function generate(ArcaInvoice $invoice, Booking $booking): string
     {
+        File::ensureDirectoryExists(storage_path('fonts'));
+
         $billing = BillingSetting::current();
         $pdf = Pdf::loadView('pdf.arca_invoice', [
             'invoice' => $invoice,
             'booking' => $booking,
             'billing' => $billing,
             'invoiceNumber' => $this->formatInvoiceNumber($invoice),
-        ]);
+        ])->setPaper('a4', 'portrait');
 
         $filename = 'arca_invoices/invoice_' . $invoice->id . '_' . time() . '.pdf';
         Storage::disk('public')->makeDirectory('arca_invoices');

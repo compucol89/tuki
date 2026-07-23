@@ -40,8 +40,9 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
         $subject = '🎟️ Tus entradas para ' . $eventTitle . ' — TukiPass';
 
         // Preparar datos de entradas
-        $tickets = $this->prepareTickets();
+        $tickets = $this->prepareTicketSummary();
         $addons = $this->booking->addons()->get();
+        $paymentAmounts = $this->paymentAmounts();
 
         // Adjuntar PDF de entradas si existe
         $pdfPath = storage_path('app/invoices/') . $this->booking->invoice;
@@ -103,6 +104,9 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
                 'eventAddress'  => $eventAddress,
                 'tickets'       => $tickets,
                 'addons'        => $addons,
+                'serviceFee'    => $paymentAmounts['service_fee'],
+                'discountTotal' => $paymentAmounts['discount_total'],
+                'amountCharged' => $paymentAmounts['amount_charged'],
                 'guestLink'     => $guestLink,
                 'invoiceLink'   => $invoiceLink,
             ]);
@@ -148,6 +152,44 @@ class EventConfirmationMail extends Mailable implements ShouldQueue
         }
 
         return $tickets;
+    }
+
+    private function prepareTicketSummary(): array
+    {
+        $grouped = [];
+
+        foreach ($this->prepareTickets() as $ticket) {
+            $name = (string) ($ticket['name'] ?? 'Entrada');
+            $price = (float) ($ticket['price'] ?? 0);
+            $key = $name . '|' . number_format($price, 2, '.', '');
+
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'index' => count($grouped) + 1,
+                    'name' => $name,
+                    'qty' => 0,
+                    'price' => $price,
+                ];
+            }
+
+            $grouped[$key]['qty'] += (int) ($ticket['qty'] ?? 1);
+        }
+
+        return array_values($grouped);
+    }
+
+    private function paymentAmounts(): array
+    {
+        $subtotal = (float) ($this->booking->price ?? 0);
+        $serviceFee = (float) ($this->booking->tax ?? 0);
+        $discountTotal = (float) ($this->booking->discount ?? 0)
+            + (float) ($this->booking->early_bird_discount ?? 0);
+
+        return [
+            'service_fee' => round($serviceFee, 2),
+            'discount_total' => round($discountTotal, 2),
+            'amount_charged' => max(round($subtotal + $serviceFee - $discountTotal, 2), 0),
+        ];
     }
 
     /**

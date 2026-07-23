@@ -1,6 +1,6 @@
 # Pendientes — TukiPass
 
-> Actualizado: 2026-05-28 — ARCA ✅, failed job limpiado ✅, pendiente: Social Login + GSC meta tag + auditorías restantes
+> Actualizado: 2026-07-23 — Search Console verificado por DNS ✅, sitemap procesado ✅, pendiente: Social Login + validaciones SEO/Meta post-deploy
 
 ---
 
@@ -8,11 +8,7 @@
 
 - [x] ~~Job fallido en producción~~: era `EventConfirmationMail` (base64_encode + HtmlString, 19-mayo, anterior a todos los fixes). Limpiado con `queue:forget 24`. Health check → 0 failed jobs ✅
 - [ ] **Social Login — Organizadores**: Clientes ya tienen Google/Facebook (`CustomerController` + vistas auth). Organizador **no** tiene botones OAuth en login/signup (`frontend/organizer/login`, `signup`). **Decisión de negocio pendiente** (ver historial: marzo 2026 se dijo "no panel" — si cambió, implementar).
-- [ ] **Google Search Console — meta tag de verificación**: Agregar en `<head>` de `resources/views/frontend/layout.blade.php`:
-  ```html
-  <meta name="google-site-verification" content="CODIGO_QUE_PASA_EL_USUARIO" />
-  ```
-  **Bloqueado hasta recibir el código** desde [Search Console](https://search.google.com/search-console). Sin esto no hay verificación de propiedad ni informes.
+- [x] **Google Search Console — propiedad DNS verificada**: `tukipass.com` figura como propiedad de dominio verificada. No hace falta agregar `google-site-verification` por meta tag.
 
 ---
 
@@ -35,9 +31,10 @@ php artisan cache:clear
 
 ### Checklist Search Console (cuando el dominio esté verificado)
 
-- [ ] Verificar propiedad `https://www.tukipass.com` (meta tag o DNS — ver ítem alta prioridad).
+- [x] Confirmar propiedad de dominio `tukipass.com` verificada por DNS y que cubre `https://www.tukipass.com`.
 - [ ] Confirmar `APP_URL` / canonical alineados con `www` y HTTPS.
-- [ ] Enviar sitemap: `https://www.tukipass.com/sitemap.xml`.
+- [x] Enviar sitemap: `https://www.tukipass.com/sitemap.xml` (procesado correctamente; 17 páginas descubiertas).
+- [ ] Enviar sitemap de imágenes después del deploy: `https://www.tukipass.com/sitemap-images.xml`.
 - [ ] Solicitar eliminación o recrawleo de URLs demo (ej. `/the-conference-planners/104`) — deben responder **410** tras deploy `a56a426`.
 - [ ] Inspeccionar e indexar: home, `/eventos`, `/organizadores`, `/politica-de-reembolsos`, 2–3 eventos reales activos.
 - [ ] [Rich Results Test](https://search.google.com/test/rich-results): evento real → `Event` + `Offer` con `availability` dinámico + `organizer.url` (`023fec1`).
@@ -51,6 +48,33 @@ php artisan cache:clear
 - [ ] **`performer` en Schema** — requiere modelo/tabla de artistas; postergar.
 - [ ] **`/mapa-del-sitio` HTML** — toca `routes/` + footer; confirmar antes.
 - [ ] Sitemap index si supera 50k URLs.
+- [ ] Revisar que Search Console recrawlee `robots.txt` actualizado con bots IA y sitemap de imágenes.
+
+---
+
+## 🟣 Meta / Facebook Sharing — TODO el sitio
+
+> Alcance: home, eventos, detalle de evento, blog, paginas legales/custom, organizadores, shop y auth publico. No es una tarea aislada de organizadores.
+
+- [x] Crear documento de auditoria y plan: `docs/audits/meta-domain-verification-best-practices-2026-07-23.md`.
+- [x] Crear documento de validacion mobile sharing iOS/Android: `docs/audits/meta-mobile-sharing-ios-android-validation-2026-07-23.md`.
+- [x] Soporte tecnico para `facebook-domain-verification` por env (`FACEBOOK_DOMAIN_VERIFICATION`) en layout publico.
+- [x] OG sitewide corregido localmente: fallback institucional `1200x630`, dimensiones, `og:image:url`, Twitter Card y `prefix` OGP.
+- [x] Validacion local sitewide: 39 vistas frontend con layout cubiertas, sin `og:image` a logo/breadcrumb/admin assets.
+- [x] Validacion produccion con `facebookexternalhit`: 17/17 URLs responden comprimidas; previews aun muestran codigo viejo hasta deploy.
+- [x] Links web de compartir normalizados a `https://` en blog, shop y modal global.
+- [ ] **Meta Domain Verification**: agregar `tukipass.com` en Business Manager del propietario real del dominio.
+- [ ] Elegir un solo metodo de verificacion Meta:
+  - Recomendado: DNS TXT permanente.
+  - Alternativa: `FACEBOOK_DOMAIN_VERIFICATION` por meta tag.
+  - Alternativa: archivo HTML en raiz publica.
+- [ ] Asociar Facebook Pages oficiales al dominio verificado.
+- [ ] Configurar `Domain Access` / Ad Link Editing para permitir edicion solo a Pages autorizadas.
+- [ ] Definir si organizadores/terceros pueden editar previews en anuncios propios o si queda restringido a Tukipass.
+- [ ] Post-deploy: usar Sharing Debugger + `Scrape Again` en home, `/eventos`, blog, legales, organizadores y eventos activos.
+- [ ] Post-deploy: validar que produccion ya no sirva imagenes OG `250x49`, `767x440`, `1600x1067` ni eventos verticales sin version social.
+- [ ] Si se lanza app movil nativa: definir App Links reales iOS/Android antes de agregar `al:ios:*` o `al:android:*` al sitio.
+- [ ] Si se integra Facebook SDK mobile: definir App ID, Bundle ID iOS, Package Name Android, key hashes y politica de Automatic App Event Logging.
 
 ---
 
@@ -114,7 +138,7 @@ php artisan cache:clear
 ## 🟡 Pendiente confirmación (humano)
 
 - [ ] ¿Social login en panel **organizador** sigue en roadmap o se mantiene solo email/contraseña?
-- [ ] Código exacto de **Google Search Console** para meta tag (pasarlo al agente cuando esté).
+- [x] Confirmar en **Google Search Console** que la propiedad de dominio por DNS está activa.
 - [ ] Otras tareas de sesiones anteriores que falten en esta lista.
 
 ---
@@ -142,4 +166,4 @@ php artisan cache:clear
 
 ---
 
-_Última actualización: 2026-05-28 — ARCA ✅, failed job ✅ (EventConfirmationMail, queue:forget 24), alt + checkout español ✅ (b340b5c). Pendiente: GSC meta tag + Social Login Org + comandos post-deploy_
+_Última actualización: 2026-07-23 — Search Console verificado por DNS ✅, sitemap principal procesado ✅. Pendiente: sitemap de imágenes post-deploy + Meta Domain Verification + Social Login Org + comandos post-deploy_

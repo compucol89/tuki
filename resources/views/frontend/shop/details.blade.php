@@ -8,7 +8,7 @@
 @php
   $og_title = $product->title;
   $og_description = strip_tags($product->description);
-  $og_image = asset('assets/admin/img/product/feature_image/' . $product->feature_image);
+  $og_image = asset('assets/front/img/og/tukipass-og.jpg');
 @endphp
 
 @section('og-title', "$og_title")
@@ -124,12 +124,12 @@
 
               </div>
               <div class="social-style-two mt-30 mb-15">
-                <a href="//www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"><i
+                <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener noreferrer"><i
                     class="fab fa-facebook-f"></i></a>
-                <a href="//twitter.com/intent/tweet?text={{ urlencode($product->title) }}&amp;url={{ urlencode(url()->current()) }}"><i
+                <a href="https://twitter.com/intent/tweet?text={{ urlencode($product->title) }}&amp;url={{ urlencode(url()->current()) }}" target="_blank" rel="noopener noreferrer"><i
                     class="fab fa-twitter"></i></a>
                 <a
-                  href="//www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ $product->title }}"><i
+                  href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ urlencode($product->title) }}" target="_blank" rel="noopener noreferrer"><i
                     class="fab fa-linkedin"></i></a>
               </div>
               <ul class="product-meta">

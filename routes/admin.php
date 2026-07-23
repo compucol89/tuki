@@ -79,6 +79,15 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
   Route::get('/monthly-earning', 'BackEnd\AdminController@monthly_earning')->middleware('permission:Lifetime Earning')->name('admin.monthly_earning');
 
   Route::group(['middleware' => 'permission:Event Management'], function () {
+    Route::get('event', function () {
+      $query = request()->query();
+
+      if (empty($query['language'])) {
+        $query['language'] = optional(\App\Models\Language::where('is_default', 1)->first())->code ?: 'es';
+      }
+
+      return redirect()->route('admin.event_management.event', $query);
+    })->name('admin.event_management.event.shortcut');
     Route::get('event-management/events/', 'BackEnd\Event\EventController@index')->name('admin.event_management.event');
     Route::get('add-event/', 'BackEnd\Event\EventController@add_event')->name('add.event.event');
     Route::get('choose-event-type/', 'BackEnd\Event\EventController@choose_event_type')->name('admin.choose-event-type');

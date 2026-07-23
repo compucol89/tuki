@@ -63,7 +63,7 @@
 @section('canonical', url()->current())
 @section('og-url', url()->current())
 @section('og-type', 'website')
-@section('og-image', asset('assets/admin/img/' . ($basicInfo->breadcrumb ?? '')))
+@section('og-image', asset('assets/front/img/og/tukipass-og.jpg'))
 
 @push('scripts')
   <script type="application/ld+json">@json($blogSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)</script>

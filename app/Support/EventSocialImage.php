@@ -5,8 +5,9 @@ namespace App\Support;
 final class EventSocialImage
 {
   private const MAX_SOCIAL_IMAGE_BYTES = 300000;
-  private const SOCIAL_IMAGE_WIDTHS = [1200, 900, 720, 600, 480];
-  private const SOCIAL_IMAGE_QUALITIES = [82, 72, 62, 52, 44];
+  private const TARGET_WIDTH = 1200;
+  private const TARGET_HEIGHT = 630;
+  private const SOCIAL_IMAGE_QUALITIES = [88, 82, 76, 70, 64, 58];
 
   public static function from(object $event, iterable $images): ?array
   {
@@ -63,7 +64,7 @@ final class EventSocialImage
 
   private static function optimizedSocialImage(string $directory, string $filename, string $path, int $eventId): ?array
   {
-    if ($eventId <= 0 || filesize($path) <= self::MAX_SOCIAL_IMAGE_BYTES || !function_exists('imagejpeg')) {
+    if ($eventId <= 0 || !function_exists('imagejpeg')) {
       return null;
     }
 
@@ -83,7 +84,7 @@ final class EventSocialImage
     }
 
     $socialDir = 'assets/admin/img/event-social/' . $eventId . '/';
-    $hash = substr(sha1($directory . '|' . $filename . '|' . filemtime($path) . '|' . filesize($path)), 0, 12);
+    $hash = substr(sha1($directory . '|' . $filename . '|' . filemtime($path) . '|' . filesize($path) . '|1200x630'), 0, 12);
     $baseName = preg_replace('/[^A-Za-z0-9_-]+/', '-', pathinfo($filename, PATHINFO_FILENAME)) ?: 'image';
     $socialFilename = $baseName . '-' . $hash . '.jpg';
     $socialPath = public_path($socialDir . $socialFilename);
@@ -95,32 +96,50 @@ final class EventSocialImage
 
     @mkdir(dirname($socialPath), 0775, true);
 
-    $targetWidths = array_values(array_unique(array_filter(array_map(
-      fn($width) => min($width, $sourceWidth),
-      self::SOCIAL_IMAGE_WIDTHS
-    ), fn($width) => $width > 0)));
+    $targetRatio = self::TARGET_WIDTH / self::TARGET_HEIGHT;
+    $sourceRatio = $sourceWidth / $sourceHeight;
 
-    foreach ($targetWidths as $targetWidth) {
-      $targetHeight = (int) max(1, round($sourceHeight * ($targetWidth / $sourceWidth)));
-      $canvas = imagecreatetruecolor($targetWidth, $targetHeight);
-      $white = imagecolorallocate($canvas, 255, 255, 255);
-      imagefill($canvas, 0, 0, $white);
-      imagecopyresampled($canvas, $source, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
-
-      foreach (self::SOCIAL_IMAGE_QUALITIES as $quality) {
-        imagejpeg($canvas, $socialPath, $quality);
-        clearstatcache(true, $socialPath);
-
-        if (is_file($socialPath) && filesize($socialPath) <= self::MAX_SOCIAL_IMAGE_BYTES) {
-          imagedestroy($canvas);
-          imagedestroy($source);
-          return self::rawMetadata($socialDir, $socialFilename, $socialPath);
-        }
-      }
-
-      imagedestroy($canvas);
+    if ($sourceRatio > $targetRatio) {
+      $cropHeight = $sourceHeight;
+      $cropWidth = (int) round($sourceHeight * $targetRatio);
+      $cropX = (int) max(0, floor(($sourceWidth - $cropWidth) / 2));
+      $cropY = 0;
+    } else {
+      $cropWidth = $sourceWidth;
+      $cropHeight = (int) round($sourceWidth / $targetRatio);
+      $cropX = 0;
+      $cropY = (int) max(0, floor(($sourceHeight - $cropHeight) / 2));
     }
 
+    $canvas = imagecreatetruecolor(self::TARGET_WIDTH, self::TARGET_HEIGHT);
+    $black = imagecolorallocate($canvas, 0, 0, 0);
+    imagefill($canvas, 0, 0, $black);
+    imagecopyresampled(
+      $canvas,
+      $source,
+      0,
+      0,
+      $cropX,
+      $cropY,
+      self::TARGET_WIDTH,
+      self::TARGET_HEIGHT,
+      $cropWidth,
+      $cropHeight
+    );
+    imageinterlace($canvas, true);
+
+    foreach (self::SOCIAL_IMAGE_QUALITIES as $quality) {
+      imagejpeg($canvas, $socialPath, $quality);
+      clearstatcache(true, $socialPath);
+
+      if (is_file($socialPath) && filesize($socialPath) <= self::MAX_SOCIAL_IMAGE_BYTES) {
+        imagedestroy($canvas);
+        imagedestroy($source);
+        return self::rawMetadata($socialDir, $socialFilename, $socialPath);
+      }
+    }
+
+    imagedestroy($canvas);
     imagedestroy($source);
 
     return is_file($socialPath) ? self::rawMetadata($socialDir, $socialFilename, $socialPath) : null;

@@ -13,6 +13,25 @@
         'error' => 'badge-danger',
         default => 'badge-secondary',
     };
+    $statusLabel = [
+        'approved' => 'Aprobado',
+        'ready' => 'Pendiente de emisión',
+        'blocked' => 'Bloqueado',
+        'issuing' => 'Emitiendo',
+        'error' => 'Error',
+    ][$invoice->status] ?? 'Sin estado';
+    $modelLabel = [
+        'customer_service_fee_invoice' => 'Factura al cliente por costo de servicio',
+        'commission_to_organizer' => 'Factura de comisión al organizador',
+    ][$invoice->invoice_model] ?? $invoice->invoice_model;
+    $paymentStatusLabel = [
+        'completed' => 'Completado',
+        'paid' => 'Pagado',
+        'pending' => 'Pendiente',
+        'rejected' => 'Rechazado',
+        'free' => 'Gratis',
+        '1' => 'Completado',
+    ][(string) ($invoice->booking?->paymentStatus ?? '')] ?? ($invoice->booking?->paymentStatus ?? '-');
   @endphp
 
   <div class="page-header">
@@ -37,10 +56,10 @@
             <div class="col-md-6">
               <p><strong>{{ __('Número') }}:</strong> {{ $invoiceNumber }}</p>
               <p><strong>{{ __('Ambiente') }}:</strong> {{ $invoice->environment === 'production' ? 'Producción' : 'Homologación' }}</p>
-              <p><strong>{{ __('Modelo') }}:</strong> {{ $invoice->invoice_model }}</p>
+              <p><strong>{{ __('Modelo') }}:</strong> {{ $modelLabel }}</p>
             </div>
             <div class="col-md-6">
-              <p><strong>{{ __('Estado') }}:</strong> <span class="badge {{ $statusClass }}">{{ ucfirst($invoice->status) }}</span></p>
+              <p><strong>{{ __('Estado') }}:</strong> <span class="badge {{ $statusClass }}">{{ __($statusLabel) }}</span></p>
               <p><strong>{{ __('Fecha de creación') }}:</strong> {{ $invoice->created_at->format('d/m/Y H:i') }}</p>
               <p><strong>{{ __('Fecha de emisión') }}:</strong> {{ $invoice->issued_at ? $invoice->issued_at->format('d/m/Y H:i') : '-' }}</p>
             </div>
@@ -89,7 +108,7 @@
           </div>
 
           <hr>
-          <h6 class="font-weight-bold">{{ __('Items') }}</h6>
+          <h6 class="font-weight-bold">{{ __('Conceptos') }}</h6>
           <div class="table-responsive">
             <table class="table table-bordered">
               <thead>
@@ -153,11 +172,11 @@
           </div>
           <div class="card-body">
             @if($invoice->arca_request)
-              <h6>{{ __('Request ARCA') }}</h6>
+              <h6>{{ __('Solicitud ARCA') }}</h6>
               <pre class="bg-light p-3" style="font-size: 11px; max-height: 300px; overflow: auto;">{{ json_encode($invoice->arca_request, JSON_PRETTY_PRINT) }}</pre>
             @endif
             @if($invoice->arca_response)
-              <h6>{{ __('Response ARCA') }}</h6>
+              <h6>{{ __('Respuesta ARCA') }}</h6>
               <pre class="bg-light p-3" style="font-size: 11px; max-height: 300px; overflow: auto;">{{ json_encode($invoice->arca_response, JSON_PRETTY_PRINT) }}</pre>
             @endif
           </div>
@@ -172,7 +191,7 @@
         </div>
         <div class="card-body">
           <a href="{{ route('admin.arca_invoices.pdf', $invoice->id) }}" class="btn btn-block btn-secondary mb-2">
-            <i class="fas fa-file-pdf mr-2"></i> {{ __('Descargar PDF') }}
+            <i class="fas fa-file-pdf mr-2"></i> {{ __('Descargar factura') }}
           </a>
 
           @if(in_array($invoice->status, ['error', 'blocked'], true))
@@ -199,8 +218,8 @@
             <p><strong>{{ __('ID') }}:</strong> {{ $invoice->booking->id }}</p>
             <p><strong>{{ __('Evento') }}:</strong> {{ $invoice->booking->evnt?->title ?? '-' }}</p>
             <p><strong>{{ __('Cliente') }}:</strong> {{ $invoice->booking->fname }} {{ $invoice->booking->lname }}</p>
-            <p><strong>{{ __('Email') }}:</strong> {{ $invoice->booking->email }}</p>
-            <p><strong>{{ __('Estado pago') }}:</strong> {{ $invoice->booking->paymentStatus ?? '-' }}</p>
+            <p><strong>{{ __('Correo') }}:</strong> {{ $invoice->booking->email }}</p>
+            <p><strong>{{ __('Estado de pago') }}:</strong> {{ $paymentStatusLabel }}</p>
             <a href="{{ route('admin.event_booking.details', $invoice->booking->id) }}" class="btn btn-sm btn-info">
               {{ __('Ver reserva') }}
             </a>

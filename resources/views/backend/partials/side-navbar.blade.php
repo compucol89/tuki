@@ -61,9 +61,15 @@
       </div>
 
       @php
+        $rolePermissions = [];
+
         if (!is_null($roleInfo)) {
-            $rolePermissions = json_decode($roleInfo->permissions);
+            $rolePermissions = json_decode($roleInfo->permissions, true) ?? [];
         }
+
+        $canSeeSidebarGroup = function (array $permissions) use ($roleInfo, $rolePermissions) {
+            return is_null($roleInfo) || count(array_intersect($permissions, $rolePermissions)) > 0;
+        };
       @endphp
 
       <ul class="nav nav-primary">
@@ -79,11 +85,15 @@
           </div>
         </div>
 
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Principal') }}</span>
+        </li>
+
         {{-- dashboard --}}
         <li class="nav-item @if (request()->routeIs('admin.dashboard')) active @endif">
           <a href="{{ route('admin.dashboard') }}">
             <i class="fas fa-palette"></i>
-            <p>{{ __('Dashboard') }}</p>
+            <p>{{ __('Panel') }}</p>
           </a>
         </li>
 
@@ -92,10 +102,17 @@
           <li class="nav-item @if (request()->routeIs('admin.menu_builder')) active @endif">
             <a href="{{ route('admin.menu_builder', ['language' => $defaultLang->code]) }}">
               <i class="fas fa-bars"></i>
-              <p>{{ __('Menu Builder') }}</p>
+              <p>{{ __('Menú web') }}</p>
             </a>
           </li>
         @endif
+
+        @if ($canSeeSidebarGroup(['Event Management', 'Event Bookings', 'Withdraw Method', 'Transaction']))
+          <li class="nav-section sidebar-nav-section">
+            <span class="text-section">{{ __('Operación') }}</span>
+          </li>
+        @endif
+
         {{-- event --}}
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Event Management', $rolePermissions)))
           <li
@@ -110,7 +127,7 @@
             @elseif (request()->routeIs('admin.event.edit.ticket')) active @endif">
             <a data-toggle="collapse" href="#event">
               <i class="fas fa-book"></i>
-              <p>{{ __('Event Management') }}</p>
+              <p>{{ __('Eventos') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -128,7 +145,7 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.event_management.categories') ? 'active' : '' }}">
                   <a href="{{ route('admin.event_management.categories', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Event Categories') }}</span>
+                    <span class="sub-item">{{ __('Categorías') }}</span>
                   </a>
                 </li>
 
@@ -144,7 +161,7 @@
                     request()->routeIs('admin.event.edit.ticket')
                         ? 'true'
                         : 'false' }}">
-                    <span class="sub-item">{{ __('Event Management') }}</span>
+                    <span class="sub-item">{{ __('Listado') }}</span>
                     <span class="caret"></span>
                   </a>
                   <div
@@ -163,7 +180,7 @@
                         class=" @if (request()->routeIs('admin.choose-event-type')) active
                         @elseif (request()->routeIs('add.event.event')) active @endif ">
                         <a href="{{ route('admin.choose-event-type', ['language' => $defaultLang->code]) }}">
-                          <span class="sub-item">{{ __('Add Event') }}</span>
+                          <span class="sub-item">{{ __('Crear') }}</span>
                         </a>
                       </li>
 
@@ -175,7 +192,7 @@
                         @elseif (request()->routeIs('admin.event.add.ticket') && request()->input('event_type') == '') active
                         @elseif (request()->routeIs('admin.event.edit.ticket') && request()->input('event_type') == '') active @endif">
                         <a href="{{ route('admin.event_management.event', ['language' => $defaultLang->code]) }}">
-                          <span class="sub-item">{{ __('All Events') }}</span>
+                          <span class="sub-item">{{ __('Todos') }}</span>
                         </a>
                       </li>
 
@@ -187,7 +204,7 @@
                         @elseif (request()->routeIs('admin.event.edit.ticket') && request()->input('event_type') == 'venue') active @endif">
                         <a
                           href="{{ route('admin.event_management.event', ['language' => $defaultLang->code, 'event_type' => 'venue']) }}">
-                          <span class="sub-item">{{ __('Venue Events') }}</span>
+                          <span class="sub-item">{{ __('Presenciales') }}</span>
                         </a>
                       </li>
 
@@ -196,7 +213,7 @@
                         @elseif (request()->routeIs('admin.add.event.event') && request()->input('type') == 'online') active @endif ">
                         <a
                           href="{{ route('admin.event_management.event', ['language' => $defaultLang->code, 'event_type' => 'online']) }}">
-                          <span class="sub-item">{{ __('Online Events') }}</span>
+                          <span class="sub-item">{{ __('En línea') }}</span>
                         </a>
                       </li>
                     </ul>
@@ -219,7 +236,7 @@
           @elseif (request()->routeIs('admin.event_booking.report')) active @endif">
             <a data-toggle="collapse" href="#event_bookings">
               <i class="fas fa-calendar-check"></i>
-              <p>{{ __('Event Bookings') }}</p>
+              <p>{{ __('Reservas') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -236,7 +253,7 @@
                 <li class="submenu">
                   <a data-toggle="collapse" href="#EventsSettings"
                     aria-expanded="{{ request()->routeIs('admin.event_management.coupons') || request()->routeIs('admin.event_booking.settings.tax_commission') || request()->routeIs('admin.event_booking.settings.preference') ? 'true' : 'false' }}">
-                    <span class="sub-item">{{ __('Settings') }}</span>
+                    <span class="sub-item">{{ __('Ajustes') }}</span>
                     <span class="caret"></span>
                   </a>
                   <div
@@ -248,18 +265,18 @@
                     <ul class="nav nav-collapse subnav">
                       <li class="{{ request()->routeIs('admin.event_booking.settings.preference') ? 'active' : '' }}">
                         <a href="{{ route('admin.event_booking.settings.preference') }}">
-                          <span class="sub-item">{{ __('Preference') }}</span>
+                          <span class="sub-item">{{ __('Preferencias') }}</span>
                         </a>
                       </li>
                       <li class="{{ request()->routeIs('admin.event_management.coupons') ? 'active' : '' }}">
                         <a href="{{ route('admin.event_management.coupons') }}">
-                          <span class="sub-item">{{ __('Coupons') }}</span>
+                          <span class="sub-item">{{ __('Cupones') }}</span>
                         </a>
                       </li>
                       <li
                         class="{{ request()->routeIs('admin.event_booking.settings.tax_commission') ? 'active' : '' }}">
                         <a href="{{ route('admin.event_booking.settings.tax_commission') }}">
-                          <span class="sub-item">{{ __('Tax & Commission') }}</span>
+                          <span class="sub-item">{{ __('Costos') }}</span>
                         </a>
                       </li>
 
@@ -272,34 +289,34 @@
                   @if (request()->routeIs('admin.event.booking') && empty(request()->input('status'))) active
                   @elseif (request()->routeIs('admin.event_booking.details')) active @endif">
                   <a href="{{ route('admin.event.booking') }}">
-                    <span class="sub-item">{{ __('All Bookings') }}</span>
+                    <span class="sub-item">{{ __('Todas') }}</span>
                   </a>
                 </li>
 
                 <li
                   class="{{ request()->routeIs('admin.event.booking') && request()->input('status') == 'completed' ? 'active' : '' }}">
                   <a href="{{ route('admin.event.booking', ['status' => 'completed']) }}">
-                    <span class="sub-item">{{ __('Completed Bookings') }}</span>
+                    <span class="sub-item">{{ __('Completadas') }}</span>
                   </a>
                 </li>
 
                 <li
                   class="{{ request()->routeIs('admin.event.booking') && request()->input('status') == 'pending' ? 'active' : '' }}">
                   <a href="{{ route('admin.event.booking', ['status' => 'pending']) }}">
-                    <span class="sub-item">{{ __('Pending Bookings') }}</span>
+                    <span class="sub-item">{{ __('Pendientes') }}</span>
                   </a>
                 </li>
 
                 <li
                   class="{{ request()->routeIs('admin.event.booking') && request()->input('status') == 'rejected' ? 'active' : '' }}">
                   <a href="{{ route('admin.event.booking', ['status' => 'rejected']) }}">
-                    <span class="sub-item">{{ __('Rejected Bookings') }}</span>
+                    <span class="sub-item">{{ __('Rechazadas') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.event_booking.report') ? 'active' : '' }}">
                   <a href="{{ route('admin.event_booking.report') }}">
-                    <span class="sub-item">{{ __('Report') }}</span>
+                    <span class="sub-item">{{ __('Reportes') }}</span>
                   </a>
                 </li>
               </ul>
@@ -318,7 +335,7 @@
           @elseif (request()->routeIs('admin.withdraw.withdraw_request')) active @endif">
             <a data-toggle="collapse" href="#withdraw_method">
               <i class="fas fa-credit-card"></i>
-              <p>{{ __('Withdraw Method') }}</p>
+              <p>{{ __('Retiros') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -335,14 +352,14 @@
                   @elseif (request()->routeIs('admin.withdraw_payment_method.mange_input')) active 
                   @elseif (request()->routeIs('admin.withdraw_payment_method.edit_input')) active @endif">
                   <a href="{{ route('admin.withdraw.payment_method', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Payment Methods') }}</span>
+                    <span class="sub-item">{{ __('Métodos') }}</span>
                   </a>
                 </li>
 
                 <li
                   class="{{ request()->routeIs('admin.withdraw.withdraw_request') && empty(request()->input('status')) ? 'active' : '' }}">
                   <a href="{{ route('admin.withdraw.withdraw_request', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Withdraw Requests') }}</span>
+                    <span class="sub-item">{{ __('Solicitudes') }}</span>
                   </a>
                 </li>
               </ul>
@@ -355,8 +372,14 @@
           <li class="nav-item @if (request()->routeIs('admin.transcation')) active @endif">
             <a href="{{ route('admin.transcation') }}">
               <i class="fas fa-exchange-alt"></i>
-              <p>{{ __('Transactions') }}</p>
+              <p>{{ __('Transacciones') }}</p>
             </a>
+          </li>
+        @endif
+
+        @if ($canSeeSidebarGroup(['Organizer Mangement', 'Customer Management', 'Support Ticket']))
+          <li class="nav-section sidebar-nav-section">
+            <span class="text-section">{{ __('Personas') }}</span>
           </li>
         @endif
 
@@ -371,7 +394,7 @@
             @elseif (request()->routeIs('admin.organizer_management.settings')) active @endif">
             <a data-toggle="collapse" href="#organizer">
               <i class="fas fa-users"></i>
-              <p>{{ __('Organizers Management') }}</p>
+              <p>{{ __('Productores') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -386,7 +409,7 @@
               <ul class="nav nav-collapse">
                 <li class="@if (request()->routeIs('admin.organizer_management.settings')) active @endif">
                   <a href="{{ route('admin.organizer_management.settings') }}">
-                    <span class="sub-item">{{ __('Settings') }}</span>
+                    <span class="sub-item">{{ __('Ajustes') }}</span>
                   </a>
                 </li>
                 <li
@@ -395,12 +418,12 @@
                   @elseif (request()->routeIs('admin.edit_management.organizer_edit')) active
                   @elseif (request()->routeIs('admin.organizer_management.organizer.change_password')) active @endif">
                   <a href="{{ route('admin.organizer_management.registered_organizer') }}">
-                    <span class="sub-item">{{ __('Registered Organizers') }}</span>
+                    <span class="sub-item">{{ __('Registrados') }}</span>
                   </a>
                 </li>
                 <li class="@if (request()->routeIs('admin.organizer_management.add_organizer')) active @endif">
                   <a href="{{ route('admin.organizer_management.add_organizer') }}">
-                    <span class="sub-item">{{ __('Add Organizer') }}</span>
+                    <span class="sub-item">{{ __('Crear') }}</span>
                   </a>
                 </li>
               </ul>
@@ -418,7 +441,7 @@
             @elseif (request()->routeIs('admin.organizer_management.add_customer')) active @endif">
             <a data-toggle="collapse" href="#customer">
               <i class="fas fa-users"></i>
-              <p>{{ __('Customers Management') }}</p>
+              <p>{{ __('Clientes') }}</p>
               <span class="caret"></span>
             </a>
             <div id="customer"
@@ -435,12 +458,12 @@
                   @elseif (request()->routeIs('admin.customer_management.customer_edit')) active
                   @elseif (request()->routeIs('admin.customer_management.customer.change_password')) active @endif">
                   <a href="{{ route('admin.organizer_management.registered_customer') }}">
-                    <span class="sub-item">{{ __('Registered Customers') }}</span>
+                    <span class="sub-item">{{ __('Registrados') }}</span>
                   </a>
                 </li>
                 <li class="@if (request()->routeIs('admin.organizer_management.add_customer')) active @endif">
                   <a href="{{ route('admin.organizer_management.add_customer') }}">
-                    <span class="sub-item">{{ __('Add Customer') }}</span>
+                    <span class="sub-item">{{ __('Crear') }}</span>
                   </a>
                 </li>
               </ul>
@@ -456,7 +479,7 @@
             @elseif (request()->routeIs('admin.support_tickets.message')) active @endif">
             <a data-toggle="collapse" href="#support_ticket">
               <i class="fas fa-globe"></i>
-              <p>{{ __('Support Tickets') }}</p>
+              <p>{{ __('Soporte') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -468,7 +491,7 @@
               <ul class="nav nav-collapse">
                 <li class="@if (request()->routeIs('admin.support_ticket.setting')) active @endif">
                   <a href="{{ route('admin.support_ticket.setting') }}">
-                    <span class="sub-item">{{ __('Settings') }}</span>
+                    <span class="sub-item">{{ __('Ajustes') }}</span>
                   </a>
                 </li>
                 <li
@@ -476,29 +499,35 @@
                   @if (request()->routeIs('admin.support_tickets') && empty(request()->input('status'))) active
                   @elseif(request()->routeIs('admin.support_tickets.message')) active @endif ">
                   <a href="{{ route('admin.support_tickets') }}">
-                    <span class="sub-item">{{ __('All Tickets') }}</span>
+                    <span class="sub-item">{{ __('Todos') }}</span>
                   </a>
                 </li>
                 <li
                   class="{{ request()->routeIs('admin.support_tickets') && request()->input('status') == 1 ? 'active' : '' }}">
                   <a href="{{ route('admin.support_tickets', ['status' => 1]) }}">
-                    <span class="sub-item">{{ __('Pending Tickets') }}</span>
+                    <span class="sub-item">{{ __('Pendientes') }}</span>
                   </a>
                 </li>
                 <li
                   class="{{ request()->routeIs('admin.support_tickets') && request()->input('status') == 2 ? 'active' : '' }}">
                   <a href="{{ route('admin.support_tickets', ['status' => 2]) }}">
-                    <span class="sub-item">{{ __('Open Tickets') }}</span>
+                    <span class="sub-item">{{ __('Abiertos') }}</span>
                   </a>
                 </li>
                 <li
                   class="{{ request()->routeIs('admin.support_tickets') && request()->input('status') == 3 ? 'active' : '' }}">
                   <a href="{{ route('admin.support_tickets', ['status' => 3]) }}">
-                    <span class="sub-item">{{ __('Closed Tickets') }}</span>
+                    <span class="sub-item">{{ __('Cerrados') }}</span>
                   </a>
                 </li>
               </ul>
             </div>
+          </li>
+        @endif
+
+        @if ($canSeeSidebarGroup(['Shop Management']))
+          <li class="nav-section sidebar-nav-section">
+            <span class="text-section">{{ __('Tienda') }}</span>
           </li>
         @endif
 
@@ -518,7 +547,7 @@
             @elseif (request()->routeIs('admin.product_order.report')) active @endif">
             <a data-toggle="collapse" href="#shop_management">
               <i class="fas fa-store-alt"></i>
-              <p>{{ __('Shop Management') }}</p>
+              <p>{{ __('Ventas') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -538,24 +567,24 @@
               <ul class="nav nav-collapse">
                 <li class="@if (request()->routeIs('admin.product.setting')) active @endif">
                   <a href="{{ route('admin.product.setting') }}">
-                    <span class="sub-item">{{ __('Settings') }}</span>
+                    <span class="sub-item">{{ __('Ajustes') }}</span>
                   </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.shop_management.shipping_charge') ? 'active' : '' }}">
                   <a href="{{ route('admin.shop_management.shipping_charge', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Shipping Charges') }}</span>
+                    <span class="sub-item">{{ __('Envíos') }}</span>
                   </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.shop_management.coupon') ? 'active' : '' }}">
                   <a href="{{ route('admin.shop_management.coupon', ['status' => 1]) }}">
-                    <span class="sub-item">{{ __('Coupon') }}</span>
+                    <span class="sub-item">{{ __('Cupones') }}</span>
                   </a>
                 </li>
 
                 <li class="submenu">
                   <a data-toggle="collapse" href="#productManagement"
                     aria-expanded="{{ request()->routeIs('admin.shop_management.category') || request()->routeIs('admin.shop_management.product_type') || request()->routeIs('admin.shop_management.product.create') || request()->routeIs('admin.shop_management.products') || request()->routeIs('admin.product_order.report') ? 'true' : 'false' }}">
-                    <span class="sub-item">{{ __('Manage Products') }}</span>
+                    <span class="sub-item">{{ __('Productos') }}</span>
                     <span class="caret"></span>
                   </a>
                   <div
@@ -571,7 +600,7 @@
                       <li class="
                         @if (request()->routeIs('admin.shop_management.category')) active @endif">
                         <a href="{{ route('admin.shop_management.category', ['language' => $defaultLang->code]) }}">
-                          <span class="sub-item">{{ __('Category') }}</span>
+                          <span class="sub-item">{{ __('Categorías') }}</span>
                         </a>
                       </li>
                       <li
@@ -579,7 +608,7 @@
                         @if (request()->routeIs('admin.shop_management.product_type')) active
                         @elseif(request()->routeIs('admin.shop_management.product.create')) active @endif">
                         <a href="{{ route('admin.shop_management.product_type') }}">
-                          <span class="sub-item">{{ __('Add Product') }}</span>
+                          <span class="sub-item">{{ __('Crear') }}</span>
                         </a>
                       </li>
                       <li
@@ -587,7 +616,7 @@
                         @if (request()->routeIs('admin.shop_management.products')) active
                         @elseif(request()->routeIs('admin.shop_management.product.edit')) active @endif">
                         <a href="{{ route('admin.shop_management.products', ['language' => $defaultLang->code]) }}">
-                          <span class="sub-item">{{ __('Products') }}</span>
+                          <span class="sub-item">{{ __('Todos') }}</span>
                         </a>
                       </li>
                     </ul>
@@ -596,7 +625,7 @@
                 <li class="submenu">
                   <a data-toggle="collapse" href="#orderManagement"
                     aria-expanded="{{ request()->routeIs('admin.product.order') || request()->routeIs('admin.product_order.report') || request()->routeIs('admin.product_order.details') ? 'true' : 'false' }}">
-                    <span class="sub-item">{{ __('Manage Orders') }}</span>
+                    <span class="sub-item">{{ __('Pedidos') }}</span>
                     <span class="caret"></span>
                   </a>
                   <div
@@ -612,37 +641,37 @@
                         @if (request()->routeIs('admin.product.order') && empty(request()->input('type'))) active 
                         @elseif (request()->routeIs('admin.product_order.details')) active @endif">
                         <a href="{{ route('admin.product.order') }}">
-                          <span class="sub-item">{{ __('All Orders') }}</span>
+                          <span class="sub-item">{{ __('Todos') }}</span>
                         </a>
                       </li>
                       <li class="
                         @if (request()->routeIs('admin.product.order') && request()->input('type') == 'pending') active @endif">
                         <a href="{{ route('admin.product.order', ['type' => 'pending']) }}">
-                          <span class="sub-item">{{ __('Pending Orders') }}</span>
+                          <span class="sub-item">{{ __('Pendientes') }}</span>
                         </a>
                       </li>
                       <li class="
                         @if (request()->routeIs('admin.product.order') && request()->input('type') == 'processing') active @endif">
                         <a href="{{ route('admin.product.order', ['type' => 'processing']) }}">
-                          <span class="sub-item">{{ __('Processing Orders') }}</span>
+                          <span class="sub-item">{{ __('En proceso') }}</span>
                         </a>
                       </li>
                       <li class="
                         @if (request()->routeIs('admin.product.order') && request()->input('type') == 'completed') active @endif">
                         <a href="{{ route('admin.product.order', ['type' => 'completed']) }}">
-                          <span class="sub-item">{{ __('Completed Orders') }}</span>
+                          <span class="sub-item">{{ __('Completados') }}</span>
                         </a>
                       </li>
                       <li class="
                         @if (request()->routeIs('admin.product.order') && request()->input('type') == 'rejected') active @endif">
                         <a href="{{ route('admin.product.order', ['type' => 'rejected']) }}">
-                          <span class="sub-item">{{ __('Rejected Orders') }}</span>
+                          <span class="sub-item">{{ __('Rechazados') }}</span>
                         </a>
                       </li>
                       <li class="
                         @if (request()->routeIs('admin.product_order.report')) active @endif">
                         <a href="{{ route('admin.product_order.report', ['language' => $defaultLang->code]) }}">
-                          <span class="sub-item">{{ __('Report') }}</span>
+                          <span class="sub-item">{{ __('Reportes') }}</span>
                         </a>
                       </li>
                     </ul>
@@ -650,6 +679,12 @@
                 </li>
               </ul>
             </div>
+          </li>
+        @endif
+
+        @if ($canSeeSidebarGroup(['Home Page', 'Footer', 'Custom Pages', 'Blog Management', 'FAQ Management', 'Contact Page', 'Advertise', 'Announcement Popups']))
+          <li class="nav-section sidebar-nav-section">
+            <span class="text-section">{{ __('Sitio') }}</span>
           </li>
         @endif
 
@@ -667,7 +702,7 @@
             @elseif (request()->routeIs('admin.home_page.section_customization')) active @endif">
             <a data-toggle="collapse" href="#home_page">
               <i class="fas fa-layer-group"></i>
-              <p>{{ __('Home Page') }}</p>
+              <p>{{ __('Inicio') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -685,50 +720,50 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.home_page.hero_section') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.hero_section', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Hero Section') }}</span>
+                    <span class="sub-item">{{ __('Portada') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.home_page.section_titles') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.section_titles', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Section Titles') }}</span>
+                    <span class="sub-item">{{ __('Títulos') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.home_page.event_features_section') ? 'active' : '' }}">
                   <a
                     href="{{ route('admin.home_page.event_features_section', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Event Features Section') }}</span>
+                    <span class="sub-item">{{ __('Beneficios') }}</span>
                   </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.home_page.how.work') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.how.work', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('How it Work Section') }}</span>
+                    <span class="sub-item">{{ __('Cómo funciona') }}</span>
                   </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.home_page.partner') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.partner', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Partner Section') }}</span>
+                    <span class="sub-item">{{ __('Aliados') }}</span>
                   </a>
                 </li>
 
 
                 <li class="{{ request()->routeIs('admin.home_page.testimonials_section') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.testimonials_section', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Testimonials Section') }}</span>
+                    <span class="sub-item">{{ __('Testimonios') }}</span>
                   </a>
                 </li>
 
 
                 <li class="{{ request()->routeIs('admin.home_page.about_us_section') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.about_us_section', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('About Us Section') }}</span>
+                    <span class="sub-item">{{ __('Nosotros') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.home_page.section_customization') ? 'active' : '' }}">
                   <a href="{{ route('admin.home_page.section_customization') }}">
-                    <span class="sub-item">{{ __('Section Hide/Show') }}</span>
+                    <span class="sub-item">{{ __('Visibilidad') }}</span>
                   </a>
                 </li>
               </ul>
@@ -744,7 +779,7 @@
             @elseif (request()->routeIs('admin.contact.page')) active @endif">
             <a data-toggle="collapse" href="#footer">
               <i class="fas fa-shoe-prints"></i>
-              <p>{{ __('Footer') }}</p>
+              <p>{{ __('Pie de página') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -755,18 +790,18 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.footer.content') ? 'active' : '' }}">
                   <a href="{{ route('admin.footer.content', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Content & Color') }}</span>
+                    <span class="sub-item">{{ __('Contenido') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.footer.quick_links') ? 'active' : '' }}">
                   <a href="{{ route('admin.footer.quick_links', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Quick Links') }}</span>
+                    <span class="sub-item">{{ __('Enlaces') }}</span>
                   </a>
                 </li>
                 <li class="{{ request()->routeIs('admin.contact.page') ? 'active' : '' }}">
                   <a href="{{ route('admin.contact.page', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Contact Page') }}</span>
+                    <span class="sub-item">{{ __('Contacto') }}</span>
                   </a>
                 </li>
               </ul>
@@ -782,7 +817,7 @@
             @elseif (request()->routeIs('admin.custom_pages.edit_page')) active @endif">
             <a href="{{ route('admin.custom_pages', ['language' => $defaultLang->code]) }}">
               <i class="fas fa-file"></i>
-              <p>{{ __('Custom Pages') }}</p>
+              <p>{{ __('Páginas') }}</p>
             </a>
           </li>
         @endif
@@ -796,7 +831,7 @@
             @elseif (request()->routeIs('admin.blog_management.edit_blog')) active @endif">
             <a data-toggle="collapse" href="#blog">
               <i class="fas fa-blog"></i>
-              <p>{{ __('Blog Management') }}</p>
+              <p>{{ __('Blog') }}</p>
               <span class="caret"></span>
             </a>
             <div id="blog"
@@ -808,7 +843,7 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.blog_management.categories') ? 'active' : '' }}">
                   <a href="{{ route('admin.blog_management.categories', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Categories') }}</span>
+                    <span class="sub-item">{{ __('Categorías') }}</span>
                   </a>
                 </li>
 
@@ -817,7 +852,7 @@
                   @elseif (request()->routeIs('admin.blog_management.create_blog')) active
                   @elseif (request()->routeIs('admin.blog_management.edit_blog')) active @endif">
                   <a href="{{ route('admin.blog_management.blogs', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Blog') }}</span>
+                    <span class="sub-item">{{ __('Artículos') }}</span>
                   </a>
                 </li>
               </ul>
@@ -830,7 +865,7 @@
           <li class="nav-item {{ request()->routeIs('admin.faq_management') ? 'active' : '' }}">
             <a href="{{ route('admin.faq_management', ['language' => $defaultLang->code]) }}">
               <i class="fas fa-circle"></i>
-              <p>{{ __('FAQ Management') }}</p>
+              <p>{{ __('Preguntas frecuentes') }}</p>
             </a>
           </li>
         @endif
@@ -840,7 +875,7 @@
           <li class="nav-item {{ request()->routeIs('admin.basic_settings.contact_page') ? 'active' : '' }}">
             <a href="{{ route('admin.basic_settings.contact_page') }}">
               <i class="fas fa-address-book"></i>
-              <p>{{ __('Contact Page') }}</p>
+              <p>{{ __('Contacto') }}</p>
             </a>
           </li>
         @endif
@@ -852,7 +887,7 @@
             @elseif (request()->routeIs('admin.advertise.advertisements')) active @endif">
             <a data-toggle="collapse" href="#workingId">
               <i class="fab fa-buysellads"></i>
-              <p>{{ __('Ads') }}</p>
+              <p>{{ __('Anuncios') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -862,13 +897,13 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.advertise.settings') ? 'active' : '' }}">
                   <a href="{{ route('admin.advertise.settings') }}">
-                    <span class="sub-item">{{ __('Settings') }}</span>
+                    <span class="sub-item">{{ __('Ajustes') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.advertise.advertisements') ? 'active' : '' }}">
                   <a href="{{ route('admin.advertise.advertisements') }}">
-                    <span class="sub-item">{{ __('Advertisements') }}</span>
+                    <span class="sub-item">{{ __('Publicidades') }}</span>
                   </a>
                 </li>
               </ul>
@@ -885,8 +920,14 @@
             @elseif (request()->routeIs('admin.announcement_popups.edit_popup')) active @endif">
             <a href="{{ route('admin.announcement_popups', ['language' => $defaultLang->code]) }}">
               <i class="fas fa-bullhorn"></i>
-              <p>{{ __('Announcement Popups') }}</p>
+              <p>{{ __('Popups') }}</p>
             </a>
+          </li>
+        @endif
+
+        @if ($canSeeSidebarGroup(['Subscribers', 'Push Notification']))
+          <li class="nav-section sidebar-nav-section">
+            <span class="text-section">{{ __('Comunicación') }}</span>
           </li>
         @endif
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Subscribers', $rolePermissions)))
@@ -896,7 +937,7 @@
           @elseif(request()->routeIs('admin.user_management.mail_for_subscribers')) active @endif">
             <a data-toggle="collapse" href="#subscribers">
               <i class="fas fa-envelope"></i>
-              <p>{{ __('Subscribers') }}</p>
+              <p>{{ __('Suscriptores') }}</p>
               <span class="caret"></span>
             </a>
             <div
@@ -907,12 +948,12 @@
               <ul class="nav nav-collapse">
                 <li class="@if (request()->routeIs('admin.user_management.subscribers')) active @endif">
                   <a href="{{ route('admin.user_management.subscribers') }}">
-                    <span class="sub-item">{{ __('Subscribers') }}</span>
+                    <span class="sub-item">{{ __('Listado') }}</span>
                   </a>
                 </li>
                 <li class="@if (request()->routeIs('admin.user_management.mail_for_subscribers')) active @endif">
                   <a href="{{ route('admin.user_management.mail_for_subscribers') }}">
-                    <span class="sub-item">{{ __('Mail to Subscribers') }}</span>
+                    <span class="sub-item">{{ __('Enviar email') }}</span>
                   </a>
                 </li>
               </ul>
@@ -926,7 +967,7 @@
                     @elseif (request()->routeIs('admin.user_management.push_notification.notification_for_visitors')) active @endif">
             <a data-toggle="collapse" href="#push_notification">
               <i class="fas fa-bell"></i>
-              <p>{{ __('Push Notification') }}</p>
+              <p>{{ __('Notificaciones push') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -938,18 +979,24 @@
                 <li
                   class="{{ request()->routeIs('admin.user_management.push_notification.settings') ? 'active' : '' }}">
                   <a href="{{ route('admin.user_management.push_notification.settings') }}">
-                    <span class="sub-item">{{ __('Settings') }}</span>
+                    <span class="sub-item">{{ __('Ajustes') }}</span>
                   </a>
                 </li>
 
                 <li
                   class="{{ request()->routeIs('admin.user_management.push_notification.notification_for_visitors') ? 'active' : '' }}">
                   <a href="{{ route('admin.user_management.push_notification.notification_for_visitors') }}">
-                    <span class="sub-item">{{ __('Send Notification') }}</span>
+                    <span class="sub-item">{{ __('Enviar') }}</span>
                   </a>
                 </li>
               </ul>
             </div>
+          </li>
+        @endif
+
+        @if ($canSeeSidebarGroup(['Payment Gateways', 'Basic Settings']))
+          <li class="nav-section sidebar-nav-section">
+            <span class="text-section">{{ __('Finanzas') }}</span>
           </li>
         @endif
 
@@ -960,7 +1007,7 @@
             @elseif (request()->routeIs('admin.payment_gateways.offline_gateways')) active @endif">
             <a data-toggle="collapse" href="#payment_gateways">
               <i class="fab fa-paypal"></i>
-              <p>{{ __('Payment Gateways') }}</p>
+              <p>{{ __('Pasarelas') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -971,13 +1018,13 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.payment_gateways.online_gateways') ? 'active' : '' }}">
                   <a href="{{ route('admin.payment_gateways.online_gateways') }}">
-                    <span class="sub-item">{{ __('Online Gateways') }}</span>
+                    <span class="sub-item">{{ __('En línea') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.payment_gateways.offline_gateways') ? 'active' : '' }}">
                   <a href="{{ route('admin.payment_gateways.offline_gateways') }}">
-                    <span class="sub-item">{{ __('Offline Gateways') }}</span>
+                    <span class="sub-item">{{ __('Manuales') }}</span>
                   </a>
                 </li>
               </ul>
@@ -995,6 +1042,10 @@
             </a>
           </li>
         @endif
+
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Sistema') }}</span>
+        </li>
 
         {{-- basic settings --}}
         @if (is_null($roleInfo) || (!empty($rolePermissions) && in_array('Basic Settings', $rolePermissions)))
@@ -1015,7 +1066,7 @@
             @elseif (request()->routeIs('admin.basic_settings.social_medias')) active @endif">
             <a data-toggle="collapse" href="#basic_settings">
               <i class="fas fa-cog"></i>
-              <p>{{ __('Basic Settings') }}</p>
+              <p>{{ __('Configuración') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -1038,7 +1089,7 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.basic_settings.general_settings') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.general_settings') }}">
-                    <span class="sub-item">{{ __('General Settings') }}</span>
+                    <span class="sub-item">{{ __('General') }}</span>
                   </a>
                 </li>
 
@@ -1051,7 +1102,7 @@
                 <li class="submenu">
                   <a data-toggle="collapse" href="#mail_settings"
                     aria-expanded="{{ request()->routeIs('admin.basic_settings.mail_from_admin') || request()->routeIs('admin.basic_settings.mail_to_admin') || request()->routeIs('admin.basic_settings.mail_templates') || request()->routeIs('admin.basic_settings.edit_mail_template') ? 'true' : 'false' }}">
-                    <span class="sub-item">{{ __('Email Settings') }}</span>
+                    <span class="sub-item">{{ __('Email') }}</span>
                     <span class="caret"></span>
                   </a>
 
@@ -1064,13 +1115,13 @@
                     <ul class="nav nav-collapse subnav">
                       <li class="{{ request()->routeIs('admin.basic_settings.mail_from_admin') ? 'active' : '' }}">
                         <a href="{{ route('admin.basic_settings.mail_from_admin') }}">
-                          <span class="sub-item">{{ __('Mail From Admin') }}</span>
+                          <span class="sub-item">{{ __('Remitente') }}</span>
                         </a>
                       </li>
 
                       <li class="{{ request()->routeIs('admin.basic_settings.mail_to_admin') ? 'active' : '' }}">
                         <a href="{{ route('admin.basic_settings.mail_to_admin') }}">
-                          <span class="sub-item">{{ __('Mail To Admin') }}</span>
+                          <span class="sub-item">{{ __('Destinatario') }}</span>
                         </a>
                       </li>
 
@@ -1078,7 +1129,7 @@
                         class="@if (request()->routeIs('admin.basic_settings.mail_templates')) active
                         @elseif (request()->routeIs('admin.basic_settings.edit_mail_template')) active @endif">
                         <a href="{{ route('admin.basic_settings.mail_templates') }}">
-                          <span class="sub-item">{{ __('Mail Templates') }}</span>
+                          <span class="sub-item">{{ __('Plantillas') }}</span>
                         </a>
                       </li>
                     </ul>
@@ -1087,13 +1138,13 @@
 
                 <li class="{{ request()->routeIs('admin.basic_settings.breadcrumb') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.breadcrumb') }}">
-                    <span class="sub-item">{{ __('Breadcrumb') }}</span>
+                    <span class="sub-item">{{ __('Ruta') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.basic_settings.page_headings') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.page_headings', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Page Headings') }}</span>
+                    <span class="sub-item">{{ __('Encabezados') }}</span>
                   </a>
                 </li>
 
@@ -1105,31 +1156,31 @@
 
                 <li class="{{ request()->routeIs('admin.basic_settings.seo') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.seo', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('SEO Informations') }}</span>
+                    <span class="sub-item">{{ __('SEO') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.basic_settings.maintenance_mode') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.maintenance_mode') }}">
-                    <span class="sub-item">{{ __('Maintenance Mode') }}</span>
+                    <span class="sub-item">{{ __('Mantenimiento') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.basic_settings.cookie_alert') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.cookie_alert', ['language' => $defaultLang->code]) }}">
-                    <span class="sub-item">{{ __('Cookie Alert') }}</span>
+                    <span class="sub-item">{{ __('Cookies') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.basic_settings.footer_logo') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.footer_logo') }}">
-                    <span class="sub-item">{{ __('Footer Logo') }}</span>
+                    <span class="sub-item">{{ __('Logo pie') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.basic_settings.social_medias') ? 'active' : '' }}">
                   <a href="{{ route('admin.basic_settings.social_medias') }}">
-                    <span class="sub-item">{{ __('Social Medias') }}</span>
+                    <span class="sub-item">{{ __('Redes sociales') }}</span>
                   </a>
                 </li>
               </ul>
@@ -1145,7 +1196,7 @@
           @elseif (request()->routeIs('admin.pwa.scanner')) active @endif">
             <a data-toggle="collapse" href="#pwa_setting">
               <i class="fab fa-app-store-ios"></i>
-              <p>{{ __('PWA Settings') }}</p>
+              <p>{{ __('PWA') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -1157,7 +1208,7 @@
               <ul class="nav nav-collapse">
                 <li class="{{ request()->routeIs('admin.pwa.scanner') ? 'active' : '' }}">
                   <a href="{{ route('admin.pwa.scanner') }}">
-                    <span class="sub-item">{{ __('PWA Scanner Setting') }}</span>
+                    <span class="sub-item">{{ __('Escáner') }}</span>
                   </a>
                 </li>
               </ul>
@@ -1168,7 +1219,7 @@
         <li class="nav-item">
           <a href="{{ route('admin.pwa.new') }}" target="_blank">
             <i class="fas fa-qrcode"></i>
-            <p>{{ __('Pwa Scanner') }}</p>
+            <p>{{ __('Escáner PWA') }}</p>
           </a>
         </li>
 
@@ -1181,7 +1232,7 @@
             @elseif (request()->routeIs('admin.admin_management.registered_admins')) active @endif">
             <a data-toggle="collapse" href="#admin">
               <i class="fas fa-users-cog"></i>
-              <p>{{ __('Admin Management') }}</p>
+              <p>{{ __('Admins') }}</p>
               <span class="caret"></span>
             </a>
 
@@ -1195,13 +1246,13 @@
                   class="@if (request()->routeIs('admin.admin_management.role_permissions')) active
                   @elseif (request()->routeIs('admin.admin_management.role.permissions')) active @endif">
                   <a href="{{ route('admin.admin_management.role_permissions') }}">
-                    <span class="sub-item">{{ __('Role & Permissions') }}</span>
+                    <span class="sub-item">{{ __('Roles y permisos') }}</span>
                   </a>
                 </li>
 
                 <li class="{{ request()->routeIs('admin.admin_management.registered_admins') ? 'active' : '' }}">
                   <a href="{{ route('admin.admin_management.registered_admins') }}">
-                    <span class="sub-item">{{ __('Registered Admins') }}</span>
+                    <span class="sub-item">{{ __('Registrados') }}</span>
                   </a>
                 </li>
               </ul>

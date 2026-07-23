@@ -27,15 +27,15 @@
       </div>
       <div class="modal-body text-center p-4">
         <div class="button-group">
-          <a href="//www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-facebook-f"></i>
             <p>{{ __('Facebook') }}</p>
           </a>
-          <a href="//twitter.com/intent/tweet?text={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}&amp;url={{ urlencode(url()->current()) }}"
+          <a href="https://twitter.com/intent/tweet?text={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}&amp;url={{ urlencode(url()->current()) }}"
             target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i>
             <p>{{ __('Twitter') }}</p>
           </a>
-          <a href="//www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}"
+          <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}"
             target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i>
             <p>{{ __('linkedin') }}</p>
           </a>

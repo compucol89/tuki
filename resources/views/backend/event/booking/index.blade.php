@@ -8,39 +8,132 @@
 
     .eb-summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 22px;
     }
 
     .eb-metric {
-      min-height: 96px;
-      padding: 16px;
-      border: 1px solid #e7eaf0;
+      --eb-accent: #94a3b8;
+      --eb-soft: #f8fafc;
+      --eb-ink: #1e2532;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      min-height: 128px;
+      padding: 22px 22px;
+      border: 1px solid #e6e9ef;
       border-radius: 8px;
       background: #fff;
-      box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
+      box-shadow: 0 8px 18px rgba(30, 37, 50, .06);
+    }
+
+    .eb-metric::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 4px;
+      background: var(--eb-accent);
+      content: "";
+    }
+
+    .eb-metric__body {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .eb-metric__icon {
+      order: -1;
+      flex: 0 0 64px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      margin-right: 24px;
+      border: 0;
+      border-radius: 14px;
+      background: var(--eb-soft);
+      color: var(--eb-accent);
+      font-size: 24px;
+    }
+
+    .eb-metric--primary::before {
+      background: #f97316;
+    }
+
+    .eb-metric--primary {
+      --eb-accent: #f97316;
+      --eb-soft: #fff7ed;
+    }
+
+    .eb-metric--money::before {
+      background: #0f766e;
+    }
+
+    .eb-metric--money {
+      --eb-accent: #0f766e;
+      --eb-soft: #ecfdf5;
+    }
+
+    .eb-metric--paid::before {
+      background: #16a34a;
+    }
+
+    .eb-metric--paid {
+      --eb-accent: #16a34a;
+      --eb-soft: #f0fdf4;
+    }
+
+    .eb-metric--free::before {
+      background: #2563eb;
+    }
+
+    .eb-metric--free {
+      --eb-accent: #2563eb;
+      --eb-soft: #eff6ff;
+    }
+
+    .eb-metric--pending::before {
+      background: #f59e0b;
+    }
+
+    .eb-metric--pending {
+      --eb-accent: #f59e0b;
+      --eb-soft: #fffbeb;
+    }
+
+    .eb-metric--platform::before {
+      background: #7c3aed;
+    }
+
+    .eb-metric--platform {
+      --eb-accent: #7c3aed;
+      --eb-soft: #f5f3ff;
     }
 
     .eb-metric__label {
-      margin-bottom: 8px;
-      color: #64748b;
+      margin-bottom: 7px;
+      color: #61708a;
       font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: none;
     }
 
     .eb-metric__value {
-      color: #1e2532;
+      color: var(--eb-ink);
       font-size: 24px;
-      font-weight: 800;
-      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.15;
     }
 
     .eb-metric__hint {
-      margin-top: 5px;
+      margin-top: 6px;
       color: #667085;
       font-size: 11px;
+      font-weight: 400;
       line-height: 1.35;
     }
 
@@ -80,14 +173,36 @@
 
     .eb-event-summary-list {
       display: grid;
-      gap: 14px;
+      gap: 16px;
     }
 
     .eb-event-summary-card {
+      --eb-event-accent: #16a34a;
+      --eb-event-soft: #f0fdf4;
+      position: relative;
       overflow: hidden;
       border: 1px solid #e7eaf0;
       border-radius: 10px;
       background: #fff;
+      box-shadow: 0 8px 22px rgba(30, 37, 50, .04);
+    }
+
+    .eb-event-summary-card::before {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--eb-event-accent);
+      content: "";
+    }
+
+    .eb-event-summary-card--free {
+      --eb-event-accent: #2563eb;
+      --eb-event-soft: #eff6ff;
+    }
+
+    .eb-event-summary-card--paid {
+      --eb-event-accent: #16a34a;
+      --eb-event-soft: #f0fdf4;
     }
 
     .eb-event-summary-card__head {
@@ -97,7 +212,7 @@
       align-items: start;
       padding: 16px 18px;
       border-bottom: 1px solid #eef1f5;
-      background: linear-gradient(180deg, #fbfcfe 0%, #fff 100%);
+      background: linear-gradient(90deg, var(--eb-event-soft) 0%, #fff 64%);
     }
 
     .eb-event-summary-card__head > div {
@@ -115,27 +230,41 @@
     .eb-event-summary-card__meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      align-items: center;
+      gap: 7px;
       color: #667085;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 500;
     }
 
-    .eb-event-summary-card__meta span {
+    .eb-event-summary-card__meta > span {
       display: inline-flex;
       align-items: center;
+      gap: 6px;
       min-height: 24px;
-      padding: 4px 8px;
+      padding: 4px 9px;
       border: 1px solid #eef1f5;
       border-radius: 999px;
-      background: #fff;
+      background: #f8fafc;
       line-height: 1.2;
       white-space: nowrap;
     }
 
     .eb-event-summary-card__date {
-      color: #f05a28;
-      font-weight: 800;
+      border-color: rgba(249, 115, 22, .22) !important;
+      background: #fff7ed !important;
+      color: #9a3412;
+      font-weight: 650;
+    }
+
+    .eb-event-summary-card__date i {
+      color: #f97316;
+      font-size: 11px;
+    }
+
+    .eb-event-summary-card__meta-chip {
+      color: #61708a;
+      font-weight: 500;
     }
 
     .eb-event-summary-card__status {
@@ -147,24 +276,60 @@
       border-radius: 999px;
       background: #fff7f2;
       color: #d94a1e;
-      font-size: 11px;
+      font-size: 11.5px;
+      font-weight: 650;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .eb-event-summary-card__aside {
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+    }
+
+    .eb-event-summary-card__amount {
+      min-width: 128px;
+      padding: 8px 10px;
+      border: 1px solid #e7eaf0;
+      border: 1px solid color-mix(in srgb, var(--eb-event-accent) 18%, #e7eaf0);
+      border-radius: 9px;
+      background: #fff;
+      text-align: right;
+    }
+
+    .eb-event-summary-card__amount span {
+      display: block;
+      color: #667085;
+      font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
     }
 
+    .eb-event-summary-card__amount strong {
+      display: block;
+      margin-top: 2px;
+      color: #1e2532;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
     .eb-event-summary-stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
-      gap: 1px;
-      padding: 1px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 14px;
       border-bottom: 1px solid #eef1f5;
-      background: #eef1f5;
+      background: #fbfcfe;
     }
 
     .eb-event-summary-stat {
       min-width: 0;
       padding: 12px 14px;
-      background: #fbfcfe;
+      border: 1px solid #eef1f5;
+      border-radius: 9px;
+      background: #fff;
     }
 
     .eb-event-summary-stat span {
@@ -183,6 +348,26 @@
       font-weight: 800;
       line-height: 1.15;
       overflow-wrap: anywhere;
+    }
+
+    .eb-event-summary-stat--sold {
+      border-color: rgba(22, 163, 74, .20);
+      background: #f0fdf4;
+    }
+
+    .eb-event-summary-stat--scan {
+      border-color: rgba(37, 99, 235, .18);
+      background: #eff6ff;
+    }
+
+    .eb-event-summary-stat--pending {
+      border-color: rgba(245, 158, 11, .18);
+      background: #fffbeb;
+    }
+
+    .eb-event-summary-stat--rejected {
+      border-color: rgba(220, 38, 38, .14);
+      background: #fff1f2;
     }
 
     .eb-type-summary__formula {
@@ -215,6 +400,16 @@
       vertical-align: middle;
       line-height: 1.35;
       overflow-wrap: anywhere;
+    }
+
+    .eb-type-row--paid td:first-child {
+      border-left: 3px solid #16a34a;
+      padding-left: 10px;
+    }
+
+    .eb-type-row--free td:first-child {
+      border-left: 3px solid #2563eb;
+      padding-left: 10px;
     }
 
     .eb-type-table__ticket {
@@ -327,6 +522,30 @@
       margin-right: 5px;
     }
 
+    .eb-status--paid,
+    .badge-success.eb-status {
+      background: #dcfce7 !important;
+      color: #166534 !important;
+    }
+
+    .eb-status--free,
+    .badge-info.eb-status {
+      background: #dbeafe !important;
+      color: #1d4ed8 !important;
+    }
+
+    .eb-status--pending,
+    .badge-warning.eb-status {
+      background: #fffbeb !important;
+      color: #92400e !important;
+    }
+
+    .eb-status--rejected,
+    .badge-danger.eb-status {
+      background: #fee2e2 !important;
+      color: #991b1b !important;
+    }
+
     .eb-expand-btn,
     .eb-action-btn {
       width: 34px;
@@ -400,6 +619,40 @@
       font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
+    }
+
+    .eb-pill--paid {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .eb-pill--free {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .eb-type-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      margin-top: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .eb-type-badge--paid {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .eb-type-badge--free {
+      background: #dbeafe;
+      color: #1d4ed8;
     }
 
     .eb-scan-cell {
@@ -519,6 +772,15 @@
         padding: 14px;
       }
 
+      .eb-event-summary-card__aside {
+        justify-items: start;
+      }
+
+      .eb-event-summary-card__amount {
+        min-width: 0;
+        text-align: left;
+      }
+
       .eb-event-summary-card__title {
         margin-bottom: 10px;
         font-size: 15px;
@@ -551,12 +813,20 @@
       }
 
       .eb-metric {
-        min-height: 82px;
-        padding: 12px;
+        min-height: 122px;
+        padding: 20px 22px;
+      }
+
+      .eb-metric__icon {
+        flex-basis: 56px;
+        width: 56px;
+        height: 56px;
+        margin-right: 18px;
+        font-size: 21px;
       }
 
       .eb-metric__value {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       .eb-type-summary__head {
@@ -675,10 +945,10 @@
     };
     $defaultLanguageCode = optional($defaultLanguage)->code ?: 'es';
     $statusOptions = [
-        'completed' => ['label' => __('Completado'), 'class' => 'success', 'icon' => 'fa-check-circle'],
-        'pending' => ['label' => __('Pendiente'), 'class' => 'warning text-dark', 'icon' => 'fa-clock'],
-        'rejected' => ['label' => __('Rechazado'), 'class' => 'danger', 'icon' => 'fa-times-circle'],
-        'free' => ['label' => __('Gratis'), 'class' => 'primary', 'icon' => 'fa-gift'],
+        'completed' => ['label' => __('Pago'), 'class' => 'success eb-status--paid', 'icon' => 'fa-check-circle'],
+        'pending' => ['label' => __('Pendiente'), 'class' => 'warning eb-status--pending', 'icon' => 'fa-clock'],
+        'rejected' => ['label' => __('Rechazado'), 'class' => 'danger eb-status--rejected', 'icon' => 'fa-times-circle'],
+        'free' => ['label' => __('Gratis'), 'class' => 'info eb-status--free', 'icon' => 'fa-gift'],
     ];
   @endphp
 
@@ -701,41 +971,65 @@
     </div>
 
     <div class="eb-summary" aria-label="{{ __('Resumen de reservas') }}">
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Reservas') }}</div>
-        <div class="eb-metric__value">{{ number_format($kpis['total'] ?? 0, 0, ',', '.') }}</div>
+      <div class="eb-metric eb-metric--primary">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Reservas') }}</div>
+          <div class="eb-metric__value">{{ number_format($kpis['total'] ?? 0, 0, ',', '.') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-ticket-alt" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Total cobrado') }}</div>
-        <div class="eb-metric__value">{{ $formatBaseMoney($kpis['charged'] ?? 0) }}</div>
-        <div class="eb-metric__hint">{{ __('Lo que pagó el cliente') }}</div>
+      <div class="eb-metric eb-metric--money">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Total cobrado') }}</div>
+          <div class="eb-metric__value">{{ $formatBaseMoney($kpis['charged'] ?? 0) }}</div>
+          <div class="eb-metric__hint">{{ __('Lo que pagó el cliente') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-coins" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Base entradas') }}</div>
-        <div class="eb-metric__value">{{ $formatBaseMoney($kpis['ticket_revenue'] ?? 0) }}</div>
-        <div class="eb-metric__hint">{{ __('Valor de entradas sin cargo de servicio') }}</div>
+      <div class="eb-metric eb-metric--paid">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Base entradas') }}</div>
+          <div class="eb-metric__value">{{ $formatBaseMoney($kpis['ticket_revenue'] ?? 0) }}</div>
+          <div class="eb-metric__hint">{{ __('Valor de entradas sin cargo de servicio') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-tags" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Neto organizadores') }}</div>
-        <div class="eb-metric__value">{{ $formatBaseMoney($kpis['organizer_net'] ?? 0) }}</div>
-        <div class="eb-metric__hint">{{ __('Base menos comisión descontada') }}</div>
+      <div class="eb-metric eb-metric--paid">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Neto organizadores') }}</div>
+          <div class="eb-metric__value">{{ $formatBaseMoney($kpis['organizer_net'] ?? 0) }}</div>
+          <div class="eb-metric__hint">{{ __('Base menos comisión descontada') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-wallet" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Plataforma') }}</div>
-        <div class="eb-metric__value">{{ $formatBaseMoney($kpis['platform_earning'] ?? 0) }}</div>
-        <div class="eb-metric__hint">{{ __('Cargo de servicio más comisión') }}</div>
+      <div class="eb-metric eb-metric--platform">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Plataforma') }}</div>
+          <div class="eb-metric__value">{{ $formatBaseMoney($kpis['platform_earning'] ?? 0) }}</div>
+          <div class="eb-metric__hint">{{ __('Cargo de servicio más comisión') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-percentage" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Completadas') }}</div>
-        <div class="eb-metric__value">{{ number_format($kpis['completed'] ?? 0, 0, ',', '.') }}</div>
+      <div class="eb-metric eb-metric--paid">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Completadas') }}</div>
+          <div class="eb-metric__value">{{ number_format($kpis['completed'] ?? 0, 0, ',', '.') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-check-circle" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Pendientes') }}</div>
-        <div class="eb-metric__value">{{ number_format($kpis['pending'] ?? 0, 0, ',', '.') }}</div>
+      <div class="eb-metric eb-metric--pending">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Pendientes') }}</div>
+          <div class="eb-metric__value">{{ number_format($kpis['pending'] ?? 0, 0, ',', '.') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-clock" aria-hidden="true"></i></span>
       </div>
-      <div class="eb-metric">
-        <div class="eb-metric__label">{{ __('Gratis') }}</div>
-        <div class="eb-metric__value">{{ number_format($kpis['free'] ?? 0, 0, ',', '.') }}</div>
+      <div class="eb-metric eb-metric--free">
+        <div class="eb-metric__body">
+          <div class="eb-metric__label">{{ __('Gratis') }}</div>
+          <div class="eb-metric__value">{{ number_format($kpis['free'] ?? 0, 0, ',', '.') }}</div>
+        </div>
+        <span class="eb-metric__icon"><i class="fas fa-gift" aria-hidden="true"></i></span>
       </div>
     </div>
 
@@ -755,39 +1049,47 @@
         @else
           <div class="eb-event-summary-list">
             @foreach ($ticketSalesByEvent as $eventSummary)
-              <article class="eb-event-summary-card">
+              @php
+                $isPaidEventSummary = (float) ($eventSummary['revenue'] ?? 0) > 0;
+              @endphp
+              <article class="eb-event-summary-card {{ $isPaidEventSummary ? 'eb-event-summary-card--paid' : 'eb-event-summary-card--free' }}">
                 <div class="eb-event-summary-card__head">
                   <div>
                     <h3 class="eb-event-summary-card__title">{{ $eventSummary['event_title'] }}</h3>
                     <div class="eb-event-summary-card__meta">
-                      <span class="eb-event-summary-card__date">{{ $eventSummary['date_label'] }}</span>
-                      <span>{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
-                      <span>{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+                      <span class="eb-event-summary-card__date">
+                        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                        {{ $eventSummary['date_label'] }}
+                      </span>
+                      <span class="eb-event-summary-card__meta-chip">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                      <span class="eb-event-summary-card__meta-chip">{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
                     </div>
                   </div>
-                  <span class="eb-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
+                  <div class="eb-event-summary-card__aside">
+                    <span class="eb-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
+                    <span class="eb-event-summary-card__amount">
+                      <span>{{ __('Base entradas') }}</span>
+                      <strong>{{ $formatBaseMoney($eventSummary['revenue']) }}</strong>
+                    </span>
+                  </div>
                 </div>
 
                 <div class="eb-event-summary-stats" aria-label="{{ __('Totales del evento') }}">
-                  <div class="eb-event-summary-stat">
+                  <div class="eb-event-summary-stat eb-event-summary-stat--sold">
                     <span>{{ __('Entradas vendidas') }}</span>
                     <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong>
                   </div>
-                  <div class="eb-event-summary-stat">
+                  <div class="eb-event-summary-stat eb-event-summary-stat--pending">
                     <span>{{ __('Pendientes') }}</span>
                     <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong>
                   </div>
-                  <div class="eb-event-summary-stat">
+                  <div class="eb-event-summary-stat eb-event-summary-stat--rejected">
                     <span>{{ __('Rechazadas') }}</span>
                     <strong>{{ number_format($eventSummary['rejected'], 0, ',', '.') }}</strong>
                   </div>
-                  <div class="eb-event-summary-stat">
+                  <div class="eb-event-summary-stat eb-event-summary-stat--scan">
                     <span>{{ __('Escaneadas') }}</span>
                     <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
-                  </div>
-                  <div class="eb-event-summary-stat">
-                    <span>{{ __('Base entradas') }}</span>
-                    <strong>{{ $formatBaseMoney($eventSummary['revenue']) }}</strong>
                   </div>
                 </div>
 
@@ -812,11 +1114,17 @@
                   </thead>
                   <tbody>
                     @foreach ($eventSummary['tickets'] as $summaryRow)
-                      <tr>
+                      @php
+                        $isPaidTicketSummary = (float) ($summaryRow['revenue'] ?? 0) > 0;
+                      @endphp
+                      <tr class="{{ $isPaidTicketSummary ? 'eb-type-row--paid' : 'eb-type-row--free' }}">
                         <td data-label="{{ __('Entrada') }}">
                           <span class="eb-type-name">{{ $summaryRow['ticket_name'] }}</span>
+                          <span class="eb-type-badge {{ $isPaidTicketSummary ? 'eb-type-badge--paid' : 'eb-type-badge--free' }}">
+                            {{ $isPaidTicketSummary ? __('Pago') : __('Gratis') }}
+                          </span>
                         </td>
-                        <td data-label="{{ __('Vendidas') }}"><span class="eb-pill">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
+                        <td data-label="{{ __('Vendidas') }}"><span class="eb-pill {{ $isPaidTicketSummary ? 'eb-pill--paid' : 'eb-pill--free' }}">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
                         <td data-label="{{ __('Pendientes') }}">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
                         <td data-label="{{ __('Rechazadas') }}">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
                         <td data-label="{{ __('Escaneo') }}">
@@ -931,7 +1239,7 @@
             </div>
           </div>
 
-          <div class="table-responsive d-none d-lg-block">
+          <div class="table-responsive d-none d-xl-block">
             <table class="table eb-table">
               <thead>
                 <tr>
@@ -1165,7 +1473,7 @@
             </table>
           </div>
 
-          <div class="eb-mobile-list d-lg-none">
+          <div class="eb-mobile-list d-xl-none">
             @foreach ($bookings as $booking)
               @php
                 $eventInfo = $eventInfos[$booking->event_id] ?? null;

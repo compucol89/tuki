@@ -17,8 +17,9 @@
     ];
   @endphp
 
+  <div class="admin-event-index">
   <div class="page-header">
-    <h4 class="page-title">{{ __('Events') }}</h4>
+    <h4 class="page-title">{{ __('Eventos') }}</h4>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('admin.dashboard') }}">
@@ -29,7 +30,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Events Management') }}</a>
+        <a href="#">{{ __('Gestión de eventos') }}</a>
       </li>
       @if (!request()->filled('event_type'))
         <li class="separator">
@@ -37,7 +38,7 @@
         </li>
         <li class="nav-item">
           <a
-            href="{{ route('admin.event_management.event', ['language' => $defaultLang->code]) }}">{{ __('All Events') }}</a>
+            href="{{ route('admin.event_management.event', ['language' => $defaultLang->code]) }}">{{ __('Todos los eventos') }}</a>
         </li>
       @endif
       @if (request()->filled('event_type') && request()->input('event_type') == 'venue')
@@ -45,7 +46,7 @@
           <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-          <a href="#">{{ __('Venue Events') }}</a>
+          <a href="#">{{ __('Eventos presenciales') }}</a>
         </li>
       @endif
       @if (request()->filled('event_type') && request()->input('event_type') == 'online')
@@ -53,7 +54,7 @@
           <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-          <a href="#">{{ __('Online Events') }}</a>
+          <a href="#">{{ __('Eventos en línea') }}</a>
         </li>
       @endif
     </ul>
@@ -65,9 +66,9 @@
         <div class="card-header">
           <div class="event-index-header">
             <div class="event-index-header__intro">
-              <span class="event-index-header__eyebrow">{{ __('Gestion') }}</span>
+              <span class="event-index-header__eyebrow">{{ __('Gestión') }}</span>
               <h3 class="event-index-header__title">{{ __('Eventos') }}</h3>
-              <p class="event-index-header__text">{{ __('Administra tus eventos, revisa su estado y entra rapido a edicion, tickets o acciones clave.') }}</p>
+              <p class="event-index-header__text">{{ __('Administrá tus eventos, revisá su estado y entrá rápido a edición, entradas o acciones clave.') }}</p>
             </div>
 
             <div class="event-index-toolbar">
@@ -93,7 +94,7 @@
 
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
                     <a href="{{ route('add.event.event', ['type' => 'online']) }}" class="dropdown-item">
-                      {{ __('Evento online') }}
+                      {{ __('Evento en línea') }}
                     </a>
 
                     <a href="{{ route('add.event.event', ['type' => 'venue']) }}" class="dropdown-item">
@@ -132,7 +133,7 @@
                       @elseif (request()->input('event_type') == 'venue')
                         {{ __('Presencial') }}
                       @else
-                        {{ __('Online') }}
+                        {{ __('En línea') }}
                       @endif
                     </strong>
                   </div>
@@ -158,7 +159,7 @@
                   <p class="mb-0">{{ __('Prueba con otro idioma, otro filtro o crea un evento nuevo.') }}</p>
                 </div>
               @else
-                <div class="table-responsive event-index-table-wrap d-none d-lg-block">
+                <div class="table-responsive event-index-table-wrap">
                   <table class="table event-index-table mt-3">
                     <thead>
                       <tr>
@@ -187,7 +188,7 @@
                             <input type="checkbox" class="bulk-check" data-val="{{ $event->id }}"
                               aria-label="{{ __('Seleccionar evento') }} {{ $event->title }}">
                           </td>
-                          <td>
+                          <td class="event-index-col-event">
                             <a target="_blank" rel="noopener"
                               href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
                               class="event-index-title-link">{{ $event->title }}</a>
@@ -205,7 +206,7 @@
                                 @if ($event->event_type === 'venue')
                                   {{ __('Presencial') }}
                                 @elseif ($event->event_type === 'online')
-                                  {{ __('Online') }}
+                                  {{ __('En línea') }}
                                 @else
                                   {{ ucfirst($event->event_type) }}
                                 @endif
@@ -213,52 +214,62 @@
                               <span class="event-index-category-chip">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                             </span>
                           </td>
-                          <td>
+                          <td class="event-index-col-entry">
                             @if ($event->event_type == 'venue')
                               <a href="{{ route('admin.event.ticket', ['language' => request()->input('language'), 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
                                 class="btn btn-success btn-sm event-index-ticket-btn">{{ __('Gestionar') }}</a>
                             @endif
                           </td>
-                          <td>
-                            <form id="statusForm-{{ $event->id }}" class="d-inline-block"
+                          <td class="event-index-col-status">
+                            <form id="statusForm-{{ $event->id }}" class="event-index-choice-form"
                               action="{{ route('admin.event_management.event.event_status', ['id' => $event->id, 'language' => request()->input('language')]) }}"
                               method="post">
 
                               @csrf
-                              <select
-                                class="form-control form-control-sm event-index-pill-select {{ $event->status == 0 ? 'bg-warning text-dark' : 'bg-primary' }}"
-                                name="status"
-                                onchange="document.getElementById('statusForm-{{ $event->id }}').submit()">
-                                <option value="1" {{ $event->status == 1 ? 'selected' : '' }}>
-                                  {{ __('Active') }}
-                                </option>
-                                <option value="0" {{ $event->status == 0 ? 'selected' : '' }}>
-                                  {{ __('Deactive') }}
-                                </option>
-                              </select>
+                              <div class="event-index-choice {{ $event->status == 0 ? 'event-index-choice--warning' : 'event-index-choice--success' }}">
+                                <button type="button" class="event-index-choice__button" aria-expanded="false">
+                                  <span>{{ $event->status == 1 ? __('Activo') : __('Inactivo') }}</span>
+                                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                </button>
+                                <div class="event-index-choice__menu">
+                                  <button type="submit" name="status" value="1"
+                                    class="event-index-choice__option {{ $event->status == 1 ? 'is-selected' : '' }}">
+                                    {{ __('Activo') }}
+                                  </button>
+                                  <button type="submit" name="status" value="0"
+                                    class="event-index-choice__option {{ $event->status == 0 ? 'is-selected' : '' }}">
+                                    {{ __('Inactivo') }}
+                                  </button>
+                                </div>
+                              </div>
                             </form>
                           </td>
-                          <td>
+                          <td class="event-index-col-featured">
 
-                            <form id="featuredForm-{{ $event->id }}" class="d-inline-block"
+                            <form id="featuredForm-{{ $event->id }}" class="event-index-choice-form"
                               action="{{ route('admin.event_management.event.update_featured', ['id' => $event->id]) }}"
                               method="post">
 
                               @csrf
-                              <select
-                                class="form-control form-control-sm event-index-pill-select {{ $event->is_featured == 'yes' ? 'bg-success' : 'bg-danger' }}"
-                                name="is_featured"
-                                onchange="document.getElementById('featuredForm-{{ $event->id }}').submit()">
-                                <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>
-                                  {{ __('Yes') }}
-                                </option>
-                                <option value="no" {{ $event->is_featured == 'no' ? 'selected' : '' }}>
-                                  {{ __('No') }}
-                                </option>
-                              </select>
+                              <div class="event-index-choice {{ $event->is_featured == 'yes' ? 'event-index-choice--success' : 'event-index-choice--muted' }}">
+                                <button type="button" class="event-index-choice__button" aria-expanded="false">
+                                  <span>{{ $event->is_featured == 'yes' ? __('Sí') : __('No') }}</span>
+                                  <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                                </button>
+                                <div class="event-index-choice__menu">
+                                  <button type="submit" name="is_featured" value="yes"
+                                    class="event-index-choice__option {{ $event->is_featured == 'yes' ? 'is-selected' : '' }}">
+                                    {{ __('Sí') }}
+                                  </button>
+                                  <button type="submit" name="is_featured" value="no"
+                                    class="event-index-choice__option {{ $event->is_featured == 'no' ? 'is-selected' : '' }}">
+                                    {{ __('No') }}
+                                  </button>
+                                </div>
+                              </div>
                             </form>
                           </td>
-                          <td>
+                          <td class="event-index-col-settlement">
                             @if ($event->organizer && $settlementSummary && $settlementSummary['pending_organizer_amount'] > 0)
                               <button type="button"
                                 class="btn btn-sm event-index-settlement-btn event-index-settlement-state--{{ $settlementSummary['status'] ?? 'pending' }}"
@@ -273,7 +284,7 @@
                               <span class="event-index-settlement-state event-index-settlement-state--muted">{{ __('No aplica') }}</span>
                             @endif
                           </td>
-                          <td>
+                          <td class="event-index-col-amounts">
                             @if ($event->organizer && $settlementSummary)
                               <div class="event-index-money-stack">
                                 <div class="event-index-money-row event-index-money-row--pending">
@@ -289,7 +300,7 @@
                               <span class="event-index-subline">{{ __('Sin montos') }}</span>
                             @endif
                           </td>
-                          <td>
+                          <td class="event-index-col-actions">
                             <div class="dropdown">
                               <button class="btn btn-secondary dropdown-toggle btn-sm event-index-actions-btn" type="button"
                                 id="dropdownMenuButton-{{ $event->id }}" data-toggle="dropdown" aria-haspopup="true"
@@ -300,12 +311,12 @@
                               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ $event->id }}">
                                 <a href="{{ route('admin.event_management.edit_event', ['id' => $event->id]) }}"
                                   class="dropdown-item">
-                                  {{ __('Edit') }}
+                                  {{ __('Editar') }}
                                 </a>
 
                                 <a href="{{ route('admin.event_management.ticket_setting', ['id' => $event->id]) }}"
                                   class="dropdown-item">
-                                  {{ __('Ticket Settings') }}
+                                  {{ __('Diseño de entrada') }}
                                 </a>
 
                                 <form class="deleteForm d-block"
@@ -314,7 +325,7 @@
 
                                   @csrf
                                   <button type="submit" class="btn btn-sm deleteBtn">
-                                    {{ __('Delete') }}
+                                    {{ __('Eliminar') }}
                                   </button>
                                 </form>
                               </div>
@@ -326,7 +337,7 @@
                   </table>
                 </div>
 
-                <div class="event-index-mobile-list d-lg-none">
+                <div class="event-index-mobile-list">
                   @foreach ($events as $event)
                     @php
                       $settlementSummary = $settlementSummaries[$event->id] ?? null;
@@ -365,7 +376,7 @@
                             @if ($event->event_type === 'venue')
                               {{ __('Presencial') }}
                             @elseif ($event->event_type === 'online')
-                              {{ __('Online') }}
+                              {{ __('En línea') }}
                             @else
                               {{ ucfirst($event->event_type) }}
                             @endif
@@ -393,27 +404,47 @@
                             <i class="fas fa-ticket-alt mr-1" aria-hidden="true"></i>{{ __('Entradas') }}
                           </a>
                         @endif
-                        <form id="statusFormMobile-{{ $event->id }}" class="event-index-mobile-form"
+                        <form id="statusFormMobile-{{ $event->id }}" class="event-index-mobile-form event-index-choice-form"
                           action="{{ route('admin.event_management.event.event_status', ['id' => $event->id, 'language' => request()->input('language')]) }}"
                           method="post">
                           @csrf
-                          <select
-                            class="form-control form-control-sm event-index-pill-select {{ $event->status == 0 ? 'bg-warning text-dark' : 'bg-primary' }}"
-                            name="status" onchange="document.getElementById('statusFormMobile-{{ $event->id }}').submit()">
-                            <option value="1" {{ $event->status == 1 ? 'selected' : '' }}>{{ __('Activo') }}</option>
-                            <option value="0" {{ $event->status == 0 ? 'selected' : '' }}>{{ __('Inactivo') }}</option>
-                          </select>
+                          <div class="event-index-choice {{ $event->status == 0 ? 'event-index-choice--warning' : 'event-index-choice--success' }}">
+                            <button type="button" class="event-index-choice__button" aria-expanded="false">
+                              <span>{{ $event->status == 1 ? __('Activo') : __('Inactivo') }}</span>
+                              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="event-index-choice__menu">
+                              <button type="submit" name="status" value="1"
+                                class="event-index-choice__option {{ $event->status == 1 ? 'is-selected' : '' }}">
+                                {{ __('Activo') }}
+                              </button>
+                              <button type="submit" name="status" value="0"
+                                class="event-index-choice__option {{ $event->status == 0 ? 'is-selected' : '' }}">
+                                {{ __('Inactivo') }}
+                              </button>
+                            </div>
+                          </div>
                         </form>
-                        <form id="featuredFormMobile-{{ $event->id }}" class="event-index-mobile-form"
+                        <form id="featuredFormMobile-{{ $event->id }}" class="event-index-mobile-form event-index-choice-form"
                           action="{{ route('admin.event_management.event.update_featured', ['id' => $event->id]) }}"
                           method="post">
                           @csrf
-                          <select
-                            class="form-control form-control-sm event-index-pill-select {{ $event->is_featured == 'yes' ? 'bg-success' : 'bg-danger' }}"
-                            name="is_featured" onchange="document.getElementById('featuredFormMobile-{{ $event->id }}').submit()">
-                            <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>{{ __('Destacado') }}</option>
-                            <option value="no" {{ $event->is_featured == 'no' ? 'selected' : '' }}>{{ __('No destacado') }}</option>
-                          </select>
+                          <div class="event-index-choice {{ $event->is_featured == 'yes' ? 'event-index-choice--success' : 'event-index-choice--muted' }}">
+                            <button type="button" class="event-index-choice__button" aria-expanded="false">
+                              <span>{{ $event->is_featured == 'yes' ? __('Destacado') : __('No destacado') }}</span>
+                              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </button>
+                            <div class="event-index-choice__menu">
+                              <button type="submit" name="is_featured" value="yes"
+                                class="event-index-choice__option {{ $event->is_featured == 'yes' ? 'is-selected' : '' }}">
+                                {{ __('Destacado') }}
+                              </button>
+                              <button type="submit" name="is_featured" value="no"
+                                class="event-index-choice__option {{ $event->is_featured == 'no' ? 'is-selected' : '' }}">
+                                {{ __('No destacado') }}
+                              </button>
+                            </div>
+                          </div>
                         </form>
                         <div class="dropdown">
                           <button class="btn btn-secondary dropdown-toggle btn-sm event-index-actions-btn" type="button"
@@ -550,6 +581,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 @endsection
 
@@ -728,7 +760,7 @@
       vertical-align: middle;
       border-top: 1px solid #eef2f7;
       padding: 12px 8px;
-      overflow-wrap: anywhere;
+      overflow-wrap: normal;
     }
 
     .event-index-table .event-index-col-check,
@@ -742,28 +774,33 @@
     }
 
     .event-index-col-event {
-      width: 34%;
+      width: 30%;
     }
 
     .event-index-col-entry {
-      width: 9%;
+      width: 10%;
     }
 
-    .event-index-col-status,
+    .event-index-col-status {
+      width: 10%;
+    }
+
     .event-index-col-featured {
       width: 9%;
     }
 
     .event-index-col-settlement {
-      width: 10%;
+      width: 12%;
     }
 
     .event-index-col-amounts {
-      width: 14%;
+      width: 15%;
     }
 
     .event-index-col-actions {
-      width: 10%;
+      width: 11%;
+      min-width: 112px;
+      text-align: right;
     }
 
     .event-index-title-link {
@@ -773,6 +810,7 @@
       font-weight: 700;
       line-height: 1.35;
       text-decoration: none;
+      overflow-wrap: anywhere;
     }
 
     .event-index-title-link:hover {
@@ -827,20 +865,149 @@
     }
 
     .event-index-pill-select {
-      min-width: 104px;
+      width: 100%;
+      min-width: 88px;
+      max-width: 112px;
       border-radius: 10px;
       border: 0;
       color: #fff;
       font-weight: 600;
     }
 
-    .event-index-actions-btn {
+    .event-index-choice-form {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      min-width: 108px;
+      max-width: 136px;
+      margin: 0;
+    }
+
+    .event-index-choice {
+      --choice-bg: #fff;
+      --choice-border: #d0d5dd;
+      --choice-color: #1e2532;
+      --choice-hover: #f8fafc;
+      position: relative;
+      width: 100%;
+    }
+
+    .event-index-choice--success {
+      --choice-bg: #ecfdf5;
+      --choice-border: #bbf7d0;
+      --choice-color: #047857;
+      --choice-hover: #dcfce7;
+    }
+
+    .event-index-choice--warning {
+      --choice-bg: #fffbeb;
+      --choice-border: #fde68a;
+      --choice-color: #92400e;
+      --choice-hover: #fef3c7;
+    }
+
+    .event-index-choice--muted {
+      --choice-bg: #f8fafc;
+      --choice-border: #d0d5dd;
+      --choice-color: #475467;
+      --choice-hover: #eef2f7;
+    }
+
+    .event-index-choice__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      min-height: 40px;
+      padding: 0 13px;
+      border: 1px solid var(--choice-border);
       border-radius: 10px;
-      padding-inline: 14px;
+      background: var(--choice-bg);
+      color: var(--choice-color);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1;
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    .event-index-choice__button:focus,
+    .event-index-choice__button:hover {
+      border-color: var(--choice-border);
+      background: var(--choice-hover);
+      color: var(--choice-color);
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, .10);
+    }
+
+    .event-index-choice__button .fas {
+      color: currentColor;
+      font-size: 10px;
+      transition: transform .16s ease;
+    }
+
+    .event-index-choice.is-open .event-index-choice__button .fas {
+      transform: rotate(180deg);
+    }
+
+    .event-index-choice__menu {
+      position: absolute;
+      z-index: 1055;
+      top: calc(100% + 6px);
+      left: 0;
+      display: none;
+      width: max-content;
+      min-width: 100%;
+      padding: 6px;
+      border: 1px solid #e4e7ec;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 18px 36px rgba(16, 24, 40, .16);
+    }
+
+    .event-index-choice.is-open .event-index-choice__menu {
+      display: grid;
+      gap: 3px;
+    }
+
+    .event-index-choice__option {
+      width: 100%;
+      min-width: 116px;
+      padding: 9px 11px;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #344054;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.1;
+      text-align: left;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .event-index-choice__option:hover,
+    .event-index-choice__option:focus,
+    .event-index-choice__option.is-selected {
+      background: var(--choice-hover);
+      color: var(--choice-color);
+      outline: 0;
+    }
+
+    .event-index-actions-btn {
+      width: 100%;
+      min-width: 96px;
+      max-width: 116px;
+      border-radius: 10px;
+      padding-inline: 10px;
+      white-space: nowrap;
     }
 
     .event-index-ticket-btn {
+      width: 100%;
       min-width: 86px;
+      max-width: 112px;
       border-radius: 10px;
       font-weight: 700;
       overflow-wrap: normal;
@@ -852,7 +1019,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
       min-width: 88px;
+      max-width: 118px;
       min-height: 30px;
       padding: 5px 10px;
       border: 0;
@@ -894,7 +1063,7 @@
     .event-index-money-stack {
       display: grid;
       gap: 4px;
-      min-width: 118px;
+      min-width: 128px;
     }
 
     .event-index-money-row {
@@ -975,8 +1144,9 @@
     }
 
     .event-index-mobile-controls {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: minmax(160px, 1.35fr) minmax(112px, .85fr) minmax(126px, .95fr);
+      align-items: start;
       gap: 8px;
       margin-top: 14px;
     }
@@ -984,15 +1154,522 @@
     .event-index-mobile-controls > .btn,
     .event-index-mobile-controls > .dropdown,
     .event-index-mobile-form {
-      flex: 1 1 132px;
+      width: 100%;
       min-width: 0;
     }
 
     .event-index-mobile-controls .btn,
     .event-index-mobile-controls .dropdown-toggle,
-    .event-index-mobile-form .form-control {
+    .event-index-mobile-form .form-control,
+    .event-index-mobile-form .event-index-choice-form,
+    .event-index-mobile-form .event-index-choice__button {
       width: 100%;
       min-height: 40px;
+      max-width: none;
+    }
+
+    .admin-event-index {
+      --event-ink: #1e2532;
+      --event-ink-strong: #111827;
+      --event-muted: #667085;
+      --event-border: #e4e7ec;
+      --event-soft: #f8fafc;
+      --event-orange: #f97316;
+      --event-orange-dark: #c2410c;
+      --event-orange-soft: #fff7ed;
+      --event-green: #16a34a;
+      --event-green-soft: #ecfdf5;
+      --event-red: #dc2626;
+      --event-red-soft: #fef2f2;
+      --event-radius: 8px;
+      color: var(--event-ink);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .admin-event-index .page-header {
+      margin-bottom: 22px;
+    }
+
+    .admin-event-index .page-title {
+      color: var(--event-ink-strong) !important;
+      font-size: 24px !important;
+      font-weight: 750 !important;
+      line-height: 1.2;
+    }
+
+    .admin-event-index .breadcrumbs,
+    .admin-event-index .breadcrumbs a {
+      color: #667085 !important;
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    .admin-event-index > .row > [class*="col-"] > .card {
+      border-color: var(--event-border) !important;
+      border-radius: var(--event-radius) !important;
+      background: #fff !important;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, .04) !important;
+      overflow: visible;
+    }
+
+    .admin-event-index .card-header,
+    .admin-event-index .card-footer {
+      border-color: var(--event-border) !important;
+      background: #fbfcfd !important;
+    }
+
+    .admin-event-index .card-header {
+      padding: 22px 24px;
+    }
+
+    .admin-event-index .card-body {
+      padding: 22px 24px;
+    }
+
+    .admin-event-index .card-footer {
+      padding: 14px 24px;
+    }
+
+    .admin-event-index .event-index-header {
+      align-items: center;
+      gap: 16px;
+    }
+
+    .admin-event-index .event-index-header__eyebrow {
+      margin-bottom: 8px;
+      padding: 5px 9px;
+      background: var(--event-orange-soft);
+      color: var(--event-orange-dark);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .05em;
+    }
+
+    .admin-event-index .event-index-header__title {
+      margin-bottom: 5px;
+      color: var(--event-ink-strong);
+      font-size: 26px;
+      font-weight: 750;
+      line-height: 1.18;
+    }
+
+    .admin-event-index .event-index-header__text {
+      max-width: 660px;
+      color: var(--event-muted);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    .admin-event-index .event-index-toolbar__group {
+      gap: 10px;
+    }
+
+    .admin-event-index .event-index-select,
+    .admin-event-index .event-index-search__field .form-control {
+      min-height: 40px;
+      border-color: #d0d5dd;
+      border-radius: var(--event-radius);
+      color: var(--event-ink);
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: none;
+    }
+
+    .admin-event-index .event-index-select:focus,
+    .admin-event-index .event-index-search__field .form-control:focus {
+      border-color: var(--event-orange);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
+    }
+
+    .admin-event-index .event-index-add-btn,
+    .admin-event-index .event-index-search__btn,
+    .admin-event-index .event-index-bulk-delete {
+      min-height: 40px;
+      border-radius: var(--event-radius);
+      font-size: 13px;
+      font-weight: 650;
+      box-shadow: none !important;
+    }
+
+    .admin-event-index .event-index-add-btn,
+    .admin-event-index .event-index-search__btn {
+      border-color: var(--event-orange-dark) !important;
+      background: var(--event-orange-dark) !important;
+    }
+
+    .admin-event-index .event-index-filters {
+      margin-bottom: 20px;
+      padding: 16px;
+      border-color: var(--event-border);
+      border-radius: var(--event-radius);
+      background: #fff;
+    }
+
+    .admin-event-index .event-index-stats {
+      gap: 10px;
+    }
+
+    .admin-event-index .event-index-stat {
+      min-width: 128px;
+      padding: 11px 13px;
+      border-color: #dce5f0;
+      border-radius: var(--event-radius);
+      background: #fff;
+    }
+
+    .admin-event-index .event-index-stat__label {
+      color: #667085;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .admin-event-index .event-index-stat__value {
+      color: var(--event-ink-strong);
+      font-size: 16px;
+      font-weight: 750;
+      line-height: 1.2;
+    }
+
+    .admin-event-index .event-index-table-wrap {
+      border-color: var(--event-border);
+      border-radius: var(--event-radius);
+      display: none;
+      box-shadow: none;
+    }
+
+    .admin-event-index .event-index-mobile-list {
+      display: grid;
+    }
+
+    .admin-event-index .event-index-table {
+      table-layout: fixed;
+    }
+
+    .admin-event-index .event-index-table thead th {
+      background: #edf4f9;
+      color: #344054;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .045em;
+      line-height: 1.25;
+      padding: 13px 10px;
+      overflow-wrap: normal;
+      white-space: nowrap;
+    }
+
+    .admin-event-index .event-index-table tbody td {
+      color: var(--event-ink);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.45;
+      padding: 14px 10px;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-event {
+      width: 31%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-entry {
+      width: 9.5%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-status {
+      width: 9.5%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-featured {
+      width: 8.5%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-settlement {
+      width: 10.5%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-amounts {
+      width: 15%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-actions {
+      width: 10%;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-status .event-index-choice-form,
+    .admin-event-index .event-index-table .event-index-col-featured .event-index-choice-form {
+      min-width: 0;
+      max-width: none;
+    }
+
+    .admin-event-index .event-index-table .event-index-choice__button,
+    .admin-event-index .event-index-table .event-index-ticket-btn,
+    .admin-event-index .event-index-table .event-index-actions-btn,
+    .admin-event-index .event-index-table .event-index-settlement-btn,
+    .admin-event-index .event-index-table .event-index-settlement-state {
+      overflow-wrap: normal;
+      white-space: nowrap;
+    }
+
+    .admin-event-index .event-index-table .event-index-choice__button {
+      gap: 6px;
+      min-height: 36px;
+      padding-inline: 10px;
+    }
+
+    .admin-event-index .event-index-table .event-index-choice__button span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .admin-event-index .event-index-table .event-index-actions-btn {
+      min-width: 86px;
+    }
+
+    .admin-event-index .event-index-table .event-index-col-entry,
+    .admin-event-index .event-index-table .event-index-col-status,
+    .admin-event-index .event-index-table .event-index-col-featured,
+    .admin-event-index .event-index-table .event-index-col-settlement,
+    .admin-event-index .event-index-table .event-index-col-amounts,
+    .admin-event-index .event-index-table .event-index-col-actions {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .admin-event-index .event-index-table .event-index-ticket-btn {
+      min-width: 0;
+      max-width: none;
+      padding-inline: 6px;
+    }
+
+    .admin-event-index .event-index-table .event-index-settlement-btn,
+    .admin-event-index .event-index-table .event-index-settlement-state,
+    .admin-event-index .event-index-table .event-index-actions-btn,
+    .admin-event-index .event-index-table .event-index-money-stack {
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+    }
+
+    .admin-event-index .event-index-table .event-index-settlement-btn,
+    .admin-event-index .event-index-table .event-index-settlement-state,
+    .admin-event-index .event-index-table .event-index-actions-btn {
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .admin-event-index .event-index-title-link {
+      color: var(--event-ink-strong);
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+
+    .admin-event-index .event-index-title-link:hover,
+    .admin-event-index .event-index-subline a:hover {
+      color: var(--event-orange-dark);
+    }
+
+    .admin-event-index .event-index-subline,
+    .admin-event-index .event-index-subline a {
+      color: #667085;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .admin-event-index .event-index-type-pill,
+    .admin-event-index .event-index-category-chip {
+      min-height: 22px;
+      padding: 3px 8px;
+      border: 1px solid transparent;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .admin-event-index .event-index-type-pill {
+      border-color: #fed7aa;
+      background: var(--event-orange-soft);
+      color: var(--event-orange-dark);
+    }
+
+    .admin-event-index .event-index-category-chip {
+      border-color: #e4e7ec;
+      background: #f8fafc;
+      color: #475467;
+    }
+
+    .admin-event-index .event-index-ticket-btn {
+      min-height: 34px;
+      border: 1px solid #bbf7d0 !important;
+      border-radius: var(--event-radius);
+      background: var(--event-green-soft) !important;
+      color: #047857 !important;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: none !important;
+    }
+
+    .admin-event-index .event-index-pill-select {
+      min-height: 34px;
+      border: 1px solid #d0d5dd !important;
+      border-radius: var(--event-radius);
+      background-color: #fff !important;
+      color: var(--event-ink) !important;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.2;
+      box-shadow: none !important;
+    }
+
+    .admin-event-index .event-index-pill-select.bg-success {
+      border-color: #bbf7d0 !important;
+      background-color: var(--event-green-soft) !important;
+      color: #047857 !important;
+    }
+
+    .admin-event-index .event-index-pill-select.bg-warning {
+      border-color: #fde68a !important;
+      background-color: #fffbeb !important;
+      color: #92400e !important;
+    }
+
+    .admin-event-index .event-index-pill-select.bg-danger {
+      border-color: #fecdd3 !important;
+      background-color: var(--event-red-soft) !important;
+      color: #be123c !important;
+    }
+
+    .admin-event-index .event-index-choice-form {
+      min-width: 108px;
+      max-width: 136px;
+    }
+
+    .admin-event-index .event-index-mobile-form.event-index-choice-form {
+      max-width: none;
+    }
+
+    .admin-event-index .event-index-settlement-btn,
+    .admin-event-index .event-index-settlement-state {
+      min-height: 30px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .admin-event-index .event-index-settlement-state--pending {
+      border-color: #fed7aa;
+    }
+
+    .admin-event-index .event-index-settlement-state--settled {
+      border-color: #bbf7d0;
+    }
+
+    .admin-event-index .event-index-actions-btn {
+      min-height: 34px;
+      border: 1px solid #d0d5dd !important;
+      border-radius: var(--event-radius);
+      background: #fff !important;
+      color: var(--event-ink) !important;
+      font-size: 12px;
+      font-weight: 650;
+      box-shadow: none !important;
+    }
+
+    .admin-event-index .dropdown-menu {
+      border-color: var(--event-border) !important;
+      border-radius: var(--event-radius) !important;
+      box-shadow: 0 16px 32px rgba(16, 24, 40, .12) !important;
+      overflow: hidden;
+    }
+
+    .admin-event-index .dropdown-item,
+    .admin-event-index .deleteBtn {
+      width: 100%;
+      padding: 9px 14px;
+      border: 0;
+      background: #fff;
+      color: var(--event-ink);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    .admin-event-index .dropdown-item:hover,
+    .admin-event-index .deleteBtn:hover {
+      background: var(--event-orange-soft);
+      color: var(--event-orange-dark);
+    }
+
+    .admin-event-index .event-index-money-row {
+      color: #667085;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .admin-event-index .event-index-money-row strong {
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .admin-event-index .event-index-mobile-card {
+      border-color: var(--event-border);
+      border-radius: var(--event-radius);
+      box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    }
+
+    .admin-event-index .event-index-mobile-label {
+      color: #667085;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    @media (min-width: 1400px) {
+      .admin-event-index .event-index-table-wrap {
+        display: block;
+      }
+
+      .admin-event-index .event-index-mobile-list {
+        display: none;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1399.98px) {
+      .admin-event-index .event-index-mobile-list {
+        gap: 14px;
+      }
+
+      .admin-event-index .event-index-mobile-card {
+        padding: 16px;
+      }
+
+      .admin-event-index .event-index-mobile-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(240px, .72fr);
+        gap: 16px;
+      }
+
+      .admin-event-index .event-index-mobile-controls {
+        grid-template-columns: minmax(160px, 1fr) minmax(132px, .7fr) minmax(132px, .7fr) minmax(132px, .72fr);
+        gap: 10px;
+      }
+
+      .admin-event-index .event-index-mobile-controls .btn,
+      .admin-event-index .event-index-mobile-controls .dropdown-toggle,
+      .admin-event-index .event-index-mobile-form .event-index-choice__button {
+        min-height: 42px;
+      }
+    }
+
+    @media (min-width: 992px) and (max-width: 1399.98px) {
+      .admin-event-index .event-index-mobile-card {
+        padding: 18px 20px;
+      }
+
+      .admin-event-index .event-index-mobile-head {
+        grid-template-columns: 34px minmax(0, 1fr);
+      }
     }
 
     @media (max-width: 991px) {
@@ -1014,11 +1691,51 @@
         padding: 12px;
       }
 
-      .event-index-mobile-controls > .btn,
-      .event-index-mobile-controls > .dropdown,
-      .event-index-mobile-form {
-        flex-basis: 100%;
+      .event-index-mobile-controls {
+        grid-template-columns: 1fr;
       }
     }
   </style>
+@endsection
+
+@section('script')
+  <script>
+    (function ($) {
+      'use strict';
+
+      function closeEventChoices() {
+        $('.event-index-choice.is-open')
+          .removeClass('is-open')
+          .find('.event-index-choice__button')
+          .attr('aria-expanded', 'false');
+      }
+
+      $(document).on('click', '.event-index-choice__button', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var $choice = $(this).closest('.event-index-choice');
+        var wasOpen = $choice.hasClass('is-open');
+
+        closeEventChoices();
+
+        if (!wasOpen) {
+          $choice.addClass('is-open');
+          $(this).attr('aria-expanded', 'true');
+        }
+      });
+
+      $(document).on('click', '.event-index-choice__menu', function (event) {
+        event.stopPropagation();
+      });
+
+      $(document).on('click', closeEventChoices);
+
+      $(document).on('keydown', function (event) {
+        if (event.key === 'Escape') {
+          closeEventChoices();
+        }
+      });
+    })(jQuery);
+  </script>
 @endsection

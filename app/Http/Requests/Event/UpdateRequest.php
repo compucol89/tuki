@@ -50,6 +50,7 @@ use ValidatesVenueGeocoding;
       'status' => 'required',
       'is_featured' => 'required',
       'organizer_id' => 'required|exists:organizers,id',
+      'meta_pixel_id' => ['nullable', 'regex:/^\d{6,32}$/'],
     ];
 
     if ($this->date_type == 'single') {

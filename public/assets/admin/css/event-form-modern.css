@@ -135,6 +135,17 @@ body.dark .event-form-modern,
   overflow: visible;
 }
 
+.event-form-modern.event-form-modern--edit > .row > .col-md-12 > .card > .card-header {
+  border: 0 !important;
+  margin-bottom: 16px !important;
+  min-height: 0;
+  padding: 0 !important;
+}
+
+.event-form-modern.event-form-modern--edit > .row > .col-md-12 > .card > .card-header .event-edit-actions {
+  margin-bottom: 0;
+}
+
 .event-form-modern > .row > .col-md-12 > .card > .card-header {
   align-items: center;
   background: transparent;

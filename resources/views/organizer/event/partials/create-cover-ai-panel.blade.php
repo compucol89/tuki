@@ -4,11 +4,11 @@
     id="event-cover-ai-create"
     data-analysis-url="{{ $temporaryAnalysisUrl }}"
   >
-    <div class="alert alert-light border mb-3" data-create-ai-status>
+    <div class="create-cover-ai-status mb-3" data-create-ai-status>
       {{ __('Subí la portada y completá la orientación del copy antes de generar. Así la IA usa el flyer más tu criterio como organizador.') }}
     </div>
 
-    <div class="create-cover-ai-preferences border rounded p-3 mb-3" data-create-ai-preferences>
+    <div class="create-cover-ai-preferences mb-3" data-create-ai-preferences>
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-start mb-2">
         <div class="pr-lg-3">
           <h5 class="mb-1">{{ __('Armar evento con asistente IA') }}</h5>
@@ -18,9 +18,9 @@
       </div>
 
       <div class="create-cover-ai-requirements mb-3" data-create-ai-readiness>
-        <span class="create-cover-ai-requirement" data-create-ai-requirement="cover">{{ __('Portada cargada') }}</span>
-        <span class="create-cover-ai-requirement" data-create-ai-requirement="preferences">{{ __('Preferencias completas') }}</span>
-        <span class="create-cover-ai-requirement" data-create-ai-requirement="brief">{{ __('Descripción breve') }}</span>
+        <span class="create-cover-ai-requirement" data-create-ai-requirement="cover"><strong>1</strong>{{ __('Portada cargada') }}</span>
+        <span class="create-cover-ai-requirement" data-create-ai-requirement="preferences"><strong>2</strong>{{ __('Preferencias completas') }}</span>
+        <span class="create-cover-ai-requirement" data-create-ai-requirement="brief"><strong>3</strong>{{ __('Descripción breve') }}</span>
       </div>
 
       <div class="row">
@@ -139,9 +139,14 @@
         <div class="small text-muted" data-create-ai-readiness-text>
           {{ __('Completá los campos obligatorios para activar la generación con IA.') }}
         </div>
-        <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze disabled>
-          <i class="fas fa-magic mr-1"></i>{{ __('Armar evento con IA') }}
-        </button>
+        <div class="create-cover-ai-actions">
+          <button type="button" class="btn btn-light btn-sm" data-cover-ai-skip>
+            {{ __('Completar manualmente') }}
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" data-cover-save-analyze disabled>
+            <i class="fas fa-magic mr-1"></i>{{ __('Armar evento con IA') }}
+          </button>
+        </div>
       </div>
     </div>
 

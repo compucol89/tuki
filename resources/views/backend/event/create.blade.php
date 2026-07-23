@@ -123,6 +123,13 @@
                         </div>
                         <span class="event-cover-box__next-step">{{ __('Siguiente paso: completá la orientación del copy debajo para activar la IA.') }}</span>
                         <small>{{ __('El asistente propone datos, copy y SEO antes de guardar. Vos revisás y decidís qué aplicar.') }}</small>
+                        <div class="event-cover-box__manual d-none" data-cover-ai-manual>
+                          <strong>{{ __('Modo manual activado.') }}</strong>
+                          <span>{{ __('Podés completar el evento sin IA. Igual recomendamos usarla si querés mejorar descripción, SEO y datos para Google.') }}</span>
+                          <button type="button" class="btn btn-outline-primary btn-sm mt-2" data-cover-ai-restore>
+                            {{ __('Volver a usar IA') }}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -873,7 +880,8 @@
     }
 
     .event-cover-box__empty,
-    .event-cover-box__ai {
+    .event-cover-box__ai,
+    .event-cover-box__manual {
       width: 100%;
       padding: 14px;
       border-radius: 14px;
@@ -884,11 +892,14 @@
 
     .event-cover-box__empty strong,
     .event-cover-box__empty span,
+    .event-cover-box__manual strong,
+    .event-cover-box__manual span,
     .event-cover-box__ai small {
       display: block;
     }
 
     .event-cover-box__empty span,
+    .event-cover-box__manual span,
     .event-cover-box__ai small {
       margin-top: 4px;
       line-height: 1.6;
@@ -899,6 +910,16 @@
       background: #f0fdf4;
       border-color: #bbf7d0;
       color: #166534;
+    }
+
+    .event-cover-box__manual {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      color: #334155;
+    }
+
+    .event-cover-box__manual span {
+      color: #64748b;
     }
 
     .event-cover-box__state {
@@ -943,6 +964,19 @@
       background: #f8fbff;
     }
 
+    .create-cover-ai-status {
+      padding: 10px 12px;
+      border-left: 3px solid #2563eb;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .create-cover-ai-preferences {
+      padding-top: 2px;
+    }
+
     .create-cover-ai-requirements {
       display: flex;
       flex-wrap: wrap;
@@ -952,6 +986,7 @@
     .create-cover-ai-requirement {
       display: inline-flex;
       align-items: center;
+      gap: 7px;
       padding: 7px 10px;
       border: 1px solid #e2e8f0;
       border-radius: 999px;
@@ -961,15 +996,37 @@
       font-weight: 700;
     }
 
+    .create-cover-ai-requirement strong {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #475569;
+      font-size: 11px;
+    }
+
     .create-cover-ai-requirement.is-ready {
       border-color: #bbf7d0;
       background: #f0fdf4;
       color: #166534;
     }
 
+    .create-cover-ai-requirement.is-ready strong {
+      background: #16a34a;
+      color: #fff;
+    }
+
     .create-cover-ai-requirement.is-missing {
       border-color: #fed7aa;
       background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .create-cover-ai-requirement.is-missing strong {
+      background: #fed7aa;
       color: #9a3412;
     }
 
@@ -980,6 +1037,14 @@
       gap: 12px;
       padding-top: 12px;
       border-top: 1px solid #e2e8f0;
+    }
+
+    .create-cover-ai-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .create-cover-ai-facts {
@@ -1061,6 +1126,14 @@
       .create-cover-ai-actionbar {
         align-items: stretch;
         flex-direction: column;
+      }
+
+      .create-cover-ai-actions {
+        justify-content: stretch;
+      }
+
+      .create-cover-ai-actions .btn {
+        width: 100%;
       }
 
       .create-cover-ai-fact {
@@ -1321,7 +1394,10 @@
       const thumbnailInput = document.querySelector('input[name="thumbnail"]');
       const emptyState = document.querySelector('[data-cover-ai-empty]');
       const readyState = document.querySelector('[data-cover-ai-ready]');
+      const manualState = document.querySelector('[data-cover-ai-manual]');
+      const restoreAiButton = document.querySelector('[data-cover-ai-restore]');
       const analyzeButton = document.querySelector('[data-cover-save-analyze]');
+      const skipAiButton = document.querySelector('[data-cover-ai-skip]');
       const panel = document.getElementById('event-cover-ai-create');
       const statusBox = panel ? panel.querySelector('[data-create-ai-status]') : null;
       const progressPanel = panel ? panel.querySelector('[data-async-progress]') : null;
@@ -1348,6 +1424,7 @@
       let progressTimer = null;
       let elapsedTimer = null;
       let startedAt = null;
+      let manualMode = false;
 
       if (!form || !thumbnailInput) return;
 
@@ -1356,13 +1433,15 @@
 
         if (emptyState) emptyState.classList.toggle('d-none', hasCover);
         if (readyState) readyState.classList.toggle('d-none', !hasCover);
-        if (panel) panel.classList.toggle('d-none', !hasCover);
+        if (manualState) manualState.classList.toggle('d-none', !hasCover || !manualMode);
+        if (panel) panel.classList.toggle('d-none', !hasCover || manualMode);
         updateAiReadiness();
 
       };
 
       thumbnailInput.addEventListener('change', toggleCoverState);
       thumbnailInput.addEventListener('change', function () {
+        manualMode = false;
         lastReview = null;
         lastDraft = null;
         if (results) results.classList.add('d-none');
@@ -1382,6 +1461,28 @@
       if (applyButton) {
         applyButton.addEventListener('click', function () {
           applyDetectedFields();
+        });
+      }
+
+      if (skipAiButton) {
+        skipAiButton.addEventListener('click', function () {
+          manualMode = true;
+          lastReview = null;
+          lastDraft = null;
+          if (results) results.classList.add('d-none');
+          if (draftBox) draftBox.classList.add('d-none');
+          if (progressPanel) progressPanel.classList.add('d-none');
+          toggleCoverState();
+          setStatus('Modo manual activado. Podés completar el evento sin IA; el asistente queda disponible si querés mejorar SEO y descripción.', 'light');
+        });
+      }
+
+      if (restoreAiButton) {
+        restoreAiButton.addEventListener('click', function () {
+          manualMode = false;
+          toggleCoverState();
+          setStatus('Asistente IA activado. Completá los pasos para generar una propuesta optimizada.', 'light');
+          if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       }
 
@@ -1493,13 +1594,15 @@
         updateRequirementPill('brief', briefReady);
 
         if (readinessText) {
-          readinessText.textContent = ready
+          readinessText.textContent = manualMode
+            ? 'Modo manual activo. Podés volver a usar IA desde el aviso de la portada.'
+            : (ready
             ? 'Listo: la IA va a usar la portada, tus preferencias y tu descripción breve.'
-            : 'Falta completar: ' + missing.join(', ') + '.';
+            : 'Falta completar: ' + missing.join(', ') + '.');
         }
 
         if (analyzeButton) {
-          analyzeButton.disabled = active || !ready;
+          analyzeButton.disabled = manualMode || active || !ready;
           if (!active) {
             analyzeButton.innerHTML = ready
               ? '<i class="fas fa-magic mr-1"></i>Armar evento con IA'

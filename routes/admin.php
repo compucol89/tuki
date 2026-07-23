@@ -120,6 +120,7 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
     Route::post('bulk/delete/event', 'BackEnd\Event\EventController@bulk_delete')->name('admin.event_management.bulk_delete_event');
 
     Route::get('event/ticket', 'BackEnd\Event\TicketController@index')->name('admin.event.ticket');
+    Route::post('event/ticket/free-limit', 'BackEnd\Event\TicketController@updateFreeTicketLimit')->name('admin.event.ticket.free_limit');
     Route::get('event/add-ticket', 'BackEnd\Event\TicketController@create')->name('admin.event.add.ticket');
     Route::post('event/ticket/store-ticket', 'BackEnd\Event\TicketController@store')->name('admin.ticket_management.store_ticket');
     Route::get('event/edit/ticket', 'BackEnd\Event\TicketController@edit')->name('admin.event.edit.ticket');

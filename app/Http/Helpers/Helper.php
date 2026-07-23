@@ -2,6 +2,7 @@
 
 use App\Models\Advertisement;
 use App\Models\BasicSettings\Basic;
+use App\Models\Event;
 use App\Models\Event\Booking;
 use App\Models\Event\EventDates;
 use App\Models\Event\Ticket;
@@ -541,55 +542,92 @@ if (!function_exists('TicketStockCheck')) {
 }
 
 if (!function_exists('checkFreePassLimit')) {
-  function checkFreePassLimit($event_id, $ticket_id, $email, $phone, $requested_qty, $limit = 2)
+  function checkFreePassLimit($event_id, $email, $phone, $document, $requested_qty, $limit = 2)
   {
     $emailNormalized = strtolower(trim((string) $email));
     $phoneNormalized = preg_replace('/[^0-9]/', '', (string) ($phone ?? ''));
+    $documentNormalized = preg_replace('/[^0-9A-Za-z]/', '', strtoupper((string) ($document ?? '')));
     $customer_id = Auth::guard('customer')->check()
       ? Auth::guard('customer')->user()->id
       : null;
 
-    if ($emailNormalized === '' && $phoneNormalized === '' && !$customer_id) {
-      return false;
+    $limit = max((int) $limit, 1);
+    $requested_qty = max((int) $requested_qty, 0);
+
+    if ($requested_qty > $limit) {
+      return ['blocked' => true, 'previous_qty' => 0];
+    }
+
+    if ($emailNormalized === '' && $phoneNormalized === '' && $documentNormalized === '' && !$customer_id) {
+      return ['blocked' => false, 'previous_qty' => 0];
+    }
+
+    $freeTicketIds = Ticket::where('event_id', $event_id)
+      ->where(function ($query) {
+        $query->where('pricing_type', 'free')
+          ->orWhere('price', '<=', 0);
+      })
+      ->pluck('id')
+      ->map(fn ($id) => (int) $id)
+      ->all();
+
+    if (empty($freeTicketIds)) {
+      return ['blocked' => false, 'previous_qty' => 0];
     }
 
     $bookings = Booking::where('event_id', $event_id)
       ->where('paymentStatus', '!=', 'rejected')
-      ->select('customer_id', 'email', 'phone', 'quantity', 'variation')
+      ->with('fiscalProfile:id,booking_id,document_number')
+      ->select('id', 'customer_id', 'email', 'phone', 'price', 'quantity', 'variation')
       ->get();
 
     $previousQty = 0;
     foreach ($bookings as $booking) {
       $bookingEmail = strtolower(trim((string) $booking->email));
       $bookingPhone = preg_replace('/[^0-9]/', '', (string) ($booking->phone ?? ''));
+      $bookingDocument = preg_replace('/[^0-9A-Za-z]/', '', strtoupper((string) optional($booking->fiscalProfile)->document_number));
       $sameCustomer = $customer_id && (int) $booking->customer_id === (int) $customer_id;
       $sameEmail = $emailNormalized !== '' && $bookingEmail === $emailNormalized;
       $samePhone = $phoneNormalized !== '' && $bookingPhone === $phoneNormalized;
+      $sameDocument = $documentNormalized !== '' && $bookingDocument === $documentNormalized;
 
-      if (!$sameCustomer && !$sameEmail && !$samePhone) {
+      if (!$sameCustomer && !$sameEmail && !$samePhone && !$sameDocument) {
         continue;
       }
 
       if (!empty($booking->variation)) {
         $variations = json_decode($booking->variation, true) ?: [];
         foreach ($variations as $variation) {
-          if ((int) ($variation['ticket_id'] ?? 0) === (int) $ticket_id) {
+          $variationTicketId = (int) ($variation['ticket_id'] ?? 0);
+          $variationPrice = (float) ($variation['price'] ?? 0);
+          if (in_array($variationTicketId, $freeTicketIds, true) || $variationPrice <= 0) {
             $previousQty += (int) ($variation['qty'] ?? 1);
           }
         }
-      } else {
+      } elseif ((float) ($booking->price ?? 0) <= 0) {
         $previousQty += (int) $booking->quantity;
       }
     }
 
-    return ($previousQty + (int) $requested_qty) > $limit;
+    return [
+      'blocked' => ($previousQty + $requested_qty) > $limit,
+      'previous_qty' => $previousQty,
+    ];
   }
 }
 
 if (!function_exists('checkSelectedFreePassLimits')) {
-  function checkSelectedFreePassLimits($event_id, $selectedTickets, $email, $phone)
+  function checkSelectedFreePassLimits($event_id, $selectedTickets, $email, $phone, $document = null)
   {
     if (empty($selectedTickets) || !is_array($selectedTickets)) {
+      return ['status' => 'false'];
+    }
+
+    $event = Event::where('id', $event_id)
+      ->select('id', 'limit_free_tickets_per_person', 'free_tickets_per_person_limit')
+      ->first();
+
+    if (!$event || !$event->limit_free_tickets_per_person) {
       return ['status' => 'false'];
     }
 
@@ -606,21 +644,40 @@ if (!function_exists('checkSelectedFreePassLimits')) {
       return ['status' => 'false'];
     }
 
-    $tickets = Ticket::whereIn('id', array_keys($qtyByTicket))
+    $freeTicketIds = Ticket::whereIn('id', array_keys($qtyByTicket))
       ->where('event_id', $event_id)
-      ->where('pricing_type', 'free')
-      ->select('id', 'max_ticket_buy_type', 'max_buy_ticket')
-      ->get();
+      ->where(function ($query) {
+        $query->where('pricing_type', 'free')
+          ->orWhere('price', '<=', 0);
+      })
+      ->pluck('id')
+      ->map(fn ($id) => (int) $id)
+      ->all();
 
-    foreach ($tickets as $ticket) {
-      if ($ticket->max_ticket_buy_type === 'unlimited') {
-        continue;
+    $requestedFreeQty = 0;
+    foreach ($selectedTickets as $selectedTicket) {
+      $ticketId = (int) ($selectedTicket['ticket_id'] ?? 0);
+      $hasSelectedPrice = array_key_exists('price', $selectedTicket);
+      $selectedPrice = $hasSelectedPrice ? (float) $selectedTicket['price'] : null;
+      if (in_array($ticketId, $freeTicketIds, true) || ($hasSelectedPrice && $selectedPrice <= 0)) {
+        $requestedFreeQty += (int) ($selectedTicket['qty'] ?? 0);
       }
+    }
 
-      $limit = (int) $ticket->max_buy_ticket > 0 ? (int) $ticket->max_buy_ticket : 2;
-      if (checkFreePassLimit($event_id, $ticket->id, $email, $phone, $qtyByTicket[$ticket->id] ?? 0, $limit)) {
-        return ['status' => 'true', 'ticket_id' => $ticket->id, 'limit' => $limit];
-      }
+    if ($requestedFreeQty <= 0) {
+      return ['status' => 'false'];
+    }
+
+    $limit = max((int) ($event->free_tickets_per_person_limit ?: 2), 1);
+    $limitCheck = checkFreePassLimit($event_id, $email, $phone, $document, $requestedFreeQty, $limit);
+
+    if ($limitCheck['blocked']) {
+      return [
+        'status' => 'true',
+        'limit' => $limit,
+        'previous_qty' => $limitCheck['previous_qty'],
+        'requested_qty' => $requestedFreeQty,
+      ];
     }
 
     return ['status' => 'false'];

@@ -46,10 +46,14 @@ class Event extends Model
     'youtube_url',
     'manual_badge',
     'event_addons_enabled',
+    'limit_free_tickets_per_person',
+    'free_tickets_per_person_limit',
   ];
 
   protected $casts = [
     'ai_metadata' => 'array',
+    'limit_free_tickets_per_person' => 'boolean',
+    'free_tickets_per_person_limit' => 'integer',
   ];
 
   public function ticket()

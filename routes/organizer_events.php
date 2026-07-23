@@ -31,6 +31,7 @@ Route::prefix('/organizer')->middleware('auth:organizer', 'admin.locale', 'Deact
   });
   Route::post('bulk/delete/event', 'BackEnd\Organizer\EventController@bulk_delete')->name('organizer.event_management.bulk_delete_event');
   Route::get('event/ticket', 'BackEnd\Organizer\TicketController@index')->name('organizer.event.ticket');
+  Route::post('event/ticket/free-limit', 'BackEnd\Organizer\TicketController@updateFreeTicketLimit')->name('organizer.event.ticket.free_limit');
   Route::get('event/add-ticket', 'BackEnd\Organizer\TicketController@create')->name('organizer.event.add.ticket');
   Route::post('event/ticket/store-ticket', 'BackEnd\Organizer\TicketController@store')->name('organizer.ticket_management.store_ticket');
   Route::get('event/edit/ticket', 'BackEnd\Organizer\TicketController@edit')->name('organizer.event.edit.ticket');

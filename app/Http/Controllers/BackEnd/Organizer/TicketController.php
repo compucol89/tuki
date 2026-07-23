@@ -37,7 +37,7 @@ class TicketController extends Controller
 
   public function index(Request $request)
   {
-    $this->getOwnedEventOrFail($request->event_id);
+    $eventModel = $this->getOwnedEventOrFail($request->event_id);
 
     $languages = Language::all();
 
@@ -49,10 +49,29 @@ class TicketController extends Controller
     }
     $tickets = Ticket::where('event_id', $request->event_id)->orderBy('id', 'desc')->get();
     $information['event'] = $event;
+    $information['eventModel'] = $eventModel;
 
     $information['tickets'] = $tickets;
     return view('organizer.event.ticket.index', compact('information', 'languages'));
   }
+
+  public function updateFreeTicketLimit(Request $request)
+  {
+    $request->validate([
+      'event_id' => 'required|integer',
+      'free_tickets_per_person_limit' => 'nullable|integer|min:1|max:10',
+    ]);
+
+    $event = $this->getOwnedEventOrFail($request->event_id);
+    $event->limit_free_tickets_per_person = $request->boolean('limit_free_tickets_per_person');
+    $event->free_tickets_per_person_limit = max((int) ($request->free_tickets_per_person_limit ?: 2), 1);
+    $event->save();
+
+    Session::flash('success', __('Configuración de entradas gratis actualizada correctamente.'));
+
+    return redirect()->back();
+  }
+
   //create
   public function create(Request $request)
   {

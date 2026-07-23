@@ -82,9 +82,17 @@ class CheckOutController extends Controller
 
       if ($request->pricing_type == 'normal') {
 
-        $price = Ticket::where('event_id', $request->event_id)->select('price', 'early_bird_discount', 'early_bird_discount_amount', 'early_bird_discount_type', 'early_bird_discount_date', 'early_bird_discount_time', 'ticket_available', 'ticket_available_type', 'max_ticket_buy_type', 'max_buy_ticket')->first();
+        $price = Ticket::where('event_id', $request->event_id)->select('id', 'price', 'early_bird_discount', 'early_bird_discount_amount', 'early_bird_discount_type', 'early_bird_discount_date', 'early_bird_discount_time', 'ticket_available', 'ticket_available_type', 'max_ticket_buy_type', 'max_buy_ticket')->first();
         $information['quantity'] = $request->quantity;
         $total = $request->quantity * $price->price;
+
+        if ((float) $price->price <= 0) {
+          Session::put('freeTicketSelection', [[
+            'ticket_id' => (int) $price->id,
+            'qty' => (int) $request->quantity,
+            'price' => 0,
+          ]]);
+        }
 
         //check guest checkout status enable or not
         if ($event_guest_checkout_status != 1) {

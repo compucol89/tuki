@@ -1,5 +1,11 @@
 @extends('organizer.layout')
 
+@php
+  $eventModel = $information['eventModel'] ?? null;
+  $freeLimitEnabled = (bool) optional($eventModel)->limit_free_tickets_per_person;
+  $freeLimitValue = max((int) (optional($eventModel)->free_tickets_per_person_limit ?: 2), 1);
+@endphp
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Tickets') }}</h4>
@@ -105,6 +111,34 @@
                   <p class="text-dark mb-0">{{ session()->get('course_status_warning') }}</p>
                 </div>
               @endif
+
+              <form action="{{ route('organizer.event.ticket.free_limit') }}" method="POST" class="ticket-free-limit mb-4">
+                @csrf
+                <input type="hidden" name="event_id" value="{{ request()->input('event_id') }}">
+
+                <div class="ticket-free-limit__copy">
+                  <span>{{ __('Control de entradas gratis') }}</span>
+                  <strong>{{ __('Limitar entradas sin costo por persona') }}</strong>
+                  <p>{{ __('Cuando está activo, una persona puede reservar como máximo la cantidad indicada de entradas gratis o con precio $0 en este evento. El control cruza email, teléfono y DNI. No afecta entradas pagas.') }}</p>
+                </div>
+
+                <div class="ticket-free-limit__controls">
+                  <label class="ticket-free-limit__toggle">
+                    <input type="checkbox" name="limit_free_tickets_per_person" value="1" @checked($freeLimitEnabled)>
+                    <span>{{ $freeLimitEnabled ? __('Activado') : __('Desactivado') }}</span>
+                  </label>
+
+                  <label class="ticket-free-limit__number">
+                    <span>{{ __('Máximo gratis por persona') }}</span>
+                    <input type="number" name="free_tickets_per_person_limit" min="1" max="10"
+                      value="{{ $freeLimitValue }}" class="form-control">
+                  </label>
+
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    {{ __('Guardar límite') }}
+                  </button>
+                </div>
+              </form>
 
               @if (count($information['tickets']) == 0)
                 <h3 class="text-center mt-2">{{ __('NO TICKET FOUND') . '!' }}</h3>
@@ -283,4 +317,99 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('style')
+  <style>
+    .ticket-free-limit {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, auto);
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      background: #f8fbff;
+    }
+
+    .ticket-free-limit__copy span,
+    .ticket-free-limit__number span {
+      display: block;
+      margin-bottom: 6px;
+      color: #2563eb;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .ticket-free-limit__copy strong {
+      display: block;
+      color: #0f172a;
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    .ticket-free-limit__copy p {
+      max-width: 760px;
+      margin: 6px 0 0;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .ticket-free-limit__controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .ticket-free-limit__toggle {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      margin: 0;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+      color: #0f172a;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .ticket-free-limit__toggle input {
+      margin-right: 8px;
+      accent-color: #f97316;
+    }
+
+    .ticket-free-limit__number {
+      min-width: 170px;
+      margin: 0;
+    }
+
+    .ticket-free-limit__number .form-control {
+      height: 40px;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 1199px) {
+      .ticket-free-limit {
+        grid-template-columns: 1fr;
+      }
+
+      .ticket-free-limit__controls {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 575px) {
+      .ticket-free-limit__controls .btn,
+      .ticket-free-limit__number,
+      .ticket-free-limit__toggle {
+        width: 100%;
+      }
+    }
+  </style>
 @endsection

@@ -31,6 +31,7 @@ class EventBookingTicketSelectionValidationTest extends TestCase
 
     Schema::dropIfExists('event_contents');
     Schema::dropIfExists('ticket_contents');
+    Schema::dropIfExists('customer_fiscal_profiles');
     Schema::dropIfExists('bookings');
     Schema::dropIfExists('tickets');
     Schema::dropIfExists('events');
@@ -200,6 +201,213 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     ]));
   }
 
+  public function test_free_ticket_limit_is_event_level_and_matches_document_number(): void
+  {
+    $event = $this->createEvent([
+      'limit_free_tickets_per_person' => true,
+      'free_tickets_per_person_limit' => 2,
+    ]);
+
+    $freeTicketA = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Ingreso gratis',
+      'pricing_type' => 'free',
+      'ticket_available_type' => 'unlimited',
+      'max_ticket_buy_type' => 'unlimited',
+      'price' => 0,
+    ]);
+
+    $freeTicketB = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Free pass mujeres',
+      'pricing_type' => 'free',
+      'ticket_available_type' => 'unlimited',
+      'max_ticket_buy_type' => 'unlimited',
+      'price' => 0,
+    ]);
+
+    $paidTicket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Entrada general',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'unlimited',
+      'price' => 12000,
+    ]);
+
+    $booking = Booking::create([
+      'booking_id' => 'booking-free-limit',
+      'event_id' => $event,
+      'paymentStatus' => 'completed',
+      'quantity' => 3,
+      'email' => 'otra-persona@example.test',
+      'phone' => '1166667777',
+      'variation' => json_encode([
+        [
+          'ticket_id' => $freeTicketA->id,
+          'name' => 'Ingreso gratis',
+          'qty' => 1,
+          'price' => 0,
+        ],
+        [
+          'ticket_id' => $freeTicketB->id,
+          'name' => 'Free pass mujeres',
+          'qty' => 1,
+          'price' => 0,
+        ],
+        [
+          'ticket_id' => $paidTicket->id,
+          'name' => 'Entrada general',
+          'qty' => 1,
+          'price' => 12000,
+        ],
+      ]),
+    ]);
+
+    DB::table('customer_fiscal_profiles')->insert([
+      'booking_id' => $booking->id,
+      'document_type' => 'DNI',
+      'document_number' => '30111222',
+      'full_name' => 'Juan Perez',
+      'iva_condition' => 'consumidor_final',
+      'created_at' => now(),
+      'updated_at' => now(),
+    ]);
+
+    $result = checkSelectedFreePassLimits($event, [[
+      'ticket_id' => $freeTicketA->id,
+      'qty' => 1,
+    ]], 'nuevo@example.test', '1199998888', '30.111.222');
+
+    $this->assertSame('true', $result['status']);
+    $this->assertSame(2, $result['limit']);
+    $this->assertSame(2, $result['previous_qty']);
+  }
+
+  public function test_free_ticket_limit_can_be_disabled_per_event(): void
+  {
+    $event = $this->createEvent([
+      'limit_free_tickets_per_person' => false,
+      'free_tickets_per_person_limit' => 2,
+    ]);
+
+    $freeTicket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Ingreso gratis',
+      'pricing_type' => 'free',
+      'ticket_available_type' => 'unlimited',
+      'max_ticket_buy_type' => 'limited',
+      'max_buy_ticket' => 2,
+      'price' => 0,
+    ]);
+
+    Booking::create([
+      'booking_id' => 'booking-free-disabled',
+      'event_id' => $event,
+      'paymentStatus' => 'completed',
+      'quantity' => 2,
+      'email' => 'juan@example.test',
+      'phone' => '11111111',
+      'variation' => json_encode([
+        [
+          'ticket_id' => $freeTicket->id,
+          'name' => 'Ingreso gratis',
+          'qty' => 2,
+          'price' => 0,
+        ],
+      ]),
+    ]);
+
+    $result = checkSelectedFreePassLimits($event, [[
+      'ticket_id' => $freeTicket->id,
+      'qty' => 1,
+    ]], 'juan@example.test', '11111111', null);
+
+    $this->assertSame('false', $result['status']);
+  }
+
+  public function test_free_ticket_limit_applies_to_fixed_price_zero_tickets(): void
+  {
+    $event = $this->createEvent([
+      'limit_free_tickets_per_person' => true,
+      'free_tickets_per_person_limit' => 2,
+    ]);
+
+    $zeroPriceTicket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Ingreso gratis',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'unlimited',
+      'max_ticket_buy_type' => 'unlimited',
+      'price' => 0,
+    ]);
+
+    Booking::create([
+      'booking_id' => 'booking-zero-price',
+      'event_id' => $event,
+      'paymentStatus' => 'completed',
+      'quantity' => 2,
+      'email' => 'juan@example.test',
+      'phone' => '11111111',
+      'variation' => json_encode([
+        [
+          'ticket_id' => $zeroPriceTicket->id,
+          'name' => 'Ingreso gratis',
+          'qty' => 2,
+          'price' => 0,
+        ],
+      ]),
+    ]);
+
+    $result = checkSelectedFreePassLimits($event, [[
+      'ticket_id' => $zeroPriceTicket->id,
+      'qty' => 1,
+      'price' => 0,
+    ]], 'juan@example.test', '11111111', null);
+
+    $this->assertSame('true', $result['status']);
+  }
+
+  public function test_free_ticket_limit_does_not_count_paid_tickets(): void
+  {
+    $event = $this->createEvent([
+      'limit_free_tickets_per_person' => true,
+      'free_tickets_per_person_limit' => 2,
+    ]);
+
+    $paidTicket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Entrada general',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'unlimited',
+      'price' => 12000,
+    ]);
+
+    Booking::create([
+      'booking_id' => 'booking-paid-only',
+      'event_id' => $event,
+      'paymentStatus' => 'completed',
+      'quantity' => 2,
+      'email' => 'juan@example.test',
+      'phone' => '11111111',
+      'variation' => json_encode([
+        [
+          'ticket_id' => $paidTicket->id,
+          'name' => 'Entrada general',
+          'qty' => 2,
+          'price' => 12000,
+        ],
+      ]),
+    ]);
+
+    $result = checkSelectedFreePassLimits($event, [[
+      'ticket_id' => $paidTicket->id,
+      'qty' => 2,
+      'price' => 12000,
+    ]], 'juan@example.test', '11111111', null);
+
+    $this->assertSame('false', $result['status']);
+  }
+
   public function test_admin_scanner_rejects_code_when_booking_has_no_issued_ticket_ids(): void
   {
     Booking::create([
@@ -258,6 +466,8 @@ class EventBookingTicketSelectionValidationTest extends TestCase
       $table->string('date_type')->nullable();
       $table->string('start_date')->nullable();
       $table->string('start_time')->nullable();
+      $table->boolean('limit_free_tickets_per_person')->default(false);
+      $table->unsignedTinyInteger('free_tickets_per_person_limit')->default(2);
       $table->timestamps();
     });
 
@@ -286,8 +496,23 @@ class EventBookingTicketSelectionValidationTest extends TestCase
       $table->string('pricing_type')->nullable();
       $table->string('ticket_available_type')->nullable();
       $table->integer('ticket_available')->nullable();
+      $table->string('max_ticket_buy_type')->nullable();
+      $table->integer('max_buy_ticket')->nullable();
       $table->decimal('price', 10, 2)->nullable();
       $table->text('variations')->nullable();
+      $table->timestamps();
+    });
+
+    Schema::create('customer_fiscal_profiles', function (Blueprint $table) {
+      $table->id();
+      $table->unsignedBigInteger('customer_id')->nullable();
+      $table->unsignedBigInteger('booking_id')->nullable()->index();
+      $table->string('full_name');
+      $table->string('document_type')->default('DNI');
+      $table->string('document_number', 20);
+      $table->string('iva_condition')->default('consumidor_final');
+      $table->string('fiscal_address')->nullable();
+      $table->string('fiscal_email')->nullable();
       $table->timestamps();
     });
 
@@ -358,6 +583,8 @@ class EventBookingTicketSelectionValidationTest extends TestCase
       'date_type' => 'single',
       'start_date' => '2026-06-27',
       'start_time' => '18:30',
+      'limit_free_tickets_per_person' => false,
+      'free_tickets_per_person_limit' => 2,
       'created_at' => now(),
       'updated_at' => now(),
     ], $attributes));

@@ -58,9 +58,9 @@ class BookingController extends Controller
       }
     }
 
-    $freePassLimit = checkSelectedFreePassLimits($id, Session::get('selTickets') ?: Session::get('freeTicketSelection'), $request->email, $request->phone);
+    $freePassLimit = checkSelectedFreePassLimits($id, Session::get('selTickets') ?: Session::get('freeTicketSelection'), $request->email, $request->phone, $request->input('dni'));
     if ($freePassLimit['status'] == 'true') {
-      Session::flash('error', __('Alcanzaste el límite de FREE PASS para este evento.'));
+      Session::flash('error', __('Alcanzaste el límite de :limit entradas gratis para este evento.', ['limit' => $freePassLimit['limit'] ?? 2]));
       return redirect()->back()->withInput();
     }
 
@@ -205,9 +205,17 @@ class BookingController extends Controller
 
       $organizer_id = $event->organizer_id;
       $variations = $info['selTickets'] ?? Session::get('selTickets');
+      $freeLimitSelection = $variations ?: Session::get('freeTicketSelection');
+
+      if ($freeLimitSelection) {
+        $this->ensureSelectedTicketsBelongToEvent($freeLimitSelection, (int) $info['event_id']);
+        $freePassLimit = checkSelectedFreePassLimits($info['event_id'], $freeLimitSelection, $info['email'] ?? null, $info['phone'] ?? null, $info['dni'] ?? null);
+        if ($freePassLimit['status'] == 'true') {
+          throw new \RuntimeException(__('Alcanzaste el límite de :limit entradas gratis para este evento.', ['limit' => $freePassLimit['limit'] ?? 2]));
+        }
+      }
 
       if ($variations) {
-        $this->ensureSelectedTicketsBelongToEvent($variations, (int) $info['event_id']);
         $info['quantity'] = !empty($info['quantity'])
           ? $info['quantity']
           : collect($variations)->sum(fn ($variation) => (int) ($variation['qty'] ?? 0));

@@ -515,17 +515,48 @@ body.dark .event-form-modern,
   border: 1px solid var(--event-border) !important;
   box-shadow: none !important;
   color: var(--event-card-fg) !important;
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, max-content);
+  justify-content: center;
   min-height: 56px;
   padding: 12px 14px !important;
+  text-align: left !important;
   white-space: normal;
+}
+
+.event-form-modern .event-step-link .badge {
+  align-items: center;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  margin: 0 !important;
+  min-width: 24px;
+  padding: 0 7px;
+}
+
+.event-form-modern .event-step-link__copy {
+  align-items: baseline;
+  display: flex;
+  gap: 7px;
+  min-width: 0;
+}
+
+.event-form-modern .event-step-link__copy strong {
+  color: var(--event-card-fg);
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .event-form-modern .event-step-link small {
   display: inline !important;
-  margin-left: 4px;
+  font-size: 12px;
+  line-height: 1.25;
+  margin-left: 0;
   margin-top: 0 !important;
+  min-width: 0;
 }
 
 .event-form-modern .event-media-intro {

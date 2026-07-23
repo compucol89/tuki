@@ -143,38 +143,56 @@
                   <div class="event-step-grid">
                     <div>
                       <a href="#section-media" class="btn btn-light btn-block text-left event-step-link">
-                        <span class="badge badge-primary mr-2">1</span>{{ __('Portada e IA') }}
-                        <small class="d-block text-muted mt-1">{{ __('Imagen principal y análisis') }}</small>
+                        <span class="badge badge-primary">1</span>
+                        <span class="event-step-link__copy">
+                          <strong>{{ __('Portada e IA') }}</strong>
+                          <small class="text-muted">{{ __('Imagen principal y análisis') }}</small>
+                        </span>
                       </a>
                     </div>
                     <div>
                       <a href="#section-schedule" class="btn btn-light btn-block text-left event-step-link">
-                        <span class="badge badge-primary mr-2">2</span>{{ __('Fechas') }}
-                        <small class="d-block text-muted mt-1">{{ __('Fecha única o múltiples funciones') }}</small>
+                        <span class="badge badge-primary">2</span>
+                        <span class="event-step-link__copy">
+                          <strong>{{ __('Fechas') }}</strong>
+                          <small class="text-muted">{{ __('Fecha única o múltiples funciones') }}</small>
+                        </span>
                       </a>
                     </div>
                     <div>
                       <a href="#section-settings" class="btn btn-light btn-block text-left event-step-link">
-                        <span class="badge badge-primary mr-2">3</span>{{ __('Configuración') }}
-                        <small class="d-block text-muted mt-1">{{ __('Estado, visibilidad y venta') }}</small>
+                        <span class="badge badge-primary">3</span>
+                        <span class="event-step-link__copy">
+                          <strong>{{ __('Configuración') }}</strong>
+                          <small class="text-muted">{{ __('Estado, visibilidad y venta') }}</small>
+                        </span>
                       </a>
                     </div>
                     <div>
                       <a href="#section-content" class="btn btn-light btn-block text-left event-step-link">
-                        <span class="badge badge-primary mr-2">4</span>{{ __('Contenido') }}
-                        <small class="d-block text-muted mt-1">{{ __('Títulos, descripción y SEO') }}</small>
+                        <span class="badge badge-primary">4</span>
+                        <span class="event-step-link__copy">
+                          <strong>{{ __('Contenido') }}</strong>
+                          <small class="text-muted">{{ __('Títulos, descripción y SEO') }}</small>
+                        </span>
                       </a>
                     </div>
                     <div>
                       <a href="#section-media-links" class="btn btn-light btn-block text-left event-step-link">
-                        <span class="badge badge-primary mr-2">5</span>{{ __('Multimedia') }}
-                        <small class="d-block text-muted mt-1">{{ __('Spotify y YouTube') }}</small>
+                        <span class="badge badge-primary">5</span>
+                        <span class="event-step-link__copy">
+                          <strong>{{ __('Multimedia') }}</strong>
+                          <small class="text-muted">{{ __('Spotify y YouTube') }}</small>
+                        </span>
                       </a>
                     </div>
                     <div>
                       <a href="#section-tracking" class="btn btn-light btn-block text-left event-step-link">
-                        <span class="badge badge-primary mr-2">6</span>{{ __('Píxeles') }}
-                        <small class="d-block text-muted mt-1">{{ __('Meta, Google y TikTok') }}</small>
+                        <span class="badge badge-primary">6</span>
+                        <span class="event-step-link__copy">
+                          <strong>{{ __('Píxeles') }}</strong>
+                          <small class="text-muted">{{ __('Meta, Google y TikTok') }}</small>
+                        </span>
                       </a>
                     </div>
                   </div>

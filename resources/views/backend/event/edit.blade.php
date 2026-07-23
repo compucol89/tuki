@@ -209,7 +209,7 @@
           </div>
 
           {{-- Galería (form propio — dropzone AJAX) --}}
-          <label class="ev-label-section">{{ __('Imagenes adicionales') }} <span class="text-muted">{{ __('Opcional') }}</span></label>
+          <label class="ev-label-section">{{ __('Imágenes adicionales') }} <span class="text-muted">{{ __('Opcional') }}</span></label>
           <div id="reload-slider-div">
             <div class="row mt-1 mb-2">
               <div class="col">
@@ -566,19 +566,21 @@
         </div>
         <div id="accordion" class="mt-2">
           @foreach ($languages as $language)
-            <div class="version ev-section-card" style="margin-bottom:12px;">
-              <div class="version-header ev-section-header" id="heading{{ $language->id }}">
-                <h5 class="mb-0">
-                  <button type="button" class="btn btn-link ev-accordion-btn" data-toggle="collapse"
-                    data-target="#collapse{{ $language->id }}"
-                    aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
-                    aria-controls="collapse{{ $language->id }}">
-                    <i class="fas fa-file-alt mr-2 text-primary"></i>
-                    {{ __('Contenido') }} — {{ $language->name }}
-                    {{ $language->is_default == 1 ? '(' . __('Default') . ')' : '' }}
-                  </button>
-                </h5>
-              </div>
+            <div class="version ev-section-card event-content-panel {{ $singleLanguageMode ? 'event-content-panel--single' : '' }}" style="margin-bottom:12px;">
+              @if (!$singleLanguageMode)
+                <div class="version-header ev-section-header" id="heading{{ $language->id }}">
+                  <h5 class="mb-0">
+                    <button type="button" class="btn btn-link ev-accordion-btn" data-toggle="collapse"
+                      data-target="#collapse{{ $language->id }}"
+                      aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
+                      aria-controls="collapse{{ $language->id }}">
+                      <i class="fas fa-file-alt mr-2 text-primary"></i>
+                      {{ __('Contenido') }} — {{ $language->name }}
+                      {{ $language->is_default == 1 ? '(' . __('Principal') . ')' : '' }}
+                    </button>
+                  </h5>
+                </div>
+              @endif
               @php
                 $event_content = DB::table('event_contents')
                     ->where('language_id', $language->id)
@@ -586,7 +588,7 @@
                     ->first();
               @endphp
               <div id="collapse{{ $language->id }}"
-                class="collapse {{ $language->is_default == 1 ? 'show' : '' }}"
+                class="{{ $singleLanguageMode ? '' : 'collapse' }} {{ $language->is_default == 1 ? 'show' : '' }}"
                 aria-labelledby="heading{{ $language->id }}" data-parent="#accordion">
                 <div class="version-body p-4">
 
@@ -679,19 +681,32 @@
                       data-height="300">{!! @$event_content->description !!}</textarea>
                   </div>
 
-                  @include('partials.event-canonical-refund-policy')
+                  <div class="event-advanced-section mb-4">
+                    <button type="button" class="event-advanced-toggle collapsed" data-toggle="collapse"
+                      data-target="#eventSeoEditAdmin{{ $language->id }}" aria-expanded="false"
+                      aria-controls="eventSeoEditAdmin{{ $language->id }}">
+                      <span>
+                        <strong>{{ __('Extras útiles') }}</strong>
+                        <small>{{ __('Políticas, palabras clave y descripción corta para Google.') }}</small>
+                      </span>
+                      <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="eventSeoEditAdmin{{ $language->id }}" class="collapse event-advanced-body">
+                      @include('partials.event-canonical-refund-policy')
 
-                  <div class="form-group">
-                    <label>{{ __('Event Meta Keywords') }}</label>
-                    <input class="form-control" name="{{ $language->code }}_meta_keywords"
-                      value="{{ @$event_content->meta_keywords }}" placeholder="{{ __('Enter Meta Keywords') }}"
-                      data-role="tagsinput">
-                  </div>
+                      <div class="form-group">
+                        <label>{{ __('Palabras clave para Google') }}</label>
+                        <input class="form-control" name="{{ $language->code }}_meta_keywords"
+                          value="{{ @$event_content->meta_keywords }}" placeholder="{{ __('Ej: festival, buenos aires, música en vivo') }}"
+                          data-role="tagsinput">
+                      </div>
 
-                  <div class="form-group">
-                    <label>{{ __('Event Meta Description') }}</label>
-                    <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="4"
-                      placeholder="{{ __('Enter Meta Description') }}">{{ @$event_content->meta_description }}</textarea>
+                      <div class="form-group">
+                        <label>{{ __('Descripción corta para Google') }}</label>
+                        <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="4"
+                          placeholder="{{ __('Una descripción breve y clara para buscadores y enlaces compartidos.') }}">{{ @$event_content->meta_description }}</textarea>
+                      </div>
+                    </div>
                   </div>
 
                   @if (!$singleLanguageMode)
@@ -717,16 +732,22 @@
         <div id="sliders"></div>
 
         {{-- ===== CARD: MULTIMEDIA ===== --}}
-        <div class="card ev-section-card mt-2">
+        <div class="card ev-section-card event-optional-card mt-2">
           <div class="card-header ev-section-header">
-            <h4 class="card-title"><i class="fas fa-music mr-2 text-primary"></i>{{ __('Multimedia del Artista') }}</h4>
-            <p class="card-category">{{ __('Opcional. Se mostrará en la página del evento para que los compradores conozcan al artista.') }}</p>
+            <button type="button" class="event-optional-toggle collapsed" data-toggle="collapse"
+              data-target="#eventMediaEditAdmin" aria-expanded="false" aria-controls="eventMediaEditAdmin">
+              <span>
+                <strong>{{ __('Multimedia del evento o artista') }}</strong>
+                <small>{{ __('Opcional. Sumá Spotify o YouTube si ayuda a vender la experiencia.') }}</small>
+              </span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
           </div>
-          <div class="card-body">
+          <div class="card-body collapse" id="eventMediaEditAdmin">
             <div class="row">
               <div class="col-lg-6">
                 <div class="form-group">
-                  <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace del artista en Spotify') }}</label>
+                  <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace de Spotify') }}</label>
                   <input type="url" class="form-control" name="spotify_url" value="{{ $event->spotify_url }}"
                     placeholder="{{ __('Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi') }}">
                   <small class="text-muted">{{ __('Abrí Spotify, buscá al artista, hacé clic en los tres puntos → Compartir → Copiar enlace del artista.') }}</small>
@@ -745,12 +766,18 @@
         </div>
 
         {{-- ===== CARD: PÍXELES ===== --}}
-        <div class="card ev-section-card mt-2">
+        <div class="card ev-section-card event-optional-card mt-2">
           <div class="card-header ev-section-header">
-            <h4 class="card-title"><i class="fas fa-chart-line mr-2 text-primary"></i>{{ __('Píxeles de Seguimiento') }}</h4>
-            <p class="card-category">{{ __('Opcional. Agregá tus propios píxeles para medir conversiones de este evento.') }}</p>
+            <button type="button" class="event-optional-toggle collapsed" data-toggle="collapse"
+              data-target="#eventTrackingEditAdmin" aria-expanded="false" aria-controls="eventTrackingEditAdmin">
+              <span>
+                <strong>{{ __('Píxeles de seguimiento') }}</strong>
+                <small>{{ __('Opcional. Agregá Meta, Google o TikTok solo si medís campañas.') }}</small>
+              </span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
           </div>
-          <div class="card-body">
+          <div class="card-body collapse" id="eventTrackingEditAdmin">
             <div class="row">
               <div class="col-lg-4">
                 <div class="form-group">

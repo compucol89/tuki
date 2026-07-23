@@ -976,6 +976,17 @@ body.dark .event-form-modern,
   padding: 20px;
 }
 
+.event-form-modern .event-content-panel--single {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+
+.event-form-modern .event-content-panel--single .version-body {
+  padding: 0 !important;
+}
+
 .event-form-modern .event-content-block,
 .event-form-modern .event-content-shell fieldset,
 .event-form-modern .event-gallery-secondary,
@@ -992,6 +1003,13 @@ body.dark .event-form-modern,
   padding: 18px;
 }
 
+.event-form-modern .event-gallery-secondary--inline {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 4px 0 0;
+}
+
 .event-form-modern .event-content-block + .event-content-block {
   margin-top: 16px;
 }
@@ -1002,6 +1020,69 @@ body.dark .event-form-modern,
   flex-direction: column;
   gap: 4px;
   margin-bottom: 16px;
+}
+
+.event-form-modern .event-advanced-section {
+  background: var(--event-card);
+  border: 1px solid var(--event-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.event-form-modern .event-advanced-toggle,
+.event-form-modern .event-optional-toggle {
+  align-items: center;
+  background: var(--event-muted);
+  border: 0;
+  color: var(--event-card-fg);
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 14px 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.event-form-modern .event-advanced-toggle strong,
+.event-form-modern .event-optional-toggle strong {
+  display: block;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.event-form-modern .event-advanced-toggle small,
+.event-form-modern .event-optional-toggle small {
+  color: var(--event-muted-fg);
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 3px;
+}
+
+.event-form-modern .event-advanced-toggle i,
+.event-form-modern .event-optional-toggle i {
+  color: var(--event-muted-fg);
+  transition: transform 0.16s ease;
+}
+
+.event-form-modern .event-advanced-toggle:not(.collapsed) i,
+.event-form-modern .event-optional-toggle:not(.collapsed) i {
+  transform: rotate(180deg);
+}
+
+.event-form-modern .event-advanced-body {
+  border-top: 1px solid var(--event-border);
+  padding: 16px;
+}
+
+.event-form-modern .event-optional-card .card-header {
+  padding: 0;
+}
+
+.event-form-modern .event-optional-card .card-body {
+  border-top: 1px solid var(--event-border);
 }
 
 .event-form-modern #my-dropzone {

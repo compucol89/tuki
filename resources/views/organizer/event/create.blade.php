@@ -421,6 +421,7 @@
                 @endif
 
 
+                  @php $singleLanguageMode = isset($languages) && count($languages) === 1; @endphp
                   <div class="event-content-shell__intro mt-4">
                     <span class="event-content-shell__eyebrow">{{ __('Paso 4') }}</span>
                     <h4 class="event-content-shell__title">{{ __('Contenido del evento') }}</h4>
@@ -429,21 +430,23 @@
 
                 <div id="accordion" class="mt-3">
                   @foreach ($languages as $language)
-                    <div class="version event-content-panel">
-                      <div class="version-header" id="heading{{ $language->id }}">
-                        <h5 class="mb-0">
-                          <button type="button" class="btn btn-link" data-toggle="collapse"
-                            data-target="#collapse{{ $language->id }}"
-                            aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
-                            aria-controls="collapse{{ $language->id }}">
-                            {{ $language->name . ' ' . __('Language') }}
-                            {{ $language->is_default == 1 ? '(' . __('Default') . ')' : '' }}
-                          </button>
-                        </h5>
-                      </div>
+                    <div class="version event-content-panel {{ $singleLanguageMode ? 'event-content-panel--single' : '' }}">
+                        @if (!$singleLanguageMode)
+                          <div class="version-header" id="heading{{ $language->id }}">
+                            <h5 class="mb-0">
+                              <button type="button" class="btn btn-link" data-toggle="collapse"
+                                data-target="#collapse{{ $language->id }}"
+                                aria-expanded="{{ $language->is_default == 1 ? 'true' : 'false' }}"
+                                aria-controls="collapse{{ $language->id }}">
+                                {{ $language->name }}
+                                {{ $language->is_default == 1 ? '(' . __('Principal') . ')' : '' }}
+                              </button>
+                            </h5>
+                          </div>
+                        @endif
 
                       <div id="collapse{{ $language->id }}"
-                        class="collapse {{ $language->is_default == 1 ? 'show' : '' }}"
+                        class="{{ $singleLanguageMode ? '' : 'collapse' }} {{ $language->is_default == 1 ? 'show' : '' }}"
                         aria-labelledby="heading{{ $language->id }}" data-parent="#accordion">
                         <div class="version-body">
                           <div class="event-content-block mb-4">
@@ -537,26 +540,48 @@
                             @endif
                           @endif
 
-                          <div class="row">
-                            <div class="col">
-                              <div class="form-group">
-                                <label>{{ __('Description') . '*' }}</label>
-                                <small class="d-block text-muted mb-2">{{ __('Cuenta que incluye la entrada, horarios, artistas, acceso y cualquier dato importante para decidir la compra.') }}</small>
-                                <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
-                                  name="{{ $language->code }}_description" placeholder="{{ __('Enter Event Description') }}" data-height="300"></textarea>
-                              </div>
-                            </div>
-                          </div>
+	                          <div class="row">
+	                            <div class="col">
+	                              <div class="form-group">
+	                                <label>{{ __('Description') . '*' }}</label>
+	                                <small class="d-block text-muted mb-2">{{ __('Cuenta que incluye la entrada, horarios, artistas, acceso y cualquier dato importante para decidir la compra.') }}</small>
+	                                <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
+	                                  name="{{ $language->code }}_description" placeholder="{{ __('Enter Event Description') }}" data-height="300"></textarea>
+	                              </div>
+	                            </div>
+	                          </div>
 
-                          <div class="event-content-block event-content-block--soft">
-                            <div class="event-content-block__head">
-                              <span class="event-content-block__kicker">{{ __('Extras útiles') }}</span>
-                              <h5 class="event-content-block__title">{{ __('Políticas y datos para Google') }}</h5>
-                              <p class="event-content-block__text">{{ __('Sirve para responder dudas frecuentes y para que el evento se vea mejor cuando lo comparten o lo encuentran en Google.') }}</p>
-                            </div>
-                            <div class="row">
-                              <div class="col-lg-12">
-                                @include('partials.event-canonical-refund-policy')
+                            @if ($language->is_default == 1)
+                              <div class="event-gallery-secondary event-gallery-secondary--inline mb-4">
+                                <div class="event-gallery-secondary__header">
+                                  <span>{{ __('Opcional') }}</span>
+                                  <h4>{{ __('Imágenes adicionales') }}</h4>
+                                  <p>{{ __('Agregá fotos complementarias del ambiente, artistas, lugar o ediciones anteriores. No reemplazan la portada.') }}</p>
+                                </div>
+                                <div id="my-dropzone" class="dropzone create">
+                                  <div class="fallback">
+                                    <input name="file" type="file" multiple />
+                                  </div>
+                                </div>
+                                <div class="mb-0" id="errpreimg"></div>
+                                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
+                              </div>
+                            @endif
+
+	                          <div class="event-advanced-section mb-4">
+	                            <button type="button" class="event-advanced-toggle collapsed" data-toggle="collapse"
+                                data-target="#eventSeoCreateOrganizer{{ $language->id }}" aria-expanded="false"
+                                aria-controls="eventSeoCreateOrganizer{{ $language->id }}">
+                                <span>
+                                  <strong>{{ __('Extras útiles') }}</strong>
+                                  <small>{{ __('Políticas, palabras clave y descripción corta para Google.') }}</small>
+                                </span>
+                                <i class="fas fa-chevron-down"></i>
+                              </button>
+                              <div id="eventSeoCreateOrganizer{{ $language->id }}" class="collapse event-advanced-body">
+	                            <div class="row">
+	                              <div class="col-lg-12">
+	                                @include('partials.event-canonical-refund-policy')
                               </div>
                             </div>
 
@@ -576,10 +601,11 @@
                                   <label>{{ __('Descripción corta para Google') }}</label>
                                   <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
                                     placeholder="{{ __('Una descripción breve y clara para buscadores y enlaces compartidos.') }}"></textarea>
-                                </div>
+	                              </div>
+	                            </div>
                               </div>
-                            </div>
-                          </div>
+	                          </div>
+	                          </div>
                           </div>
 
                           <div class="row">
@@ -609,17 +635,23 @@
 
                 <div id="sliders"></div>
 
-                {{-- Multimedia del artista --}}
-                <div class="card ev-section-card mt-4">
-                  <div class="card-header ev-section-header">
-                    <h4 class="card-title">{{ __('Multimedia del Artista') }}</h4>
-                    <small class="text-muted">{{ __('Opcional. Se mostrará en la página del evento para que los compradores conozcan al artista.') }}</small>
-                  </div>
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-lg-6">
-                        <div class="form-group">
-                          <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace del artista en Spotify') }}</label>
+	                {{-- Multimedia del evento --}}
+	                <div class="card ev-section-card event-optional-card mt-4">
+	                  <div class="card-header ev-section-header">
+                      <button type="button" class="event-optional-toggle collapsed" data-toggle="collapse"
+                        data-target="#eventMediaCreateOrganizer" aria-expanded="false" aria-controls="eventMediaCreateOrganizer">
+                        <span>
+                          <strong>{{ __('Multimedia del evento o artista') }}</strong>
+                          <small>{{ __('Opcional. Sumá Spotify o YouTube si ayuda a vender la experiencia.') }}</small>
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                      </button>
+	                  </div>
+	                  <div class="card-body collapse" id="eventMediaCreateOrganizer">
+	                    <div class="row">
+	                      <div class="col-lg-6">
+	                        <div class="form-group">
+	                          <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace de Spotify') }}</label>
                           <input type="url" class="form-control" name="spotify_url"
                             placeholder="Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi">
                           <small class="text-muted">{{ __('Abrí Spotify, buscá al artista, hacé clic en los tres puntos → Compartir → Copiar enlace del artista.') }}</small>
@@ -637,13 +669,19 @@
                   </div>
                 </div>
 
-                {{-- Píxeles de seguimiento --}}
-                <div class="card ev-section-card mt-4">
-                  <div class="card-header ev-section-header">
-                    <h4 class="card-title">{{ __('Píxeles de Seguimiento') }}</h4>
-                    <small class="text-muted">{{ __('Opcional. Agregá tus propios píxeles para medir conversiones de este evento.') }}</small>
-                  </div>
-                  <div class="card-body">
+	                {{-- Píxeles de seguimiento --}}
+	                <div class="card ev-section-card event-optional-card mt-4">
+	                  <div class="card-header ev-section-header">
+                      <button type="button" class="event-optional-toggle collapsed" data-toggle="collapse"
+                        data-target="#eventTrackingCreateOrganizer" aria-expanded="false" aria-controls="eventTrackingCreateOrganizer">
+                        <span>
+                          <strong>{{ __('Píxeles de seguimiento') }}</strong>
+                          <small>{{ __('Opcional. Agregá Meta, Google o TikTok solo si medís campañas.') }}</small>
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+                      </button>
+	                  </div>
+	                  <div class="card-body collapse" id="eventTrackingCreateOrganizer">
                     <div class="row">
                       <div class="col-lg-4">
                         <div class="form-group">
@@ -669,22 +707,6 @@
 
               </form>
 
-              <div class="event-gallery-secondary mt-4">
-                <div class="event-gallery-secondary__header">
-                  <span>{{ __('Opcional') }}</span>
-                  <h4>{{ __('Imagenes adicionales') }}</h4>
-                  <p>{{ __('Agrega fotos complementarias para mostrar mejor el ambiente, los artistas, el lugar o experiencias de ediciones anteriores. No reemplazan la portada.') }}</p>
-                </div>
-                <form action="{{ route('organizer.event.imagesstore') }}" id="my-dropzone" enctype="multipart/formdata"
-                  class="dropzone create">
-                  @csrf
-                  <div class="fallback">
-                    <input name="file" type="file" multiple />
-                  </div>
-                </form>
-                <div class="mb-0" id="errpreimg"></div>
-                <p class="text-muted small mt-2 mb-0">{{ __('JPG, PNG o WebP. Minimo aceptado: 600x450. Recomendado: 1170x570 o mas para mejor calidad.') }}</p>
-              </div>
             </div>
           </div>
         </div>

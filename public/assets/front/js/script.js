@@ -73,7 +73,7 @@
             var $overlay = $wrap.find('.mobile-menu-overlay');
 
             function premiumDrawerOpen() {
-                return $menu.hasClass('show');
+                return $menu.hasClass('show') || $('body').hasClass('mobile-drawer-open');
             }
 
             function syncPremiumDrawerAria() {

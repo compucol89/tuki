@@ -2305,6 +2305,7 @@ body.events-page .ev-catalog-count__meta {
 }
 
 body.events-page .ev-listing--premium {
+  min-height: 0;
   padding: 16px 0 clamp(64px, 8vw, 96px);
   background: #eef1f3;
 }
@@ -2524,6 +2525,7 @@ body.events-page .ev-listing--premium .ev-pagination .page-item .page-link:hover
 
   body.events-page .ev-listing--premium {
     padding-top: 12px;
+    padding-bottom: 28px;
   }
 
   body.events-page .ev-listing--empty {

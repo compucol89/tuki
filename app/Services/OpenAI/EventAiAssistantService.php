@@ -235,9 +235,10 @@ class EventAiAssistantService
         'content' => [
           'type' => 'object',
           'additionalProperties' => false,
-          'required' => ['public_title', 'subtitle', 'short_description', 'main_description', 'what_you_will_experience', 'important_information', 'cta', 'alternative_version'],
+          'required' => ['public_title', 'title_options', 'subtitle', 'short_description', 'main_description', 'what_you_will_experience', 'important_information', 'cta', 'alternative_version'],
           'properties' => [
             'public_title' => ['type' => 'string'],
+            'title_options' => ['type' => 'array', 'items' => ['type' => 'string']],
             'subtitle' => ['type' => 'string'],
             'short_description' => ['type' => 'string'],
             'main_description' => ['type' => 'string'],

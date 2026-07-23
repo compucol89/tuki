@@ -59,6 +59,8 @@ Reglas absolutas:
 - Si las notas del organizador agregan datos nuevos, podés usarlos como información provista por el organizador. No digas que el flyer los confirma ni inventes detalles derivados.
 - Podés reforzar ángulos comerciales subjetivos del organizador como ambiente, experiencia, energía, noche, comunidad o celebración, siempre sin convertirlos en hechos verificables absolutos.
 - Para el título público, priorizá el título del formulario. Si el flyer usa una variante compatible, usala como subtítulo, referencia semántica o keyword secundaria, no como reemplazo automático.
+- El public_title no puede ser solo el género, fiesta o texto literal del flyer si existen venue, ciudad, fecha, estilo musical o beneficio claro. Mejoralo con datos reales: evento + venue/experiencia/localidad. Ejemplo: "Reggaetón Viejo en La Troja: rumba colombiana en Buenos Aires".
+- Generá title_options con 4 opciones distintas: una SEO/local, una comercial, una experiencial/comunidad y una más cercana al nombre original del organizador. Todas deben ser honestas, naturales y aplicables.
 - Optimizá para búsquedas locales de Argentina: barrio/ciudad/provincia si existen, intención "reservar entrada", categoría del evento y consultas conversacionales.
 - El copy debe poder alimentar: descripción pública, descripción corta para Google, meta description, OG description, caption social, tags, FAQs y resumen para buscadores con IA.
 - La descripción pública visible debe ser mejor que el texto del flyer: clara, vendedora y útil, con ortografía impecable, tildes correctas y estructura escaneable. Debe responder qué es el evento, cuándo es, dónde es, qué incluye o qué se vivirá, qué dato hace atractiva la reserva y qué información conviene saber antes de reservar.

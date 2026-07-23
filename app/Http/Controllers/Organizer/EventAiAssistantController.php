@@ -125,7 +125,7 @@ class EventAiAssistantController extends Controller
 
     if ($request->boolean('generate_content', true)) {
       try {
-        $generated = $assistant->generateContent($canonicalFacts, $this->temporaryPreferences($request));
+        $generated = $this->strengthenGeneratedDraft($assistant->generateContent($canonicalFacts, $this->temporaryPreferences($request)), $canonicalFacts);
         $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
         $audit = $generated['audit'] ?? [];
         $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
@@ -726,6 +726,130 @@ class EventAiAssistantController extends Controller
     }
 
     return array_values(array_unique(array_filter(array_map(fn($item) => mb_substr((string) $item, 0, 80), $value))));
+  }
+
+  private function strengthenGeneratedDraft(array $generated, array $canonicalFacts): array
+  {
+    $content = $generated['content'] ?? [];
+    $sourceTitle = data_get($canonicalFacts, 'form_facts.title') ?: $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']);
+    $venue = $this->canonicalFactValue($canonicalFacts, ['marca o nombre visible', 'venue', 'lugar', 'sede']) ?: data_get($canonicalFacts, 'form_facts.venue');
+    $style = $this->canonicalFactValue($canonicalFacts, ['subtitulo', 'subtítulo', 'estilo', 'musical']);
+    $city = data_get($canonicalFacts, 'form_facts.city') ?: data_get($canonicalFacts, 'form_facts.state');
+
+    $strongTitle = $this->strongEventTitle($content['public_title'] ?? '', $sourceTitle, $venue, $style, $city);
+    if ($strongTitle) {
+      $generated['content']['public_title'] = $strongTitle;
+    }
+
+    $options = $content['title_options'] ?? [];
+    if (!is_array($options)) {
+      $options = [];
+    }
+
+    $generated['content']['title_options'] = array_values(array_unique(array_filter(array_merge(
+      [$generated['content']['public_title'] ?? null],
+      $options,
+      $this->fallbackTitleOptions($sourceTitle, $venue, $style, $city)
+    ))));
+
+    if (empty(trim(strip_tags($content['main_description'] ?? ''))) || mb_strlen(trim(strip_tags($content['main_description'] ?? ''))) < 260) {
+      $generated['content']['main_description'] = $this->fallbackMainDescription($generated, $canonicalFacts);
+    }
+
+    return $generated;
+  }
+
+  private function canonicalFactValue(array $canonicalFacts, array $needles): ?string
+  {
+    $fields = array_merge(
+      data_get($canonicalFacts, 'image_analysis.extracted_fields', []),
+      data_get($canonicalFacts, 'image_analysis.sponsors', [])
+    );
+
+    foreach ($fields as $field) {
+      $label = mb_strtolower((string) (($field['label'] ?? '') . ' ' . ($field['key'] ?? '')));
+      foreach ($needles as $needle) {
+        if (str_contains($label, mb_strtolower($needle))) {
+          $value = trim((string) ($field['value'] ?? $field['raw_text'] ?? ''));
+          return $value !== '' && $value !== '-' ? $value : null;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private function strongEventTitle(?string $current, ?string $sourceTitle, ?string $venue, ?string $style, ?string $city): ?string
+  {
+    $base = trim((string) ($current ?: $sourceTitle));
+    if ($base === '') {
+      return null;
+    }
+
+    $normalizedBase = mb_strtolower($base);
+    $normalizedSource = mb_strtolower(trim((string) $sourceTitle));
+    $isBare = $normalizedSource !== '' && ($normalizedBase === $normalizedSource || mb_strlen($base) < 24);
+
+    if (!$isBare) {
+      return $base;
+    }
+
+    if ($venue && $style) {
+      return mb_substr($base . ' en ' . $venue . ': ' . mb_strtolower($style), 0, 90);
+    }
+
+    if ($venue) {
+      return mb_substr($base . ' en ' . $venue, 0, 90);
+    }
+
+    if ($style) {
+      return mb_substr($base . ': ' . mb_strtolower($style), 0, 90);
+    }
+
+    if ($city) {
+      return mb_substr($base . ' en ' . $city, 0, 90);
+    }
+
+    return $base;
+  }
+
+  private function fallbackTitleOptions(?string $sourceTitle, ?string $venue, ?string $style, ?string $city): array
+  {
+    $base = trim((string) $sourceTitle);
+    if ($base === '') {
+      return [];
+    }
+
+    return array_values(array_filter([
+      $venue ? mb_substr($base . ' en ' . $venue, 0, 90) : null,
+      $style && $venue ? mb_substr($base . ': ' . mb_strtolower($style) . ' en ' . $venue, 0, 90) : null,
+      $style ? mb_substr($base . ' | ' . $style, 0, 90) : null,
+      $city ? mb_substr($base . ' en ' . $city, 0, 90) : null,
+      $base,
+    ]));
+  }
+
+  private function fallbackMainDescription(array $generated, array $canonicalFacts): string
+  {
+    $content = $generated['content'] ?? [];
+    $title = $content['public_title'] ?? $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']) ?? 'Este evento';
+    $venue = $this->canonicalFactValue($canonicalFacts, ['marca o nombre visible', 'venue', 'lugar', 'sede']);
+    $style = $this->canonicalFactValue($canonicalFacts, ['subtitulo', 'subtítulo', 'estilo', 'musical']);
+    $address = $this->canonicalFactValue($canonicalFacts, ['direccion', 'dirección', 'ubicacion', 'ubicación']);
+    $date = $this->canonicalFactValue($canonicalFacts, ['fecha']);
+    $promo = $this->canonicalFactValue($canonicalFacts, ['promocion', 'promoción', 'acceso']);
+
+    $sentences = [
+      $content['short_description'] ?? null,
+      trim($title . ' propone una experiencia pensada para quienes buscan una salida clara, atractiva y fácil de reservar.'),
+      $style ? 'La propuesta gira alrededor de ' . mb_strtolower($style) . ', con un enfoque directo para comunicar qué se vive y por qué vale la pena reservar.' : null,
+      $venue || $address ? 'El evento se realiza' . ($venue ? ' en ' . $venue : '') . ($address ? ', en ' . $address : '') . '.' : null,
+      $date ? 'Fecha visible o sugerida para revisar: ' . $date . '.' : null,
+      $promo ? 'Dato destacado para comunicar: ' . $promo . '.' : null,
+      'Revisá los datos finales de fecha, horario, acceso y condiciones antes de publicar para que la información quede completa y confiable.',
+    ];
+
+    return implode("\n\n", array_values(array_filter($sentences)));
   }
 
   private function runPayload(?EventAiAssistantRun $run): ?array

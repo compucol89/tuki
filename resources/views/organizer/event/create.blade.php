@@ -1274,6 +1274,8 @@
       const draftTitle = panel ? panel.querySelector('[data-create-ai-draft-title]') : null;
       const draftSummary = panel ? panel.querySelector('[data-create-ai-draft-summary]') : null;
       const draftAudit = panel ? panel.querySelector('[data-create-ai-audit]') : null;
+      const draftTitleOptions = panel ? panel.querySelector('[data-create-ai-title-options]') : null;
+      const draftDescriptionPreview = panel ? panel.querySelector('[data-create-ai-description-preview]') : null;
       let active = false;
       let lastReview = null;
       let lastDraft = null;
@@ -1507,6 +1509,8 @@
         draftBox.classList.remove('d-none');
         if (draftTitle) draftTitle.textContent = content.public_title || 'Propuesta generada';
         if (draftSummary) draftSummary.textContent = content.short_description || '';
+        renderTitleOptions(content);
+        renderDescriptionPreview(content);
         if (draftAudit) {
           const needsReview = !!(draft && draft.needs_human_review);
           draftAudit.className = 'badge mb-2 mb-lg-0 ' + (needsReview ? 'badge-warning' : 'badge-success');
@@ -1520,7 +1524,7 @@
         const fields = selectedDraftFields();
 
         if (fields.indexOf('title') !== -1 && content.public_title) {
-          setFieldValue('input[name$="_title"]', content.public_title);
+          setFieldValue('input[name$="_title"]', selectedTitleValue(content));
         }
 
         if (fields.indexOf('description') !== -1) {
@@ -1542,6 +1546,35 @@
         return Array.from(panel.querySelectorAll('[data-create-ai-field]:checked')).map(function (field) {
           return field.value;
         });
+      }
+
+      function selectedTitleValue(content) {
+        const selected = panel ? panel.querySelector('[data-create-ai-title-option]:checked') : null;
+        return selected && selected.value ? selected.value : content.public_title;
+      }
+
+      function renderTitleOptions(content) {
+        if (!draftTitleOptions) return;
+        const options = uniqueItems([content.public_title].concat(content.title_options || [])).slice(0, 5);
+        if (!options.length) {
+          draftTitleOptions.innerHTML = '';
+          return;
+        }
+
+        draftTitleOptions.innerHTML = '<div class="font-weight-bold small mb-2">Opciones de título</div>' + options.map(function (option, index) {
+          return '<label class="d-block border rounded p-2 mb-2 bg-white">'
+            + '<input type="radio" name="create_ai_title_option" data-create-ai-title-option value="' + escapeHtml(option) + '"' + (index === 0 ? ' checked' : '') + '> '
+            + '<span>' + escapeHtml(option) + '</span>'
+            + '</label>';
+        }).join('');
+      }
+
+      function renderDescriptionPreview(content) {
+        if (!draftDescriptionPreview) return;
+        const html = buildDescriptionHtml(content);
+        draftDescriptionPreview.innerHTML = html
+          ? '<div class="font-weight-bold mb-2">Descripción que se aplicará</div>' + html
+          : '<div class="text-muted">La IA no devolvió una descripción completa. Probá ajustar las preferencias y volver a armar el evento.</div>';
       }
 
       function setFieldValue(selector, value) {
@@ -1591,10 +1624,14 @@
         if (!html) return;
         const field = document.querySelector('textarea[name$="_description"]');
         if (!field) return;
-        if ($.fn.summernote && $(field).next('.note-editor').length) {
+        field.value = html;
+        const tiny = window.tinymce || window.tinyMCE;
+        const tinyEditor = tiny && field.id ? tiny.get(field.id) : null;
+        if (tinyEditor) {
+          tinyEditor.setContent(html);
+          tinyEditor.save();
+        } else if ($.fn.summernote && $(field).next('.note-editor').length) {
           $(field).summernote('code', html);
-        } else {
-          field.value = html;
         }
         field.dispatchEvent(new Event('input', { bubbles: true }));
         field.dispatchEvent(new Event('change', { bubbles: true }));

@@ -1734,10 +1734,15 @@
         if (fields.indexOf('description') !== -1) {
           var description = buildDescriptionHtml(content);
           var descriptionField = $('textarea[name$="_description"]').first();
-          if ($.fn.summernote && descriptionField.next('.note-editor').length) {
+          descriptionField.val(description);
+          var editorId = descriptionField.attr('id');
+          var tiny = window.tinymce || window.tinyMCE;
+          var tinyEditor = tiny && editorId ? tiny.get(editorId) : null;
+          if (tinyEditor) {
+            tinyEditor.setContent(description);
+            tinyEditor.save();
+          } else if ($.fn.summernote && descriptionField.next('.note-editor').length) {
             descriptionField.summernote('code', description);
-          } else {
-            descriptionField.val(description);
           }
         }
         if (fields.indexOf('meta_description') !== -1 && (seo.google_short_description || seo.meta_description)) {

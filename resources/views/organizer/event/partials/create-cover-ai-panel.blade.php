@@ -143,6 +143,8 @@
           </div>
           <span class="badge badge-light border mb-2 mb-lg-0" data-create-ai-audit></span>
         </div>
+        <div class="mt-2" data-create-ai-title-options></div>
+        <div class="border rounded bg-light p-3 mt-3 small" data-create-ai-description-preview></div>
         <div class="row mt-2">
           <div class="col-sm-6 col-lg-3">
             <label class="form-check-label small"><input type="checkbox" value="title" data-create-ai-field checked> {{ __('Título') }}</label>

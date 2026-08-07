@@ -4,7 +4,7 @@
   $frontCssAsset = static function (string $path): string {
     $fullPath = public_path($path);
 
-    return asset($path) . (is_file($fullPath) ? '?v=' . filemtime($fullPath) : '');
+    return asset($path) . (is_file($fullPath) ? '?v=' . substr(md5_file($fullPath), 0, 12) : '');
   };
   $eventsCssPath = app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css';
   $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';

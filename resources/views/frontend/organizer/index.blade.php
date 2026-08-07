@@ -10,7 +10,7 @@
   $metaKeywords = !empty($seo->meta_keyword_organizer) ? $seo->meta_keyword_organizer : '';
   $metaDescription = !empty($seo->meta_description_organizer) ? $seo->meta_description_organizer : '';
   $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';
-  $homeCssUrl = asset($homeCssPath) . (is_file(public_path($homeCssPath)) ? '?v=' . filemtime(public_path($homeCssPath)) : '');
+  $homeCssUrl = asset($homeCssPath) . (is_file(public_path($homeCssPath)) ? '?v=' . substr(md5_file(public_path($homeCssPath)), 0, 12) : '');
 @endphp
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")

@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/event-detail.css') }}?v={{ filemtime(public_path('assets/front/css/event-detail.css')) }}">
+  <link rel="stylesheet" href="{{ asset('assets/front/css/event-detail.css') }}?v={{ substr(md5_file(public_path('assets/front/css/event-detail.css')), 0, 12) }}">
 @endpush
 
 @section('body-class', 'page-event-detail')

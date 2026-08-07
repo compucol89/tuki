@@ -8,7 +8,7 @@
 
 @php
   $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';
-  $homeCssUrl = asset($homeCssPath) . (is_file(public_path($homeCssPath)) ? '?v=' . filemtime(public_path($homeCssPath)) : '');
+  $homeCssUrl = asset($homeCssPath) . (is_file(public_path($homeCssPath)) ? '?v=' . substr(md5_file(public_path($homeCssPath)), 0, 12) : '');
 @endphp
 
 @push('styles')

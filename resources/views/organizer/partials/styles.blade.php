@@ -51,7 +51,7 @@
   $adminSkinFullPath = public_path($adminSkinPath);
 @endphp
 {{-- admin skin: Modern SaaS UI override --}}
-<link rel="stylesheet" href="{{ asset($adminSkinPath) }}{{ is_file($adminSkinFullPath) ? '?v=' . filemtime($adminSkinFullPath) : '' }}">
+<link rel="stylesheet" href="{{ asset($adminSkinPath) }}{{ is_file($adminSkinFullPath) ? '?v=' . substr(md5_file($adminSkinFullPath), 0, 12) : '' }}">
 <?php /* organizer-v1 */ ?>
 
 {{-- legacy flaticon / simple-line-icons → Font Awesome --}}

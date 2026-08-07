@@ -115,7 +115,7 @@
   $adminMainJsPath = 'assets/admin/js/admin-main.js';
   $adminMainJsFullPath = public_path($adminMainJsPath);
 @endphp
-<script type="text/javascript" src="{{ asset($adminMainJsPath) }}{{ is_file($adminMainJsFullPath) ? '?v=' . filemtime($adminMainJsFullPath) : '' }}"></script>
+<script type="text/javascript" src="{{ asset($adminMainJsPath) }}{{ is_file($adminMainJsFullPath) ? '?v=' . substr(md5_file($adminMainJsFullPath), 0, 12) : '' }}"></script>
 
 @yield('variables')
 

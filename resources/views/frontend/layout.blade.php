@@ -7,7 +7,7 @@
     $siteDefaultDescription = 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online de forma segura.';
     $defaultOgImagePath = 'assets/front/img/og/tukipass-og.jpg';
     $defaultOgImageBase = asset($defaultOgImagePath);
-    $defaultOgImage = $defaultOgImageBase . (is_file(public_path($defaultOgImagePath)) ? '?v=' . filemtime(public_path($defaultOgImagePath)) : '');
+    $defaultOgImage = $defaultOgImageBase . (is_file(public_path($defaultOgImagePath)) ? '?v=' . substr(md5_file(public_path($defaultOgImagePath)), 0, 12) : '');
     $metaDescription = trim($__env->yieldContent('meta-description')) ?: $siteDefaultDescription;
     $metaKeywords = trim($__env->yieldContent('meta-keywords'));
     $metaRobots = trim($__env->yieldContent('meta-robots')) ?: 'index,follow,max-image-preview:large';
@@ -35,7 +35,7 @@
     }
     $facebookDomainVerification = trim((string) config('services.facebook.domain_verification'));
     $rootAsset = function (string $path) {
-      return asset($path) . (is_file(public_path($path)) ? '?v=' . filemtime(public_path($path)) : '');
+      return asset($path) . (is_file(public_path($path)) ? '?v=' . substr(md5_file(public_path($path)), 0, 12) : '');
     };
   @endphp
   <!-- Required meta tags -->

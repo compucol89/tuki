@@ -1,9 +1,15 @@
     <!-- Global vars (sync — needed before deferred scripts) -->
     @php
       $frontJsAsset = static function (string $path): string {
+        static $hashes = [];
         $fullPath = public_path($path);
+        if (!is_file($fullPath)) {
+          return asset($path);
+        }
+        // Hash de contenido (no filemtime): sobrevive a deploys que preservan mtimes
+        $hash = $hashes[$path] ??= substr(md5_file($fullPath), 0, 12);
 
-        return asset($path) . (is_file($fullPath) ? '?v=' . filemtime($fullPath) : '');
+        return asset($path) . '?v=' . $hash;
       };
     @endphp
     <script>

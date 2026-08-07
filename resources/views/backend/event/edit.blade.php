@@ -1195,7 +1195,7 @@
   </style>
   @php
     $eventFormModernCss = 'assets/admin/css/event-form-modern.css';
-    $eventFormModernCssVersion = is_file(public_path($eventFormModernCss)) ? '?v=' . filemtime(public_path($eventFormModernCss)) : '';
+    $eventFormModernCssVersion = is_file(public_path($eventFormModernCss)) ? '?v=' . substr(md5_file(public_path($eventFormModernCss)), 0, 12) : '';
   @endphp
   <link rel="stylesheet" href="{{ asset($eventFormModernCss) }}{{ $eventFormModernCssVersion }}">
 @endsection

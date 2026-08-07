@@ -58,6 +58,28 @@ if [ -d "$SEED_IMG_SRC" ]; then
     touch /app/public/assets/admin/img/.seed-restored
 fi
 
+# Brand favicon: SIEMPRE sobrescribir en el volume (no es upload de usuario).
+# El volume oculta el archivo de la imagen; sin esto Google/Meta quedan con el PNG viejo.
+BRAND_FAVICON_SRC="/app/public/brand/icon-32.png"
+BRAND_FAVICON_DST="/app/public/assets/admin/img/favicon.png"
+if [ -f "$BRAND_FAVICON_SRC" ]; then
+    mkdir -p "$(dirname "$BRAND_FAVICON_DST")"
+    cp -f "$BRAND_FAVICON_SRC" "$BRAND_FAVICON_DST"
+    # También alinear roots clásicos (por si un crawler pide /favicon.ico sin mirar <link>)
+    if [ -f /app/public/brand/favicon.ico ]; then
+        cp -f /app/public/brand/favicon.ico /app/public/favicon.ico
+    fi
+    if [ -f /app/public/brand/icon-32.png ]; then
+        cp -f /app/public/brand/icon-32.png /app/public/favicon-32x32.png
+    fi
+    if [ -f /app/public/brand/icon-192.png ]; then
+        cp -f /app/public/brand/icon-192.png /app/public/android-chrome-192x192.png
+    fi
+    if [ -f /app/public/brand/apple-touch-icon.png ]; then
+        cp -f /app/public/brand/apple-touch-icon.png /app/public/apple-touch-icon.png
+    fi
+fi
+
 php artisan storage:link --force
 php artisan migrate --force
 

@@ -44,7 +44,9 @@ if ($requestedFile !== false
         $isSiteIcon = $extension === 'ico'
             || str_starts_with($baseName, 'favicon')
             || str_starts_with($baseName, 'apple-touch-icon')
-            || str_starts_with($baseName, 'android-chrome');
+            || str_starts_with($baseName, 'android-chrome')
+            || str_starts_with($baseName, 'icon-')
+            || str_contains($requestedFile, DIRECTORY_SEPARATOR . 'brand' . DIRECTORY_SEPARATOR);
         if ($isSiteIcon) {
             header('Cache-Control: public, max-age=86400, must-revalidate');
             header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');

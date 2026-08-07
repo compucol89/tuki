@@ -41,12 +41,12 @@
   <!-- Required meta tags -->
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  {{-- Favicons tempr posible (antes de JSON-LD) para crawlers WhatsApp/Meta --}}
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-  <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('android-chrome-192x192.png') }}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
-  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
-  <meta name="msapplication-TileImage" content="{{ asset('android-chrome-192x192.png') }}">
+  {{-- Favicons en /brand/* (path nuevo) para romper caches viejos de Meta/Google --}}
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('brand/icon-32.png') }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('brand/icon-192.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('brand/apple-touch-icon.png') }}">
+  <link rel="shortcut icon" href="{{ asset('brand/favicon.ico') }}" type="image/x-icon">
+  <meta name="msapplication-TileImage" content="{{ asset('brand/icon-192.png') }}">
   <meta name="theme-color" content="#F97316">
   <meta name="description" content="{{ $metaDescription }}">
   <meta name="keywords" content="{{ $metaKeywords }}">
@@ -113,7 +113,7 @@
       '@id' => url('/#organization'),
       'name' => $websiteInfo->website_title ?? 'Tukipass',
       'url' => url('/'),
-      'logo' => asset('android-chrome-192x192.png'),
+      'logo' => asset('brand/icon-192.png'),
       'description' => 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online.',
       'sameAs' => collect($socialMediaInfos ?? [])
         ->pluck('url')

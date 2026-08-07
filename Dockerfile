@@ -64,6 +64,13 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
+# Seed de img para el volume de Easypanel (favicon/brand versionados en la imagen)
+RUN mkdir -p /app/public/assets/admin/img.seed \
+    && if [ -f /app/public/brand/icon-32.png ]; then \
+         cp -f /app/public/brand/icon-32.png /app/public/assets/admin/img.seed/favicon.png; \
+         cp -f /app/public/brand/icon-32.png /app/public/assets/admin/img/favicon.png; \
+       fi
+
 RUN rm -rf \
     /app/node_modules \
     /app/.git \

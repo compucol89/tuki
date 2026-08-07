@@ -65,7 +65,9 @@ class GenerateEventContentDraftJob implements ShouldQueue
         'status' => 'completed',
         'generated_payload' => $generated,
         'audit_payload' => $auditPayload,
-        'audit_status' => $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed')),
+        'audit_status' => EventAiContentDraft::normalizeAuditStatus(
+          $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed'))
+        ),
         'needs_human_review' => $needsHumanReview,
       ]);
 

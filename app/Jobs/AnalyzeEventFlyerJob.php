@@ -28,7 +28,11 @@ class AnalyzeEventFlyerJob implements ShouldQueue
 
   public function handle(EventAiAssistantService $assistant, EventFactsBuilder $factsBuilder): void
   {
-    $run = EventAiAssistantRun::with('event')->findOrFail($this->runId);
+    $run = EventAiAssistantRun::with('event')->find($this->runId);
+    if (!$run || !$run->event) {
+      // Run eliminado (usuario canceló/re-ejecutó): no hay nada que analizar ni reintentar
+      return;
+    }
     $startedAt = microtime(true);
 
     try {

@@ -137,7 +137,9 @@ class EventAiAssistantController extends Controller
           'id' => null,
           'status' => 'temporary',
           'needs_human_review' => $needsHumanReview,
-          'audit_status' => $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed')),
+          'audit_status' => EventAiContentDraft::normalizeAuditStatus(
+            $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed'))
+          ),
           'generated_payload' => $generated,
           'audit_payload' => array_merge($audit, ['moderation' => $moderation]),
         ];

@@ -37,6 +37,21 @@ class EventAiContentDraft extends Model
     return $this->belongsTo(EventAiAssistantReview::class, 'review_id');
   }
 
+  /**
+   * Normaliza el audit_status devuelto por la IA: garantiza valor no vacío
+   * y longitud compatible con la columna (evita SQLSTATE 22001).
+   */
+  public static function normalizeAuditStatus(?string $status): string
+  {
+    $status = trim((string) $status);
+
+    if ($status === '') {
+      return 'needs_human_review';
+    }
+
+    return mb_substr($status, 0, 190);
+  }
+
   public function run(): BelongsTo
   {
     return $this->belongsTo(EventAiAssistantRun::class, 'run_id');

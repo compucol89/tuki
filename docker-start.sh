@@ -91,8 +91,20 @@ mkdir -p /app/storage/logs
 printf '*/1 * * * * php /app/artisan schedule:run >> /app/storage/logs/cron.log 2>&1\n' > /etc/crontabs/root
 crond -b -l 2 || true
 
+# === Queue workers (cola database) — el contenedor corre web + workers + cron ===
+# Flags críticos: --memory por encima del pico de los jobs IA (default del worker: 128M
+# mata jobs a mitad de ejecución) y --timeout acorde a cada cola.
+php artisan queue:work database --queue=default --memory=512 --timeout=300 --tries=3 >> /app/storage/logs/worker-default.log 2>&1 &
+php artisan queue:work database --queue=ai-content --memory=1024 --timeout=300 --tries=3 >> /app/storage/logs/worker-ai-content.log 2>&1 &
+php artisan queue:work database --queue=ai-images --memory=1024 --timeout=600 --tries=3 >> /app/storage/logs/worker-ai-images.log 2>&1 &
+
 mkdir -p /app/.router-root
 # zlib.output_compression: gzip del HTML (los estáticos los comprime docker-router.php vía ob_gzhandler)
 php -d upload_max_filesize=8M -d post_max_size=12M -d memory_limit=512M \
     -d zlib.output_compression=1 -d zlib.output_compression_level=5 \
-    -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php
+    -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php &
+
+# Supervisión: si muere un worker o el web server, el contenedor termina
+# y EasyPanel lo reinicia completo (self-healing). Requiere bash >= 4.3
+# (alpine instala bash 5.x — verificado en el Dockerfile).
+wait -n

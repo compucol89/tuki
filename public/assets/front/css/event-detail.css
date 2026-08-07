@@ -104,12 +104,6 @@
 }
 
 /* ── Base: zona CTA ── */
-.ed-cta-zone {
-  background: #fafafa;
-  margin: 0 -24px -20px;
-  padding: 20px 24px;
-  border-top: 1px solid #f3f4f6;
-}
 
 /* ── Base: botón de reserva (restaurado) ── */
 .ed-buy-btn {
@@ -193,57 +187,6 @@
   background: rgba(255,255,255,0.1);
 }
 
-.ed-head-top {
-  margin-bottom: 11px;
-}
-
-.ed-head-pill {
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-}
-
-.ed-head-pill--open {
-  background: rgba(34,197,94,0.16);
-  color: #bbf7d0;
-  border: 1px solid rgba(187,247,208,0.14);
-}
-
-.ed-head-pill--over {
-  background: rgba(239,68,68,0.16);
-  color: #fecaca;
-  border: 1px solid rgba(254,202,202,0.14);
-}
-
-.ed-ticket-card__head-title {
-  display: block;
-  margin-top: 8px;
-  color: rgba(255,255,255,0.56) !important;
-}
-
-.ed-ticket-card__head-price {
-  font-family: var(--tuki-font-sans);
-  font-size: 36px !important;
-  letter-spacing: -0.05em !important;
-  line-height: 1.02;
-  text-wrap: balance;
-}
-
-.ed-ticket-card__head-sep {
-  opacity: 0.26;
-}
-
-.ed-head-stock {
-  margin-top: 10px !important;
-  color: rgba(255,255,255,0.62) !important;
-  font-size: 12px;
-  letter-spacing: -0.01em;
-}
-
 .ed-ticket-card__body {
   padding: 23px 24px 24px;
   background: linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
@@ -289,26 +232,6 @@
 .ed-countdown-wrap,
 .ed-status-pill {
   border-radius: 14px;
-}
-
-.ed-viewer-counter {
-  gap: 10px;
-  padding: 13px 14px;
-  margin-bottom: 12px;
-  background: linear-gradient(180deg, #fff8f1 0%, #fffdf9 100%);
-  border: 1px solid rgba(249,115,22,0.18);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.78),
-    0 8px 20px rgba(15,23,42,0.04);
-}
-
-.ed-viewer-counter__num {
-  font-size: 19px;
-}
-
-.ed-viewer-counter__label {
-  font-size: 12px;
-  color: #475569;
 }
 
 .ed-countdown-wrap {
@@ -383,87 +306,6 @@
   display: block !important;
 }
 
-.ed-nudge {
-  gap: 12px;
-  padding: 13px 14px;
-  margin-bottom: 14px;
-  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 8px 20px rgba(15,23,42,0.035);
-}
-
-.ed-nudge__text {
-  font-size: 12.5px;
-  line-height: 1.45;
-}
-
-body:not(.page-event-detail) .ed-ticket-card__body .event-details-information > p.mb-0 {
-  margin-top: 14px !important;
-  padding: 12px 14px 9px !important;
-  background: #f8fafc !important;
-  border-color: #e6ebf1 !important;
-  color: #64748b !important;
-  border-radius: 14px;
-}
-
-body:not(.page-event-detail) .ed-ticket-card__body .price-count {
-  gap: 14px;
-  padding: 13px 14px !important;
-  background: linear-gradient(180deg, #f8fafc 0%, #fdfefe 100%) !important;
-  border-color: #e6ebf1 !important;
-  border-radius: 16px !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
-}
-
-body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 {
-  line-height: 1.2 !important;
-  font-family: var(--tuki-font-sans);
-  font-size: 24px !important;
-  letter-spacing: -0.04em;
-}
-
-body:not(.page-event-detail) .ed-ticket-card__body .click-show {
-  margin: 6px 0 2px;
-  line-height: 1.5;
-}
-
-body:not(.page-event-detail) .ed-ticket-card__body .quantity-input {
-  border-radius: 12px;
-  border-color: #dbe1e8;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
-}
-
-body:not(.page-event-detail) .ed-ticket-card__body .quantity-input button,
-body:not(.page-event-detail) .ed-ticket-card__body .quantity-input input.quantity {
-  height: 42px !important;
-}
-
-body:not(.page-event-detail) .ed-total-row {
-  padding: 20px 0 12px;
-  margin-top: 12px;
-}
-
-body:not(.page-event-detail) .ed-total-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #94a3b8;
-}
-
-body:not(.page-event-detail) .ed-total-value {
-  font-size: 28px;
-  letter-spacing: -0.045em;
-  font-family: var(--tuki-font-sans);
-}
-
-body:not(.page-event-detail) .ed-cta-zone {
-  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
-  margin: 2px -24px -24px;
-  padding: 22px 24px 22px;
-  border-top: 1px solid #eef2f6;
-}
-
 .ed-trust,
 .ed-trust-row {
   margin-top: 14px;
@@ -530,10 +372,6 @@ body:not(.page-event-detail) .ed-cta-zone {
     right: 18px;
   }
 
-  .ed-ticket-card__head-price {
-    font-size: 31px !important;
-  }
-
   .ed-ticket-card__body {
     padding: 18px 18px 20px;
   }
@@ -543,15 +381,6 @@ body:not(.page-event-detail) .ed-cta-zone {
   .ed-countdown-wrap {
     padding-left: 12px;
     padding-right: 12px;
-  }
-
-  body:not(.page-event-detail) .ed-ticket-card__body .price-count {
-    align-items: flex-start !important;
-  }
-
-  body:not(.page-event-detail) .ed-cta-zone {
-    margin: 2px -18px -20px;
-    padding: 18px 18px 20px;
   }
 
 }
@@ -608,22 +437,6 @@ body:not(.page-event-detail) .ed-cta-zone {
   width: 100%;
   height: auto;
   position: relative;
-}
-
-.ed-gallery-count {
-  position: absolute;
-  bottom: 12px;
-  right: 14px;
-  background: rgba(20,26,38,0.7);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  pointer-events: none;
 }
 
 .ed-gallery-thumbs {
@@ -749,12 +562,6 @@ body.page-event-detail .ed-card--context .ed-card__body {
   background: transparent;
 }
 
-.ed-card--summary {
-  background:
-    radial-gradient(circle at top right, rgba(249,115,22,0.08) 0%, transparent 24%),
-    linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
-}
-
 .ed-summary-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -801,13 +608,6 @@ body.page-event-detail .ed-card--context .ed-card__body {
   margin-top: 22px;
   padding-top: 22px;
   border-top: 1px solid rgba(226, 232, 240, 0.88);
-}
-
-.ed-signal-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.3fr);
-  gap: 16px;
-  align-items: stretch;
 }
 
 .ed-summary-signals .ed-viewer-counter,
@@ -996,15 +796,6 @@ body.page-event-detail .ed-card--context .ed-card__body {
   outline-offset: -2px;
 }
 
-.ed-gallery-count {
-  background: rgba(20,26,38,0.76);
-  font-weight: 700;
-  padding: 7px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
-}
-
 .ed-gallery-thumbs {
   gap: 8px;
   padding: 12px;
@@ -1078,10 +869,6 @@ body.page-event-detail .ed-card--context .ed-card__body {
   .ed-summary-grid {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
-  }
-
-  .ed-signal-grid {
-    grid-template-columns: 1fr;
   }
 
   .ed-summary-signals .ed-viewer-counter,
@@ -1700,14 +1487,6 @@ body.page-event-detail .ei-meta__text {
   }
 }
 
-.ed-body-topline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin: 0;
-}
-
 .ed-body-chip {
   display: inline-flex;
   align-items: center;
@@ -1864,10 +1643,6 @@ body.page-event-detail .ei-meta__text {
     padding-bottom: 72px;
   }
 
-  .ed-body-topline {
-    margin-bottom: 18px;
-  }
-
   .ed-body .col-lg-8,
   .ed-body .col-lg-4 {
     padding-left: 15px;
@@ -1888,10 +1663,6 @@ body.page-event-detail .ei-meta__text {
   .ed-body {
     padding-top: 36px;
     padding-bottom: 56px;
-  }
-
-  .ed-body-topline {
-    gap: 8px;
   }
 
   .ed-body-chip {
@@ -1939,21 +1710,6 @@ body.page-event-detail .ei-meta__text {
 /* =========================================================
    Event detail: interest indicator (sidebar)
    ========================================================= */
-.ed-interest-indicator {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  background: #fff8f3;
-  border: 1px solid rgba(249,115,22,0.20);
-  border-radius: 12px;
-  margin-bottom: 14px;
-  font-size: 13px;
-  color: #374151;
-  line-height: 1.35;
-}
-.ed-interest-indicator__icon { flex-shrink: 0; color: #f97316; }
-.ed-interest-indicator__text strong { color: #111827; }
 
 /* =========================================================
    Event detail: hero nudge rotator

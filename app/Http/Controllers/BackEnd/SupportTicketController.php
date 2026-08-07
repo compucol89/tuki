@@ -133,8 +133,12 @@ class SupportTicketController extends Controller
     $data->create($input);
 
     $files = glob('assets/front/temp/*');
+    $staleCutoff = time() - 3600;
     foreach ($files as $file) {
-      unlink($file);
+      // Solo limpiar temp obsoletos (>1h): evita borrar uploads en vuelo de otros usuarios
+      if (is_file($file) && @filemtime($file) < $staleCutoff) {
+        @unlink($file);
+      }
     }
 
     SupportTicket::where('id', $id)->update([

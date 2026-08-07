@@ -125,9 +125,10 @@ class SubscriberController extends Controller
 
         $mail->send();
       } catch (Exception $e) {
-        Session::flash('warning', 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo);
-
-        return redirect()->back();
+        // No abortar el envío al resto de suscriptores: registrar y continuar
+        \Illuminate\Support\Facades\Log::warning('Subscriber mail failed: ' . $e->getMessage(), [
+          'email' => $subscriber->email_id,
+        ]);
       }
     }
 

@@ -21,6 +21,7 @@ class EventAiUsageLimiterTest extends TestCase
       $table->unsignedBigInteger('organizer_id');
       $table->string('type', 30)->default('analysis');
       $table->string('status', 30)->default('completed');
+      $table->json('input_payload')->nullable();
       $table->timestamps();
     });
 

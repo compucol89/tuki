@@ -21,6 +21,11 @@ class EventSocialImageTest extends TestCase
     }
     @rmdir(public_path('assets/admin/img/event-social/122'));
 
+    foreach (glob(public_path('assets/admin/img/event-social/121/*')) ?: [] as $file) {
+      @unlink($file);
+    }
+    @rmdir(public_path('assets/admin/img/event-social/121'));
+
     parent::tearDown();
   }
 
@@ -40,10 +45,11 @@ class EventSocialImageTest extends TestCase
 
     $socialImage = EventSocialImage::from($event, $images);
 
-    $this->assertStringContainsString('/assets/admin/img/event/thumbnail/test-social-thumb.png?v=', $socialImage['url']);
-    $this->assertSame(320, $socialImage['width']);
-    $this->assertSame(640, $socialImage['height']);
-    $this->assertSame('image/png', $socialImage['type']);
+    $this->assertStringContainsString('/assets/admin/img/event-social/121/test-social-thumb-', $socialImage['url']);
+    $this->assertStringContainsString('.jpg?v=', $socialImage['url']);
+    $this->assertSame(1200, $socialImage['width']);
+    $this->assertSame(630, $socialImage['height']);
+    $this->assertSame('image/jpeg', $socialImage['type']);
   }
 
   public function test_prefers_generated_og_image_before_thumbnail(): void
@@ -61,7 +67,8 @@ class EventSocialImageTest extends TestCase
 
     $socialImage = EventSocialImage::from($event, new Collection());
 
-    $this->assertStringContainsString('/assets/admin/img/event-ai/121/test-social-og.jpg?v=', $socialImage['url']);
+    $this->assertStringContainsString('/assets/admin/img/event-social/121/test-social-og-', $socialImage['url']);
+    $this->assertStringContainsString('.jpg?v=', $socialImage['url']);
     $this->assertSame(1200, $socialImage['width']);
     $this->assertSame(630, $socialImage['height']);
     $this->assertSame('image/jpeg', $socialImage['type']);

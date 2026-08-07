@@ -784,7 +784,7 @@ class EventAiAssistantController extends Controller
       if ($attempt > 1) {
         $attemptPreferences['quality_retry'] = [
           'previous_failures' => $lastFailures,
-          'instruction' => 'Regenerá el paquete completo. No devuelvas una propuesta mínima ni OCR. Cumplí título fuerte, descripción completa, FAQ, OG, resumen IA, tags y checklist.',
+          'instruction' => 'Regenerá el paquete completo. No devuelvas una propuesta mínima ni OCR. Cumplí título fuerte, descripción completa, OG, tags y checklist. FAQ solo con respuestas verificadas; no inventes ni muestres datos ausentes.',
         ];
       }
 
@@ -825,13 +825,21 @@ class EventAiAssistantController extends Controller
       $generated['social']['open_graph_description'] = mb_substr($short ?: strip_tags($main), 0, 220);
     }
 
-    if (empty($generated['faq']) || !is_array($generated['faq'])) {
-      $generated['faq'] = $this->fallbackFaq($generated, $canonicalFacts);
+    if (!is_array($generated['faq'] ?? null)) {
+      $generated['faq'] = [];
     }
 
-    if (count($generated['faq']) < 4) {
-      $generated['faq'] = array_slice(array_merge($generated['faq'], $this->fallbackFaq($generated, $canonicalFacts)), 0, 5);
-    }
+    $generated['faq'] = array_values(array_filter($generated['faq'], function ($item) {
+      $question = trim((string) ($item['question'] ?? ''));
+      $answer = trim((string) ($item['answer'] ?? ''));
+      if ($question === '' || $answer === '') {
+        return false;
+      }
+
+      $banned = '/debe confirmarse|no (fue|está|estan|están) (informad|especificad)|no se especific|pendiente de confirmación|antes de publicar|no contamos con información|edad mínima no informad/iu';
+
+      return !preg_match($banned, $answer);
+    }));
 
     if (empty($generated['review_checklist']) || !is_array($generated['review_checklist'])) {
       $generated['review_checklist'] = $this->fallbackReviewChecklist();
@@ -878,8 +886,12 @@ class EventAiAssistantController extends Controller
     if (mb_strlen(trim((string) ($social['open_graph_description'] ?? ''))) < 80) {
       $failures[] = 'La descripción Open Graph es insuficiente.';
     }
-    if (count(array_filter($generated['faq'] ?? [])) < 4) {
-      $failures[] = 'Faltan preguntas frecuentes para IA y Google.';
+    foreach (($generated['faq'] ?? []) as $item) {
+      $answer = trim((string) ($item['answer'] ?? ''));
+      if ($answer !== '' && preg_match('/debe confirmarse|no (fue|está|estan|están) (informad|especificad)|pendiente de confirmación|antes de publicar/iu', $answer)) {
+        $failures[] = 'Hay FAQ con notas internas o datos ausentes visibles.';
+        break;
+      }
     }
     if (count(array_filter($generated['review_checklist'] ?? [])) < 6) {
       $failures[] = 'Falta checklist de revisión humana.';
@@ -983,34 +995,39 @@ class EventAiAssistantController extends Controller
 
   private function fallbackFaq(array $generated, array $canonicalFacts): array
   {
-    $title = data_get($generated, 'content.public_title') ?: $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']) ?: 'este evento';
+    $title = data_get($generated, 'content.public_title') ?: $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']) ?: null;
     $address = $this->canonicalFactValue($canonicalFacts, ['direccion', 'dirección', 'ubicacion', 'ubicación']);
     $date = $this->canonicalFactValue($canonicalFacts, ['fecha']);
     $promo = $this->canonicalFactValue($canonicalFacts, ['promocion', 'promoción', 'acceso']);
     $style = $this->canonicalFactValue($canonicalFacts, ['subtitulo', 'subtítulo', 'estilo', 'musical']);
+    $items = [];
 
-    return [
-      [
+    if ($title) {
+      $items[] = [
         'question' => '¿Qué es ' . $title . '?',
-        'answer' => $title . ' es una publicación de evento en Tukipass. La descripción del evento reúne los datos confirmados por el organizador y la información visible de la portada para ayudar a decidir la reserva.',
-      ],
-      [
+        'answer' => $title . ($style ? ' es una propuesta de ' . mb_strtolower($style) . '.' : ' es un evento publicado en Tukipass.'),
+      ];
+    }
+    if ($address) {
+      $items[] = [
         'question' => '¿Dónde se realiza el evento?',
-        'answer' => $address ? 'El evento se realiza en ' . $address . '. Revisá la publicación final para confirmar indicaciones de ingreso, piso, sala o referencias adicionales.' : 'La ubicación debe confirmarse en la publicación final antes de reservar.',
-      ],
-      [
+        'answer' => 'El evento se realiza en ' . $address . '.',
+      ];
+    }
+    if ($date) {
+      $items[] = [
         'question' => '¿Cuándo es el evento?',
-        'answer' => $date ? 'La fecha visible o informada para el evento es ' . $date . '. Antes de reservar, revisá que la publicación final incluya día, mes, año y horario.' : 'La fecha y el horario deben confirmarse en la publicación final antes de reservar.',
-      ],
-      [
-        'question' => '¿Qué incluye la propuesta del evento?',
-        'answer' => $style ? 'La propuesta comunica ' . mb_strtolower($style) . ' y una experiencia pensada para quienes buscan una salida clara y fácil de reservar.' : 'La propuesta del evento debe revisarse en la descripción final, donde el organizador informa experiencia, acceso, artistas, horarios y condiciones.',
-      ],
-      [
+        'answer' => 'La fecha del evento es ' . $date . '.',
+      ];
+    }
+    if ($promo) {
+      $items[] = [
         'question' => '¿Hay promociones o condiciones especiales?',
-        'answer' => $promo ? 'La promoción visible o informada es: ' . $promo . '. Las condiciones finales dependen del organizador y deben revisarse antes de reservar.' : 'Las promociones, precios y condiciones de acceso deben revisarse en la publicación final del evento.',
-      ],
-    ];
+        'answer' => $promo,
+      ];
+    }
+
+    return $items;
   }
 
   private function fallbackReviewChecklist(): array
@@ -1220,10 +1237,6 @@ class EventAiAssistantController extends Controller
 
     if (!empty($content['important_information']) && is_array($content['important_information'])) {
       $parts[] = '<h3>Información importante</h3><ul>' . $this->htmlList($content['important_information']) . '</ul>';
-    }
-
-    if (!empty($payload['seo']['ai_search_summary'])) {
-      $parts[] = '<h3>Resumen para buscadores e IA</h3><p>' . nl2br(e($payload['seo']['ai_search_summary'])) . '</p>';
     }
 
     if (!empty($payload['faq']) && is_array($payload['faq'])) {

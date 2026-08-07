@@ -1910,7 +1910,7 @@
 
         let html = '<div class="font-weight-bold mb-2">Paquete SEO, redes e IA</div>';
         if (seo.seo_title) html += '<p class="mb-1"><strong>SEO title:</strong> ' + escapeHtml(seo.seo_title) + '</p>';
-        if (seo.ai_search_summary) html += '<p class="mb-1"><strong>Resumen IA:</strong> ' + escapeHtml(seo.ai_search_summary) + '</p>';
+        if (seo.ai_search_summary) html += '<p class="mb-1"><strong>Resumen IA (interno):</strong> ' + escapeHtml(seo.ai_search_summary) + '</p>';
         if (social.open_graph_title || social.open_graph_description) {
           html += '<p class="mb-1"><strong>Open Graph:</strong> ' + escapeHtml([social.open_graph_title, social.open_graph_description].filter(Boolean).join(' - ')) + '</p>';
         }
@@ -2009,9 +2009,6 @@
           html += '<h3>Información importante</h3><ul>' + listHtml(content.important_information) + '</ul>';
         }
         const seo = lastDraft && lastDraft.seo ? lastDraft.seo : {};
-        if (seo.ai_search_summary) {
-          html += '<h3>Resumen para buscadores e IA</h3><p>' + escapeHtml(seo.ai_search_summary).replace(/\n/g, '<br>') + '</p>';
-        }
         if (lastDraft && Array.isArray(lastDraft.faq) && lastDraft.faq.length) {
           html += '<h3>Preguntas frecuentes</h3>' + lastDraft.faq.filter(function (item) {
             return item && item.question && item.answer;

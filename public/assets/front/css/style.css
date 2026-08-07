@@ -234,6 +234,7 @@
     --space-card-body-x: 28px;
     --selected-tint: color-mix(in srgb, var(--primary) 12%, transparent);
     --primary-glow: #fb923c;
+    --success-text: #067a4e;
     --tk-primary: var(--primary);
     --tk-primary-hover: var(--primary-hover);
 
@@ -3977,9 +3978,9 @@ body.page-event-detail .footer-section.footer-section--premium {
 
 .main-header--premium .menu-right .menu-btn--customer:hover,
 .main-header--premium .menu-right .menu-btn--customer:focus {
-  background: #ffffff;
+  background: var(--header-btn-hover-bg);
   color: var(--foreground);
-  border-color: rgba(30,37,50,0.12);
+  border-color: var(--header-btn-hover-border);
   box-shadow: none !important;
   transform: translateY(-1px);
 }
@@ -4081,6 +4082,8 @@ body.page-event-detail .footer-section.footer-section--premium {
   background: transparent;
 }
 
+html[data-theme="dark"] .main-header--premium .logo img,
+html[data-theme="dark"] .main-header--premium .logo-mobile img,
 .fixed-header.main-header--premium .logo img,
 .fixed-header.main-header--premium .logo-mobile img {
   filter: brightness(0) invert(1);
@@ -5690,6 +5693,8 @@ html[data-theme="dark"] {
 
   --tuki-muted-light: #9ca3af;
   --selected-tint: color-mix(in srgb, var(--primary) 22%, transparent);
+  --header-surface: #111827;
+  --success-text: #4ade80;
   --primary-glow: #f0704a;
   --tk-primary: var(--primary);
   --tk-primary-hover: var(--primary-hover);
@@ -6310,4 +6315,30 @@ html[data-theme="dark"] .ui-selectmenu-menu .ui-menu .ui-menu-item-wrapper.ui-st
   background-color: var(--accent);
   color: var(--accent-foreground);
   border-color: transparent;
+}
+
+/* ==================================================================
+   THEME — HEADER DARK (superficie near-black, BUG 4)
+   ================================================================== */
+html[data-theme="dark"] .main-header--premium {
+  background: var(--header-surface);
+}
+
+html[data-theme="dark"] .main-header--premium .header-upper {
+  background: transparent;
+}
+
+html[data-theme="dark"] .fixed-header .header-upper,
+html[data-theme="dark"] .fixed-header.main-header--premium .header-upper {
+  background: var(--header-surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+html[data-theme="dark"] .blog-site .main-header--premium .header-upper {
+  background: var(--header-surface);
+}
+
+html[data-theme="dark"] .blog-site .main-header--premium .main-menu #main-menu.navbar-collapse,
+html[data-theme="dark"] .main-header--premium .main-menu #main-menu.navbar-collapse {
+  background: var(--header-surface);
 }

@@ -49,7 +49,7 @@
 
 @push('styles')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/daterangepicker.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/daterangepicker.css') }}">
 @endpush
 
 @push('scripts')

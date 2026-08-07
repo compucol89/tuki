@@ -891,3 +891,23 @@ if (!function_exists('addonsRoute')) {
     return route($resolved, $params);
   }
 }
+
+if (!function_exists('frontAsset')) {
+  /**
+   * Devuelve la URL de un asset público con cache-busting por hash de contenido.
+   * Mismo mecanismo que el closure $frontCssAsset de frontend/partials/styles.blade.php:
+   * sobrevive a deploys que preservan mtimes (md5 del archivo, no filemtime).
+   *
+   *   frontAsset('assets/front/css/auth.css')
+   */
+  function frontAsset(string $path): string
+  {
+    $fullPath = public_path($path);
+    if (!is_file($fullPath)) {
+      return asset($path);
+    }
+    $hash = substr(md5_file($fullPath), 0, 12);
+
+    return asset($path) . '?v=' . $hash;
+  }
+}

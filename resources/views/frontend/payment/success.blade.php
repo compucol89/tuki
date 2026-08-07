@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/payment.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/payment.css') }}">
 @endpush
 
 @section('pageHeading', '¡Reserva confirmada!')

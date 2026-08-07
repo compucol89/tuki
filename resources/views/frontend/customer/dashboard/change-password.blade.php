@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/customer.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/customer.css') }}">
 @endpush
 
 @section('pageHeading', 'Cambiar contraseña')

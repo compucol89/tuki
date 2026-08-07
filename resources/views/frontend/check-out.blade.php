@@ -3,7 +3,7 @@
 @section('body-class', 'checkout-page')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/checkout.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/checkout.css') }}">
 @endpush
 
 @section('custom-style')

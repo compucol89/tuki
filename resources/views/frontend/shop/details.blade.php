@@ -19,14 +19,14 @@
 @section('og-type', 'product')
 
 @section('custom-style')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/common-style.css') }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ asset('assets/front/css/common-style.css') }}"></noscript>
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/common-style.css') }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ frontAsset('assets/front/css/common-style.css') }}"></noscript>
   <link rel="stylesheet" href="{{ asset('assets/admin/css/summernote-content.css') }}">
 @endsection
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/slick.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/magnific-popup.min.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/slick.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/magnific-popup.min.css') }}">
 @endpush
 
 @push('scripts')

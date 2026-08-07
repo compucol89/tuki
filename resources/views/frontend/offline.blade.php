@@ -7,9 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{ __('Offline') }}</title>
   <!-- Padding Margin -->
-  <link rel="stylesheet" href="{{ asset('assets/front/css/spacing.min.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/spacing.min.css') }}">
   <!-- Main css -->
-  <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/style.css') }}">
 </head>
 
 <body>

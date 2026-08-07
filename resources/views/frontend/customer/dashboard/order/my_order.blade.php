@@ -131,8 +131,8 @@
 @endsection
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/datatables.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('assets/front/css/dataTables.bootstrap4.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/datatables.min.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/dataTables.bootstrap4.css') }}">
 @endpush
 
 @section('script')

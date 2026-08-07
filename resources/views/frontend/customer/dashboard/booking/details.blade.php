@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/booking.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/booking.css') }}">
 @endpush
 
 @section('pageHeading', 'Detalle de reserva')

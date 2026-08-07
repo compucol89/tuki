@@ -20,7 +20,7 @@
 @section('og-image', asset('assets/front/img/og/tukipass-og.jpg'))
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/organizer.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/organizer.css') }}">
 @endpush
 
 @section('hero-section')

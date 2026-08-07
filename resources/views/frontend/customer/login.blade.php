@@ -1,7 +1,7 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/auth.css') }}">
+  <link rel="stylesheet" href="{{ frontAsset('assets/front/css/auth.css') }}">
 @endpush
 
 @section('body-class', 'auth-page')

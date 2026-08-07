@@ -2514,19 +2514,6 @@ button.filter-button:hover {
   opacity: 1;
 }
 
-.shop-review-area {
-  padding-top: 15px;
-}
-
-.shop-review-area .shop-review-title .title {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.shop-review-area .shop-review-user ul li {
-  display: inline-block;
-}
-
 .shop-review-area .shop-review-user {
   position: relative;
   padding-left: 75px;
@@ -2541,60 +2528,6 @@ button.filter-button:hover {
   border-radius: 50%;
 }
 
-.shop-review-area .shop-review-user span {
-  padding: 3px 0;
-  font-size: 14px;
-  display: inline-block;
-}
-
-.shop-review-area .shop-review-user span span {
-  font-weight: 600;
-}
-
-.shop-review-area .shop-review-user p {
-  font-weight: 300;
-}
-
-.shop-review-area .shop-review-form .input-box {
-  margin-top: 25px;
-}
-
-.shop-review-area .shop-review-form .input-check {
-  margin-bottom: 20px;
-  margin-top: 20px;
-}
-
-.shop-review-area .shop-review-form .input-box input {
-  width: 100%;
-  height: 50px;
-  border: 2px solid #e9ebef;
-  padding-left: 20px;
-}
-
-.shop-review-area .shop-review-form .input-box span {
-  font-size: 14px;
-  color: #5f5f5f;
-  padding-bottom: 15px;
-  display: inline-block;
-}
-
-.shop-review-area .shop-review-form .input-box textarea {
-  width: 100%;
-  height: 200px;
-  border: 2px solid #e9ebef;
-  padding-left: 20px;
-  resize: none;
-  color: #8a8a8a;
-}
-
-.shop-review-area .shop-review-form .input-box ul li {
-  display: inline-block;
-}
-
-.shop-review-area .shop-review-form .input-box ul li a {
-  color: #25d06f;
-}
-
 .shop-review-area .shop-review-form .input-btn button {
   background: #25d06f;
   color: #fff;
@@ -2607,25 +2540,6 @@ button.filter-button:hover {
   color: #25d06f;
   border-color: #25d06f;
   border: 1px solid;
-}
-
-.review-content ul.review-value {
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-}
-
-.review-content ul.review-value::after {
-  content: "|";
-  color: #0000005a;
-}
-
-.review-content ul.review-value:last-child::after {
-  display: none;
-}
-
-.review-content ul:hover i {
-  color: #efcb65;
 }
 
 .price-range-box {
@@ -3598,13 +3512,6 @@ a.proceed-checkout-btn:hover {
   -webkit-transition: all 0.5s ease-out 0s;
   width: 95px;
   margin-bottom: 2px;
-}
-
-.rating {
-  background-image: url(../images/rate-star.png);
-  background-position: 0 0;
-  background-repeat: repeat-x;
-  height: 13px;
 }
 
 ul.login {
@@ -7227,109 +7134,10 @@ section.single-causes-section {
 .popup_main-content h1 {
     font-size: 54px;
 }
-.bg_cover {
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-.mfp-close-btn-in .mfp-close {
-    color: #333;
-    background: #FFF;
-    opacity: 1;
-    border-radius: 50%;
-  width: 30px;
-    height: 30px;
-    line-height: 32px;
-    right: -15px;
-    top: -15px;
-}
-.popup-wrapper {
-  position: relative;
-  width: auto;
-  max-width: 960px;
-  margin: 0 auto;
-}
-.popup-wrapper .form_control {
-    width: 100%;
-    height: 70px;
-    padding: 0 30px;
-    line-height: 70px;
-}
 
 /* Popup-one */
-.popup-one{
-  position: relative;
-  padding: 138px 120px;
-}
-.popup-one .popup_main-content{
-  position: relative;
-  text-align: center;
-  background-color: rgba(69, 29, 83, 0.8);
-  border-radius: 10px;
-  padding: 90px 55px;
-}
-.popup-one .popup_main-content h1,
-.popup-one .popup_main-content p{
-  color: #fff;
-}
-.popup-one .popup_main-content h1{
-  margin-bottom: 20px;
-}
-.popup-one .popup_main-content p{
-  margin-bottom: 30px;
-}
-.popup-one .popup_main-content .popup-main-btn{
-    padding: 15px 100px;
-    display: inline-block;
-    color: #fff;
-    border-radius: 40px;
-    border: 1px solid #fff;
-    text-decoration: none;
-    transition: .3s;
-    -webkit-transition: .3s;
-    -moz-transition: .3s;
-    -ms-transition: .3s;
-    -o-transition: .3s;
-}
-.popup-one .popup_main-content .popup-main-btn:hover,
-.popup-one .popup_main-content .popup-main-btn:focus{
-  background-color: #451D53;
-  color: #fff;
-  border-color: transparent;
-}
 
 /* Popup-two */
-
-.popup-two{
-  position: relative;
-  padding: 120px;
-}
-.popup-two .popup_main-content{
-  position: relative;
-  text-align: center;
-  background-color: rgba(255, 40, 101, 0.7);
-  border-radius: 10px;
-  padding: 90px 55px;
-}
-.popup-two .popup_main-content h1,
-.popup-two .popup_main-content p{
-  color: #fff;
-}
-.popup-two .popup_main-content h1{
-  margin-bottom: 20px;
-}
-.popup-two .popup_main-content p{
-  margin-bottom: 30px;
-}
-.popup-two .popup_main-content .subscribe-form{
-  padding: 0 70px;
-}
-.popup-two .popup_main-content .subscribe-form .form_control{
-  border: none;
-  border-radius: 10px;
-  font-size: 20px;
-  margin-bottom: 20px;
-}
 .popup-two .popup_main-content .subscribe-form  .popup-main-btn{
   width: 100%;
   border: 1px solid #fff;
@@ -7341,83 +7149,11 @@ section.single-causes-section {
   cursor: pointer;
   transition: all .3s;
 }
-.popup-two .popup_main-content .subscribe-form  .popup-main-btn:hover,
-.popup-two .popup_main-content .subscribe-form  .popup-main-btn:focus{
-  background-color: #FF2865;
-  color: #fff;
-  border-color: transparent;
-}
 
 
 /* Popup-three */
 
-.popup-three .popup_main-content{
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  background-color: #fff;
-}
-.popup-three .popup_main-content .left-bg{
-  width: 45%;
-  height: 100%;
-    min-height: 670px;
-}
-.popup-three .popup_main-content .right-content {
-  width: 55%;
-  padding: 30px 15px;
-  text-align: center;
-}
-.popup-three .popup_main-content .right-content h1{
-  font-weight: 400;
-  margin-bottom: 20px;
-}
-.popup-three .popup_main-content .right-content p{
-  margin-bottom: 20px;
-}
-.popup-three .popup_main-content .right-content .popup-main-btn {
-    padding: 15px 70px;
-    background-color: #FF2865;
-    color: #fff;
-    font-size: 19px;
-    border-radius: 35px;
-    display: inline-block;
-    text-decoration: none;
-}
-
 /* Popup-four */
-
-.popup-four .popup_main-content{
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  background-color: #fff;
-}
-.popup-four .popup_main-content .left-bg{
-  width: 45%;
-  height: 100%;
-    min-height: 670px;
-}
-.popup-four .popup_main-content .right-content {
-  width: 55%;
-  padding: 30px 30px;
-  text-align: center;
-}
-.popup-four .popup_main-content .right-content h1{
-  font-weight: 400;
-  margin-bottom: 20px;
-}
-.popup-four .popup_main-content .right-content p{
-  margin-bottom: 20px;
-}
-.popup-four .popup_main-content .subscribe-form{
-  padding: 0 70px;
-}
-.popup-four .popup_main-content .subscribe-form .form_control{
-  border: 2px solid #C5C5C5;
-  border-radius: 10px;
-  font-size: 20px;
-  margin-bottom: 20px;
-}
 .popup-four .popup_main-content .subscribe-form .popup-main-btn{
   width: 100%;
   background-color: #F8960D;
@@ -7429,20 +7165,9 @@ section.single-causes-section {
   border: none;
   transition: all .3s;
 }
-.popup-four .popup_main-content .subscribe-form .popup-main-btn:hover,
-.popup-four .popup_main-content .subscribe-form .popup-main-btn:focus{
-  background-color: #F8960D;
-  color: #fff;
-  border-color: transparent;
-}
 
 
 /* Popup-five */
-
-.popup-five .popup_main-content{
-  text-align: center;
-  padding: 75px;
-}
 .popup-five .popup_main-content h1{
   font-size: 55px;
   line-height: 65px;
@@ -7459,39 +7184,8 @@ section.single-causes-section {
   margin-bottom: 40px;
   font-weight: 400;
 }
-.popup-five .popup_main-content .popup-main-btn{
-  padding: 15px 30px;
-  display: inline-block;
-  color: #fff;
-  background-color: #29A19C;
-  border-radius: 40px;
-    text-decoration: none;
-}
 
 /* Popup-six */
-.popup-six .popup_main-content{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  background-color: #fff;
-    text-decoration: none;
-}
-.popup-six .popup_main-content .left-bg{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 50%;
-  height: 100%;
-}
-.popup-six .popup_main-content .right-content {
-  background-color: #930077;
-  width: 50%;
-  height: 100%;
-  padding: 120px 15px;
-  text-align: center;
-  margin-left: 50%;
-}
 .popup-six .popup_main-content .right-content  h1{
   font-size: 55px;
   font-weight: 400;
@@ -7516,23 +7210,6 @@ section.single-causes-section {
 }
 
 /* syotimer css */
-.popup-wrapper .syotimer__body{
-  max-width: 420px;
-  margin:0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
-}
-.popup-wrapper .syotimer__body p{
-  color: #fff;
-}
-.popup-wrapper .syotimer-cell {
-    flex: 0 0 24%;
-    padding-left: 10px;
-    padding-right: 10px;
-}
 .popup-wrapper .syotimer-cell__value {
     width: 100%;
     height: 80px;
@@ -7544,11 +7221,6 @@ section.single-causes-section {
     font-size: 36px;
     color: #fff;
   margin-bottom: 15px;
-}
-.popup-wrapper .syotimer-cell__unit {
-    font-size: 20px;
-    color: #fff;
-    text-transform: capitalize;
 }
 
 /*Medium Device*/

@@ -2696,8 +2696,8 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     e.stopImmediatePropagation();
     navigator.share({
-      title: {{ json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) }},
-      text: {{ json_encode(\Illuminate\Support\Str::limit(strip_tags($content->description ?? ''), 120), JSON_UNESCAPED_UNICODE | JSON_HEX_AMP) }},
+      title: {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
+      text: {!! json_encode(\Illuminate\Support\Str::limit(strip_tags($content->description ?? ''), 120), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
       url: window.location.href
     }).catch(function () {});
   });

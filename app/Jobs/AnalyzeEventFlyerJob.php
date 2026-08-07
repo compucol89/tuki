@@ -20,6 +20,7 @@ class AnalyzeEventFlyerJob implements ShouldQueue
 
   public int $tries = 2;
   public int $backoff = 90;
+  public int $timeout = 300;
 
   public function __construct(private int $runId)
   {

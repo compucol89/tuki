@@ -8,6 +8,7 @@ use App\Jobs\IyzicoProductOrderPendingPayment;
 use App\Models\Event\Booking;
 use App\Models\ShopManagement\ProductOrder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class CronJobController extends Controller
 {
@@ -37,6 +38,10 @@ class CronJobController extends Controller
                 }
             }
         } catch (\Throwable $th) {
+            Log::error('CronJobController checkIyzicoPendingPayment failed: ' . $th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+            ]);
         }
     }
     public function sendTicket()
@@ -45,8 +50,13 @@ class CronJobController extends Controller
 
             Artisan::call('queue:work', [
                 '--stop-when-empty' => true, // To avoid infinite running in case
+                '--max-time' => 120,
             ]);
         } catch (\Throwable $th) {
+            Log::error('CronJobController sendTicket failed: ' . $th->getMessage(), [
+                'file' => $th->getFile(),
+                'line' => $th->getLine(),
+            ]);
         }
     }
 }

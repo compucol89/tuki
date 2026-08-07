@@ -109,7 +109,9 @@ class IyzicoProductOrderPendingPayment implements ShouldQueue
         $store->sendMail($productOrder);
 
 
-        \Artisan::call("queue:work --stop-when-empty");
+        // Worker anidado acotado: procesa la cola de invoices sin correr indefinido ni
+        // consumir la memoria del proceso padre (causa de OOM en jobs de pago).
+        \Artisan::call('queue:work', ['--stop-when-empty' => true, '--max-time' => 120]);
 
         return true;
     }

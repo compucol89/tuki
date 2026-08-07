@@ -5075,7 +5075,7 @@ body.home-page .hs-chip--free {
       min-width: 46px;
       padding: 7px 8px;
       border-radius: 12px;
-      background: rgba(255,255,255,0.92);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: 0 8px 18px rgba(15,23,42,0.16);
     }
     body.home-page .emq-date__day {

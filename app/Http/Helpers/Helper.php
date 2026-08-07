@@ -488,6 +488,9 @@ if (!function_exists('StockCheck')) {
   function stockCheck($event_id, $quantity)
   {
     $ticket = Ticket::where('event_id', $event_id)->select('ticket_available', 'ticket_available_type')->first();
+    if (!$ticket) {
+      return 'error';
+    }
     if ($ticket->ticket_available_type == 'normal') {
       if ($ticket->ticket_available == 0 || $ticket->ticket_available < $quantity) {
         return 'error';

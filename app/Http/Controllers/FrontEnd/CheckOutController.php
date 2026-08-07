@@ -23,6 +23,9 @@ class CheckOutController extends Controller
   public function checkout2(Request $request)
   {
     $basic = Basic::select('event_guest_checkout_status')->first();
+    if (!$basic) {
+      return back()->with(['alert-type' => 'error', 'message' => 'No pudimos procesar tu reserva. Intentá nuevamente.']);
+    }
     $event_guest_checkout_status = $basic->event_guest_checkout_status;
     if ($event_guest_checkout_status != 1) {
       if (!Auth::guard('customer')->user()) {
@@ -31,6 +34,9 @@ class CheckOutController extends Controller
     }
     $select = false;
     $event_type = Event::where('id', $request->event_id)->select('event_type')->first();
+    if (!$event_type) {
+      return back()->with(['alert-type' => 'error', 'message' => 'El evento no existe o ya no está disponible.']);
+    }
     if ($event_type->event_type == 'venue') {
       foreach ($request->quantity as $qty) {
         if ($qty > 0) {
@@ -207,7 +213,7 @@ class CheckOutController extends Controller
 
           $language = Language::where('is_default', 1)->first();
 
-          $ticketContent = TicketContent::where([['ticket_id', $ticket->id], ['language_id', $language->id]])->first();
+          $ticketContent = TicketContent::where([['ticket_id', $ticket->id], ['language_id', optional($language)->id]])->first();
           if (empty($ticketContent)) {
             $ticketContent = TicketContent::where('ticket_id', $ticket->id)->first();
           }
@@ -215,13 +221,13 @@ class CheckOutController extends Controller
           $ticketArr[] = [
             'ticket_id' => $ticket->id,
             'early_bird_dicount' => $early_bird_dicount,
-            'name' => $ticketContent->title,
+            'name' => optional($ticketContent)->title ?? $ticket->title,
             'price' => $ticket->price,
             'type' => $ticket->pricing_type
           ];
         } elseif ($ticket->pricing_type == 'free') {
           $language = Language::where('is_default', 1)->first();
-          $ticketContent = TicketContent::where([['ticket_id', $ticket->id], ['language_id', $language->id]])->first();
+          $ticketContent = TicketContent::where([['ticket_id', $ticket->id], ['language_id', optional($language)->id]])->first();
           if (empty($ticketContent)) {
             $ticketContent = TicketContent::where('ticket_id', $ticket->id)->first();
           }
@@ -229,7 +235,7 @@ class CheckOutController extends Controller
           $ticketArr[] = [
             'ticket_id' => $ticket->id,
             'early_bird_dicount' => 0,
-            'name' => $ticketContent->title,
+            'name' => optional($ticketContent)->title ?? $ticket->title,
             'price' => 0,
             'type' => $ticket->pricing_type
           ];

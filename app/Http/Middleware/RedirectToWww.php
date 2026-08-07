@@ -17,7 +17,7 @@ class RedirectToWww
     $scheme = $this->resolveScheme($request);
     $wwwUrl = $scheme . '://www.tukipass.com' . $request->getRequestUri();
 
-    return redirect()->away($wwwUrl, 301);
+    return redirect()->away($wwwUrl, 308);
   }
 
   private function resolveScheme(Request $request): string

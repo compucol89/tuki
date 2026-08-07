@@ -4492,8 +4492,8 @@ body.page-event-detail {
   --ed-surface-soft: #f6f7f8;
   --ed-ink: #1e2532;
   --ed-ink-strong: #111827;
-  --ed-muted: #687386;
-  --ed-muted-soft: #8a95a5;
+  --ed-muted: #64748b;
+  --ed-muted-soft: #657489;
   --ed-line: rgba(30, 37, 50, 0.08);
   --ed-line-strong: rgba(30, 37, 50, 0.13);
   --ed-orange: #f97316;
@@ -6402,7 +6402,7 @@ body.page-event-detail .ed-hero-facts {
     grid-column: 1 / -1;
     max-width: 22rem;
     margin: 0;
-    color: #687386;
+    color: #64748b;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.42;
@@ -6481,7 +6481,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-option__desc .show-content {
-    color: #687386;
+    color: #64748b;
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.42;
@@ -6622,7 +6622,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-option__desc .show-content {
-    color: #687386;
+    color: #64748b;
     font-size: 0.82rem;
     font-weight: 400;
     line-height: 1.32;
@@ -6988,7 +6988,7 @@ body.page-event-detail .ed-hero-facts {
     grid-row: 4;
     max-width: 24rem;
     margin: 0.22rem 0 0.3rem;
-    color: #687386;
+    color: #64748b;
     font-size: 0.74rem;
     font-weight: 400;
     line-height: 1.35;
@@ -7380,7 +7380,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band__lead {
 }
 
 body.page-event-detail .ed-info-card--description .ed-refund-band__desc {
-  color: #647085;
+  color: #5b6b80;
   font-size: 0.82rem;
   font-weight: 430;
   line-height: 1.48;
@@ -7486,7 +7486,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__title {
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__kicker {
   margin: 0.18rem 0 0;
-  color: #687386;
+  color: #64748b;
   font-size: 0.78rem;
   font-weight: 430;
   line-height: 1.38;
@@ -7594,7 +7594,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-text {
   margin: 0.35rem 0 0;
   padding-top: 0.72rem;
   border-top: 1px solid rgba(30, 37, 50, 0.08);
-  color: #647085;
+  color: #5b6b80;
   font-size: 0.76rem;
   font-weight: 420;
   line-height: 1.58;
@@ -8234,7 +8234,7 @@ body.page-event-detail .ed-body {
     grid-row: 4;
     max-width: 23rem;
     margin: 0.22rem 0 0.3rem;
-    color: #687386;
+    color: #64748b;
     font-size: 0.72rem;
     font-weight: 400;
     line-height: 1.34;

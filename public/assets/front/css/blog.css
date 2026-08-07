@@ -1096,7 +1096,7 @@ body.blog-site:not(.blog-detail) {
   --bl-surface: #ffffff;
   --bl-surface-soft: rgba(255, 255, 255, 0.72);
   --bl-ink: var(--tk-ink, #1e2532);
-  --bl-muted: var(--tk-muted, #687386);
+  --bl-muted: var(--tk-muted, #64748b);
   --bl-subtle: #8a95a6;
   --bl-line: rgba(30, 37, 50, 0.1);
   --bl-line-strong: rgba(30, 37, 50, 0.16);

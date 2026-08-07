@@ -60,6 +60,11 @@ class GenerateEventContentDraftJob implements ShouldQueue
         'moderation_categories' => data_get($moderation, 'results.0.categories'),
       ]);
 
+      // Post-proceso determinista (mismo filtro que el preview del controller):
+      // elimina FAQs con datos ausentes/notas internas y completa fallbacks antes de persistir.
+      $generated = app(\App\Services\EventAi\EventAiDraftPostProcessor::class)
+        ->sanitize($generated, $draft->review->canonical_event_facts ?? []);
+
       // Guardar el draft PRIMERO (fuente de verdad del copy). markCompleted del run
       // va slim: el payload completo duplicado colgaba/fallaba el UPDATE y dejaba el UI en 95%.
       $draft->update([

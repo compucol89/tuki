@@ -12,6 +12,7 @@ use App\Models\Event\EventAiAssistantRun;
 use App\Models\Event\EventAiContentDraft;
 use App\Models\Event\EventContent;
 use App\Models\Language;
+use App\Services\EventAi\EventAiDraftPostProcessor;
 use App\Services\EventAi\EventAiUsageLimiter;
 use App\Services\OpenAI\EventAiAssistantService;
 use Illuminate\Http\JsonResponse;
@@ -803,53 +804,7 @@ class EventAiAssistantController extends Controller
 
   private function normalizeGeneratedPackage(array $generated, array $canonicalFacts): array
   {
-    $content = $generated['content'] ?? [];
-    $seo = $generated['seo'] ?? [];
-    $social = $generated['social'] ?? [];
-
-    $title = $content['public_title'] ?? $this->canonicalFactValue($canonicalFacts, ['titulo', 'título', 'nombre del evento']) ?? 'Evento en Tukipass';
-    $short = trim((string) ($content['short_description'] ?? ''));
-    $main = trim((string) ($content['main_description'] ?? ''));
-    $address = $this->canonicalFactValue($canonicalFacts, ['direccion', 'dirección', 'ubicacion', 'ubicación']);
-    $promo = $this->canonicalFactValue($canonicalFacts, ['promocion', 'promoción', 'acceso']);
-
-    if (empty($seo['ai_search_summary'])) {
-      $generated['seo']['ai_search_summary'] = trim($title . ' es una publicación de evento en Tukipass. ' . ($short ?: strip_tags($main)) . ($address ? ' Dirección: ' . $address . '.' : '') . ($promo ? ' Dato destacado: ' . $promo . '.' : ''));
-    }
-
-    if (empty($social['open_graph_title'])) {
-      $generated['social']['open_graph_title'] = mb_substr($title, 0, 70);
-    }
-
-    if (empty($social['open_graph_description'])) {
-      $generated['social']['open_graph_description'] = mb_substr($short ?: strip_tags($main), 0, 220);
-    }
-
-    if (!is_array($generated['faq'] ?? null)) {
-      $generated['faq'] = [];
-    }
-
-    $generated['faq'] = array_values(array_filter($generated['faq'], function ($item) {
-      $question = trim((string) ($item['question'] ?? ''));
-      $answer = trim((string) ($item['answer'] ?? ''));
-      if ($question === '' || $answer === '') {
-        return false;
-      }
-
-      $banned = '/debe confirmarse|no (fue|está|estan|están) (informad|especificad)|no se especific|pendiente de confirmación|antes de publicar|no contamos con información|edad mínima no informad/iu';
-
-      return !preg_match($banned, $answer);
-    }));
-
-    if (empty($generated['review_checklist']) || !is_array($generated['review_checklist'])) {
-      $generated['review_checklist'] = $this->fallbackReviewChecklist();
-    }
-
-    if (count($generated['review_checklist']) < 6) {
-      $generated['review_checklist'] = array_slice(array_merge($generated['review_checklist'], $this->fallbackReviewChecklist()), 0, 8);
-    }
-
-    return $generated;
+    return app(EventAiDraftPostProcessor::class)->sanitize($generated, $canonicalFacts);
   }
 
   private function draftQualityFailures(array $generated): array
@@ -888,7 +843,7 @@ class EventAiAssistantController extends Controller
     }
     foreach (($generated['faq'] ?? []) as $item) {
       $answer = trim((string) ($item['answer'] ?? ''));
-      if ($answer !== '' && preg_match('/debe confirmarse|no (fue|está|estan|están) (informad|especificad)|pendiente de confirmación|antes de publicar/iu', $answer)) {
+      if ($answer !== '' && preg_match(EventAiDraftPostProcessor::BANNED_PATTERN, $answer)) {
         $failures[] = 'Hay FAQ con notas internas o datos ausentes visibles.';
         break;
       }
@@ -1028,19 +983,6 @@ class EventAiAssistantController extends Controller
     }
 
     return $items;
-  }
-
-  private function fallbackReviewChecklist(): array
-  {
-    return [
-      ['label' => 'Título', 'status' => 'revisar', 'note' => 'Confirmá que el título sea claro, vendible y coherente con el flyer.'],
-      ['label' => 'Fecha y horario', 'status' => 'revisar', 'note' => 'Validá día, mes, año, hora de inicio y hora de cierre antes de publicar.'],
-      ['label' => 'Dirección', 'status' => 'revisar', 'note' => 'Revisá dirección, ciudad, provincia, piso o referencias de ingreso.'],
-      ['label' => 'Acceso o precio', 'status' => 'revisar', 'note' => 'Confirmá precios, gratuidades, cupos o condiciones especiales.'],
-      ['label' => 'Descripción', 'status' => 'revisar', 'note' => 'Leé la descripción completa y ajustá cualquier dato propio del organizador.'],
-      ['label' => 'SEO y Google', 'status' => 'revisar', 'note' => 'Validá palabras clave y descripción corta para Google.'],
-      ['label' => 'Imagen', 'status' => 'revisar', 'note' => 'Confirmá que la portada se vea clara y represente correctamente el evento.'],
-    ];
   }
 
   private function healStuckAiRuns(?EventAiAssistantRun $analysisRun, ?EventAiAssistantReview $review, ?EventAiContentDraft $draft): void

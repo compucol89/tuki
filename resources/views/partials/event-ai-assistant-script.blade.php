@@ -245,9 +245,35 @@
 
       function renderProgressFromStatus(response) {
         var analysis = response.analysis || null;
-        var draftRun = response.draft && response.draft.run ? response.draft.run : null;
-        var active = null;
+        var draft = response.draft || null;
+        var draftRun = draft && draft.run ? draft.run : null;
 
+        // Si ya hay review/draft listos, no dejar el UI colgado en 95% con run "running".
+        if (analysis && isRunningStatus(analysis.status) && response.review) {
+          analysis = Object.assign({}, analysis, {
+            status: 'completed',
+            progress: Object.assign({}, analysis.progress || {}, {
+              percent: 100,
+              stage: 'Completado',
+              message: 'El proceso terminó correctamente.',
+              is_estimated: false
+            })
+          });
+        }
+
+        if (draft && draft.status === 'completed' && draftRun && isRunningStatus(draftRun.status)) {
+          draftRun = Object.assign({}, draftRun, {
+            status: 'completed',
+            progress: Object.assign({}, draftRun.progress || {}, {
+              percent: 100,
+              stage: 'Completado',
+              message: 'El proceso terminó correctamente.',
+              is_estimated: false
+            })
+          });
+        }
+
+        var active = null;
         if (analysis && isRunningStatus(analysis.status)) {
           active = {type: 'analysis', run: analysis};
         } else if (draftRun && isRunningStatus(draftRun.status)) {
@@ -261,30 +287,36 @@
           return true;
         }
 
-        if (activeProcessType === 'analysis' && analysis && analysis.status === 'completed') {
-          renderProgress(analysis, 'analysis');
-          finishActiveProcess('analysis');
-          scrollToAssistantResult('[data-ai-results]');
+        if (analysis && analysis.status === 'completed' && (activeProcessType === 'analysis' || activeProcessType === null)) {
+          if (activeProcessType === 'analysis' || root.find('[data-async-progress]').is(':visible')) {
+            renderProgress(analysis, 'analysis');
+            finishActiveProcess('analysis', true);
+            scrollToAssistantResult('[data-ai-results]');
+          }
+          syncProcessButtons(null, response);
           return false;
         }
 
-        if (activeProcessType === 'draft' && draftRun && draftRun.status === 'completed') {
-          renderProgress(draftRun, 'draft');
-          finishActiveProcess('draft');
-          scrollToAssistantResult('[data-ai-draft]');
+        if (draftRun && draftRun.status === 'completed' && (activeProcessType === 'draft' || (draft && draft.status === 'completed'))) {
+          if (activeProcessType === 'draft' || root.find('[data-async-progress]').is(':visible')) {
+            renderProgress(draftRun, 'draft');
+            finishActiveProcess('draft', true);
+            scrollToAssistantResult('[data-ai-draft]');
+          }
+          syncProcessButtons(null, response);
           return false;
         }
 
         if (analysis && analysis.status === 'failed' && (!response.review || activeProcessType === 'analysis')) {
           renderProgress(analysis, 'analysis');
-          finishActiveProcess('analysis');
+          finishActiveProcess('analysis', false);
           syncProcessButtons(null, response);
           return false;
         }
 
-        if (draftRun && draftRun.status === 'failed' && (activeProcessType === 'draft' || !response.draft.generated_payload)) {
+        if (draftRun && draftRun.status === 'failed' && (activeProcessType === 'draft' || !(draft && draft.generated_payload))) {
           renderProgress(draftRun, 'draft');
-          finishActiveProcess('draft');
+          finishActiveProcess('draft', false);
           syncProcessButtons(null, response);
           return false;
         }
@@ -293,9 +325,13 @@
         return false;
       }
 
-      function finishActiveProcess(type) {
+      function finishActiveProcess(type, hidePanel) {
         activeProcessType = null;
         activeProgressStartedAtMs = null;
+        stopElapsedTimer();
+        if (hidePanel) {
+          root.find('[data-async-progress]').addClass('d-none');
+        }
         syncProcessButtons(null, {});
       }
 

@@ -306,6 +306,11 @@ class EventAiAssistantController extends Controller
       ->latest()
       ->first();
 
+    $this->healStuckAiRuns($analysisRun, $review, $draft);
+    if ($draft) {
+      $draft->load('run');
+    }
+
     return response()->json([
       'enabled' => (bool) config('features.event_ai_assistant_enabled', false),
       'usage' => $this->isAdminRequest()
@@ -1013,6 +1018,37 @@ class EventAiAssistantController extends Controller
       ['label' => 'SEO y Google', 'status' => 'revisar', 'note' => 'Validá palabras clave y descripción corta para Google.'],
       ['label' => 'Imagen', 'status' => 'revisar', 'note' => 'Confirmá que la portada se vea clara y represente correctamente el evento.'],
     ];
+  }
+
+  private function healStuckAiRuns(?EventAiAssistantRun $analysisRun, ?EventAiAssistantReview $review, ?EventAiContentDraft $draft): void
+  {
+    // Caso típico del "95% eterno": el trabajo útil terminó (review/draft listos)
+    // pero el run quedó en running porque falló/timeout markCompleted.
+    if (
+      $analysisRun
+      && in_array($analysisRun->status, ['pending', 'running'], true)
+      && $review
+      && (int) $review->run_id === (int) $analysisRun->id
+    ) {
+      $analysisRun->markCompleted(
+        is_array($analysisRun->output_payload) ? $analysisRun->output_payload : [],
+        (int) ($analysisRun->duration_ms ?: max(1, now()->diffInMilliseconds($analysisRun->created_at)))
+      );
+    }
+
+    $draftRun = $draft?->run;
+    if (
+      $draft
+      && $draft->status === 'completed'
+      && $draftRun
+      && in_array($draftRun->status, ['pending', 'running'], true)
+    ) {
+      $draftRun->markCompleted(
+        is_array($draft->generated_payload) ? $draft->generated_payload : [],
+        (int) ($draftRun->duration_ms ?: max(1, now()->diffInMilliseconds($draftRun->created_at))),
+        is_array($draft->audit_payload) ? $draft->audit_payload : null
+      );
+    }
   }
 
   private function runPayload(?EventAiAssistantRun $run): ?array

@@ -47,6 +47,9 @@ class GenerateEventContentDraftJob implements ShouldQueue
       $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
 
       $draft->run?->markProgress(95, 'Guardando resultado', 'Estamos dejando listo el copy para revisar y aplicar.');
+      // Marcar el run como completed ANTES del draft: si falla el update del draft,
+      // el frontend no queda colgado en 95% con un run "running".
+      $draft->run?->markCompleted($generated, (int) ((microtime(true) - $startedAt) * 1000), array_merge($audit, ['moderation' => $moderation]));
       $draft->update([
         'status' => 'completed',
         'generated_payload' => $generated,
@@ -54,8 +57,6 @@ class GenerateEventContentDraftJob implements ShouldQueue
         'audit_status' => $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed')),
         'needs_human_review' => $needsHumanReview,
       ]);
-
-      $draft->run?->markCompleted($generated, (int) ((microtime(true) - $startedAt) * 1000), array_merge($audit, ['moderation' => $moderation]));
     } catch (OpenAiNonRetryableException $e) {
       $draft->update(['status' => 'failed']);
       $draft->run?->markFailed($e->getMessage());

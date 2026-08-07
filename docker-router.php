@@ -64,20 +64,15 @@ if ($requestedFile !== false
             exit;
         }
 
-        // gzip solo para texto (CSS/JS/SVG/TXT/manifest/JSON); imágenes y fuentes ya están comprimidas.
-        // ob_gzhandler negocia Accept-Encoding y omite Content-Length correctamente.
+        // gzip vía zlib.output_compression (flag del php -S): para texto comprimible
+        // NO se setea Content-Length (zlib lo omite y agrega Content-Encoding: gzip).
+        // Con Content-Length presente, zlib saltea la compresión (imágenes/fuentes ya comprimidas).
         $compressibleText = in_array($extension, ['css', 'js', 'svg', 'txt', 'webmanifest', 'json'], true);
         $acceptsGzip = str_contains($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip');
 
-        if ($compressibleText && $acceptsGzip) {
-            // ob_gzhandler agrega Content-Encoding y Vary: Accept-Encoding automáticamente
-            ob_start('ob_gzhandler');
-            readfile($requestedFile);
-            ob_end_flush();
-            exit;
+        if (!($compressibleText && $acceptsGzip)) {
+            header('Content-Length: ' . filesize($requestedFile));
         }
-
-        header('Content-Length: ' . filesize($requestedFile));
 
         if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'HEAD') {
             readfile($requestedFile);

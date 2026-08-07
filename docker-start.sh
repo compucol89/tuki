@@ -102,6 +102,7 @@ mkdir -p /app/.router-root
 # zlib.output_compression: gzip del HTML (los estáticos los comprime docker-router.php vía ob_gzhandler)
 php -d upload_max_filesize=8M -d post_max_size=12M -d memory_limit=512M \
     -d zlib.output_compression=1 -d zlib.output_compression_level=5 \
+    -d display_errors=0 -d log_errors=1 \
     -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php &
 
 # Supervisión: si muere un worker o el web server, el contenedor termina

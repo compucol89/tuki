@@ -47,16 +47,35 @@ class GenerateEventContentDraftJob implements ShouldQueue
       $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
 
       $draft->run?->markProgress(95, 'Guardando resultado', 'Estamos dejando listo el copy para revisar y aplicar.');
-      // Marcar el run como completed ANTES del draft: si falla el update del draft,
-      // el frontend no queda colgado en 95% con un run "running".
-      $draft->run?->markCompleted($generated, (int) ((microtime(true) - $startedAt) * 1000), array_merge($audit, ['moderation' => $moderation]));
+      $auditPayload = array_merge($audit, [
+        'moderation_flagged' => $moderationFlagged,
+        'moderation_categories' => data_get($moderation, 'results.0.categories'),
+      ]);
+
+      // Guardar el draft PRIMERO (fuente de verdad del copy). markCompleted del run
+      // va slim: el payload completo duplicado colgaba/fallaba el UPDATE y dejaba el UI en 95%.
       $draft->update([
         'status' => 'completed',
         'generated_payload' => $generated,
-        'audit_payload' => array_merge($audit, ['moderation' => $moderation]),
+        'audit_payload' => $auditPayload,
         'audit_status' => $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed')),
         'needs_human_review' => $needsHumanReview,
       ]);
+
+      $durationMs = (int) ((microtime(true) - $startedAt) * 1000);
+      try {
+        $draft->run?->markCompleted([
+          'draft_id' => $draft->id,
+          'saved_to_draft' => true,
+        ], $durationMs, [
+          'status' => $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed')),
+          'needs_human_review' => $needsHumanReview,
+          'moderation_flagged' => $moderationFlagged,
+        ]);
+      } catch (Throwable $e) {
+        // El copy ya está en el draft; el status endpoint sana el run.
+        report($e);
+      }
     } catch (OpenAiNonRetryableException $e) {
       $draft->update(['status' => 'failed']);
       $draft->run?->markFailed($e->getMessage());

@@ -273,10 +273,22 @@
           });
         }
 
+        // Draft fallido + run zombie en 95%: no mantener el spinner eterno.
+        if (draft && draft.status === 'failed' && draftRun && isRunningStatus(draftRun.status)) {
+          draftRun = Object.assign({}, draftRun, {
+            status: 'failed',
+            progress: Object.assign({}, draftRun.progress || {}, {
+              stage: 'No se pudo completar',
+              message: 'El proceso se interrumpió al guardar. Podés volver a generar el copy.',
+              is_estimated: false
+            })
+          });
+        }
+
         var active = null;
         if (analysis && isRunningStatus(analysis.status)) {
           active = {type: 'analysis', run: analysis};
-        } else if (draftRun && isRunningStatus(draftRun.status)) {
+        } else if (draftRun && isRunningStatus(draftRun.status) && !(draft && draft.status === 'failed')) {
           active = {type: 'draft', run: draftRun};
         }
 

@@ -307,7 +307,11 @@ class EventAiAssistantController extends Controller
       ->first();
 
     $this->healStuckAiRuns($analysisRun, $review, $draft);
+    if ($analysisRun) {
+      $analysisRun->refresh();
+    }
     if ($draft) {
+      $draft->refresh();
       $draft->load('run');
     }
 
@@ -1044,11 +1048,57 @@ class EventAiAssistantController extends Controller
       && in_array($draftRun->status, ['pending', 'running'], true)
     ) {
       $draftRun->markCompleted(
-        is_array($draft->generated_payload) ? $draft->generated_payload : [],
+        [
+          'draft_id' => $draft->id,
+          'saved_to_draft' => true,
+        ],
         (int) ($draftRun->duration_ms ?: max(1, now()->diffInMilliseconds($draftRun->created_at))),
-        is_array($draft->audit_payload) ? $draft->audit_payload : null
+        is_array($draft->audit_payload) ? [
+          'status' => $draft->audit_status,
+          'needs_human_review' => (bool) $draft->needs_human_review,
+        ] : null
       );
+
+      return;
     }
+
+    // Zombie: quedó en "Guardando resultado" / running sin terminar. Desbloquea reintentos.
+    if (
+      $draft
+      && in_array($draft->status, ['pending', 'running'], true)
+      && $draftRun
+      && in_array($draftRun->status, ['pending', 'running'], true)
+      && $this->isAiRunStale($draftRun)
+    ) {
+      $draft->update(['status' => 'failed']);
+      $draftRun->markFailed('El proceso se interrumpió al guardar el resultado. Volvé a generar el copy.');
+    }
+
+    if (
+      $analysisRun
+      && in_array($analysisRun->status, ['pending', 'running'], true)
+      && (!$review || (int) $review->run_id !== (int) $analysisRun->id)
+      && $this->isAiRunStale($analysisRun)
+    ) {
+      $analysisRun->markFailed('El análisis se interrumpió. Volvé a analizar la portada.');
+    }
+  }
+
+  private function isAiRunStale(EventAiAssistantRun $run): bool
+  {
+    $progressPercent = (int) data_get($run->input_payload, 'progress.percent', 0);
+    $updatedAt = $run->updated_at ?: $run->created_at;
+    if (!$updatedAt) {
+      return false;
+    }
+
+    // En 95% ("Guardando resultado") no debería demorar más de ~45s.
+    if ($progressPercent >= 95) {
+      return $updatedAt->lte(now()->subSeconds(45));
+    }
+
+    // Cualquier run vivo sin avance por más de 3 minutos.
+    return $updatedAt->lte(now()->subMinutes(3));
   }
 
   private function runPayload(?EventAiAssistantRun $run): ?array

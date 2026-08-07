@@ -404,10 +404,10 @@ class EventController extends Controller
       $information['canonical'] = $officialEventUrl;
       $information['event_currency'] = $baseCurrencyText;
 
-      // --- P0.2: Queries movidas desde la vista ---
-      $firstTicket = Ticket::where('event_id', $content->id)->first();
-      $ticketCount = Ticket::where('event_id', $content->id)->count();
+      // --- P0.2: Queries movidas desde la vista (una sola consulta de tickets) ---
       $allTickets = Ticket::where('event_id', $content->id)->get();
+      $firstTicket = $allTickets->first();
+      $ticketCount = $allTickets->count();
       $defaultLanguage = Language::where('is_default', 1)->first();
       $admin = Admin::first();
 

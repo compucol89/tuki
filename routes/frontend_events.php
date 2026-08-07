@@ -27,4 +27,4 @@ Route::get('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist'
 Route::get('organizer/details/{id}/{name}', 'FrontEnd\OrganizerController@details')->name('frontend.organizer.details');
 Route::redirect('organizers/', '/organizadores', 301);
 Route::get('organizadores', 'FrontEnd\OrganizerController@index')->name('frontend.all.organizer');
-Route::post('organizers/contact/send-mail', 'FrontEnd\OrganizerController@sendMail')->name('organizer.contact.send_mail');
+Route::post('organizers/contact/send-mail', 'FrontEnd\OrganizerController@sendMail')->name('organizer.contact.send_mail')->middleware('throttle:5,1');

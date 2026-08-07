@@ -6,7 +6,7 @@
 
 /* Cards elevados */
 .cd-page .cd-card {
-  border: 1px solid #e8edf3; border-radius: 16px;
+  border: 1px solid var(--border); border-radius: 16px;
   box-shadow: 0 2px 4px rgba(0,0,0,.04), 0 8px 28px rgba(0,0,0,.07);
   padding: 0; overflow: hidden;
 }
@@ -126,9 +126,9 @@
 .cd-bk-hero__chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .cd-bk-hero__chip {
   display: inline-flex; align-items: center; gap: 5px;
-  background: var(--muted); border: 1px solid #e5e7eb;
+  background: var(--muted); border: 1px solid var(--border);
   border-radius: 100px; padding: 5px 13px;
-  font-size: 12px; font-weight: 600; color: #374151;
+  font-size: 12px; font-weight: 600; color: var(--foreground);
 }
 .cd-bk-hero__chip--id {
   font-family: 'SFMono-Regular', Consolas, monospace; font-size: 11px;
@@ -275,7 +275,7 @@
   gap: 12px;
   padding: 10px 24px;
   background: var(--muted);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
   font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
@@ -288,7 +288,7 @@
   grid-template-columns: 2fr 72px 110px 110px;
   gap: 12px;
   padding: 16px 24px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border);
   align-items: center;
   transition: background 0.12s;
 }
@@ -393,7 +393,7 @@
   align-items: center;
   padding: 14px 24px 16px;
   background: var(--muted);
-  border-top: 2px solid #e5e7eb;
+  border-top: 2px solid var(--border);
 }
 .cd-tickets-list__footer-label {
   font-size: 11px;

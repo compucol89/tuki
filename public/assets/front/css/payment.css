@@ -2,7 +2,7 @@
 .co-card {
   background: #fff;
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(30,37,50,0.06);
 }
@@ -12,7 +12,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 22px 28px 18px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border);
 }
 
 .co-card__step {
@@ -52,7 +52,7 @@
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--foreground);
   margin-bottom: 6px;
 }
 
@@ -64,13 +64,13 @@
 
 .co-field__error {
   font-size: 12px;
-  color: #ef4444;
+  color: var(--danger);
   margin: 4px 0 0;
 }
 
 .checkout-v2 .form-control {
   height: 48px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--border);
   border-radius: 10px;
   font-size: 15px;
   padding: 0 14px;
@@ -86,7 +86,7 @@
   outline: none;
 }
 
-.checkout-v2 .form-control::placeholder { color: #b0b7c3; }
+.checkout-v2 .form-control::placeholder { color: var(--muted-foreground); }
 
 /* ─── Payment cards grid ─── */
 .pgw-grid {
@@ -100,7 +100,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--border);
   border-radius: 12px;
   cursor: pointer;
   background: #fff;
@@ -123,7 +123,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 2px solid #d1d5db;
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -172,7 +172,7 @@
 
 /* Stripe element */
 .co-stripe-element {
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--border);
   border-radius: 10px;
   padding: 14px 16px;
   background: var(--muted);
@@ -181,7 +181,7 @@
 /* Offline gateway info */
 .co-offline-info {
   background: var(--muted);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 16px;
 }
@@ -199,7 +199,7 @@
   top: auto;
   background: #fff;
   border-radius: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   padding: 24px;
   box-shadow: 0 4px 24px rgba(30,37,50,0.08);
 }
@@ -271,7 +271,7 @@
   align-items: center;
   gap: 6px;
   font-size: 14px;
-  color: #374151;
+  color: var(--foreground);
 }
 
 .co-ticket-row__qty {
@@ -302,7 +302,7 @@
 .co-coupon {
   padding-top: 14px;
   margin-top: 12px;
-  border-top: 1px solid #eef0f3;
+  border-top: 1px solid var(--border);
 }
 
 .co-coupon__toggle {
@@ -321,7 +321,7 @@
   font-family: var(--tuki-font-sans);
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--foreground);
   cursor: pointer;
   text-align: left;
   transition: background 0.2s, color 0.2s;
@@ -426,7 +426,7 @@
 }
 
 .co-trust__icon--attention {
-  color: #d97706;
+  color: var(--warning);
 }
 
 .co-trust-logos {
@@ -452,7 +452,7 @@
   padding: 48px 0 40px;
   text-align: center;
   background: var(--muted);
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 .ps-hero--paid    { background: linear-gradient(160deg, #f0fdf4 0%, #f8f9fb 100%); }
 .ps-hero--free    { background: linear-gradient(160deg, #eff6ff 0%, #f8f9fb 100%); }
@@ -496,12 +496,12 @@
 .ps-hero__id {
   display: inline-block;
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 999px;
   padding: 4px 14px;
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--foreground);
   letter-spacing: 0.01em;
 }
 
@@ -525,7 +525,7 @@
 /* Cards */
 .ps-card {
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
   margin-bottom: 20px;
@@ -542,7 +542,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
   gap: 8px;
 }
 
@@ -560,7 +560,7 @@
   padding: 2px 10px;
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--foreground);
 }
 
 /* Event row */
@@ -637,7 +637,7 @@
   flex-direction: column;
   gap: 2px;
   padding: 12px 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border);
 }
 
 .ps-info-item__label {
@@ -663,9 +663,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border);
   font-size: 14px;
-  color: #374151;
+  color: var(--foreground);
   gap: 8px;
 }
 .ps-pay-row:last-child { border-bottom: none; }
@@ -766,7 +766,7 @@
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: var(--foreground);
   background: var(--secondary);
   text-decoration: none;
   transition: background 0.15s;
@@ -777,7 +777,7 @@
 /* CTA card */
 .ps-cta-card {
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
@@ -818,8 +818,8 @@
 
 .cd-table td {
   padding: 10px;
-  color: #374151;
-  border-bottom: 1px solid #f3f4f6;
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
 .cd-table tr:last-child td { border-bottom: none; }
@@ -827,7 +827,7 @@
 /* ─── Guest Info (rediseño) ─── */
 .cd-guest-info {
   background: #fff;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);

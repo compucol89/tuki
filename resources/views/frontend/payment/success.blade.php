@@ -267,12 +267,12 @@ fbq('track', 'Purchase', {
           </div>
           <div style="padding: 16px 20px;">
             <div style="margin-bottom: 12px;">
-              <strong style="font-size: 13px; color: #374151;">Instrucciones de acceso:</strong>
+              <strong style="font-size: 13px; color: var(--foreground);">Instrucciones de acceso:</strong>
               <p style="margin: 4px 0 0; font-size: 13px; color: var(--muted-foreground);">{{ $accessInstructions }}</p>
             </div>
             @if($event->information?->refund_policy)
               <div>
-                <strong style="font-size: 13px; color: #374151;">Política de reembolso:</strong>
+                <strong style="font-size: 13px; color: var(--foreground);">Política de reembolso:</strong>
                 <p style="margin: 4px 0 0; font-size: 13px; color: var(--muted-foreground);">{!! nl2br(e($event->information->refund_policy)) !!}</p>
               </div>
             @endif
@@ -403,7 +403,7 @@ fbq('track', 'Purchase', {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Descargar Entradas
               </a>
-              <p class="mt-2 mb-0" style="font-size: 0.875rem; color: #6c757d;">
+              <p class="mt-2 mb-0" style="font-size: 0.875rem; color: var(--muted-foreground);">
                 <small>Este comprobante es interno y no reemplaza una factura fiscal. La factura fiscal, si corresponde, se emitirá por separado.</small>
               </p>
             @endif

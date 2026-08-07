@@ -36,6 +36,9 @@ class IyzicoProductOrderPendingPayment implements ShouldQueue
     public function handle()
     {
         $productOrder = ProductOrder::where('id', $this->order_id)->first();
+        if (!$productOrder) {
+            return;
+        }
         $conversion_id = $productOrder->conversation_id;
 
         $options = IyzipayOptionsFactory::make();
@@ -53,43 +56,61 @@ class IyzicoProductOrderPendingPayment implements ShouldQueue
             if ($data['status'] == 'success' && !is_null($data['payments'])) {
                 if (is_array($data['payments'])) {
                     if ($data['payments'][0]['paymentStatus'] == 1) {
-                        $store = new OrderController();
-                        $productOrder->update(['payment_status' => 'completed']);
-                        // generate an invoice in pdf format
-                        $invoice = $store->generateInvoice($productOrder);
-
-                        // then, update the invoice field info in database
-                        $productOrder->update(['invoice_number' => $invoice]);
-
-                        $earning = Earning::first();
-                        $earning->total_revenue = $earning->total_revenue + $productOrder->total;
-                        $earning->total_earning = $earning->total_earning + $productOrder->total;
-                        $earning->save();
-
-                        //store data to transcation table 
-                        Transaction::create([
-                            'transcation_id' => time(),
-                            'booking_id' => $productOrder->id,
-                            'transcation_type' => 2,
-                            'customer_id' => $productOrder->user_id,
-                            'organizer_id' => null,
-                            'payment_status' => 1,
-                            'payment_method' => $productOrder->method,
-                            'grand_total' => $productOrder->total,
-                            'commission' => $productOrder->total,
-                            'gateway_type' => $productOrder->gateway_type,
-                            'currency_symbol' => $productOrder->currency_symbol,
-                            'currency_symbol_position' => $productOrder->currency_symbol_position,
-                        ]);
-
-                        // send a mail to the customer with the invoice
-                        $store->sendMail($productOrder);
-
-
-                        \Artisan::call("queue:work --stop-when-empty");
+                        $this->creditCompletedOrder($productOrder);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Acredita ingresos de un product order iyzico confirmado.
+     * CAS por estado: solo el primer proceso acredita (idempotencia ante retries/concurrencia).
+     */
+    public function creditCompletedOrder(ProductOrder $productOrder): bool
+    {
+        $claimed = ProductOrder::where('id', $productOrder->id)
+            ->where('payment_status', '!=', 'completed')
+            ->update(['payment_status' => 'completed']);
+
+        if ($claimed === 0) {
+            return false;
+        }
+
+        $store = new OrderController();
+        // generate an invoice in pdf format
+        $invoice = $store->generateInvoice($productOrder);
+
+        // then, update the invoice field info in database
+        $productOrder->update(['invoice_number' => $invoice]);
+
+        $earning = Earning::first();
+        $earning->total_revenue = $earning->total_revenue + $productOrder->total;
+        $earning->total_earning = $earning->total_earning + $productOrder->total;
+        $earning->save();
+
+        //store data to transcation table
+        Transaction::create([
+            'transcation_id' => time(),
+            'booking_id' => $productOrder->id,
+            'transcation_type' => 2,
+            'customer_id' => $productOrder->user_id,
+            'organizer_id' => null,
+            'payment_status' => 1,
+            'payment_method' => $productOrder->method,
+            'grand_total' => $productOrder->total,
+            'commission' => $productOrder->total,
+            'gateway_type' => $productOrder->gateway_type,
+            'currency_symbol' => $productOrder->currency_symbol,
+            'currency_symbol_position' => $productOrder->currency_symbol_position,
+        ]);
+
+        // send a mail to the customer with the invoice
+        $store->sendMail($productOrder);
+
+
+        \Artisan::call("queue:work --stop-when-empty");
+
+        return true;
     }
 }

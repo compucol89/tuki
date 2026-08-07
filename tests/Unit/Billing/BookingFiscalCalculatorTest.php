@@ -71,6 +71,23 @@ class BookingFiscalCalculatorTest extends TestCase
         $this->assertSame(10.0, $preview['service_fee_percentage_used']);
     }
 
+    public function test_gross_amount_uses_total_price_not_price_times_quantity(): void
+    {
+        $booking = $this->booking([
+            'price' => 100000,
+            'quantity' => 3,
+            'paymentStatus' => 'completed',
+        ]);
+
+        $preview = (new BookingFiscalCalculator())->calculate($booking);
+
+        $this->assertSame(100000.0, $preview['ticket_amount']);
+        $this->assertSame(3.0, $preview['quantity']);
+        $this->assertSame(100000.0, $preview['organizer_gross_amount']);
+        $this->assertSame(10000.0, $preview['platform_commission_amount']);
+        $this->assertSame(110000.0, $preview['buyer_total_estimated']);
+    }
+
     public function test_does_not_modify_booking_attributes(): void
     {
         $booking = $this->booking([

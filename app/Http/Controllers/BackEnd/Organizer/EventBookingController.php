@@ -126,9 +126,15 @@ class EventBookingController extends Controller
     }
 
     if ($request['payment_status'] == 'completed') {
+      $wasCompleted = (string) $booking->paymentStatus === 'completed';
       $booking->update([
         'paymentStatus' => 'completed'
       ]);
+
+      // Re-aprobar un booking ya completado no debe regenerar invoice ni reenviar mail
+      if ($wasCompleted) {
+        return redirect()->back();
+      }
 
       $invoice = $this->generateInvoice($booking);
 

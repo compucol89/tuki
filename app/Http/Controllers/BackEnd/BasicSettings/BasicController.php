@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -65,6 +66,12 @@ class BasicController extends Controller
       Session::flash('success', __('admin.flash.updated_successfully'));
       return back();
     } catch (\Exception $th) {
+      Log::error('BasicSettings updateInfo failed: ' . $th->getMessage(), [
+        'file' => $th->getFile(),
+        'line' => $th->getLine(),
+      ]);
+      Session::flash('error', 'No se pudo actualizar la configuración.');
+      return back();
     }
   }
 

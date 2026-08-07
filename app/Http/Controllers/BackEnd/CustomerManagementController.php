@@ -97,7 +97,8 @@ class CustomerManagementController extends Controller
         "not_in:$this->admin_user_name",
         Rule::unique('customers', 'username')
       ],
-      'password' => 'required|confirmed|min:10'
+      'password' => 'required|confirmed|min:10',
+      'photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120']
     ];
 
     $validator = Validator::make($request->all(), $rules);
@@ -222,7 +223,8 @@ class CustomerManagementController extends Controller
         'alpha_dash',
         "not_in:$this->admin_user_name",
         Rule::unique('customers', 'username')->ignore($id)
-      ]
+      ],
+      'photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp,gif', 'max:5120']
 
     ];
 

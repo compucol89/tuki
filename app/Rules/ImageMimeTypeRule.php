@@ -25,16 +25,14 @@ class ImageMimeTypeRule implements Rule
    */
   public function passes($attribute, $value)
   {
-    $image = $value;
-
-    $allowedExtensions = array('jpg', 'jpeg', 'png', 'svg', 'gif', 'webp');
-    $fileExtension = $image->getClientOriginalExtension();
-
-    if (in_array($fileExtension, $allowedExtensions)) {
-      return true;
-    } else {
+    // Validar el MIME REAL del contenido (finfo), no la extensión declarada por el cliente
+    if (!is_object($value) || !method_exists($value, 'getMimeType')) {
       return false;
     }
+
+    $allowedMimes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/gif', 'image/webp'];
+
+    return in_array(strtolower((string) $value->getMimeType()), $allowedMimes, true);
   }
 
   /**

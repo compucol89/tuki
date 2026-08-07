@@ -139,9 +139,15 @@ class EventBookingController extends Controller
     $booking = Booking::where('id', $id)->first();
 
     if ($request['payment_status'] == 'completed') {
+      $wasCompleted = (string) $booking->paymentStatus === 'completed';
       $booking->update([
         'paymentStatus' => 'completed'
       ]);
+
+      // Re-aprobar un booking ya completado no debe acreditar ingresos por segunda vez
+      if ($wasCompleted) {
+        return redirect()->back();
+      }
 
       ArcaInvoiceIssuingJob::dispatch($id)->delay(now()->addSeconds(30));
 

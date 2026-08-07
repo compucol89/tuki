@@ -51,7 +51,7 @@ class ProductStoreRequest extends FormRequest
 
     if ($this->type == 'digital') {
       if ($this->file_type == 'upload') {
-        $ruleArray['download_file'] = 'required';
+        $ruleArray['download_file'] = ['required', 'file', 'mimes:zip,rar,pdf,doc,docx,xls,xlsx,ppt,pptx,mp3,wav,mp4,mov,jpg,jpeg,png,webp', 'max:102400'];
       } else {
         $ruleArray['download_link'] = 'required';
       }

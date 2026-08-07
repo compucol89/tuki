@@ -36,6 +36,9 @@ class IyzicoEventPendingPayment implements ShouldQueue
     public function handle()
     {
         $eventBooking = Booking::where('id', $this->booking_id)->first();
+        if (!$eventBooking) {
+            return;
+        }
         $conversion_id = $eventBooking->conversation_id;
 
         $options = IyzipayOptionsFactory::make();
@@ -52,38 +55,56 @@ class IyzicoEventPendingPayment implements ShouldQueue
             if ($data['status'] == 'success' && !is_null($data['payments'])) {
                 if (is_array($data['payments'])) {
                     if ($data['payments'][0]['paymentStatus'] == 1) {
-                        // generate an invoice in pdf format
-                        $booking = new BookingController();
-                        $eventBooking->update(['paymentStatus' => 'completed']);
-
-                        BookingInvoiceJob::dispatch($eventBooking->id)->delay(now()->addSeconds(50));
-
-                        //add blance to admin revinue
-                        $earning = Earning::first();
-                        $earning->total_revenue = $earning->total_revenue + $eventBooking->price + $eventBooking->tax;
-                        if ($eventBooking->organizer_id != null) {
-                            $earning->total_earning = $earning->total_earning + ($eventBooking->tax + $eventBooking->commission);
-                        } else {
-                            $earning->total_earning = $earning->total_earning + $eventBooking->price + $eventBooking->tax;
-                        }
-                        $earning->save();
-
-                        //storeTransaction
-                        $eventBooking['paymentStatus'] = 1;
-                        $eventBooking['transcation_type'] = 1;
-
-                        storeTranscation($eventBooking);
-
-                        //store amount to organizer
-                        $organizerData['organizer_id'] = $eventBooking->organizer_id;
-                        $organizerData['price'] = $eventBooking->price;
-                        $organizerData['tax'] = $eventBooking->tax;
-                        $organizerData['commission'] = $eventBooking->commission;
-                        storeOrganizer($organizerData);
-                        \Artisan::call("queue:work --stop-when-empty");
+                        $this->creditCompletedBooking($eventBooking);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * Acredita ingresos de un booking iyzico confirmado.
+     * CAS por estado: solo el primer proceso acredita (idempotencia ante retries/concurrencia).
+     */
+    public function creditCompletedBooking(Booking $eventBooking): bool
+    {
+        $claimed = Booking::where('id', $eventBooking->id)
+            ->where('paymentStatus', '!=', 'completed')
+            ->update(['paymentStatus' => 'completed']);
+
+        if ($claimed === 0) {
+            return false;
+        }
+
+        // generate an invoice in pdf format
+        $booking = new BookingController();
+
+        BookingInvoiceJob::dispatch($eventBooking->id)->delay(now()->addSeconds(50));
+
+        //add blance to admin revinue
+        $earning = Earning::first();
+        $earning->total_revenue = $earning->total_revenue + $eventBooking->price + $eventBooking->tax;
+        if ($eventBooking->organizer_id != null) {
+            $earning->total_earning = $earning->total_earning + ($eventBooking->tax + $eventBooking->commission);
+        } else {
+            $earning->total_earning = $earning->total_earning + $eventBooking->price + $eventBooking->tax;
+        }
+        $earning->save();
+
+        //storeTransaction
+        $eventBooking['paymentStatus'] = 1;
+        $eventBooking['transcation_type'] = 1;
+
+        storeTranscation($eventBooking);
+
+        //store amount to organizer
+        $organizerData['organizer_id'] = $eventBooking->organizer_id;
+        $organizerData['price'] = $eventBooking->price;
+        $organizerData['tax'] = $eventBooking->tax;
+        $organizerData['commission'] = $eventBooking->commission;
+        storeOrganizer($organizerData);
+        \Artisan::call("queue:work --stop-when-empty");
+
+        return true;
     }
 }

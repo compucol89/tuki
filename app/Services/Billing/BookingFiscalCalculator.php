@@ -26,7 +26,9 @@ class BookingFiscalCalculator
 
         $ticketAmount = $this->money((float) ($booking->price ?? 0));
         $quantity = (float) ($booking->quantity ?? 1);
-        $organizerGrossAmount = $this->money($ticketAmount * max($quantity, 1));
+        // booking->price ES el total pagado (unit_price = price / quantity en el modelo);
+        // multiplicarlo por quantity infla la base gravable (fix auditoría H1).
+        $organizerGrossAmount = $this->money($ticketAmount);
 
         [$commissionRate, $commissionAmount, $commissionWarning, $serviceFeePercentageUsed] = $this->resolveCommission(
             $booking,

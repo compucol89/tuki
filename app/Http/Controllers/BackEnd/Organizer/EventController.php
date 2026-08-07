@@ -435,6 +435,9 @@ class EventController extends Controller
     //calculate duration end
     $in = $request->all();
 
+    // manual_badge es un badge curado asignado únicamente por el admin (fix auditoría H6)
+    unset($in['manual_badge']);
+
     $event = $this->getOwnedEventOrFail($request->event_id);
     if ($request->hasFile('thumbnail')) {
       $in['thumbnail'] = UploadFile::update(public_path('assets/admin/img/event/thumbnail/'), $request->file('thumbnail'), $event->thumbnail);

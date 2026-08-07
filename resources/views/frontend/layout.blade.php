@@ -29,6 +29,10 @@
     if ($facebookAppId === '') {
       $facebookAppId = trim((string) ($websiteInfo->facebook_app_id ?? ''));
     }
+    // Evitar placeholders inválidos (ej. "1") que Meta marca como error
+    if ($facebookAppId === '' || !ctype_digit($facebookAppId) || strlen($facebookAppId) < 10) {
+      $facebookAppId = '';
+    }
     $facebookDomainVerification = trim((string) config('services.facebook.domain_verification'));
     $rootAsset = function (string $path) {
       return asset($path) . (is_file(public_path($path)) ? '?v=' . filemtime(public_path($path)) : '');

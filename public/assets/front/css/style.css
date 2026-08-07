@@ -2238,10 +2238,10 @@ body.home-page .hero-content-wrapper {
     align-items: flex-start;
     gap: 18px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.92);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     margin-bottom: 0;
     padding: 30px 28px 26px;
-    border: 1px solid rgba(30, 37, 50, 0.08);
+    border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
     border-radius: 24px;
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
@@ -2249,7 +2249,7 @@ body.home-page .hero-content-wrapper {
 
 .feature-item:hover {
     border-color: color-mix(in srgb, var(--primary) 22%, transparent);
-    background: #ffffff;
+    background: var(--surface-hover);
     box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
     transform: translateY(-4px);
 }
@@ -2495,18 +2495,18 @@ body.home-page .hero-content-wrapper {
     width: 100%;
     min-height: 100%;
     padding: 28px 28px 20px;
-    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-    border: 1px solid rgba(30, 37, 50, 0.08);
+    box-shadow: var(--shadow-md);
+    border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.92);
+    background: color-mix(in srgb, var(--card) 92%, transparent);
     overflow: hidden;
     transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
 }
 .testimonial-item:hover {
-    box-shadow: 0 16px 38px rgba(15, 23, 42, 0.08);
+    box-shadow: var(--shadow-lg);
     transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--primary) 18%, transparent);
-    background: #ffffff;
+    background: var(--surface-hover);
 }
 
 .testimonial-item::before {
@@ -2869,7 +2869,7 @@ body.home-page .hero-content-wrapper {
     margin: 0 15px 30px;
     justify-content: center;
     width: calc(20% - 30px);
-    border: 1px solid rgba(30, 37, 50, 0.1);
+    border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
 }
 
 .trust-partners {
@@ -5690,6 +5690,8 @@ html[data-theme="dark"] {
   --warning-light: #713f12;
   --info-light: #1e3a8a;
   --danger-light: #7f1d1d;
+  --info: #60a5fa;
+  --info-foreground: #0b1220;
 
   --tuki-muted-light: #9ca3af;
   --selected-tint: color-mix(in srgb, var(--primary) 22%, transparent);

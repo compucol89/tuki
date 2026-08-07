@@ -338,9 +338,9 @@
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  background: linear-gradient(180deg, #fff7ed 0%, #fff1e6 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 8%, var(--card)) 0%, color-mix(in srgb, var(--primary) 12%, var(--card)) 100%);
   border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 
 .ei-org__name,
@@ -2261,7 +2261,7 @@ body.page-event-detail .ed-cta-zone .ed-trust-item {
 
 body.page-event-detail .ed-cta-zone .ed-trust-item__icon {
   flex-shrink: 0;
-  color: #15803d;
+  color: var(--success-text);
   opacity: 0.88;
 }
 
@@ -3037,7 +3037,7 @@ body.page-event-detail .ed-info-card__shield {
   border-radius: 999px;
   border: 0;
   background: transparent;
-  color: #15803d;
+  color: var(--success-text);
 }
 
 body.page-event-detail .ed-info-card__title {
@@ -3188,7 +3188,7 @@ body.page-event-detail .ed-info-item__value {
 }
 
 body.page-event-detail .ed-info-item__value--available {
-  color: #15803d;
+  color: var(--success-text);
 }
 
 body.page-event-detail .ed-info-item__value--low {
@@ -3387,9 +3387,9 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  border: 1px solid #dbeafe;
-  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-  color: #1d4ed8;
+  border: 1px solid color-mix(in srgb, var(--info) 30%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--info) 12%, transparent) 0%, color-mix(in srgb, var(--info) 18%, transparent) 100%);
+  color: var(--info);
 }
 
 body.page-event-detail .ed-refund-band__head-copy {
@@ -3503,7 +3503,7 @@ body.page-event-detail .ed-refund-band__legal-details[open] .ed-refund-band__leg
 }
 
 body.page-event-detail .ed-refund-band__legal-summary:focus-visible {
-  outline: 2px solid #1d4ed8;
+  outline: 2px solid var(--info);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -3535,9 +3535,9 @@ body.page-event-detail .ed-refund-band__cta {
   min-height: 40px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid #bfdbfe;
-  background: #eff6ff;
-  color: #1d4ed8;
+  border: 1px solid color-mix(in srgb, var(--info) 30%, transparent);
+  background: color-mix(in srgb, var(--info) 12%, transparent);
+  color: var(--info);
   font-size: 13px;
   font-weight: 700;
   line-height: 1.2;
@@ -3553,7 +3553,7 @@ body.page-event-detail .ed-refund-band__cta:focus-visible {
 }
 
 body.page-event-detail .ed-refund-band__cta:focus-visible {
-  outline: 2px solid #1d4ed8;
+  outline: 2px solid var(--info);
   outline-offset: 2px;
 }
 
@@ -3567,7 +3567,7 @@ body.page-event-detail .ed-refund-band__contact {
 
 body.page-event-detail .ed-refund-band__contact:hover,
 body.page-event-detail .ed-refund-band__contact:focus-visible {
-  color: #1d4ed8;
+  color: var(--info);
   text-decoration: underline;
 }
 
@@ -3577,9 +3577,9 @@ body.page-event-detail .ed-refund-band--highlight {
   align-items: flex-start;
   gap: 12px;
   padding: 16px 18px;
-  border: 1px solid #ffedd5;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-radius: 16px;
-  background: linear-gradient(180deg, #fffaf5 0%, #fff7ed 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 4%, var(--card)) 0%, color-mix(in srgb, var(--primary) 8%, var(--card)) 100%);
   box-shadow: none;
 }
 
@@ -3721,7 +3721,7 @@ body.page-event-detail .ed-ticket-picker__badge {
   border-radius: 6px;
   border: 1px solid rgba(22, 163, 74, 0.18);
   background: rgba(240, 253, 244, 0.72);
-  color: #15803d;
+  color: var(--success-text);
   font-size: 0.6875rem;
   font-weight: 500;
   line-height: 1.3;
@@ -3910,7 +3910,7 @@ body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row
   border-radius: 0;
   background: transparent;
   border: 0;
-  color: #9a3412;
+  color: var(--primary-text);
   font-size: 11px;
   font-weight: 700;
   line-height: 1.4;
@@ -4007,13 +4007,13 @@ body.page-event-detail .ed-buy-btn--premium {
 }
 
 body.page-event-detail .ed-buy-btn--premium:hover {
-  background: #15803d;
+  background: var(--success);
   transform: translateY(-1px);
   box-shadow: none !important;
 }
 
 body.page-event-detail .ed-buy-btn--premium:focus-visible {
-  background: #15803d;
+  background: var(--success);
   outline: 3px solid #14532d;
   outline-offset: 2px;
   box-shadow: none !important;
@@ -4101,11 +4101,11 @@ body.page-event-detail .ed-cta-zone--premium .ed-trust-item__icon {
    ================================================ */
 body.page-event-detail .page-wrapper,
 body.page-event-detail .ed-body {
-  background: #f8f9fb;
+  background: var(--ed-page);
 }
 
 body.page-event-detail .ed-body {
-  border-top: 1px solid #eef0f3;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 7%, transparent);
 }
 
 body.page-event-detail .ed-card,
@@ -4231,7 +4231,7 @@ body.page-event-detail .ed-info-row {
 @media (max-width: 991.98px) {
   body.page-event-detail .ed-hero-event.hero-collage-section,
   body.page-event-detail .hero-collage-section--premium.ed-hero-event {
-    background-color: #f8f9fb;
+    background-color: var(--ed-page);
   }
 
   body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
@@ -4243,26 +4243,26 @@ body.page-event-detail .ed-info-row {
 
 /* Event detail — tangerine precision layer */
 body.page-event-detail {
-  --ed-page: #e8ebed;
-  --ed-surface: #ffffff;
-  --ed-surface-soft: #f6f7f8;
-  --ed-ink: #1e2532;
-  --ed-ink-strong: #111827;
-  --ed-muted: #64748b;
-  --ed-muted-soft: #657489;
-  --ed-line: rgba(30, 37, 50, 0.08);
-  --ed-line-strong: rgba(30, 37, 50, 0.13);
+  --ed-page: var(--background);
+  --ed-surface: var(--card);
+  --ed-surface-soft: var(--muted);
+  --ed-ink: var(--foreground);
+  --ed-ink-strong: var(--foreground);
+  --ed-muted: var(--muted-foreground);
+  --ed-muted-soft: var(--muted-foreground);
+  --ed-line: color-mix(in srgb, var(--foreground) 8%, transparent);
+  --ed-line-strong: color-mix(in srgb, var(--foreground) 13%, transparent);
   --ed-orange: var(--primary);
   --ed-orange-strong: var(--primary-active);
-  --ed-orange-soft: #fff3ea;
-  --ed-green: #16a34a;
-  --ed-green-strong: #15803d;
-  --ed-blue: #2563eb;
-  --ed-radius: 12px;
-  --ed-radius-lg: 16px;
-  --ed-shadow: 0 14px 34px rgba(30, 37, 50, 0.07);
-  --ed-shadow-soft: 0 8px 22px rgba(30, 37, 50, 0.055);
-  --ed-shadow-hero: 0 28px 70px rgba(5, 8, 15, 0.22);
+  --ed-orange-soft: color-mix(in srgb, var(--primary) 8%, var(--card));
+  --ed-green: var(--success);
+  --ed-green-strong: var(--success);
+  --ed-blue: var(--info);
+  --ed-radius: var(--radius-md);
+  --ed-radius-lg: var(--radius-lg);
+  --ed-shadow: var(--shadow-md);
+  --ed-shadow-soft: var(--shadow-sm);
+  --ed-shadow-hero: var(--shadow-xl);
   --ed-sidebar-rail: 1.5rem;
   background: var(--ed-page);
   color: var(--ed-ink);
@@ -4560,7 +4560,7 @@ body.page-event-detail .ed-ticket-option + .ed-ticket-option {
 }
 
 body.page-event-detail .ed-ticket-option:hover {
-  background: #fbfcfd;
+  background: var(--surface-hover);
 }
 
 body.page-event-detail .ed-ticket-option__head {
@@ -4631,8 +4631,8 @@ body.page-event-detail .ed-ticket-card__body--premium .quantity-down,
 body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation {
   width: 2.875rem;
   min-width: 2.875rem;
-  color: #435066;
-  background: #fbfcfd;
+  color: var(--foreground);
+  background: var(--card);
   font-size: 1.05rem;
   font-weight: 800;
 }
@@ -4776,7 +4776,7 @@ body.page-event-detail .ed-info-icon {
 }
 
 body.page-event-detail .ed-info-icon--place {
-  background: #eff6ff;
+  background: color-mix(in srgb, var(--info) 12%, transparent);
   color: var(--ed-blue);
 }
 
@@ -5019,9 +5019,9 @@ body.page-event-detail .ed-description-map__title {
 
 body.page-event-detail .ed-description-map__frame {
   overflow: hidden;
-  border: 1px solid rgba(30, 37, 50, 0.1);
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
   border-radius: 16px;
-  background: #f8f9fb;
+  background: var(--ed-surface-soft);
   box-shadow: 0 10px 24px rgba(30, 37, 50, 0.055);
 }
 
@@ -5418,26 +5418,26 @@ body.page-event-detail .ed-hero-nudge__item--active {
 
   body.page-event-detail .ed-ev-kicker__chip--category {
     border-color: color-mix(in srgb, var(--primary) 24%, transparent);
-    background: #fff7ed;
-    color: #9a3412;
+    background: color-mix(in srgb, var(--primary) 16%, transparent);
+    color: var(--primary-text);
   }
 
   body.page-event-detail .ed-hero__status-pill--upcoming {
     border-color: rgba(37, 99, 235, 0.2);
-    background: #eff6ff;
-    color: #1d4ed8;
+    background: color-mix(in srgb, var(--info) 18%, transparent);
+    color: #bfdbfe;
   }
 
   body.page-event-detail .ed-hero__status-pill--running {
     border-color: rgba(22, 163, 74, 0.2);
-    background: #f0fdf4;
-    color: var(--ed-green-strong);
+    background: color-mix(in srgb, var(--success) 18%, transparent);
+    color: #bbf7d0;
   }
 
   body.page-event-detail .ed-hero__status-pill--over {
     border-color: rgba(239, 68, 68, 0.2);
-    background: #fef2f2;
-    color: #b91c1c;
+    background: color-mix(in srgb, var(--danger) 18%, transparent);
+    color: #fecaca;
   }
 
   body.page-event-detail .ed-ev-title {
@@ -5465,7 +5465,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
   body.page-event-detail .ed-hero__btn:hover,
   body.page-event-detail .ed-hero__btn:focus-visible {
     border-color: color-mix(in srgb, var(--primary) 28%, transparent);
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: var(--ed-orange-strong);
   }
 
@@ -5508,8 +5508,8 @@ body.page-event-detail .ed-hero-nudge__item--active {
 
   body.page-event-detail .ed-head-status--over {
     border-color: rgba(239, 68, 68, 0.18);
-    background: #fef2f2;
-    color: #b91c1c;
+    background: color-mix(in srgb, var(--danger) 18%, transparent);
+    color: #fecaca;
   }
 
   body.page-event-detail .ed-ticket-card__head-title {
@@ -5569,7 +5569,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 0.85rem;
     border: 1px solid rgba(30, 37, 50, 0.08);
     border-radius: 14px;
-    background: #fbfcfd;
+    background: var(--card);
     box-shadow: none;
   }
 
@@ -5906,19 +5906,19 @@ body.page-event-detail .ed-hero-facts {
 
 @media (max-width: 991.98px) {
   body.page-event-detail {
-    --ed-page: #f8f9fb;
+    --ed-page: var(--background);
   }
 
   body.page-event-detail .page-wrapper,
   body.page-event-detail .ed-body {
-    background: #f8f9fb;
+    background: var(--ed-page);
   }
 
   body.page-event-detail .ed-hero-event.hero-collage-section,
   body.page-event-detail .hero-collage-section--premium.ed-hero-event {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border);
     background:
-      linear-gradient(180deg, #f8f9fb 0%, #f8f9fb 62%, #eef2f6 100%) !important;
+      linear-gradient(180deg, var(--ed-page) 0%, var(--ed-page) 62%, var(--ed-surface-soft) 100%) !important;
   }
 
   body.page-event-detail .ed-hero-grid__main.hero-content {
@@ -6177,7 +6177,7 @@ body.page-event-detail .ed-hero-facts {
     border-radius: 999px;
     border-color: rgba(22, 163, 74, 0.18);
     background: #f0fdf4;
-    color: #15803d;
+    color: var(--success-text);
     font-size: 0.7rem;
     font-weight: 600;
     line-height: 1;
@@ -6195,7 +6195,7 @@ body.page-event-detail .ed-hero-facts {
     display: grid;
     gap: 0.88rem;
     padding: 1rem;
-    border: 1px solid #d9dee5;
+    border: 1px solid var(--border);
     border-radius: 12px;
     background: var(--card);
     box-shadow: 0 1px 2px rgba(30, 37, 50, 0.04);
@@ -6274,8 +6274,8 @@ body.page-event-detail .ed-hero-facts {
 
   body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
     min-height: 2.875rem;
-    border-color: #d9dee5;
-    background: #fbfcfd;
+    border-color: var(--border);
+    background: var(--card);
   }
 
   body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
@@ -6305,7 +6305,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .quantity-up:hover,
   body.page-event-detail .ed-ticket-card__body--premium .quantity-down:hover,
   body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation:hover {
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: var(--ed-orange-strong);
   }
 }
@@ -6409,7 +6409,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
     min-height: 2.52rem;
     border-color: #dfe4ea;
-    background: #fbfcfd;
+    background: var(--card);
   }
 
   body.page-event-detail .ed-ticket-card__body--premium .quantity-up,
@@ -6592,7 +6592,7 @@ body.page-event-detail .ed-hero-facts {
     padding: 0.34rem 0.58rem;
     border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: #1f2430;
     font-size: 0.9rem;
     font-weight: 760;
@@ -6617,7 +6617,7 @@ body.page-event-detail .ed-hero-facts {
     min-height: 2.75rem;
     border-color: #dfe4ea;
     border-radius: 999px;
-    background: #fbfcfd;
+    background: var(--card);
     box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
   }
 
@@ -6648,7 +6648,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .quantity-up:hover,
   body.page-event-detail .ed-ticket-card__body--premium .quantity-down:hover,
   body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation:hover {
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: var(--primary-text);
   }
 
@@ -6708,7 +6708,7 @@ body.page-event-detail .ed-hero-facts {
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: #15803d;
+    color: var(--success-text);
     font-size: 0.74rem;
     font-weight: 560;
     line-height: 1.2;
@@ -6879,7 +6879,7 @@ body.page-event-detail .ed-total-protection {
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
-  color: #15803d;
+  color: var(--success-text);
   font-size: 0.74rem;
   font-weight: 560;
   line-height: 1.2;
@@ -7222,7 +7222,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon {
   height: 2rem;
   border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
   border-radius: 10px;
-  background: #fff7ed;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
   color: var(--primary-text);
 }
 
@@ -7377,7 +7377,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta {
   padding: 0 0.78rem;
   border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-radius: 999px;
-  background: #fff7ed;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
   color: var(--primary-text);
   font-size: 0.75rem;
   font-weight: 620;
@@ -7557,7 +7557,7 @@ body.page-event-detail .ei-cal__btn {
 body.page-event-detail .ei-cal__btn:hover,
 body.page-event-detail .ei-cal__btn:focus-visible {
   border-color: color-mix(in srgb, var(--primary) 28%, transparent);
-  background: #fff7ed;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
   color: var(--primary-text);
 }
 
@@ -7869,7 +7869,7 @@ body.page-event-detail .ed-body {
     padding: 0.33rem 0.56rem;
     border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: #1f2430;
     font-size: 0.88rem;
     font-weight: 760;
@@ -7887,7 +7887,7 @@ body.page-event-detail .ed-body {
     min-height: 2.58rem;
     border-color: #dfe4ea;
     border-radius: 999px;
-    background: #fbfcfd;
+    background: var(--card);
     box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
   }
 
@@ -7960,7 +7960,7 @@ body.page-event-detail .ed-body {
     padding: 0;
     border: 0;
     background: transparent;
-    color: #15803d;
+    color: var(--success-text);
     font-size: 0.72rem;
     font-weight: 560;
     line-height: 1.2;
@@ -8085,14 +8085,14 @@ body.page-event-detail .ed-body {
 
   body.page-event-detail .ed-ev-kicker__chip--category {
     border-color: color-mix(in srgb, var(--primary) 32%, transparent);
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: var(--primary-text);
   }
 
   body.page-event-detail .ed-hero__status-pill {
     border-color: rgba(37, 99, 235, 0.24);
-    background: #eff6ff;
-    color: #1d4ed8;
+    background: color-mix(in srgb, var(--info) 12%, transparent);
+    color: #bfdbfe;
   }
 
   body.page-event-detail .ed-ev-title {
@@ -8199,7 +8199,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-hero-fact__value--available {
-    color: #15803d;
+    color: var(--success-text);
   }
 
   body.page-event-detail .ed-hero-fact__value--low {
@@ -8232,7 +8232,7 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-hero__btn:hover,
   body.page-event-detail .ed-hero__btn:focus-visible {
     border-color: color-mix(in srgb, var(--primary) 38%, transparent);
-    background: #fff7ed;
+    background: color-mix(in srgb, var(--primary) 10%, var(--card));
     color: var(--primary-text);
     transform: translateY(-1px);
   }
@@ -8383,7 +8383,7 @@ body.page-event-detail .ed-hero-info {
   }
 
   body.page-event-detail .ed-hero-info .ed-info-item__value--available {
-    color: #15803d;
+    color: var(--success-text);
   }
 
   body.page-event-detail .ed-hero-info .ed-info-item__value--low {

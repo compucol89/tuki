@@ -96,10 +96,10 @@
   gap: 18px;
   padding: 20px 22px;
   border-radius: 20px;
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.98) 100%);
+  background: linear-gradient(165deg, color-mix(in srgb, var(--card) 96%, transparent) 0%, color-mix(in srgb, var(--muted) 98%, transparent) 100%);
   border: 1px solid var(--ctp-line);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 1) inset,
+    0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent) inset,
     0 14px 40px rgba(15, 23, 42, 0.06),
     0 2px 6px rgba(15, 23, 42, 0.03);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.2s ease;
@@ -127,9 +127,9 @@
   justify-content: center;
   border-radius: 14px;
   color: var(--ctp-accent);
-  background: linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--primary) 8%, var(--card)) 0%, color-mix(in srgb, var(--primary) 12%, var(--card)) 100%);
   border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 8%, transparent) inset;
 }
 
 .contact-page-premium .ctp-card__label {
@@ -498,8 +498,8 @@ body.contact-page-premium main {
   gap: 14px;
   padding: 16px 17px;
   border-radius: var(--ctp-radius);
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.74);
+  background: color-mix(in srgb, var(--card) 72%, transparent);
+  border: 1px solid var(--border);
   box-shadow: 0 8px 20px rgba(30, 37, 50, 0.06);
 }
 

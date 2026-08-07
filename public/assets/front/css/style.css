@@ -3339,7 +3339,7 @@ blockquote {
     position: relative;
     --footer-bg: var(--tk-bg, #e8ebed);
     --footer-surface: var(--tk-card, #ffffff);
-    --footer-surface-soft: rgba(255, 255, 255, 0.72);
+    --footer-surface-soft: var(--card-soft);
     --footer-ink: var(--tk-ink, #333333);
     --footer-ink-strong: var(--tk-ink-strong, #1c2433);
     --footer-muted: var(--tk-muted, #68717d);
@@ -6341,4 +6341,21 @@ html[data-theme="dark"] .blog-site .main-header--premium .header-upper {
 html[data-theme="dark"] .blog-site .main-header--premium .main-menu #main-menu.navbar-collapse,
 html[data-theme="dark"] .main-header--premium .main-menu #main-menu.navbar-collapse {
   background: var(--header-surface);
+}
+
+/* ==================================================================
+   THEME — badges de pago del footer (dark)
+   Colores de marca VISA/AMEX solo en light; MP mantiene fondo blanco
+   (lockup oficial, requiere blanco para leerse).
+   ================================================================== */
+html[data-theme="dark"] .footer-pay--visa {
+  color: var(--foreground);
+}
+
+html[data-theme="dark"] .footer-pay--amex {
+  color: var(--foreground);
+}
+
+html[data-theme="dark"] .footer-pay--naranja {
+  color: var(--primary-text);
 }

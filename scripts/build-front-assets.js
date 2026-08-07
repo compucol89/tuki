@@ -13,6 +13,7 @@ const cssFiles = [
   'public/assets/front/css/home.css',
   'public/assets/front/css/events.css',
   'public/assets/front/css/organizer.css',
+  'public/assets/front/css/event-detail.css',
 ];
 
 const jsFiles = [

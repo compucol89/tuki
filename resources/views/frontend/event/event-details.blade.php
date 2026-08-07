@@ -1,7 +1,10 @@
 @extends('frontend.layout')
 
 @push('styles')
-  <link rel="stylesheet" href="{{ asset('assets/front/css/event-detail.css') }}?v={{ substr(md5_file(public_path('assets/front/css/event-detail.css')), 0, 12) }}">
+  @php
+    $eventDetailCssPath = app()->environment('production') ? 'assets/front/css/event-detail.min.css' : 'assets/front/css/event-detail.css';
+  @endphp
+  <link rel="stylesheet" href="{{ asset($eventDetailCssPath) }}?v={{ substr(md5_file(public_path($eventDetailCssPath)), 0, 12) }}">
 @endpush
 
 @section('body-class', 'page-event-detail')

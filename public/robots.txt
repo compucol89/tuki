@@ -4,6 +4,7 @@
 # Previews sociales: Facebook, Instagram, Messenger y WhatsApp.
 User-agent: facebookexternalhit
 User-agent: Facebot
+User-agent: WhatsApp
 Allow: /
 Allow: /organizer/details/
 Disallow: /admin/

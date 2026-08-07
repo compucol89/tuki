@@ -48,7 +48,7 @@ class AppServiceProvider extends ServiceProvider
       Paginator::useBootstrap();
 
       $data = Cache::remember('global_basic_settings', now()->addHours(6), function () {
-        return DB::table('basic_settings')->select('favicon', 'website_title', 'logo', 'timezone', 'preloader', 'event_guest_checkout_status', 'primary_color')->first();
+        return DB::table('basic_settings')->select('favicon', 'website_title', 'logo', 'timezone', 'preloader', 'event_guest_checkout_status', 'primary_color', 'facebook_app_id')->first();
       });
 
       if ($data === null) {
@@ -60,6 +60,7 @@ class AppServiceProvider extends ServiceProvider
           'preloader' => '',
           'event_guest_checkout_status' => 0,
           'primary_color' => '#F97316',
+          'facebook_app_id' => '',
         ];
       } elseif (empty($data->timezone)) {
         $data->timezone = config('app.timezone', 'UTC');

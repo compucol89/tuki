@@ -38,8 +38,20 @@ if ($requestedFile !== false
         $etag = '"' . md5($requestedFile . '|' . $lastModified . '|' . filesize($requestedFile)) . '"';
 
         header('Content-Type: ' . ($mimeTypes[$extension] ?? 'application/octet-stream'));
-        header('Cache-Control: public, max-age=31536000, immutable');
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+
+        // Favicons: cache corto + revalidación (WhatsApp/Meta cachean agresivo; immutable empeora el ícono viejo)
+        $baseName = basename($requestedFile);
+        $isSiteIcon = $extension === 'ico'
+            || str_starts_with($baseName, 'favicon')
+            || str_starts_with($baseName, 'apple-touch-icon')
+            || str_starts_with($baseName, 'android-chrome');
+        if ($isSiteIcon) {
+            header('Cache-Control: public, max-age=86400, must-revalidate');
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 86400) . ' GMT');
+        } else {
+            header('Cache-Control: public, max-age=31536000, immutable');
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+        }
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $lastModified) . ' GMT');
         header('ETag: ' . $etag);
 

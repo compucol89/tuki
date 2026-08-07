@@ -26,6 +26,9 @@
     $ogType = trim($__env->yieldContent('og-type')) ?: 'website';
     $canonicalUrl = trim($__env->yieldContent('canonical')) ?: url()->current();
     $facebookAppId = trim((string) config('services.facebook.client_id'));
+    if ($facebookAppId === '') {
+      $facebookAppId = trim((string) ($websiteInfo->facebook_app_id ?? ''));
+    }
     $facebookDomainVerification = trim((string) config('services.facebook.domain_verification'));
     $rootAsset = function (string $path) {
       return asset($path) . (is_file(public_path($path)) ? '?v=' . filemtime(public_path($path)) : '');
@@ -131,12 +134,12 @@
   <script type="application/ld+json">{!! json_encode($schemaWebsite, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
   @stack('schema')
   @stack('head-scripts')
-  <!-- Favicon / App Icons (WhatsApp/Meta usa rel=icon PNG; no confundir con og:image) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ $rootAsset('favicon-32x32.png') }}">
-  <link rel="icon" type="image/png" sizes="192x192" href="{{ $rootAsset('android-chrome-192x192.png') }}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ $rootAsset('apple-touch-icon.png') }}">
-  <link rel="icon" href="{{ $rootAsset('favicon.ico') }}" sizes="any">
-  <meta name="msapplication-TileImage" content="{{ $rootAsset('android-chrome-192x192.png') }}">
+  <!-- Favicon / App Icons: URLs estables (sin ?v=) para crawlers WhatsApp/Meta -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('android-chrome-192x192.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+  <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+  <meta name="msapplication-TileImage" content="{{ asset('android-chrome-192x192.png') }}">
   <link rel="manifest" href="{{ $rootAsset('site.webmanifest') }}">
   <meta name="theme-color" content="#F97316">
   @hasSection('hero-preload')

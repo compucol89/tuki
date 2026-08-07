@@ -55,7 +55,7 @@ RUN apk add --no-cache \
 RUN printf '%s\n' \
     'upload_max_filesize=8M' \
     'post_max_size=12M' \
-    'memory_limit=256M' \
+    'memory_limit=512M' \
     > /usr/local/etc/php/conf.d/tukipass-uploads.ini
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

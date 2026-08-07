@@ -41,7 +41,14 @@ class GenerateEventContentDraftJob implements ShouldQueue
       $generated = $assistant->generateContent($draft->review->canonical_event_facts ?? [], $preferences);
 
       $draft->run?->markProgress(75, 'Revisando copy y SEO', 'Validamos consistencia, políticas y textos para Google y redes.');
-      $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
+      $moderationSource = trim(implode("\n", array_filter([
+        data_get($generated, 'content.public_title'),
+        data_get($generated, 'content.short_description'),
+        data_get($generated, 'content.main_description'),
+        data_get($generated, 'seo.meta_description'),
+        data_get($generated, 'social.instagram_caption'),
+      ])));
+      $moderation = $assistant->moderateText(mb_substr($moderationSource !== '' ? $moderationSource : 'evento', 0, 4000));
       $audit = $generated['audit'] ?? [];
       $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
       $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;

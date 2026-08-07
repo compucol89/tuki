@@ -23,6 +23,11 @@
               </button>
               <div class="logo-mobile"><a href="{{ route('index') }}"><img
                     src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}" width="150" height="40"></a></div>
+              <button type="button" class="theme-toggle theme-toggle--compact" data-theme-toggle
+                aria-label="{{ __('Cambiar a modo oscuro') }}" aria-pressed="false" title="{{ __('Cambiar tema claro/oscuro') }}">
+                <i class="fas fa-moon theme-toggle-icon" aria-hidden="true"></i>
+                <i class="fas fa-sun theme-toggle-icon" aria-hidden="true"></i>
+              </button>
               @if (!Auth::guard('customer')->check())
                 <a href="{{ route('customer.login') }}" class="header-ingresar-btn">{{ __('Ingresar') }}</a>
               @endif

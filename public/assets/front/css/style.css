@@ -5715,12 +5715,54 @@ html[data-theme="dark"] ::selection {
   position: relative;
 }
 
+/* Estilo neutral propio: gana a menu.css `.menu-right .menu-btn` (legacy primary)
+   para que el toggle NO parezca un CTA naranja */
+.main-header--premium .menu-right .menu-btn.theme-toggle {
+  background: var(--header-btn-bg);
+  border: 1px solid var(--header-btn-border);
+  color: var(--foreground);
+  padding: 9px 14px;
+}
+
+.main-header--premium .menu-right .menu-btn.theme-toggle:hover,
+.main-header--premium .menu-right .menu-btn.theme-toggle:focus,
+.main-header--premium .menu-right .menu-btn.theme-toggle:active,
+.main-header--premium .menu-right .menu-dropdown.show > .menu-btn.theme-toggle {
+  background: var(--header-btn-hover-bg);
+  border-color: var(--header-btn-hover-border);
+  color: var(--foreground);
+  transform: translateY(-1px);
+}
+
+.main-header--premium .menu-right .menu-btn.theme-toggle:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Barra fija / blog (header navy): mismo lenguaje que .menu-btn--customer */
+.fixed-header.main-header--premium .menu-right .menu-btn.theme-toggle,
+.blog-site .main-header--premium .menu-right .menu-btn.theme-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.fixed-header.main-header--premium .menu-right .menu-btn.theme-toggle:hover,
+.fixed-header.main-header--premium .menu-right .menu-btn.theme-toggle:focus,
+.blog-site .main-header--premium .menu-right .menu-btn.theme-toggle:hover,
+.blog-site .main-header--premium .menu-right .menu-btn.theme-toggle:focus {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
 .theme-toggle .theme-toggle-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 20px;
   height: 20px;
+  font-size: 17px;
 }
 
 html[data-theme="light"] .theme-toggle .fa-sun {
@@ -5729,6 +5771,37 @@ html[data-theme="light"] .theme-toggle .fa-sun {
 
 html[data-theme="dark"] .theme-toggle .fa-moon {
   display: none;
+}
+
+/* Toggle compacto en la barra móvil (visible ≤1199px sin abrir el drawer) */
+.theme-toggle--compact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0 4px;
+  border-radius: 12px;
+  background: var(--header-btn-bg);
+  border: 1px solid var(--header-btn-border);
+  color: var(--foreground);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.theme-toggle--compact:hover,
+.theme-toggle--compact:focus {
+  background: var(--header-btn-hover-bg);
+  border-color: var(--header-btn-hover-border);
+  color: var(--foreground);
+}
+
+.theme-toggle--compact:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 /* ==================================================================

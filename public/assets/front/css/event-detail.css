@@ -1,6 +1,6 @@
 /* ─── EVENT INFO CARD (ei-*) ─── */
 .ei-card {
-  background:#fff; border-radius:16px;
+  background:var(--card); border-radius:16px;
   border:1px solid #e5e7eb;
   box-shadow:0 1px 3px rgba(0,0,0,0.06);
   overflow:hidden; margin-bottom:16px;
@@ -33,7 +33,7 @@
   font-size:12px; color:var(--primary-text-color); font-weight:500;
   text-decoration:none; transition:color 0.15s;
 }
-.ei-org__link:hover { color:#ea580c; }
+.ei-org__link:hover { color:var(--primary-text); }
 /* Address row */
 .ei-meta {
   display:flex; align-items:flex-start; gap:12px;
@@ -52,7 +52,7 @@
   text-decoration:none; transition:background 0.15s, color 0.15s, border-color 0.15s; white-space:nowrap;
 }
 .ei-cal__btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }
-.ei-cal__btn--google { background:#fff; }
+.ei-cal__btn--google { background:var(--card); }
 
 /* ================================================
 /* ================================================
@@ -80,8 +80,8 @@
 
 /* ── Base: tarjeta de entradas (restaurada) ── */
 .ed-ticket-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--card);
+  border: 1px solid var(--border);
   margin-bottom: 16px;
 }
 
@@ -118,7 +118,7 @@
   min-height: 52px;
   padding: 0 20px;
   box-sizing: border-box;
-  background: #f97316;
+  background: var(--primary);
   color: #fff;
   border: none;
   border-radius: 15px;
@@ -131,7 +131,7 @@
 }
 
 .ed-buy-btn:hover {
-  background: #ea580c;
+  background: var(--primary-hover);
   transform: translateY(-1px);
 }
 
@@ -160,7 +160,7 @@
 
 .ed-trust {
   font-size: 11px;
-  color: #9ca3af;
+  color: var(--tuki-muted-light);
   text-align: center;
   margin-top: 12px;
   display: flex;
@@ -176,7 +176,7 @@
 
 .ed-ticket-card__head {
   background:
-    radial-gradient(circle at top right, rgba(249,115,22,0.18) 0%, transparent 32%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--primary) 18%, transparent) 0%, transparent 32%),
     linear-gradient(180deg, #1a2230 0%, #242e3f 100%);
   padding: 25px 24px 22px;
 }
@@ -215,16 +215,16 @@
   height: 48px;
   border-radius: 14px;
   border: 1px solid #dfe6ee;
-  background: #fff;
-  color: #111827;
+  background: var(--card);
+  color: var(--foreground);
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset;
 }
 
 .ed-ticket-card__body select.form-control:focus {
-  border-color: rgba(249,115,22,0.45);
-  box-shadow: 0 0 0 4px rgba(249,115,22,0.08);
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 8%, transparent);
 }
 
 .ed-viewer-counter,
@@ -318,7 +318,7 @@
 
 .ed-trust-item {
   gap: 5px;
-  color: #64748b;
+  color: var(--muted-foreground);
 }
 
 .ed-info-card,
@@ -339,7 +339,7 @@
   height: 38px;
   border-radius: 12px;
   background: linear-gradient(180deg, #fff7ed 0%, #fff1e6 100%);
-  border: 1px solid rgba(249,115,22,0.12);
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
 }
 
@@ -632,7 +632,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
   border-radius: 22px;
   border: 1px solid rgba(226, 232, 240, 0.9);
   background:
-    radial-gradient(circle at top left, rgba(249, 115, 22, 0.08), transparent 48%),
+    radial-gradient(circle at top left, color-mix(in srgb, var(--primary) 8%, transparent), transparent 48%),
     linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%);
   box-shadow: 0 16px 36px rgba(15, 23, 42, 0.07);
 }
@@ -647,8 +647,8 @@ body.page-event-detail .ed-card--context .ed-card__body {
   width: 44px;
   height: 44px;
   border-radius: 14px;
-  background: rgba(249, 115, 22, 0.12);
-  color: #c2410c;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--primary-text);
 }
 
 .ed-summary-signals .ed-viewer-counter__num {
@@ -723,7 +723,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
 .ed-summary-signals .ed-nudge__text {
   font-size: 14px;
   line-height: 1.6;
-  color: #334155;
+  color: var(--foreground);
 }
 
 .ed-summary-signals .ed-status-pill {
@@ -792,7 +792,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
 }
 
 .ed-gallery-main__link:focus-visible {
-  outline: 2px solid rgba(249,115,22,0.85);
+  outline: 2px solid color-mix(in srgb, var(--primary) 85%, transparent);
   outline-offset: -2px;
 }
 
@@ -818,7 +818,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
 }
 
 .ed-gallery-thumb--active {
-  box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 /* ── Botones de acción del hero (favoritos, compartir, mapa) ── */
@@ -1277,7 +1277,7 @@ body.page-event-detail .event-addons--sidebar {
   margin: 0 calc(-1 * var(--ed-sidebar-rail)) calc(-1 * var(--ed-sidebar-rail));
   padding: var(--ed-space-4, 16px) var(--ed-sidebar-rail) var(--ed-space-5, 20px);
   border-top: 1px solid rgba(15, 23, 42, 0.08);
-  background: #fff;
+  background: var(--card);
 }
 
 body.page-event-detail .event-addons__title {
@@ -1290,7 +1290,7 @@ body.page-event-detail .event-addons__title {
 
 body.page-event-detail .event-addons__subtitle {
   margin: 6px 0 14px;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -1301,7 +1301,7 @@ body.page-event-detail .event-addons--sidebar .addon-section {
 
 body.page-event-detail .event-addons--sidebar .addon-section-title {
   margin: 0 0 10px;
-  color: #334155;
+  color: var(--foreground);
   font-size: 11px;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -1329,7 +1329,7 @@ body.page-event-detail .event-addons--sidebar .addon-card__image--placeholder {
   height: 68px;
   object-fit: cover;
   border-radius: 12px;
-  background: #f8fafc;
+  background: var(--muted);
 }
 
 body.page-event-detail .event-addons--sidebar .addon-card__title {
@@ -1345,7 +1345,7 @@ body.page-event-detail .event-addons--sidebar .addon-card__notice,
 body.page-event-detail .event-addons--sidebar small {
   grid-column: 2;
   margin: 4px 0 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11px;
   line-height: 1.35;
 }
@@ -1356,7 +1356,7 @@ body.page-event-detail .event-addons--sidebar .addon-card__price {
 }
 
 body.page-event-detail .event-addons--sidebar .addon-card__price-amount {
-  color: #f97316;
+  color: var(--primary);
   font-size: 14px;
   font-weight: 900;
 }
@@ -1375,7 +1375,7 @@ body.page-event-detail .event-addons--sidebar .addon-card__qty {
 
 body.page-event-detail .event-addons--sidebar .addon-card__qty-label {
   margin: 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11px;
   font-weight: 800;
 }
@@ -1385,7 +1385,7 @@ body.page-event-detail .event-addons--sidebar .addon-card__add-btn {
   padding: 0 13px;
   border: 0;
   border-radius: 13px;
-  background: #f97316;
+  background: var(--primary);
   color: #fff;
   font-size: 12px;
   font-weight: 900;
@@ -1495,7 +1495,7 @@ body.page-event-detail .ei-meta__text {
   border-radius: 999px;
   border: 1px solid #e2e8f0;
   background: rgba(255,255,255,0.92);
-  color: #334155;
+  color: var(--foreground);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -1507,7 +1507,7 @@ body.page-event-detail .ei-meta__text {
   color: #172131;
   text-decoration: none;
   border-color: #cbd5e1;
-  background: #ffffff;
+  background: var(--card);
 }
 
 .ed-body-chip--category i {
@@ -1732,7 +1732,7 @@ body.page-event-detail .ei-meta__text {
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--primary-color, #f97316);
+  background: var(--primary-color);
   flex-shrink: 0;
 }
 .ed-hero-nudge__item {
@@ -1794,7 +1794,7 @@ body.page-event-detail .ed-ticket-card {
 
 body.page-event-detail .ed-ticket-card__body {
   padding: 22px var(--ed-sidebar-rail) 22px;
-  background: #ffffff;
+  background: var(--card);
   border-radius: 0 0 24px 24px;
 }
 
@@ -1951,7 +1951,7 @@ body.page-event-detail .ed-ticket-card__body .click-show {
 }
 
 body.page-event-detail .ed-ticket-card__body .show-content {
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.45;
@@ -1970,7 +1970,7 @@ body.page-event-detail .ed-ticket-card__body .price-count {
   flex-wrap: wrap;
   padding: 15px;
   border-radius: 16px;
-  background: #f8fafc;
+  background: var(--muted);
   border: 1px solid rgba(15, 23, 42, 0.08);
   box-shadow: none;
 }
@@ -1980,7 +1980,7 @@ body.page-event-detail .ed-ticket-card__body .price-count p {
   width: 100%;
   margin: 4px 0 0;
   font-size: 11px;
-  color: #6b7280;
+  color: var(--muted-foreground);
   line-height: 1.4;
 }
 
@@ -2033,7 +2033,7 @@ body.page-event-detail .ed-ticket-card__body .quantity-input {
   flex: 0 0 auto;
   min-height: 36px;
   border-radius: 13px;
-  background: #ffffff;
+  background: var(--card);
   border: 1px solid rgba(15, 23, 42, 0.10);
   box-shadow: none;
 }
@@ -2074,7 +2074,7 @@ body.page-event-detail .ed-ticket-card__body .quantity-down:focus-visible,
 body.page-event-detail .ed-ticket-card__body .quantity-down_variation:focus-visible,
 body.page-event-detail .ed-ticket-card__body .addon-quantity-up:focus-visible,
 body.page-event-detail .ed-ticket-card__body .addon-quantity-down:focus-visible {
-  outline: 3px solid rgba(249, 115, 22, 0.22);
+  outline: 3px solid color-mix(in srgb, var(--primary) 22%, transparent);
   outline-offset: 2px;
 }
 
@@ -2087,7 +2087,7 @@ body.page-event-detail .ed-ticket-card__body .quantity {
   border: 0;
   border-left: 1px solid rgba(15, 23, 42, 0.08);
   border-right: 1px solid rgba(15, 23, 42, 0.08);
-  background: #ffffff;
+  background: var(--card);
   color: #0f172a;
   font-size: 15px;
   font-weight: 800;
@@ -2112,7 +2112,7 @@ body.page-event-detail .ed-total-label {
   margin: 0;
   justify-self: start;
   max-width: 16rem;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11.5px;
   font-weight: 800;
   line-height: 1.2;
@@ -2170,7 +2170,7 @@ body.page-event-detail .ed-buy-btn:hover {
 }
 
 body.page-event-detail .ed-buy-btn:focus-visible {
-  outline: 3px solid rgba(249, 115, 22, 0.28);
+  outline: 3px solid color-mix(in srgb, var(--primary) 28%, transparent);
   outline-offset: 3px;
   box-shadow: none !important;
 }
@@ -2208,7 +2208,7 @@ body.page-event-detail .ed-conversion-trust__item {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 12px;
   font-weight: 600;
   line-height: 1.35;
@@ -2222,7 +2222,7 @@ body.page-event-detail .ed-conversion-trust__item i {
 }
 
 body.page-event-detail .ed-cta-zone__hint {
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 13px;
   font-weight: 600;
   text-align: center;
@@ -2253,7 +2253,7 @@ body.page-event-detail .ed-cta-zone .ed-trust-item {
   font-size: 12.5px;
   font-weight: 600;
   line-height: 1.3;
-  color: #64748b;
+  color: var(--muted-foreground);
   white-space: normal;
   max-width: 11.5rem;
   text-align: left;
@@ -2277,7 +2277,7 @@ body.page-event-detail .ed-summary-grid--quickfacts {
   align-items: stretch;
   border-radius: 18px;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  background: #ffffff;
+  background: var(--card);
   box-shadow: 0 10px 28px rgba(15, 23, 42, 0.045);
   overflow: hidden;
 }
@@ -2367,7 +2367,7 @@ body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact 
   display: block;
   margin: 0;
   margin-top: 1px;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11.5px;
   font-weight: 500;
   line-height: 1.35;
@@ -2380,7 +2380,7 @@ body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:
 body.page-event-detail .ed-summary-grid--quickfacts .ed-summary-item--quickfact:hover .ed-summary-item__icon {
   background: #e2e8f0;
   border-color: rgba(15, 23, 42, 0.1);
-  color: #334155;
+  color: var(--foreground);
 }
 
 /* Optional secondary card normalization */
@@ -2688,7 +2688,7 @@ body.page-event-detail .addon-modal-card {
   flex-direction: column;
   border: 2px solid var(--surface-card-border);
   border-radius: 12px;
-  background: #ffffff;
+  background: var(--card);
   padding: var(--ed-space-3, 0.75rem);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -2732,7 +2732,7 @@ body.page-event-detail .addon-modal-card__title {
 
 body.page-event-detail .addon-modal-card__desc {
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--muted-foreground);
   margin-bottom: var(--ed-space-2, 0.5rem);
   line-height: 1.4;
 }
@@ -2747,7 +2747,7 @@ body.page-event-detail .addon-modal-card__price {
 
 body.page-event-detail .addon-modal-card__notice {
   font-size: 0.78rem;
-  color: #64748b;
+  color: var(--muted-foreground);
   margin: var(--ed-space-2, 0.5rem) 0;
   line-height: 1.35;
 }
@@ -2772,14 +2772,14 @@ body.page-event-detail .quantity-input--modal {
   border: 1.5px solid var(--surface-card-border);
   border-radius: 8px;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--card);
 }
 
 body.page-event-detail .quantity-input--modal button {
   width: 44px;
   height: 44px;
   border: none;
-  background: #f8fafc;
+  background: var(--muted);
   color: var(--color-fg);
   font-size: 1.25rem;
   font-weight: 600;
@@ -2804,7 +2804,7 @@ body.page-event-detail .quantity-input--modal input {
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-fg);
-  background: #ffffff;
+  background: var(--card);
   -moz-appearance: textfield;
 }
 
@@ -2850,8 +2850,8 @@ body.page-event-detail .ed-addons-modal .btn-primary {
 
 body.page-event-detail .ed-addons-modal .btn-primary:hover,
 body.page-event-detail .ed-addons-modal .btn-primary:focus {
-  background-color: #ea580c;
-  border-color: #ea580c;
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
 }
 
 body.page-event-detail .ed-addons-modal__error {
@@ -3006,7 +3006,7 @@ body.page-event-detail .ed-info-card {
   overflow: hidden;
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--card);
   box-shadow: none;
 }
 
@@ -3017,7 +3017,7 @@ body.page-event-detail .ed-info-card__head {
   gap: 12px;
   padding: 14px 20px 8px;
   border-bottom: 1px solid #eef2f6;
-  background: #ffffff;
+  background: var(--card);
 }
 
 body.page-event-detail .ed-info-card__head-main {
@@ -3083,7 +3083,7 @@ body.page-event-detail .ed-info-card__body--description {
 
 body.page-event-detail .ed-info-card--description .summernote-content {
   max-width: 72ch;
-  color: #1e2532;
+  color: var(--foreground);
   line-height: 1.8;
 }
 
@@ -3137,7 +3137,7 @@ body.page-event-detail .ed-info-icon {
 }
 
 body.page-event-detail .ed-info-icon--date {
-  color: #ea580c;
+  color: var(--primary-text);
 }
 
 body.page-event-detail .ed-info-icon--place {
@@ -3197,7 +3197,7 @@ body.page-event-detail .ed-info-item__value--low {
 
 body.page-event-detail .ed-info-item__meta {
   display: block;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 12.5px;
   font-weight: 500;
   line-height: 1.45;
@@ -3246,7 +3246,7 @@ body.page-event-detail .ed-info-trust__copy {
 
 body.page-event-detail .ed-info-trust__title {
   display: block;
-  color: #334155;
+  color: var(--foreground);
   font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
@@ -3254,7 +3254,7 @@ body.page-event-detail .ed-info-trust__title {
 
 body.page-event-detail .ed-info-trust__desc {
   display: block;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11px;
   font-weight: 500;
   line-height: 1.35;
@@ -3268,7 +3268,7 @@ body.page-event-detail .ed-info-assurance {
   margin: 12px 0 0;
   padding-top: 12px;
   border-top: 1px solid #eef2f6;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.45;
@@ -3364,7 +3364,7 @@ body.page-event-detail .ed-refund-band--policy {
   overflow: hidden;
   border: 1px solid rgba(15, 23, 42, 0.09);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--card);
   box-shadow:
     0 1px 2px rgba(15, 23, 42, 0.04),
     0 14px 36px rgba(15, 23, 42, 0.06);
@@ -3407,7 +3407,7 @@ body.page-event-detail .ed-refund-band__title {
 
 body.page-event-detail .ed-refund-band__kicker {
   margin: 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 12.5px;
   font-weight: 600;
   line-height: 1.4;
@@ -3444,7 +3444,7 @@ body.page-event-detail .ed-refund-band__point-icon {
   margin-top: 1px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
-  background: #f8fafc;
+  background: var(--muted);
   color: #475569;
 }
 
@@ -3463,7 +3463,7 @@ body.page-event-detail .ed-refund-band__point-copy strong {
 }
 
 body.page-event-detail .ed-refund-band__point-copy > span {
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.55;
@@ -3474,12 +3474,12 @@ body.page-event-detail .ed-refund-band__legal-details {
   padding: 12px 14px;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  background: #f8fafc;
+  background: var(--muted);
 }
 
 body.page-event-detail .ed-refund-band__legal-summary {
   cursor: pointer;
-  color: #334155;
+  color: var(--foreground);
   font-size: 12.5px;
   font-weight: 700;
   line-height: 1.4;
@@ -3510,7 +3510,7 @@ body.page-event-detail .ed-refund-band__legal-summary:focus-visible {
 
 body.page-event-detail .ed-refund-band__legal-text {
   margin: 10px 0 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 12px;
   font-weight: 500;
   line-height: 1.65;
@@ -3558,7 +3558,7 @@ body.page-event-detail .ed-refund-band__cta:focus-visible {
 }
 
 body.page-event-detail .ed-refund-band__contact {
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 12.5px;
   font-weight: 600;
   line-height: 1.4;
@@ -3592,8 +3592,8 @@ body.page-event-detail .ed-refund-band--highlight .ed-refund-band__icon {
   height: 38px;
   border-radius: 11px;
   border: 1px solid #fed7aa;
-  background: #ffffff;
-  color: #ea580c;
+  background: var(--card);
+  color: var(--primary-text);
 }
 
 body.page-event-detail .ed-refund-band__content {
@@ -3612,7 +3612,7 @@ body.page-event-detail .ed-refund-band__lead {
 
 body.page-event-detail .ed-refund-band__desc {
   margin: 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 13.5px;
   font-weight: 500;
   line-height: 1.55;
@@ -3677,7 +3677,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band--highlight {
    ========================================================= */
 body.page-event-detail .ed-ticket-card__body--premium {
   padding: 20px var(--ed-sidebar-rail) 1.375rem;
-  background: #ffffff;
+  background: var(--card);
 }
 
 body.page-event-detail .ed-ticket-picker__intro {
@@ -3692,7 +3692,7 @@ body.page-event-detail .ed-ticket-picker__intro {
 
 body.page-event-detail .ed-ticket-picker__title {
   margin: 0;
-  color: #1e2532;
+  color: var(--foreground);
   font-family: var(--tuki-font-sans, "Inter", sans-serif);
   font-size: clamp(0.9375rem, 2.8cqi, 1.0625rem);
   font-weight: 600;
@@ -3703,7 +3703,7 @@ body.page-event-detail .ed-ticket-picker__title {
 
 body.page-event-detail .ed-ticket-picker__sub {
   margin: 0;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-size: clamp(0.75rem, 2.4cqi, 0.8125rem);
   font-weight: 400;
   line-height: 1.47;
@@ -3741,13 +3741,13 @@ body.page-event-detail .ed-ticket-card__body--premium .form-group.mb-3 {
   padding: 12px 14px;
   border: 1px solid #eef2f6;
   border-radius: 14px;
-  background: #ffffff;
+  background: var(--card);
 }
 
 body.page-event-detail .ed-ticket-card__body--premium .ed-field-label {
   display: block;
   margin-bottom: 8px;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -3765,7 +3765,7 @@ body.page-event-detail .ed-ticket-option {
   overflow: visible;
   border: 0;
   border-radius: 0;
-  background: #ffffff;
+  background: var(--card);
   box-shadow: none;
   transition:
     border-color 180ms ease,
@@ -3779,7 +3779,7 @@ body.page-event-detail .ed-ticket-option + .ed-ticket-option {
 
 body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
   border-color: transparent;
-  box-shadow: inset 3px 0 0 rgba(249, 115, 22, 0.72);
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--primary) 72%, transparent);
 }
 
 body.page-event-detail .ed-ticket-option__head {
@@ -3807,7 +3807,7 @@ body.page-event-detail .ed-ticket-option__desc {
 
 body.page-event-detail .ed-ticket-option__desc .show-content {
   margin: 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.5;
@@ -3821,7 +3821,7 @@ body.page-event-detail .ed-ticket-option__desc .read-more-btn {
   padding: 0;
   border: 0;
   background: none;
-  color: #f97316;
+  color: var(--primary);
   font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
@@ -3867,7 +3867,7 @@ body.page-event-detail .ed-ticket-option--solo:has(.quantity[value]:not([value="
 body.page-event-detail .ed-ticket-option--solo .ed-ticket-option__buy-row.price-count {
   margin-top: 0;
   border-radius: 0;
-  background: #ffffff;
+  background: var(--card);
   border: 0;
   padding: 16px 0;
   box-shadow: none;
@@ -3878,7 +3878,7 @@ body.page-event-detail .ed-ticket-option--solo .ed-ticket-option__buy-row.price-
 
 body.page-event-detail .ed-ticket-option--solo:has(.quantity[value]:not([value="0"])) .ed-ticket-option__buy-row.price-count {
   border-color: transparent;
-  box-shadow: inset 3px 0 0 rgba(249, 115, 22, 0.72);
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--primary) 72%, transparent);
 }
 
 body.page-event-detail .ed-ticket-option__price {
@@ -3920,7 +3920,7 @@ body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
   min-height: 44px;
   border-radius: 999px;
   border: 1px solid rgba(15, 23, 42, 0.1);
-  background: #ffffff;
+  background: var(--card);
   box-shadow: none;
 }
 
@@ -3968,7 +3968,7 @@ body.page-event-detail .ed-ticket-card__body--premium .ed-total-row--premium {
 }
 
 body.page-event-detail .ed-total-row--premium .ed-total-label {
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 11.5px;
   letter-spacing: 0.09em;
 }
@@ -4052,7 +4052,7 @@ body.page-event-detail .ed-cta-zone--premium .ed-trust-item {
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #6b7280;
+  color: var(--muted-foreground);
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.35;
@@ -4114,8 +4114,8 @@ body.page-event-detail .ei-card,
 body.page-event-detail .ed-ticket-card,
 body.page-event-detail .ed-countdown-wrap,
 body.page-event-detail .ed-viewer-counter {
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
 }
@@ -4123,7 +4123,7 @@ body.page-event-detail .ed-viewer-counter {
 body.page-event-detail .ed-card__head,
 body.page-event-detail .ed-info-card__head {
   border-bottom: 1px solid #f3f4f6;
-  background: #fff;
+  background: var(--card);
 }
 
 body.page-event-detail .ed-card__body:not(.ed-card__body--embed),
@@ -4132,7 +4132,7 @@ body.page-event-detail .ei-card,
 body.page-event-detail .ed-card--context .ed-card__body,
 body.page-event-detail .ed-card.ed-card--gallery,
 body.page-event-detail .ed-card.ed-card--context {
-  background: #fff;
+  background: var(--card);
 }
 
 body.page-event-detail .ed-body-breadcrumbs {
@@ -4148,7 +4148,7 @@ body.page-event-detail .ed-summary-item:not(.ed-summary-item--quickfact),
 body.page-event-detail .ed-info-item,
 body.page-event-detail .ed-refund-point,
 body.page-event-detail .event-addons--sidebar .addon-card {
-  background: #fff;
+  background: var(--card);
   border-color: #eef0f3;
   box-shadow: none;
 }
@@ -4183,7 +4183,7 @@ body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
 
 body.page-event-detail .ed-ticket-card__body,
 body.page-event-detail .ed-ticket-card__body--premium {
-  background: #fff;
+  background: var(--card);
   border: 0;
   box-shadow: none;
 }
@@ -4193,7 +4193,7 @@ body.page-event-detail .ed-ticket-picker__intro {
 }
 
 body.page-event-detail .ed-ticket-option {
-  background: #fff;
+  background: var(--card);
   border-color: #eef0f3;
   box-shadow: none;
 }
@@ -4208,7 +4208,7 @@ body.page-event-detail .ed-total-row,
 body.page-event-detail .ed-cta-zone,
 body.page-event-detail .ed-cta-zone--premium,
 body.page-event-detail .event-addons--sidebar {
-  background: #fff;
+  background: var(--card);
   border-top-color: #eef0f3;
 }
 
@@ -4235,8 +4235,8 @@ body.page-event-detail .ed-info-row {
   }
 
   body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__body {
-    background: #fff;
-    border-color: #e5e7eb;
+    background: var(--card);
+    border-color: var(--border);
     box-shadow: 0 2px 12px rgba(30, 37, 50, 0.06);
   }
 }
@@ -4252,8 +4252,8 @@ body.page-event-detail {
   --ed-muted-soft: #657489;
   --ed-line: rgba(30, 37, 50, 0.08);
   --ed-line-strong: rgba(30, 37, 50, 0.13);
-  --ed-orange: #f97316;
-  --ed-orange-strong: #ea580c;
+  --ed-orange: var(--primary);
+  --ed-orange-strong: var(--primary-active);
   --ed-orange-soft: #fff3ea;
   --ed-green: #16a34a;
   --ed-green-strong: #15803d;
@@ -4326,8 +4326,8 @@ body.page-event-detail .ed-hero__status-pill {
 }
 
 body.page-event-detail .ed-ev-kicker__chip--category {
-  border-color: rgba(249, 115, 22, 0.5);
-  background: rgba(249, 115, 22, 0.16);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  background: color-mix(in srgb, var(--primary) 16%, transparent);
   color: #fed7aa;
 }
 
@@ -4409,8 +4409,8 @@ body.page-event-detail .ed-hero__btn {
 
 body.page-event-detail .ed-hero__btn:hover,
 body.page-event-detail .ed-hero__btn:focus-visible {
-  border-color: rgba(249, 115, 22, 0.5);
-  background: rgba(249, 115, 22, 0.18);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
   color: #ffffff;
 }
 
@@ -4430,7 +4430,7 @@ body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
   border-radius: var(--ed-radius-lg) var(--ed-radius-lg) 0 0;
   background:
     linear-gradient(180deg, rgba(31, 38, 51, 0.96) 0%, rgba(22, 28, 39, 0.94) 100%),
-    radial-gradient(circle at 88% 0%, rgba(249, 115, 22, 0.22), transparent 36%);
+    radial-gradient(circle at 88% 0%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 36%);
   color: rgba(255, 255, 255, 0.86);
   box-shadow: none;
 }
@@ -4830,7 +4830,7 @@ body.page-event-detail .ed-info-card--description .summernote-content ol {
 body.page-event-detail .ed-refund-band--highlight,
 body.page-event-detail .ed-refund-band--policy {
   background: #fffaf6;
-  border-color: rgba(249, 115, 22, 0.14);
+  border-color: color-mix(in srgb, var(--primary) 14%, transparent);
   box-shadow: none;
 }
 
@@ -4945,7 +4945,7 @@ body.page-event-detail .ed-countdown-wrap .syotimer-cell__value {
 body.page-event-detail .ed-interest-indicator {
   padding: 0.9rem 1rem;
   background: #fffaf6;
-  border-color: rgba(249, 115, 22, 0.16);
+  border-color: color-mix(in srgb, var(--primary) 16%, transparent);
   color: var(--ed-muted);
 }
 
@@ -4983,7 +4983,7 @@ body.page-event-detail .ei-cal__btn {
   min-height: 2.5rem;
   border-color: var(--ed-line);
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--card);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -5010,7 +5010,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band--highlight + .
 
 body.page-event-detail .ed-description-map__title {
   margin: 0 0 0.62rem;
-  color: #1e2532;
+  color: var(--foreground);
   font-size: clamp(0.98rem, 1vw, 1.08rem);
   font-weight: 650;
   line-height: 1.28;
@@ -5411,13 +5411,13 @@ body.page-event-detail .ed-hero-nudge__item--active {
   body.page-event-detail .ed-ev-kicker__chip,
   body.page-event-detail .ed-hero__status-pill {
     border-color: var(--ed-line);
-    background: #ffffff;
+    background: var(--card);
     color: var(--ed-muted);
     box-shadow: 0 6px 18px rgba(30, 37, 50, 0.045);
   }
 
   body.page-event-detail .ed-ev-kicker__chip--category {
-    border-color: rgba(249, 115, 22, 0.24);
+    border-color: color-mix(in srgb, var(--primary) 24%, transparent);
     background: #fff7ed;
     color: #9a3412;
   }
@@ -5455,7 +5455,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
 
   body.page-event-detail .ed-hero__btn {
     border-color: var(--ed-line);
-    background: #ffffff;
+    background: var(--card);
     color: var(--ed-ink);
     box-shadow: 0 8px 22px rgba(30, 37, 50, 0.065);
     backdrop-filter: none;
@@ -5464,7 +5464,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
 
   body.page-event-detail .ed-hero__btn:hover,
   body.page-event-detail .ed-hero__btn:focus-visible {
-    border-color: rgba(249, 115, 22, 0.28);
+    border-color: color-mix(in srgb, var(--primary) 28%, transparent);
     background: #fff7ed;
     color: var(--ed-orange-strong);
   }
@@ -5473,7 +5473,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     overflow: hidden;
     border: 1px solid rgba(30, 37, 50, 0.08);
     border-radius: 18px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 14px 34px rgba(30, 37, 50, 0.08);
   }
 
@@ -5483,7 +5483,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     border: 0;
     border-bottom: 1px solid var(--ed-line);
     border-radius: 18px 18px 0 0;
-    background: #ffffff;
+    background: var(--card);
     color: var(--ed-ink);
     box-shadow: none;
   }
@@ -5534,7 +5534,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 1.05rem;
     border: 0;
     border-radius: 0 0 18px 18px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: none;
   }
 
@@ -5575,8 +5575,8 @@ body.page-event-detail .ed-hero-nudge__item--active {
 
   body.page-event-detail .ed-ticket-option:hover,
   body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
-    border-color: rgba(249, 115, 22, 0.24);
-    background: #ffffff;
+    border-color: color-mix(in srgb, var(--primary) 24%, transparent);
+    background: var(--card);
     box-shadow: 0 8px 20px rgba(30, 37, 50, 0.055);
   }
 
@@ -5609,7 +5609,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 0.9rem;
     border: 1px solid var(--ed-line);
     border-radius: 14px;
-    background: #f8fafc;
+    background: var(--muted);
   }
 
   body.page-event-detail .ed-total-row--premium .ed-total-row__note {
@@ -5716,7 +5716,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     overflow: hidden;
     border: 1px solid rgba(30, 37, 50, 0.09);
     border-radius: 20px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 16px 38px rgba(30, 37, 50, 0.09);
   }
 
@@ -5735,7 +5735,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 1rem;
     border: 0;
     border-radius: 0;
-    background: #ffffff;
+    background: var(--card);
   }
 
   body.page-event-detail .ed-head-top {
@@ -5763,7 +5763,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 0.82rem;
     border: 1px solid rgba(30, 37, 50, 0.07);
     border-radius: 14px;
-    background: #f8fafc;
+    background: var(--muted);
   }
 
   body.page-event-detail .ed-ticket-picker__title {
@@ -5794,7 +5794,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 0.82rem;
     border-color: rgba(30, 37, 50, 0.085);
     border-radius: 14px;
-    background: #ffffff;
+    background: var(--card);
   }
 
   body.page-event-detail .ed-ticket-option:hover,
@@ -5815,7 +5815,7 @@ body.page-event-detail .ed-hero-nudge__item--active {
     padding: 0.85rem;
     border: 1px solid rgba(30, 37, 50, 0.075);
     border-radius: 14px;
-    background: #f8fafc;
+    background: var(--muted);
     box-shadow: none;
   }
 
@@ -5958,7 +5958,7 @@ body.page-event-detail .ed-hero-facts {
     width: 2rem;
     height: 2rem;
     border-radius: 999px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 1px 0 rgba(30, 37, 50, 0.08);
   }
 
@@ -6070,9 +6070,9 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-option,
   body.page-event-detail .ed-ticket-option + .ed-ticket-option {
     padding: 0.9rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
     border-radius: 16px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
   }
 
@@ -6086,8 +6086,8 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-card__body--premium .ed-total-row.ed-total-row--premium {
-    border-color: #e5e7eb;
-    background: #ffffff;
+    border-color: var(--border);
+    background: var(--card);
   }
 
   body.page-event-detail .ed-cta-zone--premium {
@@ -6158,7 +6158,7 @@ body.page-event-detail .ed-hero-facts {
     grid-column: 1 / -1;
     max-width: 22rem;
     margin: 0;
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.42;
@@ -6197,7 +6197,7 @@ body.page-event-detail .ed-hero-facts {
     padding: 1rem;
     border: 1px solid #d9dee5;
     border-radius: 12px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 1px 2px rgba(30, 37, 50, 0.04);
   }
 
@@ -6208,7 +6208,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-option:hover,
   body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
     border-color: #cfd6df;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 3px 10px rgba(30, 37, 50, 0.055);
   }
 
@@ -6237,7 +6237,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-option__desc .show-content {
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.42;
@@ -6284,7 +6284,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .quantity {
     height: 2.875rem;
     min-height: 2.875rem;
-    color: #334155;
+    color: var(--foreground);
     background: transparent;
     font-size: 0.95rem;
     font-weight: 700;
@@ -6350,7 +6350,7 @@ body.page-event-detail .ed-hero-facts {
     padding: 0.84rem 0.9rem;
     border-color: #dfe4ea;
     border-radius: 11px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 1px 1px rgba(30, 37, 50, 0.035);
   }
 
@@ -6378,7 +6378,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-option__desc .show-content {
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.82rem;
     font-weight: 400;
     line-height: 1.32;
@@ -6462,7 +6462,7 @@ body.page-event-detail .ed-hero-facts {
 
   body.page-event-detail .ed-ticket-picker__title-icon {
     flex: 0 0 auto;
-    color: #f97316;
+    color: var(--primary);
     transform: translateY(0.02em);
   }
 
@@ -6487,7 +6487,7 @@ body.page-event-detail .ed-hero-facts {
     border: 1px solid #e4e8ee;
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
-    background: #fff;
+    background: var(--card);
     box-shadow: 0 4px 18px rgba(30, 37, 50, 0.055);
   }
 
@@ -6500,7 +6500,7 @@ body.page-event-detail .ed-hero-facts {
     padding: 0.88rem 1rem;
     border: 0;
     border-radius: 0;
-    background: #fff;
+    background: var(--card);
     box-shadow: none;
   }
 
@@ -6516,7 +6516,7 @@ body.page-event-detail .ed-hero-facts {
     min-height: 0;
     margin: 0 !important;
     padding: 0 0.92rem;
-    background: #ffffff;
+    background: var(--card);
     font-size: 0.72rem;
     line-height: 1.25;
   }
@@ -6525,7 +6525,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
     border-color: transparent;
     background: #fffaf6;
-    box-shadow: inset 3px 0 0 rgba(249, 115, 22, 0.55);
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--primary) 55%, transparent);
   }
 
   body.page-event-detail .ed-ticket-option__head {
@@ -6573,7 +6573,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .ed-ticket-option__buy-row.price-count > p {
     grid-column: 1 / -1;
     margin: 0.1rem 0 0;
-    color: #c2410c;
+    color: var(--primary-text);
     font-size: 0.74rem;
     line-height: 1.3;
   }
@@ -6590,7 +6590,7 @@ body.page-event-detail .ed-hero-facts {
     min-height: 1.86rem;
     margin: 0;
     padding: 0.34rem 0.58rem;
-    border: 1px solid rgba(249, 115, 22, 0.18);
+    border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
     background: #fff7ed;
     color: #1f2430;
@@ -6603,7 +6603,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-option__price--free {
-    color: #c2410c;
+    color: var(--primary-text);
   }
 
   body.page-event-detail .ed-ticket-option__price del {
@@ -6627,7 +6627,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .quantity {
     height: 2.75rem;
     min-height: 2.75rem;
-    color: #334155;
+    color: var(--foreground);
     background: transparent;
     font-size: 0.9rem;
     font-weight: 760;
@@ -6649,7 +6649,7 @@ body.page-event-detail .ed-hero-facts {
   body.page-event-detail .ed-ticket-card__body--premium .quantity-down:hover,
   body.page-event-detail .ed-ticket-card__body--premium .quantity-down_variation:hover {
     background: #fff7ed;
-    color: #ea580c;
+    color: var(--primary-text);
   }
 
   body.page-event-detail .ed-ticket-picker__list > p.text-warning[class*="max_error"] {
@@ -6657,7 +6657,7 @@ body.page-event-detail .ed-hero-facts {
     margin: 0;
     padding: 0 1rem;
     color: #b45309;
-    background: #fff;
+    background: var(--card);
     font-size: 0.74rem;
     line-height: 1.25;
   }
@@ -6672,7 +6672,7 @@ body.page-event-detail .ed-hero-facts {
     border: 1px solid #e4e8ee;
     border-top: 0;
     border-radius: 0 0 16px 16px;
-    background: #f8fafc;
+    background: var(--muted);
     box-shadow: 0 10px 22px rgba(30, 37, 50, 0.07);
   }
 
@@ -6744,7 +6744,7 @@ body.page-event-detail .ed-hero-facts {
     grid-row: 4;
     max-width: 24rem;
     margin: 0.22rem 0 0.3rem;
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.74rem;
     font-weight: 400;
     line-height: 1.35;
@@ -6775,7 +6775,7 @@ body.page-event-detail .ed-hero-facts {
     align-items: center;
     gap: 0.32rem;
     min-width: 0;
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.68rem;
     font-weight: 540;
     line-height: 1.15;
@@ -6914,7 +6914,7 @@ body.page-event-detail .ed-total-row__trust .ed-trust-item {
   align-items: center;
   gap: 0.34rem;
   min-width: 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 0.72rem;
   font-weight: 540;
   line-height: 1.18;
@@ -6963,7 +6963,7 @@ body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a {
 
 body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a:hover,
 body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a:focus-visible {
-  color: #f97316;
+  color: var(--primary);
 }
 
 body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__sep {
@@ -7073,7 +7073,7 @@ body.page-event-detail .ed-info-card--description .summernote-content p:first-ch
   margin-bottom: 0.9rem;
   padding-bottom: 0.86rem;
   border-bottom: 1px solid rgba(30, 37, 50, 0.08);
-  color: #111827;
+  color: var(--foreground);
   font-size: clamp(1.02rem, 1.15vw, 1.14rem);
   font-weight: 650;
   line-height: 1.34;
@@ -7112,7 +7112,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band--highlight {
   margin-top: 1.05rem;
   padding: 0.88rem 0 0;
   border: 0;
-  border-top: 1px solid rgba(249, 115, 22, 0.18);
+  border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
   border-radius: 0;
   background: transparent;
 }
@@ -7123,7 +7123,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band--highlight .ed
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #ea580c;
+  color: var(--primary-text);
 }
 
 body.page-event-detail .ed-info-card--description .ed-refund-band__lead {
@@ -7220,10 +7220,10 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__head {
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon {
   width: 2rem;
   height: 2rem;
-  border: 1px solid rgba(249, 115, 22, 0.18);
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
   border-radius: 10px;
   background: #fff7ed;
-  color: #ea580c;
+  color: var(--primary-text);
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon svg {
@@ -7233,7 +7233,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__icon svg {
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__title {
   margin: 0;
-  color: #1e2532;
+  color: var(--foreground);
   font-size: clamp(0.98rem, 1vw, 1.08rem);
   font-weight: 680;
   line-height: 1.25;
@@ -7242,7 +7242,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__title {
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__kicker {
   margin: 0.18rem 0 0;
-  color: #64748b;
+  color: var(--muted-foreground);
   font-size: 0.78rem;
   font-weight: 430;
   line-height: 1.38;
@@ -7275,7 +7275,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-icon {
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #f97316;
+  color: var(--primary);
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-icon svg {
@@ -7327,7 +7327,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-summary::b
   content: "+";
   width: 1rem;
   margin-right: 0.24rem;
-  color: #f97316;
+  color: var(--primary);
   font-size: 0.92rem;
   font-weight: 620;
   line-height: 1;
@@ -7340,7 +7340,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-details[op
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-summary:focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.32);
+  outline: 2px solid color-mix(in srgb, var(--primary) 32%, transparent);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -7375,10 +7375,10 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta {
   justify-content: center;
   min-height: 2rem;
   padding: 0 0.78rem;
-  border: 1px solid rgba(249, 115, 22, 0.2);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-radius: 999px;
   background: #fff7ed;
-  color: #ea580c;
+  color: var(--primary-text);
   font-size: 0.75rem;
   font-weight: 620;
   line-height: 1.2;
@@ -7389,13 +7389,13 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta {
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:hover,
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:focus-visible {
-  border-color: rgba(249, 115, 22, 0.32);
+  border-color: color-mix(in srgb, var(--primary) 32%, transparent);
   background: #ffedd5;
-  color: #c2410c;
+  color: var(--primary-text);
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.32);
+  outline: 2px solid color-mix(in srgb, var(--primary) 32%, transparent);
   outline-offset: 3px;
 }
 
@@ -7410,7 +7410,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact {
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact:hover,
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact:focus-visible {
-  color: #ea580c;
+  color: var(--primary-text);
   text-decoration: underline;
   text-underline-offset: 0.18rem;
 }
@@ -7510,7 +7510,7 @@ body.page-event-detail .ei-org__link {
   align-items: center;
   gap: 0.28rem;
   margin-top: 0.1rem;
-  color: #ea580c;
+  color: var(--primary-text);
   font-size: 0.75rem;
   font-weight: 560;
   line-height: 1.25;
@@ -7522,7 +7522,7 @@ body.page-event-detail .ei-meta {
 
 body.page-event-detail .ei-meta__icon,
 body.page-event-detail .ei-cal__icon {
-  color: #f97316;
+  color: var(--primary);
   font-size: 0.78rem;
 }
 
@@ -7546,7 +7546,7 @@ body.page-event-detail .ei-cal__btn {
   padding: 0 0.78rem;
   border-radius: 999px;
   border-color: rgba(30, 37, 50, 0.1);
-  background: #ffffff;
+  background: var(--card);
   color: #314052;
   font-size: 0.75rem;
   font-weight: 620;
@@ -7556,9 +7556,9 @@ body.page-event-detail .ei-cal__btn {
 
 body.page-event-detail .ei-cal__btn:hover,
 body.page-event-detail .ei-cal__btn:focus-visible {
-  border-color: rgba(249, 115, 22, 0.28);
+  border-color: color-mix(in srgb, var(--primary) 28%, transparent);
   background: #fff7ed;
-  color: #ea580c;
+  color: var(--primary-text);
 }
 
 body.page-event-detail .ed-body {
@@ -7599,7 +7599,7 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-hero-event.hero-collage-section,
   body.page-event-detail .hero-collage-section--premium.ed-hero-event {
     min-height: 0;
-    background-color: #111827;
+    background-color: var(--foreground);
   }
 
   body.page-event-detail .ed-hero-grid__main.hero-content {
@@ -7683,7 +7683,7 @@ body.page-event-detail .ed-body {
     overflow: hidden;
     border: 1px solid rgba(226, 232, 240, 0.96);
     border-radius: 22px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 24px 54px rgba(2, 6, 23, 0.24);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -7695,7 +7695,7 @@ body.page-event-detail .ed-body {
     border: 0;
     border-bottom: 1px solid #edf0f4;
     border-radius: 0;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -7712,7 +7712,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-ticket-card__head-price {
-    color: #1e2532;
+    color: var(--foreground);
     font-size: clamp(1.78rem, 2.45vw, 2.08rem) !important;
     font-weight: 780;
     line-height: 0.98;
@@ -7732,7 +7732,7 @@ body.page-event-detail .ed-body {
     padding: 1rem 1.05rem 1.08rem;
     border: 0;
     border-radius: 0;
-    background: #ffffff;
+    background: var(--card);
   }
 
   body.page-event-detail .ed-ticket-picker__intro {
@@ -7750,7 +7750,7 @@ body.page-event-detail .ed-body {
     align-items: center;
     gap: 0.42rem;
     margin: 0;
-    color: #1e2532;
+    color: var(--foreground);
     font-size: 1.04rem;
     font-weight: 700;
     line-height: 1.22;
@@ -7759,7 +7759,7 @@ body.page-event-detail .ed-body {
 
   body.page-event-detail .ed-ticket-picker__title-icon {
     flex: 0 0 auto;
-    color: #f97316;
+    color: var(--primary);
     transform: translateY(0.02em);
   }
 
@@ -7781,7 +7781,7 @@ body.page-event-detail .ed-body {
     border: 1px solid #e4e8ee;
     border-bottom: 0;
     border-radius: 16px 16px 0 0;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 4px 18px rgba(30, 37, 50, 0.045);
   }
 
@@ -7794,7 +7794,7 @@ body.page-event-detail .ed-body {
     padding: 0.82rem 0.92rem;
     border: 0;
     border-radius: 0;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: none;
   }
 
@@ -7810,7 +7810,7 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
     border-color: transparent;
     background: #fffaf6;
-    box-shadow: inset 3px 0 0 rgba(249, 115, 22, 0.5);
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--primary) 50%, transparent);
   }
 
   body.page-event-detail .ed-ticket-option__head {
@@ -7867,7 +7867,7 @@ body.page-event-detail .ed-body {
     min-height: 1.82rem;
     margin: 0;
     padding: 0.33rem 0.56rem;
-    border: 1px solid rgba(249, 115, 22, 0.18);
+    border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
     background: #fff7ed;
     color: #1f2430;
@@ -7880,7 +7880,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-ticket-option__price--free {
-    color: #c2410c;
+    color: var(--primary-text);
   }
 
   body.page-event-detail .ed-ticket-card__body--premium .quantity-input {
@@ -7897,7 +7897,7 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-ticket-card__body--premium .quantity {
     height: 2.58rem;
     min-height: 2.58rem;
-    color: #334155;
+    color: var(--foreground);
     background: transparent;
     font-size: 0.88rem;
     font-weight: 760;
@@ -7925,7 +7925,7 @@ body.page-event-detail .ed-body {
     border: 1px solid #e4e8ee;
     border-top: 0;
     border-radius: 0 0 16px 16px;
-    background: #f8fafc;
+    background: var(--muted);
     box-shadow: 0 10px 22px rgba(30, 37, 50, 0.06);
   }
 
@@ -7990,7 +7990,7 @@ body.page-event-detail .ed-body {
     grid-row: 4;
     max-width: 23rem;
     margin: 0.22rem 0 0.3rem;
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.72rem;
     font-weight: 400;
     line-height: 1.34;
@@ -8021,7 +8021,7 @@ body.page-event-detail .ed-body {
     align-items: center;
     gap: 0.32rem;
     min-width: 0;
-    color: #64748b;
+    color: var(--muted-foreground);
     font-size: 0.66rem;
     font-weight: 540;
     line-height: 1.15;
@@ -8078,15 +8078,15 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-ev-kicker__chip {
-    background: #ffffff;
+    background: var(--card);
     border-color: #dfe4ea;
     box-shadow: 0 1px 2px rgba(30, 37, 50, 0.035);
   }
 
   body.page-event-detail .ed-ev-kicker__chip--category {
-    border-color: rgba(249, 115, 22, 0.32);
+    border-color: color-mix(in srgb, var(--primary) 32%, transparent);
     background: #fff7ed;
-    color: #c2410c;
+    color: var(--primary-text);
   }
 
   body.page-event-detail .ed-hero__status-pill {
@@ -8097,7 +8097,7 @@ body.page-event-detail .ed-body {
 
   body.page-event-detail .ed-ev-title {
     max-width: 10.8em;
-    color: #1e2532;
+    color: var(--foreground);
     font-size: clamp(3.15rem, 4.35vw, 4.45rem);
     font-weight: 780;
     line-height: 1.02;
@@ -8115,7 +8115,7 @@ body.page-event-detail .ed-body {
 
   body.page-event-detail .ed-hero-nudge::before {
     top: 0.64em;
-    background: #f97316;
+    background: var(--primary);
     box-shadow: none;
   }
 
@@ -8134,7 +8134,7 @@ body.page-event-detail .ed-body {
     overflow: hidden;
     border: 1px solid #e4e8ee;
     border-radius: 18px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 10px 28px rgba(30, 37, 50, 0.055);
   }
 
@@ -8158,12 +8158,12 @@ body.page-event-detail .ed-body {
     width: 2.05rem;
     height: 2.05rem;
     border-radius: 999px;
-    background: #f8fafc;
+    background: var(--muted);
     box-shadow: inset 0 0 0 1px rgba(30, 37, 50, 0.06);
   }
 
   body.page-event-detail .ed-hero-fact__icon--date {
-    color: #f97316;
+    color: var(--primary);
   }
 
   body.page-event-detail .ed-hero-fact__icon--place {
@@ -8190,7 +8190,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-hero-fact__value {
-    color: #1e2532;
+    color: var(--foreground);
     font-size: 0.88rem;
     font-weight: 700;
     line-height: 1.22;
@@ -8222,8 +8222,8 @@ body.page-event-detail .ed-body {
     width: 2.72rem;
     height: 2.72rem;
     border: 1px solid #dfe4ea;
-    background: #ffffff;
-    color: #334155;
+    background: var(--card);
+    color: var(--foreground);
     box-shadow: 0 6px 18px rgba(30, 37, 50, 0.08);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -8231,9 +8231,9 @@ body.page-event-detail .ed-body {
 
   body.page-event-detail .ed-hero__btn:hover,
   body.page-event-detail .ed-hero__btn:focus-visible {
-    border-color: rgba(249, 115, 22, 0.38);
+    border-color: color-mix(in srgb, var(--primary) 38%, transparent);
     background: #fff7ed;
-    color: #c2410c;
+    color: var(--primary-text);
     transform: translateY(-1px);
   }
 
@@ -8242,7 +8242,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-section--hero-media .ed-gallery-main {
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 18px 42px rgba(30, 37, 50, 0.12);
   }
 
@@ -8273,7 +8273,7 @@ body.page-event-detail .ed-body {
     overflow: visible;
     border: 1px solid rgba(30, 37, 50, 0.08);
     border-radius: 22px;
-    background: #ffffff;
+    background: var(--card);
     box-shadow: 0 16px 38px rgba(30, 37, 50, 0.1);
   }
 
@@ -8374,7 +8374,7 @@ body.page-event-detail .ed-hero-info {
 
   body.page-event-detail .ed-hero-info .ed-info-item__value {
     margin: 0 0 0.1rem;
-    color: #1e2532;
+    color: var(--foreground);
     font-size: 0.9rem;
     font-weight: 700;
     line-height: 1.22;
@@ -8548,7 +8548,7 @@ body.page-event-detail .ed-ticket-signal__eyebrow {
   align-items: center;
   gap: 0.42rem;
   margin-bottom: 0.5rem;
-  color: #ea580c;
+  color: var(--primary-text);
   font-size: 0.68rem;
   font-weight: 740;
   line-height: 1;
@@ -8560,8 +8560,8 @@ body.page-event-detail .ed-ticket-signal__dot {
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 999px;
-  background: #f97316;
-  box-shadow: 0 0 0 0.22rem rgba(249, 115, 22, 0.12);
+  background: var(--primary);
+  box-shadow: 0 0 0 0.22rem color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 body.page-event-detail .ed-ticket-signal__rail {
@@ -8589,7 +8589,7 @@ body.page-event-detail .ed-ticket-signal__item--active {
 
 body.page-event-detail .ed-ticket-signal__item strong {
   display: block;
-  color: #1e2532;
+  color: var(--foreground);
   font-size: clamp(1.32rem, 1.75vw, 1.7rem);
   font-weight: 780;
   line-height: 1;
@@ -8614,7 +8614,7 @@ body.page-event-detail .ed-ticket-signal__progress {
   height: 2px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(249, 115, 22, 0.13);
+  background: color-mix(in srgb, var(--primary) 13%, transparent);
 }
 
 body.page-event-detail .ed-ticket-signal__progress span {
@@ -8622,7 +8622,7 @@ body.page-event-detail .ed-ticket-signal__progress span {
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: #f97316;
+  background: var(--primary);
   transform-origin: left center;
   animation: ed-ticket-signal-progress 5.2s linear infinite;
 }
@@ -8701,7 +8701,7 @@ body.page-event-detail .ed-countdown-wrap {
   row-gap: 0.62rem;
   margin: 0;
   padding: 0.95rem;
-  border: 1px solid rgba(249, 115, 22, 0.14);
+  border: 1px solid color-mix(in srgb, var(--primary) 14%, transparent);
   border-left: 0;
   border-radius: 16px;
   background:
@@ -8713,7 +8713,7 @@ body.page-event-detail .ed-countdown-label {
   justify-content: flex-start;
   gap: 0.45rem;
   margin: 0;
-  color: #c2410c;
+  color: var(--primary-text);
   font-size: 0.72rem;
   font-weight: 680;
   line-height: 1.2;
@@ -8725,7 +8725,7 @@ body.page-event-detail .ed-countdown-label {
 body.page-event-detail .ed-countdown-label svg {
   width: 0.88rem;
   height: 0.88rem;
-  color: #f97316;
+  color: var(--primary);
   stroke-width: 2.2;
 }
 
@@ -8740,9 +8740,9 @@ body.page-event-detail .ed-countdown-wrap .syotimer__body {
   gap: 0;
   align-items: stretch;
   overflow: hidden;
-  border: 1px solid rgba(30, 37, 50, 0.08);
+  border: 1px solid var(--border);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.86);
+  background: var(--card-soft);
 }
 
 body.page-event-detail .ed-countdown-wrap .syotimer-cell {
@@ -8824,7 +8824,7 @@ body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit {
     min-height: 0 !important;
     margin: 0 !important;
     padding: 0 0.92rem !important;
-    background: #ffffff;
+    background: var(--card);
     font-size: 0.72rem;
     line-height: 1.25;
   }

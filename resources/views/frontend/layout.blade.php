@@ -1,7 +1,21 @@
 <!DOCTYPE html>
-<html lang="es-AR" dir="ltr" prefix="og: https://ogp.me/ns#">
+<html lang="es-AR" dir="ltr" prefix="og: https://ogp.me/ns#" data-theme="light">
 
 <head>
+  {{-- Theme bootstrap: setear html[data-theme] ANTES del primer paint para evitar FOUC --}}
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('tuki-theme');
+        var theme = saved === 'dark' || saved === 'light'
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
   @php
     $siteName = trim((string) ($websiteInfo->website_title ?? config('app.name', 'Tukipass'))) ?: 'Tukipass';
     $siteDefaultDescription = 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online de forma segura.';
@@ -47,7 +61,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('brand/apple-touch-icon.png') }}">
   <link rel="shortcut icon" href="{{ asset('brand/favicon.ico') }}" type="image/x-icon">
   <meta name="msapplication-TileImage" content="{{ asset('brand/icon-192.png') }}">
-  <meta name="theme-color" content="#F97316">
+  <meta name="theme-color" content="#e05d38">
   <meta name="description" content="{{ $metaDescription }}">
   <meta name="keywords" content="{{ $metaKeywords }}">
   <meta name="robots" content="{{ $metaRobots }}">
@@ -156,82 +170,15 @@
   @stack('styles')
   <style>
     :root {
-      --tuki-primary: #F97316;
-      --tuki-primary-accessible: #C2410C;
-      --tuki-primary-hover: #9A3412;
-      --tuki-dark: #1e2532;
-      --tuki-dark-rgb: 30, 37, 50;
-      --tuki-surface: #ffffff;
-      --tuki-surface-alt: #f8fafc;
-      --tuki-muted: #6b7280;
-      --tuki-muted-light: #9ca3af;
-      --tuki-border: #e5e7eb;
-      --tuki-border-light: #f3f4f6;
-      --tuki-success: #059669;
-      --tuki-success-light: #d1fae5;
-      --tuki-danger: #dc2626;
-      --tuki-danger-light: #fee2e2;
-      --tuki-warning: #d97706;
-      --tuki-warning-light: #fef3c7;
-      --tuki-radius-sm: 8px;
-      --tuki-radius-md: 12px;
-      --tuki-radius-lg: 18px;
-      --tuki-radius-xl: 24px;
-      --tuki-radius-full: 9999px;
-      --tuki-shadow-sm: 0 2px 8px rgba(var(--tuki-dark-rgb), 0.06);
-      --tuki-shadow-md: 0 8px 24px rgba(var(--tuki-dark-rgb), 0.08);
-      --tuki-shadow-lg: 0 18px 40px rgba(var(--tuki-dark-rgb), 0.12);
-      --tuki-shadow-focus: 0 0 0 4px rgba(255, 255, 255, 0.9);
-      --tuki-space-1: 4px;
-      --tuki-space-2: 8px;
-      --tuki-space-3: 12px;
-      --tuki-space-4: 16px;
-      --tuki-space-5: 20px;
-      --tuki-space-6: 24px;
-      --tuki-space-8: 32px;
-      --tuki-space-10: 40px;
-      --tuki-space-12: 48px;
-      --tuki-font-body: inherit;
-      --tuki-text-xs: 12px;
-      --tuki-text-sm: 14px;
-      --tuki-text-base: 16px;
-      --tuki-text-lg: 18px;
-      --tuki-text-xl: 20px;
-      --tuki-text-2xl: 24px;
-      --tuki-text-3xl: 28px;
-      --tuki-text-4xl: 36px;
-      --tuki-icon-sm: 14px;
-      --tuki-icon-md: 16px;
-      --tuki-icon-lg: 20px;
-      --tuki-transition-fast: 150ms ease;
-      --tuki-transition-base: 200ms ease;
-      --tuki-transition-slow: 300ms ease;
-      --tuki-z-dropdown: 100;
-      --tuki-z-sticky: 500;
-      --tuki-z-overlay: 1000;
-      --tuki-z-modal: 1050;
-      --tuki-z-skip: 2000;
+      /* Únicos tokens que dependen del servidor/DB */
+      --brand-primary: #{{ $basicInfo->primary_color }};
+      --breadcrumb-overlay-color: #{{ $basicInfo->breadcrumb_overlay_color }};
+      --breadcrumb-overlay-opacity: {{ $basicInfo->breadcrumb_overlay_opacity }};
+      color-scheme: light;
     }
 
-    .skip-link {
-      position: absolute;
-      left: var(--tuki-space-4);
-      top: -48px;
-      z-index: var(--tuki-z-skip);
-      padding: 10px 14px;
-      border-radius: var(--tuki-radius-sm);
-      background: var(--tuki-dark);
-      color: var(--tuki-surface);
-      text-decoration: none;
-      transition: top var(--tuki-transition-base);
-    }
-
-    .skip-link:focus {
-      top: var(--tuki-space-4);
-      color: var(--tuki-surface);
-      outline: 3px solid var(--tuki-surface);
-      outline-offset: 3px;
-      box-shadow: 0 0 0 4px rgba(var(--tuki-dark-rgb), 0.55);
+    html[data-theme="dark"] {
+      color-scheme: dark;
     }
   </style>
   {{-- Prerender: páginas del sitio con intención de navegación (hover/mousedown) --}}

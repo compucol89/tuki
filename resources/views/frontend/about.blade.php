@@ -119,8 +119,8 @@
                             aria-hidden="true" focusable="false">
                             <defs>
                               <linearGradient id="about-metrics-bar-fill" x1="0" y1="1" x2="0" y2="0">
-                                <stop offset="0%" stop-color="#ea580c" />
-                                <stop offset="100%" stop-color="#F97316" />
+                                <stop offset="0%" stop-color="var(--primary)" />
+                                <stop offset="100%" stop-color="var(--primary)" />
                               </linearGradient>
                             </defs>
                             @foreach ($__heroBars as $__i => $__h)
@@ -147,12 +147,12 @@
                           aria-hidden="true" focusable="false">
                           <defs>
                             <linearGradient id="about-metrics-spark-line" x1="0" y1="0" x2="1" y2="0">
-                              <stop offset="0%" stop-color="#C2410C" />
-                              <stop offset="100%" stop-color="#F97316" />
+                              <stop offset="0%" stop-color="var(--primary-text)" />
+                              <stop offset="100%" stop-color="var(--primary)" />
                             </linearGradient>
                             <linearGradient id="about-metrics-spark-fill" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stop-color="rgba(249,115,22,0.22)" />
-                              <stop offset="100%" stop-color="rgba(249,115,22,0)" />
+                              <stop offset="0%" stop-color="color-mix(in srgb, var(--primary) 22%, transparent)" />
+                              <stop offset="100%" stop-color="color-mix(in srgb, var(--primary) 0%, transparent)" />
                             </linearGradient>
                           </defs>
                           <polyline class="about-metrics__spark-area" fill="url(#about-metrics-spark-fill)"
@@ -420,22 +420,22 @@
   + Airbnb (radios acogedores, acento cálido = marca). Ver: .references/awesome-design-md/DESIGN.about-tuki-page.md
 */
 body.about-page {
-  --about-surface-a: #ffffff;
-  --about-surface-b: #f8fafc;
+  --about-surface-a: var(--card);
+  --about-surface-b: var(--muted);
   --about-band-space: 4.5rem;
   --about-band-space-mobile: 3rem;
   --about-section-head-space: 2.25rem;
 
-  --about-ds-ink: #0f172a;
-  --about-ds-text: #334155;
-  --about-ds-text-secondary: var(--about-ds-text-secondary);
-  --about-ds-muted: var(--about-ds-muted);
-  --about-ds-muted-2: var(--about-ds-muted-2);
+  --about-ds-ink: var(--foreground);
+  --about-ds-text: var(--foreground);
+  --about-ds-text-secondary: var(--muted-foreground);
+  --about-ds-muted: var(--muted-foreground);
+  --about-ds-muted-2: var(--tuki-muted-light);
 
-  --about-ds-border-hair: rgba(30, 37, 50, 0.05);
-  --about-ds-border-faint: rgba(30, 37, 50, 0.06);
-  --about-ds-border-soft: rgba(30, 37, 50, 0.07);
-  --about-ds-border: rgba(30, 37, 50, 0.08);
+  --about-ds-border-hair: color-mix(in srgb, var(--foreground) 5%, transparent);
+  --about-ds-border-faint: color-mix(in srgb, var(--foreground) 6%, transparent);
+  --about-ds-border-soft: color-mix(in srgb, var(--foreground) 7%, transparent);
+  --about-ds-border: color-mix(in srgb, var(--foreground) 8%, transparent);
 
   --about-ds-radius-xs: 14px;
   --about-ds-radius-icon: 14px;
@@ -465,7 +465,7 @@ body.about-page {
   --about-ds-hero-scrim-1: rgba(15, 23, 42, 0.28);
   --about-ds-hero-scrim-2: rgba(15, 23, 42, 0.46);
   --about-ds-hero-scrim-3: rgba(15, 23, 42, 0.8);
-  --about-ds-accent-wash: rgba(249, 115, 22, 0.045);
+  --about-ds-accent-wash: color-mix(in srgb, var(--primary) 5%, transparent);
 }
 
 /* Hero “Sobre nosotros”: legibilidad sobre foto + migas chip (inspiración editorial / vidrio) */
@@ -710,11 +710,11 @@ body.about-page .about-organizer-pitch__lead {
   text-align: left;
   font-size: clamp(1rem, 0.35vw + 0.93rem, 1.1rem);
   line-height: 1.65;
-  color: #334155;
+  color: var(--foreground);
 }
 
 body.about-page .about-organizer-pitch__lead strong {
-  color: #0f172a;
+  color: var(--foreground);
   font-weight: 700;
 }
 
@@ -757,7 +757,7 @@ body.about-page .about-organizer-pitch__card {
   min-height: 100%;
   padding: 1.5lh;
   border-radius: var(--about-ds-radius-md);
-  background: #ffffff;
+  background: var(--card);
   border: 1px solid var(--about-ds-border);
   /* `lh` del cuerpo: mismo ritmo para gap/padding entre título y párrafo */
   font-size: 0.94rem;
@@ -767,7 +767,7 @@ body.about-page .about-organizer-pitch__card {
 }
 
 body.about-page .about-organizer-pitch__card:hover {
-  border-color: rgba(249, 115, 22, 0.22);
+  border-color: color-mix(in srgb, var(--primary) 22%, transparent);
   box-shadow: var(--about-ds-shadow-organizer-hover);
 }
 
@@ -777,7 +777,7 @@ body.about-page .about-organizer-pitch__card-title {
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.25;
-  color: #0f172a;
+  color: var(--foreground);
   margin-block: 0;
 }
 
@@ -793,7 +793,7 @@ body.about-page .about-organizer-pitch__card-text {
 }
 
 body.about-page .about-organizer-pitch__card-text strong {
-  color: #172131;
+  color: var(--foreground);
   font-weight: 700;
 }
 
@@ -803,7 +803,7 @@ body.about-page .about-organizer-pitch__pullquote {
   padding-inline: 1.5lh;
   border-radius: var(--about-ds-radius-xs);
   background: linear-gradient(135deg, rgba(255, 247, 237, 0.95) 0%, rgba(255, 255, 255, 0.88) 100%);
-  border: 1px solid rgba(249, 115, 22, 0.2);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-left: 4px solid var(--primary-color);
 }
 
@@ -812,11 +812,11 @@ body.about-page .about-organizer-pitch__pullquote-text {
   font-size: 1rem;
   line-height: 1.62;
   font-weight: 500;
-  color: #334155;
+  color: var(--foreground);
 }
 
 body.about-page .about-organizer-pitch__pullquote-text strong {
-  color: #c2410c;
+  color: var(--primary-text);
   font-weight: 700;
 }
 
@@ -853,7 +853,7 @@ body.about-page .about-organizer-pitch__link {
 }
 
 body.about-page .about-organizer-pitch__link:hover {
-  color: var(--secondary-color, #ea580c);
+  color: var(--secondary-color);
 }
 
 body.about-page .about-page__section-head {
@@ -902,12 +902,12 @@ body.about-page .about-page__testimonial-aside {
   outline: none;
 }
 .about-page .about-skip-link:focus-visible {
-  outline: 3px solid #f97316;
+  outline: 3px solid var(--primary);
   outline-offset: 2px;
 }
 
 .about-page #contenido-principal:focus-visible {
-  outline: 2px solid #c2410c;
+  outline: 2px solid var(--primary-text);
   outline-offset: 4px;
 }
 
@@ -966,7 +966,7 @@ body.about-page .about-page__testimonial-aside {
   padding-inline-start: clamp(2.35rem, 4.5vw, 3.15rem);
   border-radius: var(--about-ds-radius-xl);
   background:
-    radial-gradient(ellipse 120% 80% at 100% -15%, rgba(249, 115, 22, 0.06), transparent 50%),
+    radial-gradient(ellipse 120% 80% at 100% -15%, color-mix(in srgb, var(--primary) 6%, transparent), transparent 50%),
     linear-gradient(165deg, #fbfbfc 0%, #ffffff 45%, #f8f9fb 100%);
   border: 1px solid var(--about-ds-border);
   box-shadow: var(--about-ds-shadow-card);
@@ -992,7 +992,7 @@ body.about-page .about-page__testimonial-aside {
   font-size: clamp(0.9rem, 0.32vw + 0.84rem, 1rem);
   line-height: 1.55;
   letter-spacing: 0.01em;
-  color: #5c6678;
+  color: var(--muted-foreground);
 }
 
 #contenido-principal-sobre-nosotros .about-metrics__bento {
@@ -1008,7 +1008,7 @@ body.about-page .about-page__testimonial-aside {
   align-items: stretch;
   padding: clamp(1.15rem, 2.5vw, 1.45rem);
   border-radius: var(--about-ds-radius-lg);
-  background: #ffffff;
+  background: var(--card);
   border: 1px solid var(--about-ds-border-soft);
   box-shadow: 0 10px 32px -20px rgba(23, 27, 38, 0.12);
 }
@@ -1034,7 +1034,7 @@ body.about-page .about-page__testimonial-aside {
 #contenido-principal-sobre-nosotros .about-metrics__label--hero {
   font-size: clamp(0.8rem, 0.25vw + 0.74rem, 0.92rem);
   line-height: 1.4;
-  color: #5b677a;
+  color: var(--muted-foreground);
   font-weight: 600;
   letter-spacing: 0.01em;
   text-transform: none;
@@ -1052,7 +1052,7 @@ body.about-page .about-page__testimonial-aside {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #8894a8;
+  color: var(--muted-foreground);
 }
 
 #contenido-principal-sobre-nosotros .about-metrics__svg-bars {
@@ -1145,7 +1145,7 @@ body.about-page .about-page__testimonial-aside {
   gap: 0.35rem;
   padding: 0.85rem 0.75rem 0.9rem;
   border-radius: var(--about-ds-radius-sm);
-  background: #ffffff;
+  background: var(--card);
   border: 1px solid var(--about-ds-border-faint);
   box-shadow: 0 4px 16px -10px rgba(23, 27, 38, 0.1);
 }
@@ -1169,7 +1169,7 @@ body.about-page .about-page__testimonial-aside {
 #contenido-principal-sobre-nosotros .about-metrics__label--sub {
   font-size: 0.65rem;
   line-height: 1.4;
-  color: #6a7384;
+  color: var(--muted-foreground);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1191,7 +1191,7 @@ body.about-page .about-page__testimonial-aside {
   bottom: 0;
   width: var(--meter, 70%);
   border-radius: inherit;
-  background: linear-gradient(90deg, #c2410c, #f97316);
+  background: linear-gradient(90deg, var(--primary-text), var(--primary));
   transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1242,7 +1242,7 @@ body.about-page .about-page__testimonial-aside {
   padding: clamp(2.35rem, 5vw, 3.5rem) clamp(2rem, 4.5vw, 2.85rem) clamp(2.5rem, 5vw, 3.65rem);
   padding-inline-start: clamp(2.35rem, 4.5vw, 3.15rem);
   border-radius: var(--about-ds-radius-xl);
-  background: #ffffff;
+  background: var(--card);
   border: 1px solid var(--about-ds-border);
   box-shadow: var(--about-ds-shadow-card);
   overflow: hidden;
@@ -1285,8 +1285,8 @@ body.about-page .about-page__testimonial-aside {
   background: linear-gradient(
     180deg,
     var(--primary-color) 0%,
-    #ea580c 42%,
-    rgba(249, 115, 22, 0.28) 100%
+    var(--primary) 42%,
+    color-mix(in srgb, var(--primary) 28%, transparent) 100%
   );
   pointer-events: none;
   z-index: 0;
@@ -1312,7 +1312,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   font-size: 1.0625rem;
   line-height: 1.72;
   font-family: var(--base-font);
-  color: #3d4a5c;
+  color: var(--muted-foreground);
 }
 
 #contenido-principal-sobre-nosotros .about-content__head.section-title {
@@ -1341,14 +1341,14 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   font-size: clamp(1.08rem, 0.55vw + 0.95rem, 1.2rem);
   font-weight: 500;
   line-height: 1.58;
-  color: #4b5568;
+  color: var(--secondary-foreground);
   letter-spacing: -0.01em;
 }
 
 #contenido-principal-sobre-nosotros .about-content__body {
   font-size: 1.02rem;
   line-height: 1.78;
-  color: #3f4a59;
+  color: var(--muted-foreground);
   max-width: min(100%, 42rem);
   padding-block-start: 0.15rem;
 }
@@ -1368,7 +1368,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   padding: 1.5rem 1.55rem 1.55rem 1.5rem;
   border-radius: var(--about-ds-radius-md);
   border: 1px solid var(--about-ds-border-soft);
-  background: #ffffff;
+  background: var(--card);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 1) inset,
     0 10px 28px -16px rgba(23, 27, 38, 0.1),
@@ -1378,11 +1378,11 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
 
 @media (hover: hover) {
   #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item:hover {
-    border-color: rgba(249, 115, 22, 0.2);
+    border-color: color-mix(in srgb, var(--primary) 20%, transparent);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.92) inset,
       0 18px 40px -22px rgba(23, 27, 38, 0.15),
-      0 6px 20px -10px rgba(249, 115, 22, 0.12);
+      0 6px 20px -10px color-mix(in srgb, var(--primary) 12%, transparent);
   }
 }
 
@@ -1407,10 +1407,10 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   border-radius: var(--about-ds-radius-xs) !important;
   background: linear-gradient(
     165deg,
-    rgba(249, 115, 22, 0.16) 0%,
-    rgba(249, 115, 22, 0.05) 100%
+    color-mix(in srgb, var(--primary) 16%, transparent) 0%,
+    color-mix(in srgb, var(--primary) 5%, transparent) 100%
   ) !important;
-  border: 1px solid rgba(249, 115, 22, 0.12) !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
 }
 
@@ -1432,10 +1432,10 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   border-radius: var(--about-ds-radius-xs);
   background: linear-gradient(
     165deg,
-    rgba(249, 115, 22, 0.16) 0%,
-    rgba(249, 115, 22, 0.05) 100%
+    color-mix(in srgb, var(--primary) 16%, transparent) 0%,
+    color-mix(in srgb, var(--primary) 5%, transparent) 100%
   );
-  border: 1px solid rgba(249, 115, 22, 0.12);
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
   color: var(--primary-text-color) !important;
 }
@@ -1448,7 +1448,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   font-size: 0.98rem;
   line-height: 1.75;
   letter-spacing: 0.01em;
-  color: #4b5568;
+  color: var(--secondary-foreground);
 }
 
 #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item .feature-content h3,
@@ -1467,7 +1467,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   margin: 0;
   font-size: 0.98rem;
   line-height: 1.75;
-  color: #4b5568;
+  color: var(--secondary-foreground);
 }
 
 #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item .feature-content > p + p {
@@ -1547,7 +1547,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
 
 /* Enlaces: contraste + subrayado (1.4.1) */
 #contenido-principal-sobre-nosotros .about-content__body a {
-  color: #9a3412;
+  color: var(--primary-hover);
   font-weight: 600;
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
@@ -1556,12 +1556,12 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
 }
 
 #contenido-principal-sobre-nosotros .about-content__body a:hover {
-  color: #7c2d12;
+  color: var(--primary-hover);
   text-underline-offset: 4px;
 }
 
 #contenido-principal-sobre-nosotros .about-content__body a:focus-visible {
-  outline: 2px solid #c2410c;
+  outline: 2px solid var(--primary-text);
   outline-offset: 3px;
   border-radius: 3px;
 }
@@ -1664,7 +1664,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   font-size: clamp(1rem, 0.45vw + 0.92rem, 1.12rem);
   line-height: 1.65;
   letter-spacing: 0.01em;
-  color: #5a6474;
+  color: var(--muted-foreground);
 }
 
 .about-page #caracteristicas .feature-section--about-premium__empty {
@@ -1717,7 +1717,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(249, 115, 22, 0.35),
+    color-mix(in srgb, var(--primary) 35%, transparent),
     transparent
   );
   opacity: 0.85;
@@ -1763,11 +1763,11 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .about-page #caracteristicas .feature-item--about-premium:hover {
     transform: translateY(-5px);
-    border-color: rgba(249, 115, 22, 0.22);
+    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 1) inset,
       0 28px 56px -28px rgba(23, 27, 38, 0.18),
-      0 12px 28px -14px rgba(249, 115, 22, 0.12);
+      0 12px 28px -14px color-mix(in srgb, var(--primary) 12%, transparent);
   }
 }
 
@@ -1775,11 +1775,11 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   width: 3.25rem;
   height: 3.25rem;
   border-radius: var(--about-ds-radius-md);
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 115, 22, 0.1) 100%);
-  border: 1px solid rgba(249, 115, 22, 0.15);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.95) 0%, color-mix(in srgb, var(--primary) 10%, transparent) 100%);
+  border: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    0 8px 20px -12px rgba(249, 115, 22, 0.35);
+    0 8px 20px -12px color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 .about-page #caracteristicas .feature-item--about-premium .feature-item__icon i {
@@ -1801,7 +1801,7 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   margin: 0;
   font-size: 0.96rem;
   line-height: 1.68;
-  color: #4f5968;
+  color: var(--muted-foreground);
 }
 
 @media (max-width: 767.98px) {

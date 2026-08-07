@@ -268,12 +268,12 @@ fbq('track', 'Purchase', {
           <div style="padding: 16px 20px;">
             <div style="margin-bottom: 12px;">
               <strong style="font-size: 13px; color: #374151;">Instrucciones de acceso:</strong>
-              <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{{ $accessInstructions }}</p>
+              <p style="margin: 4px 0 0; font-size: 13px; color: var(--muted-foreground);">{{ $accessInstructions }}</p>
             </div>
             @if($event->information?->refund_policy)
               <div>
                 <strong style="font-size: 13px; color: #374151;">Política de reembolso:</strong>
-                <p style="margin: 4px 0 0; font-size: 13px; color: #6b7280;">{!! nl2br(e($event->information->refund_policy)) !!}</p>
+                <p style="margin: 4px 0 0; font-size: 13px; color: var(--muted-foreground);">{!! nl2br(e($event->information->refund_policy)) !!}</p>
               </div>
             @endif
           </div>

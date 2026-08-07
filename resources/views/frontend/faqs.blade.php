@@ -196,12 +196,12 @@
   --fp-ink: #0f172a;
   --fp-muted: #64748b;
   --fp-line: rgba(15, 23, 42, 0.08);
-  --fp-accent: #ea580c;
+  --fp-accent: var(--primary);
   position: relative;
   z-index: 0;
   padding: clamp(56px, 8vw, 96px) 0 clamp(64px, 9vw, 104px);
   background:
-    radial-gradient(ellipse 90% 55% at 8% -12%, rgba(249, 115, 22, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 55% at 8% -12%, color-mix(in srgb, var(--primary) 6%, transparent) 0%, transparent 50%),
     radial-gradient(ellipse 70% 45% at 92% 20%, rgba(59, 130, 246, 0.04) 0%, transparent 45%),
     linear-gradient(185deg, #f8fafc 0%, #f1f5f9 45%, #eef2f7 100%);
 }
@@ -227,7 +227,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--muted-foreground);
 }
 .faq-page-premium .faq-premium__lede {
   margin: 0;
@@ -271,10 +271,10 @@
   transition: box-shadow 0.3s ease, border-color 0.25s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .faq-page-premium .faq-premium__accordion .card:hover {
-  border-color: rgba(249, 115, 22, 0.15);
+  border-color: color-mix(in srgb, var(--primary) 15%, transparent);
 }
 .faq-page-premium .faq-premium__accordion .card:has(.faq-premium__trigger:not(.collapsed)) {
-  border-color: rgba(249, 115, 22, 0.22);
+  border-color: color-mix(in srgb, var(--primary) 22%, transparent);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 1) inset,
     0 18px 48px rgba(15, 23, 42, 0.08),
@@ -307,10 +307,10 @@
   transition: color 0.2s ease;
 }
 .faq-page-premium .faq-premium__trigger:hover {
-  color: #1e293b;
+  color: var(--foreground);
 }
 .faq-page-premium .faq-premium__trigger:focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.55);
+  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent);
   outline-offset: -2px;
 }
 .faq-page-premium .faq-premium__trigger-icon {
@@ -329,7 +329,7 @@
 .faq-page-premium .faq-premium__trigger:not(.collapsed) .faq-premium__trigger-icon {
   transform: rotate(180deg);
   background: rgba(255, 237, 213, 0.95);
-  border-color: rgba(249, 115, 22, 0.2);
+  border-color: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 .faq-page-premium .faq-premium__accordion .card-body {
   padding: 0 22px 20px 22px;
@@ -345,7 +345,7 @@
 }
 @supports not selector(:has(*)) {
   .faq-page-premium .faq-premium__accordion .card.faq-premium__card--open {
-    border-color: rgba(249, 115, 22, 0.22);
+    border-color: color-mix(in srgb, var(--primary) 22%, transparent);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 1) inset,
       0 18px 48px rgba(15, 23, 42, 0.08),

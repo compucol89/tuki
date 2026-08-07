@@ -249,7 +249,7 @@ ul.breadcumb li:last-child::after {
 }
 
 .blog-sidebar-widgets {
-  background-color: #f7f7f7;
+  background-color: var(--secondary);
   padding: 40px 35px;
   margin-bottom: 40px;
 }
@@ -579,7 +579,7 @@ ul.breadcumb li:last-child::after {
 }
 
 .blog-txt {
-  background-color: #f7f7f7;
+  background-color: var(--secondary);
   padding: 29px 25px 30px;
   margin-top: -3px;
   position: relative;
@@ -761,7 +761,7 @@ a.readmore-btn:hover::after {
   line-height: 32px;
   font-size: 18px;
   margin: 38px 0 35px;
-  background-color: #f7f7f7;
+  background-color: var(--secondary);
 }
 
 .blog-share {
@@ -1099,7 +1099,7 @@ div#map {
 
 .job-lists .single-job {
   border: 1px solid #f7f7f7;
-  background-color: #f7f7f7;
+  background-color: var(--secondary);
   border-radius: 8px;
   padding: 30px;
   margin-bottom: 25px;
@@ -5457,8 +5457,9 @@ a#cartIcon .cart-total {
   height: 45px;
   padding: 0 20px;
   border-radius: 5px;
-  border: 1px solid #e9e9e9;
-  background: #fbfbfb;
+  border: 1px solid var(--border);
+  background: var(--input);
+  color: var(--foreground);
 }
 
 .charity-contact .section-title h2 {
@@ -5683,15 +5684,16 @@ button.main-btn {
 }
 
 .event-search-section {
-  background: #eee;
+  background: var(--secondary);
 }
 
 .event-search-form .form_control {
   width: 100%;
   height: 45px;
-  background: #fff;
+  background: var(--input);
   border: none;
   padding: 10px;
+  color: var(--foreground);
 }
 
 .event-search-form .nice-select {
@@ -7710,7 +7712,7 @@ div#particles-js canvas {
   width: 100%;
 }
 .service-txt {
-  background-color: #f7f7f7;
+  background-color: var(--secondary);
   padding: 25px 28px 30px;
   margin-top: -3px;
 }

@@ -35,7 +35,7 @@
     align-items: center;
     min-height: 56px;
     overflow: hidden;
-    background: #fff;
+    background: var(--card);
     border: 1px solid rgba(30, 37, 50, 0.08);
     border-radius: 12px;
   }
@@ -93,8 +93,8 @@
     align-self: stretch;
     flex: 0 0 clamp(138px, 11vw, 164px);
     margin-left: 0;
-    background: #f97316;
-    color: #1e2532;
+    background: var(--primary);
+    color: var(--foreground);
     font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
     font-size: 14px;
     font-weight: 600;

@@ -417,7 +417,8 @@
 }
 
 .author-area .ui-selectmenu-button.ui-button {
-    background-color: #fff;
+    background-color: var(--input);
+    color: var(--foreground);
 }
 
 .author-area .product-filter h6 {
@@ -437,6 +438,9 @@
     height: 55px;
     line-height: 55px;
     font-size: 14px;
+    background: var(--input);
+    color: var(--foreground);
+    border: 1px solid var(--border);
 }
 
 .authors-search-filter .search-filter-form .search-item {
@@ -474,9 +478,9 @@
     line-height: 55px;
     padding: 0 25px;
     border-radius: 0;
-    background-color: #fff;
-    color: var(--base-color);
-    border: 1px solid #e1e1e1;
+    background-color: var(--input);
+    color: var(--foreground);
+    border: 1px solid var(--border);
 }
 
 .authors-search-filter .search-filter-form .ui-selectmenu-button.ui-button .ui-icon {
@@ -635,7 +639,7 @@
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    background: radial-gradient(ellipse 90% 55% at 50% -20%, rgba(249, 115, 22, 0.06) 0%, transparent 55%);
+    background: radial-gradient(ellipse 90% 55% at 50% -20%, color-mix(in srgb, var(--primary) 6%, transparent) 0%, transparent 55%);
     z-index: 0;
 }
 
@@ -763,13 +767,13 @@
 }
 
 .organizer-details-page .org-profile-card__facts .last a {
-    color: #c2410c;
+    color: var(--primary-text);
     text-decoration: none !important;
     transition: color 0.2s ease;
 }
 
 .organizer-details-page .org-profile-card__facts .last a:hover {
-    color: #ea580c;
+    color: var(--primary-text);
 }
 
 .organizer-details-page .org-profile-card__actions {
@@ -786,7 +790,7 @@
     font-weight: 700 !important;
     letter-spacing: -0.02em;
     border: none !important;
-    background: linear-gradient(135deg, #ff6b1a 0%, #ea580c 100%) !important;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-active) 100%) !important;
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 
@@ -925,7 +929,7 @@
 }
 
 .organizer-details-page .org-events-showcase__nav .nav-link:focus-visible {
-    outline: 2px solid rgba(249, 115, 22, 0.65);
+    outline: 2px solid color-mix(in srgb, var(--primary) 65%, transparent);
     outline-offset: 2px;
 }
 
@@ -972,7 +976,7 @@
     font-size: 1.05rem;
     font-weight: 800;
     letter-spacing: -0.03em;
-    color: #334155;
+    color: var(--foreground);
 }
 
 .organizer-details-page .org-events-showcase__empty-hint {
@@ -1399,29 +1403,29 @@ html[dir*=rtl] .modal .close {
 
 /* Public organizer profile */
 .organizer-details-page {
-  --org-bg: #e8ebed;
-  --org-bg-soft: #f3f4f6;
-  --org-page: #fbfbfd;
-  --org-surface: #ffffff;
-  --org-surface-soft: #f8fafc;
-  --org-text: #1e2532;
-  --org-text-strong: #0f172a;
-  --org-muted: #64748b;
-  --org-soft: #94a3b8;
-  --org-border: rgba(15, 23, 42, 0.08);
-  --org-border-strong: rgba(15, 23, 42, 0.14);
-  --org-primary: #e05d38;
-  --org-primary-strong: #bf4424;
-  --org-primary-soft: rgba(224, 93, 56, 0.12);
-  --org-accent: #d6e4f0;
-  --org-accent-ink: #1e3a8a;
-  --org-radius-sm: 8px;
-  --org-radius-md: 12px;
-  --org-radius-lg: 16px;
-  --org-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.10), 0 1px 2px rgba(15, 23, 42, 0.08);
-  --org-shadow-panel: 0 16px 34px rgba(15, 23, 42, 0.05);
-  --org-shadow-lift: 0 18px 34px rgba(15, 23, 42, 0.10);
-  --org-focus: 0 0 0 4px rgba(224, 93, 56, 0.14);
+  --org-bg: var(--background);
+  --org-bg-soft: var(--secondary);
+  --org-page: var(--background);
+  --org-surface: var(--card);
+  --org-surface-soft: var(--muted);
+  --org-text: var(--foreground);
+  --org-text-strong: var(--foreground);
+  --org-muted: var(--muted-foreground);
+  --org-soft: var(--tuki-muted-light);
+  --org-border: color-mix(in srgb, var(--foreground) 8%, transparent);
+  --org-border-strong: color-mix(in srgb, var(--foreground) 14%, transparent);
+  --org-primary: var(--primary);
+  --org-primary-strong: var(--primary-hover);
+  --org-primary-soft: color-mix(in srgb, var(--primary) 12%, transparent);
+  --org-accent: var(--accent);
+  --org-accent-ink: var(--accent-foreground);
+  --org-radius-sm: var(--radius-sm);
+  --org-radius-md: var(--radius-md);
+  --org-radius-lg: var(--radius-lg);
+  --org-shadow-sm: var(--shadow-sm);
+  --org-shadow-panel: var(--shadow-md);
+  --org-shadow-lift: var(--shadow-lg);
+  --org-focus: 0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent);
   background: var(--org-bg);
 }
 
@@ -2417,7 +2421,7 @@ html[dir*=rtl] .modal .close {
     height: 32px;
     margin-left: auto;
     opacity: 1;
-    color: var(--tk-primary, #e05d38);
+    color: var(--tk-primary);
     pointer-events: none;
   }
 
@@ -2434,8 +2438,8 @@ html[dir*=rtl] .modal .close {
     width: 30px;
     height: 30px;
     border-radius: 999px;
-    background: rgba(224, 93, 56, 0.10);
-    color: var(--tk-primary, #e05d38);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--tk-primary);
   }
 
   .organizer-details-page .org-timeline .ev-card__dtbar-cta-arrow svg {
@@ -2492,7 +2496,7 @@ html[dir*=rtl] .modal .close {
 
   .organizer-details-page .org-timeline .ev-card__title {
     max-width: 100%;
-    color: #1e2532;
+    color: var(--foreground);
     font-size: clamp(16px, 4.15vw, 18px);
     font-weight: 800;
     line-height: 1.15;
@@ -2525,7 +2529,7 @@ html[dir*=rtl] .modal .close {
   }
 
   .organizer-details-page .org-timeline .ev-card__datetime-bar .ev-card__img-month-text {
-    color: #f97316;
+    color: var(--primary);
     font-size: 10px;
   }
 
@@ -2547,7 +2551,7 @@ html[dir*=rtl] .modal .close {
     margin-left: 11px;
     opacity: 1;
     pointer-events: none;
-    color: #c2410c;
+    color: var(--primary-text);
   }
 
   .organizer-details-page .org-timeline .ev-card__dtbar-cta-arrow {
@@ -2556,10 +2560,10 @@ html[dir*=rtl] .modal .close {
     height: 32px;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(249, 115, 22, .18);
+    border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
     background: #fff7ed;
-    color: #c2410c;
+    color: var(--primary-text);
     box-shadow: 0 6px 16px rgba(194, 65, 12, .10);
   }
 

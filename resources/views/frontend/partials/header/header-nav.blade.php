@@ -66,6 +66,11 @@
               </ul>
 
               <div class="menu-right menu-right--premium">
+                <button type="button" class="menu-btn theme-toggle" data-theme-toggle
+                  aria-label="{{ __('Cambiar a modo oscuro') }}" aria-pressed="false" title="{{ __('Cambiar tema claro/oscuro') }}">
+                  <i class="fas fa-moon theme-toggle-icon" aria-hidden="true"></i>
+                  <i class="fas fa-sun theme-toggle-icon" aria-hidden="true"></i>
+                </button>
                 @if (!Auth::guard('customer')->check())
                   <div class="dropdown menu-dropdown menu-dropdown--customer">
                     <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerGuestDropdown"

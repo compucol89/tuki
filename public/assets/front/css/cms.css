@@ -25,7 +25,7 @@
   box-shadow:
     0 24px 70px rgba(15, 23, 42, 0.10),
     0 1px 0 rgba(255, 255, 255, 0.85) inset;
-  color: #475569;
+  color: var(--muted-foreground);
   font-size: 16px;
   line-height: 1.8;
 }
@@ -37,8 +37,8 @@
   margin-bottom: 14px;
   padding: 8px 12px;
   border-radius: 999px;
-  background: rgba(249, 115, 22, 0.10);
-  color: #c2410c;
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  color: var(--primary-text);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0;
@@ -47,7 +47,7 @@
 .custom-page-area .summernote-content h2 {
   max-width: 760px;
   margin: 0 0 12px;
-  color: #1e2532;
+  color: var(--foreground);
   font-size: 44px;
   line-height: 1.05;
   letter-spacing: 0;
@@ -63,7 +63,7 @@
   position: relative;
   margin-block: 1.35lh 0.45lh;
   padding-top: 16px;
-  color: #1e2532;
+  color: var(--foreground);
   font-size: 28px;
   line-height: 1.18;
   letter-spacing: 0;
@@ -83,7 +83,7 @@
   width: 72px;
   height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #f97316, rgba(249, 115, 22, 0.12));
+  background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 12%, transparent));
 }
 
 .custom-page-area .summernote-content p,
@@ -105,12 +105,12 @@
 }
 
 .custom-page-area .summernote-content strong {
-  color: #1e2532;
+  color: var(--foreground);
   font-weight: 800;
 }
 
 .custom-page-area .summernote-content a {
-  color: #ea580c;
+  color: var(--primary-text);
   font-weight: 700;
   text-decoration: none;
   text-underline-offset: 4px;
@@ -118,12 +118,12 @@
 
 .custom-page-area .summernote-content a:hover,
 .custom-page-area .summernote-content a:focus {
-  color: #c2410c;
+  color: var(--primary-text);
   text-decoration: underline;
 }
 
 .custom-page-area .summernote-content a:focus-visible {
-  outline: 3px solid rgba(249, 115, 22, 0.35);
+  outline: 3px solid color-mix(in srgb, var(--primary) 35%, transparent);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -132,10 +132,10 @@
   margin-block: 1.25lh;
   max-width: 78ch;
   padding: 18px 22px;
-  border-left: 4px solid #f97316;
+  border-left: 4px solid var(--primary);
   border-radius: 14px;
-  background: #fff7ed;
-  color: #9a3412;
+  background: color-mix(in srgb, var(--primary) 8%, var(--card));
+  color: var(--primary-hover);
 }
 
 .custom-page-area .summernote-content table {
@@ -155,8 +155,8 @@
 }
 
 .custom-page-area .summernote-content table th {
-  background: #fff7ed;
-  color: #1e2532;
+  background: color-mix(in srgb, var(--primary) 8%, var(--card));
+  color: var(--foreground);
   font-weight: 800;
 }
 

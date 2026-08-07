@@ -295,7 +295,7 @@
     }
 
     .event-search .search-item:first-child {
-        border-bottom: 1px solid rgba(3, 10, 21, 0.15);
+        border-bottom: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
         border-radius: 5px 5px 0 0;
     }
 

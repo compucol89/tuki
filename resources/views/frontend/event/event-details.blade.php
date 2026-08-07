@@ -96,15 +96,15 @@
   <style>
     .page-event-detail .ed-body {
       padding-top: 0;
-      background: #f8fafc;
+      background: var(--muted);
     }
 
     .page-event-detail .ed-card {
       margin-bottom: var(--tuki-space-10);
       border: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
       border-radius: var(--tuki-radius-lg);
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      background: var(--card);
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
     }
 
@@ -149,7 +149,7 @@
 
     .page-event-detail .ed-card__title {
       margin: 0;
-      color: var(--tuki-dark);
+      color: var(--foreground);
     }
 
     .page-event-detail .ed-section {
@@ -177,7 +177,7 @@
 
     .page-event-detail .ed-section__title {
       margin: 0;
-      color: var(--tuki-dark);
+      color: var(--foreground);
       font-size: clamp(22px, 2vw, 28px);
       line-height: 1.25;
       font-weight: 750;
@@ -185,7 +185,7 @@
     }
 
     .page-event-detail .ed-section__content {
-      color: #4b5563;
+      color: var(--secondary-foreground);
       font-size: var(--tuki-text-base);
       line-height: 1.75;
     }
@@ -237,7 +237,7 @@
       border: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
       border-radius: var(--tuki-radius-full);
       background: var(--tuki-surface-alt);
-      color: var(--tuki-dark);
+      color: var(--foreground);
       font-size: var(--tuki-text-xs);
       font-weight: 700;
       text-decoration: none;
@@ -245,7 +245,7 @@
 
     .page-event-detail .ed-section--description .summernote-content {
       max-width: 72ch;
-      color: var(--tuki-dark);
+      color: var(--foreground);
     }
 
     .page-event-detail .ed-section--media {
@@ -290,7 +290,7 @@
     .page-event-detail .ei-card {
       border: 1px solid rgba(var(--tuki-dark-rgb), 0.10);
       border-radius: var(--tuki-radius-lg);
-      background: rgba(255, 255, 255, 0.96);
+      background: var(--card);
       box-shadow: 0 18px 40px rgba(var(--tuki-dark-rgb), 0.10);
       overflow: hidden;
     }
@@ -311,7 +311,7 @@
     }
 
     .ed-breadcrumbs__list a {
-      color: var(--tuki-dark);
+      color: var(--foreground);
       text-decoration: none;
     }
 
@@ -463,7 +463,7 @@
         z-index: var(--tuki-z-modal);
         display: block;
         padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-        background: rgba(255, 255, 255, 0.97);
+        background: var(--card);
         border-top: 1px solid rgba(var(--tuki-dark-rgb), 0.08);
         box-shadow: 0 -12px 28px rgba(var(--tuki-dark-rgb), 0.14);
         backdrop-filter: blur(12px);
@@ -493,7 +493,7 @@
         font-size: var(--tuki-text-xl);
         line-height: 1.1;
         font-weight: 800;
-        color: var(--tuki-dark);
+        color: var(--foreground);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -504,7 +504,7 @@
         flex: 1 1 auto;
         min-height: 48px;
         border-radius: var(--tuki-radius-full);
-        background: #16a34a;
+        background: var(--success);
         color: #ffffff !important;
         font-weight: 700;
         display: inline-flex;
@@ -515,17 +515,17 @@
       }
 
       .ed-mobile-bar__cta:hover {
-        background: #15803d;
+        background: var(--success);
         color: #ffffff !important;
         transform: translateY(-1px);
       }
 
       .ed-mobile-bar__cta:focus-visible {
-        background: #15803d;
+        background: var(--success);
         color: #ffffff !important;
-        outline: 3px solid #14532d;
+        outline: 3px solid var(--success);
         outline-offset: 2px;
-        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.35);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 35%, transparent);
       }
 
       .ed-mobile-bar__cta--disabled {
@@ -613,9 +613,9 @@
       align-items: center;
       padding: 5px 14px;
       border-radius: 999px;
-      background: rgba(249, 115, 22, 0.18);
-      border: 1px solid rgba(249, 115, 22, 0.42);
-      color: #fdba74;
+      background: color-mix(in srgb, var(--primary) 18%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent);
+      color: var(--primary);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -625,8 +625,8 @@
     }
 
     .ed-ev-category-badge:hover {
-      background: rgba(249, 115, 22, 0.30);
-      color: #fed7aa;
+      background: color-mix(in srgb, var(--primary) 30%, transparent);
+      color: var(--primary-glow);
     }
 
     .ed-ev-kicker {
@@ -649,18 +649,18 @@
       transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
     .ed-ev-kicker__chip--category {
-      background: rgba(249, 115, 22, 0.18);
-      border: 1px solid rgba(249, 115, 22, 0.42);
-      color: #fdba74;
+      background: color-mix(in srgb, var(--primary) 18%, transparent);
+      border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent);
+      color: var(--primary);
     }
     .ed-ev-kicker__chip--category:hover,
     .ed-ev-kicker__chip--category:focus-visible {
-      background: rgba(249, 115, 22, 0.30);
-      color: #fed7aa;
+      background: color-mix(in srgb, var(--primary) 30%, transparent);
+      color: var(--primary-glow);
       text-decoration: none;
     }
     .ed-ev-kicker__chip--category:focus-visible {
-      outline: 2px solid rgba(249, 115, 22, 0.55);
+      outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent);
       outline-offset: 3px;
     }
     .ed-ev-kicker__chip--status {
@@ -737,20 +737,20 @@
     }
     .ed-body-breadcrumbs .ed-breadcrumbs__list {
       font-size: var(--tuki-text-xs);
-      color: rgba(var(--tuki-dark-rgb), 0.42);
+      color: color-mix(in srgb, var(--foreground) 42%, transparent);
     }
 
     .ed-body-breadcrumbs .ed-breadcrumbs__list a {
-      color: rgba(var(--tuki-dark-rgb), 0.5);
+      color: color-mix(in srgb, var(--foreground) 50%, transparent);
       font-weight: 500;
     }
 
     .ed-body-breadcrumbs .ed-breadcrumbs__list a:hover {
-      color: rgba(var(--tuki-dark-rgb), 0.72);
+      color: color-mix(in srgb, var(--foreground) 72%, transparent);
     }
 
     .ed-body-breadcrumbs .ed-breadcrumbs__current {
-      color: rgba(var(--tuki-dark-rgb), 0.55);
+      color: color-mix(in srgb, var(--foreground) 55%, transparent);
       font-weight: 500;
     }
 

@@ -5,7 +5,7 @@
     .verify-email-page {
       padding: 100px 0;
       background:
-        radial-gradient(circle at top left, rgba(249, 115, 22, 0.12), transparent 32%),
+        radial-gradient(circle at top left, color-mix(in srgb, var(--primary) 12%, transparent), transparent 32%),
         radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 28%),
         linear-gradient(180deg, #fffaf5 0%, #ffffff 52%, #f8fafc 100%);
     }
@@ -21,7 +21,7 @@
       overflow: hidden;
       border: 1px solid rgba(30, 37, 50, 0.08);
       border-radius: 28px;
-      background: #ffffff;
+      background: var(--card);
       box-shadow: 0 28px 70px rgba(30, 37, 50, 0.10);
       padding: 56px 44px;
       text-align: center;
@@ -32,7 +32,7 @@
       position: absolute;
       inset: 0 0 auto;
       height: 6px;
-      background: {{ $status === 'success' ? 'linear-gradient(90deg, #22c55e 0%, #16a34a 100%)' : 'linear-gradient(90deg, #f97316 0%, #ea580c 100%)' }};
+      background: {{ $status === 'success' ? 'linear-gradient(90deg, var(--success) 0%, var(--success) 100%)' : 'linear-gradient(90deg, var(--primary) 0%, var(--primary-active) 100%)' }};
     }
 
     .verify-email-badge {
@@ -44,8 +44,8 @@
       align-items: center;
       justify-content: center;
       font-size: 34px;
-      color: #ffffff;
-      background: {{ $status === 'success' ? 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)' : 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)' }};
+      color: var(--primary-foreground);
+      background: {{ $status === 'success' ? 'linear-gradient(135deg, var(--success) 0%, var(--success) 100%)' : 'linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%)' }};
       box-shadow: 0 18px 35px {{ $status === 'success' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(15, 23, 42, 0.08)' }};
     }
 
@@ -60,13 +60,13 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #1e2532;
+      color: var(--foreground);
       background: rgba(30, 37, 50, 0.06);
     }
 
     .verify-email-title {
       margin-bottom: 16px;
-      color: #1e2532;
+      color: var(--foreground);
       font-size: 40px;
       line-height: 1.1;
       font-weight: 800;
@@ -98,26 +98,26 @@
     }
 
     .verify-email-btn--primary {
-      color: #ffffff;
-      background: #f97316;
+      color: var(--primary-foreground);
+      background: var(--primary);
     }
 
     .verify-email-btn--primary:hover {
-      color: #ffffff;
+      color: var(--primary-foreground);
       transform: translateY(-1px);
-      background: #ea580c;
+      background: var(--primary);
     }
 
     .verify-email-btn--secondary {
-      color: #1e2532;
-      background: #ffffff;
+      color: var(--foreground);
+      background: var(--card);
       border: 1px solid rgba(30, 37, 50, 0.12);
     }
 
     .verify-email-btn--secondary:hover {
-      color: #1e2532;
+      color: var(--foreground);
       border-color: rgba(30, 37, 50, 0.2);
-      background: #f8fafc;
+      background: var(--muted);
     }
 
     .verify-email-help {

@@ -18,20 +18,20 @@
 <style>
 /* Contacto — fondo plano (sin degradados ni textura). body.contact-page-premium */
 .contact-page-premium .ctp-premium {
-  --ctp-ink: #1e2532;
-  --ctp-ink-soft: #475569;
-  --ctp-muted: #6b7280;
-  --ctp-line: #eaecf0;
-  --ctp-accent: #f97316;
-  --ctp-accent-hover: #ea580c;
-  --ctp-accent-soft: rgba(249, 115, 22, 0.12);
-  --ctp-surface: #ffffff;
+  --ctp-ink: var(--foreground);
+  --ctp-ink-soft: var(--muted-foreground);
+  --ctp-muted: var(--muted-foreground);
+  --ctp-line: var(--border);
+  --ctp-accent: var(--primary);
+  --ctp-accent-hover: var(--primary-hover);
+  --ctp-accent-soft: color-mix(in srgb, var(--primary) 12%, transparent);
+  --ctp-surface: var(--card);
   --ctp-sec-pt: 48px;
   --ctp-sec-pb: 72px;
   position: relative;
   z-index: 0;
   padding: var(--ctp-sec-pt) 0 var(--ctp-sec-pb);
-  background: #f8fafc;
+  background: var(--muted);
 }
 
 @media (min-width: 768px) {
@@ -111,7 +111,7 @@
 
 .contact-page-premium .ctp-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(249, 115, 22, 0.2);
+  border-color: color-mix(in srgb, var(--primary) 20%, transparent);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 1) inset,
     0 22px 56px rgba(15, 23, 42, 0.09),
@@ -128,7 +128,7 @@
   border-radius: 14px;
   color: var(--ctp-accent);
   background: linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%);
-  border: 1px solid rgba(249, 115, 22, 0.22);
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
 }
 
@@ -160,7 +160,7 @@
 
 .contact-page-premium .ctp-card__value a:hover {
   color: var(--primary-color, var(--ctp-accent));
-  border-bottom-color: rgba(249, 115, 22, 0.35);
+  border-bottom-color: color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 .contact-page-premium .ctp-divider {
@@ -219,7 +219,7 @@
   position: relative;
   padding: clamp(28px, 4vw, 44px) clamp(24px, 3.5vw, 44px) clamp(26px, 3.5vw, 40px);
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--card);
   border: 1px solid var(--ctp-line);
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
   animation: ctp-reveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
@@ -290,7 +290,7 @@
 
 .contact-page-premium .ctp-field input::placeholder,
 .contact-page-premium .ctp-field textarea::placeholder {
-  color: #94a3b8;
+  color: var(--muted-foreground);
 }
 
 .contact-page-premium .ctp-field input:hover,
@@ -303,7 +303,7 @@
   background: #fff;
   border-color: rgba(234, 88, 12, 0.45);
   box-shadow:
-    0 0 0 4px rgba(249, 115, 22, 0.11),
+    0 0 0 4px color-mix(in srgb, var(--primary) 11%, transparent),
     0 1px 0 rgba(255, 255, 255, 1) inset;
 }
 
@@ -312,7 +312,7 @@
   margin: 6px 0 0;
   font-size: 12px;
   font-weight: 600;
-  color: #dc2626;
+  color: var(--danger);
 }
 
 .contact-page-premium .ctp-recaptcha {
@@ -376,20 +376,20 @@
 .contact-page-premium .ctp-alert--success {
   background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
   border: 1px solid #86efac;
-  color: #166534;
+  color: var(--success);
 }
 
 .contact-page-premium .ctp-alert--error {
   background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
   border: 1px solid #fecaca;
-  color: #b91c1c;
+  color: var(--danger);
 }
 
 /* —— Mapa —— */
 .contact-page-premium .ctp-map {
   position: relative;
   border-top: 1px solid rgba(15, 23, 42, 0.06);
-  background: #e2e8f0;
+  background: var(--secondary);
 }
 
 .contact-page-premium .ctp-map iframe {
@@ -434,7 +434,7 @@ body.contact-page-premium {
   --ctp-accent: var(--tk-primary, #e05d38);
   --ctp-accent-hover: var(--tk-primary-dark, #bf4424);
   --ctp-accent-soft: #fff2ec;
-  --ctp-surface: #ffffff;
+  --ctp-surface: var(--card);
   --ctp-radius: 8px;
   --ctp-shadow: 0 14px 32px rgba(30, 37, 50, 0.08);
   background: var(--ctp-bg);
@@ -598,8 +598,8 @@ body.contact-page-premium main {
 .contact-page-premium .ctp-field input,
 .contact-page-premium .ctp-field textarea {
   border-radius: var(--ctp-radius);
-  border-color: rgba(30, 37, 50, 0.1);
-  background: rgba(255, 255, 255, 0.86);
+  border-color: var(--border);
+  background: var(--input);
   color: var(--ctp-ink);
   font-size: 14px;
   letter-spacing: 0;
@@ -659,7 +659,7 @@ body.contact-page-premium main {
 
 .contact-page-premium .ctp-map-frame {
   width: 100%;
-  background: #dfe4e8;
+  background: var(--secondary);
   line-height: 0;
 }
 

@@ -96,9 +96,9 @@
       <p class="auth-split__subtitle">{{ __('organizer.login.form_subtitle') }}</p>
 
       @if (Auth::guard('customer')->check())
-        <div class="alert mb-4" style="border: 1px solid rgba(249, 115, 22, 0.18); border-radius: 18px; background: linear-gradient(180deg, rgba(249, 115, 22, 0.08) 0%, rgba(255, 255, 255, 0.96) 100%); color: #1e2532; box-shadow: 0 14px 32px rgba(30, 37, 50, 0.06);">
+        <div class="alert mb-4" style="border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); border-radius: 18px; background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 8%, transparent) 0%, rgba(255, 255, 255, 0.96) 100%); color: #1e2532; box-shadow: 0 14px 32px rgba(30, 37, 50, 0.06);">
           <div class="d-flex align-items-center mb-2">
-            <span class="d-inline-flex align-items-center justify-content-center mr-2" style="width: 34px; height: 34px; border-radius: 10px; background: rgba(249, 115, 22, 0.14); color: #f97316; font-size: 16px;">
+            <span class="d-inline-flex align-items-center justify-content-center mr-2" style="width: 34px; height: 34px; border-radius: 10px; background: color-mix(in srgb, var(--primary) 14%, transparent); color: var(--primary); font-size: 16px;">
               <i class="fas fa-info-circle"></i>
             </span>
             <strong style="font-size: 18px;">Estás ingresando al panel de organizadores</strong>
@@ -113,7 +113,7 @@
             <a href="{{ route('organizer.login') }}" class="theme-btn" style="min-width: 220px;">Continuar al login de organizador</a>
             <a href="{{ route('organizer.signup') }}" class="btn btn-light" style="min-width: 220px; border-radius: 10px; border: 1px solid rgba(30, 37, 50, 0.12); color: #1e2532;">Crear cuenta de organizador</a>
             <a href="{{ route('customer.dashboard') }}" class="btn btn-light" style="min-width: 220px; border-radius: 10px; border: 1px solid rgba(30, 37, 50, 0.12); color: #1e2532;">Ir a mi cuenta de cliente</a>
-            <a href="{{ route('customer.logout') }}" class="btn btn-link p-0 align-self-center" style="color: #f97316; font-weight: 700;">Cerrar sesión de cliente</a>
+            <a href="{{ route('customer.logout') }}" class="btn btn-link p-0 align-self-center" style="color: var(--primary); font-weight: 700;">Cerrar sesión de cliente</a>
           </div>
         </div>
       @endif

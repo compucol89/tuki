@@ -73,7 +73,7 @@
       font-size: 11px;
       line-height: 1.4;
       color: #1a1a1a;
-      background: #ffffff;
+      background: var(--card);
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -101,8 +101,8 @@
       max-width: 400px;
       width: 100%;
       margin: 0 auto;
-      background: #ffffff;
-      border: 2px solid #F97316;
+      background: var(--card);
+      border: 2px solid #e05d38;
       border-radius: 20px;
       overflow: hidden;
       page-break-inside: avoid;
@@ -117,7 +117,7 @@
       position: absolute;
       width: 28px;
       height: 28px;
-      background: #ffffff;
+      background: var(--card);
       border-radius: 50%;
       top: 50%;
       transform: translateY(-50%);
@@ -134,7 +134,7 @@
 
     /* Header */
     .ticket-header {
-      background: #ffffff;
+      background: var(--card);
       color: #1a1a1a;
       padding: 20px 15px 15px;
       text-align: center;
@@ -165,13 +165,13 @@
 
     /* QR Section */
     .qr-section {
-      background: #ffffff;
+      background: var(--card);
       padding: 15px;
       text-align: center;
     }
 
     .qr-container {
-      background: #ffffff;
+      background: var(--card);
       border-radius: 12px;
       padding: 12px;
       display: inline-block;
@@ -195,7 +195,7 @@
     /* Ticket Details */
     .ticket-details {
       padding: 18px 20px;
-      background: #ffffff;
+      background: var(--card);
     }
 
     .ticket-type {
@@ -207,7 +207,7 @@
 
     .ticket-type-label {
       font-size: 9px;
-      color: #F97316;
+      color: var(--primary);
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -297,7 +297,7 @@
 
     .payment-title {
       font-size: 9px;
-      color: #F97316;
+      color: var(--primary);
       font-weight: bold;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -326,13 +326,13 @@
     }
 
     .payment-table .discount td:last-child {
-      color: #16a34a;
+      color: var(--success);
     }
 
     .payment-total {
       margin-top: 8px;
       padding-top: 8px;
-      border-top: 2px solid #F97316;
+      border-top: 2px solid #e05d38;
     }
 
     .payment-total td {
@@ -342,13 +342,13 @@
 
     .payment-total td:last-child {
       font-size: 15px;
-      color: #F97316;
+      color: var(--primary);
     }
 
     /* Instructions */
     .instructions {
       background: #fffbeb;
-      border-left: 3px solid #F97316;
+      border-left: 3px solid #e05d38;
       padding: 10px 12px;
       margin-bottom: 15px;
       border-radius: 0 8px 8px 0;
@@ -376,7 +376,7 @@
     /* Footer */
     .ticket-footer {
       background: #1a1a1a;
-      color: #ffffff;
+      color: var(--primary-foreground);
       padding: 15px;
       text-align: center;
     }
@@ -407,7 +407,7 @@
     }
 
     @media print {
-      body { background: #ffffff; }
+      body { background: var(--card); }
       .ticket { box-shadow: none; }
     }
   </style>

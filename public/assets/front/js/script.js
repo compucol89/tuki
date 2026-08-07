@@ -824,3 +824,67 @@ $('body').on('submit', '#vendorContactForm', function (e) {
 
 
 })
+var __probe = 1;
+
+/* ==================================================================
+   THEME TWEAKCN — Light/Dark toggle
+   ================================================================== */
+(function () {
+    'use strict';
+    console.log('THEME-PROBE-FULL');
+
+    var STORAGE_KEY = 'tuki-theme';
+
+    function currentTheme() {
+        return document.documentElement.getAttribute('data-theme') || 'light';
+    }
+
+    function applyTheme(theme, persist) {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (persist) {
+            try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) { /* noop */ }
+        }
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+            meta.setAttribute('content', theme === 'dark' ? '#1c2433' : '#e05d38');
+        }
+        var toggles = document.querySelectorAll('[data-theme-toggle]');
+        for (var i = 0; i < toggles.length; i++) {
+            toggles[i].setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+            toggles[i].setAttribute('aria-label', theme === 'dark'
+                ? 'Cambiar a modo claro'
+                : 'Cambiar a modo oscuro');
+        }
+    }
+
+    function initThemeToggle() {
+        var toggles = document.querySelectorAll('[data-theme-toggle]');
+        for (var i = 0; i < toggles.length; i++) {
+            toggles[i].addEventListener('click', function () {
+                applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
+            });
+        }
+        // Responder a cambios del sistema SOLO si el usuario no eligió explícitamente
+        var mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+        if (mq && typeof mq.addEventListener === 'function') {
+            mq.addEventListener('change', function (e) {
+                var saved = null;
+                try { saved = localStorage.getItem(STORAGE_KEY); } catch (err) { /* noop */ }
+                if (saved === 'dark' || saved === 'light') {
+                    return; // elección explícita del usuario
+                }
+                applyTheme(e.matches ? 'dark' : 'light', false);
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+            applyTheme(currentTheme(), false);
+            initThemeToggle();
+        });
+    } else {
+        applyTheme(currentTheme(), false);
+        initThemeToggle();
+    }
+})();

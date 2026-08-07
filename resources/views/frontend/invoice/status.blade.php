@@ -127,7 +127,7 @@
           Estamos trabajando para resolverlo. Si necesitás el comprobante con urgencia,
           contactanos y lo gestionamos manualmente.
         </p>
-        <a href="mailto:hola@tukipass.com" style="display:inline-block; background:#F97316; color:#fff; font-weight:700; padding:12px 28px; border-radius:8px; text-decoration:none; font-size:15px;">Contactar soporte</a>
+        <a href="mailto:hola@tukipass.com" style="display:inline-block; background:#e05d38; color:#fff; font-weight:700; padding:12px 28px; border-radius:8px; text-decoration:none; font-size:15px;">Contactar soporte</a>
       </div>
 
     @else
@@ -144,7 +144,7 @@
   </div>
 
   <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:24px;">
-    TukiPass · <a href="{{ route('index') }}" style="color:#F97316; text-decoration:none;">Volver al inicio</a>
+    TukiPass · <a href="{{ route('index') }}" style="color:#e05d38; text-decoration:none;">Volver al inicio</a>
   </p>
 
 </div>

@@ -423,7 +423,7 @@ textarea.form_control{
 }
 .sigle_input_check:after {
 	background: var(--secondary-color);
-	color: #FFFFFF;
+	color: var(--primary-foreground);
 	border-color: #ddd;
 }
 @media only screen and (max-width: 991px){
@@ -544,7 +544,7 @@ textarea.form_control{
 }
 
 .single-message {
-	background: #f7f7f7;
+	background: var(--secondary);
 	border-radius: 8px;
 	padding: 20px 30px;
 	margin-bottom: 20px;

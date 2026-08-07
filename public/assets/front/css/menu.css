@@ -33,7 +33,7 @@
     padding-bottom: 12px;
     animation: sticky 0.22s ease-out;
     box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.10);
-    background: rgb(30, 37, 50);
+    background: var(--tuki-dark);
     will-change: transform;
 }
 
@@ -175,9 +175,9 @@
     z-index: 100;
     display: none;
     padding: 20px 0;
-    background: #ffffff;
-    -webkit-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05), -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05), -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
+    background: var(--popover);
+    -webkit-box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md);
 }
 
 .main-menu .navigation li .megamenu:after {
@@ -203,15 +203,15 @@
     z-index: 100;
     display: none;
     border-radius: 5px;
-    background: #ffffff;
-    -webkit-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05), -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
-    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.05), -2px 0px 5px 1px rgba(0, 0, 0, 0.05);
+    background: var(--popover);
+    -webkit-box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-md);
 }
 
 .main-menu .navigation li ul li {
     width: 100%;
     padding: 5px 20px;
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid var(--border);
 }
 
 .main-menu .navigation li ul li:last-child {
@@ -398,7 +398,7 @@
 }
 
 .menu-right .dropdown-menu .dropdown-item:hover {
-    background: rgba(249, 115, 22, 0.08) !important;
+    background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
     color: var(--primary-color) !important;
     padding-left: 22px;
 }

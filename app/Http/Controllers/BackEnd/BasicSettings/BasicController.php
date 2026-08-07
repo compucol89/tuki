@@ -171,6 +171,7 @@ class BasicController extends Controller
     );
 
     Cache::forget('global_basic_settings');
+    Cache::forget('frontend_basic_settings');
       Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();
@@ -1054,6 +1055,7 @@ class BasicController extends Controller
     setEnvironmentValue($array);
 
     Cache::forget('global_basic_settings');
+    Cache::forget('frontend_basic_settings');
       Session::flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();

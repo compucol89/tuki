@@ -82,6 +82,17 @@ fi
 
 php artisan storage:link --force
 php artisan migrate --force
+php artisan view:cache || true
+php artisan event:cache || true
+
+# Scheduler de Laravel (reconcile de stock H4, reset de views, futuros schedulados).
+# EasyPanel no tiene cron por servicio: crond dentro del contenedor (busybox alpine).
+mkdir -p /app/storage/logs
+printf '*/1 * * * * php /app/artisan schedule:run >> /app/storage/logs/cron.log 2>&1\n' > /etc/crontabs/root
+crond -b -l 2 || true
 
 mkdir -p /app/.router-root
-php -d upload_max_filesize=8M -d post_max_size=12M -d memory_limit=256M -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php
+# zlib.output_compression: gzip del HTML (los estáticos los comprime docker-router.php vía ob_gzhandler)
+php -d upload_max_filesize=8M -d post_max_size=12M -d memory_limit=512M \
+    -d zlib.output_compression=1 -d zlib.output_compression_level=5 \
+    -S 0.0.0.0:8080 -t /app/.router-root /app/docker-router.php

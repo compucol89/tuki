@@ -5034,7 +5034,7 @@ body.page-event-detail .ed-description-map__iframe {
 }
 
 body.page-event-detail .ed-mobile-bar {
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--card) 92%, transparent);
   border-top: 1px solid var(--ed-line);
   box-shadow: 0 -14px 36px rgba(30, 37, 50, 0.12);
   backdrop-filter: blur(14px);

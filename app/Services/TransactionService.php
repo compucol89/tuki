@@ -15,7 +15,7 @@ class TransactionService
     $afterBalance = $organizer ? $organizer->amount + ($booking->price - $booking->commission) : null;
 
     return Transaction::create([
-      'transcation_id' => time(),
+      'transcation_id' => time() . '-' . \Illuminate\Support\Str::random(6),
       'booking_id' => $booking->id,
       'transcation_type' => $booking->transcation_type,
       'customer_id' => $booking->customer_id,
@@ -36,7 +36,7 @@ class TransactionService
   public function storeProductTransaction($orderInfo): Transaction
   {
     return Transaction::create([
-      'transcation_id' => time(),
+      'transcation_id' => time() . '-' . \Illuminate\Support\Str::random(6),
       'booking_id' => $orderInfo->id,
       'transcation_type' => 2,
       'customer_id' => Auth::guard('customer')->id(),

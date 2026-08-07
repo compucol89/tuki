@@ -10,6 +10,7 @@ use App\Services\ImageValidation\ImageSimilarityService;
 use App\Services\OpenAI\ImageGenerationService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -18,12 +19,18 @@ use Illuminate\Support\Facades\Log;
 use RuntimeException;
 use Throwable;
 
-class GenerateAiImageJob implements ShouldQueue
+class GenerateAiImageJob implements ShouldQueue, ShouldBeUnique
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $tries = 3;
     public int $timeout = 600;
+    public int $uniqueFor = 180;
+
+    public function uniqueId(): string
+    {
+        return 'ai-image-' . $this->generationId;
+    }
 
     public function __construct(public int $generationId)
     {

@@ -91,7 +91,7 @@ class IyzicoProductOrderPendingPayment implements ShouldQueue
 
         //store data to transcation table
         Transaction::create([
-            'transcation_id' => time(),
+            'transcation_id' => time() . '-' . \Illuminate\Support\Str::random(6),
             'booking_id' => $productOrder->id,
             'transcation_type' => 2,
             'customer_id' => $productOrder->user_id,

@@ -17,7 +17,6 @@
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
     "postcss": "^8.1.14",
-    "puppeteer": "^24.42.0",
     "webpack": "^5.74.0"
   },
   "dependencies": {

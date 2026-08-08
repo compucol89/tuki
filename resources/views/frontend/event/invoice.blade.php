@@ -23,8 +23,9 @@
   
   $tickets    = $bookingInfo->variation != null ? json_decode($bookingInfo->variation, true) : null;
   $ticketCount = $tickets ? count($tickets) : $bookingInfo->quantity;
-  $eventDate  = \Carbon\Carbon::parse($bookingInfo->event_date)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY');
-  $eventTime  = \Carbon\Carbon::parse($bookingInfo->event_date)->format('H:i');
+  $docTz     = config('app.timezone', 'UTC');
+  $eventDate  = \Carbon\Carbon::parse($bookingInfo->event_date, $docTz)->locale('es')->isoFormat('dddd D [de] MMMM [de] YYYY');
+  $eventTime  = \Carbon\Carbon::parse($bookingInfo->event_date, $docTz)->format('H:i');
 
   $locationParts = array_filter([
     cleanLocationPart($bookingInfo->city ?? null),
@@ -272,9 +273,11 @@
     }
 
     .info-value-small {
-      font-size: 10px;
+      font-size: 8px;
       font-weight: bold;
       color: #333;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .payment-method-cell .info-value-small {
@@ -384,8 +387,9 @@
     .footer-code {
       font-size: 13px;
       font-weight: bold;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       margin-bottom: 4px;
+      overflow-wrap: anywhere;
     }
 
     .footer-brand {
@@ -394,10 +398,11 @@
     }
 
     .footer-disclaimer {
-      font-size: 7px;
-      color: rgba(255,255,255,0.5);
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.78);
       margin-top: 6px;
       font-style: italic;
+      line-height: 1.5;
     }
 
     /* Page break */
@@ -494,7 +499,7 @@
                       Mercado Pago
                     @endif
                   @else
-                    {{ $bookingInfo->paymentMethod ?? '—' }}
+                    {{ $bookingInfo->paymentMethod ?? ($bookingInfo->price <= 0 ? __('Gratuita') : '—') }}
                   @endif
                 </div>
               </td>

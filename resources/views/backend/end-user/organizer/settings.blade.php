@@ -1,6 +1,7 @@
 @extends('backend.layout')
 
 @section('content')
+  <div class="admin-organizer-settings">
   <div class="page-header">
     <h4 class="page-title">{{ __('Settings') }}</h4>
     <ul class="breadcrumbs">
@@ -126,15 +127,57 @@
       </div>
     </div>
   </div>
+  </div>
 @endsection
 
 @section('style')
   <style>
+    .admin-organizer-settings {
+      --os-ink: #1e2532;
+      --os-ink-strong: #111827;
+      --os-muted: #667085;
+      --os-border: #e4e7ec;
+      --os-soft: #f8fafc;
+      --os-card: #ffffff;
+      --os-header: #fbfcfd;
+      --os-accent-soft: #fff7ed;
+      --os-accent: #c2410c;
+      --os-primary: #f97316;
+      --os-switch-off: #94a3b8;
+      --os-intro-bg: linear-gradient(180deg, #fcfdff 0%, #f8fbff 100%);
+      --os-note-bg: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      --os-radius: 12px;
+      color: var(--os-ink);
+    }
+
+    .admin-organizer-settings > .row > [class*="col-"] > .card {
+      background: var(--os-card) !important;
+      border-color: var(--os-border) !important;
+      box-shadow: none !important;
+    }
+
+    .admin-organizer-settings .card-header,
+    .admin-organizer-settings .card-footer {
+      background: var(--os-header) !important;
+      border-color: var(--os-border) !important;
+    }
+
+    .admin-organizer-settings .page-title {
+      color: var(--os-ink-strong) !important;
+      font-size: 24px !important;
+      font-weight: 750 !important;
+    }
+
+    .admin-organizer-settings .breadcrumbs,
+    .admin-organizer-settings .breadcrumbs a {
+      color: var(--os-muted) !important;
+    }
+
     .organizer-settings-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 20px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
@@ -143,21 +186,21 @@
     .organizer-setting-note__eyebrow {
       display: inline-flex;
       align-items: center;
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 999px;
-      background: #e8f1ff;
-      color: #1d4ed8;
+      background: var(--os-accent-soft);
+      color: var(--os-accent);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .organizer-settings-header__title {
       margin-bottom: 6px;
-      color: #0f172a;
-      font-size: 28px;
+      color: var(--os-ink-strong);
+      font-size: 24px;
       font-weight: 700;
     }
 
@@ -166,89 +209,92 @@
     .organizer-setting-note__text {
       margin-bottom: 0;
       max-width: 640px;
-      color: #64748b;
-      line-height: 1.7;
+      color: var(--os-muted);
+      line-height: 1.55;
+      font-size: 13.5px;
     }
 
     .organizer-settings-summary {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .organizer-settings-summary__item {
-      min-width: 170px;
-      padding: 14px 16px;
-      border: 1px solid #dbe5f3;
-      border-radius: 16px;
-      background: #fff;
+      min-width: 160px;
+      padding: 12px 14px;
+      border: 1px solid var(--os-border);
+      border-radius: 10px;
+      background: var(--os-soft);
     }
 
     .organizer-settings-summary__label {
       display: block;
       margin-bottom: 4px;
-      color: #64748b;
-      font-size: 12px;
+      color: var(--os-muted);
+      font-size: 11.5px;
     }
 
     .organizer-settings-summary__value {
-      color: #0f172a;
-      font-size: 16px;
+      color: var(--os-ink-strong);
+      font-size: 15px;
       font-weight: 700;
     }
 
     .organizer-settings-shell {
-      max-width: 980px;
+      max-width: 820px;
       margin: 0 auto;
     }
 
     .organizer-settings-intro {
-      margin-bottom: 22px;
-      padding: 18px 20px;
-      border: 1px solid #e5e7eb;
-      border-radius: 20px;
-      background: linear-gradient(180deg, #fcfdff 0%, #f8fbff 100%);
+      margin-bottom: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--os-border);
+      border-radius: var(--os-radius);
+      background: var(--os-intro-bg);
     }
 
     .organizer-settings-grid {
       display: grid;
-      gap: 18px;
+      gap: 14px;
     }
 
     .organizer-setting-card {
-      padding: 22px;
-      border: 1px solid #e5e7eb;
-      border-radius: 22px;
-      background: #fff;
-      box-shadow: 0 14px 30px rgba(15, 23, 42, .05);
+      padding: 18px;
+      border: 1px solid var(--os-border);
+      border-radius: var(--os-radius);
+      background: var(--os-card);
+      box-shadow: none;
     }
 
     .organizer-setting-card__top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 20px;
+      gap: 16px;
     }
 
     .organizer-setting-card__title {
-      margin-bottom: 8px;
-      color: #0f172a;
-      font-size: 20px;
+      margin-bottom: 6px;
+      color: var(--os-ink-strong);
+      font-size: 17px;
       font-weight: 700;
     }
 
     .organizer-setting-card__text {
       margin-bottom: 0;
-      color: #64748b;
-      line-height: 1.7;
+      color: var(--os-muted);
+      line-height: 1.55;
+      font-size: 13.5px;
     }
 
     .organizer-setting-card__hint {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid #eef2f7;
-      color: #475569;
-      line-height: 1.7;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--os-border);
+      color: var(--os-muted);
+      line-height: 1.55;
+      font-size: 13px;
     }
 
     .organizer-setting-card__switch {
@@ -267,7 +313,7 @@
       height: 26px;
       border-radius: 999px;
       border: 0;
-      background: #cbd5e1;
+      background: var(--os-switch-off);
       box-shadow: none;
     }
 
@@ -282,7 +328,7 @@
     }
 
     .organizer-setting-card__switch .custom-control-input:checked~.custom-control-label::before {
-      background: #2563eb;
+      background: var(--os-primary);
     }
 
     .organizer-setting-card__switch .custom-control-input:checked~.custom-control-label::after {
@@ -290,39 +336,48 @@
     }
 
     .organizer-setting-note {
-      padding: 22px;
-      border: 1px solid #dbe5f3;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      box-shadow: 0 14px 30px rgba(15, 23, 42, .05);
+      padding: 18px;
+      border: 1px solid var(--os-border);
+      border-radius: var(--os-radius);
+      background: var(--os-note-bg);
+      box-shadow: none;
     }
 
     .organizer-setting-note__title {
-      margin-bottom: 8px;
-      color: #0f172a;
-      font-size: 20px;
+      margin-bottom: 6px;
+      color: var(--os-ink-strong);
+      font-size: 17px;
       font-weight: 700;
     }
 
     .organizer-setting-note__header {
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .organizer-setting-note__label {
-      color: #0f172a;
+      color: var(--os-ink-strong);
       font-weight: 700;
       margin-bottom: 8px;
     }
 
     .organizer-setting-note__textarea {
-      min-height: 130px;
-      border-radius: 14px;
+      min-height: 120px;
+      border-radius: 10px;
+      background: var(--os-soft) !important;
+      border-color: var(--os-border) !important;
+      color: var(--os-ink) !important;
+    }
+
+    .organizer-setting-note__textarea:focus {
+      border-color: var(--os-primary) !important;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, .2);
     }
 
     .organizer-setting-note__foot {
       margin-top: 10px;
-      color: #64748b;
-      line-height: 1.7;
+      color: var(--os-muted);
+      line-height: 1.55;
+      font-size: 13px;
     }
 
     .organizer-settings-footer {
@@ -332,15 +387,17 @@
     }
 
     .organizer-settings-footer__text {
-      margin-bottom: 16px;
-      color: #64748b;
-      line-height: 1.7;
+      margin-bottom: 14px;
+      color: var(--os-muted);
+      line-height: 1.55;
+      font-size: 13.5px;
     }
 
     .organizer-settings-footer__btn {
-      min-width: 230px;
-      border-radius: 14px;
-      padding: 12px 22px;
+      min-width: 220px;
+      min-height: 42px;
+      border-radius: 10px;
+      padding: 10px 20px;
       font-weight: 700;
     }
 
@@ -356,6 +413,61 @@
       .organizer-settings-summary__item {
         flex: 1 1 100%;
       }
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings {
+      --os-ink: #e5e5e5;
+      --os-ink-strong: #ffffff;
+      --os-muted: #a3a3a3;
+      --os-border: #3d4354;
+      --os-soft: #1f2838;
+      --os-card: #2a3040;
+      --os-header: #252b38;
+      --os-accent-soft: #2a3656;
+      --os-accent: #93c5fd;
+      --os-primary: #e05d38;
+      --os-switch-off: #5b6472;
+      --os-intro-bg: linear-gradient(180deg, #252b38 0%, #1f2838 100%);
+      --os-note-bg: linear-gradient(180deg, #2a3040 0%, #1f2838 100%);
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings > .row > [class*="col-"] > .card,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-card,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-summary__item {
+      background: var(--os-card) !important;
+      border-color: var(--os-border) !important;
+      box-shadow: none !important;
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings .card-header,
+    html[data-theme="dark"] .admin-organizer-settings .card-footer,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-intro,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-note {
+      background: var(--os-header) !important;
+      border-color: var(--os-border) !important;
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-intro {
+      background: var(--os-intro-bg) !important;
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-note {
+      background: var(--os-note-bg) !important;
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-header__title,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-card__title,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-note__title,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-note__label,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-summary__value {
+      color: var(--os-ink-strong) !important;
+    }
+
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-header__eyebrow,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-settings-intro__eyebrow,
+    html[data-theme="dark"] .admin-organizer-settings .organizer-setting-note__eyebrow {
+      background: var(--os-accent-soft) !important;
+      color: var(--os-accent) !important;
     }
   </style>
 @endsection

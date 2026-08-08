@@ -1504,9 +1504,9 @@ body.page-event-detail .ei-meta__text {
 }
 
 .ed-body-chip:hover {
-  color: #172131;
+  color: var(--foreground);
   text-decoration: none;
-  border-color: #cbd5e1;
+  border-color: var(--border);
   background: var(--card);
 }
 
@@ -2798,8 +2798,8 @@ body.page-event-detail .quantity-input--modal input {
   width: 56px;
   height: 44px;
   border: none;
-  border-left: 1px solid #cbd5e1;
-  border-right: 1px solid #cbd5e1;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
@@ -4020,8 +4020,8 @@ body.page-event-detail .ed-buy-btn--premium:focus-visible {
 }
 
 body.page-event-detail .ed-buy-btn--premium:disabled {
-  background: #cbd5e1;
-  color: #f8fafc;
+  background: var(--muted);
+  color: var(--muted-foreground);
   box-shadow: none !important;
   transform: none;
   cursor: not-allowed;

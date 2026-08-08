@@ -464,6 +464,12 @@ body.contact-page-premium main {
   text-transform: none;
 }
 
+    /* A11y: labels del bloque de contacto en light (AA) */
+    html[data-theme="light"] .contact-page-premium .ctp-info__label,
+    html[data-theme="light"] .contact-page-premium .ctp-social__label {
+      color: #9a3412 !important;
+    }
+
 .contact-page-premium .ctp-info__label {
   margin-bottom: 10px;
   font-size: 12px;
@@ -898,3 +904,4 @@ body.contact-page-premium main {
 </section>
 @endif
 @endsection
+

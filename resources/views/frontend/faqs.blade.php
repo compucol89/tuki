@@ -193,7 +193,7 @@
 <style>
 /* FAQ — premium + IA por grupos (solo .faq-page-premium) */
 .faq-page-premium .faq-premium {
-  --fp-ink: #0f172a;
+  --fp-ink: var(--foreground);
   --fp-muted: #64748b;
   --fp-line: rgba(15, 23, 42, 0.08);
   --fp-accent: var(--primary);

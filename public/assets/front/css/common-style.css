@@ -287,7 +287,7 @@ ul.breadcumb li:last-child::after {
 .popular-posts-lists h4 {
   margin-bottom: 26px;
   font-weight: 700;
-  color: #38383c;
+  color: var(--foreground);
 }
 
 .category-lists h4 {
@@ -328,7 +328,7 @@ ul.breadcumb li:last-child::after {
 }
 
 .popular-post-txt h5 a {
-  color: #38383c;
+  color: var(--foreground);
   text-decoration: none;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -365,7 +365,7 @@ ul.breadcumb li:last-child::after {
 .category-lists ul li a {
   position: relative;
   display: inline-block;
-  color: #38383c;
+  color: var(--foreground);
   text-decoration: none;
   padding-left: 15px;
   -webkit-transition: 0.5s;
@@ -465,7 +465,7 @@ ul.breadcumb li:last-child::after {
 .pagination-nav span.page-link {
   padding: 10px 15px;
   border: 2px solid #ddd;
-  color: #38383c;
+  color: var(--foreground);
 }
 
 .pagination-nav .page-item:first-child .page-link {
@@ -606,14 +606,14 @@ ul.breadcumb li:last-child::after {
 
 .blog-txt .blog-title {
   font-size: 26px;
-  color: #38383c;
+  color: var(--foreground);
   font-weight: 700;
   margin: 16px 0 10px;
   line-height: 1.3;
 }
 
 .blog-txt .blog-title a {
-  color: #38383c;
+  color: var(--foreground);
   position: relative;
   text-decoration: none;
   -webkit-transition: 0.3s;
@@ -841,7 +841,7 @@ a.readmore-btn:hover::after {
 .comment-lists h3 {
   font-size: 24px;
   font-weight: 700;
-  color: #38383c;
+  color: var(--foreground);
   display: block;
   position: relative;
   margin-bottom: 49px;
@@ -904,7 +904,7 @@ a.readmore-btn:hover::after {
   font-size: 14px;
   font-weight: 600;
   font-style: italic;
-  color: #38383c;
+  color: var(--foreground);
   margin-top: -5px;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -935,7 +935,7 @@ a.readmore-btn:hover::after {
   font-family: "Source Serif Pro", serif;
   font-size: 24px;
   font-weight: 700;
-  color: #38383c;
+  color: var(--foreground);
 }
 
 .reply-form-section h3::after {
@@ -1381,7 +1381,7 @@ div#map {
   font-size: 35px;
   font-family: "Source Serif Pro", serif;
   font-weight: 700;
-  color: #38383c;
+  color: var(--foreground);
   margin: 22px 0 14px;
 }
 
@@ -1400,7 +1400,7 @@ div#map {
   font-size: 30px;
   font-family: "Source Serif Pro", serif;
   font-weight: 700;
-  color: #38383c;
+  color: var(--foreground);
 }
 
 .case-details-section .project-overview p {
@@ -1424,7 +1424,7 @@ div#map {
   display: -ms-flexbox;
   display: flex;
   margin-bottom: 13px;
-  color: #38383c;
+  color: var(--foreground);
 }
 
 .case-details-section .case-details-points li:last-child {
@@ -1754,7 +1754,7 @@ a.boxed-btn {
 }
 
 .product-area .shop-category .category-item ul li a {
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   line-height: 35px;
 }
 
@@ -1774,7 +1774,7 @@ li.active-search a {
 
 .product-area .shop-tag .tag-item ul li a {
   font-size: 14px;
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   line-height: 40px;
   background: #eef3f9;
   border-radius: 6px;
@@ -1832,7 +1832,7 @@ li.active-search a {
 .product-area .shop-price .price-item span {
   font-size: 14px;
   font-weight: 500;
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   padding-top: 12px !important;
 }
 
@@ -1983,7 +1983,7 @@ button.filter-button:hover {
 }
 
 .checkbox_common li label {
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   font-size: 15px;
   margin-bottom: 12px;
   cursor: pointer;
@@ -2210,7 +2210,7 @@ button.filter-button:hover {
   font-size: 16px;
   font-weight: 400;
   line-height: 26px;
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   padding-bottom: 20px;
 }
 
@@ -2244,7 +2244,7 @@ button.filter-button:hover {
 
 .product-details-area .product-details-content .product-icons-item-1 ul li a {
   font-size: 20px;
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   transition: all linear 0.3s;
 }
 
@@ -2269,7 +2269,7 @@ button.filter-button:hover {
 }
 
 .product-details-area .product-details-content .product-social-icon ul li a {
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   margin-right: 8px;
   transition: all linear 0.3s;
   font-size: 14px;
@@ -2367,7 +2367,7 @@ button.filter-button:hover {
 
 .shop-tab-area .nav .nav-item .nav-link {
   background-color: transparent;
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   font-size: 18px;
   font-weight: 600;
   line-height: 60px;
@@ -2409,7 +2409,7 @@ button.filter-button:hover {
   font-size: 14px;
   font-weight: 400;
   line-height: 26px;
-  color: #8a8a8a;
+  color: var(--muted-foreground);
   margin: 0;
 }
 
@@ -2661,7 +2661,7 @@ button.filter-button:hover {
 .checkout-area .shop-title-box h3 {
   position: relative;
   font-size: 24px;
-  color: #282828;
+  color: var(--foreground);
   margin-bottom: 30px;
   font-weight: 600;
 }
@@ -2735,7 +2735,7 @@ button.filter-button:hover {
 }
 
 .checkout-area .create-acc .checkbox label {
-  color: #282828;
+  color: var(--foreground);
   font-weight: 400;
   font-size: 16px;
   cursor: pointer;
@@ -2810,7 +2810,7 @@ button.filter-button:hover {
   border-top: none;
   border-bottom: none;
   font-size: 18px;
-  color: #282828;
+  color: var(--foreground);
 }
 
 .checkout-area .table .cart-table thead tr th.product-column {
@@ -2873,7 +2873,7 @@ button.filter-button:hover {
 }
 
 .checkout-area .table .cart-table tbody tr .product-column .column-box .product-title h3 {
-  color: #282828;
+  color: var(--foreground);
   font-size: 18px;
   font-weight: 500;
   text-transform: capitalize;
@@ -2928,7 +2928,7 @@ p.gateway-desc {
   display: block;
   float: left;
   border-right: 1px solid #e8e6f4;
-  color: #282828;
+  color: var(--foreground);
   font-size: 16px;
   font-weight: 600;
   line-height: 28px;
@@ -2980,7 +2980,7 @@ p.gateway-desc {
 }
 
 .cart-total .payment-options .option-block .checkbox label span {
-  color: #282828;
+  color: var(--foreground);
   font-size: 16px;
   font-weight: 400;
   padding-left: 10px;
@@ -3093,14 +3093,14 @@ p.gateway-desc {
 
 .total-item-info li {
   font-size: 15px;
-  color: #282828;
+  color: var(--foreground);
 }
 
 .total-item-info li span {
   font-size: 13px;
   font-weight: 500;
   text-transform: uppercase;
-  color: #282828;
+  color: var(--foreground);
 }
 
 .cart-area .table-outer {
@@ -3151,7 +3151,7 @@ p.gateway-desc {
 }
 
 .cart-area .cart-table tbody tr td {
-  color: #282828;
+  color: var(--foreground);
   font-size: 18px;
   font-weight: 500;
   line-height: 24px;
@@ -3192,7 +3192,7 @@ p.gateway-desc {
 }
 
 .cart-area .cart-table tbody tr .prod-column .column-box .title h3 {
-  color: #282828;
+  color: var(--foreground);
   font-size: 16px;
   font-weight: 600;
   line-height: 20px;
@@ -3315,7 +3315,7 @@ p.gateway-desc {
 }
 
 .cart-middle .apply-coupon .apply-coupon-button .btn-style-one .btn-title {
-  color: #282828;
+  color: var(--foreground);
   background: #f6f6f6;
 }
 
@@ -7718,14 +7718,14 @@ div#particles-js canvas {
 }
 .service-txt .service-title {
   font-size: 24px;
-  color: #38383c;
+  color: var(--foreground);
   font-family: "Source Serif Pro", serif;
   font-weight: 700;
   margin-bottom: 10px;
   line-height: 1.4;
 }
 .service-txt .service-title a {
-  color: #38383c;
+  color: var(--foreground);
   text-decoration: none;
   -webkit-transition: 0.3s;
   transition: 0.3s;

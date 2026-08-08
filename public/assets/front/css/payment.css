@@ -611,7 +611,7 @@
 }
 .ps-meta svg { width: 12px; height: 12px; flex-shrink: 0; }
 .ps-meta--online { background: #eff6ff; color: var(--info); }
-.ps-meta--venue  { background: var(--secondary); color: #374151; }
+.ps-meta--venue  { background: var(--secondary); color: var(--foreground); }
 
 .ps-event-row__link {
   display: inline-flex;
@@ -738,7 +738,7 @@
 .ps-btn--secondary { background: #1e2532; color: #fff; }
 .ps-btn--secondary:hover { background: #2d3748; color: #fff; }
 
-.ps-btn--ghost { background: transparent; color: #374151; border: 1px solid #e5e7eb; }
+.ps-btn--ghost { background: transparent; color: var(--foreground); border: 1px solid #e5e7eb; }
 .ps-btn--ghost:hover { background: var(--secondary); color: var(--foreground); }
 
 /* Calendar */
@@ -885,7 +885,7 @@
   position: relative;
   padding-left: 20px;
   font-size: 13px;
-  color: #64748b;
+  color: var(--muted-foreground);
   line-height: 1.45;
 }
 
@@ -899,7 +899,7 @@
   background: #10b981;
   border-radius: 50%;
 }
-.cd-guest-info__list li strong { color: #374151; font-weight: 600; }
+.cd-guest-info__list li strong { color: var(--foreground); font-weight: 600; }
 
 .cd-guest-info__id {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;

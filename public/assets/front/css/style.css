@@ -6457,3 +6457,8 @@ html[data-theme="light"] .navbar .menu-btn--organizer {
   border-color: #9a3412 !important;
   color: #ffffff !important;
 }
+
+/* A11y: text-muted de Bootstrap en light (4.8:1) */
+html[data-theme="light"] .text-muted {
+  color: #5f6b7d !important;
+}

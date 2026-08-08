@@ -31,7 +31,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--muted-foreground);
 }
 
 .evf-panel__title {
@@ -182,7 +182,7 @@ a.evf-btn--primary {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--muted-foreground);
   margin: 0;
 }
 
@@ -246,7 +246,7 @@ a.evf-btn--primary {
 
 .evf-icon {
   flex-shrink: 0;
-  color: #94a3b8;
+  color: var(--muted-foreground);
 }
 
 .evf-input {
@@ -261,7 +261,7 @@ a.evf-btn--primary {
 }
 
 .evf-input::placeholder {
-  color: #94a3b8;
+  color: var(--muted-foreground);
 }
 
 .evf-select {
@@ -302,7 +302,7 @@ a.evf-btn--primary {
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--muted-foreground);
 }
 
 .evf-seg__track {
@@ -323,7 +323,7 @@ a.evf-btn--primary {
   font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #475569;
+  color: var(--muted-foreground);
   text-decoration: none !important;
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
   white-space: nowrap;
@@ -977,7 +977,7 @@ a.evf-btn--primary {
 .ed-countdown-wrap .syotimer-cell__unit { 
   font-size:9px !important; 
   font-weight:600 !important; 
-  color:#9ca3af !important; 
+  color:var(--muted-foreground) !important; 
   text-transform:uppercase !important; 
   letter-spacing:0.06em !important; 
   display:block !important; 
@@ -1030,7 +1030,7 @@ a.evf-btn--primary {
 }
 
 /* Section label */
-.ed-section-label { font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.1em; margin:0 0 12px; padding-top:0; border-top:none; }
+.ed-section-label { font-size:10px; font-weight:700; color:var(--muted-foreground); text-transform:uppercase; letter-spacing:0.1em; margin:0 0 12px; padding-top:0; border-top:none; }
 
 /* Status pills */
 .ed-status-pill { display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; margin-bottom:16px; }
@@ -1068,10 +1068,10 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 {
   font-size: 16px !important; font-weight: 800 !important; color: #111827 !important;
   margin: 0 !important; line-height: 34px !important; letter-spacing: -0.03em;
 }
-body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 del { font-size:12px; color:#9ca3af; font-weight:400; margin-left:5px; letter-spacing:0; }
+body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 del { font-size:12px; color:var(--muted-foreground); font-weight:400; margin-left:5px; letter-spacing:0; }
 /* "gratis" */
 body:not(.page-event-detail) .ed-ticket-card__body .price-count h6 span { font-size:16px !important; font-weight:800 !important; letter-spacing:-0.03em; color:#059669 !important; }
-body:not(.page-event-detail) .ed-ticket-card__body .click-show { font-size:11px; color:#9ca3af; margin:2px 0 0; line-height:1.4; }
+body:not(.page-event-detail) .ed-ticket-card__body .click-show { font-size:11px; color:var(--muted-foreground); margin:2px 0 0; line-height:1.4; }
 
 /* Quantity control — connected pill */
 body:not(.page-event-detail) .ed-ticket-card__body .quantity-input { display:flex; align-items:stretch; border:1.5px solid var(--border); border-radius:8px; overflow:hidden; flex-shrink:0; background:var(--card); transition: border-color 0.2s, box-shadow 0.2s; }
@@ -1134,7 +1134,7 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
 .ed-info-row:last-child { border-bottom:none; }
 .ed-info-icon { width:34px; height:34px; border-radius:8px; background:#fff7ed; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--primary-text-color); font-size:13px; }
 .ed-info-text { flex:1; }
-.ed-info-text strong { display:block; font-size:10px; font-weight:700; color:#9ca3af; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.1em; }
+.ed-info-text strong { display:block; font-size:10px; font-weight:700; color:var(--muted-foreground); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.1em; }
 .ed-info-text span { font-size:13px; color:#374151; line-height:1.5; }
 .ed-organizer { display:flex; align-items:center; gap:10px; }
 .ed-organizer img { width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #e5e7eb; }
@@ -2208,12 +2208,12 @@ body.events-page .hs-search-wrap--events .hs-search-head__title {
   line-height: 1.15;
   letter-spacing: 0;
   font-weight: 800;
-  color: #2f3337;
+  color: var(--foreground);
 }
 
 body.events-page .hs-search-wrap--events .hs-search-head__sub {
   max-width: 620px;
-  color: #68717d;
+  color: var(--muted-foreground);
 }
 
 body.events-page .hs-search-wrap--events .hs-search-form {
@@ -2281,7 +2281,7 @@ body.events-page .ev-catalog-count__main {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  color: #2f3337;
+  color: var(--foreground);
   font-size: 26px;
   font-weight: 800;
   letter-spacing: 0;
@@ -2298,7 +2298,7 @@ body.events-page .ev-catalog-count__num {
 }
 
 body.events-page .ev-catalog-count__meta {
-  color: #7b8490;
+  color: var(--muted-foreground);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
@@ -2357,7 +2357,7 @@ body.events-page .ev-listing--premium .ev-pagination .page-item .page-link {
   border: 1px solid rgba(30, 37, 50, 0.08);
   border-radius: 10px !important;
   background: rgba(255, 255, 255, 0.82);
-  color: #2f3337;
+  color: var(--foreground);
   box-shadow: none;
   font-size: 13px;
   font-weight: 700;
@@ -2722,7 +2722,7 @@ body.events-page .ev-listing--premium .ev-pagination .page-item .page-link:hover
     gap: 4px;
     max-width: 100%;
     margin: 0;
-    color: #6f7884;
+    color: var(--muted-foreground);
     font-size: 10px;
     font-weight: 400;
     line-height: 1.05;
@@ -2740,7 +2740,7 @@ body.events-page .ev-listing--premium .ev-pagination .page-item .page-link:hover
 
   body.events-page .ev-listing__inner .ev-card__loc-row span {
     min-width: 0;
-    color: #6f7884;
+    color: var(--muted-foreground);
     font-size: 10px;
     font-weight: 400;
     line-height: 1.05;

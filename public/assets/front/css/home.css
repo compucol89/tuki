@@ -641,7 +641,7 @@ body.home-page .work-process-inner {
 }
 .hs-chip--free {
   background: var(--muted);
-  color: #15803d;
+  color: var(--success);
 }
 .hs-chip--free:hover {
   background: var(--success-light);
@@ -5290,4 +5290,9 @@ html[data-theme="dark"] .hs-sf__btn:focus {
 /* A11y: chip activo del buscador en light (AA) */
 html[data-theme="light"] .hs-chip--active {
   color: #9a3412 !important;
+}
+
+/* A11y: chip Gratis en dark (verde claro AA) */
+html[data-theme="dark"] .hs-chip--free {
+  color: #4ade80 !important;
 }

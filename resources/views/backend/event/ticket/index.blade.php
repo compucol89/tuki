@@ -472,7 +472,7 @@
 
     .ticket-index-header__text {
       margin: 0;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 13px;
       line-height: 1.5;
     }
@@ -517,7 +517,7 @@
     .ticket-index-language label {
       display: block;
       margin-bottom: 6px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 500;
     }
@@ -574,7 +574,7 @@
     .ticket-free-limit__copy p {
       max-width: 760px;
       margin: 6px 0 0;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
       line-height: 1.5;
     }
@@ -632,7 +632,7 @@
     }
 
     .ticket-index-empty p {
-      color: #64748b;
+      color: var(--adm-muted);
     }
 
     .ticket-index-table-wrap {
@@ -709,7 +709,7 @@
     .ticket-index-muted {
       display: block;
       margin-top: 4px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 11px;
       line-height: 1.35;
     }

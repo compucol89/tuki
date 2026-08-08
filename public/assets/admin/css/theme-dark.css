@@ -1032,3 +1032,74 @@ html[data-theme="dark"] .breadcrumbs li p,
 html[data-theme="dark"] .page-header p {
   color: var(--adm-muted) !important;
 }
+
+/* ============ Cert 360: botones primarios/success, warnings, tx, arca ============ */
+html[data-theme="dark"] .tx-btn.tx-btn-primary,
+html[data-theme="dark"] .tx-btn.tx-btn-primary:hover {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
+  border-color: #9a3412 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .tx-btn.tx-btn-primary {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
+  border-color: #9a3412 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-success,
+html[data-theme="light"] .btn-success {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
+  border-color: #065f46 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="light"] .text-warning {
+  color: #a16207 !important;
+}
+
+html[data-theme="dark"] .text-warning {
+  color: #fbbf24 !important;
+}
+
+html[data-theme="dark"] .tx-amount.positive,
+html[data-theme="dark"] .tx-amount--positive {
+  color: #4ade80 !important;
+}
+
+html[data-theme="dark"] .tx-btn.tx-btn-light,
+html[data-theme="light"] .tx-btn.tx-btn-light {
+  color: var(--adm-ink) !important;
+  border-color: var(--adm-border) !important;
+}
+
+html[data-theme="dark"] .arca-line-muted,
+html[data-theme="light"] .arca-line-muted {
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="dark"] .arca-invoice-link {
+  color: var(--adm-ink) !important;
+}
+
+html[data-theme="dark"] .text-danger {
+  color: #f08a94 !important;
+}
+
+html[data-theme="dark"] code,
+html[data-theme="dark"] .code-block,
+html[data-theme="dark"] pre,
+html[data-theme="dark"] pre code {
+  color: var(--adm-ink) !important;
+}
+
+html[data-theme="light"] .text-danger {
+  color: #b91c1c !important;
+}
+
+html[data-theme="light"] code,
+html[data-theme="light"] .code-block,
+html[data-theme="light"] pre,
+html[data-theme="light"] pre code {
+  color: #1e2532 !important;
+}

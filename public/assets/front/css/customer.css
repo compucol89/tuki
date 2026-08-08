@@ -282,3 +282,14 @@ html[data-theme="dark"] .cp-strength-fill[data-level="0"] { background: #f87171 
 html[data-theme="dark"] .cp-strength-fill[data-level="1"] { background: #fb923c !important; }
 html[data-theme="dark"] .cp-strength-fill[data-level="2"] { background: #facc15 !important; }
 html[data-theme="dark"] .cp-strength-fill[data-level="3"] { background: #4ade80 !important; }
+
+/* A11y: DataTables (ordenes del customer) en dark (AA) */
+html[data-theme="dark"] .dataTables_wrapper label,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_info,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_length,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_filter,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_empty,
+html[data-theme="dark"] table.dataTable td,
+html[data-theme="dark"] table.dataTable th {
+  color: var(--foreground) !important;
+}

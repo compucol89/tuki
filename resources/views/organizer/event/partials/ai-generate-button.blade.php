@@ -65,7 +65,7 @@
   }
   .ai-status-card__desc {
     margin: .15rem 0 0;
-    color: #64748b;
+    color: var(--adm-muted);
     font-size: .75rem;
     line-height: 1.35;
   }
@@ -150,7 +150,7 @@
   }
   .ai-status-card__meta {
     margin: -.25rem 0 .65rem;
-    color: #64748b;
+    color: var(--adm-muted);
     font-size: .72rem;
   }
   .ai-apply-row {
@@ -164,7 +164,7 @@
   }
   .ai-apply-row.is-visible { display: flex; }
   .ai-apply-row__copy {
-    color: #64748b;
+    color: var(--adm-muted);
     font-size: .8rem;
   }
   @media (max-width: 991px) {

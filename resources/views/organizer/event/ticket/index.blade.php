@@ -351,7 +351,7 @@
     .ticket-free-limit__copy p {
       max-width: 760px;
       margin: 6px 0 0;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
       line-height: 1.5;
     }

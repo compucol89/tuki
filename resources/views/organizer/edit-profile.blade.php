@@ -154,7 +154,7 @@
 
     .org-profile-builder .opb-title {
       margin: 0;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: clamp(28px, 3vw, 42px);
       font-weight: 800;
       line-height: 1.05;
@@ -186,7 +186,7 @@
       border: 1px solid var(--opb-border);
       border-radius: 10px;
       background: var(--opb-card);
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 13px;
       font-weight: 800;
       text-decoration: none;
@@ -204,8 +204,8 @@
 
     .org-profile-builder .opb-btn--primary {
       border-color: var(--opb-primary);
-      background: var(--opb-primary);
-      color: #fff;
+      background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+      color: #ffffff;
     }
 
     .org-profile-builder .opb-btn--primary:hover,
@@ -253,7 +253,7 @@
 
     .org-profile-builder .opb-panel__head h2 {
       margin: 0;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 18px;
       font-weight: 800;
       line-height: 1.2;
@@ -272,7 +272,7 @@
     }
 
     .org-profile-builder .form-group label {
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .02em;
@@ -283,7 +283,7 @@
       border-color: var(--opb-border);
       border-radius: 10px;
       background: var(--opb-input);
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 14px;
       box-shadow: none;
     }
@@ -349,7 +349,7 @@
       border: 1px solid var(--opb-border);
       border-radius: 10px;
       background: #fff;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 13px;
       font-weight: 800;
       cursor: pointer;
@@ -407,7 +407,7 @@
       padding: 15px 16px;
       border: 0;
       background: var(--opb-muted);
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 14px;
       font-weight: 800;
       text-align: left;
@@ -483,7 +483,7 @@
     }
 
     .org-profile-builder .opb-score__value strong {
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 34px;
       font-weight: 800;
       line-height: 1;
@@ -537,7 +537,7 @@
       display: flex;
       align-items: flex-start;
       gap: 9px;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 13px;
       font-weight: 700;
     }
@@ -573,7 +573,7 @@
     .org-profile-builder .opb-next-actions > strong {
       display: block;
       margin-bottom: 8px;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: .06em;
@@ -586,7 +586,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 9px 0;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 13px;
       font-weight: 800;
       text-decoration: none;
@@ -633,7 +633,7 @@
 
     .org-profile-builder .opb-preview h3 {
       margin: 14px 0 4px;
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-size: 21px;
       font-weight: 800;
       line-height: 1.1;
@@ -648,7 +648,7 @@
     }
 
     .org-profile-builder .opb-preview__role {
-      color: #1e2532;
+      color: var(--opb-foreground);
       font-weight: 800;
     }
 

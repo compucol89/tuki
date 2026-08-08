@@ -1097,7 +1097,7 @@
       display: block;
       font-size: 12px;
       font-weight: 500;
-      color: #64748b;
+      color: var(--adm-muted);
       max-width: 440px;
       margin: 0 auto;
     }
@@ -1137,7 +1137,7 @@
 
     .event-cover-box__text,
     .event-cover-box__hint {
-      color: #64748b;
+      color: var(--adm-muted);
       line-height: 1.7;
     }
 
@@ -1204,7 +1204,7 @@
     }
 
     .event-cover-box__upload-copy small {
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
     }
 
@@ -1365,7 +1365,7 @@
     }
 
     .async-progress-panel__meta {
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
     }
 

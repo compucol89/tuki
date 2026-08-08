@@ -177,8 +177,8 @@
       min-height: 40px;
       padding: 0 16px;
       border-radius: 8px;
-      background: var(--adm-primary, #f05a28);
-      color: #fff;
+      background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+      color: #ffffff;
       font-size: 13px;
       font-weight: 700;
       white-space: nowrap;

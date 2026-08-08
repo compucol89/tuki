@@ -10,7 +10,7 @@
 }
 .ei-label {
   display:block; font-size:10px; font-weight:700;
-  color:#9ca3af; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--muted-foreground); text-transform:uppercase; letter-spacing:0.1em;
   margin-bottom:4px;
 }
 /* Organizer row */
@@ -48,7 +48,7 @@
 .ei-cal__btn {
   display:inline-flex; align-items:center; gap:6px;
   padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600;
-  background:#f8fafc; color:#374151; border:1px solid #e5e7eb;
+  background:var(--card); color:var(--foreground); border:1px solid var(--border);
   text-decoration:none; transition:background 0.15s, color 0.15s, border-color 0.15s; white-space:nowrap;
 }
 .ei-cal__btn:hover { background:#1e2532; color:#fff; border-color:#1e2532; }
@@ -246,7 +246,7 @@
   margin-bottom: 12px;
   font-size: 12px;
   font-weight: 600;
-  color: #374151;
+  color: var(--foreground);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: center;
@@ -761,7 +761,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
 
 .ed-card .summernote-content p,
 .ed-card .summernote-content li {
-  color: #475569;
+  color: var(--muted-foreground);
 }
 
 .ed-card .summernote-content ul,
@@ -6019,7 +6019,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-hero-fact__meta {
-    color: #657287;
+    color: var(--muted-foreground);
     font-size: 0.78rem;
     font-weight: 500;
     line-height: 1.32;
@@ -6968,7 +6968,7 @@ body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list li {
 }
 
 body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a {
-  color: #7d8798;
+  color: var(--muted-foreground);
   font-weight: 540;
   text-decoration: none;
 }
@@ -7557,9 +7557,9 @@ body.page-event-detail .ei-cal__btn {
   min-height: 2.18rem;
   padding: 0 0.78rem;
   border-radius: 999px;
-  border-color: rgba(30, 37, 50, 0.1);
+  border-color: color-mix(in srgb, var(--foreground) 10%, transparent);
   background: var(--card);
-  color: #314052;
+  color: var(--foreground);
   font-size: 0.75rem;
   font-weight: 620;
   line-height: 1;
@@ -8861,5 +8861,14 @@ html[data-theme="light"] body.page-event-detail .ed-info-item__label,
 html[data-theme="light"] body.page-event-detail .ed-info-item__meta,
 html[data-theme="light"] body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit,
 html[data-theme="light"] body.page-event-detail .ed-ticket-signal__item span {
+  color: #5f6b7d;
+}
+html[data-theme="light"] body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a,
+html[data-theme="light"] body.page-event-detail .ei-label,
+html[data-theme="light"] body.page-event-detail .ed-hero-fact__meta {
+  color: #5f6b7d;
+}
+html[data-theme="light"] body.page-event-detail .ed-info-card--description .summernote-content p,
+html[data-theme="light"] body.page-event-detail .ed-info-card--description .summernote-content li {
   color: #5f6b7d;
 }

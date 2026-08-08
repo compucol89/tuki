@@ -247,7 +247,7 @@
         if (/[^A-Za-z0-9]/.test(val)) score++;
         var idx = Math.max(0, Math.min(score - 1, strengthLabels.length - 1));
         var widths = ['25%', '50%', '75%', '100%'];
-        var colors = ['#ef4444', '#f97316', '#eab308', '#22c55e'];
+        var colors = ['#b91c1c', '#c2410c', '#a16207', '#15803d'];
         fill.style.width = widths[idx];
         fill.style.background = colors[idx];
         label.textContent = strengthLabels[idx];

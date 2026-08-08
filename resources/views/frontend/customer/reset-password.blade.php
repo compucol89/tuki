@@ -122,8 +122,9 @@
     var lvl = levels[score - 1] || levels[0];
     fill.style.width = lvl.w;
     fill.style.background = lvl.color;
+      fill.dataset.level = idx;
     label.textContent = lvl.text;
-    label.style.color = lvl.color;
+    label.style.color = '';
   });
 
   document.getElementById('rp_password_confirm').addEventListener('input', function() {

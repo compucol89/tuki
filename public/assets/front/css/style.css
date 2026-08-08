@@ -27,6 +27,8 @@
        Fuente visual: docs/stweakcn (theme cmrwpqgvc000104jp62jrabsq)
        Único primary: var(--brand-primary) definido en layout.blade.php
        ================================================================ */
+    --drawer-scrollbar-gap: 0px;
+    --org-shadow-lg: 0 1px 3px rgba(0, 0, 0, 0.10), 0 4px 6px rgba(0, 0, 0, 0.08);
     --background: #e8ebed;
     --foreground: #333333;
 

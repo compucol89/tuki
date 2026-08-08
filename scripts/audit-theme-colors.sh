@@ -61,3 +61,14 @@ if [ "$FAIL" = "1" ]; then
 fi
 echo "RESULTADO: PASS"
 exit 0
+
+# ===== CI V2: colores en arrays JS de blades (escapan al scan de CSS) =====
+JS_HITS=$(grep -rnE "\['#[0-9a-fA-F]{3,6}'[^\]]*\]" resources/views 2>/dev/null \
+  | grep -vE "\.min\.|vendor|HARDCODE-ALLOW" || true)
+if [ -n "$JS_HITS" ]; then
+  echo "ARRAYS DE COLORES EN JS DE BLADES (P2):"
+  echo "$JS_HITS" | head -20
+  [ "$REPORT_ONLY" = "0" ] && FAIL=1
+else
+  echo "JS color arrays: OK"
+fi

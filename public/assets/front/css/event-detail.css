@@ -8888,3 +8888,9 @@ body.page-event-detail .ed-total-row--premium .ed-total-row__trust {
   margin-bottom: 0 !important;
   padding-top: 0 !important;
 }
+
+/* Tokens definidos (antes solo fallback) */
+body.page-event-detail {
+  --ed-hero-bg-height: 100%;
+  --ed-sidebar-reserve: 168px;
+}

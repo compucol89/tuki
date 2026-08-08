@@ -276,3 +276,9 @@
 .st-file-input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; }
 
 /* ─── AUTH CENTERED (forget / reset password) ─── */
+
+/* A11y: barra de fuerza de la contrasena — variante dark por nivel (AA 3:1) */
+html[data-theme="dark"] .cp-strength-fill[data-level="0"] { background: #f87171 !important; }
+html[data-theme="dark"] .cp-strength-fill[data-level="1"] { background: #fb923c !important; }
+html[data-theme="dark"] .cp-strength-fill[data-level="2"] { background: #facc15 !important; }
+html[data-theme="dark"] .cp-strength-fill[data-level="3"] { background: #4ade80 !important; }

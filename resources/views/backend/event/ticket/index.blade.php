@@ -455,7 +455,7 @@
       padding: 4px 10px;
       border-radius: 999px;
       background: #f1f5f9;
-      color: #475569;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0;
@@ -652,7 +652,7 @@
       border-top: 0;
       border-bottom: 1px solid #e5e7eb;
       background: #f8fafc;
-      color: #475569;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0;
@@ -728,7 +728,7 @@
       padding: 3px 8px;
       border-radius: 999px;
       background: #f8fafc;
-      color: #475569;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 600;
       white-space: nowrap;
@@ -780,7 +780,7 @@
     .ticket-index-mobile-label {
       display: block;
       margin-bottom: 6px;
-      color: #475569;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0;

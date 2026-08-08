@@ -197,7 +197,7 @@
       font-size: 9px;
       color: #666;
       margin-top: 6px;
-      font-weight: bold;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -251,7 +251,7 @@
 
     .attendee-name {
       font-size: 15px;
-      font-weight: bold;
+      font-weight: 700;
       color: #1a1a1a;
     }
 
@@ -286,7 +286,7 @@
 
     .info-value-small {
       font-size: 8px;
-      font-weight: bold;
+      font-weight: 700;
       color: #333;
       word-wrap: break-word;
       overflow-wrap: break-word;
@@ -313,7 +313,7 @@
     .payment-title {
       font-size: 9px;
       color: var(--primary);
-      font-weight: bold;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       margin-bottom: 8px;
@@ -336,7 +336,7 @@
 
     .payment-table td:last-child {
       text-align: right;
-      font-weight: bold;
+      font-weight: 700;
       color: #333;
     }
 
@@ -351,7 +351,7 @@
     }
 
     .payment-total td {
-      font-weight: bold;
+      font-weight: 700;
       font-size: 11px;
     }
 
@@ -371,7 +371,7 @@
 
     .instructions-title {
       font-size: 9px;
-      font-weight: bold;
+      font-weight: 700;
       color: #1a1a1a;
       margin-bottom: 6px;
     }
@@ -426,9 +426,9 @@
 
     .footer-disclaimer {
       font-size: 8.5px;
-      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+      color: rgba(255,255,255,0.78);
       margin-top: 6px;
-      font-style: italic;
       line-height: 1.5;
     }
 
@@ -447,7 +447,7 @@
   @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-Medium.ttf") }}') format('truetype'); font-weight: 500; }
   @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-SemiBold.ttf") }}') format('truetype'); font-weight: 600; }
   @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-Bold.ttf") }}') format('truetype'); font-weight: 700; }
-  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-ExtraBold.ttf") }}') format('truetype'); font-weight: 800 900; }
+  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-ExtraBold.ttf") }}') format('truetype'); font-weight: 800; }
 
   body {
     font-family: 'InterDoc', Helvetica, Arial, sans-serif;

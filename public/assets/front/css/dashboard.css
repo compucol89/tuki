@@ -18,7 +18,7 @@
 .user-sidebar .links li a{
 	display: block;
 	padding: 15px 0;
-	color: #676767;
+	color: var(--muted-foreground);
 }
 .user-sidebar .links li a.active,
 .user-sidebar .links li:hover > a{
@@ -501,7 +501,7 @@ textarea.form_control{
 }
 
 .note-editor .note-toolbar .note-btn-group .note-btn.btn-light {
-	color: #212529;
+	color: var(--foreground);
 }
 
 .dashboard-area .user-profile-details .account-info .main-info {
@@ -577,7 +577,7 @@ textarea.form_control{
 }
 
 .single-message .user-infos span {
-	color: #666666;
+	color: var(--muted-foreground);
 	font-weight: 400;
 }
 
@@ -591,7 +591,7 @@ textarea.form_control{
 
 .single-message .message {
 	margin-top: 10px;
-	color: #666666;
+	color: var(--muted-foreground);
 }
 
 .single-message .reply-download-btn {

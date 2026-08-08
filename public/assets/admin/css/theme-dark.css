@@ -671,7 +671,7 @@ html[data-theme="dark"] {
   --adm-muted: #a3a3a3;
   --adm-border: #3d4354;
   --adm-primary: #e05d38;
-  --adm-primary-dark: #f0704a;
+  --adm-primary-dark: #f4845f;
   --adm-primary-strong: #f78a63;
   --adm-primary-soft: #3a2c26;
   --adm-accent: #2a3656;
@@ -702,6 +702,61 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] {
 html[data-theme="dark"] .sidebar[data-background-color="white"] .sidebar-wrapper,
 html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .sidebar-wrapper {
   background: var(--adm-sidebar) !important;
+}
+
+/* Nav items: anular el "modo white" de admin-skin cuando el tema es dark.
+   Orden: primero colores base, luego estados activo/expandido/hover. */
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a p,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a i,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a .caret,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a i.text-primary {
+  color: rgba(229, 229, 229, 0.82) !important;
+  background: transparent !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:hover,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:focus,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a[data-toggle=collapse][aria-expanded=true],
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a {
+  background: rgba(224, 93, 56, 0.18) !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: transparent !important;
+  box-shadow: inset 3px 0 0 var(--adm-primary) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:hover p,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:hover i,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:focus p,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:focus i,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a[data-toggle=collapse][aria-expanded=true] p,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a[data-toggle=collapse][aria-expanded=true] i,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a[data-toggle=collapse][aria-expanded=true] .caret,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a p,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a i,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a .caret,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a p,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a i,
+html[data-theme="dark"] .sidebar[data-background-color="white"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a .caret {
+  color: #ffffff !important;
+}
+
+/* Submenu y secciones en dark */
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li a,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li a .sub-item {
+  color: rgba(229, 229, 229, 0.66) !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li.active > a .sub-item,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li a:hover .sub-item {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-section .text-section {
+  color: rgba(229, 229, 229, 0.5) !important;
 }
 
 /* ============ Superficies puntuales (sidebar-search, métricas, thumbs) ============ */
@@ -901,4 +956,65 @@ html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item
 html[data-theme="dark"] .sidebar .nav > .nav-item.active > a p,
 html[data-theme="dark"] .sidebar .nav > .nav-item.active > a i {
   color: #ffffff !important;
+}
+
+/* ============ A11y dark: badge secundario, boton primary, sidebar spans ============ */
+html[data-theme="dark"] .badge-secondary,
+html[data-theme="dark"] .eb-buyer__guest {
+  background-color: var(--adm-bg-soft) !important;
+  color: var(--adm-ink) !important;
+  border: 1px solid var(--adm-border) !important;
+}
+
+html[data-theme="dark"] .btn-primary {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
+  border-color: #9a3412 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .btn-primary:hover,
+html[data-theme="dark"] .btn-primary:focus {
+  background: linear-gradient(135deg, #d9531a 0%, #b03d10 100%) !important;
+  border-color: #b03d10 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar .nav > .nav-item a span,
+html[data-theme="dark"] .sidebar .nav > .nav-item a p,
+html[data-theme="dark"] .sidebar .nav > .nav-item a i {
+  color: inherit !important;
+}
+
+html[data-theme="light"] .sidebar[data-background-color] .nav .nav-section .text-section {
+  color: #5f6b7d !important;
+}
+
+/* ============ Usuario del sidebar: nombre y nivel por tema ============ */
+html[data-theme="dark"] .sidebar[data-background-color="white"] .user .info a,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .user .info a span {
+  color: var(--adm-ink) !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .user .info .user-level {
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="light"] .sidebar[data-background-color="white"] .user .info .user-level {
+  color: #5f6b7d !important;
+}
+
+/* ============ A11y: botones outline por tema (AA) ============ */
+html[data-theme="light"] .btn-outline-primary {
+  color: #0056b3 !important;
+  border-color: #0056b3 !important;
+}
+
+html[data-theme="dark"] .btn-outline-primary {
+  color: #7ab8ff !important;
+  border-color: #7ab8ff !important;
+}
+
+html[data-theme="dark"] .btn-outline-danger {
+  color: #f08a94 !important;
+  border-color: #f08a94 !important;
 }

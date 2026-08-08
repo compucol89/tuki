@@ -101,7 +101,7 @@
       gap: 6px;
       min-height: 28px;
       padding: 4px 10px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--adm-border);
       border-radius: 999px;
       background: var(--adm-bg-soft, #f8fafc);
       color: var(--adm-muted);
@@ -173,10 +173,10 @@
     .eb-hub-hint {
       margin: 0 0 16px;
       padding: 14px 16px;
-      border: 1px solid #dbe4f0;
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
-      background: #f8fafc;
-      color: #475569;
+      background: var(--adm-bg-soft);
+      color: var(--adm-muted);
       font-size: 14px;
       line-height: 1.45;
     }
@@ -202,15 +202,15 @@
 
     .eb-metric {
       --eb-accent: #94a3b8;
-      --eb-soft: #f8fafc;
-      --eb-ink: #1e2532;
+      --eb-soft: color-mix(in srgb, var(--eb-accent) 10%, var(--adm-card));
+      --eb-ink: var(--adm-ink);
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: center;
       min-height: 128px;
       padding: 22px 22px;
-      border: 1px solid #e6e9ef;
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
       background: var(--adm-card);
       box-shadow: 0 8px 18px rgba(30, 37, 50, .06);
@@ -251,7 +251,6 @@
 
     .eb-metric--primary {
       --eb-accent: #f97316;
-      --eb-soft: #fff7ed;
     }
 
     .eb-metric--money::before {
@@ -260,7 +259,6 @@
 
     .eb-metric--money {
       --eb-accent: #0f766e;
-      --eb-soft: #ecfdf5;
     }
 
     .eb-metric--paid::before {
@@ -269,7 +267,6 @@
 
     .eb-metric--paid {
       --eb-accent: #16a34a;
-      --eb-soft: #f0fdf4;
     }
 
     .eb-metric--free::before {
@@ -278,7 +275,6 @@
 
     .eb-metric--free {
       --eb-accent: #2563eb;
-      --eb-soft: #eff6ff;
     }
 
     .eb-metric--pending::before {
@@ -287,7 +283,6 @@
 
     .eb-metric--pending {
       --eb-accent: #f59e0b;
-      --eb-soft: #fffbeb;
     }
 
     .eb-metric--platform::before {
@@ -296,12 +291,11 @@
 
     .eb-metric--platform {
       --eb-accent: #7c3aed;
-      --eb-soft: #f5f3ff;
     }
 
     .eb-metric__label {
       margin-bottom: 7px;
-      color: #61708a;
+      color: var(--adm-muted);
       font-size: 12px;
       font-weight: 500;
       letter-spacing: .04em;
@@ -365,7 +359,7 @@
 
     .eb-event-summary-card {
       --eb-event-accent: #16a34a;
-      --eb-event-soft: #f0fdf4;
+      --eb-event-soft: color-mix(in srgb, var(--eb-event-accent) 12%, var(--adm-card));
       position: relative;
       overflow: hidden;
       border: 1px solid var(--adm-border);
@@ -384,12 +378,10 @@
 
     .eb-event-summary-card--free {
       --eb-event-accent: #2563eb;
-      --eb-event-soft: #eff6ff;
     }
 
     .eb-event-summary-card--paid {
       --eb-event-accent: #16a34a;
-      --eb-event-soft: #f0fdf4;
     }
 
     .eb-event-summary-card__head {
@@ -399,7 +391,7 @@
       align-items: start;
       padding: 16px 18px;
       border-bottom: 1px solid var(--adm-border);
-      background: linear-gradient(90deg, var(--eb-event-soft) 0%, #fff 64%);
+      background: linear-gradient(90deg, var(--eb-event-soft) 0%, var(--adm-card) 64%);
       list-style: none;
       cursor: pointer;
     }
@@ -476,7 +468,7 @@
       gap: 6px;
       min-height: 24px;
       padding: 4px 9px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--adm-border);
       border-radius: 999px;
       background: var(--adm-bg-soft);
       line-height: 1.2;
@@ -496,7 +488,7 @@
     }
 
     .eb-event-summary-card__meta-chip {
-      color: #61708a;
+      color: var(--adm-muted);
       font-weight: 500;
     }
 
@@ -560,7 +552,7 @@
     .eb-event-summary-stat {
       min-width: 0;
       padding: 12px 14px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--adm-border);
       border-radius: 9px;
       background: var(--adm-card);
     }
@@ -585,12 +577,12 @@
 
     .eb-event-summary-stat--sold {
       border-color: rgba(22, 163, 74, .20);
-      background: var(--adm-success);
+      background: color-mix(in srgb, var(--adm-success) 16%, var(--adm-card));
     }
 
     .eb-event-summary-stat--scan {
       border-color: rgba(37, 99, 235, .18);
-      background: var(--adm-accent);
+      background: color-mix(in srgb, var(--adm-info) 16%, var(--adm-card));
     }
 
     .eb-event-summary-stat--pending {
@@ -757,8 +749,8 @@
 
     .eb-status--paid,
     .badge-success.eb-status {
-      background: #dcfce7 !important;
-      color: #166534 !important;
+      background: color-mix(in srgb, var(--adm-success) 16%, var(--adm-card)) !important;
+      color: var(--adm-success) !important;
     }
 
     .eb-status--free,
@@ -806,7 +798,7 @@
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 12px;
       padding: 14px 16px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
       background: var(--adm-card);
     }
@@ -829,7 +821,7 @@
       gap: 10px;
       align-items: center;
       padding: 8px 10px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--adm-border);
       border-radius: 7px;
       background: var(--adm-card);
     }
@@ -847,8 +839,8 @@
       min-height: 24px;
       padding: 3px 8px;
       border-radius: 999px;
-      background: #fff7ed;
-      color: #9a3412;
+      background: var(--adm-primary-soft);
+      color: var(--adm-primary-strong);
       font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
@@ -967,7 +959,7 @@
     }
 
     .eb-empty i {
-      color: #9aa4b2;
+      color: var(--adm-muted);
       font-size: 34px;
     }
 
@@ -1032,7 +1024,7 @@
 
       .eb-event-summary-stat {
         padding: 11px 12px;
-        border: 1px solid #eef1f5;
+        border: 1px solid var(--adm-border);
         border-radius: 9px;
         background: var(--adm-card);
       }
@@ -1114,7 +1106,7 @@
 
       .eb-type-table tr {
         padding: 10px 12px;
-        border: 1px solid #eef1f5;
+        border: 1px solid var(--adm-border);
         border-radius: 10px;
         background: var(--adm-card);
         box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
@@ -1135,7 +1127,7 @@
         min-height: 0;
         margin-bottom: 4px;
         padding: 0 0 9px;
-        border-bottom: 1px solid #f1f3f7;
+        border-bottom: 1px solid var(--adm-border);
       }
 
       .eb-type-table td:first-child::before {

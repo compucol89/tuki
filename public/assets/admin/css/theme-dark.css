@@ -1186,3 +1186,17 @@ html[data-theme="light"] .topbar-toggler i,
 html[data-theme="light"] .sidenav-toggler i {
   color: #5f6b7d !important;
 }
+
+/* ============ Menu builder: headers de columnas en dark (tokens, no blancos) ============ */
+html[data-theme="dark"] .admin-menu-builder .card-header,
+html[data-theme="dark"] .admin-menu-builder .card.border-primary .card-header,
+html[data-theme="dark"] .admin-menu-builder .card .card-header {
+  background: var(--adm-bg-soft) !important;
+  border-color: var(--adm-border) !important;
+  color: var(--adm-ink) !important;
+}
+
+html[data-theme="dark"] .admin-menu-builder .card-header.text-white,
+html[data-theme="dark"] .admin-menu-builder .bg-primary.text-white {
+  color: var(--adm-ink) !important;
+}

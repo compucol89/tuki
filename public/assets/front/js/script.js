@@ -453,15 +453,13 @@
        ========================================================================== */
 
     $(window).on('load', function () {
-
-        if ($(".popup-wrapper").length > 0) {
-            let $firstPopup = $(".popup-wrapper").eq(0);
-            popupAnnouncement($firstPopup);
+        if ($('.popup-wrapper').length > 0) {
+            popupAnnouncement($('.popup-wrapper').eq(0));
         }
     });
 
     // lazyload init
-    new LazyLoad();
+    window.tukiLazyLoad = new LazyLoad();
 
     $('.offer-timer').each(function () {
         let $this = $(this);
@@ -484,41 +482,96 @@
 })(window.jQuery);
 
 function popupAnnouncement($this) {
-    let closedPopups = [];
-    if (sessionStorage.getItem('closedPopups')) {
-        closedPopups = JSON.parse(sessionStorage.getItem('closedPopups'));
+    if (!$this || !$this.length) {
+        return;
     }
 
-    // if the popup is not in closedPopups Array
-    if (closedPopups.indexOf($this.data('popup_id')) == -1) {
-        $('#' + $this.attr('id')).show();
-        let popupDelay = $this.data('popup_delay');
+    let closedPopups = [];
+    try {
+        if (sessionStorage.getItem('closedPopups')) {
+            closedPopups = JSON.parse(sessionStorage.getItem('closedPopups')) || [];
+        }
+    } catch (e) {
+        closedPopups = [];
+    }
 
-        setTimeout(function () {
-            if (jQuery.magnificPopup) {
-                jQuery.magnificPopup.open({
-                    items: { src: '#' + $this.attr('id') },
-                    type: 'inline',
-                    callbacks: {
-                        afterClose: function () {
-                            // after the popup is closed, store it in the sessionStorage & show next popup
-                            closedPopups.push($this.data('popup_id'));
-                            sessionStorage.setItem('closedPopups', JSON.stringify(closedPopups));
+    const popupId = $this.data('popup_id');
 
-
-                            if ($this.next('.popup-wrapper').length > 0) {
-                                popupAnnouncement($this.next('.popup-wrapper'));
-                            }
-                        }
-                    }
-                }, 0);
-            }
-        }, popupDelay);
-    } else {
+    if (closedPopups.indexOf(popupId) !== -1) {
         if ($this.next('.popup-wrapper').length > 0) {
             popupAnnouncement($this.next('.popup-wrapper'));
         }
+        return;
     }
+
+    // Delay: valores <= 120 se tratan como segundos (UX admin); si no, milisegundos.
+    let rawDelay = parseInt($this.data('popup_delay'), 10);
+    if (isNaN(rawDelay) || rawDelay < 0) {
+        rawDelay = 1000;
+    }
+    const popupDelay = rawDelay <= 120 ? rawDelay * 1000 : rawDelay;
+
+    const hydratePopupMedia = function ($root) {
+        $root.find('[data-bg]').each(function () {
+            const bg = this.getAttribute('data-bg');
+            if (bg && !this.style.backgroundImage) {
+                this.style.backgroundImage = 'url(' + bg + ')';
+            }
+            this.classList.add('loaded');
+        });
+
+        $root.find('img.lazy[data-src]').each(function () {
+            const src = this.getAttribute('data-src');
+            if (src && !this.getAttribute('src')) {
+                this.setAttribute('src', src);
+            }
+            this.classList.add('loaded');
+        });
+
+        if (window.tukiLazyLoad && typeof window.tukiLazyLoad.update === 'function') {
+            window.tukiLazyLoad.update();
+        }
+    };
+
+    setTimeout(function () {
+        if (!jQuery.magnificPopup) {
+            return;
+        }
+
+        // Nunca forzar display fuera del modal: deja el popup pegado en el documento.
+        jQuery.magnificPopup.open({
+            items: { src: '#' + $this.attr('id') },
+            type: 'inline',
+            fixedContentPos: true,
+            fixedBgPos: true,
+            overflowY: 'auto',
+            closeBtnInside: true,
+            closeOnBgClick: true,
+            enableEscapeKey: true,
+            removalDelay: 0,
+            mainClass: 'mfp-fade tuki-announcement-popup',
+            callbacks: {
+                beforeOpen: function () {
+                    hydratePopupMedia($this);
+                },
+                open: function () {
+                    hydratePopupMedia($this);
+                    document.documentElement.classList.add('tuki-popup-open');
+                },
+                afterClose: function () {
+                    document.documentElement.classList.remove('tuki-popup-open');
+                    closedPopups.push(popupId);
+                    try {
+                        sessionStorage.setItem('closedPopups', JSON.stringify(closedPopups));
+                    } catch (e) { /* ignore quota */ }
+
+                    if ($this.next('.popup-wrapper').length > 0) {
+                        popupAnnouncement($this.next('.popup-wrapper'));
+                    }
+                }
+            }
+        }, 0);
+    }, popupDelay);
 }
 
 // scroll to bottom

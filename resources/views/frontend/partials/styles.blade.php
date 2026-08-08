@@ -31,6 +31,10 @@
 <link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}">
 <!-- Main css -->
 <link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}">
+<!-- Magnific Popup (announcement popups + galerías) -->
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/magnific-popup.min.css') }}">
+<!-- Announcement popup geometry overrides -->
+<link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/popup-announcement.css') }}">
 <!-- Responsive css -->
 <link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}">
 <!-- Toastr css -->

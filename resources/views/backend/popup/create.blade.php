@@ -197,7 +197,7 @@
                                                 placeholder="{{ __('Enter Popup Delay') }}">
                                             <p id="err_delay" class="mt-2 mb-0 text-danger em"></p>
                                             <p class="text-warning mt-2 mb-0">
-                                                <small>{{ __('Popup will appear in UI after this delay time') }}</small>
+                                                <small>{{ __('Delay: usá segundos (ej. 3) o milisegundos (ej. 3000). Valores ≤ 120 se toman como segundos.') }}</small>
                                             </p>
                                         </div>
                                     </div>

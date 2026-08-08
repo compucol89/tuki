@@ -224,13 +224,13 @@
 
     @yield('content')
 
-    @includeIf('frontend.partials.popups')
-
-
     @includeIf('frontend.partials.footer.footer')
 
   </div>
   <!--End pagewrapper-->
+
+  {{-- Popups fuera del page-wrapper: evita que un show() accidental rompa el layout --}}
+  @includeIf('frontend.partials.popups')
 
   {{-- modals --}}
   @yield('modals')

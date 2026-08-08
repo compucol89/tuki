@@ -10,10 +10,24 @@ use App\Models\Language;
 use App\Models\Popup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
 
 class PopupController extends Controller
 {
+  private function forgetAnnouncementPopupCache(?int $languageId = null): void
+  {
+    if ($languageId) {
+      Cache::forget('frontend_announcement_popup_' . $languageId);
+
+      return;
+    }
+
+    Language::query()->pluck('id')->each(function ($id) {
+      Cache::forget('frontend_announcement_popup_' . $id);
+    });
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -76,6 +90,10 @@ class PopupController extends Controller
       'end_time' => $request->has('end_time') ? date('h:i', strtotime($request['end_time'])) : null
     ]);
 
+    $this->forgetAnnouncementPopupCache(
+      $request->filled('language_id') ? (int) $request->language_id : null
+    );
+
     Session::flash('success', 'New popup added successfully!');
 
     return response()->json(['status' => 'success'], 200);
@@ -101,6 +119,8 @@ class PopupController extends Controller
 
       Session::flash('success', __('admin.flash.updated_successfully'));
     }
+
+    $this->forgetAnnouncementPopupCache((int) $popup->language_id);
 
     return redirect()->back();
   }
@@ -139,6 +159,8 @@ class PopupController extends Controller
       'end_time' => $request->has('end_time') ? date('h:i', strtotime($request['end_time'])) : null
     ]);
 
+    $this->forgetAnnouncementPopupCache((int) $popup->language_id);
+
     Session::flash('success', __('admin.flash.updated_successfully'));
 
     return response()->json(['status' => 'success'], 200);
@@ -153,10 +175,13 @@ class PopupController extends Controller
   public function destroy($id)
   {
     $popup = Popup::find($id);
+    $languageId = $popup ? (int) $popup->language_id : null;
 
     @unlink(public_path('assets/admin/img/popups/') . $popup->image);
 
     $popup->delete();
+
+    $this->forgetAnnouncementPopupCache($languageId);
 
     return redirect()->back()->with('success', __('admin.flash.deleted_successfully'));
   }
@@ -178,6 +203,8 @@ class PopupController extends Controller
 
       $popup->delete();
     }
+
+    $this->forgetAnnouncementPopupCache();
 
     Session::flash('success', __('admin.flash.deleted_successfully'));
 

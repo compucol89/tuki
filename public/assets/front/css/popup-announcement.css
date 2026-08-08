@@ -1,0 +1,285 @@
+/**
+ * Announcement popups — geometry / Magnific inline layout.
+ * Loaded globally so production does not depend on style.min rebuild.
+ */
+
+html.tuki-popup-open,
+html.tuki-popup-open body {
+  overflow: hidden;
+}
+
+/* Keep sources hidden until Magnific mounts them */
+.popup-wrapper {
+  display: none;
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: min(960px, calc(100vw - 32px));
+  position: relative;
+  width: 100%;
+}
+
+.mfp-content .popup-wrapper,
+.mfp-inline-holder .mfp-content .popup-wrapper {
+  display: block !important;
+  margin: 0 auto;
+  max-height: min(88vh, 900px);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mfp-bg {
+  z-index: 10040;
+}
+
+.mfp-wrap {
+  z-index: 10050;
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mfp-container {
+  box-sizing: border-box;
+  padding: 24px 12px !important;
+}
+
+.mfp-content {
+  max-width: min(960px, calc(100vw - 24px));
+  vertical-align: middle;
+}
+
+.mfp-close-btn-in .mfp-close {
+  background: #fff !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+  color: #1e2532 !important;
+  font-size: 22px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  opacity: 1 !important;
+  right: 8px !important;
+  top: 8px !important;
+  width: 36px !important;
+  z-index: 10060;
+}
+
+/* Type 1 — image only */
+.popup-wrapper > div > img,
+.popup-wrapper .popup-image {
+  border-radius: 8px;
+  display: block;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Headings: markup uses h2; legacy CSS targeted h1 */
+.popup_main-content h1,
+.popup_main-content h2 {
+  font-size: clamp(1.35rem, 2.2vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 12px;
+}
+
+.popup_main-content p,
+.popup_main-content h4 {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+.popup-one,
+.popup-two {
+  padding: clamp(28px, 6vw, 80px) clamp(16px, 5vw, 72px);
+}
+
+.popup-one .popup_main-content,
+.popup-two .popup_main-content {
+  border-radius: 12px;
+  padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 40px);
+}
+
+.popup-one .popup_main-content h1,
+.popup-one .popup_main-content h2,
+.popup-one .popup_main-content p,
+.popup-two .popup_main-content h1,
+.popup-two .popup_main-content h2,
+.popup-two .popup_main-content p {
+  color: #fff;
+}
+
+.popup-main-btn {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-weight: 650;
+  justify-content: center;
+  line-height: 1.2;
+  min-height: 44px;
+  padding: 12px 28px;
+  text-decoration: none;
+}
+
+.popup-two .subscribe-form,
+.popup-four .subscribe-form {
+  margin: 0 auto;
+  max-width: 420px;
+  padding: 0;
+}
+
+.popup-wrapper .form_control {
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-size: 15px;
+  height: 48px;
+  line-height: 1.3;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.popup-two .subscribe-form .popup-main-btn,
+.popup-four .subscribe-form .popup-main-btn {
+  border-radius: 10px;
+  font-size: 15px;
+  height: 48px;
+  width: 100%;
+}
+
+/* Split layouts */
+.popup-three .popup_main-content,
+.popup-four .popup_main-content,
+.popup-six .popup_main-content {
+  align-items: stretch;
+  background: #fff;
+  border-radius: 12px;
+  display: flex;
+  flex-wrap: nowrap;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.popup-three .popup_main-content .left-bg,
+.popup-four .popup_main-content .left-bg {
+  flex: 0 0 42%;
+  min-height: 320px;
+  width: 42%;
+}
+
+.popup-three .popup_main-content .right-content,
+.popup-four .popup_main-content .right-content {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  padding: clamp(24px, 4vw, 40px);
+  text-align: center;
+  width: auto;
+}
+
+/* Type 6: absolute left was escaping without relative parent */
+.popup-six .popup_main-content {
+  min-height: 360px;
+}
+
+.popup-six .popup_main-content .left-bg {
+  bottom: 0;
+  height: auto;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 50%;
+}
+
+.popup-six .popup_main-content .right-content {
+  box-sizing: border-box;
+  margin-left: 50%;
+  padding: clamp(32px, 5vw, 72px) clamp(16px, 3vw, 28px);
+  width: 50%;
+}
+
+.popup-five .popup_main-content {
+  padding: clamp(32px, 6vw, 64px) clamp(16px, 4vw, 48px);
+  text-align: center;
+}
+
+.popup-wrapper .syotimer__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 0 auto 24px;
+  max-width: 420px;
+}
+
+.popup-wrapper .syotimer-cell {
+  flex: 1 1 22%;
+  min-width: 64px;
+  padding: 0 4px;
+}
+
+.popup-wrapper .syotimer-cell__value {
+  align-items: center;
+  background: #1f3a52;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  display: flex;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  height: 64px;
+  justify-content: center;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.popup-wrapper .syotimer-cell__unit {
+  color: #fff;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+@media (max-width: 767.98px) {
+  .mfp-container {
+    padding: 16px 10px !important;
+  }
+
+  .popup-three .popup_main-content,
+  .popup-four .popup_main-content,
+  .popup-six .popup_main-content {
+    flex-direction: column;
+  }
+
+  .popup-three .popup_main-content .left-bg,
+  .popup-four .popup_main-content .left-bg,
+  .popup-six .popup_main-content .left-bg {
+    display: none;
+  }
+
+  .popup-three .popup_main-content .right-content,
+  .popup-four .popup_main-content .right-content,
+  .popup-six .popup_main-content .right-content {
+    margin-left: 0;
+    padding: 28px 18px;
+    width: 100%;
+  }
+
+  .popup-wrapper .syotimer-cell {
+    flex: 1 1 40%;
+  }
+}
+
+html[data-theme="dark"] .mfp-bg {
+  background: #0b0b0b;
+  opacity: 0.85;
+}
+
+html[data-theme="dark"] .mfp-close-btn-in .mfp-close {
+  background: #2a3040 !important;
+  color: #fff !important;
+}
+
+html[data-theme="dark"] .popup-three .popup_main-content,
+html[data-theme="dark"] .popup-four .popup_main-content,
+html[data-theme="dark"] .popup-six .popup_main-content {
+  background: #2a3040;
+  color: #e5e5e5;
+}

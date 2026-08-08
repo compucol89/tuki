@@ -84,7 +84,7 @@
     --scrim: rgba(0, 0, 0, 0.5);
 
     /* Estado Tuki (semánticos independientes, no mapean a primary) */
-    --success: #059669;
+    --success: #047857;
     --success-foreground: #ffffff;
     --success-light: #d1fae5;
     --warning: #d97706;

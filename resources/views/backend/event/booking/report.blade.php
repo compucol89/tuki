@@ -8,10 +8,22 @@
       --br-muted: #667085;
       --br-border: #e4e7ec;
       --br-soft: #f8fafc;
+      --br-card: #ffffff;
+      --br-header: #fbfcfe;
+      --br-hairline: #eef1f5;
+      --br-thead: #edf4f9;
       --br-orange: #f97316;
       --br-orange-dark: #c2410c;
       --br-green: #16a34a;
       --br-blue: #2563eb;
+      --br-status-paid-bg: #dcfce7;
+      --br-status-paid-fg: #166534;
+      --br-status-pending-bg: #fffbeb;
+      --br-status-pending-fg: #92400e;
+      --br-status-free-bg: #dbeafe;
+      --br-status-free-fg: #1d4ed8;
+      --br-status-rejected-bg: #fee2e2;
+      --br-status-rejected-fg: #991b1b;
       color: var(--br-ink);
       font-size: 13px;
       line-height: 1.45;
@@ -36,7 +48,7 @@
     .br-event-card {
       border: 1px solid var(--br-border);
       border-radius: 8px;
-      background: #fff;
+      background: var(--br-card);
       box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
     }
 
@@ -60,9 +72,26 @@
     }
 
     .br-filter-card label {
-      color: #5f6f89;
+      color: var(--br-muted);
       font-size: 12px;
       font-weight: 700;
+    }
+
+    .br-filter-card .form-control {
+      background: var(--br-soft);
+      border-color: var(--br-border);
+      color: var(--br-ink);
+    }
+
+    .br-filter-card .form-control:focus {
+      border-color: var(--br-orange);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, .18);
+    }
+
+    .br-filter-card .btn-light {
+      background: var(--br-soft) !important;
+      border-color: var(--br-border) !important;
+      color: var(--br-ink) !important;
     }
 
     .br-summary {
@@ -74,7 +103,7 @@
 
     .br-metric {
       --br-accent: #94a3b8;
-      --br-soft: #f8fafc;
+      --br-metric-soft: var(--br-soft);
       position: relative;
       display: grid;
       grid-template-columns: minmax(0, 1fr) 40px;
@@ -82,9 +111,9 @@
       min-height: 96px;
       padding: 16px;
       overflow: hidden;
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--br-border);
       border-radius: 8px;
-      background: linear-gradient(180deg, #fff 0%, var(--br-soft) 100%);
+      background: linear-gradient(180deg, var(--br-card) 0%, var(--br-metric-soft) 100%);
       box-shadow: 0 8px 22px rgba(30, 37, 50, .05);
     }
 
@@ -98,14 +127,14 @@
 
     .br-metric__label {
       margin-bottom: 7px;
-      color: #64748b;
+      color: var(--br-muted);
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
     }
 
     .br-metric__value {
-      color: #1e2532;
+      color: var(--br-ink-strong);
       font-size: 23px;
       font-weight: 900;
       line-height: 1.15;
@@ -114,7 +143,7 @@
 
     .br-metric__hint {
       margin-top: 5px;
-      color: #667085;
+      color: var(--br-muted);
       font-size: 11px;
       line-height: 1.35;
     }
@@ -125,42 +154,40 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      border: 1px solid #e7eaf0;
-      border: 1px solid color-mix(in srgb, var(--br-accent) 24%, transparent);
+      border: 1px solid var(--br-border);
       border-radius: 12px;
-      background: #fff;
-      background: color-mix(in srgb, var(--br-accent) 10%, #fff);
+      background: var(--br-card);
       color: var(--br-accent);
     }
 
     .br-metric--primary {
       --br-accent: #f97316;
-      --br-soft: #fff7ed;
+      --br-metric-soft: #fff7ed;
       border-color: rgba(249, 115, 22, .20);
     }
 
     .br-metric--money,
     .br-metric--paid {
       --br-accent: #16a34a;
-      --br-soft: #f0fdf4;
+      --br-metric-soft: #f0fdf4;
       border-color: rgba(22, 163, 74, .24);
     }
 
     .br-metric--pending {
       --br-accent: #f59e0b;
-      --br-soft: #fffbeb;
+      --br-metric-soft: #fffbeb;
       border-color: rgba(245, 158, 11, .24);
     }
 
     .br-metric--free {
       --br-accent: #2563eb;
-      --br-soft: #eff6ff;
+      --br-metric-soft: #eff6ff;
       border-color: rgba(37, 99, 235, .24);
     }
 
     .br-metric--rejected {
       --br-accent: #dc2626;
-      --br-soft: #fff1f2;
+      --br-metric-soft: #fff1f2;
       border-color: rgba(220, 38, 38, .18);
     }
 
@@ -175,8 +202,8 @@
       justify-content: space-between;
       gap: 14px;
       padding: 16px 18px;
-      border-bottom: 1px solid #eef1f5;
-      background: #fbfcfe;
+      border-bottom: 1px solid var(--br-hairline);
+      background: var(--br-header);
     }
 
     .br-section__title {
@@ -239,14 +266,14 @@
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 14px;
       padding: 15px 17px;
-      background: linear-gradient(90deg, var(--br-event-soft) 0%, #fff 68%);
-      border-bottom: 1px solid #eef1f5;
+      background: linear-gradient(90deg, var(--br-event-soft) 0%, var(--br-card) 68%);
+      border-bottom: 1px solid var(--br-hairline);
     }
 
     .br-event-card__title {
       display: block;
       margin-bottom: 7px;
-      color: #1e2532;
+      color: var(--br-ink-strong);
       font-size: 15px;
       font-weight: 900;
       line-height: 1.25;
@@ -273,24 +300,23 @@
     }
 
     .br-chip {
-      border: 1px solid #eef1f5;
-      background: #fff;
-      color: #5f6f89;
+      border: 1px solid var(--br-hairline);
+      background: var(--br-card);
+      color: var(--br-muted);
     }
 
     .br-event-card__amount {
       min-width: 138px;
       padding: 8px 10px;
-      border: 1px solid #e7eaf0;
-      border: 1px solid color-mix(in srgb, var(--br-event-accent) 18%, #e7eaf0);
+      border: 1px solid var(--br-border);
       border-radius: 9px;
-      background: #fff;
+      background: var(--br-card);
       text-align: right;
     }
 
     .br-event-card__amount span {
       display: block;
-      color: #667085;
+      color: var(--br-muted);
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
@@ -298,7 +324,7 @@
 
     .br-event-card__amount strong {
       display: block;
-      color: #1e2532;
+      color: var(--br-ink-strong);
       font-size: 17px;
       font-weight: 900;
       line-height: 1.15;
@@ -309,19 +335,19 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       padding: 14px;
-      background: #fbfcfe;
+      background: var(--br-header);
     }
 
     .br-event-stat {
       padding: 10px 12px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--br-hairline);
       border-radius: 9px;
-      background: #fff;
+      background: var(--br-card);
     }
 
     .br-event-stat span {
       display: block;
-      color: #667085;
+      color: var(--br-muted);
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
@@ -330,33 +356,33 @@
     .br-event-stat strong {
       display: block;
       margin-top: 3px;
-      color: #1e2532;
+      color: var(--br-ink-strong);
       font-size: 18px;
       font-weight: 900;
     }
 
     .br-status--paid,
     .badge-success.br-status {
-      background: #dcfce7 !important;
-      color: #166534 !important;
+      background: var(--br-status-paid-bg) !important;
+      color: var(--br-status-paid-fg) !important;
     }
 
     .br-status--pending,
     .badge-warning.br-status {
-      background: #fffbeb !important;
-      color: #92400e !important;
+      background: var(--br-status-pending-bg) !important;
+      color: var(--br-status-pending-fg) !important;
     }
 
     .br-status--free,
     .badge-info.br-status {
-      background: #dbeafe !important;
-      color: #1d4ed8 !important;
+      background: var(--br-status-free-bg) !important;
+      color: var(--br-status-free-fg) !important;
     }
 
     .br-status--rejected,
     .badge-danger.br-status {
-      background: #fee2e2 !important;
-      color: #991b1b !important;
+      background: var(--br-status-rejected-bg) !important;
+      color: var(--br-status-rejected-fg) !important;
     }
 
     .br-table {
@@ -372,8 +398,8 @@
     .br-table th {
       border-top: 0;
       border-bottom: 1px solid var(--br-border);
-      background: #edf4f9;
-      color: #344054;
+      background: var(--br-thead) !important;
+      color: var(--br-muted) !important;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .045em;
@@ -384,11 +410,13 @@
 
     .br-table td {
       vertical-align: middle;
-      color: var(--br-ink);
+      color: var(--br-ink) !important;
+      border-color: var(--br-border) !important;
       font-size: 13px;
       font-weight: 400;
       line-height: 1.45;
       padding: 14px;
+      background: transparent !important;
     }
 
     .br-table th:nth-child(1),
@@ -450,7 +478,7 @@
     }
 
     .br-event-link:hover {
-      color: #c2410c;
+      color: var(--br-orange-dark);
       text-decoration: none;
     }
 
@@ -473,7 +501,7 @@
       gap: 12px;
       padding: 14px;
       border-top: 1px solid var(--br-border);
-      background: #fbfcfd;
+      background: var(--br-header);
     }
 
     .br-booking-card {
@@ -482,7 +510,7 @@
       padding: 14px;
       border: 1px solid var(--br-border);
       border-radius: 8px;
-      background: #fff;
+      background: var(--br-card);
       box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
     }
 
@@ -519,7 +547,7 @@
       grid-template-columns: 1fr;
       gap: 10px;
       padding-top: 12px;
-      border-top: 1px solid #eef1f5;
+      border-top: 1px solid var(--br-hairline);
     }
 
     .br-booking-card__label {
@@ -546,7 +574,7 @@
       justify-content: space-between;
       gap: 10px;
       padding-top: 12px;
-      border-top: 1px solid #eef1f5;
+      border-top: 1px solid var(--br-hairline);
     }
 
     .br-empty {
@@ -555,15 +583,94 @@
     }
 
     .br-empty i {
-      color: #9aa4b2;
+      color: var(--br-muted);
       font-size: 34px;
     }
 
     .br-empty h3 {
       margin-top: 14px;
-      color: #1e2532;
+      color: var(--br-ink-strong);
       font-size: 18px;
       font-weight: 900;
+    }
+
+    html[data-theme="dark"] .booking-report-admin {
+      --br-ink: #e5e5e5;
+      --br-ink-strong: #ffffff;
+      --br-muted: #a3a3a3;
+      --br-border: #3d4354;
+      --br-soft: #1f2838;
+      --br-card: #2a3040;
+      --br-header: #252b38;
+      --br-hairline: #3d4354;
+      --br-thead: #1f2838;
+      --br-orange-dark: #fdba74;
+      --br-status-paid-bg: #14352a;
+      --br-status-paid-fg: #4ade80;
+      --br-status-pending-bg: #3a2f1a;
+      --br-status-pending-fg: #fbbf24;
+      --br-status-free-bg: #1e3a5f;
+      --br-status-free-fg: #93c5fd;
+      --br-status-rejected-bg: #3a2228;
+      --br-status-rejected-fg: #f87171;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-metric--primary {
+      --br-metric-soft: #3a2c26;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-metric--money,
+    html[data-theme="dark"] .booking-report-admin .br-metric--paid {
+      --br-metric-soft: #14352a;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-metric--pending {
+      --br-metric-soft: #3a2f1a;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-metric--free {
+      --br-metric-soft: #1e3a5f;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-metric--rejected {
+      --br-metric-soft: #3a2228;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-event-card {
+      --br-event-soft: #14352a;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-event-card--pending {
+      --br-event-soft: #3a2f1a;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-event-card--free {
+      --br-event-soft: #1e3a5f;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-event-card--rejected {
+      --br-event-soft: #3a2228;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-filter-card,
+    html[data-theme="dark"] .booking-report-admin .br-section,
+    html[data-theme="dark"] .booking-report-admin .br-event-card,
+    html[data-theme="dark"] .booking-report-admin .br-metric,
+    html[data-theme="dark"] .booking-report-admin .br-booking-card {
+      background: var(--br-card) !important;
+      border-color: var(--br-border) !important;
+      box-shadow: none !important;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-metric {
+      background: linear-gradient(180deg, var(--br-card) 0%, var(--br-metric-soft) 100%) !important;
+    }
+
+    html[data-theme="dark"] .booking-report-admin .br-section__head,
+    html[data-theme="dark"] .booking-report-admin .br-event-card__stats,
+    html[data-theme="dark"] .booking-report-admin .br-mobile-list {
+      background: var(--br-header) !important;
+      border-color: var(--br-border) !important;
     }
 
     @media (max-width: 1199px) {

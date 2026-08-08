@@ -142,7 +142,7 @@ class MercadoPagoDiagnosticoController extends Controller
             'items' => [[
                 'title'       => 'Test TukiPass',
                 'quantity'    => 1,
-                'currency_id' => 'ARS',
+                'currency_id' => $this->getCurrencyInfo()->base_currency_text ?? config('tukipass.currency.text'),
                 'unit_price'  => 1.00,
             ]],
         ]);

@@ -721,7 +721,7 @@ body.contact-page-premium main {
   $contactAddresses = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $info->contact_addresses ?? ''))));
   $contactMails = array_values(array_filter(array_map('trim', explode(',', $info->contact_mails ?? ''))));
   $contactPhones = array_values(array_filter(array_map('trim', explode(',', $info->contact_numbers ?? ''))));
-  $mapAddress = 'Av. Pueyrredón 1357 local 63 Capital Federal, Buenos Aires, Argentina';
+  $mapAddress = $contactAddresses[0] ?? $websiteInfo->address ?? '';
   $validSocials = collect($socialMediaInfos ?? [])->filter(function ($social) {
       $url = trim((string) ($social->url ?? ''));
       return $url !== '';
@@ -883,6 +883,7 @@ body.contact-page-premium main {
 </section>
 
 {{-- ── MAPA ── --}}
+@if ($mapAddress !== '')
 <section class="ctp-map-section" aria-label="Ubicación Tukipass">
   <p class="ctp-map-address-line">{{ $mapAddress }}</p>
   <div class="ctp-map ctp-map-frame">
@@ -895,4 +896,5 @@ body.contact-page-premium main {
     </iframe>
   </div>
 </section>
+@endif
 @endsection

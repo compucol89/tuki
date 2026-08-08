@@ -10,10 +10,10 @@ class LegalPagesContentSeeder extends Seeder
 {
   public function run()
   {
-    $operator = 'TAYRONA - GROUP S.A.S.';
-    $cuit = '30-71885087-4';
-    $address = 'Pueyrredón Av. 1357, Ciudad Autónoma de Buenos Aires, Argentina';
-    $domain = (string) config('tukipass.redirect_www.www_domain', 'https://www.tukipass.com');
+    $operator = (string) config('tukipass.fiscal.issuer_name', 'TAYRONA GROUP SAS');
+    $cuit = (string) config('tukipass.fiscal.issuer_cuit', '30-71885087-4');
+    $address = (string) config('tukipass.fiscal.issuer_address', 'Pueyrredón Av. 1357, Ciudad Autónoma de Buenos Aires, Argentina');
+    $domain = rtrim((string) config('app.url'), '/');
     $supportEmail = (string) config('tukipass.fiscal.support_email', 'soporte@tukipass.com');
     $privacyEmail = (string) config('tukipass.fiscal.contact_email', 'info@tukipass.com');
     $updatedAt = '15/04/2026';

@@ -8,7 +8,14 @@ use Illuminate\Support\Facades\Http;
 
 final class VenueGeocoder
 {
-  private const USER_AGENT = 'TukipassEventGeocoder/1.0 (support@tukipass.com)';
+  private const USER_AGENT_PREFIX = 'TukipassEventGeocoder/1.0';
+
+  public static function userAgent(): string
+  {
+    $email = trim((string) \App\Models\BasicSettings\Basic::query()->value('email_address'));
+
+    return self::USER_AGENT_PREFIX . ' (' . ($email !== '' ? $email : (string) config('tukipass.fiscal.support_email')) . ')';
+  }
 
   public static function buildAddressQueryFromRequest(Request $request): string
   {
@@ -41,7 +48,7 @@ final class VenueGeocoder
 
     try {
       $response = Http::withHeaders([
-        'User-Agent' => self::USER_AGENT,
+        'User-Agent' => self::userAgent(),
         'Accept-Language' => 'es',
       ])->timeout(10)->get('https://nominatim.openstreetmap.org/search', [
         'q' => $query,

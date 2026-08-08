@@ -68,7 +68,7 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
                     'environment'    => config('arca.environment', 'homologation'),
                     'status'         => 'blocked',
                     'invoice_model'  => config('arca.invoice_model', 'customer_service_fee_invoice'),
-                    'currency'       => 'ARS',
+                    'currency'       => config('tukipass.currency.text'),
                     'error_message'  => 'La reserva no está pagada',
                 ]);
                 $invoice->save();
@@ -253,7 +253,7 @@ class ArcaInvoiceIssuingJob implements ShouldQueue
                     'environment'   => config('arca.environment', 'homologation'),
                     'status'        => 'error',
                     'invoice_model' => config('arca.invoice_model', 'customer_service_fee_invoice'),
-                    'currency'      => 'ARS',
+                    'currency'      => config('tukipass.currency.text'),
                     'error_code'    => (string) $exception->getCode(),
                     'error_message' => $exception->getMessage(),
                 ]);

@@ -31,12 +31,12 @@
       return substr($digits, 0, 2) . '-' . substr($digits, 2, 8) . '-' . substr($digits, 10, 1);
     }
 
-    return $value ?: '30-71885087-4';
+    return $value ?: config('tukipass.fiscal.issuer_cuit');
   };
 
-  $issuerName = trim((string) ($billing->issuer_name ?: config('arca.issuer_name'))) ?: 'TAYRONA GROUP SAS';
-  $issuerCuit = $formatCuit($invoice->issuer_cuit_used ?: $billing->issuer_cuit ?: '30718850874');
-  $issuerIva = $formatCondition($billing->issuer_iva_condition_text ?: $billing->issuer_iva_condition, 'Responsable Inscripto');
+  $issuerName = trim((string) ($billing->issuer_name ?: config('arca.issuer_name'))) ?: config('tukipass.fiscal.issuer_name');
+  $issuerCuit = $formatCuit($invoice->issuer_cuit_used ?: $billing->issuer_cuit ?: config('tukipass.fiscal.issuer_cuit_compact'));
+  $issuerIva = $formatCondition($billing->issuer_iva_condition_text ?: $billing->issuer_iva_condition, config('tukipass.fiscal.issuer_iva_condition'));
   $issuerAddress = trim((string) $billing->issuer_address);
   $recipientName = trim((string) ($invoice->recipient_name ?: trim(($booking->fname ?? '') . ' ' . ($booking->lname ?? '')))) ?: 'Consumidor final';
   $recipientDocument = trim((string) ($invoice->recipient_tax_id ?: $booking->dni ?: 'Consumidor final'));
@@ -490,8 +490,8 @@
       </table>
 
       <div class="footer">
-        <strong>TukiPass</strong> - Entradas online para eventos en Argentina<br>
-        TAYRONA GROUP SAS - CUIT 30-71885087-4 - Factura electrónica autorizada por ARCA
+        <strong>{{ config('app.name') }}</strong> - Entradas online para eventos en Argentina<br>
+        {{ config('tukipass.fiscal.issuer_name') }} - CUIT {{ config('tukipass.fiscal.issuer_cuit') }} - Factura electrónica autorizada por ARCA
       </div>
     </div>
   </div>

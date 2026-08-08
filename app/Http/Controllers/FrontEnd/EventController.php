@@ -309,7 +309,7 @@ class EventController extends Controller
         }
       }
       $websiteTitle = $basicSettings?->website_title ?? config('app.name');
-      $baseCurrencyText = $basicSettings?->base_currency_text ?? 'ARS';
+      $baseCurrencyText = $basicSettings?->base_currency_text ?? config('tukipass.currency.text');
 
       $statusMeta = $this->buildEventStatusMeta($content, $websiteTimezone);
       $ticketSummary = $this->buildTicketSummary($content);

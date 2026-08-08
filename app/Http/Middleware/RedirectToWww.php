@@ -10,12 +10,15 @@ class RedirectToWww
 {
   public function handle(Request $request, Closure $next): Response
   {
-    if ($request->getHost() !== 'tukipass.com') {
+    $bareDomain = (string) config('tukipass.redirect_www.bare_domain', 'tukipass.com');
+    $wwwDomain = (string) config('tukipass.redirect_www.www_domain', 'www.tukipass.com');
+
+    if ($request->getHost() !== $bareDomain) {
       return $next($request);
     }
 
     $scheme = $this->resolveScheme($request);
-    $wwwUrl = $scheme . '://www.tukipass.com' . $request->getRequestUri();
+    $wwwUrl = $scheme . '://' . $wwwDomain . $request->getRequestUri();
 
     return redirect()->away($wwwUrl, 308);
   }

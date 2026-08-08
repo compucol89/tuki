@@ -24,8 +24,8 @@
     $calEndDate   = str_replace('-', '', $event->end_date ?? '');
     $calEndTime   = str_replace(':', '', $event->end_time ?? '');
   }
-  $calSTime = $calStartTime ? $calStartTime - 5 : '0000';
-  $calETime = $calEndTime   ? $calEndTime - 5   : '0000';
+  $calSTime = $calStartTime ?: '0000';
+  $calETime = $calEndTime   ?: '0000';
 
   $eventTitle   = @$event->information->title ?? '';
   $eventSlug    = @$event->information->slug  ?? '';
@@ -44,9 +44,9 @@
       (float) $booking->price + (float) $booking->tax - (float) $booking->discount - (float) $booking->early_bird_discount,
       0
     ), 2);
-	  $purchaseCurrency = strtoupper(trim((string) ($booking->currencyText ?: 'ARS')));
+	  $purchaseCurrency = strtoupper(trim((string) ($booking->currencyText ?: config('tukipass.currency.text'))));
     if (!preg_match('/^[A-Z]{3}$/', $purchaseCurrency)) {
-      $purchaseCurrency = 'ARS';
+      $purchaseCurrency = config('tukipass.currency.text');
     }
     $purchaseContentId = 'event_' . (int) $booking->event_id;
     $purchaseContents = [[

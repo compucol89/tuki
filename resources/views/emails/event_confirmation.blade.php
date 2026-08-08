@@ -437,21 +437,21 @@
 
     {{-- Footer --}}
     <div class="footer">
-      <p class="brand">TukiPass</p>
+      <p class="brand">{{ config('app.name') }}</p>
       <p>Entradas y Tickets Online para Eventos en Argentina</p>
       @php
         $billing = \App\Models\BillingSetting::current();
       @endphp
       @if($billing->issuer_name || $billing->issuer_cuit)
         <p style="margin-top: 8px; font-size: 11px; color: #666;">
-          <strong>{{ $billing->issuer_name ?? 'TAYRONA GROUP SAS' }}</strong>
+          <strong>{{ $billing->issuer_name ?? config('tukipass.fiscal.issuer_name') }}</strong>
           @if($billing->issuer_cuit) · CUIT {{ $billing->issuer_cuit }}@endif
           @if($billing->issuer_address)<br>{{ $billing->issuer_address }}@endif
           @if($billing->issuer_iva_condition_text)<br>{{ $billing->issuer_iva_condition_text }}@endif
         </p>
       @else
         <p style="margin-top: 8px; font-size: 11px; color: #666;">
-          <strong>TAYRONA GROUP SAS</strong> · CUIT 30-71885087-4
+          <strong>{{ config('tukipass.fiscal.issuer_name') }}</strong> · CUIT {{ config('tukipass.fiscal.issuer_cuit') }}
         </p>
       @endif
       <p style="margin-top: 12px; font-size: 11px; color: #aaa;">

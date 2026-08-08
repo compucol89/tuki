@@ -16,14 +16,14 @@ final class EventRefundPolicy
   {
     $billing = BillingSetting::current();
 
-    return trim((string) ($billing?->issuer_name ?? '')) ?: config('tukipass.fiscal.issuer_name', 'TAYRONA GROUP SAS');
+    return trim((string) ($billing?->issuer_name ?? '')) ?: config('tukipass.fiscal.issuer_name');
   }
 
   public static function issuerCuit(): string
   {
     $billing = BillingSetting::current();
 
-    return trim((string) ($billing?->issuer_cuit ?? '')) ?: config('tukipass.fiscal.issuer_cuit', '30-71885087-4');
+    return trim((string) ($billing?->issuer_cuit ?? '')) ?: config('tukipass.fiscal.issuer_cuit');
   }
 
   public static function supportEmail(): string

@@ -5,7 +5,7 @@
   App::setLocale($languageCode);
   $primary     = '#' . ($websiteInfo->primary_color ?? 'f97316');
   $position    = $bookingInfo->currencyTextPosition ?? 'left';
-  $currency    = $bookingInfo->currencyText ?? 'ARS';
+  $currency    = $bookingInfo->currencyText ?? config('tukipass.currency.text');
   
   function formatMoney($amount, $position, $currency) {
     $amt = number_format((float)$amount, 2, ',', '.');
@@ -574,12 +574,12 @@
           @endphp
           <div style="font-size:8px; color:rgba(255,255,255,0.6); margin-top:8px; line-height:1.5;">
             @if($billing->issuer_name || $billing->issuer_cuit)
-              {{ $billing->issuer_name ?? 'TAYRONA GROUP SAS' }}
+              {{ $billing->issuer_name ?? config('tukipass.fiscal.issuer_name') }}
               @if($billing->issuer_cuit) · CUIT {{ $billing->issuer_cuit }}@endif
               @if($billing->issuer_address)<br>{{ $billing->issuer_address }}@endif
               @if($billing->issuer_iva_condition_text)<br>{{ $billing->issuer_iva_condition_text }}@endif
             @else
-              TAYRONA GROUP SAS · CUIT 30-71885087-4
+              {{ config('tukipass.fiscal.issuer_name') }} · CUIT {{ config('tukipass.fiscal.issuer_cuit') }}
             @endif
           </div>
           <div class="footer-disclaimer">Comprobante interno - No es factura fiscal</div>
@@ -752,12 +752,12 @@
           @endphp
           <div style="font-size:8px; color:rgba(255,255,255,0.6); margin-top:8px; line-height:1.5;">
             @if($billing->issuer_name || $billing->issuer_cuit)
-              {{ $billing->issuer_name ?? 'TAYRONA GROUP SAS' }}
+              {{ $billing->issuer_name ?? config('tukipass.fiscal.issuer_name') }}
               @if($billing->issuer_cuit) · CUIT {{ $billing->issuer_cuit }}@endif
               @if($billing->issuer_address)<br>{{ $billing->issuer_address }}@endif
               @if($billing->issuer_iva_condition_text)<br>{{ $billing->issuer_iva_condition_text }}@endif
             @else
-              TAYRONA GROUP SAS · CUIT 30-71885087-4
+              {{ config('tukipass.fiscal.issuer_name') }} · CUIT {{ config('tukipass.fiscal.issuer_cuit') }}
             @endif
           </div>
           <div class="footer-disclaimer">Comprobante interno - No es factura fiscal</div>

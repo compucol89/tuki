@@ -306,7 +306,7 @@ $productSchema = [
 if (isset($product->current_price) && is_numeric($product->current_price)) {
     $productSchema['offers'] = [
         '@type' => 'Offer',
-        'priceCurrency' => 'ARS',
+        'priceCurrency' => $basicInfo->base_currency_text ?? config('tukipass.currency.text'),
         'price' => (string) $product->current_price,
         'availability' => ($product->stock ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
         'url' => url()->current(),

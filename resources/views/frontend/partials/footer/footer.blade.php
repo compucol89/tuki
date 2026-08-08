@@ -104,12 +104,12 @@
         <nav class="footer-nav" aria-labelledby="footer-legal-title">
           <h2 class="footer-title" id="footer-legal-title">{{ __('Legal') }}</h2>
           <ul class="footer-nav__list">
-            <li><a href="{{ url('/terminos-y-condiciones') }}">{{ __('Términos y condiciones') }}</a></li>
-            <li><a href="{{ url('/politica-de-privacidad') }}">{{ __('Política de privacidad') }}</a></li>
-            <li><a href="{{ url('/eliminacion-de-datos') }}">{{ __('Eliminación de datos') }}</a></li>
-            <li><a href="{{ url('/politica-de-reembolsos') }}">{{ __('Política de reembolsos') }}</a></li>
-            <li><a href="{{ url('/politica-de-cookies') }}">{{ __('Política de cookies') }}</a></li>
-            <li><a href="{{ url('/defensa-al-consumidor') }}">{{ __('Defensa al consumidor') }}</a></li>
+            <li><a href="{{ route('dynamic_page', ['slug' => 'terminos-y-condiciones']) }}">{{ __('Términos y condiciones') }}</a></li>
+            <li><a href="{{ route('dynamic_page', ['slug' => 'politica-de-privacidad']) }}">{{ __('Política de privacidad') }}</a></li>
+            <li><a href="{{ route('dynamic_page', ['slug' => 'eliminacion-de-datos']) }}">{{ __('Eliminación de datos') }}</a></li>
+            <li><a href="{{ route('dynamic_page', ['slug' => 'politica-de-reembolsos']) }}">{{ __('Política de reembolsos') }}</a></li>
+            <li><a href="{{ route('dynamic_page', ['slug' => 'politica-de-cookies']) }}">{{ __('Política de cookies') }}</a></li>
+            <li><a href="{{ route('dynamic_page', ['slug' => 'defensa-al-consumidor']) }}">{{ __('Defensa al consumidor') }}</a></li>
           </ul>
         </nav>
       </div>

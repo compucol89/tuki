@@ -127,7 +127,7 @@
           Estamos trabajando para resolverlo. Si necesitás el comprobante con urgencia,
           contactanos y lo gestionamos manualmente.
         </p>
-        <a href="mailto:hola@tukipass.com" style="display:inline-block; background:#e05d38; color:#fff; font-weight:700; padding:12px 28px; border-radius:8px; text-decoration:none; font-size:15px;">Contactar soporte</a>
+        <a href="mailto:{{ $basicInfo->email_address }}" style="display:inline-block; background:#e05d38; color:#fff; font-weight:700; padding:12px 28px; border-radius:8px; text-decoration:none; font-size:15px;">Contactar soporte</a>
       </div>
 
     @else

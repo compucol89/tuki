@@ -92,8 +92,8 @@
   <meta name="twitter:image:alt" content="{{ $ogImageAlt }}" />
   <meta name="twitter:url" content="{{ $ogUrl }}" />
   {{-- Preconnect to own origin for CSS/fonts/assets --}}
-  <link rel="preconnect" href="https://www.tukipass.com">
-  <link rel="dns-prefetch" href="https://www.tukipass.com">
+  <link rel="preconnect" href="{{ url('/') }}">
+  <link rel="dns-prefetch" href="{{ url('/') }}">
   <link rel="canonical" href="{{ $canonicalUrl }}" />
   <link rel="alternate" type="text/plain" title="Mapa para agentes IA" href="{{ url('/llms.txt') }}" />
   <link rel="alternate" type="text/plain" title="Referencia completa para agentes IA" href="{{ url('/llms-full.txt') }}" />

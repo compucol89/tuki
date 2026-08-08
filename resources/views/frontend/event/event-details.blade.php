@@ -827,6 +827,9 @@
 
 @push('schema')
 @php
+  $fiscalIssuer = \App\Models\BillingSetting::current();
+  $fiscalName = trim((string) ($fiscalIssuer?->issuer_name ?? '')) ?: config('tukipass.fiscal.issuer_name');
+  $fiscalCuit = trim((string) ($fiscalIssuer?->issuer_cuit ?? '')) ?: config('tukipass.fiscal.issuer_cuit');
   $schemaStart = !empty($startDateTime)
     ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)
     : null;
@@ -897,7 +900,7 @@
     $jsonLd['offers'] = [
       '@type' => 'Offer',
       'price' => is_numeric($ticketSummary['min_ticket_price'] ?? null) ? $ticketSummary['min_ticket_price'] : 0,
-      'priceCurrency' => $event_currency ?? 'ARS',
+      'priceCurrency' => $basicInfo->base_currency_text ?? config('tukipass.currency.text'),
       'availability' => (
         ($ticketSummary['has_unlimited_stock'] ?? false)
         || (($ticketSummary['total_stock'] ?? null) !== null && (int) $ticketSummary['total_stock'] > 0)
@@ -2256,7 +2259,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
               <p class="ed-info-assurance">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                {{ __('Venta operada por Tukipass · TAYRONA GROUP SAS · CUIT 30-71885087-4') }}
+                {{ __('Venta operada por') }} {{ config('app.name') }} · {{ $fiscalName }} · CUIT {{ $fiscalCuit }}
               </p>
             </div>
           </section>
@@ -2369,7 +2372,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                 </span>
                 <span class="ed-refund-band__point-copy">
                   <strong>{{ __('Venta online') }}</strong>
-                  <span>{{ __('Tukipass presta el servicio tecnológico de reserva y venta de entradas. TAYRONA GROUP SAS — CUIT 30-71885087-4.') }}</span>
+                  <span>{{ __('Tukipass presta el servicio tecnológico de reserva y venta de entradas.') }} {{ $fiscalName }} — CUIT {{ $fiscalCuit }}.</span>
                 </span>
               </li>
               <li class="ed-refund-band__point" role="listitem">
@@ -2399,7 +2402,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
             <div class="ed-refund-band__footer">
               <a class="ed-refund-band__cta" href="{{ url('/politica-de-reembolsos') }}">{{ __('Política de reembolsos') }}</a>
-              <a class="ed-refund-band__contact" href="mailto:soporte@tukipass.com">soporte@tukipass.com</a>
+              <a class="ed-refund-band__contact" href="mailto:{{ $basicInfo->email_address }}">{{ $basicInfo->email_address }}</a>
             </div>
           </section>
 
@@ -2557,7 +2560,7 @@ document.addEventListener('DOMContentLoaded', function() {
   @if($eventMetaPixelId !== '')
   var metaPixelInitiateTracked = false;
   var metaPixelEventName = {!! json_encode($content->title, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
-  var metaPixelCurrency = {!! json_encode($basicInfo->base_currency_text ?? 'ARS', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
+  var metaPixelCurrency = {!! json_encode($basicInfo->base_currency_text ?? config('tukipass.currency.text'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   var metaPixelInitiateEventId = {!! json_encode($metaPixelInitiateCheckoutEventId, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!};
   @endif
 

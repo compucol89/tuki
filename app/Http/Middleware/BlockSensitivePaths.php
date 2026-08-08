@@ -36,15 +36,6 @@ class BlockSensitivePaths
     /**
      * Headers de seguridad HTTP.
      */
-    private array $securityHeaders = [
-        'X-Frame-Options' => 'SAMEORIGIN',
-        'X-Content-Type-Options' => 'nosniff',
-        'X-XSS-Protection' => '1; mode=block',
-        'Referrer-Policy' => 'strict-origin-when-cross-origin',
-        'Permissions-Policy' => 'geolocation=(), microphone=(), camera=()',
-        'Content-Security-Policy' => "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://app.midtrans.com https://app.sandbox.midtrans.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://connect.facebook.net https://www.facebook.com; frame-src 'self' https://www.google.com https://maps.google.com https://app.midtrans.com https://app.sandbox.midtrans.com https://www.facebook.com; frame-ancestors 'self'; form-action 'self' https://www.tukipass.com https://tukipass.com https://www.mercadopago.com.ar https://mercadopago.com.ar https://www.mercadopago.com https://mercadopago.com https://sandbox.mercadopago.com.ar https://sandbox.mercadopago.com; base-uri 'self'; object-src 'none'",
-    ];
-
     public function handle(Request $request, Closure $next): Response
     {
         $path = $request->path();
@@ -71,7 +62,7 @@ class BlockSensitivePaths
 
         // Agregar headers de seguridad
         if (method_exists($response, 'header')) {
-            foreach ($this->securityHeaders as $header => $value) {
+            foreach ($this->securityHeaders($request) as $header => $value) {
                 $response->header($header, $value);
             }
 
@@ -82,5 +73,23 @@ class BlockSensitivePaths
         }
 
         return $response;
+    }
+
+    /**
+     * Headers de seguridad HTTP. El dominio propio de form-action se deriva
+     * de config('app.url') para que siga al entorno desplegado.
+     */
+    private function securityHeaders(Request $request): array
+    {
+        $ownHost = parse_url(config('app.url', $request->getSchemeAndHttpHost()), PHP_URL_HOST) ?: $request->getHost();
+
+        return [
+            'X-Frame-Options' => 'SAMEORIGIN',
+            'X-Content-Type-Options' => 'nosniff',
+            'X-XSS-Protection' => '1; mode=block',
+            'Referrer-Policy' => 'strict-origin-when-cross-origin',
+            'Permissions-Policy' => 'geolocation=(), microphone=(), camera=()',
+            'Content-Security-Policy' => "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://app.midtrans.com https://app.sandbox.midtrans.com https://connect.facebook.net https://www.facebook.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://connect.facebook.net https://www.facebook.com; frame-src 'self' https://www.google.com https://maps.google.com https://app.midtrans.com https://app.sandbox.midtrans.com https://www.facebook.com; frame-ancestors 'self'; form-action 'self' https://{$ownHost} http://{$ownHost} https://www.mercadopago.com.ar https://mercadopago.com.ar https://www.mercadopago.com https://mercadopago.com https://sandbox.mercadopago.com.ar https://sandbox.mercadopago.com; base-uri 'self'; object-src 'none'",
+        ];
     }
 }

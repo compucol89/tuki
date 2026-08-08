@@ -188,7 +188,7 @@
         </div>
         <div class="row">
           <strong>Condición IVA:</strong>
-          <span>Responsable Inscripto</span>
+          <span>{{ (\App\Models\BillingSetting::current()->issuer_iva_condition_text ?: config('tukipass.fiscal.issuer_iva_condition')) }}</span>
         </div>
       </div>
 
@@ -245,8 +245,8 @@
     </div>
 
     <div class="footer">
-      <p><strong>TukiPass</strong> — Entradas online para eventos en Argentina</p>
-      <p>TAYRONA GROUP SAS — CUIT 30-71885087-4</p>
+      <p><strong>{{ config('app.name') }}</strong> — Entradas online para eventos en Argentina</p>
+      <p>{{ config('tukipass.fiscal.issuer_name') }} — CUIT {{ config('tukipass.fiscal.issuer_cuit') }}</p>
       <p>Factura electrónica autorizada por ARCA</p>
       <p style="margin-top: 12px; font-size: 11px; color: #999;">
         Este email fue generado automáticamente. No respondas a esta dirección.

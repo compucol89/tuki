@@ -43,8 +43,8 @@
             <td align="center" style="background-color:#f9fafb; border-top:1px solid #eeeeee; padding:28px 32px; color:#888888;">
               <p style="margin:0 0 4px; font-size:14px; line-height:1.5; font-weight:700; color:#1e2532;">{{ $websiteTitle }}</p>
               <p style="margin:4px 0; font-size:12px; line-height:1.5; color:#888888;">Entradas online para eventos en Argentina</p>
-              <p style="margin:8px 0 0; font-size:11px; line-height:1.5; color:#666666;"><strong>TAYRONA GROUP SAS</strong> &mdash; CUIT 30-71885087-4</p>
-              <p style="margin:8px 0 0; font-size:11px; line-height:1.5; color:#aaaaaa;">Operador comercial de la plataforma Tukipass.<br>Copyright &copy; 2026 Tukipass. Todos los derechos reservados.</p>
+              <p style="margin:8px 0 0; font-size:11px; line-height:1.5; color:#666666;"><strong>{{ config('tukipass.fiscal.issuer_name') }}</strong> &mdash; CUIT {{ config('tukipass.fiscal.issuer_cuit') }}</p>
+              <p style="margin:8px 0 0; font-size:11px; line-height:1.5; color:#aaaaaa;">Operador comercial de la plataforma {{ config('app.name') }}.<br>Copyright &copy; {{ date('Y') }} {{ config('app.name') }}. Todos los derechos reservados.</p>
             </td>
           </tr>
         </table>

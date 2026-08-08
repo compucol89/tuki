@@ -24,7 +24,7 @@ class CommissionInvoiceBuilder
             'environment' => config('arca.environment', 'homologation'),
             'status' => empty($blockedReasons) ? 'ready' : 'blocked',
             'invoice_model' => config('arca.invoice_model', 'customer_service_fee_invoice'),
-            'currency' => 'ARS',
+            'currency' => config('tukipass.currency.text'),
             'point_of_sale' => config('arca.punto_venta'),
             'cbte_tipo' => $billing->default_invoice_type ?: config('arca.tipo_comprobante'),
             'concept' => config('arca.concepto'),

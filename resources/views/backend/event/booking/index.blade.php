@@ -120,7 +120,7 @@
     .eb-event-row__chip--status {
       border-color: rgba(240, 90, 40, .22);
       background: var(--adm-primary-soft);
-      color: var(--adm-primary-dark);
+      color: var(--adm-primary-strong);
     }
 
     .eb-event-row__kpis {
@@ -157,8 +157,8 @@
       min-height: 40px;
       padding: 0 16px;
       border-radius: 8px;
-      background: var(--adm-primary, #f05a28);
-      color: #fff;
+      background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+      color: #ffffff;
       font-size: 13px;
       font-weight: 700;
       line-height: 1;
@@ -500,7 +500,7 @@
       border: 1px solid rgba(240, 90, 40, .22);
       border-radius: 999px;
       background: var(--adm-primary-soft);
-      color: var(--adm-primary-dark);
+      color: var(--adm-primary-strong);
       font-size: 11.5px;
       font-weight: 650;
       letter-spacing: 0;

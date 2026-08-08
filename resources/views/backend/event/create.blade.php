@@ -1319,6 +1319,78 @@
       overflow: hidden;
       box-shadow: none;
     }
+
+    /* Dark: superficies hardcodeadas del create (theme coverage) */
+    html[data-theme="dark"] .create-check-done {
+      border-color: #2d6a45 !important;
+      background: #173525 !important;
+    }
+
+    html[data-theme="dark"] #my-dropzone,
+    html[data-theme="dark"] .event-cover-box,
+    html[data-theme="dark"] .event-gallery-secondary,
+    html[data-theme="dark"] .event-content-panel,
+    html[data-theme="dark"] .event-content-block,
+    html[data-theme="dark"] .create-cover-ai-panel,
+    html[data-theme="dark"] .create-cover-ai-facts,
+    html[data-theme="dark"] .create-cover-ai-fact,
+    html[data-theme="dark"] .async-progress-panel {
+      background: #2a3040 !important;
+      border-color: #3d4354 !important;
+      color: #e5e5e5 !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box {
+      background: linear-gradient(180deg, #252b38 0%, #1f2838 100%) !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__title,
+    html[data-theme="dark"] .event-content-shell__title,
+    html[data-theme="dark"] .event-content-block__title,
+    html[data-theme="dark"] .event-gallery-secondary__header h4,
+    html[data-theme="dark"] .event-gallery-secondary__header .card-title {
+      color: #ffffff !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__hint,
+    html[data-theme="dark"] .event-content-shell__text,
+    html[data-theme="dark"] .event-content-block__text,
+    html[data-theme="dark"] .event-cover-box__eyebrow,
+    html[data-theme="dark"] .event-content-shell__eyebrow,
+    html[data-theme="dark"] .event-content-block__kicker {
+      color: #a3a3a3 !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__eyebrow,
+    html[data-theme="dark"] .event-content-shell__eyebrow {
+      background: #2a3656 !important;
+      color: #93c5fd !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__manual,
+    html[data-theme="dark"] .event-content-block--soft,
+    html[data-theme="dark"] .create-cover-ai-preferences,
+    html[data-theme="dark"] .create-cover-ai-requirements {
+      background: #1f2838 !important;
+      border-color: #3d4354 !important;
+    }
+
+    html[data-theme="dark"] .event-content-shell .tox .tox-toolbar-overlord,
+    html[data-theme="dark"] .event-content-shell .tox .tox-toolbar,
+    html[data-theme="dark"] .event-content-shell .tox .tox-toolbar__primary {
+      background: #252b38 !important;
+      background-image: none !important;
+    }
+
+    html[data-theme="dark"] .event-content-shell .tox.tox-tinymce,
+    html[data-theme="dark"] .event-content-shell .tox .tox-editor-header {
+      border-color: #3d4354 !important;
+      background: #2a3040 !important;
+    }
+
+    html[data-theme="dark"] .event-content-shell .tox .tox-edit-area__iframe {
+      background: #2a3040 !important;
+    }
   </style>
   @php
     $eventFormModernCss = 'assets/admin/css/event-form-modern.css';

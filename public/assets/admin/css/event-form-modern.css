@@ -34,6 +34,8 @@
   margin: 0 auto;
 }
 
+/* Dark: mismo mecanismo del panel (html[data-theme="dark"]), no solo body.dark legacy */
+html[data-theme="dark"] .event-form-modern,
 body[data-background-color="dark"] .event-form-modern,
 body.dark .event-form-modern,
 .dark .event-form-modern {
@@ -189,18 +191,63 @@ body.dark .event-form-modern,
 }
 
 .event-form-modern .card {
-  background: var(--event-card);
-  border: 1px solid var(--event-border);
+  background: var(--event-card) !important;
+  border: 1px solid var(--event-border) !important;
   border-radius: 8px;
-  box-shadow: var(--event-shadow-sm);
-  color: var(--event-card-fg);
+  box-shadow: var(--event-shadow-sm) !important;
+  color: var(--event-card-fg) !important;
   overflow: hidden;
 }
 
+/* Shell externo del create/edit: transparente (no isla blanca) */
+.event-form-modern > .row > .col-md-12 > .card,
+.event-form-modern.event-form-modern--create > .row > .col-md-12 > .card,
+.event-form-modern.event-form-modern--edit > .row > .col-md-12 > .card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.event-form-modern > .row > .col-md-12 > .card > .card-header,
+.event-form-modern > .row > .col-md-12 > .card > .card-body,
+.event-form-modern > .row > .col-md-12 > .card > .card-footer {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
 .event-form-modern .card-header {
-  background: var(--event-muted);
-  border-bottom: 1px solid var(--event-border);
+  background: var(--event-muted) !important;
+  border-bottom: 1px solid var(--event-border) !important;
+  color: var(--event-card-fg) !important;
   padding: 14px 18px;
+}
+
+.event-form-modern .ev-section-card > .card-body,
+.event-form-modern .ev-section-card > .card-footer {
+  background: var(--event-card) !important;
+  color: var(--event-card-fg) !important;
+  border-color: var(--event-border) !important;
+}
+
+.event-form-modern .ev-section-card .border,
+.event-form-modern .ev-section-card .border.rounded,
+.event-form-modern [id^="check-"] {
+  background: var(--event-surface) !important;
+  border-color: var(--event-border) !important;
+  color: var(--event-card-fg) !important;
+}
+
+html[data-theme="dark"] .event-form-modern .page-title {
+  color: var(--event-card-fg) !important;
+}
+
+html[data-theme="dark"] .event-form-modern .page-header .breadcrumbs,
+html[data-theme="dark"] .event-form-modern .page-header .breadcrumbs a {
+  color: var(--event-muted-fg) !important;
+}
+
+html[data-theme="dark"] .event-form-modern .text-muted {
+  color: var(--event-muted-fg) !important;
 }
 
 .event-form-modern .card-body {

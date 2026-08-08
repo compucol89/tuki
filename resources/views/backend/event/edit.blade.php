@@ -1192,6 +1192,44 @@
         width: 100%;
       }
     }
+
+    /* Dark: superficies hardcodeadas del edit (theme coverage) */
+    html[data-theme="dark"] .event-cover-box,
+    html[data-theme="dark"] .event-gallery-secondary,
+    html[data-theme="dark"] .event-content-panel,
+    html[data-theme="dark"] .event-content-block,
+    html[data-theme="dark"] .ai-assistant-fact {
+      background: #2a3040 !important;
+      border-color: #3d4354 !important;
+      color: #e5e5e5 !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box {
+      background: linear-gradient(180deg, #252b38 0%, #1f2838 100%) !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__title,
+    html[data-theme="dark"] .event-cover-box__upload-copy,
+    html[data-theme="dark"] .event-cover-box__upload-copy strong,
+    html[data-theme="dark"] .ai-assistant-fact__value {
+      color: #ffffff !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__text,
+    html[data-theme="dark"] .event-cover-box__hint,
+    html[data-theme="dark"] .event-cover-box__eyebrow {
+      color: #a3a3a3 !important;
+    }
+
+    html[data-theme="dark"] .event-cover-box__eyebrow {
+      background: #2a3656 !important;
+      color: #93c5fd !important;
+    }
+
+    html[data-theme="dark"] #my-dropzone {
+      background: #1f2838 !important;
+      border-color: #3d4354 !important;
+    }
   </style>
   @php
     $eventFormModernCss = 'assets/admin/css/event-form-modern.css';

@@ -600,8 +600,8 @@
       align-items: center;
       padding: 6px 10px;
       border-radius: 999px;
-      background: #e8f1ff;
-      color: #1d4ed8;
+      background: var(--event-orange-soft, #fff7ed);
+      color: var(--event-orange-dark, #c2410c);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .08em;
@@ -1208,7 +1208,7 @@
 
     .admin-event-index .breadcrumbs,
     .admin-event-index .breadcrumbs a {
-      color: #667085 !important;
+      color: var(--event-muted) !important;
       font-size: 12.5px;
       font-weight: 500;
     }

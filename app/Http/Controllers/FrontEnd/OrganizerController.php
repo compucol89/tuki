@@ -66,9 +66,11 @@ class OrganizerController extends Controller
 
     $collection = Organizer::with(['organizer_info' => function ($query) use ($language) {
       return $query->where('language_id', $language->id);
-    }])->when($username, function ($query) use ($username) {
-      return $query->where('username', 'like', '%' . $username . '%');
-    })
+    }])
+      ->listable()
+      ->when($username, function ($query) use ($username) {
+        return $query->where('username', 'like', '%' . $username . '%');
+      })
       ->when($location, function ($query) use ($locationIds) {
         return $query->whereIn('id', $locationIds);
       })
@@ -135,6 +137,7 @@ class OrganizerController extends Controller
         $information['organizer'] = $organizer;
         $information['admin'] = false;
         $organizerEventColumn = $organizer->id;
+        $information['profileIsPublic'] = app(\App\Services\OrganizerProfileChecklistService::class)->isComplete($organizer);
       }
 
       $ticketSub = DB::raw("(SELECT event_id,

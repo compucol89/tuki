@@ -5490,6 +5490,7 @@ purchase-message,
 .page-banner {
     background-repeat: no-repeat;
     background-size: cover;
+    background-color: rgba(30, 37, 50, 0.88);
 }
 
 .page-banner .banner-author {
@@ -6399,4 +6400,57 @@ html[data-theme="light"] .main-header--premium .menu-right .dropdown:last-child 
 html[data-theme="light"] .main-header--premium .header-ingresar-btn {
   background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
   color: #ffffff;
+}
+
+/* ============ A11y: text-muted en dark (cards de organizadores, 4.5:1+) ============ */
+html[data-theme="dark"] .text-muted,
+html[data-theme="dark"] .author-area .text-muted,
+html[data-theme="dark"] .author-area .font-sm,
+html[data-theme="dark"] .trust-partners__intro p {
+  color: var(--muted-foreground) !important;
+}
+
+/* ============ A11y: cards de autor (directorio) en dark ============ */
+html[data-theme="dark"] .author-area .card .card-content,
+html[data-theme="dark"] .author-area .card .card-content .font-sm,
+html[data-theme="dark"] .author-area .card .card-content p,
+html[data-theme="dark"] .author-area .card .card-content .text-muted {
+  color: var(--muted-foreground) !important;
+}
+
+/* ============ Breadcrumb sin imagen: texto oscuro en light ============ */
+html[data-theme="light"] .page-title--plain .title,
+html[data-theme="light"] .page-title--plain .breadcrumb-item a,
+html[data-theme="light"] .page-title--plain .breadcrumb-item.active,
+html[data-theme="light"] .page-title--plain .breadcrumb-item + .breadcrumb-item::before {
+  color: var(--foreground) !important;
+}
+
+/* ============ A11y: textos de features/testimonios del directorio ============ */
+html[data-theme="dark"] .feature-item p,
+html[data-theme="dark"] .feature-item .feature-content,
+html[data-theme="dark"] .testimonial-item p {
+  color: var(--muted-foreground) !important;
+}
+
+.feature-item h5,
+.feature-item .feature-content h5,
+html[data-theme="dark"] .feature-item h5 {
+  color: var(--foreground) !important;
+}
+
+html[data-theme="dark"] .testimonial-item,
+html[data-theme="dark"] .testimonial-item p,
+html[data-theme="dark"] .testimonial-item span,
+html[data-theme="dark"] .testimonial-item .author,
+html[data-theme="dark"] .testimonial-item .author-info {
+  color: var(--muted-foreground) !important;
+}
+
+/* ============ A11y: boton del menu del header estandar (frontend) ============ */
+html[data-theme="light"] .menu-btn--organizer,
+html[data-theme="light"] .navbar .menu-btn--organizer {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
+  border-color: #9a3412 !important;
+  color: #ffffff !important;
 }

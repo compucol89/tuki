@@ -301,6 +301,20 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
     <noscript class="org-profile-pixel-noscript"><img height="1" width="1" alt="" style="display:none" src="{{ $profilePixelPageViewUrl }}"></noscript>
   @endif
 
+  @if(isset($profileIsPublic) && !$profileIsPublic)
+    <section class="org-profile-notice" role="status" aria-live="polite">
+      <div class="container">
+        <div class="org-profile-notice__inner">
+          <i class="fas fa-eye-slash" aria-hidden="true"></i>
+          <div>
+            <strong>{{ __('Este perfil no es público todavía') }}</strong>
+            <p class="mb-0">{{ __('El perfil se publicará cuando complete todos los pasos del armado: foto, portada, datos de contacto, descripción, ubicación, redes, email verificado y un evento publicado. Así podrá aparecer en el directorio, indexarse y llegar a más usuarios y clientes.') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  @endif
+
   <section class="org-profile-head" aria-labelledby="organizer-profile-title">
     <div class="container">
       <article class="org-profile-panel">

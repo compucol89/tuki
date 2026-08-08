@@ -2750,3 +2750,28 @@ html[dir*=rtl] .modal .close {
     transform: none;
   }
 }
+
+/* ============ Aviso de perfil no público (detalle del organizador) ============ */
+.org-profile-notice {
+  padding: 14px 0;
+}
+
+.org-profile-notice__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--foreground);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.org-profile-notice__inner i {
+  margin-top: 2px;
+  color: var(--primary);
+  font-size: 18px;
+}

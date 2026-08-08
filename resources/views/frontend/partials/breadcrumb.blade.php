@@ -11,7 +11,7 @@
 @endphp
 <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
 <!--====== PAGE TITLE PART START ======-->
-<div class="page-title bg_cover pt-140 pb-140 lazy" @if (!empty($breadcrumb)) data-bg="{{ asset('assets/admin/img/' . $breadcrumb) }}" @endif>
+<div class="page-title bg_cover pt-140 pb-140 lazy @if (empty($breadcrumb)) page-title--plain @endif" @if (!empty($breadcrumb)) data-bg="{{ asset('assets/admin/img/' . $breadcrumb) }}" @endif>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-12">

@@ -47,17 +47,20 @@
   $hasLocation = $profileLocation !== '';
   $hasOfficialLinks = $socialCount > 0;
   $hasActiveAgenda = ($profileEventStats['upcoming'] ?? 0) > 0;
-  $completionChecks = [
-    ['label' => __('Foto de perfil'), 'complete' => !empty($organizer->photo), 'hint' => __('Usá una imagen cuadrada y reconocible.'), 'href' => '#opb-media-title'],
-    ['label' => __('Portada'), 'complete' => !empty($organizer->cover_photo), 'hint' => __('Mostrá ambiente, público o escenario.'), 'href' => '#opb-media-title'],
-    ['label' => __('Nombre público'), 'complete' => $hasCustomName, 'hint' => __('Que coincida con tu marca en redes.'), 'href' => '#opb-content-title'],
-    ['label' => __('Descripción clara'), 'complete' => $hasStrongDescription, 'hint' => __('Mínimo 80 caracteres con qué hacés y dónde.'), 'href' => '#opb-content-title'],
-    ['label' => __('Ubicación'), 'complete' => $hasLocation, 'hint' => __('Ayuda a búsquedas por ciudad o país.'), 'href' => '#opb-content-title'],
-    ['label' => __('Redes o sitio web'), 'complete' => $hasOfficialLinks, 'hint' => __('Refuerzan identidad para Google e IA.'), 'href' => '#opb-social-title'],
-    ['label' => __('Meta Pixel válido'), 'complete' => $metaPixelValid, 'hint' => __('Permite medir visitas y contactos.'), 'href' => '#opb-measurement-title'],
-  ];
+  $checklist = app(\App\Services\OrganizerProfileChecklistService::class)->steps($organizer);
+  $completionChecks = collect($checklist)->map(function ($step) {
+    $href = match ($step['key']) {
+      'photo', 'cover' => '#opb-media-title',
+      'name', 'description', 'location' => '#opb-content-title',
+      'social' => '#opb-social-title',
+      'email_verified' => '#opb-account-title',
+      default => '#opb-measurement-title',
+    };
+    return ['label' => $step['label'], 'complete' => $step['complete'], 'hint' => $step['hint'], 'href' => $href];
+  })->all();
   $completionDone = collect($completionChecks)->where('complete', true)->count();
   $completionPercent = (int) round(($completionDone / max(count($completionChecks), 1)) * 100);
+  $profileIsPublic = $completionDone === count($completionChecks);
   $nextProfileActions = collect($completionChecks)->filter(fn ($check) => !$check['complete'])->take(3)->values();
   $profileQualityLabel = $completionPercent >= 86
     ? __('Listo para compartir')
@@ -105,6 +108,22 @@
       --opb-border: #dcdfe2;
       --opb-input: #f4f5f7;
       --opb-ring: rgba(224, 93, 56, .18);
+    }
+
+    html[data-theme="dark"] .org-profile-builder {
+      --opb-background: #1c2331;
+      --opb-foreground: #e5e5e5;
+      --opb-card: #232b3b;
+      --opb-primary: #f0704a;
+      --opb-primary-strong: #f78a63;
+      --opb-secondary: #2a3345;
+      --opb-muted: #2a3040;
+      --opb-muted-foreground: #a3a3a3;
+      --opb-accent: #33415c;
+      --opb-accent-foreground: #8ab4f8;
+      --opb-border: #39445c;
+      --opb-input: #2a3040;
+      --opb-ring: rgba(240, 112, 74, .25);
       --opb-radius: 12px;
       --opb-shadow: 0 18px 38px rgba(30, 37, 50, .08);
       color: var(--opb-foreground);
@@ -421,6 +440,34 @@
       background: var(--opb-card);
       box-shadow: var(--opb-shadow);
       overflow: hidden;
+    }
+
+    .org-profile-builder .opb-notice {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--opb-border);
+      border-left: 4px solid var(--opb-primary);
+      border-radius: var(--opb-radius);
+      background: var(--opb-card);
+      color: var(--opb-foreground);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .org-profile-builder .opb-notice i {
+      color: var(--opb-primary);
+      font-size: 15px;
+    }
+
+    .org-profile-builder .opb-notice--ok {
+      border-left-color: #16a34a;
+    }
+
+    .org-profile-builder .opb-notice--ok i {
+      color: #16a34a;
     }
 
     .org-profile-builder .opb-score {
@@ -1075,6 +1122,19 @@
         </div>
 
         <aside class="opb-checklist" aria-label="{{ __('Resumen del perfil') }}">
+          @if (!$profileIsPublic)
+            <div class="opb-notice" role="status">
+              <i class="fas fa-eye-slash" aria-hidden="true"></i>
+              <strong>{{ __('Tu perfil no es público todavía') }}</strong>
+              <p class="mb-0">{{ __('Completá todos los pasos para que tu perfil sea público, aparezca en el directorio y llegue a más usuarios y clientes.') }}</p>
+            </div>
+          @else
+            <div class="opb-notice opb-notice--ok" role="status">
+              <i class="fas fa-check-circle" aria-hidden="true"></i>
+              <strong>{{ __('Tu perfil es público') }}</strong>
+              <p class="mb-0">{{ __('Ya aparecés en el directorio y podés indexarte en buscadores.') }}</p>
+            </div>
+          @endif
           <section class="opb-score">
             <p class="opb-kicker">{{ __('Calidad del perfil') }}</p>
             <p class="opb-score__state">{{ $profileQualityLabel }}</p>

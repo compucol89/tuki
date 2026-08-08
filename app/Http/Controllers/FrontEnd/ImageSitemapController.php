@@ -297,7 +297,7 @@ class ImageSitemapController extends Controller
     $root = rtrim((string) config('app.url'), '/');
 
     if ($root === '' || Str::contains($root, ['localhost', '127.0.0.1'])) {
-      return 'https://www.tukipass.com';
+      return (string) config('tukipass.redirect_www.www_domain');
     }
 
     return $root;

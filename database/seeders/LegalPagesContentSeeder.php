@@ -13,9 +13,9 @@ class LegalPagesContentSeeder extends Seeder
     $operator = 'TAYRONA - GROUP S.A.S.';
     $cuit = '30-71885087-4';
     $address = 'Pueyrredón Av. 1357, Ciudad Autónoma de Buenos Aires, Argentina';
-    $domain = 'https://www.tukipass.com';
-    $supportEmail = 'soporte@tukipass.com';
-    $privacyEmail = 'info@tukipass.com';
+    $domain = (string) config('tukipass.redirect_www.www_domain', 'https://www.tukipass.com');
+    $supportEmail = (string) config('tukipass.fiscal.support_email', 'soporte@tukipass.com');
+    $privacyEmail = (string) config('tukipass.fiscal.contact_email', 'info@tukipass.com');
     $updatedAt = '15/04/2026';
     $refundUpdatedAt = '27/05/2026';
     $legalFooter = LegalPageFooter::publishedFooterHtml();

@@ -21,8 +21,8 @@ return [
 
     'allowed_origins' => [
         env('APP_URL', 'https://tukipass.com'),
-        'https://tukipass.com',
-        'https://www.tukipass.com',
+        env('APP_WWW_DOMAIN', 'https://www.tukipass.com'),
+        env('APP_BARE_DOMAIN', 'https://tukipass.com'),
     ],
 
     'allowed_origins_patterns' => [],

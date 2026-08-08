@@ -1,0 +1,11 @@
+name: Zero Hardcoded Data Audit
+
+on: [push, pull_request]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run hardcode audit
+        run: bash scripts/audit-hardcode.sh

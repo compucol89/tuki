@@ -5206,10 +5206,10 @@ body.page-event-detail .ed-mobile-bar__cta:focus-visible {
   }
 
   body.page-event-detail .ed-hero__btn {
-    width: 2.55rem;
-    height: 2.55rem;
-    min-width: 2.55rem;
-    min-height: 2.55rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
   }
 
   body.page-event-detail .ed-ticket-picker__intro {

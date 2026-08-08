@@ -2,20 +2,56 @@
 
 namespace App\Support;
 
+use App\Models\BasicSettings\Basic;
+use App\Models\BillingSetting;
 use Illuminate\Support\Str;
 
 final class EventRefundPolicy
 {
   /**
+   * Datos de identidad corporativa desde su fuente de verdad (DB settings),
+   * con fallback único centralizado en config/tukipass.php.
+   */
+  public static function issuerName(): string
+  {
+    $billing = BillingSetting::current();
+
+    return trim((string) ($billing?->issuer_name ?? '')) ?: config('tukipass.fiscal.issuer_name', 'TAYRONA GROUP SAS');
+  }
+
+  public static function issuerCuit(): string
+  {
+    $billing = BillingSetting::current();
+
+    return trim((string) ($billing?->issuer_cuit ?? '')) ?: config('tukipass.fiscal.issuer_cuit', '30-71885087-4');
+  }
+
+  public static function supportEmail(): string
+  {
+    $basic = Basic::query()->first();
+    $email = trim((string) ($basic?->email_address ?? ''));
+
+    return $email !== '' ? $email : (string) config('tukipass.fiscal.support_email');
+  }
+
+  public static function policyUrl(): string
+  {
+    return url('/politica-de-reembolsos');
+  }
+
+  /**
    * Texto único mostrado en admin, organizador, detalle de evento y base de datos.
    */
   public static function canonicalPlainText(): string
   {
-    return 'Tukipass (TAYRONA GROUP SAS, CUIT 30-71885087-4) presta un servicio tecnológico de venta online de entradas. '
+    $policyUrl = self::policyUrl();
+    $domain = parse_url($policyUrl, PHP_URL_HOST) ?: config('app.url');
+
+    return 'Tukipass (' . self::issuerName() . ', CUIT ' . self::issuerCuit() . ') presta un servicio tecnológico de venta online de entradas. '
       . 'No organiza ni produce los eventos publicados: el organizador o productor es el único responsable de la producción, realización e información publicada del evento. '
       . 'Los reembolsos, cancelaciones, reprogramaciones y el derecho de arrepentimiento —cuando corresponda conforme la Ley 24.240 de Defensa del Consumidor y la normativa aplicable— '
-      . 'se rigen por la política general de Tukipass (www.tukipass.com/politica-de-reembolsos), por las condiciones del organizador y por la ley argentina. '
-      . 'Reclamos y consultas: soporte@tukipass.com.';
+      . 'se rigen por la política general de Tukipass (' . $domain . '/politica-de-reembolsos), por las condiciones del organizador y por la ley argentina. '
+      . 'Reclamos y consultas: ' . self::supportEmail() . '.';
   }
 
   public static function matchesCanonical(?string $value): bool

@@ -212,11 +212,11 @@ class SystemHealthCheck extends Command
             $this->warn("  ⚠️  Mailer: {$mailer}");
         }
 
-        if ($from === 'info@tukipass.com') {
+        if ($from === (string) config('tukipass.fiscal.contact_email')) {
             $this->ok[] = "MAIL_FROM_ADDRESS correcto";
             $this->line("  ✅ From: {$from}");
         } else {
-            $this->warnings[] = "MAIL_FROM_ADDRESS no es info@tukipass.com";
+            $this->warnings[] = "MAIL_FROM_ADDRESS no coincide con tukipass.fiscal.contact_email";
             $this->warn("  ⚠️  From: {$from}");
         }
 

@@ -5,9 +5,22 @@
   }
 @endphp
 <!DOCTYPE html>
-<html>
+<html lang="es" dir="ltr" data-theme="light">
 
 <head>
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('tuki-theme');
+        var theme = saved === 'dark' || saved === 'light'
+          ? saved
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      } catch (e) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
   {{-- required meta tags --}}
   <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,6 +74,34 @@
   {{-- include scripts --}}
   @includeIf('organizer.partials.scripts')
   @includeIf('organizer.partials.modal')
+
+  <script>
+    (function () {
+      function currentTheme() {
+        return document.documentElement.dataset.theme || 'light';
+      }
+      function applyTheme(theme, persist) {
+        document.documentElement.dataset.theme = theme;
+        // activar el dark nativo de admin-skin (body[data-background-color="dark"])
+        document.body.setAttribute('data-background-color', theme === 'dark' ? 'dark' : 'white');
+        if (persist) {
+          try { localStorage.setItem('tuki-theme', theme); } catch (e) { /* noop */ }
+        }
+        document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {
+          b.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+          b.setAttribute('aria-label', theme === 'dark'
+            ? 'Cambiar a modo claro'
+            : 'Cambiar a modo oscuro');
+        });
+      }
+      document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
+        });
+      });
+      applyTheme(currentTheme(), false);
+    })();
+  </script>
 </body>
 
 </html>

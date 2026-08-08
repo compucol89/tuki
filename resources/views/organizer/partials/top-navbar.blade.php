@@ -51,6 +51,12 @@
           </div>
         </form>
 
+        <button type="button" class="btn btn-sm btn-secondary mr-2 theme-toggle-panel" data-theme-toggle-panel
+          aria-pressed="false" aria-label="{{ __('Cambiar a modo oscuro') }}" title="{{ __('Cambiar tema claro/oscuro') }}">
+          <i class="fa fa-moon"></i>
+          <i class="fa fa-sun"></i>
+        </button>
+
         <li class="nav-item dropdown hidden-caret">
           <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
             <div class="avatar-sm">

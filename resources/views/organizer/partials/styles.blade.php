@@ -54,6 +54,9 @@
 <link rel="stylesheet" href="{{ asset($adminSkinPath) }}{{ is_file($adminSkinFullPath) ? '?v=' . substr(md5_file($adminSkinFullPath), 0, 12) : '' }}">
 <?php /* organizer-v1 */ ?>
 
+{{-- theme-dark: capa dark de los paneles (html[data-theme="dark"]) --}}
+<link rel="stylesheet" href="{{ frontAsset('assets/admin/css/theme-dark.css') }}">
+
 {{-- legacy flaticon / simple-line-icons → Font Awesome --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-icons-compat.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/admin/css/admin-icons-compat.css') }}"></noscript>

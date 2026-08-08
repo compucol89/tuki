@@ -1,0 +1,759 @@
+/* ==================================================================
+   THEME TWEAKCN — DARK para paneles Admin/Organizer (Atlantis)
+   Scoped: html[data-theme="dark"] · mismo mecanismo que el frontend
+   (localStorage 'tuki-theme' + data-theme en <html>).
+   Los data-background-color nativos de Atlantis conviven con esta capa.
+   ================================================================== */
+html[data-theme="dark"] body {
+  background: #1c2433;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .wrapper,
+html[data-theme="dark"] .main-panel {
+  background: #1c2433;
+}
+
+html[data-theme="dark"] .main-panel .content {
+  background: #1c2433;
+}
+
+html[data-theme="dark"] .page-inner {
+  background: transparent;
+}
+
+/* ============ Sidebar (refuerzo del dark nativo Atlantis) ============ */
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .sidebar[data-background-color="dark"],
+html[data-theme="dark"] .sidebar[data-background-color="dark2"] {
+  background: #171e2b !important;
+}
+
+html[data-theme="dark"] .sidebar .logo-header,
+html[data-theme="dark"] .logo-header,
+html[data-theme="dark"] .logo-header[data-background-color],
+html[data-theme="dark"] .logo-header[data-background-color="dark2"],
+html[data-theme="dark"] .logo-header[data-background-color="dark"],
+html[data-theme="dark"] .main-header,
+html[data-theme="dark"] .main-header .navbar-header,
+html[data-theme="dark"] .navbar-header[data-background-color] {
+  background: #171e2b !important;
+  border-color: #3d4354 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] .sidebar .nav .nav-item a,
+html[data-theme="dark"] .sidebar .nav .nav-item a[data-toggle="collapse"],
+html[data-theme="dark"] .sidebar .nav .nav-item a i,
+html[data-theme="dark"] .sidebar .nav .nav-item .submenu a,
+html[data-theme="dark"] .sidebar .user .info a,
+html[data-theme="dark"] .sidebar .user .info span {
+  color: rgba(229, 229, 229, 0.82);
+}
+
+html[data-theme="dark"] .sidebar .nav .nav-item:hover > a,
+html[data-theme="dark"] .sidebar .nav .nav-item.active > a,
+html[data-theme="dark"] .sidebar .nav .nav-item a[data-toggle="collapse"][aria-expanded="true"] {
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .sidebar .nav .nav-item.active > a,
+html[data-theme="dark"] .sidebar .nav .nav-item.active:hover > a {
+  background: rgba(224, 93, 56, 0.18);
+}
+
+html[data-theme="dark"] .sidebar .nav .nav-item.active > a:before {
+  background: #e05d38;
+}
+
+html[data-theme="dark"] .sidebar .nav .nav-item .submenu {
+  background: rgba(0, 0, 0, 0.16);
+}
+
+html[data-theme="dark"] .sidebar .separator {
+  color: #5b6472;
+}
+
+html[data-theme="dark"] .sidebar .user {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* ============ Top navbar ============ */
+html[data-theme="dark"] .navbar-header[data-background-color="dark"],
+html[data-theme="dark"] .navbar-header[data-background-color="white2"] {
+  background: #171e2b !important;
+}
+
+html[data-theme="dark"] .navbar-header .navbar-nav .nav-link,
+html[data-theme="dark"] .navbar-header .topbar-nav .nav-link,
+html[data-theme="dark"] .navbar-header .dropdown-toggle,
+html[data-theme="dark"] .navbar-header .topbar-toggler,
+html[data-theme="dark"] .navbar-header .navbar-toggler {
+  color: rgba(229, 229, 229, 0.82);
+}
+
+html[data-theme="dark"] .navbar-header .dropdown-menu {
+  background: #262b38;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .navbar-header .dropdown-menu .dropdown-item {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .navbar-header .dropdown-menu .dropdown-item:hover {
+  background: #2a3656;
+  color: #bfdbfe;
+}
+
+/* ============ Cards ============ */
+html[data-theme="dark"] .card {
+  background: #2a3040;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .card-header,
+html[data-theme="dark"] .card-footer {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .card .card-header .card-title,
+html[data-theme="dark"] .card .card-title,
+html[data-theme="dark"] .page-title,
+html[data-theme="dark"] .page-header .page-title,
+html[data-theme="dark"] h1, html[data-theme="dark"] h2,
+html[data-theme="dark"] h3, html[data-theme="dark"] h4,
+html[data-theme="dark"] h5, html[data-theme="dark"] h6,
+html[data-theme="dark"] .card-header .card-category,
+html[data-theme="dark"] .card-title,
+html[data-theme="dark"] .card-category {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .card .card-header:not(.card-header-border) {
+  border-bottom: 1px solid #3d4354;
+}
+
+html[data-theme="dark"] .card .card-body {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .card .card-body .text-muted,
+html[data-theme="dark"] .text-muted {
+  color: #a3a3a3 !important;
+}
+
+html[data-theme="dark"] .card .card-stats .icon-big i {
+  color: rgba(229, 229, 229, 0.7);
+}
+
+html[data-theme="dark"] .card-stats .numbers .card-category {
+  color: #a3a3a3;
+}
+
+/* ============ Tablas ============ */
+html[data-theme="dark"] .table {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .table thead th {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .table td,
+html[data-theme="dark"] .table th {
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+  background: #2a3040;
+}
+
+html[data-theme="dark"] .table-hover tbody tr:hover {
+  background: #303750;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .table td .badge,
+html[data-theme="dark"] .table td .btn {
+  vertical-align: middle;
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dataTables_filter input,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_length select {
+  background: #3d4354;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dataTables_info,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate {
+  color: #a3a3a3;
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #c8cdd6 !important;
+}
+
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: #e05d38 !important;
+  color: #ffffff !important;
+}
+
+/* ============ Formularios ============ */
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-group .form-control,
+html[data-theme="dark"] .custom-select,
+html[data-theme="dark"] .select2-container--default .select2-selection--single,
+html[data-theme="dark"] .select2-container--default .select2-selection--multiple {
+  background-color: #3d4354;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .form-control:focus,
+html[data-theme="dark"] .select2-container--default .select2-selection--single:focus {
+  background-color: #3d4354;
+  border-color: #e05d38;
+  color: #e5e5e5;
+  box-shadow: 0 0 0 0.2rem rgba(224, 93, 56, 0.25);
+}
+
+html[data-theme="dark"] .form-control::placeholder {
+  color: #9aa3af;
+}
+
+html[data-theme="dark"] .form-control:disabled,
+html[data-theme="dark"] .form-control[readonly] {
+  background-color: #2a3040;
+  color: #9aa3af;
+}
+
+html[data-theme="dark"] .form-group label,
+html[data-theme="dark"] label,
+html[data-theme="dark"] .col-form-label {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .form-group .form-label,
+html[data-theme="dark"] .form-label {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .input-group-text,
+html[data-theme="dark"] .input-group-append .input-group-text {
+  background-color: #2a3040;
+  border-color: #3d4354;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .selectgroup-button {
+  background: #2a3040 !important;
+  border-color: #3d4354 !important;
+  color: #c8cdd6 !important;
+}
+
+html[data-theme="dark"] .selectgroup-input:checked + .selectgroup-button {
+  background: #e05d38;
+  border-color: #e05d38;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .selectgroup-input:focus + .selectgroup-button,
+html[data-theme="dark"] .selectgroup-button:hover {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .select2-dropdown {
+  background-color: #262b38;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .select2-container--default .select2-results__option {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected],
+html[data-theme="dark"] .select2-container--default .select2-results__option[aria-selected="true"] {
+  background: #2a3656;
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .select2-container--default .select2-selection__rendered {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__arrow b {
+  border-top-color: #e5e5e5;
+}
+
+html[data-theme="dark"] .bootstrap-tagsinput {
+  background-color: #3d4354;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .bootstrap-tagsinput .tag {
+  background: #e05d38;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td,
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table th {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td.day:hover,
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td span:hover {
+  background: #303750;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td.active,
+html[data-theme="dark"] .bootstrap-datetimepicker-widget table td.active:hover {
+  background: #e05d38;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .dropzone {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .dropzone .dz-message {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .summernote,
+html[data-theme="dark"] .note-editor.note-frame {
+  background: #2a3040;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .note-editor.note-frame .note-editing-area .note-editable {
+  background: #2a3040;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .note-toolbar .note-btn {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .custom-file-label {
+  background: #3d4354;
+  border-color: #3d4354;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .custom-control-label::before {
+  background-color: #3d4354;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #e05d38;
+  border-color: #e05d38;
+}
+
+/* ============ Modales / Dropdowns / Paginación ============ */
+html[data-theme="dark"] .modal-content {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .modal-footer {
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .modal-title {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .modal-header .close {
+  color: #e5e5e5;
+  text-shadow: none;
+}
+
+html[data-theme="dark"] .dropdown-menu {
+  background: #262b38;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .dropdown-menu .dropdown-item {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .dropdown-menu .dropdown-item:hover,
+html[data-theme="dark"] .dropdown-menu .dropdown-item:focus {
+  background: #2a3656;
+  color: #bfdbfe;
+}
+
+html[data-theme="dark"] .dropdown-divider {
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .pagination .page-link {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .pagination .page-link:hover {
+  background: #303750;
+  color: #e05d38;
+}
+
+html[data-theme="dark"] .pagination .page-item.active .page-link {
+  background: #e05d38;
+  border-color: #e05d38;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .pagination .page-item.disabled .page-link {
+  background: #2a3040;
+  color: #7c8590;
+}
+
+/* ============ Botones / Badges / Alerts / Tabs ============ */
+html[data-theme="dark"] .btn-light {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .btn-light:hover {
+  background: #303750;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .btn-outline-light {
+  border-color: #3d4354;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .btn-outline-light:hover {
+  background: #2a3040;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .btn-default {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .btn-secondary {
+  background: #2a303e;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .badge-light {
+  background: #2a303e;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .badge-outline-primary {
+  border-color: #e05d38;
+  color: #f0704a;
+}
+
+html[data-theme="dark"] .badge-primary {
+  background: #e05d38;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .alert-light {
+  background: #2a303e;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .alert {
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .nav-tabs {
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .nav-tabs .nav-link {
+  color: #a3a3a3;
+}
+
+html[data-theme="dark"] .nav-tabs .nav-link.active,
+html[data-theme="dark"] .nav-tabs .nav-item.show .nav-link {
+  background: #2a3040;
+  border-color: #3d4354;
+  border-bottom-color: #2a3040;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .nav-pills .nav-link.active,
+html[data-theme="dark"] .nav-pills .show > .nav-link {
+  background: #e05d38;
+  color: #ffffff;
+}
+
+/* ============ Links y texto ============ */
+html[data-theme="dark"] .page-inner a:not(.btn):not(.dropdown-item):not(.page-link):not(.badge):not(.nav-link):not(.logo):not(.sidebar-link) {
+  color: #f0704a;
+}
+
+html[data-theme="dark"] .page-inner a:not(.btn):not(.dropdown-item):not(.page-link):not(.badge):not(.nav-link):not(.logo):not(.sidebar-link):hover {
+  color: #f78a63;
+}
+
+html[data-theme="dark"] .breadcrumb {
+  background: #2a3040;
+}
+
+html[data-theme="dark"] .breadcrumb-item a {
+  color: #f0704a;
+}
+
+html[data-theme="dark"] .breadcrumb-item.active {
+  color: #a3a3a3;
+}
+
+html[data-theme="dark"] hr,
+html[data-theme="dark"] .separator-line {
+  border-color: #3d4354;
+}
+
+/* ============ Listas / Switches / Varios ============ */
+html[data-theme="dark"] .list-group-item {
+  background: #2a3040;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .switch input:checked + .slider {
+  background: #e05d38;
+}
+
+html[data-theme="dark"] .fc .fc-toolbar h2 {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .timeline > li > .timeline-panel {
+  background: #2a3040;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .timeline > li > .timeline-panel .timeline-title {
+  color: #e5e5e5;
+}
+
+html[data-theme="dark"] .ui-datepicker,
+html[data-theme="dark"] .ui-widget.ui-widget-content {
+  background: #262b38;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .ui-datepicker th {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .ui-datepicker td a {
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .ui-datepicker td a.ui-state-hover {
+  background: #303750;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .ui-datepicker td a.ui-state-active {
+  background: #e05d38;
+  color: #ffffff;
+}
+
+/* ============ Datatables / acción ============ */
+html[data-theme="dark"] .btn.btn-sm.btn-primary,
+html[data-theme="dark"] .btn.btn-primary {
+  background-color: #e05d38;
+  border-color: #e05d38;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .btn.btn-primary:hover,
+html[data-theme="dark"] .btn.btn-primary:focus {
+  background-color: #c24a26;
+  border-color: #c24a26;
+}
+
+/* ============ Login ============ */
+html[data-theme="dark"] .login-form,
+html[data-theme="dark"] .login-card,
+html[data-theme="dark"] .card-login,
+html[data-theme="dark"] .login-wrapper .card {
+  background: #2a3040;
+  border-color: #3d4354;
+}
+
+html[data-theme="dark"] .login-wrapper {
+  background: #1c2433;
+}
+
+html[data-theme="dark"] .login-form .form-control {
+  background: #3d4354;
+  border-color: #3d4354;
+  color: #e5e5e5;
+}
+
+/* ============ Factura ============ */
+html[data-theme="dark"] .invoice {
+  background: #2a3040;
+  color: #c8cdd6;
+}
+
+html[data-theme="dark"] .invoice .invoice-header,
+html[data-theme="dark"] .invoice .invoice-footer {
+  background: #262b38;
+  border-color: #3d4354;
+}
+
+/* ============ Scrollbars ============ */
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #3d4354;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1c2433;
+}
+
+/* ============ Autofill ============ */
+html[data-theme="dark"] input:-webkit-autofill,
+html[data-theme="dark"] textarea:-webkit-autofill,
+html[data-theme="dark"] select:-webkit-autofill {
+  -webkit-text-fill-color: #e5e5e5;
+  -webkit-box-shadow: 0 0 0 1000px #3d4354 inset;
+}
+
+/* ============ Toggle del panel: icono según theme ============ */
+html[data-theme="light"] .theme-toggle-panel .fa-sun {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle-panel .fa-moon {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle-panel.btn-secondary {
+  background: #2a3656;
+  border-color: #3d4354;
+  color: #bfdbfe;
+}
+
+/* ==================================================================
+   DARK — redefinición de tokens del shell (admin-skin --adm-*)
+   Un solo bloque tematiza TODO el panel (mismo principio del frontend).
+   ================================================================== */
+html[data-theme="dark"] {
+  --adm-bg: #1c2433;
+  --adm-bg-soft: #2a303e;
+  --adm-card: #2a3040;
+  --adm-ink: #e5e5e5;
+  --adm-ink-strong: #ffffff;
+  --adm-muted: #a3a3a3;
+  --adm-border: #3d4354;
+  --adm-primary: #e05d38;
+  --adm-primary-dark: #f0704a;
+  --adm-primary-strong: #f78a63;
+  --adm-primary-soft: #3a2c26;
+  --adm-accent: #2a3656;
+  --adm-accent-ink: #bfdbfe;
+  --adm-success: #4ade80;
+  --adm-info: #60a5fa;
+  --adm-warning: #fbbf24;
+  --adm-danger: #f87171;
+  --adm-radius: 8px;
+  --adm-radius-lg: 10px;
+  --adm-radius-xl: 14px;
+  --adm-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+  --adm-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --adm-ring: rgba(224, 93, 56, 0.35);
+  --adm-sidebar: #171e2b;
+  --adm-sidebar-soft: #1f2838;
+}
+
+/* Sidebar blanco nativo -> oscuro en dark */
+html[data-theme="dark"] .sidebar[data-background-color="white"],
+html[data-theme="dark"] .sidebar.sidebar-style-2[data-background-color="white"],
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]),
+html[data-theme="dark"] .sidebar[data-background-color="dark"],
+html[data-theme="dark"] .sidebar[data-background-color="dark2"] {
+  background: var(--adm-sidebar) !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .sidebar-wrapper,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .sidebar-wrapper {
+  background: var(--adm-sidebar) !important;
+}
+
+/* ============ Superficies puntuales (sidebar-search, métricas, thumbs) ============ */
+html[data-theme="dark"] .sidebar .sidebar-search,
+html[data-theme="dark"] .sidebar-wrapper .form-control.sidebar-search,
+html[data-theme="dark"] .form-control.sidebar-search {
+  background-color: #1f2838 !important;
+  border-color: #3d4354 !important;
+  color: #e5e5e5 !important;
+}
+
+html[data-theme="dark"] .eb-metric__icon,
+html[data-theme="dark"] .eb-metric-icon {
+  background-color: #2a3040 !important;
+  color: #f0704a !important;
+}
+
+html[data-theme="dark"] .thumb-preview {
+  background-color: #2a3040 !important;
+  border-color: #3d4354 !important;
+}
+
+html[data-theme="dark"] a.btn-secondary,
+html[data-theme="dark"] .btn-secondary {
+  background-color: #2a303e !important;
+  border-color: #3d4354 !important;
+  color: #e5e5e5 !important;
+}
+
+html[data-theme="dark"] a.btn-secondary:hover,
+html[data-theme="dark"] .btn-secondary:hover {
+  background-color: #303750 !important;
+  color: #ffffff !important;
+}
+html[data-theme="dark"] .selectgroup-pills .selectgroup-button,
+html[data-theme="dark"] .selectgroup-secondary .selectgroup-button {
+  background: #2a3040 !important;
+  border-color: #3d4354 !important;
+  color: #c8cdd6 !important;
+}
+
+/* ============ Organizer: score del dashboard y filas de tabla ============ */
+html[data-theme="dark"] .od-profile-score,
+html[data-theme="dark"] .od-profile-score__body,
+html[data-theme="dark"] .od-score-panel {
+  background-color: #2a3040 !important;
+  border-color: #3d4354 !important;
+  color: #e5e5e5 !important;
+}
+
+html[data-theme="dark"] .table-row {
+  background-color: #2a3040 !important;
+  border-color: #3d4354 !important;
+  color: #e5e5e5 !important;
+}

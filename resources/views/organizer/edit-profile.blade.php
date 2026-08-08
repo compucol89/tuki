@@ -1276,3 +1276,14 @@
     })();
   </script>
 @endsection
+
+    /* A11y: labels del formulario del perfil en dark (AA) */
+    html[data-theme="dark"] .page-inner label,
+    html[data-theme="dark"] .page-inner .form-group label,
+    html[data-theme="dark"] .org-profile-edit-form label {
+      color: var(--adm-ink) !important;
+    }
+
+    html[data-theme="dark"] .org-profile-builder .opb-file {
+      color: var(--opb-foreground) !important;
+    }

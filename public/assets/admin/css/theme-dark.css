@@ -106,17 +106,29 @@ html[data-theme="dark"] .navbar-header .dropdown-menu .dropdown-item:hover {
   color: #bfdbfe;
 }
 
-/* ============ Cards ============ */
-html[data-theme="dark"] .card {
-  background: #2a3040;
-  border-color: #3d4354;
+/* ============ Cards ============
+   admin-skin usa rgba(255,255,255,.88) !important → hay que empatar fuerza */
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card-light,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .table-responsive,
+html[data-theme="dark"] .dataTables_wrapper,
+html[data-theme="dark"] .ev-section-card {
+  background: var(--adm-card, #2a3040) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+  box-shadow: var(--adm-shadow-sm) !important;
 }
 
 html[data-theme="dark"] .card-header,
-html[data-theme="dark"] .card-footer {
-  background: #2a3040;
-  border-color: #3d4354;
-  color: #e5e5e5;
+html[data-theme="dark"] .card-footer,
+html[data-theme="dark"] .card .card-header,
+html[data-theme="dark"] .card .card-footer,
+html[data-theme="dark"] .card .card-action,
+html[data-theme="dark"] .ev-section-header {
+  background: var(--adm-bg-soft, #2a303e) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+  color: var(--adm-ink, #e5e5e5) !important;
 }
 
 html[data-theme="dark"] .card .card-header .card-title,
@@ -154,19 +166,17 @@ html[data-theme="dark"] .card-stats .numbers .card-category {
 }
 
 /* ============ Tablas ============ */
-html[data-theme="dark"] .table {
-  color: #c8cdd6;
+html[data-theme="dark"] .table,
+html[data-theme="dark"] .table td,
+html[data-theme="dark"] .table th {
+  color: var(--adm-ink, #c8cdd6) !important;
+  border-color: var(--adm-border, #3d4354) !important;
 }
 
 html[data-theme="dark"] .table thead th {
-  background: #2a3040;
-  border-color: #3d4354;
-  color: #e5e5e5;
-}
-
-html[data-theme="dark"] .table td,
-html[data-theme="dark"] .table th {
-  border-color: #3d4354;
+  background: var(--adm-bg-soft, #2a303e) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+  color: var(--adm-ink-strong, #e5e5e5) !important;
 }
 
 html[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
@@ -535,9 +545,39 @@ html[data-theme="dark"] .separator-line {
 
 /* ============ Listas / Switches / Varios ============ */
 html[data-theme="dark"] .list-group-item {
-  background: #2a3040;
-  border-color: #3d4354;
-  color: #e5e5e5;
+  background: var(--adm-card, #2a3040) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+  color: var(--adm-ink, #e5e5e5) !important;
+}
+
+/* Headers “bg-primary” blanqueados por admin-skin (#f8fafc !important) */
+html[data-theme="dark"] .card .card-header.bg-primary,
+html[data-theme="dark"] .card .card-header.bg-secondary,
+html[data-theme="dark"] .card .card-header.bg-info,
+html[data-theme="dark"] .card .card-header.bg-success,
+html[data-theme="dark"] .card .card-header.bg-warning,
+html[data-theme="dark"] .card .card-header.bg-danger,
+html[data-theme="dark"] .admin-menu-builder .card.border-primary > .card-header {
+  background: var(--adm-bg-soft, #2a303e) !important;
+  border-bottom-color: var(--adm-border, #3d4354) !important;
+  color: var(--adm-ink-strong, #ffffff) !important;
+}
+
+html[data-theme="dark"] .admin-menu-builder .card.border-primary,
+html[data-theme="dark"] .admin-menu-builder .list-group-item,
+html[data-theme="dark"] .admin-menu-builder #myMenuEditor .list-group-item {
+  background: var(--adm-card, #2a3040) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+}
+
+html[data-theme="dark"] .admin-menu-builder .card.border-primary > .card-footer,
+html[data-theme="dark"] .admin-menu-builder > .card-footer {
+  background: var(--adm-bg-soft, #2a303e) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+}
+
+html[data-theme="dark"] .admin-menu-builder #myMenuEditor .txt {
+  color: var(--adm-ink, #e5e5e5) !important;
 }
 
 html[data-theme="dark"] .switch input:checked + .slider {
@@ -1102,4 +1142,47 @@ html[data-theme="light"] .code-block,
 html[data-theme="light"] pre,
 html[data-theme="light"] pre code {
   color: #1e2532 !important;
+}
+
+/* Page title / breadcrumbs: admin-skin hardcodea #111827 */
+html[data-theme="dark"] .page-header .page-title {
+  color: var(--adm-ink-strong, #ffffff) !important;
+}
+
+html[data-theme="dark"] .page-header .breadcrumbs,
+html[data-theme="dark"] .page-header .breadcrumbs a,
+html[data-theme="dark"] .page-header .breadcrumbs li a {
+  color: var(--adm-muted, #a3a3a3) !important;
+}
+
+/* Dashboard stat cards (también con #fff !important en admin-skin) */
+html[data-theme="dark"] .dashboard-items .card-stats {
+  background: var(--adm-card, #2a3040) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+}
+
+/* ============ Atlantis: iconos del sidebar y nav-search (AA 1.4.11) ============ */
+html[data-theme="dark"] .sidebar .nav > .nav-item a i,
+html[data-theme="dark"] .sidebar .nav > .nav-item a:not(.dropdown-toggle) i,
+html[data-theme="light"] .sidebar .nav > .nav-item a i,
+html[data-theme="light"] .sidebar .nav > .nav-item a:not(.dropdown-toggle) i {
+  color: #a3a3a3 !important;
+}
+
+html[data-theme="dark"] .main-header .nav-search .form-control,
+html[data-theme="dark"] .navbar-header .nav-search .form-control {
+  color: var(--adm-ink) !important;
+}
+
+/* ============ Atlantis: togglers del header (iconos de navegacion AA) ============ */
+html[data-theme="dark"] .navbar-toggler .navbar-toggler-icon i,
+html[data-theme="dark"] .topbar-toggler i,
+html[data-theme="dark"] .sidenav-toggler i {
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="light"] .navbar-toggler .navbar-toggler-icon i,
+html[data-theme="light"] .topbar-toggler i,
+html[data-theme="light"] .sidenav-toggler i {
+  color: #5f6b7d !important;
 }

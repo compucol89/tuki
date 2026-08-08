@@ -8540,7 +8540,7 @@ body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head--interest {
   padding: 1rem 1.08rem 1.12rem;
   overflow: hidden;
   background:
-    linear-gradient(135deg, rgba(255, 247, 237, 0.86) 0%, rgba(255, 255, 255, 0.96) 54%, rgba(248, 250, 252, 0.98) 100%);
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 7%, var(--card)) 0%, var(--card) 54%, color-mix(in srgb, var(--muted) 55%, var(--card)) 100%);
 }
 
 body.page-event-detail .ed-ticket-signal__eyebrow {
@@ -8599,7 +8599,7 @@ body.page-event-detail .ed-ticket-signal__item strong {
 body.page-event-detail .ed-ticket-signal__item span {
   display: block;
   max-width: 17.5rem;
-  color: #5f6b7d;
+  color: var(--muted-foreground);
   font-size: 0.84rem;
   font-weight: 520;
   line-height: 1.32;
@@ -8659,7 +8659,7 @@ body.page-event-detail .ed-ticket-signal__progress span {
     border-bottom: 1px solid #edf0f4;
     border-radius: 0;
     background:
-      linear-gradient(135deg, rgba(255, 247, 237, 0.9) 0%, rgba(255, 255, 255, 0.98) 58%, rgba(248, 250, 252, 0.98) 100%);
+      linear-gradient(135deg, color-mix(in srgb, var(--primary) 7%, var(--card)) 0%, var(--card) 58%, color-mix(in srgb, var(--muted) 55%, var(--card)) 100%);
   }
 
   body.page-event-detail #event-booking-card > .ed-ticket-card__head--signal + .ed-ticket-card__body,

@@ -246,7 +246,7 @@
     .category-index-header__text {
       margin-bottom: 0;
       max-width: 620px;
-      color: #64748b;
+      color: var(--adm-muted);
       line-height: 1.7;
     }
 
@@ -299,7 +299,7 @@
     .category-index-stat__label {
       display: block;
       margin-bottom: 4px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
     }
 
@@ -311,7 +311,7 @@
 
     .category-index-filters__hint {
       max-width: 420px;
-      color: #64748b;
+      color: var(--adm-muted);
       line-height: 1.7;
     }
 
@@ -320,7 +320,7 @@
       border: 1px dashed #d6d9e6;
       border-radius: 18px;
       background: #f8fafc;
-      color: #64748b;
+      color: var(--adm-muted);
     }
 
     .category-index-empty h3 {
@@ -481,7 +481,7 @@
 
     .category-modal-intro__text {
       margin-bottom: 0;
-      color: #64748b;
+      color: var(--adm-muted);
       line-height: 1.7;
     }
 
@@ -504,7 +504,7 @@
     }
 
     .category-image-box__text {
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 14px;
       line-height: 1.7;
     }

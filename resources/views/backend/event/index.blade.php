@@ -619,7 +619,7 @@
     .event-index-header__text {
       margin-bottom: 0;
       max-width: 620px;
-      color: #64748b;
+      color: var(--adm-muted);
       line-height: 1.7;
     }
 
@@ -672,7 +672,7 @@
     .event-index-stat__label {
       display: block;
       margin-bottom: 4px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
     }
 
@@ -718,7 +718,7 @@
       border: 1px dashed #d6d9e6;
       border-radius: 18px;
       background: #f8fafc;
-      color: #64748b;
+      color: var(--adm-muted);
     }
 
     .event-index-empty h3 {
@@ -821,7 +821,7 @@
     .event-index-subline {
       display: block;
       margin-top: 4px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 11px;
       line-height: 1.35;
     }
@@ -1057,7 +1057,7 @@
     .event-index-settlement-state--no_balance,
     .event-index-settlement-state--muted {
       background: #f1f5f9;
-      color: #64748b;
+      color: var(--adm-muted);
     }
 
     .event-index-money-stack {
@@ -1072,7 +1072,7 @@
       justify-content: space-between;
       gap: 8px;
       padding: 0;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 11px;
       line-height: 1.2;
     }

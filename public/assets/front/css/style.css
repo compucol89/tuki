@@ -6387,3 +6387,14 @@ html[data-theme="dark"] .skip-link:focus {
 html[data-theme="dark"] .footer-section--premium {
   --footer-muted: #94a3b8;
 }
+
+/* Header premium en light: contraste AA en botones naranjas */
+html[data-theme="light"] .main-header--premium .menu-right .menu-btn--organizer,
+html[data-theme="light"] .main-header--premium .menu-right .dropdown:last-child .menu-btn.menu-btn--organizer {
+  color: #1e2532 !important;
+}
+
+html[data-theme="light"] .main-header--premium .header-ingresar-btn {
+  background: var(--primary-active);
+  color: #1e2532;
+}

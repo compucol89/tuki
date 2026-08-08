@@ -3,7 +3,7 @@
 @section('style')
   <style>
     .transaction-admin {
-      color: #1f2937;
+      color: var(--adm-ink);
       font-size: 13px;
       font-weight: 400;
       letter-spacing: 0;
@@ -27,8 +27,8 @@
     .transaction-admin .tx-card,
     .transaction-admin .tx-table-card,
     .transaction-admin .tx-mobile-card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
+      background: var(--adm-card);
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
       box-shadow: 0 10px 24px rgba(15, 23, 42, .04);
     }
@@ -39,31 +39,31 @@
 
     .transaction-admin .tx-panel-header {
       padding: 22px 24px;
-      border-bottom: 1px solid #e5e7eb;
-      background: #fbfbfc;
+      border-bottom: 1px solid var(--adm-border);
+      background: var(--adm-card);
     }
 
     .transaction-admin .tx-panel-title {
       margin: 0;
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 18px;
       font-weight: 600;
     }
 
     .transaction-admin .tx-panel-subtitle {
       margin: 6px 0 0;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 13px;
       line-height: 1.5;
     }
 
     .transaction-admin .tx-filter {
       padding: 22px 24px;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--adm-border);
     }
 
     .transaction-admin label {
-      color: #475569;
+      color: var(--adm-muted);
       font-size: 12px;
       font-weight: 500;
       margin-bottom: 7px;
@@ -71,15 +71,15 @@
 
     .transaction-admin .form-control {
       min-height: 42px;
-      border-color: #dbe3ef;
+      border-color: var(--adm-border);
       border-radius: 7px;
-      color: #1f2937;
+      color: var(--adm-ink);
       font-size: 14px;
       font-weight: 400;
     }
 
     .transaction-admin .form-control:focus {
-      border-color: #f97316;
+      border-color: var(--adm-primary);
       box-shadow: 0 0 0 3px rgba(249, 115, 22, .12);
     }
 
@@ -107,15 +107,15 @@
     }
 
     .transaction-admin .tx-btn-primary {
-      background: #d63d08;
-      border-color: #d63d08;
-      color: #fff;
+      background: var(--adm-primary);
+      border-color: var(--adm-primary);
+      color: #ffffff;
     }
 
     .transaction-admin .tx-btn-light {
-      background: #fff;
-      border-color: #dbe3ef;
-      color: #475569;
+      background: var(--adm-card);
+      border-color: var(--adm-border);
+      color: var(--adm-muted);
     }
 
     .transaction-admin .tx-kpis {
@@ -123,41 +123,41 @@
       grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 14px;
       padding: 22px 24px;
-      background: #f5f7fa;
-      border-bottom: 1px solid #e5e7eb;
+      background: var(--adm-bg-soft);
+      border-bottom: 1px solid var(--adm-border);
     }
 
     .transaction-admin .tx-card {
       padding: 17px;
       min-height: 112px;
-      border-top: 3px solid #e5e7eb;
+      border-top: 3px solid var(--adm-border);
     }
 
     .transaction-admin .tx-card-orange {
-      border-top-color: #f97316;
+      border-top-color: var(--adm-primary);
     }
 
     .transaction-admin .tx-card-green {
-      border-top-color: #16a34a;
+      border-top-color: var(--adm-success);
     }
 
     .transaction-admin .tx-card-red {
-      border-top-color: #dc2626;
+      border-top-color: var(--adm-danger);
     }
 
     .transaction-admin .tx-card-blue {
-      border-top-color: #2563eb;
+      border-top-color: var(--adm-info);
     }
 
     .transaction-admin .tx-card-purple {
-      border-top-color: #7c3aed;
+      border-top-color: var(--adm-primary);
     }
 
     .transaction-admin .tx-kpi-label {
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: .02em;
@@ -166,7 +166,7 @@
 
     .transaction-admin .tx-kpi-value {
       margin-top: 12px;
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 23px;
       font-weight: 700;
       line-height: 1.1;
@@ -174,7 +174,7 @@
 
     .transaction-admin .tx-kpi-note {
       margin-top: 6px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
       line-height: 1.35;
     }
@@ -189,13 +189,13 @@
 
     .transaction-admin .table {
       margin-bottom: 0;
-      color: #1f2937;
+      color: var(--adm-ink);
     }
 
     .transaction-admin .table thead th {
       background: #eaf2f8;
       border-color: #dce6ef;
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: .03em;
@@ -205,27 +205,27 @@
     }
 
     .transaction-admin .table tbody td {
-      border-color: #edf1f5;
+      border-color: var(--adm-border);
       font-size: 13px;
       vertical-align: middle;
     }
 
     .transaction-admin .tx-id {
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 14px;
       font-weight: 600;
       white-space: nowrap;
     }
 
     .transaction-admin .tx-muted {
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
       font-weight: 400;
       line-height: 1.45;
     }
 
     .transaction-admin .tx-context-title {
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 13.5px;
       font-weight: 600;
       line-height: 1.35;
@@ -251,28 +251,28 @@
     }
 
     .transaction-admin .tx-badge-green {
-      background: #dcfce7;
-      color: #15803d;
+      background: color-mix(in srgb, var(--adm-success) 16%, var(--adm-card));
+      color: var(--adm-success);
     }
 
     .transaction-admin .tx-badge-blue {
-      background: #dbeafe;
-      color: #1d4ed8;
+      background: color-mix(in srgb, var(--adm-info) 16%, var(--adm-card));
+      color: var(--adm-info);
     }
 
     .transaction-admin .tx-badge-amber {
-      background: #fff7ed;
-      color: #c2410c;
+      background: var(--adm-primary-soft);
+      color: var(--adm-primary-dark);
     }
 
     .transaction-admin .tx-badge-red {
-      background: #fee2e2;
-      color: #b91c1c;
+      background: color-mix(in srgb, var(--adm-danger) 14%, var(--adm-card));
+      color: var(--adm-danger);
     }
 
     .transaction-admin .tx-badge-gray {
-      background: #eef2f7;
-      color: #475569;
+      background: var(--adm-bg-soft);
+      color: var(--adm-muted);
     }
 
     .transaction-admin .tx-badge-dark {
@@ -287,14 +287,14 @@
     }
 
     .transaction-admin .tx-amount {
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 15px;
       font-weight: 700;
       white-space: nowrap;
     }
 
     .transaction-admin .tx-value {
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 13px;
       font-weight: 500;
       line-height: 1.35;
@@ -305,7 +305,7 @@
     }
 
     .transaction-admin .tx-amount.negative {
-      color: #b91c1c;
+      color: var(--adm-danger);
     }
 
     .transaction-admin .tx-balance {
@@ -319,11 +319,11 @@
     .transaction-admin .tx-empty {
       padding: 60px 20px;
       text-align: center;
-      color: #64748b;
+      color: var(--adm-muted);
     }
 
     .transaction-admin .tx-empty h3 {
-      color: #111827;
+      color: var(--adm-ink-strong);
       font-size: 22px;
       font-weight: 600;
       margin-bottom: 8px;
@@ -360,8 +360,8 @@
     body[data-background-color="dark"] .transaction-admin .tx-card,
     body[data-background-color="dark"] .transaction-admin .tx-table-card,
     body[data-background-color="dark"] .transaction-admin .tx-mobile-card {
-      background: #fff;
-      color: #1f2937;
+      background: var(--adm-card);
+      color: var(--adm-ink);
     }
 
     @media (max-width: 1399.98px) {

@@ -132,28 +132,28 @@
     }
 
     .arca-status-success {
-      background: #dcfce7;
-      color: #15803d;
+      background: color-mix(in srgb, var(--adm-success) 16%, var(--adm-card));
+      color: var(--adm-success);
     }
 
     .arca-status-info {
-      background: #e0f2fe;
-      color: #0369a1;
+      background: color-mix(in srgb, var(--adm-info) 16%, var(--adm-card));
+      color: var(--adm-info);
     }
 
     .arca-status-warning {
-      background: #fff7ed;
-      color: #c2410c;
+      background: var(--adm-primary-soft);
+      color: var(--adm-primary-dark);
     }
 
     .arca-status-danger {
-      background: #fee2e2;
-      color: #b91c1c;
+      background: color-mix(in srgb, var(--adm-danger) 14%, var(--adm-card));
+      color: var(--adm-danger);
     }
 
     .arca-status-muted {
-      background: #f1f5f9;
-      color: #475569;
+      background: var(--adm-bg-soft);
+      color: var(--adm-muted);
     }
 
     .arca-action-stack {

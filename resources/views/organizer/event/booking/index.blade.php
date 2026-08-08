@@ -3,7 +3,7 @@
 @section('style')
   <style>
     .organizer-booking-admin {
-      color: #1e2532;
+      color: var(--adm-ink);
     }
 
     .ob-summary {
@@ -16,22 +16,22 @@
     .ob-metric {
       min-height: 96px;
       padding: 16px;
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
-      background: #fff;
+      background: var(--adm-card);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
     .ob-metric__label {
       margin-bottom: 8px;
-      color: #64748b;
+      color: var(--adm-muted);
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
     }
 
     .ob-metric__value {
-      color: #1e2532;
+      color: var(--adm-ink);
       font-size: 24px;
       font-weight: 800;
       line-height: 1.2;
@@ -39,23 +39,23 @@
 
     .ob-metric__hint {
       margin-top: 5px;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 11px;
       line-height: 1.35;
     }
 
     .ob-toolbar {
-      border-bottom: 1px solid #eef1f5;
-      background: #fbfcfe;
+      border-bottom: 1px solid var(--adm-border);
+      background: var(--adm-card);
     }
 
     .ob-type-summary {
       max-width: 100%;
       overflow: hidden;
       margin-bottom: 18px;
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
-      background: #fff;
+      background: var(--adm-card);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
@@ -64,12 +64,12 @@
       justify-content: space-between;
       gap: 14px;
       padding: 16px 18px;
-      border-bottom: 1px solid #eef1f5;
+      border-bottom: 1px solid var(--adm-border);
     }
 
     .ob-type-summary__title {
       margin: 0;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-size: 16px;
       font-weight: 800;
     }
@@ -85,9 +85,9 @@
 
     .ob-event-summary-card {
       overflow: hidden;
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--adm-border);
       border-radius: 10px;
-      background: #fff;
+      background: var(--adm-card);
     }
 
     .ob-event-summary-card__head {
@@ -96,7 +96,7 @@
       gap: 16px;
       align-items: start;
       padding: 16px 18px;
-      border-bottom: 1px solid #eef1f5;
+      border-bottom: 1px solid var(--adm-border);
       background: linear-gradient(180deg, #fbfcfe 0%, #fff 100%);
     }
 
@@ -106,7 +106,7 @@
 
     .ob-event-summary-card__title {
       margin: 0 0 7px;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-size: 16px;
       font-weight: 800;
       line-height: 1.25;
@@ -116,7 +116,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 12px;
       font-weight: 600;
     }
@@ -128,13 +128,13 @@
       padding: 4px 8px;
       border: 1px solid #eef1f5;
       border-radius: 999px;
-      background: #fff;
+      background: var(--adm-card);
       line-height: 1.2;
       white-space: nowrap;
     }
 
     .ob-event-summary-card__date {
-      color: #f05a28;
+      color: var(--adm-primary);
       font-weight: 800;
     }
 
@@ -143,10 +143,10 @@
       align-items: center;
       min-height: 24px;
       padding: 5px 9px;
-      border: 1px solid rgba(240, 90, 40, .22);
+      border: 1px solid color-mix(in srgb, var(--adm-primary) 22%, transparent);
       border-radius: 999px;
-      background: #fff7f2;
-      color: #d94a1e;
+      background: var(--adm-primary-soft);
+      color: var(--adm-primary-dark);
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
@@ -157,19 +157,19 @@
       grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
       gap: 1px;
       padding: 1px;
-      border-bottom: 1px solid #eef1f5;
-      background: #eef1f5;
+      border-bottom: 1px solid var(--adm-border);
+      background: var(--adm-border);
     }
 
     .ob-event-summary-stat {
       min-width: 0;
       padding: 12px 14px;
-      background: #fbfcfe;
+      background: var(--adm-card);
     }
 
     .ob-event-summary-stat span {
       display: block;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
@@ -178,7 +178,7 @@
     .ob-event-summary-stat strong {
       display: block;
       margin-top: 3px;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-size: 18px;
       font-weight: 800;
       line-height: 1.15;
@@ -194,7 +194,7 @@
 
     .ob-type-table th {
       border-top: 0;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 10px;
       line-height: 1.25;
       padding: 8px 6px;
@@ -227,7 +227,7 @@
 
     .ob-type-name {
       display: block;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-weight: 800;
       overflow-wrap: anywhere;
     }
@@ -236,7 +236,7 @@
       display: block;
       max-width: 100%;
       overflow: hidden;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 12px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -252,7 +252,7 @@
 
     .ob-table th {
       border-top: 0;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 12px;
       text-transform: uppercase;
       white-space: nowrap;
@@ -266,7 +266,7 @@
       display: block;
       max-width: 280px;
       overflow: hidden;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-weight: 700;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -274,12 +274,12 @@
 
     .ob-muted {
       display: block;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 12px;
     }
 
     .ob-money {
-      color: #1e2532;
+      color: var(--adm-ink);
       font-weight: 800;
       white-space: nowrap;
     }
@@ -316,7 +316,7 @@
     }
 
     .ob-detail-row td {
-      background: #fbfcfe;
+      background: var(--adm-card);
       border-top: 0;
     }
 
@@ -327,18 +327,18 @@
       padding: 14px 16px;
       border: 1px solid #eef1f5;
       border-radius: 8px;
-      background: #fff;
+      background: var(--adm-card);
     }
 
     .ob-detail-section {
       grid-column: 1 / -1;
       padding-top: 12px;
-      border-top: 1px solid #eef1f5;
+      border-top: 1px solid var(--adm-border);
     }
 
     .ob-detail-label {
       display: block;
-      color: #667085;
+      color: var(--adm-muted);
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -347,7 +347,7 @@
     .ob-detail-value {
       display: block;
       margin-top: 4px;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-weight: 700;
     }
 
@@ -365,13 +365,13 @@
       padding: 8px 10px;
       border: 1px solid #eef1f5;
       border-radius: 7px;
-      background: #fbfcfe;
+      background: var(--adm-card);
     }
 
     .ob-mini-title {
       display: block;
       overflow-wrap: anywhere;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-weight: 800;
     }
 
@@ -411,9 +411,9 @@
 
     .ob-mobile-booking {
       padding: 14px;
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--adm-border);
       border-radius: 8px;
-      background: #fff;
+      background: var(--adm-card);
     }
 
     .ob-mobile-booking__head {
@@ -425,7 +425,7 @@
 
     .ob-mobile-booking__title {
       margin-bottom: 2px;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-weight: 800;
     }
 
@@ -439,7 +439,7 @@
     .ob-mobile-extra {
       padding-top: 10px;
       margin-top: 10px;
-      border-top: 1px solid #eef1f5;
+      border-top: 1px solid var(--adm-border);
     }
 
     .ob-empty {
@@ -454,7 +454,7 @@
 
     .ob-empty h3 {
       margin-top: 14px;
-      color: #1e2532;
+      color: var(--adm-ink);
       font-size: 18px;
       font-weight: 800;
     }
@@ -501,14 +501,14 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
         padding: 12px;
-        background: #fbfcfe;
+        background: var(--adm-card);
       }
 
       .ob-event-summary-stat {
         padding: 11px 12px;
         border: 1px solid #eef1f5;
         border-radius: 9px;
-        background: #fff;
+        background: var(--adm-card);
       }
 
       .ob-event-summary-stat strong {
@@ -530,8 +530,8 @@
 
       .ob-type-table {
         padding: 10px;
-        border-top: 1px solid #eef1f5;
-        background: #fbfcfe;
+        border-top: 1px solid var(--adm-border);
+        background: var(--adm-card);
         font-size: 12px;
       }
 
@@ -562,7 +562,7 @@
         padding: 10px 12px;
         border: 1px solid #eef1f5;
         border-radius: 10px;
-        background: #fff;
+        background: var(--adm-card);
         box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
       }
 
@@ -590,14 +590,14 @@
 
       .ob-type-table td::before {
         content: attr(data-label);
-        color: #667085;
+        color: var(--adm-muted);
         font-size: 10px;
         font-weight: 800;
         text-transform: uppercase;
       }
 
       .ob-type-table td:not(:first-child) {
-        color: #1e2532;
+        color: var(--adm-ink);
         font-weight: 700;
       }
 

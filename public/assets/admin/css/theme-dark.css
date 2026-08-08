@@ -757,3 +757,148 @@ html[data-theme="dark"] .table-row {
   border-color: #3d4354 !important;
   color: #e5e5e5 !important;
 }
+
+/* ============ Tabs activos + pills de pagina (booking organizer) ============ */
+html[data-theme="dark"] .nav-tabs .nav-link.active,
+html[data-theme="dark"] .nav-tabs .nav-item.show .nav-link,
+html[data-theme="dark"] .page-inner .nav-tabs .nav-link.active {
+  background-color: var(--adm-card) !important;
+  border-color: var(--adm-border) !important;
+  border-bottom-color: var(--adm-card) !important;
+  color: var(--adm-ink) !important;
+}
+
+html[data-theme="dark"] .nav-tabs .nav-link {
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="dark"] .ob-pill {
+  background-color: var(--adm-primary-soft) !important;
+  color: var(--adm-primary-strong) !important;
+  border-color: color-mix(in srgb, var(--adm-primary) 22%, transparent) !important;
+}
+
+/* ============ Tabs de pagina (sin .nav-tabs wrapper) + badges estado ============ */
+html[data-theme="dark"] .nav-link.active,
+html[data-theme="dark"] .nav-link.active:hover,
+html[data-theme="dark"] .nav-pills .nav-link.active,
+html[data-theme="dark"] .card-header .nav-link.active {
+  background-color: var(--adm-card) !important;
+  border-color: var(--adm-border) !important;
+  color: var(--adm-ink) !important;
+}
+
+html[data-theme="dark"] .nav-link {
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="dark"] .badge-success,
+html[data-theme="dark"] .badge-info,
+html[data-theme="dark"] .badge-warning,
+html[data-theme="dark"] .badge-danger {
+  background-color: var(--adm-card) !important;
+  border: 1px solid var(--adm-border) !important;
+}
+
+html[data-theme="dark"] .badge-success,
+html[data-theme="dark"] .eb-status--paid {
+  color: var(--adm-success) !important;
+}
+
+html[data-theme="dark"] .badge-info,
+html[data-theme="dark"] .eb-status--free {
+  color: var(--adm-info) !important;
+}
+
+html[data-theme="dark"] .badge-warning {
+  color: var(--adm-warning) !important;
+}
+
+html[data-theme="dark"] .badge-danger {
+  color: var(--adm-danger) !important;
+}
+
+html[data-theme="dark"] .eb-pill:not(.eb-pill--paid):not(.eb-pill--free) {
+  background-color: var(--adm-bg-soft) !important;
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="dark"] .btn-success {
+  background-color: var(--adm-success) !important;
+  border-color: var(--adm-success) !important;
+  color: #0b1220 !important;
+}
+
+html[data-theme="dark"] .btn-info {
+  background-color: var(--adm-info) !important;
+  border-color: var(--adm-info) !important;
+  color: #0b1220 !important;
+}
+
+html[data-theme="dark"] .btn-warning {
+  background-color: var(--adm-warning) !important;
+  border-color: var(--adm-warning) !important;
+  color: #0b1220 !important;
+}
+
+html[data-theme="dark"] .btn-danger {
+  background-color: var(--adm-danger) !important;
+  border-color: var(--adm-danger) !important;
+  color: #0b1220 !important;
+}
+
+/* ============ Breadcrumbs del panel (bg transparente en dark) ============ */
+html[data-theme="dark"] .page-header .breadcrumbs,
+html[data-theme="dark"] .breadcrumbs,
+html[data-theme="dark"] .breadcrumbs li,
+html[data-theme="dark"] .breadcrumbs li a,
+html[data-theme="dark"] .breadcrumb,
+html[data-theme="dark"] .breadcrumb li,
+html[data-theme="dark"] .breadcrumb li a {
+  background-color: transparent !important;
+  color: var(--adm-muted) !important;
+}
+
+html[data-theme="dark"] .breadcrumbs li a:hover,
+html[data-theme="dark"] .breadcrumb li a:hover {
+  color: var(--adm-primary) !important;
+}
+
+/* ============ Sidebar: item activo (blanco Atlantis -> dark) ============ */
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item.active > a,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item.selected > a,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:hover,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a:focus,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item a[aria-expanded="true"],
+html[data-theme="dark"] .sidebar .nav > .nav-item.active > a,
+html[data-theme="dark"] .sidebar .nav > .nav-item.selected > a {
+  background: rgba(249, 115, 22, 0.16) !important;
+  box-shadow: inset 3px 0 0 var(--adm-primary) !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li.active > a,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li a:hover,
+html[data-theme="dark"] .sidebar .nav-collapse li.active > a {
+  background-color: color-mix(in srgb, var(--adm-primary) 20%, #1b2230) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+html[data-theme="dark"] body .sidebar[data-background-color="white"] .nav > .nav-item.active > a,
+html[data-theme="dark"] body .sidebar[data-background-color="white"] .nav > .nav-item.selected > a {
+  background-color: rgba(249, 115, 22, 0.16) !important;
+  background-image: none !important;
+  box-shadow: inset 3px 0 0 var(--adm-primary) !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item.active > a p,
+html[data-theme="dark"] .sidebar[data-background-color="white"] .nav > .nav-item.active > a i,
+html[data-theme="dark"] .sidebar .nav > .nav-item.active > a p,
+html[data-theme="dark"] .sidebar .nav > .nav-item.active > a i {
+  color: #ffffff !important;
+}

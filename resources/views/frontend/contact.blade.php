@@ -564,8 +564,8 @@ body.contact-page-premium main {
 
 .contact-page-premium .ctp-form-wrap {
   border-radius: var(--ctp-radius);
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.76);
+  background: color-mix(in srgb, var(--card) 78%, transparent);
+  border: 1px solid var(--border);
   box-shadow: var(--ctp-shadow);
   overflow: hidden;
 }

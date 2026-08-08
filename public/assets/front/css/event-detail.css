@@ -3141,15 +3141,15 @@ body.page-event-detail .ed-info-icon--date {
 }
 
 body.page-event-detail .ed-info-icon--place {
-  color: #2563eb;
+  color: var(--info);
 }
 
 body.page-event-detail .ed-info-icon--org {
-  color: #475569;
+  color: var(--muted-foreground);
 }
 
 body.page-event-detail .ed-info-icon--stock {
-  color: #16a34a;
+  color: var(--success-text);
 }
 
 body.page-event-detail .ed-info-icon svg {
@@ -4781,13 +4781,13 @@ body.page-event-detail .ed-info-icon--place {
 }
 
 body.page-event-detail .ed-info-icon--org {
-  background: #f1f5f9;
-  color: #526074;
+  background: var(--muted);
+  color: var(--muted-foreground);
 }
 
 body.page-event-detail .ed-info-icon--stock {
-  background: #f0fdf4;
-  color: var(--ed-green);
+  background: var(--success-light);
+  color: var(--success-text);
 }
 
 body.page-event-detail .ed-info-item__value {

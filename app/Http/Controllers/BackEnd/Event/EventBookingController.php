@@ -33,6 +33,18 @@ class EventBookingController extends Controller
 {
   public function index(Request $request)
   {
+    return $this->renderBookingIndex($request);
+  }
+
+  public function byEvent(Request $request, $eventId)
+  {
+    $event = Event::with('dates')->findOrFail($eventId);
+
+    return $this->renderBookingIndex($request, (int) $event->id, $event);
+  }
+
+  private function renderBookingIndex(Request $request, ?int $focusedEventId = null, ?Event $focusedEvent = null)
+  {
     $language = Language::where('is_default', 1)->first();
     $filterParams = $request->only([
       'search',
@@ -44,8 +56,11 @@ class EventBookingController extends Controller
       'event_title',
     ]);
 
-    $applyFilters = function ($query) use ($request) {
+    $applyFilters = function ($query) use ($request, $focusedEventId) {
       return $query
+        ->when($focusedEventId, function ($query) use ($focusedEventId) {
+          return $query->where('event_id', $focusedEventId);
+        })
         ->when($request->filled('search'), function ($query) use ($request) {
           $search = $request->input('search');
 
@@ -82,7 +97,6 @@ class EventBookingController extends Controller
         });
     };
 
-    $bookingQuery = $applyFilters(Booking::with(['organizer', 'customerInfo', 'addons', 'arcaInvoice', 'fiscalProfile']));
     $kpiQuery = $applyFilters(Booking::query());
     $ticketSummaryBookings = $applyFilters(Booking::select([
       'id',
@@ -98,10 +112,15 @@ class EventBookingController extends Controller
       'scanned_tickets',
     ]))->get();
 
-    $bookings = $bookingQuery
-      ->orderByDesc('id')
-      ->paginate(10)
-      ->appends($filterParams);
+    // Hub: solo eventos. Página del evento: lista de compradores de ese evento.
+    if ($focusedEventId) {
+      $bookings = $applyFilters(Booking::with(['organizer', 'customerInfo', 'addons', 'arcaInvoice', 'fiscalProfile']))
+        ->orderByDesc('id')
+        ->paginate(20)
+        ->appends($filterParams);
+    } else {
+      $bookings = Booking::whereRaw('0 = 1')->paginate(20);
+    }
 
     $kpis = [
       'total' => (clone $kpiQuery)->count(),
@@ -116,8 +135,8 @@ class EventBookingController extends Controller
     $currencySettings = Basic::select('base_currency_symbol_position', 'base_currency_symbol')->first();
     $defaultLanguage = $language;
 
-    $eventIds = $bookings->pluck('event_id')
-      ->merge($ticketSummaryBookings->pluck('event_id'))
+    $eventIds = collect($ticketSummaryBookings)->pluck('event_id')
+      ->when($focusedEventId, fn ($ids) => $ids->push($focusedEventId))
       ->filter()
       ->unique();
     $eventInfos = EventContent::whereIn('event_id', $eventIds)
@@ -131,7 +150,16 @@ class EventBookingController extends Controller
     $ticketSummaryService = app(EventTicketSalesSummaryService::class);
     $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents);
 
-    return view('backend.event.booking.index', compact('bookings', 'kpis', 'eventInfos', 'ticketSalesByEvent', 'currencySettings', 'defaultLanguage'));
+    return view('backend.event.booking.index', compact(
+      'bookings',
+      'kpis',
+      'eventInfos',
+      'ticketSalesByEvent',
+      'currencySettings',
+      'defaultLanguage',
+      'focusedEventId',
+      'focusedEvent'
+    ));
   }
   //updatePaymentStatus
   public function updatePaymentStatus(Request $request, $id)

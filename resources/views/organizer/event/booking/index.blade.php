@@ -627,6 +627,14 @@
         $amount = number_format((float) $amount, 0, ',', '.');
         return ($position == 'left' ? $symbol : '') . $amount . ($position == 'right' ? $symbol : '');
     };
+    $focusedEventId = $focusedEventId ?? null;
+    $focusedEvent = $focusedEvent ?? null;
+    $focusedEventTitle = $focusedEventId
+      ? (optional($eventInfos[$focusedEventId] ?? null)->title ?: __('Evento') . ' #' . $focusedEventId)
+      : null;
+    $bookingFiltersAction = $focusedEventId
+      ? route('organizer.event_booking.by_event', $focusedEventId)
+      : route('organizer.event.booking');
     $statusOptions = [
         'completed' => ['label' => __('Completado'), 'class' => 'success', 'icon' => 'fa-check-circle'],
         'pending' => ['label' => __('Pendiente'), 'class' => 'warning text-dark', 'icon' => 'fa-clock'],
@@ -637,7 +645,13 @@
 
   <div class="organizer-booking-admin">
     <div class="page-header">
-      <h4 class="page-title">{{ __('Reservas de eventos') }}</h4>
+      <h4 class="page-title">
+        @if ($focusedEventId)
+          {{ __('Compradores') }}: {{ $focusedEventTitle }}
+        @else
+          {{ __('Reservas de eventos') }}
+        @endif
+      </h4>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
@@ -648,10 +662,31 @@
           <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-          <a href="#">{{ __('Reservas') }}</a>
+          <a href="{{ route('organizer.event.booking') }}">{{ __('Reservas') }}</a>
         </li>
+        @if ($focusedEventId)
+          <li class="separator">
+            <i class="flaticon-right-arrow"></i>
+          </li>
+          <li class="nav-item">
+            <a href="#">{{ Str::limit($focusedEventTitle, 40) }}</a>
+          </li>
+        @endif
       </ul>
     </div>
+
+    @if ($focusedEventId)
+      <p class="alert alert-light border mb-3">
+        <a href="{{ route('organizer.event.booking') }}" class="btn btn-sm btn-outline-secondary mr-2">
+          <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>{{ __('Volver a eventos') }}
+        </a>
+        {{ __('Personas que reservaron este evento (incluye invitados con nombre, email y teléfono).') }}
+      </p>
+    @else
+      <p class="alert alert-light border mb-3">
+        {{ __('Elegí un evento para ver quién compró. Acá solo ves el resumen por evento.') }}
+      </p>
+    @endif
 
     <div class="ob-summary" aria-label="{{ __('Resumen de reservas') }}">
       <div class="ob-metric">
@@ -685,8 +720,20 @@
     <section class="ob-type-summary" aria-labelledby="organizerTicketTypeSummaryTitle">
       <div class="ob-type-summary__head">
         <div>
-          <h2 id="organizerTicketTypeSummaryTitle" class="ob-type-summary__title">{{ __('Ventas por evento y tipo de entrada') }}</h2>
-          <div class="ob-muted">{{ __('Ordenado por fecha del evento; respeta los filtros aplicados.') }}</div>
+          <h2 id="organizerTicketTypeSummaryTitle" class="ob-type-summary__title">
+            @if ($focusedEventId)
+              {{ __('Resumen del evento') }}
+            @else
+              {{ __('Eventos con reservas') }}
+            @endif
+          </h2>
+          <div class="ob-muted">
+            @if ($focusedEventId)
+              {{ __('Tipos de entrada de este evento.') }}
+            @else
+              {{ __('Ordenado por fecha. Abrí un evento para ver los compradores.') }}
+            @endif
+          </div>
         </div>
         <div class="ob-muted">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
       </div>
@@ -734,6 +781,7 @@
                   </div>
                 </div>
 
+                @if ($focusedEventId)
                 <table class="table ob-type-table">
                   <colgroup>
                     <col class="ob-type-table__ticket">
@@ -771,6 +819,15 @@
                     @endforeach
                   </tbody>
                 </table>
+                @endif
+                @unless ($focusedEventId)
+                  <div class="mt-3 pt-3 border-top">
+                    <a class="btn btn-primary btn-sm"
+                      href="{{ route('organizer.event_booking.by_event', $eventSummary['event_id']) }}">
+                      <i class="fas fa-users mr-1" aria-hidden="true"></i>{{ __('Ver compradores') }}
+                    </a>
+                  </div>
+                @endunless
               </article>
             @endforeach
           </div>
@@ -778,14 +835,15 @@
       </div>
     </section>
 
+    @if ($focusedEventId)
     <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header ob-toolbar">
-            <form id="organizerBookingFiltersForm" action="{{ route('organizer.event.booking') }}" method="GET">
+            <form id="organizerBookingFiltersForm" action="{{ $bookingFiltersAction }}" method="GET">
               <div class="row align-items-end">
                 <div class="col-lg-4">
-                  <div class="card-title mb-2">{{ __('Reservas') }}</div>
+                  <div class="card-title mb-2">{{ __('Compradores') }}</div>
                   <button class="btn btn-danger btn-sm d-none bulk-delete"
                     data-href="{{ route('organizer.event_booking.bulk_delete') }}" type="button">
                     <i class="flaticon-interface-5" aria-hidden="true"></i> {{ __('Eliminar') }}
@@ -839,7 +897,7 @@
                       </th>
                       <th scope="col">{{ __('Reserva') }}</th>
                       <th scope="col">{{ __('Evento') }}</th>
-                      <th scope="col">{{ __('Cliente') }}</th>
+                      <th scope="col">{{ __('Comprador') }}</th>
                       <th scope="col">{{ __('Importe') }}</th>
                       <th scope="col">{{ __('Pago') }}</th>
                       <th scope="col">{{ __('Escaneo') }}</th>
@@ -898,14 +956,7 @@
                           <span class="ob-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
                         </td>
                         <td>
-                          @if ($customer)
-                            {{ $customer->fname }} {{ $customer->lname }}
-                          @elseif (is_null($booking->customer_id))
-                            {{ __('Invitado') }}
-                          @else
-                            -
-                          @endif
-                          <span class="ob-muted">{{ $booking->email ?: '-' }}</span>
+                          @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
                         </td>
                         <td>
                           <div class="ob-money">{{ $formatMoney($paidTotal) }}</div>
@@ -1058,15 +1109,9 @@
 
                     <div class="ob-mobile-booking__grid">
                       <div>
-                        <span class="ob-detail-label">{{ __('Cliente') }}</span>
+                        <span class="ob-detail-label">{{ __('Comprador') }}</span>
                         <span class="ob-detail-value">
-                          @if ($customer)
-                            {{ $customer->fname }} {{ $customer->lname }}
-                          @elseif (is_null($booking->customer_id))
-                            {{ __('Invitado') }}
-                          @else
-                            -
-                          @endif
+                          @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
                         </span>
                       </div>
                       <div>
@@ -1167,6 +1212,7 @@
         </div>
       </div>
     </div>
+    @endif
   </div>
 @endsection
 

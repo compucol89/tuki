@@ -6361,3 +6361,24 @@ html[data-theme="dark"] .footer-pay--amex {
 html[data-theme="dark"] .footer-pay--naranja {
   color: var(--primary-text);
 }
+
+/* ============ Header premium en dark: botones AA ============ */
+html[data-theme="dark"] .main-header--premium .menu-right .menu-btn--organizer,
+html[data-theme="dark"] .main-header--premium .menu-right .dropdown:last-child .menu-btn.menu-btn--organizer {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
+  color: #ffffff !important;
+  border-color: #9a3412 !important;
+}
+
+html[data-theme="dark"] .main-header--premium .header-ingresar-btn {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  color: #ffffff;
+}
+
+/* ============ Skip link en dark (legible) ============ */
+html[data-theme="dark"] .skip-link,
+html[data-theme="dark"] .skip-link:focus {
+  background: #111827;
+  color: #f3f4f6;
+  outline-color: #f3f4f6;
+}

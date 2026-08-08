@@ -165,6 +165,9 @@ Route::prefix('/admin')->middleware(['auth:admin', 'admin.locale'])->group(funct
     });
 
     Route::get('', 'BackEnd\Event\EventBookingController@index')->name('admin.event.booking');
+    Route::get('/evento/{eventId}', 'BackEnd\Event\EventBookingController@byEvent')
+      ->whereNumber('eventId')
+      ->name('admin.event_booking.by_event');
     Route::post('/update/payment-status/{id}', 'BackEnd\Event\EventBookingController@updatePaymentStatus')->name('admin.event_booking.update_payment_status');
     Route::get('/details/{id}', 'BackEnd\Event\EventBookingController@show')->name('admin.event_booking.details');
     Route::post('/{id}/delete', 'BackEnd\Event\EventBookingController@destroy')->name('admin.event_booking.delete');

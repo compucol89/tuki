@@ -589,26 +589,39 @@
                 <span class="bd-field__value">
                   @if ($customer)
                     <a href="{{ route('admin.customer_management.customer_details', ['id' => $customer->id, 'language' => optional($language)->code ?: 'es']) }}">
-                      {{ trim($customer->fname . ' ' . $customer->lname) }}
+                      {{ $booking->buyerName() !== '' ? $booking->buyerName() : trim($customer->fname . ' ' . $customer->lname) }}
                     </a>
-                  @elseif (is_null($booking->customer_id))
-                    {{ __('Invitado') }}
+                  @elseif ($booking->isGuestBuyer())
+                    {{ $booking->buyerName() !== '' ? $booking->buyerName() : __('Invitado') }}
+                    <span class="badge badge-secondary ml-1">{{ __('Invitado') }}</span>
+                  @else
+                    {{ $booking->buyerName() !== '' ? $booking->buyerName() : '-' }}
+                  @endif
+                </span>
+              </div>
+              <div class="bd-field">
+                <span class="bd-field__label">{{ __('Nombre usado en la reserva') }}</span>
+                <span class="bd-field__value">{{ $booking->buyerName() !== '' ? $booking->buyerName() : '-' }}</span>
+              </div>
+              <div class="bd-field">
+                <span class="bd-field__label">{{ __('Email') }}</span>
+                <span class="bd-field__value">
+                  @if ($booking->buyerEmail() !== '')
+                    <a href="mailto:{{ $booking->buyerEmail() }}">{{ $booking->buyerEmail() }}</a>
                   @else
                     -
                   @endif
                 </span>
               </div>
               <div class="bd-field">
-                <span class="bd-field__label">{{ __('Nombre usado en la reserva') }}</span>
-                <span class="bd-field__value">{{ trim($booking->fname . ' ' . $booking->lname) ?: '-' }}</span>
-              </div>
-              <div class="bd-field">
-                <span class="bd-field__label">{{ __('Email') }}</span>
-                <span class="bd-field__value">{{ $booking->email ?: '-' }}</span>
-              </div>
-              <div class="bd-field">
                 <span class="bd-field__label">{{ __('Teléfono') }}</span>
-                <span class="bd-field__value">{{ $booking->phone ?: '-' }}</span>
+                <span class="bd-field__value">
+                  @if ($booking->buyerPhone() !== '')
+                    <a href="tel:{{ preg_replace('/\s+/', '', $booking->buyerPhone()) }}">{{ $booking->buyerPhone() }}</a>
+                  @else
+                    -
+                  @endif
+                </span>
               </div>
               <div class="bd-field">
                 <span class="bd-field__label">{{ __('Ubicación') }}</span>

@@ -281,7 +281,7 @@
 .ed-countdown-wrap .syotimer-cell__value {
   font-size: 20px !important;
   font-weight: 800 !important;
-  color: #1e2532 !important;
+  color: var(--muted-foreground) !important;
   line-height: 1 !important;
   border: none !important;
   margin: 0 0 2px !important;
@@ -511,7 +511,7 @@
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.04em;
-  color: #172131;
+  color: var(--foreground);
 }
 
 .ed-card__title--with-icon {
@@ -593,7 +593,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
   font-size: 15px;
   line-height: 1.42;
   letter-spacing: -0.025em;
-  color: #172131;
+  color: var(--foreground);
 }
 
 .ed-summary-item__meta {
@@ -753,7 +753,7 @@ body.page-event-detail .ed-card--context .ed-card__body {
 .ed-card .summernote-content h3,
 .ed-card .summernote-content h4 {
   font-family: var(--tuki-font-sans);
-  color: #172131;
+  color: var(--foreground);
   letter-spacing: -0.04em;
   line-height: 1.2;
   margin-block: 0;
@@ -1604,7 +1604,7 @@ body.page-event-detail .ei-meta__text {
 
 .ei-org__name,
 .ei-meta__text {
-  color: #172131;
+  color: var(--foreground);
 }
 
 .ei-cal__btns {
@@ -4136,12 +4136,12 @@ body.page-event-detail .ed-card.ed-card--context {
 }
 
 body.page-event-detail .ed-body-breadcrumbs {
-  color: #8a94a6;
+  color: var(--muted-foreground);
 }
 
 body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list a,
 body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current {
-  color: #8a94a6;
+  color: var(--muted-foreground);
 }
 
 body.page-event-detail .ed-summary-item:not(.ed-summary-item--quickfact),
@@ -4338,6 +4338,10 @@ body.page-event-detail .ed-hero__status-pill--upcoming {
   box-shadow: none;
 }
 
+html[data-theme="light"] body.page-event-detail .ed-hero__status-pill--upcoming {
+  color: #1d4ed8;
+}
+
 body.page-event-detail .ed-hero__status-pill--running {
   border-color: rgba(134, 239, 172, 0.32);
   background: rgba(22, 163, 74, 0.18);
@@ -4345,11 +4349,19 @@ body.page-event-detail .ed-hero__status-pill--running {
   box-shadow: none;
 }
 
+html[data-theme="light"] body.page-event-detail .ed-hero__status-pill--running {
+  color: #047857;
+}
+
 body.page-event-detail .ed-hero__status-pill--over {
   border-color: rgba(252, 165, 165, 0.32);
   background: rgba(239, 68, 68, 0.18);
   color: #fecaca;
   box-shadow: none;
+}
+
+html[data-theme="light"] body.page-event-detail .ed-hero__status-pill--over {
+  color: #b91c1c;
 }
 
 body.page-event-detail .ed-ev-title {
@@ -4806,7 +4818,7 @@ body.page-event-detail .ed-info-item__meta {
 
 body.page-event-detail .ed-info-card--description .summernote-content {
   max-width: 74ch;
-  color: #2b3444;
+  color: var(--foreground);
   font-size: 1rem;
   line-height: 1.72;
 }
@@ -5981,7 +5993,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-hero-fact__label {
-    color: #7b8797;
+    color: var(--muted-foreground);
     font-size: 0.68rem;
     font-weight: 750;
     line-height: 1.2;
@@ -6454,7 +6466,7 @@ body.page-event-detail .ed-hero-facts {
     display: inline-flex;
     align-items: center;
     gap: 0.42rem;
-    color: #1f2430;
+    color: var(--foreground);
     font-size: 1rem;
     font-weight: 680;
     line-height: 1.24;
@@ -6468,7 +6480,7 @@ body.page-event-detail .ed-hero-facts {
 
   body.page-event-detail .ed-ticket-picker__sub {
     max-width: 20rem;
-    color: #697386;
+    color: var(--muted-foreground);
     font-size: 0.82rem;
     line-height: 1.35;
   }
@@ -6535,7 +6547,7 @@ body.page-event-detail .ed-hero-facts {
 
   body.page-event-detail .ed-ticket-option__title {
     margin: 0;
-    color: #252a33;
+    color: var(--foreground);
     font-size: 0.94rem;
     font-weight: 680;
     line-height: 1.22;
@@ -6554,7 +6566,7 @@ body.page-event-detail .ed-hero-facts {
   }
 
   body.page-event-detail .ed-ticket-option__desc .show-content {
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.8rem;
     font-weight: 400;
     line-height: 1.34;
@@ -6593,7 +6605,7 @@ body.page-event-detail .ed-hero-facts {
     border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
     background: color-mix(in srgb, var(--primary) 10%, var(--card));
-    color: #1f2430;
+    color: var(--foreground);
     font-size: 0.9rem;
     font-weight: 760;
     line-height: 1;
@@ -6688,7 +6700,7 @@ body.page-event-detail .ed-hero-facts {
     grid-column: 1;
     grid-row: 2;
     margin: 0;
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.72rem;
     font-weight: 720;
     line-height: 1.15;
@@ -6731,7 +6743,7 @@ body.page-event-detail .ed-hero-facts {
     align-self: center;
     justify-self: end;
     margin: 0;
-    color: #1f2430;
+    color: var(--foreground);
     font-size: 1.72rem;
     font-weight: 760;
     line-height: 0.95;
@@ -6944,7 +6956,7 @@ body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__list {
   max-width: 100%;
   min-width: 0;
   overflow: hidden;
-  color: #8a94a6;
+  color: var(--muted-foreground);
   font-size: 0.72rem;
   line-height: 1.2;
   letter-spacing: 0;
@@ -6977,7 +6989,7 @@ body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current {
   min-width: 4rem;
   max-width: min(28rem, 42vw);
   overflow: hidden;
-  color: #667184;
+  color: var(--muted-foreground);
   font-weight: 540;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -7056,7 +7068,7 @@ body.page-event-detail .ed-info-card__body--description {
 
 body.page-event-detail .ed-info-card--description .summernote-content {
   max-width: 68ch;
-  color: #2b3444;
+  color: var(--foreground);
   font-size: clamp(0.95rem, 0.9vw, 1rem);
   font-weight: 430;
   line-height: 1.62;
@@ -7066,7 +7078,7 @@ body.page-event-detail .ed-info-card--description .summernote-content {
 
 body.page-event-detail .ed-info-card--description .summernote-content p {
   margin: 0 0 0.72rem;
-  color: #2f3a4a;
+  color: var(--foreground);
 }
 
 body.page-event-detail .ed-info-card--description .summernote-content p:first-child {
@@ -7083,7 +7095,7 @@ body.page-event-detail .ed-info-card--description .summernote-content p:last-chi
   margin-top: 0.95rem;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(30, 37, 50, 0.07);
-  color: #7a8494;
+  color: var(--muted-foreground);
   font-size: 0.84rem;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -7091,7 +7103,7 @@ body.page-event-detail .ed-info-card--description .summernote-content p:last-chi
 
 body.page-event-detail .ed-info-card--description .summernote-content strong,
 body.page-event-detail .ed-info-card--description .summernote-content b {
-  color: #172131;
+  color: var(--foreground);
   font-weight: 680;
 }
 
@@ -7128,7 +7140,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band--highlight .ed
 
 body.page-event-detail .ed-info-card--description .ed-refund-band__lead {
   margin-bottom: 0.28rem;
-  color: #172131;
+  color: var(--foreground);
   font-size: 0.93rem;
   font-weight: 680;
   line-height: 1.35;
@@ -7136,7 +7148,7 @@ body.page-event-detail .ed-info-card--description .ed-refund-band__lead {
 }
 
 body.page-event-detail .ed-info-card--description .ed-refund-band__desc {
-  color: #5b6b80;
+  color: var(--muted-foreground);
   font-size: 0.82rem;
   font-weight: 430;
   line-height: 1.48;
@@ -7288,7 +7300,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy {
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy strong {
-  color: #232b39;
+  color: var(--foreground);
   font-size: 0.78rem;
   font-weight: 650;
   line-height: 1.24;
@@ -7296,7 +7308,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy stron
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy > span {
-  color: #667286;
+  color: var(--muted-foreground);
   font-size: 0.76rem;
   font-weight: 420;
   line-height: 1.43;
@@ -7316,7 +7328,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-summary {
   align-items: center;
   min-height: 2.1rem;
   cursor: pointer;
-  color: #536075;
+  color: var(--muted-foreground);
   font-size: 0.76rem;
   font-weight: 560;
   line-height: 1.3;
@@ -7350,7 +7362,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__legal-text {
   margin: 0.35rem 0 0;
   padding-top: 0.72rem;
   border-top: 1px solid rgba(30, 37, 50, 0.08);
-  color: #5b6b80;
+  color: var(--muted-foreground);
   font-size: 0.76rem;
   font-weight: 420;
   line-height: 1.58;
@@ -7400,7 +7412,7 @@ body.page-event-detail .ed-refund-band--policy .ed-refund-band__cta:focus-visibl
 }
 
 body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact {
-  color: #69758a;
+  color: var(--muted-foreground);
   font-size: 0.75rem;
   font-weight: 520;
   line-height: 1.3;
@@ -7498,7 +7510,7 @@ body.page-event-detail .ei-label {
 
 body.page-event-detail .ei-org__name,
 body.page-event-detail .ei-meta__text {
-  color: #263041;
+  color: var(--foreground);
   font-size: 0.9rem;
   font-weight: 620;
   line-height: 1.36;
@@ -7706,7 +7718,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-ticket-card__head-title {
-    color: #7b8797 !important;
+    color: var(--muted-foreground) !important;
     font-size: 0.68rem;
     font-weight: 680;
   }
@@ -7766,7 +7778,7 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-ticket-picker__sub {
     max-width: 20.5rem;
     margin-top: 0.34rem;
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.8rem;
     font-weight: 400;
     line-height: 1.35;
@@ -7820,7 +7832,7 @@ body.page-event-detail .ed-body {
 
   body.page-event-detail .ed-ticket-option__title {
     margin: 0;
-    color: #1f2430;
+    color: var(--foreground);
     font-size: 0.92rem;
     font-weight: 680;
     line-height: 1.22;
@@ -7839,7 +7851,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-ticket-option__desc .show-content {
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.78rem;
     font-weight: 400;
     line-height: 1.32;
@@ -7870,7 +7882,7 @@ body.page-event-detail .ed-body {
     border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
     border-radius: 999px;
     background: color-mix(in srgb, var(--primary) 10%, var(--card));
-    color: #1f2430;
+    color: var(--foreground);
     font-size: 0.88rem;
     font-weight: 760;
     line-height: 1;
@@ -7941,7 +7953,7 @@ body.page-event-detail .ed-body {
     grid-column: 1;
     grid-row: 2;
     margin: 0;
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.68rem;
     font-weight: 720;
     line-height: 1.15;
@@ -7977,7 +7989,7 @@ body.page-event-detail .ed-body {
     align-self: center;
     justify-self: end;
     margin: 0;
-    color: #1f2430;
+    color: var(--foreground);
     font-size: 1.58rem;
     font-weight: 760;
     line-height: 0.95;
@@ -8110,7 +8122,7 @@ body.page-event-detail .ed-body {
   body.page-event-detail .ed-hero-nudge {
     min-height: 1.45rem;
     margin-top: 0.95rem;
-    color: #536174;
+    color: var(--muted-foreground);
   }
 
   body.page-event-detail .ed-hero-nudge::before {
@@ -8120,7 +8132,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-hero-nudge__item {
-    color: #536174;
+    color: var(--muted-foreground);
     font-size: 0.95rem;
     font-weight: 500;
     line-height: 1.35;
@@ -8181,7 +8193,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-hero-fact__label {
-    color: #7b8797;
+    color: var(--muted-foreground);
     font-size: 0.67rem;
     font-weight: 560;
     line-height: 1.2;
@@ -8207,7 +8219,7 @@ body.page-event-detail .ed-body {
   }
 
   body.page-event-detail .ed-hero-fact__meta {
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.73rem;
     font-weight: 440;
     line-height: 1.3;
@@ -8363,7 +8375,7 @@ body.page-event-detail .ed-hero-info {
     padding: 0;
     overflow: visible;
     clip: auto;
-    color: #7b8797;
+    color: var(--muted-foreground);
     font-size: 0.67rem;
     font-weight: 560;
     line-height: 1.2;
@@ -8391,7 +8403,7 @@ body.page-event-detail .ed-hero-info {
   }
 
   body.page-event-detail .ed-hero-info .ed-info-item__meta {
-    color: #667184;
+    color: var(--muted-foreground);
     font-size: 0.73rem;
     font-weight: 440;
     line-height: 1.3;
@@ -8498,7 +8510,7 @@ body.page-event-detail .ed-hero-info {
     margin-top: var(--ed-desktop-step-2);
     padding-top: 0;
     border-top: 0;
-    color: #536174;
+    color: var(--muted-foreground);
     font-size: 0.93rem;
     line-height: 1.55;
   }
@@ -8705,7 +8717,7 @@ body.page-event-detail .ed-countdown-wrap {
   border-left: 0;
   border-radius: 16px;
   background:
-    linear-gradient(135deg, rgba(255, 247, 237, 0.78) 0%, rgba(255, 255, 255, 0.98) 56%, rgba(248, 250, 252, 0.96) 100%);
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 7%, var(--card)) 0%, var(--card) 56%, color-mix(in srgb, var(--muted) 55%, var(--card)) 100%);
   box-shadow: none;
 }
 
@@ -8765,7 +8777,7 @@ body.page-event-detail .ed-countdown-wrap .syotimer-cell + .syotimer-cell {
 
 body.page-event-detail .ed-countdown-wrap .syotimer-cell__value {
   margin: 0 0 0.12rem !important;
-  color: #1e2532 !important;
+  color: var(--muted-foreground) !important;
   font-size: clamp(1.62rem, 2.25vw, 2rem) !important;
   font-weight: 880 !important;
   line-height: 0.92 !important;
@@ -8775,7 +8787,7 @@ body.page-event-detail .ed-countdown-wrap .syotimer-cell__value {
 
 body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit {
   max-width: 100%;
-  color: #7a8494 !important;
+  color: var(--muted-foreground) !important;
   font-size: 0.56rem !important;
   font-weight: 650 !important;
   line-height: 1.1 !important;
@@ -8828,4 +8840,26 @@ body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit {
     font-size: 0.72rem;
     line-height: 1.25;
   }
+}
+
+/* ============ Light: grises muted a 4.5:1 (WCAG AA) ============ */
+html[data-theme="light"] body.page-event-detail .ed-hero-fact__label,
+html[data-theme="light"] body.page-event-detail .ed-hero-fact__meta,
+html[data-theme="light"] body.page-event-detail .ed-hero-nudge__item,
+html[data-theme="light"] body.page-event-detail .ed-ticket-picker__sub,
+html[data-theme="light"] body.page-event-detail .ed-ticket-option__desc .show-content,
+html[data-theme="light"] body.page-event-detail .ed-total-label,
+html[data-theme="light"] body.page-event-detail .ed-body-breadcrumbs,
+html[data-theme="light"] body.page-event-detail .ed-body-breadcrumbs .ed-breadcrumbs__current,
+html[data-theme="light"] body.page-event-detail .ed-refund-band__kicker,
+html[data-theme="light"] body.page-event-detail .ed-refund-band__desc,
+html[data-theme="light"] body.page-event-detail .ed-refund-band__legal-summary,
+html[data-theme="light"] body.page-event-detail .ed-refund-band__legal-text,
+html[data-theme="light"] body.page-event-detail .ed-refund-band--policy .ed-refund-band__point-copy > span,
+html[data-theme="light"] body.page-event-detail .ed-refund-band--policy .ed-refund-band__contact,
+html[data-theme="light"] body.page-event-detail .ed-info-item__label,
+html[data-theme="light"] body.page-event-detail .ed-info-item__meta,
+html[data-theme="light"] body.page-event-detail .ed-countdown-wrap .syotimer-cell__unit,
+html[data-theme="light"] body.page-event-detail .ed-ticket-signal__item span {
+  color: #5f6b7d;
 }

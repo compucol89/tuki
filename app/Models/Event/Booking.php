@@ -68,6 +68,56 @@ class Booking extends Model
   {
     return $this->hasOne(Customer::class, 'id', 'customer_id');
   }
+
+  /** Nombre del comprador en la reserva (invitado o cuenta); prioriza snapshot de la compra. */
+  public function buyerName(): string
+  {
+    $fromBooking = trim((string) ($this->fname ?? '') . ' ' . (string) ($this->lname ?? ''));
+    if ($fromBooking !== '') {
+      return $fromBooking;
+    }
+
+    $customer = $this->relationLoaded('customerInfo')
+      ? $this->customerInfo
+      : $this->customerInfo()->first();
+
+    if ($customer) {
+      $fromCustomer = trim((string) ($customer->fname ?? '') . ' ' . (string) ($customer->lname ?? ''));
+      if ($fromCustomer !== '') {
+        return $fromCustomer;
+      }
+    }
+
+    return '';
+  }
+
+  public function buyerEmail(): string
+  {
+    if (filled($this->email)) {
+      return (string) $this->email;
+    }
+
+    $customer = $this->relationLoaded('customerInfo') ? $this->customerInfo : null;
+
+    return filled(optional($customer)->email) ? (string) $customer->email : '';
+  }
+
+  public function buyerPhone(): string
+  {
+    if (filled($this->phone)) {
+      return (string) $this->phone;
+    }
+
+    $customer = $this->relationLoaded('customerInfo') ? $this->customerInfo : null;
+
+    return filled(optional($customer)->phone) ? (string) $customer->phone : '';
+  }
+
+  public function isGuestBuyer(): bool
+  {
+    return is_null($this->customer_id);
+  }
+
   public function fiscalProfile()
   {
     return $this->hasOne(CustomerFiscalProfile::class, 'booking_id', 'id');

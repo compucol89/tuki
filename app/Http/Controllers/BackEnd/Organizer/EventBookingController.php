@@ -32,6 +32,22 @@ class EventBookingController extends Controller
 
   public function index(Request $request)
   {
+    return $this->renderBookingIndex($request);
+  }
+
+  public function byEvent(Request $request, $eventId)
+  {
+    $organizerId = Auth::guard('organizer')->user()->id;
+    $event = Event::with('dates')
+      ->where('id', $eventId)
+      ->where('organizer_id', $organizerId)
+      ->firstOrFail();
+
+    return $this->renderBookingIndex($request, (int) $event->id, $event);
+  }
+
+  private function renderBookingIndex(Request $request, ?int $focusedEventId = null, ?Event $focusedEvent = null)
+  {
     $bookingId = $paymentStatus = null;
     $eventIds = [];
     if ($request->filled('booking_id')) {
@@ -51,23 +67,37 @@ class EventBookingController extends Controller
       $paymentStatus = $request['status'];
     }
 
+    $search = $request->filled('search') ? $request->input('search') : null;
     $organizer_id = Auth::guard('organizer')->user()->id;
 
-    $applyFilters = function ($query) use ($bookingId, $eventIds, $paymentStatus, $organizer_id) {
+    $applyFilters = function ($query) use ($bookingId, $eventIds, $paymentStatus, $organizer_id, $focusedEventId, $search) {
       return $query->join('events', 'events.id', 'bookings.event_id')
+      ->when($focusedEventId, function ($query) use ($focusedEventId) {
+        return $query->where('bookings.event_id', $focusedEventId);
+      })
       ->when($bookingId, function ($query) use ($bookingId) {
         return $query->where('bookings.booking_id', 'like', '%' . $bookingId . '%');
+      })
+      ->when($search, function ($query) use ($search) {
+        return $query->where(function ($query) use ($search) {
+          $query->where('bookings.booking_id', 'like', '%' . $search . '%')
+            ->orWhere('bookings.fname', 'like', '%' . $search . '%')
+            ->orWhere('bookings.lname', 'like', '%' . $search . '%')
+            ->orWhere('bookings.email', 'like', '%' . $search . '%')
+            ->orWhere('bookings.phone', 'like', '%' . $search . '%')
+            ->orWhereIn('bookings.event_id', EventContent::select('event_id')
+              ->where('title', 'like', '%' . $search . '%'));
+        });
       })
       ->when($eventIds, function ($query) use ($eventIds) {
         return $query->whereIn('bookings.event_id', $eventIds);
       })
-      ->when($paymentStatus, function ($query, $paymentStatus) {
+      ->when($paymentStatus, function ($query) use ($paymentStatus) {
         return $query->where('bookings.paymentStatus', '=', $paymentStatus);
       })
       ->where('events.organizer_id', $organizer_id);
     };
 
-    $bookingQuery = $applyFilters(Booking::with(['customerInfo', 'addons']));
     $kpiQuery = $applyFilters(Booking::query());
     $ticketSummaryBookings = $applyFilters(Booking::select([
       'bookings.id',
@@ -83,11 +113,15 @@ class EventBookingController extends Controller
       'bookings.scanned_tickets',
     ]))->get();
 
-    $bookings = $bookingQuery
-      ->select('bookings.*')
-      ->orderByDesc('bookings.id')
-      ->paginate(10)
-      ->appends($request->only(['booking_id', 'event_title', 'status']));
+    if ($focusedEventId) {
+      $bookings = $applyFilters(Booking::with(['customerInfo', 'addons']))
+        ->select('bookings.*')
+        ->orderByDesc('bookings.id')
+        ->paginate(20)
+        ->appends($request->only(['booking_id', 'event_title', 'status', 'search']));
+    } else {
+      $bookings = Booking::whereRaw('0 = 1')->paginate(20);
+    }
 
     $kpis = [
       'total' => (clone $kpiQuery)->count(),
@@ -100,8 +134,8 @@ class EventBookingController extends Controller
     $currencySettings = Basic::select('base_currency_symbol_position', 'base_currency_symbol')->first();
 
     $language = $this->getLanguage();
-    $eventIdsForInfo = $bookings->pluck('event_id')
-      ->merge($ticketSummaryBookings->pluck('event_id'))
+    $eventIdsForInfo = collect($ticketSummaryBookings)->pluck('event_id')
+      ->when($focusedEventId, fn ($ids) => $ids->push($focusedEventId))
       ->filter()
       ->unique();
     $eventInfos = EventContent::whereIn('event_id', $eventIdsForInfo)
@@ -115,7 +149,15 @@ class EventBookingController extends Controller
     $ticketSummaryService = app(EventTicketSalesSummaryService::class);
     $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents);
 
-    return view('organizer.event.booking.index', compact('bookings', 'eventInfos', 'kpis', 'ticketSalesByEvent', 'currencySettings'));
+    return view('organizer.event.booking.index', compact(
+      'bookings',
+      'eventInfos',
+      'kpis',
+      'ticketSalesByEvent',
+      'currencySettings',
+      'focusedEventId',
+      'focusedEvent'
+    ));
   }
   //updatePaymentStatus
   public function updatePaymentStatus(Request $request, $id)

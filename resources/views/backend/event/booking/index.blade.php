@@ -6,6 +6,46 @@
       color: var(--adm-ink);
     }
 
+    .eb-buyer__name {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--adm-ink, #1e2532);
+    }
+
+    .eb-buyer__guest {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .eb-buyer__label {
+      font-weight: 600;
+    }
+
+    .eb-event-summary-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #e6e9ef;
+    }
+
+    .eb-hub-hint {
+      margin: 0 0 18px;
+      padding: 14px 16px;
+      border: 1px solid #dbe4f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
     .eb-summary {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -944,6 +984,14 @@
         return ($position == 'left' ? $symbol : '') . $amount . ($position == 'right' ? $symbol : '');
     };
     $defaultLanguageCode = optional($defaultLanguage)->code ?: 'es';
+    $focusedEventId = $focusedEventId ?? null;
+    $focusedEvent = $focusedEvent ?? null;
+    $focusedEventTitle = $focusedEventId
+      ? (optional($eventInfos[$focusedEventId] ?? null)->title ?: __('Evento') . ' #' . $focusedEventId)
+      : null;
+    $bookingFiltersAction = $focusedEventId
+      ? route('admin.event_booking.by_event', $focusedEventId)
+      : route('admin.event.booking');
     $statusOptions = [
         'completed' => ['label' => __('Pago'), 'class' => 'success eb-status--paid', 'icon' => 'fa-check-circle'],
         'pending' => ['label' => __('Pendiente'), 'class' => 'warning eb-status--pending', 'icon' => 'fa-clock'],
@@ -954,7 +1002,13 @@
 
   <div class="event-booking-admin">
     <div class="page-header">
-      <h4 class="page-title">{{ __('Reservas de eventos') }}</h4>
+      <h4 class="page-title">
+        @if ($focusedEventId)
+          {{ __('Compradores') }}: {{ $focusedEventTitle }}
+        @else
+          {{ __('Reservas de eventos') }}
+        @endif
+      </h4>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('admin.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
@@ -965,10 +1019,31 @@
           <i class="flaticon-right-arrow"></i>
         </li>
         <li class="nav-item">
-          <a href="#">{{ __('Reservas') }}</a>
+          <a href="{{ route('admin.event.booking') }}">{{ __('Reservas') }}</a>
         </li>
+        @if ($focusedEventId)
+          <li class="separator">
+            <i class="flaticon-right-arrow"></i>
+          </li>
+          <li class="nav-item">
+            <a href="#">{{ Str::limit($focusedEventTitle, 40) }}</a>
+          </li>
+        @endif
       </ul>
     </div>
+
+    @if ($focusedEventId)
+      <p class="eb-hub-hint">
+        <a href="{{ route('admin.event.booking') }}" class="btn btn-sm btn-outline-secondary mr-2">
+          <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>{{ __('Volver a eventos') }}
+        </a>
+        {{ __('Lista de personas que reservaron este evento (incluye invitados: nombre, email y teléfono de la reserva).') }}
+      </p>
+    @else
+      <p class="eb-hub-hint">
+        {{ __('Elegí un evento para ver quién compró: nombre, email y teléfono (también invitados). Acá solo ves el resumen por evento.') }}
+      </p>
+    @endif
 
     <div class="eb-summary" aria-label="{{ __('Resumen de reservas') }}">
       <div class="eb-metric eb-metric--primary">
@@ -1033,11 +1108,58 @@
       </div>
     </div>
 
+    @unless ($focusedEventId)
+      <div class="card mb-3">
+        <div class="card-body py-3">
+          <form action="{{ route('admin.event.booking') }}" method="GET" class="row align-items-end">
+            <div class="col-md-6 col-lg-5">
+              <div class="form-group mb-md-0">
+                <label for="hubEventSearch">{{ __('Buscar evento o comprador') }}</label>
+                <input id="hubEventSearch" name="search" type="search" class="form-control"
+                  placeholder="{{ __('Título del evento, nombre, email o teléfono') }}"
+                  value="{{ request('search') }}" autocomplete="off">
+              </div>
+            </div>
+            <div class="col-md-3 col-lg-2">
+              <div class="form-group mb-md-0">
+                <label for="hubStatus">{{ __('Estado') }}</label>
+                <select id="hubStatus" name="status" class="form-control">
+                  <option value="">{{ __('Todos') }}</option>
+                  <option value="completed" @selected(request('status') === 'completed')>{{ __('Completado') }}</option>
+                  <option value="pending" @selected(request('status') === 'pending')>{{ __('Pendiente') }}</option>
+                  <option value="rejected" @selected(request('status') === 'rejected')>{{ __('Rechazado') }}</option>
+                  <option value="free" @selected(request('status') === 'free')>{{ __('Gratis') }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3 col-lg-3">
+              <div class="form-group mb-0">
+                <button class="btn btn-primary" type="submit">{{ __('Filtrar') }}</button>
+                <a href="{{ route('admin.event.booking') }}" class="btn btn-light">{{ __('Limpiar') }}</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    @endunless
+
     <section class="eb-type-summary" aria-labelledby="ticketTypeSummaryTitle">
       <div class="eb-type-summary__head">
         <div>
-          <h2 id="ticketTypeSummaryTitle" class="eb-type-summary__title">{{ __('Ventas por evento y tipo de entrada') }}</h2>
-          <div class="eb-muted">{{ __('Ordenado por fecha del evento; respeta los filtros aplicados.') }}</div>
+          <h2 id="ticketTypeSummaryTitle" class="eb-type-summary__title">
+            @if ($focusedEventId)
+              {{ __('Resumen del evento') }}
+            @else
+              {{ __('Eventos con reservas') }}
+            @endif
+          </h2>
+          <div class="eb-muted">
+            @if ($focusedEventId)
+              {{ __('Tipos de entrada de este evento.') }}
+            @else
+              {{ __('Ordenado por fecha del evento. Abrí un evento para ver los compradores.') }}
+            @endif
+          </div>
         </div>
         <div class="eb-muted">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
       </div>
@@ -1093,6 +1215,7 @@
                   </div>
                 </div>
 
+                @if ($focusedEventId)
                 <table class="table eb-type-table">
                   <colgroup>
                     <col class="eb-type-table__ticket">
@@ -1136,6 +1259,16 @@
                     @endforeach
                   </tbody>
                 </table>
+                @endif
+
+                @unless ($focusedEventId)
+                  <div class="eb-event-summary-card__actions">
+                    <a class="btn btn-primary btn-sm"
+                      href="{{ route('admin.event_booking.by_event', $eventSummary['event_id']) }}">
+                      <i class="fas fa-users mr-1" aria-hidden="true"></i>{{ __('Ver compradores') }}
+                    </a>
+                  </div>
+                @endunless
               </article>
             @endforeach
           </div>
@@ -1143,15 +1276,16 @@
       </div>
     </section>
 
+    @if ($focusedEventId)
     <div class="card">
       <div class="card-header eb-toolbar">
-        <form id="bookingFiltersForm" action="{{ route('admin.event.booking') }}" method="GET">
+        <form id="bookingFiltersForm" action="{{ $bookingFiltersAction }}" method="GET">
           <div class="row align-items-end">
             <div class="col-xl-5 col-lg-6">
               <div class="form-group">
-                <label for="bookingSearch">{{ __('Buscar') }}</label>
+                <label for="bookingSearch">{{ __('Buscar comprador') }}</label>
                 <input id="bookingSearch" name="search" type="search" class="form-control"
-                  placeholder="{{ __('ID, evento, cliente, email o teléfono') }}"
+                  placeholder="{{ __('Nombre, apellido, email, teléfono o ID de reserva') }}"
                   value="{{ request()->input('search', request()->input('booking_id', request()->input('event_title'))) }}"
                   autocomplete="off">
               </div>
@@ -1174,7 +1308,7 @@
             </div>
             <div class="col-xl-3 text-xl-right">
               <div class="form-group">
-                <a href="{{ route('admin.event.booking') }}" class="btn btn-light">
+                <a href="{{ $bookingFiltersAction }}" class="btn btn-light">
                   {{ __('Limpiar') }}
                 </a>
                 <button class="btn btn-danger d-none bulk-delete ml-2" type="button"
@@ -1248,7 +1382,7 @@
                   </th>
                   <th scope="col">{{ __('Reserva') }}</th>
                   <th scope="col">{{ __('Evento') }}</th>
-                  <th scope="col">{{ __('Cliente') }}</th>
+                  <th scope="col">{{ __('Comprador') }}</th>
                   <th scope="col">{{ __('Dinero') }}</th>
                   <th scope="col">{{ __('Estado') }}</th>
                   <th scope="col">{{ __('Escaneo') }}</th>
@@ -1316,16 +1450,7 @@
                       <span class="eb-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
                     </td>
                     <td>
-                      @if ($customer)
-                        <a href="{{ route('admin.customer_management.customer_details', ['id' => $customer->id, 'language' => $defaultLanguageCode]) }}">
-                          {{ $customer->fname }} {{ $customer->lname }}
-                        </a>
-                      @elseif (is_null($booking->customer_id))
-                        {{ __('Invitado') }}
-                      @else
-                        -
-                      @endif
-                      <div class="eb-muted">{{ $booking->email ?: '-' }}</div>
+                      @include('backend.event.booking.partials.buyer-cell', ['booking' => $booking, 'defaultLanguageCode' => $defaultLanguageCode])
                     </td>
                     <td>
                       <div class="eb-money">{{ __('Cobrado') }}: {{ $formatMoney($paidTotal) }}</div>
@@ -1526,15 +1651,9 @@
 
                 <div class="eb-mobile-booking__grid">
                   <div>
-                    <span class="eb-detail-label">{{ __('Cliente') }}</span>
+                    <span class="eb-detail-label">{{ __('Comprador') }}</span>
                     <span class="eb-detail-value">
-                      @if ($customer)
-                        {{ $customer->fname }} {{ $customer->lname }}
-                      @elseif (is_null($booking->customer_id))
-                        {{ __('Invitado') }}
-                      @else
-                        -
-                      @endif
+                      @include('backend.event.booking.partials.buyer-cell', ['booking' => $booking, 'defaultLanguageCode' => $defaultLanguageCode])
                     </span>
                   </div>
                   <div>
@@ -1634,6 +1753,7 @@
         </div>
       @endif
     </div>
+    @endif
   </div>
 @endsection
 

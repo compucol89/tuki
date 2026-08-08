@@ -6391,10 +6391,12 @@ html[data-theme="dark"] .footer-section--premium {
 /* Header premium en light: contraste AA en botones naranjas */
 html[data-theme="light"] .main-header--premium .menu-right .menu-btn--organizer,
 html[data-theme="light"] .main-header--premium .menu-right .dropdown:last-child .menu-btn.menu-btn--organizer {
-  color: #1e2532 !important;
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
+  color: #ffffff !important;
+  border-color: #9a3412 !important;
 }
 
 html[data-theme="light"] .main-header--premium .header-ingresar-btn {
-  background: var(--primary-active);
-  color: #1e2532;
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  color: #ffffff;
 }

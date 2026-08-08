@@ -1843,3 +1843,14 @@ label {
     grid-template-columns: 1fr;
   }
 }
+
+/* ============ Layout: ritmo del dashboard (stats -> siguiente bloque) ============ */
+.dashboard-items {
+  margin-bottom: 1.5rem;
+}
+
+.page-inner > .card .card-header + .chart-container,
+.page-inner > .card .card-header + .table-responsive,
+.page-inner > .card .card-header + table {
+  margin-top: 0.25rem;
+}

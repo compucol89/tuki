@@ -78,6 +78,124 @@
       padding: 18px;
     }
 
+    .ob-event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ob-event-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px 20px;
+      min-height: 72px;
+      padding: 16px 18px 16px 20px;
+      border: 1px solid var(--adm-border);
+      border-left: 4px solid var(--adm-primary, #f05a28);
+      border-radius: 10px;
+      background: var(--adm-card);
+      color: inherit;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(30, 37, 50, .04);
+      transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+    }
+
+    .ob-event-row:hover,
+    .ob-event-row:focus {
+      border-color: color-mix(in srgb, var(--adm-primary) 35%, var(--adm-border));
+      box-shadow: 0 8px 20px rgba(30, 37, 50, .08);
+      color: inherit;
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+
+    .ob-event-row__main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ob-event-row__title {
+      margin: 0;
+      color: var(--adm-ink);
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .ob-event-row__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ob-event-row__chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border: 1px solid #eef1f5;
+      border-radius: 999px;
+      background: var(--adm-bg-soft, #f8fafc);
+      color: var(--adm-muted);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .ob-event-row__kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ob-event-row__kpi {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      color: var(--adm-muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .ob-event-row__kpi strong {
+      color: var(--adm-ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .ob-event-row__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 16px;
+      border-radius: 8px;
+      background: var(--adm-primary, #f05a28);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    @media (max-width: 767px) {
+      .ob-event-row {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .ob-event-row__cta {
+        width: 100%;
+      }
+    }
+
     .ob-event-summary-list {
       display: grid;
       gap: 14px;
@@ -684,7 +802,7 @@
       </p>
     @else
       <p class="alert alert-light border mb-3">
-        {{ __('Elegí un evento para ver quién compró. Acá solo ves el resumen por evento.') }}
+        {{ __('Lista de eventos con reservas. Entrá a un evento para ver tipos de entrada, compradores y acciones.') }}
       </p>
     @endif
 
@@ -724,14 +842,14 @@
             @if ($focusedEventId)
               {{ __('Resumen del evento') }}
             @else
-              {{ __('Eventos con reservas') }}
+              {{ __('Eventos') }}
             @endif
           </h2>
           <div class="ob-muted">
             @if ($focusedEventId)
               {{ __('Tipos de entrada de este evento.') }}
             @else
-              {{ __('Ordenado por fecha. Abrí un evento para ver los compradores.') }}
+              {{ __('Ordenado por fecha. Tocá un evento para ver todo.') }}
             @endif
           </div>
         </div>
@@ -743,94 +861,112 @@
             <p class="text-muted mb-0">{{ __('No hay entradas para resumir con estos filtros.') }}</p>
           </div>
         @else
-          <div class="ob-event-summary-list">
-            @foreach ($ticketSalesByEvent as $eventSummary)
-              <article class="ob-event-summary-card">
-                <div class="ob-event-summary-card__head">
-                  <div>
-                    <h3 class="ob-event-summary-card__title">{{ $eventSummary['event_title'] }}</h3>
-                    <div class="ob-event-summary-card__meta">
-                      <span class="ob-event-summary-card__date">{{ $eventSummary['date_label'] }}</span>
-                      <span>{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
-                      <span>{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+          @unless ($focusedEventId)
+            <div class="ob-event-list" role="list">
+              @foreach ($ticketSalesByEvent as $eventSummary)
+                <a role="listitem" class="ob-event-row"
+                  href="{{ route('organizer.event_booking.by_event', $eventSummary['event_id']) }}">
+                  <div class="ob-event-row__main">
+                    <h3 class="ob-event-row__title">{{ $eventSummary['event_title'] }}</h3>
+                    <div class="ob-event-row__meta">
+                      <span class="ob-event-row__chip">{{ $eventSummary['date_label'] }}</span>
+                      <span class="ob-event-row__chip">{{ $eventSummary['date_status'] }}</span>
+                      <span class="ob-event-row__chip">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                    </div>
+                    <ul class="ob-event-row__kpis" aria-label="{{ __('Totales del evento') }}">
+                      <li class="ob-event-row__kpi"><span>{{ __('Vendidas') }}</span> <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong></li>
+                      <li class="ob-event-row__kpi"><span>{{ __('Pendientes') }}</span> <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong></li>
+                      <li class="ob-event-row__kpi"><span>{{ __('Escaneadas') }}</span> <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong></li>
+                      <li class="ob-event-row__kpi"><span>{{ __('Neto') }}</span> <strong>{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</strong></li>
+                    </ul>
+                  </div>
+                  <span class="ob-event-row__cta">
+                    {{ __('Abrir evento') }}
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                  </span>
+                </a>
+              @endforeach
+            </div>
+          @else
+            <div class="ob-event-summary-list">
+              @foreach ($ticketSalesByEvent as $eventSummary)
+                <article class="ob-event-summary-card">
+                  <div class="ob-event-summary-card__head">
+                    <div>
+                      <h3 class="ob-event-summary-card__title">{{ $eventSummary['event_title'] }}</h3>
+                      <div class="ob-event-summary-card__meta">
+                        <span class="ob-event-summary-card__date">{{ $eventSummary['date_label'] }}</span>
+                        <span>{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                        <span>{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+                      </div>
+                    </div>
+                    <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
+                  </div>
+
+                  <div class="ob-event-summary-stats" aria-label="{{ __('Totales del evento') }}">
+                    <div class="ob-event-summary-stat">
+                      <span>{{ __('Entradas vendidas') }}</span>
+                      <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong>
+                    </div>
+                    <div class="ob-event-summary-stat">
+                      <span>{{ __('Pendientes') }}</span>
+                      <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong>
+                    </div>
+                    <div class="ob-event-summary-stat">
+                      <span>{{ __('Rechazadas') }}</span>
+                      <strong>{{ number_format($eventSummary['rejected'], 0, ',', '.') }}</strong>
+                    </div>
+                    <div class="ob-event-summary-stat">
+                      <span>{{ __('Escaneadas') }}</span>
+                      <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
+                    </div>
+                    <div class="ob-event-summary-stat">
+                      <span>{{ __('Neto estimado') }}</span>
+                      <strong>{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</strong>
                     </div>
                   </div>
-                  <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
-                </div>
 
-                <div class="ob-event-summary-stats" aria-label="{{ __('Totales del evento') }}">
-                  <div class="ob-event-summary-stat">
-                    <span>{{ __('Entradas vendidas') }}</span>
-                    <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong>
-                  </div>
-                  <div class="ob-event-summary-stat">
-                    <span>{{ __('Pendientes') }}</span>
-                    <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong>
-                  </div>
-                  <div class="ob-event-summary-stat">
-                    <span>{{ __('Rechazadas') }}</span>
-                    <strong>{{ number_format($eventSummary['rejected'], 0, ',', '.') }}</strong>
-                  </div>
-                  <div class="ob-event-summary-stat">
-                    <span>{{ __('Escaneadas') }}</span>
-                    <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
-                  </div>
-                  <div class="ob-event-summary-stat">
-                    <span>{{ __('Neto estimado') }}</span>
-                    <strong>{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</strong>
-                  </div>
-                </div>
-
-                @if ($focusedEventId)
-                <table class="table ob-type-table">
-                  <colgroup>
-                    <col class="ob-type-table__ticket">
-                    <col class="ob-type-table__counts">
-                    <col class="ob-type-table__counts">
-                    <col class="ob-type-table__counts">
-                    <col class="ob-type-table__scan">
-                    <col class="ob-type-table__money">
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th scope="col">{{ __('Entrada') }}</th>
-                      <th scope="col">{{ __('Vendidas') }}</th>
-                      <th scope="col">{{ __('Pendientes') }}</th>
-                      <th scope="col">{{ __('Rechazadas') }}</th>
-                      <th scope="col">{{ __('Escaneo') }}</th>
-                      <th scope="col">{{ __('Ingresos') }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($eventSummary['tickets'] as $summaryRow)
+                  <table class="table ob-type-table">
+                    <colgroup>
+                      <col class="ob-type-table__ticket">
+                      <col class="ob-type-table__counts">
+                      <col class="ob-type-table__counts">
+                      <col class="ob-type-table__counts">
+                      <col class="ob-type-table__scan">
+                      <col class="ob-type-table__money">
+                    </colgroup>
+                    <thead>
                       <tr>
-                        <td data-label="{{ __('Entrada') }}">
-                          <span class="ob-type-name">{{ $summaryRow['ticket_name'] }}</span>
-                        </td>
-                        <td data-label="{{ __('Vendidas') }}"><span class="ob-pill">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
-                        <td data-label="{{ __('Pendientes') }}">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
-                        <td data-label="{{ __('Rechazadas') }}">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
-                        <td data-label="{{ __('Escaneo') }}">
-                          <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
-                          <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
-                        </td>
-                        <td data-label="{{ __('Ingresos') }}"><span class="ob-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
+                        <th scope="col">{{ __('Entrada') }}</th>
+                        <th scope="col">{{ __('Vendidas') }}</th>
+                        <th scope="col">{{ __('Pendientes') }}</th>
+                        <th scope="col">{{ __('Rechazadas') }}</th>
+                        <th scope="col">{{ __('Escaneo') }}</th>
+                        <th scope="col">{{ __('Ingresos') }}</th>
                       </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-                @endif
-                @unless ($focusedEventId)
-                  <div class="mt-3 pt-3 border-top">
-                    <a class="btn btn-primary btn-sm"
-                      href="{{ route('organizer.event_booking.by_event', $eventSummary['event_id']) }}">
-                      <i class="fas fa-users mr-1" aria-hidden="true"></i>{{ __('Ver compradores') }}
-                    </a>
-                  </div>
-                @endunless
-              </article>
-            @endforeach
-          </div>
+                    </thead>
+                    <tbody>
+                      @foreach ($eventSummary['tickets'] as $summaryRow)
+                        <tr>
+                          <td data-label="{{ __('Entrada') }}">
+                            <span class="ob-type-name">{{ $summaryRow['ticket_name'] }}</span>
+                          </td>
+                          <td data-label="{{ __('Vendidas') }}"><span class="ob-pill">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
+                          <td data-label="{{ __('Pendientes') }}">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
+                          <td data-label="{{ __('Rechazadas') }}">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
+                          <td data-label="{{ __('Escaneo') }}">
+                            <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
+                            <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
+                          </td>
+                          <td data-label="{{ __('Ingresos') }}"><span class="ob-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </article>
+              @endforeach
+            </div>
+          @endunless
         @endif
       </div>
     </section>

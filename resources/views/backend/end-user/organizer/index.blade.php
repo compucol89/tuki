@@ -2,9 +2,68 @@
 
 @section('style')
   <style>
+    .admin-organizers-index {
+      --oi-ink: #1e2532;
+      --oi-ink-strong: #111827;
+      --oi-muted: #667085;
+      --oi-border: #e4e7ec;
+      --oi-soft: #f8fafc;
+      --oi-card: #ffffff;
+      --oi-header: #fbfcfd;
+      --oi-thead: #edf4f9;
+      --oi-primary: #e05d38;
+      --oi-label-bg: #f3f4f6;
+      --oi-label-fg: #64748b;
+      --oi-bar-bg: #edf0f2;
+      --oi-chip-bg: #f9fafb;
+      --oi-strong-bg: rgba(22, 163, 74, .12);
+      --oi-strong-fg: #15803d;
+      --oi-mid-bg: rgba(224, 93, 56, .12);
+      --oi-mid-fg: #bf4424;
+      --oi-low-bg: rgba(220, 38, 38, .12);
+      --oi-low-fg: #b91c1c;
+      --oi-success-bg: #14352a;
+      --oi-success-fg: #4ade80;
+      --oi-danger-bg: #3a2228;
+      --oi-danger-fg: #f87171;
+      color: var(--oi-ink);
+    }
+
+    .admin-organizers-index .page-title {
+      color: var(--oi-ink-strong) !important;
+      font-size: 24px !important;
+      font-weight: 750 !important;
+    }
+
+    .admin-organizers-index .breadcrumbs,
+    .admin-organizers-index .breadcrumbs a {
+      color: var(--oi-muted) !important;
+    }
+
+    .admin-organizers-index > .row > [class*="col-"] > .card {
+      background: var(--oi-card) !important;
+      border-color: var(--oi-border) !important;
+      box-shadow: none !important;
+    }
+
+    .admin-organizers-index .card-header,
+    .admin-organizers-index .card-footer {
+      background: var(--oi-header) !important;
+      border-color: var(--oi-border) !important;
+    }
+
+    .admin-organizers-index .card-title {
+      color: var(--oi-ink-strong) !important;
+    }
+
+    .admin-organizers-index .card-body {
+      background: var(--oi-card) !important;
+      color: var(--oi-ink) !important;
+    }
+
     .admin-profile-quality {
       min-width: 190px;
-      color: #1e2532;
+      color: var(--oi-ink);
     }
 
     .admin-profile-quality__head {
@@ -16,6 +75,7 @@
     }
 
     .admin-profile-quality__head strong {
+      color: var(--oi-ink-strong);
       font-size: 17px;
       font-weight: 800;
       line-height: 1;
@@ -27,8 +87,8 @@
       min-height: 22px;
       padding: 4px 8px;
       border-radius: 999px;
-      background: #f3f4f6;
-      color: #64748b;
+      background: var(--oi-label-bg);
+      color: var(--oi-label-fg);
       font-size: 10px;
       font-weight: 800;
       line-height: 1;
@@ -37,32 +97,32 @@
     }
 
     .admin-profile-quality__label.is-strong {
-      background: rgba(22, 163, 74, .12);
-      color: #15803d;
+      background: var(--oi-strong-bg);
+      color: var(--oi-strong-fg);
     }
 
     .admin-profile-quality__label.is-mid {
-      background: rgba(224, 93, 56, .12);
-      color: #bf4424;
+      background: var(--oi-mid-bg);
+      color: var(--oi-mid-fg);
     }
 
     .admin-profile-quality__label.is-low {
-      background: rgba(220, 38, 38, .1);
-      color: #b91c1c;
+      background: var(--oi-low-bg);
+      color: var(--oi-low-fg);
     }
 
     .admin-profile-quality__bar {
       height: 7px;
       overflow: hidden;
       border-radius: 999px;
-      background: #edf0f2;
+      background: var(--oi-bar-bg);
     }
 
     .admin-profile-quality__bar span {
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: #e05d38;
+      background: var(--oi-primary);
     }
 
     .admin-profile-quality__missing {
@@ -78,15 +138,15 @@
       gap: 4px;
       padding: 4px 7px;
       border-radius: 999px;
-      background: #f9fafb;
-      color: #64748b;
+      background: var(--oi-chip-bg);
+      color: var(--oi-muted);
       font-size: 10px;
       font-weight: 700;
       line-height: 1;
     }
 
     .admin-profile-quality__missing i {
-      color: #e05d38;
+      color: var(--oi-primary);
       font-size: 9px;
     }
 
@@ -102,11 +162,87 @@
       min-width: 190px;
       height: 38px;
       border-radius: 8px;
+      background: var(--oi-soft) !important;
+      border-color: var(--oi-border) !important;
+      color: var(--oi-ink) !important;
+    }
+
+    .admin-profile-filters .form-control:focus {
+      border-color: var(--oi-primary) !important;
+      box-shadow: 0 0 0 3px rgba(224, 93, 56, .22);
     }
 
     .admin-profile-filters .btn {
       height: 38px;
       border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .admin-profile-filters .btn-light {
+      background: var(--oi-soft) !important;
+      border-color: var(--oi-border) !important;
+      color: var(--oi-ink) !important;
+    }
+
+    .admin-organizers-index .table {
+      color: var(--oi-ink) !important;
+    }
+
+    .admin-organizers-index .table thead th {
+      background: var(--oi-thead) !important;
+      border-color: var(--oi-border) !important;
+      color: var(--oi-muted) !important;
+    }
+
+    .admin-organizers-index .table td,
+    .admin-organizers-index .table th {
+      border-color: var(--oi-border) !important;
+      color: var(--oi-ink) !important;
+      vertical-align: middle;
+    }
+
+    .admin-organizers-index .table-striped tbody tr:nth-of-type(odd) {
+      background: var(--oi-soft) !important;
+    }
+
+    .admin-organizers-index .table-striped tbody tr:nth-of-type(even) {
+      background: var(--oi-card) !important;
+    }
+
+    .admin-organizers-index select.form-control-sm.bg-success {
+      background: #ecfdf5 !important;
+      border-color: #bbf7d0 !important;
+      color: #047857 !important;
+    }
+
+    .admin-organizers-index select.form-control-sm.bg-danger {
+      background: #fef2f2 !important;
+      border-color: #fecdd3 !important;
+      color: #be123c !important;
+    }
+
+    .admin-organizers-index .dropdown-menu {
+      background: var(--oi-card) !important;
+      border-color: var(--oi-border) !important;
+    }
+
+    .admin-organizers-index .dropdown-item,
+    .admin-organizers-index .deleteBtn {
+      background: var(--oi-card) !important;
+      color: var(--oi-ink) !important;
+    }
+
+    .admin-organizers-index .dropdown-item:hover,
+    .admin-organizers-index .deleteBtn:hover {
+      background: var(--oi-soft) !important;
+      color: var(--oi-ink-strong) !important;
+    }
+
+    .admin-organizers-index .admin-organizers-empty {
+      padding: 36px 16px;
+      color: var(--oi-muted);
+      text-align: center;
+      font-size: 16px;
       font-weight: 700;
     }
 
@@ -121,10 +257,56 @@
         width: 100%;
       }
     }
+
+    html[data-theme="dark"] .admin-organizers-index {
+      --oi-ink: #e5e5e5;
+      --oi-ink-strong: #ffffff;
+      --oi-muted: #a3a3a3;
+      --oi-border: #3d4354;
+      --oi-soft: #1f2838;
+      --oi-card: #2a3040;
+      --oi-header: #252b38;
+      --oi-thead: #1f2838;
+      --oi-label-bg: #303750;
+      --oi-label-fg: #c8cdd6;
+      --oi-bar-bg: #303750;
+      --oi-chip-bg: #252b38;
+      --oi-strong-bg: #14352a;
+      --oi-strong-fg: #4ade80;
+      --oi-mid-bg: #3a2c26;
+      --oi-mid-fg: #fdba74;
+      --oi-low-bg: #3a2228;
+      --oi-low-fg: #f87171;
+    }
+
+    html[data-theme="dark"] .admin-organizers-index > .row > [class*="col-"] > .card,
+    html[data-theme="dark"] .admin-organizers-index .card-body {
+      background: var(--oi-card) !important;
+      border-color: var(--oi-border) !important;
+    }
+
+    html[data-theme="dark"] .admin-organizers-index .card-header,
+    html[data-theme="dark"] .admin-organizers-index .card-footer {
+      background: var(--oi-header) !important;
+      border-color: var(--oi-border) !important;
+    }
+
+    html[data-theme="dark"] .admin-organizers-index select.form-control-sm.bg-success {
+      background: #14352a !important;
+      border-color: #166534 !important;
+      color: #4ade80 !important;
+    }
+
+    html[data-theme="dark"] .admin-organizers-index select.form-control-sm.bg-danger {
+      background: #3a2228 !important;
+      border-color: #7f1d1d !important;
+      color: #f87171 !important;
+    }
   </style>
 @endsection
 
 @section('content')
+  <div class="admin-organizers-index">
   <div class="page-header">
     <h4 class="page-title">{{ __('Registered Organizers') }}</h4>
     <ul class="breadcrumbs">
@@ -194,7 +376,7 @@
           <div class="row">
             <div class="col-lg-12">
               @if (count($organizers) == 0)
-                <h3 class="text-center">{{ __('NO ORGANIZER FOUND') . '!' }}</h3>
+                <h3 class="admin-organizers-empty">{{ __('NO ORGANIZER FOUND') . '!' }}</h3>
               @else
                 <div class="table-responsive">
                   <table class="table table-striped mt-3">
@@ -354,5 +536,6 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 @endsection

@@ -2,106 +2,209 @@
 
 @section('style')
   <style>
+    /* Ritmo: 8 / 12 / 16 / 20. Ejes alineados en filtros, filas y acciones. */
     .arca-invoices-page {
-      --arca-border: #e5eaf0;
-      --arca-muted: #64748b;
       --arca-ink: #1e2532;
+      --arca-ink-strong: #111827;
+      --arca-muted: #667085;
+      --arca-border: #e4e7ec;
       --arca-soft: #f8fafc;
-      --arca-orange: #f97316;
+      --arca-card: #ffffff;
+      --arca-header: #fbfcfd;
+      --arca-thead: #edf4f9;
+      --arca-primary: #f97316;
+      --arca-radius: 8px;
+      --arca-control-h: 40px;
+      --arca-gap: 12px;
+      --arca-pad: 16px;
+      color: var(--arca-ink);
+    }
+
+    .arca-invoices-page .page-header {
+      margin-bottom: 16px;
+    }
+
+    .arca-invoices-page .page-title {
+      color: var(--arca-ink-strong) !important;
+      font-size: 24px !important;
+      font-weight: 750 !important;
+      line-height: 1.2;
+    }
+
+    .arca-invoices-page .breadcrumbs,
+    .arca-invoices-page .breadcrumbs a {
+      color: var(--arca-muted) !important;
+      font-size: 12.5px;
+      font-weight: 500;
     }
 
     .arca-invoices-page .card {
-      border: 1px solid var(--arca-border);
-      border-radius: 8px;
-      box-shadow: 0 10px 24px rgba(30, 37, 50, 0.04);
+      background: var(--arca-card) !important;
+      border: 1px solid var(--arca-border) !important;
+      border-radius: var(--arca-radius);
+      box-shadow: none !important;
+      margin-bottom: 16px;
       overflow: hidden;
     }
 
     .arca-invoices-page .card-header {
-      background: #fbfbfc;
-      border-bottom: 1px solid var(--arca-border);
-      padding: 18px 22px;
+      align-items: center;
+      background: var(--arca-header) !important;
+      border-bottom: 1px solid var(--arca-border) !important;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      min-height: 56px;
+      padding: 14px var(--arca-pad);
+    }
+
+    .arca-invoices-page .card-header > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
     }
 
     .arca-invoices-page .card-title {
-      color: var(--arca-ink);
+      color: var(--arca-ink-strong);
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
+      line-height: 1.25;
       margin: 0;
     }
 
+    .arca-invoices-page .card-body {
+      background: var(--arca-card) !important;
+      padding: var(--arca-pad);
+    }
+
+    .arca-invoices-page .card-body .form-group {
+      margin-bottom: 0;
+    }
+
+    .arca-invoices-page .card-body label {
+      color: var(--arca-muted);
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .arca-invoices-page .form-control {
+      background: var(--arca-soft) !important;
+      border-color: var(--arca-border) !important;
+      border-radius: var(--arca-radius);
+      color: var(--arca-ink) !important;
+      height: var(--arca-control-h);
+      min-height: var(--arca-control-h);
+    }
+
+    .arca-invoices-page .form-control:focus {
+      border-color: var(--arca-primary) !important;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, .18);
+    }
+
     .arca-filter-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
       align-items: end;
+      display: grid;
+      gap: var(--arca-gap);
+      grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
     }
 
     .arca-filter-actions {
+      align-items: center;
       display: flex;
-      gap: 10px;
+      gap: 8px;
       justify-content: flex-end;
+      min-height: var(--arca-control-h);
+    }
+
+    .arca-filter-actions .btn {
+      align-items: center;
+      border-radius: var(--arca-radius);
+      box-shadow: none !important;
+      display: inline-flex;
+      font-size: 13px;
+      font-weight: 650;
+      gap: 6px;
+      height: var(--arca-control-h);
+      justify-content: center;
+      min-height: var(--arca-control-h);
+      padding: 0 16px;
+      white-space: nowrap;
+    }
+
+    .arca-filter-actions .btn-secondary {
+      background: var(--arca-soft) !important;
+      border-color: var(--arca-border) !important;
+      color: var(--arca-ink) !important;
     }
 
     .arca-invoices-table {
       color: var(--arca-ink);
       margin-bottom: 0;
       table-layout: fixed;
+      width: 100%;
     }
 
     .arca-invoices-table thead th {
-      background: #eaf2f8;
-      border-bottom: 1px solid #d8e4ee;
-      color: #111827;
+      background: var(--arca-thead) !important;
+      border-bottom: 1px solid var(--arca-border) !important;
+      border-top: 0;
+      color: var(--arca-muted) !important;
       font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .03em;
-      padding: 14px 16px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1.25;
+      padding: 12px 14px;
       text-transform: uppercase;
       vertical-align: middle;
       white-space: nowrap;
     }
 
     .arca-invoices-table tbody td {
-      border-color: #eef2f6;
+      background: transparent !important;
+      border-color: var(--arca-border) !important;
+      color: var(--arca-ink) !important;
       font-size: 13px;
-      line-height: 1.45;
-      padding: 16px;
+      line-height: 1.4;
+      padding: 12px 14px;
       vertical-align: middle;
     }
 
-    .arca-id-col {
-      width: 58px;
+    .arca-invoices-table tbody tr:hover td {
+      background: var(--arca-soft) !important;
     }
 
-    .arca-status-col {
-      width: 132px;
-    }
+    .arca-id-col { width: 56px; }
+    .arca-status-col { width: 140px; }
+    .arca-money-col { width: 112px; }
+    .arca-date-col { width: 104px; }
+    .arca-actions-col { width: 168px; }
 
     .arca-money-col,
-    .arca-date-col {
-      width: 126px;
-    }
-
-    .arca-actions-col {
-      width: 188px;
-    }
-
-    .arca-money-cell {
-      padding-right: 22px !important;
-    }
-
+    .arca-money-cell,
+    .arca-actions-col,
     .arca-actions-cell {
-      padding-left: 24px !important;
+      text-align: right;
+    }
+
+    .arca-cell-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
     }
 
     .arca-invoice-link {
       background: transparent;
       border: 0;
-      color: var(--arca-ink);
+      color: var(--arca-ink-strong);
       cursor: pointer;
       display: block;
-      font-weight: 600;
+      font-weight: 700;
       max-width: 100%;
       overflow: hidden;
       padding: 0;
@@ -110,11 +213,18 @@
       white-space: nowrap;
     }
 
+    .arca-invoice-link:hover,
+    .arca-invoice-link:focus {
+      color: var(--arca-primary);
+      outline: 0;
+      text-decoration: none;
+    }
+
     .arca-line-muted {
       color: var(--arca-muted);
       display: block;
       font-size: 12px;
-      margin-top: 4px;
+      line-height: 1.35;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -122,165 +232,231 @@
     }
 
     .arca-status-pill {
+      align-items: center;
       border-radius: 999px;
       display: inline-flex;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 700;
+      justify-content: center;
       line-height: 1;
-      padding: 8px 10px;
+      min-height: 28px;
+      padding: 0 10px;
       white-space: nowrap;
     }
 
     .arca-status-success {
-      background: color-mix(in srgb, var(--adm-success) 16%, var(--adm-card));
-      color: var(--adm-success);
+      background: #ecfdf5;
+      color: #047857;
     }
 
     .arca-status-info {
-      background: color-mix(in srgb, var(--adm-info) 16%, var(--adm-card));
-      color: var(--adm-info);
+      background: #eff6ff;
+      color: #1d4ed8;
     }
 
     .arca-status-warning {
-      background: var(--adm-primary-soft);
-      color: var(--adm-primary-dark);
+      background: #fff7ed;
+      color: #c2410c;
     }
 
     .arca-status-danger {
-      background: color-mix(in srgb, var(--adm-danger) 14%, var(--adm-card));
-      color: var(--adm-danger);
+      background: #fef2f2;
+      color: #be123c;
     }
 
     .arca-status-muted {
-      background: var(--adm-bg-soft);
-      color: var(--adm-muted);
+      background: var(--arca-soft);
+      color: var(--arca-muted);
     }
 
     .arca-action-stack {
       align-items: center;
-      column-gap: 12px;
-      display: grid;
-      grid-auto-columns: max-content;
-      grid-auto-flow: column;
+      display: flex;
+      gap: 8px;
       justify-content: flex-end;
       white-space: nowrap;
     }
 
     .arca-action-stack .btn {
       align-items: center;
-      border-radius: 8px;
+      border-radius: var(--arca-radius);
+      box-shadow: none !important;
       display: inline-flex;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 650;
       gap: 6px;
-      height: 40px;
+      height: 36px;
       justify-content: center;
       line-height: 1;
-      margin-left: 0 !important;
-      min-height: 40px;
-      padding: 0 14px !important;
-      box-shadow: none !important;
-    }
-
-    .arca-invoices-page .table .arca-action-stack .btn + .btn,
-    .arca-invoices-page .table .arca-action-stack .btn + form,
-    .arca-invoices-page .table .arca-action-stack form + .btn,
-    .arca-invoices-page .table .arca-action-stack form + form {
-      margin-left: 0 !important;
+      margin: 0 !important;
+      min-height: 36px;
+      padding: 0 12px !important;
     }
 
     .arca-action-stack form {
+      display: inline-flex;
       margin: 0;
     }
 
     .arca-action-stack .arca-btn-view {
-      min-width: 76px;
+      min-width: 72px;
     }
 
     .arca-action-stack .arca-btn-icon {
-      min-width: 40px;
+      min-width: 36px;
       padding: 0 !important;
-      width: 40px;
+      width: 36px;
     }
 
     .arca-action-stack .arca-btn-icon i {
       margin: 0;
     }
 
+    .arca-action-stack .btn-light {
+      background: var(--arca-soft) !important;
+      border-color: var(--arca-border) !important;
+      color: var(--arca-ink) !important;
+    }
+
+    .arca-pagination {
+      border-top: 1px solid var(--arca-border);
+      display: flex;
+      justify-content: center;
+      margin-top: 0;
+      padding-top: 16px;
+    }
+
+    .arca-empty {
+      color: var(--arca-muted);
+      font-weight: 600;
+      padding: 40px 16px !important;
+      text-align: center;
+    }
+
     .arca-modal .modal-content {
+      background: var(--arca-card);
       border: 0;
       border-radius: 10px;
+      color: var(--arca-ink);
       overflow: hidden;
     }
 
     .arca-modal .modal-header {
       align-items: flex-start;
-      background: #fbfbfc;
+      background: var(--arca-header);
       border-bottom: 1px solid var(--arca-border);
-      padding: 20px 24px;
+      gap: 12px;
+      padding: 16px 20px;
+    }
+
+    .arca-modal .modal-body {
+      padding: 20px;
+    }
+
+    .arca-modal .modal-footer {
+      background: var(--arca-header);
+      border-top: 1px solid var(--arca-border);
+      gap: 8px;
+      padding: 12px 20px;
     }
 
     .arca-modal-title {
-      color: var(--arca-ink);
+      color: var(--arca-ink-strong);
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 750;
+      line-height: 1.25;
       margin: 0;
     }
 
     .arca-detail-grid {
       display: grid;
-      gap: 14px;
+      gap: 12px;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .arca-detail-box {
       background: var(--arca-soft);
       border: 1px solid var(--arca-border);
-      border-radius: 8px;
-      padding: 14px;
+      border-radius: var(--arca-radius);
+      min-height: 72px;
+      padding: 12px 14px;
     }
 
     .arca-detail-label {
       color: var(--arca-muted);
       display: block;
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: .04em;
       margin-bottom: 6px;
       text-transform: uppercase;
     }
 
     .arca-detail-value {
-      color: var(--arca-ink);
+      color: var(--arca-ink-strong);
       font-size: 14px;
       font-weight: 700;
+      line-height: 1.35;
       overflow-wrap: anywhere;
     }
 
     .arca-modal-section {
       border-top: 1px solid var(--arca-border);
-      padding-top: 18px;
+      padding-top: 16px;
     }
 
     .arca-modal-section-title {
-      color: var(--arca-ink);
-      font-size: 14px;
-      font-weight: 800;
+      color: var(--arca-ink-strong);
+      font-size: 13px;
+      font-weight: 750;
       margin-bottom: 12px;
     }
 
+    .arca-modal-section-head {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .arca-modal-section-head .arca-modal-section-title {
+      margin-bottom: 0;
+    }
+
     .arca-pdf-frame {
-      background: #f8fafc;
+      background: var(--arca-soft);
       border: 1px solid var(--arca-border);
-      border-radius: 8px;
+      border-radius: var(--arca-radius);
       height: 520px;
       width: 100%;
+    }
+
+    .arca-modal .table th,
+    .arca-modal .table td {
+      border-color: var(--arca-border) !important;
+      color: var(--arca-ink) !important;
+      padding: 10px 12px;
+      vertical-align: middle;
+    }
+
+    .arca-modal .table thead th {
+      background: var(--arca-thead) !important;
+      color: var(--arca-muted) !important;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     @media (max-width: 1199.98px) {
       .arca-filter-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .arca-filter-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-end;
       }
 
       .arca-table-cae,
@@ -290,7 +466,7 @@
       }
 
       .arca-actions-col {
-        width: 156px;
+        width: 148px;
       }
     }
 
@@ -305,6 +481,14 @@
         justify-content: flex-start;
       }
 
+      .arca-filter-actions {
+        width: 100%;
+      }
+
+      .arca-filter-actions .btn {
+        flex: 1 1 auto;
+      }
+
       .arca-invoices-table {
         min-width: 720px;
       }
@@ -312,6 +496,55 @@
       .arca-pdf-frame {
         height: 420px;
       }
+    }
+
+    html[data-theme="dark"] .arca-invoices-page {
+      --arca-ink: #e5e5e5;
+      --arca-ink-strong: #ffffff;
+      --arca-muted: #a3a3a3;
+      --arca-border: #3d4354;
+      --arca-soft: #1f2838;
+      --arca-card: #2a3040;
+      --arca-header: #252b38;
+      --arca-thead: #1f2838;
+      --arca-primary: #e05d38;
+    }
+
+    html[data-theme="dark"] .arca-status-success {
+      background: #14352a;
+      color: #4ade80;
+    }
+
+    html[data-theme="dark"] .arca-status-info {
+      background: #1e3a5f;
+      color: #93c5fd;
+    }
+
+    html[data-theme="dark"] .arca-status-warning {
+      background: #3a2c26;
+      color: #fdba74;
+    }
+
+    html[data-theme="dark"] .arca-status-danger {
+      background: #3a2228;
+      color: #f87171;
+    }
+
+    html[data-theme="dark"] .arca-modal .modal-content,
+    html[data-theme="dark"] .arca-modal .modal-body {
+      background: var(--arca-card) !important;
+      color: var(--arca-ink) !important;
+    }
+
+    html[data-theme="dark"] .arca-modal .modal-header,
+    html[data-theme="dark"] .arca-modal .modal-footer {
+      background: var(--arca-header) !important;
+      border-color: var(--arca-border) !important;
+    }
+
+    html[data-theme="dark"] .arca-modal .close {
+      color: var(--arca-ink-strong);
+      text-shadow: none;
     }
   </style>
 @endsection
@@ -365,16 +598,19 @@
       </ul>
     </div>
 
-    <div class="card mb-4">
+    <div class="card">
       <div class="card-header">
-        <div class="card-title">{{ __('Filtros') }}</div>
+        <div>
+          <div class="card-title">{{ __('Filtros') }}</div>
+          <span class="arca-line-muted">{{ __('Filtrá por estado, rango de fechas o búsqueda.') }}</span>
+        </div>
       </div>
       <div class="card-body">
         <form action="{{ route('admin.arca_invoices.index') }}" method="get">
           <div class="arca-filter-grid">
-            <div class="form-group mb-0">
-              <label>{{ __('Estado') }}</label>
-              <select name="status" class="form-control">
+            <div class="form-group">
+              <label for="arcaStatus">{{ __('Estado') }}</label>
+              <select id="arcaStatus" name="status" class="form-control">
                 <option value="">{{ __('Todos') }}</option>
                 <option value="ready" {{ request('status') === 'ready' ? 'selected' : '' }}>{{ __('Pendiente de emisión') }}</option>
                 <option value="blocked" {{ request('status') === 'blocked' ? 'selected' : '' }}>{{ __('Bloqueado') }}</option>
@@ -383,29 +619,29 @@
                 <option value="error" {{ request('status') === 'error' ? 'selected' : '' }}>{{ __('Error') }}</option>
               </select>
             </div>
-            <div class="form-group mb-0">
-              <label>{{ __('Desde') }}</label>
-              <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
+            <div class="form-group">
+              <label for="arcaDateFrom">{{ __('Desde') }}</label>
+              <input id="arcaDateFrom" type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
             </div>
-            <div class="form-group mb-0">
-              <label>{{ __('Hasta') }}</label>
-              <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+            <div class="form-group">
+              <label for="arcaDateTo">{{ __('Hasta') }}</label>
+              <input id="arcaDateTo" type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
             </div>
-            <div class="form-group mb-0">
-              <label>{{ __('Búsqueda') }}</label>
-              <input type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="{{ __('CAE, nombre, correo...') }}">
+            <div class="form-group">
+              <label for="arcaSearch">{{ __('Búsqueda') }}</label>
+              <input id="arcaSearch" type="text" name="search" class="form-control" value="{{ request('search') }}" placeholder="{{ __('CAE, nombre, correo...') }}">
             </div>
-          </div>
-          <div class="arca-filter-actions mt-3">
-            <a href="{{ route('admin.arca_invoices.index') }}" class="btn btn-secondary">{{ __('Limpiar') }}</a>
-            <button type="submit" class="btn btn-primary">{{ __('Filtrar') }}</button>
+            <div class="arca-filter-actions">
+              <a href="{{ route('admin.arca_invoices.index') }}" class="btn btn-secondary">{{ __('Limpiar') }}</a>
+              <button type="submit" class="btn btn-primary">{{ __('Filtrar') }}</button>
+            </div>
           </div>
         </form>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-header d-flex align-items-center justify-content-between">
+      <div class="card-header">
         <div>
           <div class="card-title">{{ __('Comprobantes') }}</div>
           <span class="arca-line-muted">{{ __('Revisá el estado, abrí el detalle o descargá la factura.') }}</span>
@@ -422,9 +658,9 @@
                 <th class="arca-table-cae">{{ __('CAE') }}</th>
                 <th class="arca-status-col">{{ __('Estado') }}</th>
                 <th>{{ __('Receptor') }}</th>
-                <th class="arca-money-col text-right">{{ __('Total') }}</th>
+                <th class="arca-money-col">{{ __('Total') }}</th>
                 <th class="arca-date-col">{{ __('Fecha') }}</th>
-                <th class="arca-actions-col text-right">{{ __('Acciones') }}</th>
+                <th class="arca-actions-col">{{ __('Acciones') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -438,10 +674,12 @@
                 <tr>
                   <td>#{{ $invoice->id }}</td>
                   <td>
-                    <button type="button" class="arca-invoice-link" data-toggle="modal" data-target="#arcaInvoiceModal{{ $invoice->id }}">
-                      {{ $invoiceNumber }}
-                    </button>
-                    <span class="arca-line-muted">{{ $invoice->environment === 'production' ? __('Producción') : __('Homologación') }}</span>
+                    <div class="arca-cell-stack">
+                      <button type="button" class="arca-invoice-link" data-toggle="modal" data-target="#arcaInvoiceModal{{ $invoice->id }}">
+                        {{ $invoiceNumber }}
+                      </button>
+                      <span class="arca-line-muted">{{ $invoice->environment === 'production' ? __('Producción') : __('Homologación') }}</span>
+                    </div>
                   </td>
                   <td class="arca-table-cae">
                     <span class="arca-line-muted">{{ $invoice->cae ?: __('Sin CAE') }}</span>
@@ -450,31 +688,35 @@
                     <span class="arca-status-pill {{ $statusClass }}">{{ __($label) }}</span>
                   </td>
                   <td>
-                    <strong>{{ $name }}</strong>
-                    @if($invoice->booking?->email)
-                      <span class="arca-line-muted">{{ $invoice->booking->email }}</span>
-                    @endif
+                    <div class="arca-cell-stack">
+                      <strong>{{ $name }}</strong>
+                      @if($invoice->booking?->email)
+                        <span class="arca-line-muted">{{ $invoice->booking->email }}</span>
+                      @endif
+                    </div>
                   </td>
-                  <td class="text-right text-nowrap arca-money-cell">${{ number_format($invoice->total_amount ?? 0, 2, ',', '.') }}</td>
+                  <td class="arca-money-cell text-nowrap">${{ number_format($invoice->total_amount ?? 0, 2, ',', '.') }}</td>
                   <td class="arca-date-cell">
-                    {{ $invoice->created_at->format('d/m/Y') }}
-                    <span class="arca-line-muted">{{ $invoice->created_at->format('H:i') }}</span>
+                    <div class="arca-cell-stack">
+                      <span>{{ $invoice->created_at->format('d/m/Y') }}</span>
+                      <span class="arca-line-muted">{{ $invoice->created_at->format('H:i') }}</span>
+                    </div>
                   </td>
                   <td class="arca-actions-cell">
                     <div class="arca-action-stack">
                       <button type="button" class="btn btn-primary arca-btn-view" data-toggle="modal" data-target="#arcaInvoiceModal{{ $invoice->id }}">
-                        <i class="fas fa-eye"></i> {{ __('Ver') }}
+                        <i class="fas fa-eye" aria-hidden="true"></i> {{ __('Ver') }}
                       </button>
                       @if($invoice->booking)
                         <a href="{{ route('admin.arca_invoices.pdf', $invoice->id) }}" class="btn btn-light arca-btn-icon" title="{{ __('Descargar factura') }}" aria-label="{{ __('Descargar factura') }}">
-                          <i class="fas fa-file-pdf"></i>
+                          <i class="fas fa-file-pdf" aria-hidden="true"></i>
                         </a>
                       @endif
                       @if(in_array($invoice->status, ['error', 'blocked'], true))
-                        <form action="{{ route('admin.arca_invoices.retry', $invoice->id) }}" method="post" class="d-inline" onsubmit="return confirm('{{ __('¿Reintentar emisión?') }}')">
+                        <form action="{{ route('admin.arca_invoices.retry', $invoice->id) }}" method="post" onsubmit="return confirm('{{ __('¿Reintentar emisión?') }}')">
                           @csrf
                           <button type="submit" class="btn btn-warning arca-btn-icon" title="{{ __('Reintentar') }}" aria-label="{{ __('Reintentar') }}">
-                            <i class="fas fa-redo"></i>
+                            <i class="fas fa-redo" aria-hidden="true"></i>
                           </button>
                         </form>
                       @endif
@@ -483,14 +725,14 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="8" class="text-center py-5">{{ __('No se encontraron comprobantes.') }}</td>
+                  <td colspan="8" class="arca-empty">{{ __('No se encontraron comprobantes.') }}</td>
                 </tr>
               @endforelse
             </tbody>
           </table>
         </div>
 
-        <div class="d-flex justify-content-center mt-3">
+        <div class="arca-pagination">
           {{ $invoices->links() }}
         </div>
       </div>
@@ -507,9 +749,9 @@
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <div>
+              <div class="arca-cell-stack">
                 <h5 class="arca-modal-title" id="arcaInvoiceModalTitle{{ $invoice->id }}">{{ __('Factura ARCA') }} {{ $invoiceNumber }}</h5>
-                <span class="arca-status-pill {{ $statusClass }} mt-2">{{ __($label) }}</span>
+                <span class="arca-status-pill {{ $statusClass }}">{{ __($label) }}</span>
               </div>
               <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Cerrar') }}">
                 <span aria-hidden="true">&times;</span>
@@ -631,11 +873,11 @@
                 </div>
                 <div class="col-lg-7">
                   <div class="arca-modal-section">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                      <div class="arca-modal-section-title mb-0">{{ __('Vista del comprobante') }}</div>
+                    <div class="arca-modal-section-head">
+                      <div class="arca-modal-section-title">{{ __('Vista del comprobante') }}</div>
                       @if($invoice->booking)
                         <a href="{{ route('admin.arca_invoices.pdf', $invoice->id) }}" class="btn btn-sm btn-light">
-                          <i class="fas fa-download mr-1"></i> {{ __('Descargar') }}
+                          <i class="fas fa-download" aria-hidden="true"></i> {{ __('Descargar') }}
                         </a>
                       @endif
                     </div>

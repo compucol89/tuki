@@ -149,19 +149,28 @@
       height: 32px;
     }
 
-    .event-title,
-    .event-date {
-      font-size: 18px;
-      font-weight: bold;
-      line-height: 1.2;
-      margin-bottom: 6px;
-      color: #1a1a1a;
+    .event-title {
+      font-size: 21px;
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 4px;
+      color: #14181f;
     }
 
     .event-location {
-      font-size: 10px;
-      color: #1a1a1a;
-      margin-top: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #5b6472;
+      margin: 2px 0 8px;
+      line-height: 1.35;
+    }
+
+    .event-date {
+      font-size: 14px;
+      font-weight: 700;
+      color: #d9481c;
+      margin-bottom: 2px;
+      line-height: 1.2;
     }
 
     /* QR Section */
@@ -207,18 +216,19 @@
     }
 
     .ticket-type-label {
-      font-size: 9px;
+      font-size: 9.5px;
       color: var(--primary);
-      font-weight: bold;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     .ticket-type-name {
-      font-size: 16px;
-      font-weight: bold;
-      color: #1a1a1a;
-      margin-top: 4px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #14181f;
+      margin-top: 5px;
+      letter-spacing: 0.2px;
     }
 
     /* Attendee */
@@ -231,8 +241,10 @@
 
     .attendee-label {
       font-size: 8px;
-      color: #999;
+      color: #8a94a6;
       text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
       letter-spacing: 0.5px;
       margin-bottom: 3px;
     }
@@ -385,21 +397,36 @@
     }
 
     .footer-code {
-      font-size: 13px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-      overflow-wrap: anywhere;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 8px;
+      padding: 5px 10px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+      max-width: 90%;
     }
 
     .footer-brand {
-      font-size: 9px;
-      color: rgba(255,255,255,0.7);
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .footer-legal {
+      font-size: 8.5px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 5px;
+      font-weight: 600;
     }
 
     .footer-disclaimer {
       font-size: 8.5px;
-      color: rgba(255,255,255,0.78);
+      color: rgba(255,255,255,0.75);
       margin-top: 6px;
       font-style: italic;
       line-height: 1.5;
@@ -415,7 +442,17 @@
       body { background: var(--card); }
       .ticket { box-shadow: none; }
     }
-  </style>
+  /* Inter embedded para DomPDF (pesos estaticos) */
+  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-Regular.ttf") }}') format('truetype'); font-weight: 400; }
+  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-Medium.ttf") }}') format('truetype'); font-weight: 500; }
+  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-SemiBold.ttf") }}') format('truetype'); font-weight: 600; }
+  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-Bold.ttf") }}') format('truetype'); font-weight: 700; }
+  @font-face { font-family: 'InterDoc'; src: url('{{ public_path("assets/front/fonts/Inter-ExtraBold.ttf") }}') format('truetype'); font-weight: 800 900; }
+
+  body {
+    font-family: 'InterDoc', Helvetica, Arial, sans-serif;
+  }
+</style>
 </head>
 <body>
 

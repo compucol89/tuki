@@ -13,6 +13,7 @@ use App\Models\Organizer;
 use App\Models\ShopManagement\Product;
 use App\Models\ShopManagement\ProductImage;
 use App\Services\FileUploadService;
+use App\Services\OrganizerProfileChecklistService;
 use App\Support\DemoEventExclusion;
 use App\Support\EventSocialImage;
 use Illuminate\Support\Collection;
@@ -32,9 +33,41 @@ class ImageSitemapController extends Controller
     'morbi-in-sem',
   ];
 
+  private const RESERVED_CUSTOM_PAGE_SLUGS = [
+    'admin',
+    'customer',
+    'organizer',
+    'organizers',
+    'checkout',
+    'check-out2',
+    'cart',
+    'login',
+    'registro',
+    'recuperar-contrasena',
+    'register',
+    'sitemap.xml',
+    'sitemap',
+    'event',
+    'eventos',
+    'organizadores',
+    'blog',
+    'shop',
+    'tienda',
+    'contacto',
+    'sobre-nosotros',
+    'faq',
+    'faqs',
+    'preguntas-frecuentes',
+    'privacy-policy',
+    'terms-&-conditions',
+  ];
+
   public function index()
   {
-    URL::forceRootUrl($this->rootUrl());
+    $rootUrl = $this->rootUrl();
+
+    URL::forceRootUrl($rootUrl);
+    URL::forceScheme((string) parse_url($rootUrl, PHP_URL_SCHEME) ?: 'https');
 
     $urls = $this->eventEntries()
       ->concat($this->blogEntries())
@@ -178,6 +211,11 @@ class ImageSitemapController extends Controller
         ->select('organizers.id', 'organizers.username', 'organizers.photo', 'organizers.cover_photo', 'organizer_infos.name as profile_name')
         ->orderBy('organizers.updated_at', 'desc')
         ->get()
+        ->filter(function ($organizer) {
+          $fullOrganizer = Organizer::find($organizer->id);
+          return $fullOrganizer
+            && app(OrganizerProfileChecklistService::class)->isComplete($fullOrganizer);
+        })
         ->map(function ($organizer) {
           $profileName = trim((string) ($organizer->profile_name ?: $organizer->username));
           $profileSlug = Str::slug($profileName);
@@ -223,15 +261,7 @@ class ImageSitemapController extends Controller
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
         return $query->where('page_contents.language_id', $defaultLanguageId);
       })
-      ->whereNotIn('page_contents.slug', [
-        'admin',
-        'customer',
-        'organizer',
-        'checkout',
-        'cart',
-        'privacy-policy',
-        'terms-&-conditions',
-      ])
+      ->whereNotIn('page_contents.slug', self::RESERVED_CUSTOM_PAGE_SLUGS)
       ->where('page_contents.slug', 'not like', '%&%')
       ->select('page_contents.slug')
       ->orderBy('pages.updated_at', 'desc')
@@ -297,10 +327,14 @@ class ImageSitemapController extends Controller
     $root = rtrim((string) config('app.url'), '/');
 
     if ($root === '' || Str::contains($root, ['localhost', '127.0.0.1'])) {
-      return (string) config('tukipass.redirect_www.www_domain');
+      $root = (string) config('tukipass.redirect_www.www_domain');
     }
 
-    return $root;
+    if (!Str::startsWith($root, ['http://', 'https://'])) {
+      $root = 'https://' . ltrim($root, '/');
+    }
+
+    return preg_replace('/^http:\/\//', 'https://', rtrim($root, '/'));
   }
 
   private function defaultLanguageId(): ?int

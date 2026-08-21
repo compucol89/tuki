@@ -12,10 +12,18 @@
     : 'Recuperar contraseña';
   $metaKeywords = !empty($seo->meta_keyword_organizer_forget_password) ? $seo->meta_keyword_organizer_forget_password : '';
   $metaDescription = !empty($seo->meta_description_organizer_forget_password) ? $seo->meta_description_organizer_forget_password : '';
+
+  if ($metaKeywords === '' || str_contains(strtolower($metaKeywords), 'organizer')) {
+    $metaKeywords = 'recuperar contraseña organizador, productor Tukipass, acceso organizador';
+  }
+
+  if ($metaDescription === '' || str_contains(strtolower($metaDescription), 'organizer')) {
+    $metaDescription = 'Recuperá la contraseña de tu cuenta de productor en Tukipass.';
+  }
 @endphp
 @section('pageHeading', $organizerForgetPasswordTitle)
-@section('meta-keywords', "{{ $metaKeywords }}")
-@section('meta-description', "$metaDescription")
+@section('meta-keywords', $metaKeywords)
+@section('meta-description', $metaDescription)
 @section('hero-section')
   <!-- Page Banner Start -->
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"

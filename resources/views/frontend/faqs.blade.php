@@ -343,6 +343,44 @@
   line-height: 1.65;
   color: var(--fp-muted);
 }
+html[data-theme="dark"] body.faq-page-premium .faq-premium {
+  --fp-muted: var(--muted-foreground);
+  --fp-line: color-mix(in srgb, var(--foreground) 8%, transparent);
+  background:
+    radial-gradient(ellipse 90% 55% at 8% -12%, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 52%),
+    radial-gradient(ellipse 70% 45% at 92% 20%, color-mix(in srgb, var(--accent-foreground) 6%, transparent) 0%, transparent 45%),
+    linear-gradient(185deg, var(--background) 0%, color-mix(in srgb, var(--muted) 88%, var(--background)) 48%, var(--background) 100%);
+}
+html[data-theme="dark"] body.faq-page-premium .faq-premium::before {
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+}
+html[data-theme="dark"] body.faq-page-premium .faq-premium__accordion .card {
+  background: linear-gradient(165deg, color-mix(in srgb, var(--card) 96%, var(--background)) 0%, color-mix(in srgb, var(--card) 88%, var(--muted)) 100%);
+  border-color: var(--fp-line);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 16px 42px rgba(0, 0, 0, 0.2),
+    0 2px 10px rgba(0, 0, 0, 0.16);
+}
+html[data-theme="dark"] body.faq-page-premium .faq-premium__accordion .card:has(.faq-premium__trigger:not(.collapsed)),
+html[data-theme="dark"] body.faq-page-premium .faq-premium__accordion .card.faq-premium__card--open {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 20px 48px rgba(0, 0, 0, 0.28),
+    0 8px 20px color-mix(in srgb, var(--primary) 10%, transparent);
+}
+html[data-theme="dark"] body.faq-page-premium .faq-premium__trigger-icon {
+  background: color-mix(in srgb, var(--card) 82%, var(--primary));
+  border-color: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+html[data-theme="dark"] body.faq-page-premium .faq-premium__trigger:not(.collapsed) .faq-premium__trigger-icon {
+  background: color-mix(in srgb, var(--card) 70%, var(--primary));
+}
+html[data-theme="dark"] body.faq-page-premium .faq-premium__accordion .card-body {
+  background: color-mix(in srgb, var(--card) 82%, var(--background));
+  border-top-color: var(--fp-line);
+}
 @supports not selector(:has(*)) {
   .faq-page-premium .faq-premium__accordion .card.faq-premium__card--open {
     border-color: color-mix(in srgb, var(--primary) 22%, transparent);
@@ -440,37 +478,3 @@
   </section>
   <!--====== FAQ PART END ======-->
 @endsection
-
-@push('scripts')
-@php
-  $faqSchemaMainEntity = [];
-  if (!empty($faqGroups) && is_iterable($faqGroups)) {
-    foreach ($faqGroups as $group) {
-      foreach ($group['items'] ?? [] as $item) {
-        $question = trim(strip_tags((string) ($item['question'] ?? '')));
-        $answer = trim(strip_tags((string) ($item['answer'] ?? '')));
-        if ($question === '' || $answer === '') {
-          continue;
-        }
-        $faqSchemaMainEntity[] = [
-          '@type' => 'Question',
-          'name' => $question,
-          'acceptedAnswer' => [
-            '@type' => 'Answer',
-            'text' => $answer,
-          ],
-        ];
-      }
-    }
-  }
-@endphp
-@if (!empty($faqSchemaMainEntity))
-<script type="application/ld+json">
-{!! json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'FAQPage',
-    'mainEntity' => $faqSchemaMainEntity,
-], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
-</script>
-@endif
-@endpush

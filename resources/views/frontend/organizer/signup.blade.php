@@ -15,9 +15,17 @@
     ? trim($seo->meta_keyword_organizer_signup)
     : __('organizer.signup.seo.meta_keywords_default');
 
+  if ($metaKeywords === '' || str_contains(strtolower($metaKeywords), 'organizer signup')) {
+    $metaKeywords = __('organizer.signup.seo.meta_keywords_default');
+  }
+
   $metaDescription = !empty($seo->meta_description_organizer_signup)
     ? trim($seo->meta_description_organizer_signup)
     : __('organizer.signup.seo.meta_description_default');
+
+  if ($metaDescription === '' || str_contains(strtolower($metaDescription), 'organizer signup')) {
+    $metaDescription = __('organizer.signup.seo.meta_description_default');
+  }
 
   $signupCanonical = route('organizer.signup', [], true);
   $signupOgImage = asset('assets/front/img/og/tukipass-og.jpg');

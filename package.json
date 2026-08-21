@@ -14,9 +14,11 @@
     "test:a11y": "playwright test --grep @a11y",
     "test:aria": "playwright test --grep @aria",
     "test:visual": "playwright test --grep @visual",
+    "test:seo": "playwright test --grep @seo",
     "test:frontend": "npm run test:e2e && npm run test:a11y && npm run test:aria",
     "test:theme": "playwright test --grep @theme",
-    "audit:organizer-theme": "bash scripts/audit-organizer-theme.sh"
+    "audit:organizer-theme": "bash scripts/audit-organizer-theme.sh",
+    "test:legal": "playwright test --grep @legal"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

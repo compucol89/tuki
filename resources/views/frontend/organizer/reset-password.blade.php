@@ -5,20 +5,22 @@
 @endpush
 
 @section('meta-robots', 'noindex,follow')
+@section('meta-keywords', 'restablecer contraseña organizador, productor Tukipass, acceso organizador')
+@section('meta-description', 'Elegí una nueva contraseña para volver a entrar al panel de productor de Tukipass.')
 
 @section('pageHeading')
-  {{ __('Reset Password') }}
+  {{ __('Restablecer contraseña') }}
 @endsection
 @section('hero-section')
   <!-- Page Banner Start -->
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy" data-bg="{{ asset('assets/admin/img/'. $basicInfo->breadcrumb) }}">
     <div class="container">
         <div class="banner-inner">
-            <h1 class="page-title">{{ __('Reset Password') }}</h1>
+            <h1 class="page-title">{{ __('Restablecer contraseña') }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
-                    <li class="breadcrumb-item active">{{ __('Reset Password') }}</li>
+                    <li class="breadcrumb-item active">{{ __('Restablecer contraseña') }}</li>
                 </ol>
             </nav>
         </div>
@@ -58,7 +60,7 @@
                       </div>
                     </div>
                     <div class="form-group mb-0">
-                        <button class="theme-btn br-30" type="submit" data-loading-text="Por favor esperá...">{{ __('Reset Password') }}</button>
+                        <button class="theme-btn br-30" type="submit" data-loading-text="Por favor esperá...">{{ __('Restablecer contraseña') }}</button>
                     </div>
                 </form>
             </div>

@@ -840,6 +840,52 @@ body.about-page .testimonial-empty__text {
   color: var(--about-ds-text-secondary);
 }
 
+body.about-page #aliados .trust-partners__logos .client-logo-item {
+  align-items: center;
+  background: color-mix(in srgb, var(--card) 92%, var(--background));
+  padding: 0.8rem;
+}
+
+body.about-page #aliados .trust-partners__logos .client-logo-item > a,
+body.about-page #aliados .trust-partners__logos .client-logo-item > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--about-ds-radius-sm);
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(30, 37, 50, 0.07);
+}
+
+body.about-page #aliados .trust-partners__logos .client-logo-item img {
+  max-width: min(100%, 11rem);
+  max-height: 2.25rem;
+  object-fit: contain;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal;
+  transform: none !important;
+}
+
+body.about-page #aliados .trust-partners__logos .client-logo-item:hover,
+body.about-page #aliados .trust-partners__logos .client-logo-item:focus-within {
+  background: color-mix(in srgb, var(--card) 96%, var(--background));
+  border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item {
+  background: color-mix(in srgb, var(--card) 90%, var(--background));
+  border-color: color-mix(in srgb, #fff 13%, transparent);
+}
+
+html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item:hover,
+html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item:focus-within {
+  background: color-mix(in srgb, var(--card) 96%, var(--background));
+  border-color: color-mix(in srgb, var(--primary) 26%, transparent);
+}
+
 @media (max-width: 991px) {
   body.about-page .about-page__testimonial-aside {
     margin-bottom: var(--about-section-head-space);

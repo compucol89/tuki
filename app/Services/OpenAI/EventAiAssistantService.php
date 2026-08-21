@@ -50,6 +50,22 @@ class EventAiAssistantService
     );
   }
 
+  /**
+   * Punto de entrada estructurado para el pipeline V3 (modelo/schema configurables).
+   */
+  public function createStructured(string $model, string $instructions, array $input, string $schemaName, array $schema): array
+  {
+    return $this->createStructuredResponse($model, $instructions, $input, $schemaName, $schema);
+  }
+
+  /**
+   * Imagen como data URL para input del modelo (pipeline V3).
+   */
+  public function imageAsDataUrl(string $path): string
+  {
+    return $this->imageDataUrl($path);
+  }
+
   public function moderateImageAndText(string $imagePath, string $text): array
   {
     $apiKey = config('openai.api_key');

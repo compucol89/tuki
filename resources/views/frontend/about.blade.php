@@ -842,8 +842,8 @@ body.about-page .testimonial-empty__text {
 
 body.about-page #aliados .trust-partners__logos .client-logo-item {
   align-items: center;
-  background: color-mix(in srgb, var(--card) 92%, var(--background));
-  padding: 0.8rem;
+  background: color-mix(in srgb, var(--card) 88%, var(--background));
+  padding: 1rem 1.25rem;
 }
 
 body.about-page #aliados .trust-partners__logos .client-logo-item > a,
@@ -853,18 +853,16 @@ body.about-page #aliados .trust-partners__logos .client-logo-item > span {
   justify-content: center;
   width: 100%;
   min-height: 3.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0;
   border-radius: var(--about-ds-radius-sm);
-  background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(30, 37, 50, 0.07);
 }
 
 body.about-page #aliados .trust-partners__logos .client-logo-item img {
   max-width: min(100%, 11rem);
   max-height: 2.25rem;
   object-fit: contain;
-  filter: none !important;
-  opacity: 1 !important;
+  filter: grayscale(1) saturate(0) brightness(0.58) contrast(1.18) !important;
+  opacity: 0.86 !important;
   mix-blend-mode: normal;
   transform: none !important;
 }
@@ -873,6 +871,12 @@ body.about-page #aliados .trust-partners__logos .client-logo-item:hover,
 body.about-page #aliados .trust-partners__logos .client-logo-item:focus-within {
   background: color-mix(in srgb, var(--card) 96%, var(--background));
   border-color: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+body.about-page #aliados .trust-partners__logos .client-logo-item:hover img,
+body.about-page #aliados .trust-partners__logos .client-logo-item:focus-within img {
+  filter: grayscale(1) saturate(0) brightness(0.44) contrast(1.28) !important;
+  opacity: 1 !important;
 }
 
 html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item {
@@ -884,6 +888,16 @@ html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-
 html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item:focus-within {
   background: color-mix(in srgb, var(--card) 96%, var(--background));
   border-color: color-mix(in srgb, var(--primary) 26%, transparent);
+}
+
+html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item img {
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.9 !important;
+}
+
+html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item:hover img,
+html[data-theme="dark"] body.about-page #aliados .trust-partners__logos .client-logo-item:focus-within img {
+  opacity: 1 !important;
 }
 
 @media (max-width: 991px) {

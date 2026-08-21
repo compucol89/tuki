@@ -5,9 +5,15 @@ module.exports = defineConfig({
   timeout: 90_000,
   fullyParallel: true,
   retries: 0,
-  reporter: [['list']],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never', outputFolder: 'playwright-report' }],
+  ],
   use: {
-    baseURL: 'http://localhost:8801',
+    // Los assets del frontend se generan contra el host del request de cada
+    // entorno (127.0.0.1 en el stack docker local/CI) → baseURL debe coincidir
+    // para que img-src 'self' no viole CSP (FF-001).
+    baseURL: 'http://127.0.0.1:8801',
     viewport: { width: 1440, height: 900 },
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
@@ -19,9 +25,8 @@ module.exports = defineConfig({
     },
   ],
   expect: {
-    // Tolerancia documentada: banda y≈800-900 del home contiene un elemento
-    // dinámico del hero (~1.2k px, verificado GATE 6); el resto de la página
-    // es estable pixel a pixel.
-    toHaveScreenshot: { maxDiffPixels: 2000 },
+    // Tolerancia estricta por defecto; los elementos dinámicos (slideshow del
+    // hero del home) se enmascaran por-test en visual.spec.js.
+    toHaveScreenshot: { maxDiffPixels: 200 },
   },
 });

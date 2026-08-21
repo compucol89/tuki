@@ -11,7 +11,7 @@ Route::prefix('/organizer')->group(function () {
     Route::get('/login', 'BackEnd\Organizer\OrganizerController@login')->name('organizer.login');
     Route::get('/signup', 'BackEnd\Organizer\OrganizerController@signup')->name('organizer.signup');
     Route::post('/create', 'BackEnd\Organizer\OrganizerController@create')->middleware('throttle:3,1')->name('organizer.create');
-    Route::post('/store', 'BackEnd\Organizer\OrganizerController@authentication')->middleware('throttle:5,1')->name('organizer.authentication');
+    Route::post('/store', 'BackEnd\Organizer\OrganizerController@authentication')->middleware('throttle:'.(int) env('ORGANIZER_LOGIN_THROTTLE_PER_MINUTE', 5).',1')->name('organizer.authentication');
     Route::get('/forget-password', 'BackEnd\Organizer\OrganizerController@forget_passord')->name('organizer.forget.password');
     Route::post('/send-forget-mail', 'BackEnd\Organizer\OrganizerController@forget_mail')->middleware('throttle:5,1')->name('organizer.forget.mail');
     Route::get('/reset-password', 'BackEnd\Organizer\OrganizerController@reset_password')->name('organizer.reset.password');

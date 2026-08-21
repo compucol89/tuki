@@ -21,6 +21,31 @@ const ROUTES = [
   { name: 'withdraw', path: '/organizer/withdraw?language=es' },
 ];
 
+const PUBLIC_DARK_ROUTES = [
+  {
+    name: 'sobre-nosotros',
+    path: '/sobre-nosotros',
+    surfaces: [
+      '.about-metrics--dashboard',
+      '.about-organizer-pitch__pullquote',
+      '.feature-item--about-premium',
+      '.feature-item--about-premium .feature-item__icon',
+      '.testimonial-item',
+      '.total-client-reviews',
+    ],
+  },
+  {
+    name: 'preguntas-frecuentes',
+    path: '/preguntas-frecuentes',
+    surfaces: [
+      '.faq-premium',
+      '.faq-premium__accordion .card',
+      '.faq-premium__trigger-icon',
+      '.faq-premium__accordion .card-body',
+    ],
+  },
+];
+
 const USER = {
   username: process.env.E2E_ORGANIZER_USERNAME,
   password: process.env.E2E_ORGANIZER_PASSWORD,
@@ -34,24 +59,33 @@ function requireOrganizerCredentials() {
 
 async function login(page) {
   requireOrganizerCredentials();
-  await page.goto('/organizer/login', { waitUntil: 'load' });
-  const alreadyIn = await page.evaluate(() => !!document.querySelector('.sidebar'));
-  if (alreadyIn) {
-    return;
+  // Bajo paralelismo la sesión file de Laravel puede perder la carrera de login
+  // (lock de sesión) → reintento + verificación real de sesión antes de continuar.
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await page.goto('/organizer/login', { waitUntil: 'load' });
+    const alreadyIn = await page.evaluate(() => !!document.querySelector('.sidebar'));
+    if (alreadyIn) {
+      return;
+    }
+    // El login usa bindings propietarios; forzamos el setter nativo + evento input
+    await page.evaluate(({ u, p }) => {
+      const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+      const fill = (sel, val) => {
+        const el = document.querySelector(sel);
+        set.call(el, val);
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      };
+      fill('#username', u);
+      fill('#password', p);
+    }, { u: USER.username, p: USER.password });
+    await page.getByRole('button', { name: /Ingresar al panel/i }).click();
+    await page.waitForURL('**/organizer/dashboard', { timeout: 15_000 }).catch(() => {});
+    const authed = await page.evaluate(() => !!document.querySelector('.sidebar'));
+    if (authed) {
+      return;
+    }
   }
-  // El login usa bindings propietarios; forzamos el setter nativo + evento input
-  await page.evaluate(({ u, p }) => {
-    const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-    const fill = (sel, val) => {
-      const el = document.querySelector(sel);
-      set.call(el, val);
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-    };
-    fill('#username', u);
-    fill('#password', p);
-  }, { u: USER.username, p: USER.password });
-  await page.getByRole('button', { name: /Ingresar al panel/i }).click();
-  await page.waitForURL('**/organizer/dashboard', { timeout: 15_000 }).catch(() => {});
+  throw new Error('No se pudo autenticar al organizer (3 intentos, sesión no persistida).');
 }
 
 async function setTheme(page, theme) {
@@ -62,6 +96,50 @@ async function setTheme(page, theme) {
     if (s) s.setAttribute('data-background-color', t === 'dark' ? 'dark2' : 'white');
   }, theme);
   await page.waitForTimeout(200);
+}
+
+async function setPublicTheme(page, theme) {
+  await page.addInitScript((t) => localStorage.setItem('tuki-theme', t), theme);
+  await page.evaluate((t) => {
+    localStorage.setItem('tuki-theme', t);
+    document.documentElement.dataset.theme = t;
+  }, theme).catch(() => {});
+}
+
+async function publicThemeAudit(page, selectors) {
+  return page.evaluate((surfaceSelectors) => {
+    const normalize = (values) => {
+      const rgba = values.map(Number);
+      const rgb = rgba.slice(0, 3).map((n) => (n <= 1 ? n * 255 : n));
+      const alpha = rgba.length > 3 ? rgba[3] : 1;
+      return { rgb, alpha };
+    };
+
+    const brightPaint = (paint) => {
+      const matches = String(paint).match(/(?:rgba?|color\(srgb)\([^)]+\)/g) || [];
+      return matches.some((token) => {
+        const values = token.match(/[\d.]+/g);
+        if (!values || values.length < 3) return false;
+        const { rgb, alpha } = normalize(values);
+        return alpha >= 0.3 && rgb[0] > 238 && rgb[1] > 238 && rgb[2] > 238;
+      });
+    };
+
+    return surfaceSelectors.flatMap((selector) =>
+      Array.from(document.querySelectorAll(selector)).map((el) => {
+        const cs = getComputedStyle(el);
+        const paint = `${cs.backgroundColor} ${cs.backgroundImage}`;
+        return brightPaint(paint)
+          ? {
+              selector,
+              className: el.className.toString().slice(0, 80),
+              backgroundColor: cs.backgroundColor,
+              backgroundImage: cs.backgroundImage.slice(0, 220),
+            }
+          : null;
+      }).filter(Boolean)
+    );
+  }, selectors);
 }
 
 async function themeAudit(page) {
@@ -139,7 +217,27 @@ test('@theme detalle evento dark: entradas no muestran islas claras al interactu
   expect(focused.isLight, `focus/cantidad claro en entrada dark: ${focused.bg}`).toBe(false);
 });
 
+test.describe('@theme contrato theming público', () => {
+  for (const route of PUBLIC_DARK_ROUTES) {
+    test(`${route.name} dark sin islas light`, async ({ page }) => {
+      await setPublicTheme(page, 'dark');
+      await page.goto(route.path, { waitUntil: 'load' });
+      await setPublicTheme(page, 'dark');
+
+      const brightSurfaces = await publicThemeAudit(page, route.surfaces);
+
+      expect(brightSurfaces, `islas claras en dark: ${route.name}`).toEqual([]);
+    });
+  }
+});
+
 test.describe('@theme contrato theming organizer', () => {
+  test.skip(!USER.username || !USER.password, 'Requiere E2E_ORGANIZER_USERNAME y E2E_ORGANIZER_PASSWORD.');
+
+  // Serial: el login usa la sesión file de Laravel (lock por request); con
+  // login concurrente la sesión se pierde bajo carga (flaky verificado).
+  test.describe.configure({ mode: 'serial' });
+
   for (const route of ROUTES) {
     for (const theme of ['light', 'dark']) {
       test(`${route.name} × ${theme} sin islas blancas / azules / texto oscuro`, async ({ page }) => {
@@ -147,6 +245,9 @@ test.describe('@theme contrato theming organizer', () => {
         await login(page);
         await page.goto(route.path, { waitUntil: 'load' });
         await setTheme(page, theme);
+
+        // Presencia real: si el login no persistió (página pública), FALLA.
+        await expect(page.locator('.sidebar')).toBeVisible();
 
         const audit = await themeAudit(page);
 
@@ -160,21 +261,33 @@ test.describe('@theme contrato theming organizer', () => {
     }
   }
 
-  test('@theme sidebar: icono de sub-item activo = token (nunca #1572E8)', async ({ page }) => {
+  test('@theme sidebar: iconos de items activos = token (nunca #1572E8)', async ({ page }) => {
     await login(page);
     await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'load' });
     await setTheme(page, 'dark');
 
+    // Presencia real: si el login no persistió (página pública), FALLA.
+    await expect(page.locator('.sidebar')).toBeVisible();
+
     const colors = await page.evaluate(() => {
       const active = document.querySelector('.sidebar .nav-collapse li.active a i');
+      const activeParent = document.querySelector('.sidebar .nav > .nav-item.active a i');
       const brothers = Array.from(document.querySelectorAll('.sidebar .nav-collapse a i'))
         .filter((i) => i.getBoundingClientRect().width > 0 && !i.closest('li').classList.contains('active'))
         .slice(0, 3)
         .map((i) => getComputedStyle(i).color);
-      return { active: active ? getComputedStyle(active).color : null, brothers };
+      return {
+        active: active ? getComputedStyle(active).color : null,
+        activeParent: activeParent ? getComputedStyle(activeParent).color : null,
+        brothers,
+      };
     });
 
+    // Presencia real (nunca vacuo): si el icono no existe, el test FALLA.
+    expect(colors.active, 'icono de sub-item activo debe existir').toBeTruthy();
+    expect(colors.activeParent, 'icono del item raíz activo debe existir').toBeTruthy();
     expect(colors.active).not.toBe('rgb(21, 114, 232)');
+    expect(colors.activeParent).not.toBe('rgb(21, 114, 232)');
     for (const c of colors.brothers) {
       expect(c).not.toBe('rgb(21, 114, 232)');
     }

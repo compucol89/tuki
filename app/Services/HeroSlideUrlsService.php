@@ -18,7 +18,7 @@ class HeroSlideUrlsService
      */
     public static function build(int $maxSlides = 8): array
     {
-        $cacheKey = 'hero_slide_urls_'.$maxSlides;
+        $cacheKey = 'hero_slide_urls_'.$maxSlides.'_'.request()->getHttpHost();
 
         return Cache::remember($cacheKey, 3600, function () use ($maxSlides) {
             $campaignDir = public_path('assets/front/img/hero-campaign');

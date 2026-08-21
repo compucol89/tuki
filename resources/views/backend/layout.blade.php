@@ -78,18 +78,44 @@
         function currentTheme() {
           return document.documentElement.dataset.theme || 'light';
         }
+        // Tema persistido en DB al renderizar (source of truth para revertir)
+        var serverTheme = currentTheme();
         function applyTheme(theme, persist) {
           document.documentElement.dataset.theme = theme;
           // activar el dark nativo de admin-skin (body[data-background-color="dark"])
           document.body.setAttribute('data-background-color', theme === 'dark' ? 'dark' : 'white');
+          // sincronizar en vivo los contenedores con data-background-color propio
+          document.querySelectorAll('.sidebar, .logo-header').forEach(function (el) {
+            el.setAttribute('data-background-color', theme === 'dark' ? 'dark2' : 'white');
+          });
+          document.querySelectorAll('.navbar-header').forEach(function (el) {
+            el.setAttribute('data-background-color', theme === 'dark' ? 'dark' : 'white');
+          });
           if (persist) {
             try { localStorage.setItem('tuki-theme', theme); } catch (e) { /* noop */ }
+            persistServerTheme(theme);
           }
           document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {
             b.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
             b.setAttribute('aria-label', theme === 'dark'
               ? 'Cambiar a modo claro'
               : 'Cambiar a modo oscuro');
+          });
+        }
+        function persistServerTheme(theme) {
+          var token = document.querySelector('meta[name="csrf-token"]');
+          fetch('{{ route('admin.change_theme') }}', {
+            method: 'POST',
+            headers: token ? { 'X-CSRF-TOKEN': token.getAttribute('content') } : {},
+            body: new URLSearchParams({ admin_theme_version: theme }),
+            credentials: 'same-origin'
+          }).then(function (res) {
+            if (!res.ok) {
+              throw new Error('HTTP ' + res.status);
+            }
+            serverTheme = theme;
+          }).catch(function () {
+            applyTheme(serverTheme, false);
           });
         }
         document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {

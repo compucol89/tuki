@@ -83,13 +83,20 @@
       function currentTheme() {
         return document.documentElement.dataset.theme || 'light';
       }
+      // Tema persistido en DB al renderizar (source of truth para revertir)
+      var serverTheme = currentTheme();
       function applyTheme(theme, persist) {
         document.documentElement.dataset.theme = theme;
         // activar el dark nativo de admin-skin (body[data-background-color="dark"])
         document.body.setAttribute('data-background-color', theme === 'dark' ? 'dark' : 'white');
-        // sincronizar los radios del formulario de theme (DB) con el estado visual
-        document.querySelectorAll('input[name="theme_version"]').forEach(function (r) {
-          r.checked = r.value === theme;
+        // sincronizar en vivo los contenedores con data-background-color propio
+        // (sidebar/logo usan dark2; navbar-header usa dark) — sin esto el menú
+        // quedaba anclado al valor del servidor y no cambiaba al togglear.
+        document.querySelectorAll('.sidebar, .logo-header').forEach(function (el) {
+          el.setAttribute('data-background-color', theme === 'dark' ? 'dark2' : 'white');
+        });
+        document.querySelectorAll('.navbar-header').forEach(function (el) {
+          el.setAttribute('data-background-color', theme === 'dark' ? 'dark' : 'white');
         });
         if (persist) {
           try { localStorage.setItem('tuki-theme', theme); } catch (e) { /* noop */ }
@@ -109,11 +116,14 @@
           headers: token ? { 'X-CSRF-TOKEN': token.getAttribute('content') } : {},
           body: new URLSearchParams({ theme_version: theme }),
           credentials: 'same-origin'
+        }).then(function (res) {
+          if (!res.ok) {
+            throw new Error('HTTP ' + res.status);
+          }
+          serverTheme = theme;
         }).catch(function () {
-          // fallo de red/servidor: revertir a lo persistido en DB (radios)
-          var dbTheme = document.querySelector('input[name="theme_version"]:checked');
-          var fallback = dbTheme ? dbTheme.value : 'light';
-          applyTheme(fallback, false);
+          // fallo de red/servidor: revertir al tema persistido en DB
+          applyTheme(serverTheme, false);
         });
       }
       document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {

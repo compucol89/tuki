@@ -380,10 +380,16 @@ class AdminController extends Controller
 
   public function changeTheme(Request $request)
   {
+    $theme = in_array($request->admin_theme_version, ['light', 'dark'], true) ? $request->admin_theme_version : 'light';
+
     DB::table('basic_settings')->updateOrInsert(
       ['uniqid' => 12345],
-      ['admin_theme_version' => $request->admin_theme_version]
+      ['admin_theme_version' => $theme]
     );
+
+    if ($request->expectsJson() || $request->ajax()) {
+      return response()->json(['ok' => true, 'admin_theme_version' => $theme]);
+    }
 
     return redirect()->back();
   }

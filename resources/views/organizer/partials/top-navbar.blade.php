@@ -30,32 +30,6 @@
     <div class="container-fluid">
       <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
         <li class="nav-item">
-          <form action="{{ route('organizer.change_theme') }}" class="form-inline mr-3" method="POST">
-
-            @csrf
-            <div class="form-group">
-              <div class="selectgroup selectgroup-secondary selectgroup-pills">
-                <label class="selectgroup-item">
-                  <input type="radio" name="theme_version" value="light" class="selectgroup-input"
-                    {{ Auth::guard('organizer')->user()->theme_version == 'light' ? 'checked' : '' }}
-                    aria-label="{{ __('Tema claro') }}"
-                    onchange="this.form.submit()">
-                  <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-sun" aria-hidden="true"></i></span>
-                </label>
-
-                <label class="selectgroup-item">
-                  <input type="radio" name="theme_version" value="dark" class="selectgroup-input"
-                    {{ Auth::guard('organizer')->user()->theme_version == 'dark' ? 'checked' : '' }}
-                    aria-label="{{ __('Tema oscuro') }}"
-                    onchange="this.form.submit()">
-                  <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-moon" aria-hidden="true"></i></span>
-                </label>
-              </div>
-            </div>
-          </form>
-        </li>
-
-        <li class="nav-item">
           <button type="button" class="btn btn-sm btn-secondary mr-2 theme-toggle-panel" data-theme-toggle-panel
             aria-pressed="false" aria-label="{{ __('Cambiar a modo oscuro') }}" title="{{ __('Cambiar tema claro/oscuro') }}">
             <i class="fa fa-moon" aria-hidden="true"></i>

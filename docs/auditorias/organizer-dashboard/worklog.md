@@ -85,3 +85,14 @@
 | 10:15 | Gate extendido: blade_raw_colors + outline_suppression; baseline 5 checks | ✅ PASS |
 | 10:20 | Docs 06-21 (16 archivos) + issues.csv (26 issues) + worklog | ✅ |
 | — | Suites: test:theme 14/14, a11y dashboard 2/2, audit PASS | ✅ |
+
+## Corrección post-reauditoría (2026-08-21 noche) — toggle de tema
+
+| Trabajo | Resultado |
+|---------|-----------|
+| Radios de tema eliminados del topbar (organizer + backend) — redundantes con el toggle | ✅ un solo control |
+| applyTheme sincroniza .sidebar/.logo-header/.navbar-header en vivo (dark2/white, dark/white) | ✅ menú cambia al instante |
+| persistServerTheme con serverTheme como fallback de red (sin radios) | ✅ revert consistente |
+| AdminController@changeTheme whitelist + JSON | ✅ |
+| Verificado: dark→light y light→dark con sidebar cambiando; reload coherente; DB sync | ✅ |
+| Suites: @theme 14/14, a11y dashboard 2/2, audit PASS | ✅ |

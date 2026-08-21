@@ -1,0 +1,191 @@
+=== Git Baseline ===
+Date: 2026-08-21T07:58:25Z
+Branch: remediation/audit-2026-08-21
+HEAD: 93466da9eccee9449847bef65ca1b09f8362b0f4
+
+=== Modified Files ===
+ M PENDIENTES.md
+ M app/Http/Controllers/Controller.php
+ M app/Http/Controllers/FrontEnd/BlogController.php
+ M app/Http/Controllers/FrontEnd/EventController.php
+ M app/Http/Controllers/FrontEnd/OrganizerController.php
+ M app/Models/Organizer.php
+ M package-lock.json
+ M package.json
+ M public/assets/admin/css/admin-main.css
+ M public/assets/admin/css/admin-skin.css
+ M public/assets/admin/css/atlantis.css
+ M public/assets/admin/css/event-form-modern.css
+ M public/assets/admin/css/responsive.css
+ M public/assets/admin/css/theme-dark.css
+ M public/assets/admin/js/chart-init.js
+ M public/assets/front/css/event-detail.css
+ M public/assets/front/css/event-detail.min.css
+ M public/assets/front/css/organizer.min.css
+ M public/assets/front/css/responsive.css
+ M public/assets/front/css/style.css
+ M public/assets/front/css/style.min.css
+ M public/css/app.css
+ M public/css/fontawesome.css
+ M public/js/app.js
+ M public/mix-manifest.json
+ M resources/css/app.css
+ M resources/lang/admin.json
+ M resources/views/backend/forget-password.blade.php
+ M resources/views/backend/reset-password.blade.php
+ M resources/views/frontend/event/event.blade.php
+ M resources/views/frontend/journal/blog-details.blade.php
+ M resources/views/frontend/journal/blogs.blade.php
+ M resources/views/frontend/layout.blade.php
+ M resources/views/frontend/organizer/login.blade.php
+ M resources/views/organizer/change-password.blade.php
+ M resources/views/organizer/edit-profile.blade.php
+ M resources/views/organizer/event/booking/details.blade.php
+ M resources/views/organizer/event/booking/index.blade.php
+ M resources/views/organizer/event/booking/report.blade.php
+ M resources/views/organizer/event/create.blade.php
+ M resources/views/organizer/event/edit.blade.php
+ M resources/views/organizer/event/event_type.blade.php
+ M resources/views/organizer/event/index.blade.php
+ M resources/views/organizer/event/ticket-settings.blade.php
+ M resources/views/organizer/event/ticket/create.blade.php
+ M resources/views/organizer/event/ticket/edit.blade.php
+ M resources/views/organizer/event/ticket/index.blade.php
+ M resources/views/organizer/income.blade.php
+ M resources/views/organizer/index.blade.php
+ M resources/views/organizer/layout.blade.php
+ M resources/views/organizer/partials/scripts.blade.php
+ M resources/views/organizer/partials/side-navbar.blade.php
+ M resources/views/organizer/partials/top-navbar.blade.php
+ M resources/views/organizer/support_ticket/create.blade.php
+ M resources/views/organizer/support_ticket/index.blade.php
+ M resources/views/organizer/support_ticket/messages.blade.php
+ M resources/views/organizer/telegram-bot/index.blade.php
+ M resources/views/organizer/transaction.blade.php
+ M resources/views/organizer/verify.blade.php
+ M resources/views/organizer/withdraw/create.blade.php
+ M resources/views/organizer/withdraw/index.blade.php
+ M resources/views/partials/event-canonical-refund-policy.blade.php
+ M resources/views/partials/event-venue-location.blade.php
+ M resources/views/partials/free-ticket-limit.blade.php
+ M skills-lock.json
+ M tests/Unit/Services/PublicBusinessMetricsServiceTest.php
+?? .env.bak-audit-1787271406
+?? app/Console/Commands/FixCorruptedEventDates.php
+?? app/Console/Commands/PurgeDemoBlogPosts.php
+?? app/Support/EventPublicWindow.php
+?? dashboard-snapshot.md
+?? docs/ai-llm-seo/
+?? docs/arca/
+?? docs/auditoria-a11y-dashboard-organizer.md
+?? docs/auditorias/organizer-dashboard/
+?? docs/bots-seo-ia/
+?? docs/cdnjs/
+?? docs/design-system/
+?? docs/docs-google-search/
+?? docs/easypanel/
+?? docs/email-promocional/
+?? docs/email-transaccional/
+?? docs/fontawesome/
+?? docs/fontsource/
+?? docs/google-calendar/
+?? docs/htmlpurifier/
+?? docs/laravel_12/
+?? docs/lighthouse/
+?? docs/mercadopago/
+?? docs/meta-webmasters/
+?? docs/metapixel/
+?? docs/ogp/
+?? docs/pdf-tickets-export/
+?? docs/recaptcha/
+?? docs/socialite/
+?? docs/stweakcn/
+?? docs/superpowers/plans/2026-06-03-openai-event-ai-images.md
+?? docs/superpowers/plans/2026-07-23-organizer-profile-builder.md
+?? docs/superpowers/specs/2026-06-03-openai-event-ai-images-design.md
+?? docs/superpowers/specs/2026-06-08-event-detail-section-redesign.md
+?? docs/superpowers/specs/2026-06-18-event-booking-list-redesign.md
+?? docs/superpowers/specs/2026-07-23-organizer-profile-builder-design.md
+?? docs/unlighthouse/
+?? docs/web-push-pwa/
+?? docs/webp/
+?? opencode.json
+?? playwright.config.js
+?? public/assets/admin/img/.seed-restored
+?? public/assets/front/css/theme-dark-quiet.css
+?? public/fonts/vendor/@fontsource/ibm-plex-mono/
+?? storage/fonts/
+?? tests/Feature/BlogCategoryCountsTest.php
+?? tests/Feature/BlogDemoPurgeTest.php
+?? tests/Feature/EventPublishingTest.php
+?? tests/Feature/ProductionDataIntegrityTest.php
+?? tests/Feature/PublicOrganizerScopeTest.php
+
+=== Diff Stat ===
+ PENDIENTES.md                                      |     1 +
+ app/Http/Controllers/Controller.php                |     7 +-
+ app/Http/Controllers/FrontEnd/BlogController.php   |     3 +-
+ app/Http/Controllers/FrontEnd/EventController.php  |     4 +-
+ .../Controllers/FrontEnd/OrganizerController.php   |    15 +-
+ app/Models/Organizer.php                           |    13 +-
+ package-lock.json                                  |    98 +
+ package.json                                       |     3 +
+ public/assets/admin/css/admin-main.css             |     8 +-
+ public/assets/admin/css/admin-skin.css             |   437 +-
+ public/assets/admin/css/atlantis.css               |    11 +-
+ public/assets/admin/css/event-form-modern.css      |     2 +-
+ public/assets/admin/css/responsive.css             |    14 +-
+ public/assets/admin/css/theme-dark.css             |    84 +-
+ public/assets/admin/js/chart-init.js               |   194 +-
+ public/assets/front/css/event-detail.css           |    47 +-
+ public/assets/front/css/event-detail.min.css       |   182 +-
+ public/assets/front/css/organizer.min.css          |     2 +-
+ public/assets/front/css/responsive.css             |     6 +-
+ public/assets/front/css/style.css                  |    22 +-
+ public/assets/front/css/style.min.css              |     2 +-
+ public/css/app.css                                 |     4 +
+ public/css/fontawesome.css                         |     2 +-
+ public/js/app.js                                   | 19755 ++++++++++++++++++-
+ public/mix-manifest.json                           |     6 +-
+ resources/css/app.css                              |     6 +
+ resources/lang/admin.json                          |     6 +-
+ resources/views/backend/forget-password.blade.php  |     3 -
+ resources/views/backend/reset-password.blade.php   |     3 -
+ resources/views/frontend/event/event.blade.php     |     5 +
+ .../views/frontend/journal/blog-details.blade.php  |    10 -
+ resources/views/frontend/journal/blogs.blade.php   |    11 +-
+ resources/views/frontend/layout.blade.php          |     6 +-
+ resources/views/frontend/organizer/login.blade.php |    55 +-
+ .../views/organizer/change-password.blade.php      |    20 +-
+ resources/views/organizer/edit-profile.blade.php   |    56 +-
+ .../organizer/event/booking/details.blade.php      |     2 +-
+ .../views/organizer/event/booking/index.blade.php  |    26 +-
+ .../views/organizer/event/booking/report.blade.php |    12 +-
+ resources/views/organizer/event/create.blade.php   |   188 +-
+ resources/views/organizer/event/edit.blade.php     |   195 +-
+ .../views/organizer/event/event_type.blade.php     |     4 +-
+ resources/views/organizer/event/index.blade.php    |    20 +-
+ .../organizer/event/ticket-settings.blade.php      |    10 +-
+ .../views/organizer/event/ticket/create.blade.php  |    89 +-
+ .../views/organizer/event/ticket/edit.blade.php    |    63 +-
+ .../views/organizer/event/ticket/index.blade.php   |    29 +-
+ resources/views/organizer/income.blade.php         |    14 +-
+ resources/views/organizer/index.blade.php          |    45 +-
+ resources/views/organizer/layout.blade.php         |     7 +-
+ .../views/organizer/partials/scripts.blade.php     |    75 +
+ .../views/organizer/partials/side-navbar.blade.php |   152 +-
+ .../views/organizer/partials/top-navbar.blade.php  |    26 +-
+ .../organizer/support_ticket/create.blade.php      |     8 +-
+ .../views/organizer/support_ticket/index.blade.php |    15 +-
+ .../organizer/support_ticket/messages.blade.php    |     8 +-
+ .../views/organizer/telegram-bot/index.blade.php   |     2 +-
+ resources/views/organizer/transaction.blade.php    |    35 +-
+ resources/views/organizer/verify.blade.php         |     6 +-
+ .../views/organizer/withdraw/create.blade.php      |    10 +-
+ resources/views/organizer/withdraw/index.blade.php |    32 +-
+ .../event-canonical-refund-policy.blade.php        |     2 +-
+ .../views/partials/event-venue-location.blade.php  |     8 +-
+ .../views/partials/free-ticket-limit.blade.php     |     4 +-
+ skills-lock.json                                   |    48 +
+ .../Services/PublicBusinessMetricsServiceTest.php  |     4 +-
+ 66 files changed, 21449 insertions(+), 793 deletions(-)

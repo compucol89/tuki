@@ -20,16 +20,7 @@
   $pageTitle       = !empty($pageHeading) ? ($pageHeading->blog_page_title ?? __('Blog')) : __('Blog');
   $activeCategory  = request()->input('category', '');
   $searchTitle     = request()->input('title', '');
-  $demoBlogSlugs = [
-    'vivamus-vestibulum', 'vestibulum-commodo', 'nam-dui-mi',
-    'phasellus-ultrices', 'donec-nec-justo', 'morbi-in-sem',
-  ];
-  $isDemoBlog = function ($slug) use ($demoBlogSlugs) {
-    return isset($slug) && \Illuminate\Support\Str::startsWith($slug, $demoBlogSlugs);
-  };
-  $visibleBlogs = collect($blogs->items())->reject(function ($blog) use ($isDemoBlog) {
-    return $isDemoBlog($blog->slug);
-  })->values();
+  $visibleBlogs = collect($blogs->items());
   $blogSchemaPosts = $visibleBlogs->map(function ($blog) {
     return array_filter([
       '@type' => 'BlogPosting',

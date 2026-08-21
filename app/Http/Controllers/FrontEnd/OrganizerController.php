@@ -51,12 +51,15 @@ class OrganizerController extends Controller
     $locationIds = [];
     if ($request->filled('location')) {
       $location = $request->location;
-      $organizer_infos = OrganizerInfo::where('city', 'like', '%' . $location . '%')
-        ->orWhere('state', 'like', '%' . $location . '%')
-        ->orWhere('country', 'like', '%' . $location . '%')
-        ->orWhere('address', 'like', '%' . $location . '%')
-        ->where('language_id', $language->id)
-        ->get();
+      $organizer_infos = OrganizerInfo::where(function ($q) use ($location, $language) {
+        $q->where('language_id', $language->id)
+          ->where(function ($q2) use ($location) {
+            $q2->where('city', 'like', '%' . $location . '%')
+              ->orWhere('state', 'like', '%' . $location . '%')
+              ->orWhere('country', 'like', '%' . $location . '%')
+              ->orWhere('address', 'like', '%' . $location . '%');
+          });
+      })->get();
       foreach ($organizer_infos as $info) {
         if (!in_array($info->organizer_id, $locationIds)) {
           array_push($locationIds, $info->organizer_id);

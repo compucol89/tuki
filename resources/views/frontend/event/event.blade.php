@@ -340,6 +340,11 @@
         <p>{{ $evf_has_filters ? __('No se encontraron eventos con esos filtros') : __('No hay eventos publicados por ahora') }}</p>
         @if ($evf_has_filters)
           <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Limpiar filtros') }}</a>
+        @else
+          <div class="ev-empty__actions">
+            <a href="{{ route('organizer.signup') }}" class="hs-chip hs-chip--active">{{ __('Publicar un evento') }}</a>
+            <a href="{{ route('contact') }}" class="hs-chip">{{ __('Recibir novedades') }}</a>
+          </div>
         @endif
       </div>
     @endif

@@ -153,9 +153,7 @@ class EventController extends Controller
       ->when($keyword, function ($query, $keyword) {
         return $query->where('event_contents.title', 'like', '%' . $keyword . '%');
       })
-      ->where('events.status', 1)
-      ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
-      ->where('events.end_date_time', '>=', $this->now_date_time)
+      ->tap(fn ($q) => \App\Support\EventPublicWindow::apply($q, $this->now_date_time))
       ->select('events.*', 'event_contents.title', 'event_contents.description', 'event_contents.city', 'event_contents.state', 'event_contents.country', 'event_contents.address', 'event_contents.zip_code', 'event_contents.slug',
         'tk.ticket_count', 'tk.min_price', 'tk.has_free', 'tk.has_paid',
         'organizers.id as org_id', 'organizers.username as org_username')

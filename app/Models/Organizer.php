@@ -62,15 +62,19 @@ class Organizer extends Model implements AuthenticatableContract
 
   /**
    * Organizadores elegibles para el directorio público (/organizadores):
-   * cumplen todos los pasos obligatorios del perfil (foto, portada, nombre,
-   * descripción >= 80, ubicación, redes, email verificado y mínimo un
-   * evento publicado ya realizado).
+   * perfil completo (foto, portada, nombre, descripción >= 80, ubicación,
+   * redes, email verificado) y correo de operación válido.
+   * Decisión 2026-08-21 (F-005): ya NO se exige evento publicado y realizado.
    */
   public function scopeListable($query)
   {
     return $query->whereNotNull('photo')
       ->whereNotNull('cover_photo')
       ->whereNotNull('email_verified_at')
+      ->where(function ($email) {
+        $email->where('email', 'not like', '%@test.%')
+          ->where('email', 'not like', '%@example.%');
+      })
       ->where(function ($social) {
         $social->whereNotNull('website')
           ->orWhereNotNull('instagram')
@@ -89,9 +93,6 @@ class Organizer extends Model implements AuthenticatableContract
               ->orWhereNotNull('country')
               ->orWhereNotNull('address');
           });
-      })
-      ->whereHas('events', function ($event) {
-        $event->where('status', 1)->where('end_date', '<', now());
       });
   }
 }

@@ -67,7 +67,7 @@ class PublicBusinessMetricsServiceTest extends TestCase
   public function test_organizers_active_uses_relaxed_listable_policy(): void
   {
     $this->insert('organizers', [
-      'id' => 1, 'username' => 'organizador-real', 'email' => 'real@example.com', 'password' => 'x',
+      'id' => 1, 'username' => 'organizador-real', 'email' => 'real@dominio.com', 'password' => 'x',
       'photo' => 'foto.jpg', 'cover_photo' => 'portada.jpg',
       'email_verified_at' => now(), 'website' => 'https://ejemplo.com',
     ]);
@@ -78,7 +78,7 @@ class PublicBusinessMetricsServiceTest extends TestCase
     ]);
 
     $this->insert('organizers', [
-      'id' => 2, 'username' => 'sin-email', 'email' => 'x@example.com', 'password' => 'x',
+      'id' => 2, 'username' => 'sin-email', 'email' => 'x@dominio.com', 'password' => 'x',
       'photo' => 'foto.jpg', 'cover_photo' => 'portada.jpg', 'website' => 'https://ejemplo.com',
     ]);
     $this->insert('organizer_infos', [

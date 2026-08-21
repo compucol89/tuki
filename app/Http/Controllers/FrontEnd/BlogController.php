@@ -102,7 +102,8 @@ class BlogController extends Controller
   {
     $categories = $language->blogCategory()->where('status', 1)->orderBy('serial_number', 'asc')->get();
 
-    $blogCounts = BlogInformation::selectRaw('blog_category_id, COUNT(*) as count')
+    $blogCounts = BlogInformation::where('language_id', $language->id)
+      ->selectRaw('blog_category_id, COUNT(*) as count')
       ->groupBy('blog_category_id')
       ->pluck('count', 'blog_category_id');
 

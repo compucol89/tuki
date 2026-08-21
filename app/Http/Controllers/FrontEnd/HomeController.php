@@ -305,11 +305,10 @@ class HomeController extends Controller
       $queryResult['aboutMetrics'] = app(\App\Services\PublicBusinessMetricsService::class)->forAboutPage($language->id);
 
       if ($sectionInfo->testimonials_section_status == 1) {
-      $queryResult['testimonialData'] = Cache::remember('testimonial_section_' . $language->id, 3600, fn () => TestimonialSection::where('language_id', $language->id)->first());
+        $queryResult['testimonialData'] = Cache::remember('testimonial_section_' . $language->id, 3600, fn () => TestimonialSection::where('language_id', $language->id)->first());
 
         $queryResult['testimonials'] = Testimonial::where('language_id', $language->id)
-          ->where('published', true)
-          ->where('verified', true)
+          ->publiclyVisible()
           ->orderBy('serial_number', 'asc')
           ->get();
       }

@@ -17,7 +17,37 @@ class Testimonial extends Model
    *
    * @var array
    */
-  protected $fillable = ['language_id', 'image', 'name', 'occupation', 'comment', 'serial_number', 'rating'];
+  protected $fillable = [
+    'language_id',
+    'image',
+    'name',
+    'occupation',
+    'comment',
+    'serial_number',
+    'rating',
+    'published',
+    'verified',
+    'consent',
+    'verified_at',
+    'verified_by',
+    'source',
+    'original_text',
+  ];
+
+  protected $casts = [
+    'published' => 'boolean',
+    'verified' => 'boolean',
+    'consent' => 'boolean',
+    'verified_at' => 'datetime',
+  ];
+
+  public function scopePubliclyVisible($query)
+  {
+    return $query
+      ->where('published', true)
+      ->where('verified', true)
+      ->where('consent', true);
+  }
 
   public function language()
   {

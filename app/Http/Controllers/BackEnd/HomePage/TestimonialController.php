@@ -90,7 +90,14 @@ class TestimonialController extends Controller
     $imageName = UploadFile::store(public_path('assets/admin/img/clients/'), $request->file('image'));
 
     Testimonial::create($request->except('image') + [
-      'image' => $imageName
+      'image' => $imageName,
+      'published' => true,
+      'verified' => true,
+      'consent' => true,
+      'verified_at' => now(),
+      'verified_by' => 'admin:' . (auth('admin')->id() ?? 'unknown'),
+      'source' => 'admin_homepage_testimonial',
+      'original_text' => $request->comment,
     ]);
 
     Session::flash('success', __('admin.flash.added_successfully'));
@@ -107,7 +114,14 @@ class TestimonialController extends Controller
     }
 
     $testimonial->update($request->except('image') + [
-      'image' => $request->hasFile('image') ? $imageName : $testimonial->image
+      'image' => $request->hasFile('image') ? $imageName : $testimonial->image,
+      'published' => true,
+      'verified' => true,
+      'consent' => true,
+      'verified_at' => $testimonial->verified_at ?: now(),
+      'verified_by' => $testimonial->verified_by ?: 'admin:' . (auth('admin')->id() ?? 'unknown'),
+      'source' => $testimonial->source ?: 'admin_homepage_testimonial',
+      'original_text' => $testimonial->original_text ?: $request->comment,
     ]);
 
     Session::flash('success', __('admin.flash.updated_successfully'));

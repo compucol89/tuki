@@ -71,7 +71,7 @@
           @php
             $aboutMetrics = $aboutMetrics ?? config('about_metrics', []);
           @endphp
-          <div class="row align-items-stretch about-section__split">
+          <div class="row align-items-start about-section__split">
             <div class="col-lg-6 about-metrics-column">
               @if (!empty($aboutMetrics['enabled']) && !empty($aboutMetrics['stats']))
                 @php
@@ -236,6 +236,17 @@
 
   <!-- Testimonial Section Start -->
   @if ($secInfo->testimonials_section_status == 1)
+    @php
+      $publicTestimonialsCount = is_countable($testimonials ?? null) ? count($testimonials) : 0;
+      $publicTestimonialsSummary = null;
+      if ($publicTestimonialsCount === 1) {
+        $publicTestimonialsSummary = __('about_testimonials_public_summary_one');
+      } elseif ($publicTestimonialsCount > 1) {
+        $publicTestimonialsSummary = __('about_testimonials_public_summary_many', [
+          'count' => number_format($publicTestimonialsCount, 0, ',', '.'),
+        ]);
+      }
+    @endphp
     <section class="testimonial-section about-page__band about-page__band--surface-a" id="testimonios"
       aria-labelledby="about-testimonials-heading">
       <div class="container">
@@ -246,19 +257,21 @@
                 <h2 id="about-testimonials-heading">{{ $testimonialData ? $testimonialData->title : __('What say our client about us') }}</h2>
               </div>
               <p>{{ $testimonialData ? $testimonialData->text : '' }}</p>
-              <div class="total-client-reviews mt-40 bg-lighter">
-                <div class="review-images mb-30">
-                  @if (!is_null($testimonialData))
-                    <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/' . $testimonialData->image) }}"
-                      alt="{{ __('Reseña destacada') }}" loading="lazy">
-                  @else
-                    <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/clients.png') }}"
-                      alt="{{ __('Reseña destacada') }}" loading="lazy">
-                  @endif
-                  <span class="pluse"><i class="fas fa-plus"></i></span>
+              @if ($publicTestimonialsSummary)
+                <div class="total-client-reviews mt-40 bg-lighter">
+                  <div class="review-images mb-30">
+                    @if (!is_null($testimonialData))
+                      <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/' . $testimonialData->image) }}"
+                        alt="{{ __('Reseña destacada') }}" loading="lazy">
+                    @else
+                      <img class="lazy" data-src="{{ asset('assets/admin/img/testimonial/clients.png') }}"
+                        alt="{{ __('Reseña destacada') }}" loading="lazy">
+                    @endif
+                    <span class="pluse"><i class="fas fa-plus"></i></span>
+                  </div>
+                  <p class="h6">{{ $publicTestimonialsSummary }}</p>
                 </div>
-                <p class="h6">{{ $testimonialData ? $testimonialData->review_text : __('0 Clients Reviews') }}</p>
-              </div>
+              @endif
             </div>
           </div>
           <div class="col-lg-8">
@@ -287,7 +300,10 @@
                   @endforeach
                 </div>
               @else
-                <p class="h4 text-center">{{ __('No Review Found') }}</p>
+                <div class="testimonial-empty" role="status">
+                  <p class="testimonial-empty__title">{{ __('about_testimonials_empty_title') }}</p>
+                  <p class="testimonial-empty__text">{{ __('about_testimonials_empty_text') }}</p>
+                </div>
               @endif
             </div>
           </div>
@@ -544,14 +560,14 @@ body.about-page .about-page-banner__crumbs .breadcrumb-item.active {
   font-family: var(--heading-font);
 }
 
-body.about-page main#contenido-principal > section.about-page__band {
+body.about-page #contenido-principal > section.about-page__band {
   margin: 0;
   padding-top: var(--about-band-space);
   padding-bottom: var(--about-band-space);
 }
 
 @media (max-width: 767.98px) {
-  body.about-page main#contenido-principal > section.about-page__band {
+  body.about-page #contenido-principal > section.about-page__band {
     padding-top: var(--about-band-space-mobile);
     padding-bottom: var(--about-band-space-mobile);
   }
@@ -566,7 +582,7 @@ body.about-page .about-page__band--surface-b {
   border-top: 1px solid var(--about-ds-border-hair);
 }
 
-body.about-page main#contenido-principal > section.about-page__band:first-of-type {
+body.about-page #contenido-principal > section.about-page__band:first-of-type {
   border-top: none;
 }
 
@@ -798,6 +814,32 @@ body.about-page .about-page__testimonial-aside {
   margin-bottom: 0;
 }
 
+body.about-page .testimonial-empty {
+  max-width: 34rem;
+  margin-inline: auto;
+  padding: 1.5rem;
+  border-radius: var(--about-ds-radius-md);
+  border: 1px solid var(--about-ds-border);
+  background: var(--card);
+  box-shadow: var(--about-ds-shadow-organizer);
+}
+
+body.about-page .testimonial-empty__title {
+  margin: 0;
+  font-family: var(--heading-font);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--heading-color);
+}
+
+body.about-page .testimonial-empty__text {
+  margin: 0.75rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--about-ds-text-secondary);
+}
+
 @media (max-width: 991px) {
   body.about-page .about-page__testimonial-aside {
     margin-bottom: var(--about-section-head-space);
@@ -849,33 +891,22 @@ body.about-page .about-page__testimonial-aside {
   margin-inline: auto;
 }
 
-/* Dos columnas: misma altura en lg+ (stretch + flex); misma “cápsula” que .about-story-premium */
+/* Dos columnas: alto por contenido; evita reservar aire muerto cuando una columna trae menos contenido CMS. */
 @media (min-width: 992px) {
   #contenido-principal-sobre-nosotros .about-section__split {
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   #contenido-principal-sobre-nosotros .about-metrics-column,
   #contenido-principal-sobre-nosotros .about-story-column {
-    display: flex;
-    flex-direction: column;
+    display: block;
   }
 
   #contenido-principal-sobre-nosotros .about-metrics--dashboard,
   #contenido-principal-sobre-nosotros .about-story-premium {
-    flex: 1 1 auto;
     width: 100%;
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  #contenido-principal-sobre-nosotros .about-metrics__bento {
-    flex: 1 1 auto;
-  }
-
-  #contenido-principal-sobre-nosotros .about-metrics__footer {
-    margin-top: auto;
+    min-height: 0;
+    display: block;
   }
 }
 
@@ -928,7 +959,7 @@ body.about-page .about-page__testimonial-aside {
 
 #contenido-principal-sobre-nosotros .about-metrics__hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1rem, 2.5vw, 1.5rem);
   align-items: stretch;
   padding: clamp(1.15rem, 2.5vw, 1.45rem);
@@ -1727,6 +1758,63 @@ html[dir="rtl"] #contenido-principal-sobre-nosotros .about-story-premium::after 
   font-size: 0.96rem;
   line-height: 1.68;
   color: var(--muted-foreground);
+}
+
+html[data-theme="dark"] body.about-page {
+  --about-ds-inset-highlight: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  --about-ds-shadow-card: var(--about-ds-inset-highlight),
+    0 24px 52px -28px rgba(0, 0, 0, 0.42),
+    0 8px 24px -18px rgba(0, 0, 0, 0.36);
+  --about-ds-shadow-card-soft: var(--about-ds-inset-highlight),
+    0 22px 50px -30px rgba(0, 0, 0, 0.44),
+    0 6px 18px -12px rgba(0, 0, 0, 0.34);
+  --about-ds-shadow-organizer:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 14px 32px rgba(0, 0, 0, 0.18);
+  --about-ds-shadow-organizer-hover:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 18px 40px rgba(0, 0, 0, 0.24);
+  --about-ds-accent-wash: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+html[data-theme="dark"] #contenido-principal-sobre-nosotros .about-metrics--dashboard {
+  background:
+    radial-gradient(ellipse 120% 80% at 100% -15%, color-mix(in srgb, var(--primary) 10%, transparent), transparent 52%),
+    linear-gradient(165deg, color-mix(in srgb, var(--card) 94%, var(--background)) 0%, var(--card) 48%, color-mix(in srgb, var(--card) 88%, var(--muted)) 100%);
+}
+
+html[data-theme="dark"] body.about-page .about-organizer-pitch__pullquote {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 12%, var(--card)) 0%, color-mix(in srgb, var(--card) 92%, var(--background)) 100%);
+  border-color: color-mix(in srgb, var(--primary) 28%, transparent);
+  border-left-color: var(--primary);
+}
+
+html[data-theme="dark"] #contenido-principal-sobre-nosotros .about-metrics__spark-block,
+html[data-theme="dark"] #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item,
+html[data-theme="dark"] .about-page #caracteristicas .feature-item.feature-item--about-premium {
+  background: linear-gradient(165deg, color-mix(in srgb, var(--card) 96%, var(--background)) 0%, color-mix(in srgb, var(--card) 88%, var(--muted)) 100%);
+  border-color: var(--about-ds-border);
+  box-shadow: var(--about-ds-shadow-card-soft);
+}
+
+html[data-theme="dark"] #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item .feature-item__icon,
+html[data-theme="dark"] #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item > i,
+html[data-theme="dark"] .about-page #caracteristicas .feature-item--about-premium .feature-item__icon {
+  background: linear-gradient(155deg, color-mix(in srgb, var(--primary) 10%, var(--card)) 0%, color-mix(in srgb, var(--primary) 18%, var(--card)) 100%) !important;
+  border-color: color-mix(in srgb, var(--primary) 24%, transparent) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 24px -16px color-mix(in srgb, var(--primary) 40%, transparent) !important;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html[data-theme="dark"] .about-page #caracteristicas .feature-item--about-premium:hover,
+  html[data-theme="dark"] #contenido-principal-sobre-nosotros .about-content--premium .about-content__body .feature-item:hover {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.08) inset,
+      0 28px 56px -30px rgba(0, 0, 0, 0.46),
+      0 12px 28px -18px color-mix(in srgb, var(--primary) 20%, transparent);
+  }
 }
 
 @media (max-width: 767.98px) {

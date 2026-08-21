@@ -336,19 +336,36 @@
                   $partnerImagePath = 'assets/admin/img/partner/' . $partnerImage;
                   $cleanPartnerImagePath = 'assets/front/img/partner-logos/' . $partnerImage;
                   $partnerImageUrl = asset($partnerImagePath);
+                  $partnerImageSrcset = '';
 
                   if ($partnerImage !== '' && is_file(public_path($cleanPartnerImagePath))) {
                     $partnerImageVersion = substr(md5_file(public_path($cleanPartnerImagePath)), 0, 12);
                     $partnerImageUrl = asset($cleanPartnerImagePath) . '?v=' . $partnerImageVersion;
+
+                    $partnerImage2xPath = preg_replace('/(\.[^.]+)$/', '@2x$1', $cleanPartnerImagePath);
+                    $partnerImage3xPath = preg_replace('/(\.[^.]+)$/', '@3x$1', $cleanPartnerImagePath);
+                    $partnerImageSrcsetCandidates = [];
+
+                    if (is_file(public_path($partnerImage2xPath))) {
+                      $partnerImage2xVersion = substr(md5_file(public_path($partnerImage2xPath)), 0, 12);
+                      $partnerImageSrcsetCandidates[] = asset($partnerImage2xPath) . '?v=' . $partnerImage2xVersion . ' 2x';
+                    }
+
+                    if (is_file(public_path($partnerImage3xPath))) {
+                      $partnerImage3xVersion = substr(md5_file(public_path($partnerImage3xPath)), 0, 12);
+                      $partnerImageSrcsetCandidates[] = asset($partnerImage3xPath) . '?v=' . $partnerImage3xVersion . ' 3x';
+                    }
+
+                    $partnerImageSrcset = implode(', ', $partnerImageSrcsetCandidates);
                   }
                 @endphp
                 @if ($partnerUrl !== '')
                   <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
                     aria-label="{{ __('Visitar sitio del aliado estratégico') }}"><img class="lazy"
-                      data-src="{{ $partnerImageUrl }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></a>
+                      data-src="{{ $partnerImageUrl }}" @if ($partnerImageSrcset !== '') data-srcset="{{ $partnerImageSrcset }}" @endif alt="{{ __('Logo de aliado') }}" loading="lazy"></a>
                 @else
                   <span><img class="lazy"
-                      data-src="{{ $partnerImageUrl }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></span>
+                      data-src="{{ $partnerImageUrl }}" @if ($partnerImageSrcset !== '') data-srcset="{{ $partnerImageSrcset }}" @endif alt="{{ __('Logo de aliado') }}" loading="lazy"></span>
                 @endif
               </div>
             @endforeach

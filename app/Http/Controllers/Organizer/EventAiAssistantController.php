@@ -107,7 +107,9 @@ class EventAiAssistantController extends Controller
         ], 422);
       }
 
-      $analysis = $assistant->analyzeFlyer($imagePath, $formFacts);
+      $analysis = app(\App\Services\OpenAI\EventAI\EventAiOrchestrator::class)->isEnabled()
+        ? app(\App\Services\OpenAI\EventAI\EventAiOrchestrator::class)->extract($imagePath, $formFacts)
+        : $assistant->analyzeFlyer($imagePath, $formFacts);
     } catch (OpenAiNonRetryableException $e) {
       return response()->json([
         'error' => 'ai_analysis_failed',
@@ -127,30 +129,69 @@ class EventAiAssistantController extends Controller
     $draftError = null;
 
     if ($request->boolean('generate_content', false)) {
-      try {
-        $generated = $this->generateContentWithQualityGate($assistant, $canonicalFacts, $this->temporaryPreferences($request));
-        $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
-        $audit = $generated['audit'] ?? [];
-        $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
-        $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
+      $v3 = app(\App\Services\OpenAI\EventAI\EventAiOrchestrator::class);
+      if ($v3->isEnabled()) {
+        try {
+          $factsV3 = app(\App\Services\EventAi\CanonicalEventFactsBuilder::class)->buildFromTemporary(
+            $formFacts,
+            $analysis,
+            [
+              'price' => $request->filled('pricing_type') ? null : $request->input('price'),
+              'pricing_type' => $request->filled('pricing_type') ? 'free' : null,
+            ],
+          );
 
-        $draft = [
-          'id' => null,
-          'status' => 'temporary',
-          'needs_human_review' => $needsHumanReview,
-          'audit_status' => EventAiContentDraft::normalizeAuditStatus(
-            $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed'))
-          ),
-          'generated_payload' => $generated,
-          'audit_payload' => array_merge($audit, ['moderation' => $moderation]),
-        ];
-      } catch (OpenAiNonRetryableException $e) {
-        $draftError = $e->getMessage();
-      } catch (RuntimeException $e) {
-        $draftError = 'La IA devolvió una propuesta incompleta y no la aplicamos. Probá ajustar las preferencias o volver a generar el evento.';
-      } catch (Throwable $e) {
-        report($e);
-        $draftError = 'No pudimos generar el copy y SEO en este momento. Podés aplicar los datos detectados y completar el texto manualmente.';
+          $generated = $v3->generate($factsV3, $this->temporaryPreferences($request), $formFacts['category'] ?? '', $formFacts['event_type'] ?? 'venue');
+
+          $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
+          $audit = $generated['audit'] ?? [];
+          $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
+          $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
+
+          $draft = [
+            'id' => null,
+            'status' => 'temporary',
+            'needs_human_review' => $needsHumanReview,
+            'audit_status' => EventAiContentDraft::normalizeAuditStatus(
+              $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed'))
+            ),
+            'generated_payload' => $generated,
+            'audit_payload' => array_merge($audit, ['moderation' => $moderation]),
+          ];
+        } catch (OpenAiNonRetryableException $e) {
+          $draftError = $e->getMessage();
+        } catch (RuntimeException $e) {
+          $draftError = 'El pipeline V3 no completó la propuesta: ' . $e->getMessage();
+        } catch (Throwable $e) {
+          report($e);
+          $draftError = 'No pudimos generar el copy y SEO en este momento. Intentá de nuevo en unos minutos.';
+        }
+      } else {
+        try {
+          $generated = $this->generateContentWithQualityGate($assistant, $canonicalFacts, $this->temporaryPreferences($request));
+          $moderation = $assistant->moderateText(json_encode($generated, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '');
+          $audit = $generated['audit'] ?? [];
+          $moderationFlagged = (bool) data_get($moderation, 'results.0.flagged', false);
+          $needsHumanReview = (bool) ($audit['needs_human_review'] ?? false) || $moderationFlagged;
+
+          $draft = [
+            'id' => null,
+            'status' => 'temporary',
+            'needs_human_review' => $needsHumanReview,
+            'audit_status' => EventAiContentDraft::normalizeAuditStatus(
+              $moderationFlagged ? 'moderation_review' : ($audit['status'] ?? ($needsHumanReview ? 'needs_human_review' : 'passed'))
+            ),
+            'generated_payload' => $generated,
+            'audit_payload' => array_merge($audit, ['moderation' => $moderation]),
+          ];
+        } catch (OpenAiNonRetryableException $e) {
+          $draftError = $e->getMessage();
+        } catch (RuntimeException $e) {
+          $draftError = 'La IA devolvió una propuesta incompleta y no la aplicamos. Probá ajustar las preferencias o volver a generar el evento.';
+        } catch (Throwable $e) {
+          report($e);
+          $draftError = 'No pudimos generar el copy y SEO en este momento. Podés aplicar los datos detectados y completar el texto manualmente.';
+        }
       }
     }
 

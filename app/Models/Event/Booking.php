@@ -366,4 +366,10 @@ class Booking extends Model
   {
     return $this->belongsTo(Organizer::class);
   }
+
+  protected static function booted()
+  {
+    static::saved(fn () => \App\Services\PublicBusinessMetricsService::forgetCache());
+    static::deleted(fn () => \App\Services\PublicBusinessMetricsService::forgetCache());
+  }
 }

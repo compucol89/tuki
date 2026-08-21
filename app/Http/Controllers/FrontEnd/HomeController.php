@@ -302,12 +302,16 @@ class HomeController extends Controller
     $queryResult['heroSection'] = Cache::remember('hero_section_' . $language->id, 3600, fn () => HeroSection::where('language_id', $language->id)->first());
 
     $queryResult['aboutUsSection'] = Cache::remember('about_us_section_' . $language->id, 3600, fn () => AboutUsSection::where('language_id', $language->id)->first());
-      $queryResult['aboutMetrics'] = config('about_metrics');
+      $queryResult['aboutMetrics'] = app(\App\Services\PublicBusinessMetricsService::class)->forAboutPage($language->id);
 
       if ($sectionInfo->testimonials_section_status == 1) {
       $queryResult['testimonialData'] = Cache::remember('testimonial_section_' . $language->id, 3600, fn () => TestimonialSection::where('language_id', $language->id)->first());
 
-        $queryResult['testimonials'] = Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get();
+        $queryResult['testimonials'] = Testimonial::where('language_id', $language->id)
+          ->where('published', true)
+          ->where('verified', true)
+          ->orderBy('serial_number', 'asc')
+          ->get();
       }
 
     $queryResult['featureEventSection'] = Cache::remember('feature_event_section_' . $language->id, 3600, fn () => EventFeatureSection::where('language_id', $language->id)->first());

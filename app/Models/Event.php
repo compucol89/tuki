@@ -109,6 +109,8 @@ class Event extends Model
 
   protected static function forgetHomeEventCaches(): void
   {
+    \App\Services\PublicBusinessMetricsService::forgetCache();
+
     $langIds = DB::table('languages')->pluck('id');
     foreach ($langIds as $lid) {
       Cache::forget('home_featured_events_all_' . $lid);

@@ -78,24 +78,12 @@
                   $__am = $aboutMetrics;
                   $__stats = [];
                   foreach ($__am['stats'] ?? [] as $__row) {
-                    if (!empty($__row['value'] ?? null) && !empty($__row['label_key'] ?? null)) {
+                    if (($__row['value'] ?? null) !== null && ($__row['value'] ?? '') !== '' && !empty($__row['label_key'] ?? null)) {
                       $__stats[] = $__row;
                     }
                   }
                   $__hero = $__stats[0] ?? null;
                   $__secondary = array_slice($__stats, 1);
-                  $__vis = $__am['visual'] ?? [];
-                  $__heroBars = $__vis['hero_bars'] ?? [38, 52, 71, 64, 88, 76];
-                  $__spark = $__vis['sparkline'] ?? [18, 22, 19, 28, 35, 32, 41, 48, 55, 62, 58, 70];
-                  $__meters = $__vis['meters'] ?? [];
-                  $__nSpark = max(count($__spark), 2);
-                  $__sparkPts = [];
-                  foreach ($__spark as $__i => $__v) {
-                    $__x = 2 + ($__i / ($__nSpark - 1)) * 116;
-                    $__y = 40 - ((float) $__v / 100) * 34;
-                    $__sparkPts[] = round($__x, 2) . ',' . round($__y, 2);
-                  }
-                  $__sparkPoly = implode(' ', $__sparkPts);
                 @endphp
                 <div class="about-metrics about-metrics--dashboard" role="region"
                   aria-label="{{ __('about_metrics_region_aria') }}">
@@ -112,85 +100,22 @@
                           <span id="about-metrics-hero-title" class="about-metrics__value about-metrics__value--hero">{{ $__hero['value'] }}</span>
                           <span id="about-metrics-hero-desc" class="about-metrics__label about-metrics__label--hero">{{ __($__hero['label_key']) }}</span>
                         </div>
-                        <div class="about-metrics__hero-viz" role="group"
-                          aria-label="{{ __('about_metrics_chart_aria') }}">
-                          <span class="about-metrics__viz-title">{{ __('about_metrics_chart_title') }}</span>
-                          <svg class="about-metrics__svg-bars" viewBox="0 0 200 76" preserveAspectRatio="xMidYMid meet"
-                            aria-hidden="true" focusable="false">
-                            <defs>
-                              <linearGradient id="about-metrics-bar-fill" x1="0" y1="1" x2="0" y2="0">
-                                <stop offset="0%" stop-color="var(--primary)" />
-                                <stop offset="100%" stop-color="var(--primary)" />
-                              </linearGradient>
-                            </defs>
-                            @foreach ($__heroBars as $__i => $__h)
-                              @php
-                                $__bw = 24;
-                                $__gap = 9;
-                                $__x = 5 + $__i * ($__bw + $__gap);
-                                $__barH = max(6, ((float) $__h / 100) * 54);
-                                $__y = 72 - $__barH;
-                              @endphp
-                              <rect class="about-metrics__bar" x="{{ $__x }}" y="{{ $__y }}" width="{{ $__bw }}"
-                                height="{{ $__barH }}" rx="8" fill="url(#about-metrics-bar-fill)" />
-                            @endforeach
-                          </svg>
-                          <span class="about-metrics__viz-note">{{ __('about_metrics_viz_disclaimer') }}</span>
-                        </div>
                       </article>
-
-                      <div class="about-metrics__spark-block" role="group" aria-label="{{ __('about_metrics_spark_aria') }}">
-                        <div class="about-metrics__spark-head">
-                          <span class="about-metrics__viz-title">{{ __('about_metrics_spark_title') }}</span>
-                        </div>
-                        <svg class="about-metrics__svg-spark" viewBox="0 0 120 44" preserveAspectRatio="none"
-                          aria-hidden="true" focusable="false">
-                          <defs>
-                            <linearGradient id="about-metrics-spark-line" x1="0" y1="0" x2="1" y2="0">
-                              <stop offset="0%" stop-color="var(--primary-text)" />
-                              <stop offset="100%" stop-color="var(--primary)" />
-                            </linearGradient>
-                            <linearGradient id="about-metrics-spark-fill" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stop-color="color-mix(in srgb, var(--primary) 22%, transparent)" />
-                              <stop offset="100%" stop-color="color-mix(in srgb, var(--primary) 0%, transparent)" />
-                            </linearGradient>
-                          </defs>
-                          <polyline class="about-metrics__spark-area" fill="url(#about-metrics-spark-fill)"
-                            stroke="none"
-                            points="2,42 {{ $__sparkPoly }} 118,42" />
-                          <polyline class="about-metrics__spark-line" fill="none" stroke="url(#about-metrics-spark-line)"
-                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
-                            points="{{ $__sparkPoly }}" />
-                        </svg>
-                        <span class="about-metrics__viz-note">{{ __('about_metrics_viz_disclaimer_short') }}</span>
-                      </div>
 
                       @if (count($__secondary) > 0)
                         <ul class="about-metrics__subs">
-                          @foreach ($__secondary as $__si => $__st)
-                            @php
-                              $__meter = (int) ($__meters[$__si] ?? (70 - $__si * 3));
-                              $__meter = max(18, min(100, $__meter));
-                            @endphp
+                          @foreach ($__secondary as $__st)
                             <li class="about-metrics__sub">
                               <div class="about-metrics__sub-top">
                                 <span class="about-metrics__value about-metrics__value--sub">{{ $__st['value'] }}</span>
                               </div>
                               <span class="about-metrics__label about-metrics__label--sub">{{ __($__st['label_key']) }}</span>
-                              <div class="about-metrics__meter" role="presentation"
-                                aria-label="{{ __('about_metrics_meter_aria') }}">
-                                <span class="about-metrics__meter-fill" style="--meter: {{ $__meter }}%;"></span>
-                              </div>
                             </li>
                           @endforeach
                         </ul>
                       @endif
                     </div>
                   @endif
-
-                  <footer class="about-metrics__footer">
-                    <p class="about-metrics__note">{{ __('about_metrics_note') }}</p>
-                  </footer>
                 </div>
               @else
                 <figure class="about-image-part pt-10 rmb-55 mb-0">

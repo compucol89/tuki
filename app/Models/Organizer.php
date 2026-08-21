@@ -54,6 +54,12 @@ class Organizer extends Model implements AuthenticatableContract
     return $this->hasMany(Event::class);
   }
 
+  protected static function booted()
+  {
+    static::saved(fn () => \App\Services\PublicBusinessMetricsService::forgetCache());
+    static::deleted(fn () => \App\Services\PublicBusinessMetricsService::forgetCache());
+  }
+
   /**
    * Organizadores elegibles para el directorio público (/organizadores):
    * cumplen todos los pasos obligatorios del perfil (foto, portada, nombre,

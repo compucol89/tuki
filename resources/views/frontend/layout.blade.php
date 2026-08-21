@@ -126,12 +126,27 @@
       '@type' => 'Organization',
       '@id' => url('/#organization'),
       'name' => $websiteInfo->website_title ?? 'TukiPass',
+      'legalName' => config('tukipass.fiscal.issuer_name') ?: 'TAYRONA GROUP SAS',
       'url' => url('/'),
       'logo' => asset('brand/icon-192.png'),
       'description' => 'TukiPass es una plataforma argentina para descubrir eventos y reservar entradas online.',
+      'address' => [
+        '@type' => 'PostalAddress',
+        'streetAddress' => config('tukipass.fiscal.issuer_address') ?: 'Av. Pueyrredón 1357 Local 63',
+        'addressLocality' => 'Ciudad Autónoma de Buenos Aires',
+        'addressRegion' => 'CABA',
+        'addressCountry' => 'AR',
+      ],
       'sameAs' => collect($socialMediaInfos ?? [])
         ->pluck('url')
-        ->filter(fn ($url) => is_string($url) && filter_var($url, FILTER_VALIDATE_URL))
+        ->filter(function ($url) {
+          // Solo URLs con perfil real (path no vacío); descarta dominios desnudos tipo https://facebook.com/
+          if (!is_string($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+          }
+          $path = trim((string) parse_url($url, PHP_URL_PATH), '/');
+          return $path !== '';
+        })
         ->values()
         ->all(),
     ], fn ($value) => $value !== null && $value !== '' && $value !== []);

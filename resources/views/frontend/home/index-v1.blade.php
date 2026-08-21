@@ -220,8 +220,8 @@
         <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Todos') }}</a>
         <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">{{ __('Gratis') }}</a>
         <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">{{ __('Pagos') }}</a>
-        <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' to ' . $today->format('Y-m-d')]) }}" class="hs-chip">{{ __('Hoy') }}</a>
-        <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' to ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">{{ __('Este finde') }}</a>
+        <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' a ' . $today->format('Y-m-d')]) }}" class="hs-chip">{{ __('Hoy') }}</a>
+        <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' a ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">{{ __('Este finde') }}</a>
         @foreach ($categories->take(4) as $cat)
           <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip hs-chip--category">{{ $cat->name }}</a>
         @endforeach

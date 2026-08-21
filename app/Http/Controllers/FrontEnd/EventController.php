@@ -13,6 +13,7 @@ use App\Models\Event\EventDates;
 use App\Models\Event\EventImage;
 use App\Models\Event\Ticket;
 use App\Models\HomePage\HeroSection;
+use App\Models\OrganizerInfo;
 use App\Models\Language;
 use App\Models\Event\Wishlist;
 use App\Models\Organizer;
@@ -47,6 +48,21 @@ class EventController extends Controller
 
     $language = $this->getLanguage();
     $information  = [];
+
+    // Sin filtros significativos pero con query string → normalizar a /eventos (evita ?event=, ?category=, etc. vacíos).
+    $hasMeaningfulQuery = $request->filled('category')
+      || $request->filled('location')
+      || $request->filled('event')
+      || $request->filled('pricing')
+      || $request->filled('dates')
+      || $request->filled('min')
+      || $request->filled('max')
+      || $request->filled('search-input')
+      || $request->filled('sort')
+      || $request->filled('page');
+    if (!$hasMeaningfulQuery && $request->getQueryString() !== null) {
+      return redirect()->route('events', [], 301);
+    }
     $categories = Cache::remember('event_categories_' . $language->id, now()->addHours(6), function () use ($language) {
       return EventCategory::where([['language_id', $language->id], ['status', 1]])->orderBy('serial_number', 'asc')->get();
     });
@@ -64,7 +80,7 @@ class EventController extends Controller
       $category = $request['category'];
       $categoryModel = EventCategory::where([['slug', $category], ['status', 1]])->first();
       if (!$categoryModel) {
-        return redirect()->route('events');
+        abort(404);
       }
       $category = $categoryModel->id;
     }
@@ -288,6 +304,15 @@ class EventController extends Controller
         if ($content->organizer_id != NULL) {
           $organizer = Organizer::where('id', $content->organizer_id)->first();
           $information['organizer'] = $organizer;
+          if ($organizer) {
+            // Slug canónico del perfil (mismo criterio que OrganizerController::details):
+            // nombre público (organizer_info) o username → para el schema organizer.url.
+            $organizerInfo = OrganizerInfo::where('organizer_id', $organizer->id)
+              ->where('language_id', $this->getLanguage()->id)
+              ->first();
+            $organizerProfileName = trim((string) ($organizerInfo->name ?? $organizer->username));
+            $information['organizerProfileSlug'] = Str::slug($organizerProfileName);
+          }
         }
       }
 

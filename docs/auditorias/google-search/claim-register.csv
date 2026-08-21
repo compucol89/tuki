@@ -1,0 +1,7 @@
+claim,url,source,owner,verified_at,evidence,status,action
+"3.200+ eventos","/","home hero (verificar)","Business/Product",NOT VERIFIED,,"UNVERIFIED","Requiere provenance: query documentada o snapshot aprobado (content-integrity-policy.md). Si no → REMOVE."
+"486.000+ entradas vendidas","/","home/estadisticas (verificar)","Business/Product",NOT VERIFIED,,"UNVERIFIED","Requiere provenance: tickets paid/issued, rolling 12 meses. Si no → REMOVE."
+"1.050+ productores","/","home/estadisticas (verificar)","Business/Product",NOT VERIFIED,,"UNVERIFIED","Requiere provenance: organizers activos. Si no → REMOVE."
+"78 por fin de semana","/","home (verificar)","Business/Product",NOT VERIFIED,,"UNVERIFIED","Requiere provenance. Si no → REMOVE."
+"+500 opiniones verificadas","/","testimonials section","Business/Product",NOT VERIFIED,,"UNVERIFIED","Prohibido sin dataset real de reseñas verificadas (policy reviews self-serving). Sin pipeline → REMOVE."
+"la comisión más baja del mercado","/organizador/signup o similar","marketing comparativo","Business",NOT VERIFIED,,"UNVERIFIED","Requiere benchmark_source con competidores + fecha + metodología. Sin eso → REMOVE."

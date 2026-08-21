@@ -886,7 +886,7 @@
       '@type' => 'Organization',
       'name' => !empty($organizer) ? $organizer->username : $websiteInfo->website_title,
       'url' => !empty($organizer) && !empty($organizer->id)
-        ? route('frontend.organizer.details', [$organizer->id, str_replace(' ', '-', $organizer->username)], true)
+        ? route('frontend.organizer.details', [$organizer->id, ($organizerProfileSlug ?? \Illuminate\Support\Str::slug($organizer->username))], true)
         : url('/'),
     ],
   ];
@@ -913,7 +913,13 @@
   $jsonLd = array_filter($jsonLd, function ($value) {
     return !is_null($value) && $value !== '';
   });
-  $shouldEmitEventJsonLd = $eventName !== ''
+  // Solo emitir Event JSON-LD para eventos NO pasados: Google no contempla "EventEnded"
+  // entre los valores admitidos (16-evento.md) y no aplica rich results a contenido obsoleto
+  // (01-directrices-generales.md). Los eventos pasados siguen indexables sin schema de evento.
+  $isPastEvent = !empty($schemaStart)
+    && $schemaStart->lt(\Carbon\Carbon::now($websiteTimezone ?? $websiteInfo->timezone));
+  $shouldEmitEventJsonLd = !$isPastEvent
+    && $eventName !== ''
     && $schemaStartDate !== null
     && !empty($schemaLocation);
 
@@ -1470,13 +1476,16 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
           @else
             @php $checkWishList = false; @endphp
           @endif
-          <a href="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}"
-            class="ed-hero__btn {{ $checkWishList == true ? 'text-success' : '' }}"
-            aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}"
-            title="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
-            <i class="fas fa-bookmark"></i>
-            <span class="sr-only">{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}</span>
-          </a>
+          <form method="post" action="{{ $checkWishList == false ? route('addto.wishlist', $content->id) : route('remove.wishlist', $content->id) }}" class="d-inline">
+            @csrf
+            <button type="submit"
+              class="ed-hero__btn {{ $checkWishList == true ? 'text-success' : '' }}"
+              aria-label="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}"
+              title="{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}">
+              <i class="fas fa-bookmark"></i>
+              <span class="sr-only">{{ $checkWishList ? __('Quitar de favoritos') : __('Guardar en favoritos') }}</span>
+            </button>
+          </form>
           <button type="button" class="ed-hero__btn" data-toggle="modal" data-target=".share-event" aria-label="{{ __('Compartir evento') }}">
             <i class="fas fa-share-alt"></i>
           </button>

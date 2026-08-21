@@ -95,8 +95,8 @@ class OrganizerController extends Controller
       $testimonialData = Cache::remember('home_testimonial_section_' . $language->id, 86400, fn () =>
         TestimonialSection::where('language_id', $language->id)->first()
       );
-      $testimonials = Cache::remember('home_testimonials_' . $language->id, 86400, fn () =>
-        Testimonial::where('language_id', $language->id)->orderBy('serial_number', 'asc')->get()
+      $testimonials = Cache::remember('home_public_testimonials_' . $language->id, 86400, fn () =>
+        Testimonial::where('language_id', $language->id)->publiclyVisible()->orderBy('serial_number', 'asc')->get()
       );
     }
     $partners = Cache::remember('home_partners_' . $language->id, 86400, fn () =>
@@ -124,9 +124,15 @@ class OrganizerController extends Controller
         ->first();
 
       if (filled($request->admin)) {
+        // Preview del admin: solo con sesión de administrador autenticada.
+        // Públicamente esta URL no debe existir (perfil fantasma indexable).
+        if (!Auth::guard('admin')->check()) {
+          return response()->view('errors.404', [], 404);
+        }
         $admin = Admin::first();
         $information['organizer'] = $admin;
         $information['admin'] = true;
+        $information['previewMode'] = true;
         $information['organizer_info'] = null;
         $organizerEventColumn = null;
       } else {
@@ -139,6 +145,7 @@ class OrganizerController extends Controller
 
         $information['organizer'] = $organizer;
         $information['admin'] = false;
+        $information['previewMode'] = false;
         $organizerEventColumn = $organizer->id;
         $information['profileIsPublic'] = app(\App\Services\OrganizerProfileChecklistService::class)->isComplete($organizer);
       }
@@ -179,11 +186,14 @@ class OrganizerController extends Controller
       $information['publicOrganizerName'] = trim((string) ($information['organizer_info']->name ?? $information['organizer']->username ?? config('app.name', 'Tukipass')));
       $information['publicOrganizerDescription'] = trim(strip_tags((string) ($information['organizer_info']->details ?? '')));
       $profileSlug = Str::slug($information['publicOrganizerName']);
+      // Canonical SIEMPRE sin query (el preview admin nunca se canonicaliza a sí mismo).
       $routeParameters = [$id, $profileSlug !== '' ? $profileSlug : Str::slug($name)];
-      if (filled($request->admin)) {
-        $routeParameters['admin'] = 'true';
-      }
       $information['publicOrganizerUrl'] = route('frontend.organizer.details', $routeParameters, true);
+
+      // Consolidación canónica: cualquier variante de slug/case distinta a la canónica → 301.
+      if (!$information['admin'] && ($name !== $routeParameters[1])) {
+        return redirect()->route('frontend.organizer.details', $routeParameters, 301);
+      }
 
       return view('frontend.organizer.details', $information); //code...
     } catch (\Throwable $th) {

@@ -146,7 +146,20 @@
 @section('og-description', $metaDescription)
 @section('og-image',       $ogImage)
 @section('og-type',        'website')
-@section('canonical',      url()->current())
+@php
+  // Si hay filtros activos (categoría, fechas, precio, búsqueda, etc.) la canónica
+  // es la URL base /eventos (parámetro opcional omitido). Solo con paginación pura
+  // cada página usa su propia canónica (?page=N), según Google (08-ecommerce-paginacion).
+  $evfFilterKeys = ['category', 'location', 'event', 'pricing', 'dates', 'min', 'max', 'search-input', 'sort'];
+  $evfHasFilters = collect(request()->only($evfFilterKeys))
+    ->filter(fn ($v) => filled($v))
+    ->isNotEmpty();
+@endphp
+@section('canonical', $evfHasFilters
+    ? url()->current()
+    : (($information['events']->currentPage() > 1)
+        ? url()->current() . '?page=' . $information['events']->currentPage()
+        : url()->current()))
 @section('og-url',         url()->current())
 
 {{-- ─── HERO — premium (collage + capas editoriales) ─── --}}

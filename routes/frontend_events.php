@@ -22,8 +22,8 @@ Route::get('eventos', 'FrontEnd\EventController@index')->name('events');
 Route::get('{slug}/{id}', 'FrontEnd\EventController@details')
   ->name('event.details')
   ->where('id', '[0-9]+');
-Route::get('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
-Route::get('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');
+Route::post('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
+Route::post('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');
 Route::get('organizer/details/{id}/{name}', 'FrontEnd\OrganizerController@details')->name('frontend.organizer.details');
 Route::redirect('organizers/', '/organizadores', 301);
 Route::get('organizadores', 'FrontEnd\OrganizerController@index')->name('frontend.all.organizer');

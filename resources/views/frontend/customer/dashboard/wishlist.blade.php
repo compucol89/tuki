@@ -71,12 +71,14 @@
                       <div class="wl-item__actions">
                         <a href="{{ route('event.details', [$ev->slug, $item->event_id]) }}"
                            class="wl-item__btn wl-item__btn--primary">Ver evento</a>
-                        <a href="{{ route('remove.wishlist', $item->event_id) }}"
-                           class="wl-item__btn wl-item__btn--remove"
-                           onclick="return confirm('¿Quitás este evento de tu lista?')">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-                          Quitar
-                        </a>
+                        <form method="post" action="{{ route('remove.wishlist', $item->event_id) }}" class="d-inline"
+                              onsubmit="return confirm('¿Quitás este evento de tu lista?')">
+                          @csrf
+                          <button type="submit" class="wl-item__btn wl-item__btn--remove">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                            Quitar
+                          </button>
+                        </form>
                       </div>
                     </div>
                   </div>

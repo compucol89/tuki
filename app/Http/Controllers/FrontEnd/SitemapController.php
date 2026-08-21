@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 class SitemapController extends Controller
 {
 
-  private const DEMO_BLOG_SLUG_PREFIXES = [
+  public const DEMO_BLOG_SLUG_PREFIXES = [
     'vivamus-vestibulum',
     'vestibulum-commodo',
     'nam-dui-mi',
@@ -66,7 +66,7 @@ class SitemapController extends Controller
 
     $events = EventContent::join('events', 'events.id', '=', 'event_contents.event_id')
       ->where('events.status', 1)
-      ->whereDate('events.end_date_time', '>=', now()->toDateString())
+      ->whereColumn('events.end_date_time', '>=', 'events.start_date')
       ->whereNotIn('event_contents.slug', DemoEventExclusion::EVENT_SLUGS)
       ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
@@ -199,6 +199,12 @@ class SitemapController extends Controller
       ->select('organizers.id', 'organizers.username', 'organizers.updated_at', 'organizer_infos.name as profile_name')
       ->orderBy('organizers.updated_at', 'desc')
       ->get()
+      ->filter(function ($organizer) {
+        // Gate de completitud: solo perfiles públicos completos van al sitemap.
+        $fullOrganizer = \App\Models\Organizer::find($organizer->id);
+        return $fullOrganizer
+          && app(\App\Services\OrganizerProfileChecklistService::class)->isComplete($fullOrganizer);
+      })
       ->map(function ($organizer) {
         $profileName = trim((string) ($organizer->profile_name ?: $organizer->username));
         $profileSlug = Str::slug($profileName);

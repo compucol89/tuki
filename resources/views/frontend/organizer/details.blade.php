@@ -183,6 +183,7 @@
 @section('og-type', 'website')
 @section('canonical', $profileUrl)
 @section('og-url', $profileUrl)
+@section('meta-robots', (($previewMode ?? false) || (!empty($organizer) && (int) ($organizer->status ?? 1) !== 1)) ? 'noindex,follow' : 'index,follow,max-image-preview:large')
 
 @push('styles')
   <link rel="stylesheet" href="{{ $frontCssAsset($eventsCssPath) }}">

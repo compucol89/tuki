@@ -4,17 +4,16 @@
   <link rel="stylesheet" href="{{ frontAsset('assets/front/css/organizer.css') }}">
 @endpush
 
-@section('pageHeading')
-  @if (!empty($pageHeading))
-    {{ $pageHeading->organizer_forget_password_page_title ?? __('Forget Password') }}
-  @else
-    {{ __('Forget Password') }}
-  @endif
-@endsection
+@section('meta-robots', 'noindex,follow')
+
 @php
+  $organizerForgetPasswordTitle = !empty($pageHeading)
+    ? ($pageHeading->organizer_forget_password_page_title ?? 'Recuperar contraseña')
+    : 'Recuperar contraseña';
   $metaKeywords = !empty($seo->meta_keyword_organizer_forget_password) ? $seo->meta_keyword_organizer_forget_password : '';
   $metaDescription = !empty($seo->meta_description_organizer_forget_password) ? $seo->meta_description_organizer_forget_password : '';
 @endphp
+@section('pageHeading', $organizerForgetPasswordTitle)
 @section('meta-keywords', "{{ $metaKeywords }}")
 @section('meta-description', "$metaDescription")
 @section('hero-section')
@@ -23,23 +22,11 @@
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
       <div class="banner-inner">
-        <h2 class="page-title">
-          @if (!empty($pageHeading))
-            {{ $pageHeading->organizer_forget_password_page_title ?? __('Forget Password') }}
-          @else
-            {{ __('Forget Password') }}
-          @endif
-        </h2>
+        <h1 class="page-title">{{ $organizerForgetPasswordTitle }}</h1>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>
-            <li class="breadcrumb-item active">
-              @if (!empty($pageHeading))
-                {{ $pageHeading->organizer_forget_password_page_title ?? __('Forget Password') }}
-              @else
-                {{ __('Forget Password') }}
-              @endif
-            </li>
+            <li class="breadcrumb-item active">{{ $organizerForgetPasswordTitle }}</li>
           </ol>
         </nav>
       </div>
@@ -72,7 +59,7 @@
               @enderror
             </div>
             <div class="form-group mb-0">
-              <button class="theme-btn br-30" type="submit">{{ __('PROCEED') }}</button>
+              <button class="theme-btn br-30" type="submit">Enviar enlace de recuperación</button>
             </div>
           </form>
         </div>

@@ -4,6 +4,8 @@
   <link rel="stylesheet" href="{{ frontAsset('assets/front/css/organizer.css') }}">
 @endpush
 
+@section('meta-robots', 'noindex,follow')
+
 @section('pageHeading')
   {{ __('Reset Password') }}
 @endsection
@@ -12,7 +14,7 @@
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy" data-bg="{{ asset('assets/admin/img/'. $basicInfo->breadcrumb) }}">
     <div class="container">
         <div class="banner-inner">
-            <h2 class="page-title">{{ __('Reset Password') }}</h2>
+            <h1 class="page-title">{{ __('Reset Password') }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Home') }}</a></li>

@@ -8,6 +8,7 @@ use App\Models\Journal\Blog;
 use App\Models\Journal\BlogCategory;
 use App\Models\Journal\BlogInformation;
 use Illuminate\Http\Request;
+use App\Http\Controllers\FrontEnd\SitemapController;
 
 class BlogController extends Controller
 {
@@ -27,12 +28,21 @@ class BlogController extends Controller
       $blogTitle = $request['title'];
     }
     if ($request->filled('category')) {
-      $blogCategory = BlogCategory::where('slug', $request['category'])->first()->id;
+      $categoryModel = BlogCategory::where('slug', $request['category'])->first();
+      if (!$categoryModel) {
+        abort(404);
+      }
+      $blogCategory = $categoryModel->id;
     }
 
     $queryResult['blogs'] = Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
       ->join('blog_categories', 'blog_categories.id', '=', 'blog_informations.blog_category_id')
       ->where('blog_informations.language_id', '=', $language->id)
+      ->where(function ($query) {
+        foreach (SitemapController::DEMO_BLOG_SLUG_PREFIXES as $prefix) {
+          $query->where('blog_informations.slug', 'not like', $prefix . '%');
+        }
+      })
       ->when($blogTitle, function ($query, $blogTitle) {
         return $query->where('blog_informations.title', 'like', '%' . $blogTitle . '%');
       })
@@ -58,7 +68,11 @@ class BlogController extends Controller
 
       $queryResult['bgImg'] = $this->getBreadcrumb();
 
-      $blogId = BlogInformation::where('slug', $slug)->first()->blog_id;
+      $blogInfo = BlogInformation::where('slug', $slug)->first();
+      if (!$blogInfo) {
+        abort(404);
+      }
+      $blogId = $blogInfo->blog_id;
 
       $queryResult['details'] = Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
         ->join('blog_categories', 'blog_categories.id', '=', 'blog_informations.blog_category_id')
@@ -66,6 +80,11 @@ class BlogController extends Controller
         ->where('blog_informations.blog_id', '=', $blogId)
         ->select('blogs.image', 'blogs.created_at', 'blog_informations.title', 'blog_informations.author', 'blog_informations.slug', 'blog_informations.content', 'blog_informations.meta_keywords', 'blog_informations.meta_description', 'blog_categories.name as categoryName', 'blog_categories.slug as blogSlug')
         ->first();
+
+      // Slug existe en otro idioma pero no en el activo → 404 real (evita soft-404).
+      if (!$queryResult['details']) {
+        abort(404);
+      }
 
       $categoryId = BlogInformation::where('language_id', $language->id)->where('slug', $slug)->pluck('blog_category_id')->first();
 
@@ -94,7 +113,7 @@ class BlogController extends Controller
 
       return view('frontend.journal.blog-details', $queryResult);
     } catch (\Exception $th) {
-      return view('errors.404');
+      abort(404);
     }
   }
 

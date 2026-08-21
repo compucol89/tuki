@@ -12,7 +12,7 @@ class AiIndexFilesTest extends TestCase
 
     $response->assertOk();
 
-    $robots = $response->streamedContent();
+    $robots = file_get_contents($response->baseResponse->getFile()->getPathname());
 
     $this->assertStringContainsString('User-agent: OAI-SearchBot', $robots);
     $this->assertStringContainsString("User-agent: GPTBot\nDisallow: /", $robots);
@@ -66,7 +66,7 @@ class AiIndexFilesTest extends TestCase
     $this->assertStringContainsString('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"', $content);
     $this->assertStringContainsString('<urlset', $content);
 
-    $robots = $this->get('/robots.txt')->streamedContent();
+$robots = file_get_contents(public_path('robots.txt'));
 
     $this->assertStringContainsString('Sitemap: https://www.tukipass.com/sitemap-images.xml', $robots);
   }

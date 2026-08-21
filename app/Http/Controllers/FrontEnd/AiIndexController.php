@@ -419,7 +419,9 @@ class AiIndexController extends Controller
     $root = rtrim((string) config('app.url'), '/');
 
     if ($root === '' || Str::contains($root, ['localhost', '127.0.0.1'])) {
-      return (string) config('tukipass.redirect_www.www_domain');
+      $domain = (string) config('tukipass.redirect_www.www_domain');
+
+      return Str::startsWith($domain, ['http://', 'https://']) ? $domain : 'https://' . $domain;
     }
 
     return $root;

@@ -15,7 +15,8 @@ vive en `/docs/tukipass/`.
 | Laravel Mix | 6.x + `.version()` | `webpack.mix.js`, `public/mix-manifest.json` |
 | Bootstrap frontend | 4.5.3 | `public/assets/front/css/bootstrap.4.5.3.min.css` + `bootstrap.4.5.3.min.js` |
 | Bootstrap admin/organizer | 4.3.1 | `public/assets/admin/css/bootstrap.min.css` + `bootstrap.min.js` |
-| jQuery frontend | 3.6.0 (y duplicado `jquery.min.js`) | `public/assets/front/js/` |
+| jQuery frontend | 3.7.0 — `jquery.min.js` (el que carga el layout); `jquery-3.6.0.min.js` (v3.6.0) = duplicado sin uso | `public/assets/front/js/` |
+| jQuery admin/organizer | 3.7.0 (`jquery.min.js`) | `public/assets/admin/js/` |
 | Popper | presente (`popper.min.js`) | `public/assets/front/js/` |
 | Build | Laravel Mix (sin Vite) | `package.json` |
 | Testing PHP | PHPUnit 11 | `composer.json`, `phpunit.xml` |
@@ -28,8 +29,8 @@ vive en `/docs/tukipass/`.
 | `wcag/` | WCAG 2.2 normativa (tag oficial WCAG22-20231005), How to Meet (quickref), 11 páginas Understanding | Headings, contraste, dark mode, teclado, foco, targets, labels, reflow |
 | `google-search/` | Mapeo a la captura completa de Google Search Central (155 docs, `docs/docs-google-search/`) | SEO, canonical, sitemap, robots, políticas de reseñas |
 | `schema-org/` | Review, AggregateRating | Structured data solo con dataset real |
-| `bootstrap/4.3/` | 11 páginas oficiales de Bootstrap 4.3 (admin/organizer) | Markup real del panel |
-| `bootstrap/4.5/` | 11 páginas oficiales de Bootstrap 4.5 (frontend) | Markup real del frontend |
+| `bootstrap/4.3/` | 22 páginas oficiales de Bootstrap 4.3 (admin/organizer) | Markup real del panel |
+| `bootstrap/4.5/` | 22 páginas oficiales de Bootstrap 4.5 (frontend) | Markup real del frontend |
 | `bootstrap/4.6/` | `REFERENCE-ONLY.md` (nota de diffs) | Referencia secundaria, nunca source of truth |
 | `laravel/12.x/` | 10 docs oficiales (Eloquent, queries, validation, pagination, cache, database, database-testing, mail, blade, csrf) | Blog 6→0, organizadores 6→0, stats desde backend |
 | `laravel-mix/6.x/` | 7 docs oficiales (what-is-mix, installation, api, javascript, css, sass, versioning) | Cache-busting de assets, CSS "que no se actualiza" |
@@ -50,5 +51,9 @@ vive en `/docs/tukipass/`.
 
 - `laravel-mix/6.x/css.md`, `javascript.md`, `what-is-mix.md` son páginas oficialmente cortas (contenido íntegro).
 - Mix no publica páginas `source-maps` ni `production` (404 en laravel-mix.com); el equivalente de producción es `docs/workflow.md` del repo laravel-mix (no capturado por innecesario).
+- **Tipografía real (2026-08-21):** las páginas de `bootstrap/4.3|4.5/typography.md` describen el native font stack y `$font-family-base` de Bootstrap, pero TukiPass **los reemplaza por Inter (UI) + IBM Plex Mono (datos)** vía `admin-skin.css` / `style.css` + `@fontsource`. El sistema real vive en `docs/design-system/typography.md`. No aplicar el stack de Bootstrap sobre el proyecto.
+- **`prefers-reduced-motion`:** presente en el frontend (`style.css`, `home.css`, etc.), **ausente en el panel admin/organizer** — gap de accesibilidad del proyecto (P3), no de estas docs.
+- **Skip link:** la doc de a11y recomienda `.sr-only sr-only-focusable`; el panel usa `.skip-link` custom (equivalente funcional) y el frontend usa el patrón Bootstrap (`.about-skip-link sr-only sr-only-focusable`).
+- **jQuery duplicado:** `public/assets/front/js/jquery-3.6.0.min.js` (v3.6.0) no lo carga ningún layout → candidato a eliminación. El cargado en ambos layouts es `jquery.min.js` (v3.7.0).
 - Ampliación 2026-08-21 (GATE 0): agregados `laravel/12.x/eloquent-relationships.md` (whereHas) y 11 páginas Understanding WCAG (1.4.1, 1.4.12, 1.3.5, 2.1.2, 2.5.5, 2.4.13, 3.3.7, 3.3.8, 4.1.2, 4.1.3 — estos últimos tres vía carpetas understanding/{20,21,22} del espejo w3c/wcag). Total: 72 archivos.
 - Relaciones con otras carpetas de `/docs/`: `docs/laravel_12/` (capturas anteriores) y `docs/docs-google-search/` (captura completa de Google) son complementarias; este corpus es el índice canónico versionado.

@@ -37,6 +37,24 @@ componentes esencialmente idéntico a 4.5.3.
 ## Dependencias JS reales (para inventario de carga)
 
 Frontend 4.5.3 requiere jQuery + Popper (`bootstrap.4.5.3.min.js`). El panel 4.3.1 requiere
-jQuery + Popper (`bootstrap.min.js`). **Verificar por página el orden y la versión real de
-cada script descargado** (existe duplicado `jquery-3.6.0.min.js` vs `jquery.min.js` en
-`public/assets/front/js/` — determinar cuál carga cada layout).
+jQuery + Popper (`bootstrap.min.js`). **Verificado 2026-08-21:**
+
+| Layout | jQuery cargado | Bootstrap JS | Otros |
+|--------|----------------|--------------|-------|
+| Frontend (`frontend/partials/scripts.blade.php:66`) | `assets/front/js/jquery.min.js` = **v3.7.0** | `bootstrap.4.5.3.min.js` (v4.5.3) | `popper.min.js` |
+| Admin/Organizer (`organizer/partials/scripts.blade.php:8`) | `assets/admin/js/jquery.min.js` = **v3.7.0** | `bootstrap.min.js` (v4.3.1) | jQuery UI, timepicker, etc. |
+
+El archivo `public/assets/front/js/jquery-3.6.0.min.js` (v3.6.0) **no lo carga ningún layout**
+→ duplicado muerto, candidato a eliminación.
+
+## Notas de aplicabilidad TukiPass (2026-08-21)
+
+- **Tipografía:** las páginas `typography.md` (4.3/4.5) describen el native font stack de
+  Bootstrap. TukiPass lo reemplaza por **Inter (UI) + IBM Plex Mono (datos)** (ver
+  `docs/design-system/typography.md`). No aplicar `$font-family-base`/native stack al proyecto.
+- **Reduced motion:** el frontend implementa `prefers-reduced-motion`; el panel admin **no**
+  (gap P3 del proyecto — corregir en `admin-skin.css`).
+- **Skip link:** las docs recomiendan `.sr-only sr-only-focusable`; el panel usa `.skip-link`
+  custom (equivalente) — `organizer/layout.blade.php:47`; el frontend usa el patrón Bootstrap.
+- **Foco:** Bootstrap 4.3/4.5 documenta `:focus` por defecto; el panel lo reemplazó por un
+  anillo `:focus-visible` naranja (`atlantis.css` override, WCAG 2.4.7/2.4.13).

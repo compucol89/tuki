@@ -40,9 +40,8 @@
   <section class="shop-details-area pt-120 rpt-100 pb-95 rpb-75">
     <div class="container">
       @php
-        $reviews = App\Models\ShopManagement\ProductReview::where('product_id', $product->id)->get();
-        $avarage_rating = App\Models\ShopManagement\ProductReview::where('product_id', $product->id)->avg('review');
-        $avarage_rating = round($avarage_rating, 2);
+        $reviews = App\Models\ShopManagement\ProductReview::with('customer')->where('product_id', $product->id)->get();
+        $avarage_rating = round((float) $reviews->avg('review'), 2);
       @endphp
       <div class="shop-details-content">
         <div class="row justify-content-between pb-45">
@@ -169,21 +168,25 @@
                   @if (count($reviews) > 0)
                     @foreach ($reviews as $review)
                       <div class="shop-review-user">
-                        @php
-                          $customer = App\Models\Customer::where('id', $review->user_id)->first();
-                        @endphp
-                        <img class="lazy"
-                          src="{{ $customer->photo != null ? asset('assets/admin/img/customer-profile/' . $customer->photo) : asset('assets/front/images/profile.jpg') }}"
-                          alt="{{ __('Imagen del usuario') }}" width="60" loading="lazy">
-
-
-                        <ul>
-                          <div class="rate">
-                            <div class="rating" style="width:{{ $review->review * 20 }}%"></div>
-                          </div>
-                        </ul>
-                        <span><span>{{ convertUtf8($customer->fname) }} {{ convertUtf8($customer->lname) }}</span> –
-                          {{ date('d-m-Y', strtotime($review->created_at)) }}</span>
+                        @php $customer = $review->customer; @endphp
+                        @if ($customer)
+                          <img class="lazy"
+                            src="{{ $customer->photo != null ? asset('assets/admin/img/customer-profile/' . $customer->photo) : asset('assets/front/images/profile.jpg') }}"
+                            alt="{{ __('Imagen del usuario') }}" width="60" loading="lazy">
+                          <ul>
+                            <div class="rate">
+                              <div class="rating" style="width:{{ $review->review * 20 }}%"></div>
+                            </div>
+                          </ul>
+                          <span><span>{{ convertUtf8($customer->fname) }} {{ convertUtf8($customer->lname) }}</span> –
+                            {{ date('d-m-Y', strtotime($review->created_at)) }}</span>
+                        @else
+                          <img class="lazy"
+                            src="{{ asset('assets/front/images/profile.jpg') }}"
+                            alt="{{ __('Cliente') }}" width="60" loading="lazy">
+                          <span><span>{{ __('Cliente') }}</span> –
+                            {{ date('d-m-Y', strtotime($review->created_at)) }}</span>
+                        @endif
                         <p>{{ convertUtf8($review->comment) }}</p>
                       </div>
                     @endforeach

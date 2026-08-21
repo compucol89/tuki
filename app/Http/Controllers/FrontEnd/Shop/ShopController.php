@@ -84,6 +84,15 @@ class ShopController extends Controller
     $information['products'] = $products;
     $information['product_categories'] = $product_categories;
 
+    // Fix N+1: agregado de ratings en UNA consulta (antes 2 queries por card).
+    $productRatings = App\Models\ShopManagement\ProductReview::query()
+      ->selectRaw('product_id, AVG(review) as avg_rating, COUNT(*) as review_count')
+      ->whereNotNull('review')
+      ->groupBy('product_id')
+      ->get()
+      ->keyBy('product_id');
+    $information['productRatings'] = $productRatings;
+
     $max = Product::max('current_price');
     $min = Product::min('current_price');
     $information['max'] = $max;
@@ -657,34 +666,42 @@ class ShopController extends Controller
   //review
   public function review(Request $request)
   {
-    if ($request->review || $request->comment) {
-      if (ProductReview::where('user_id', Auth::guard('customer')->user()->id)->where('product_id', $request->product_id)->exists()) {
-        $exists =    ProductReview::where('user_id', Auth::guard('customer')->user()->id)->where('product_id', $request->product_id)->first();
-        if ($request->review) {
-          $exists->update([
-            'review' => $request->review,
-          ]);
-          $avgreview = ProductReview::where('product_id', $request->product_id)->avg('review');
-        }
-        if ($request->comment) {
-          $exists->update([
-            'comment' => $request->comment,
-          ]);
-        }
-        Session::flash('success', __('customer.flash.review_updated'));
-        return back();
-      } else {
-        $input = $request->all();
-        $input['user_id'] = Auth::guard('customer')->user()->id;
-        $data = new ProductReview;
-        $data->create($input);
-        $avgreview = ProductReview::where('product_id', $request->product_id)->avg('review');
-        Session::flash('success', __('customer.flash.review_submitted'));
-        return back();
-      }
-    } else {
+    // Corrección 2: invitado → redirect al login (antes error 500).
+    if (!Auth::guard('customer')->check()) {
+      return redirect()->route('customer.login');
+    }
+
+    // Corrección 1: validación server-side (escala 1-5, límite de comentario,
+    // producto debe existir). La UI ya limita 1-5; ahora el backend también.
+    if (!$request->filled('review') && !$request->filled('comment')) {
       Session::flash('error', __('customer.flash.review_not_submitted'));
       return back();
     }
+
+    $validated = $request->validate([
+      'product_id' => ['required', 'integer', 'exists:products,id'],
+      'review' => ['nullable', 'numeric', 'min:1', 'max:5'],
+      'comment' => ['nullable', 'string', 'max:2000'],
+    ]);
+
+    $userId = Auth::guard('customer')->user()->id;
+    $review = ProductReview::firstOrNew([
+      'user_id' => $userId,
+      'product_id' => (int) $validated['product_id'],
+    ]);
+    $wasExisting = $review->exists;
+
+    if ($request->filled('review')) {
+      $review->review = (float) $validated['review'];
+    }
+    if ($request->filled('comment')) {
+      $review->comment = $validated['comment'];
+    }
+    $review->save();
+
+    Session::flash('success', $wasExisting
+      ? __('customer.flash.review_updated')
+      : __('customer.flash.review_submitted'));
+    return back();
   }
 }

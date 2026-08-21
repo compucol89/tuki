@@ -9,7 +9,7 @@ Route::get('/tienda', 'FrontEnd\Shop\ShopController@index')->name('shop');
 Route::prefix('shop')->group(function () {
   Route::redirect('/', '/tienda', 301);
   Route::get('/details/{slug}/{id}', 'FrontEnd\Shop\ShopController@details')->name('shop.details');
-  Route::post('review-submit', 'FrontEnd\Shop\ShopController@review')->name('product.review.submit');
+  Route::post('review-submit', 'FrontEnd\Shop\ShopController@review')->middleware('throttle:5,1')->name('product.review.submit');
   Route::get('add-to-cart/{id}', 'FrontEnd\Shop\ShopController@addToCart')->name('add.cart');
   Route::get('add-to-cart-2/{id}/{qty?}', 'FrontEnd\Shop\ShopController@addToCart2')->name('add.cart2');
   Route::post('order-now', 'FrontEnd\Shop\ShopController@orderNow')->name('order-now');

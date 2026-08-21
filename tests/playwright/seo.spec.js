@@ -79,3 +79,20 @@ test('@seo sitemap de imágenes usa URLs absolutas y canónicas', async () => {
 
   await context.dispose();
 });
+
+test('@seo ningún JSON-LD público emite AggregateRating/Review (SEO freeze)', async ({ page }) => {
+  const PAGES = ['/', '/eventos', '/blog', '/preguntas-frecuentes', '/sobre-nosotros', '/organizadores'];
+  for (const path of PAGES) {
+    await page.goto(path, { waitUntil: 'load' });
+    const raw = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('script[type="application/ld+json"]'))
+        .map((s) => s.textContent)
+        .join('\n')
+    );
+    expect(raw, `${path} no debe contener aggregateRating`).not.toContain('aggregateRating');
+    expect(raw, `${path} no debe contener Review`).not.toContain('"@type":"Review"');
+    expect(raw, `${path} no debe contener ratingValue`).not.toContain('ratingValue');
+    expect(raw, `${path} no debe contener reviewCount/ratingCount`).not.toContain('reviewCount');
+    expect(raw, `${path} no debe contener reviewCount/ratingCount`).not.toContain('ratingCount');
+  }
+});

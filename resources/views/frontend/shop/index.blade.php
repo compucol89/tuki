@@ -159,9 +159,8 @@
                         </div>
                       </div>
                       @php
-                        $reviews = App\Models\ShopManagement\ProductReview::where('product_id', $item->id)->get();
-                        $avarage_rating = App\Models\ShopManagement\ProductReview::where('product_id', $item->id)->avg('review');
-                        $avarage_rating = round($avarage_rating, 2);
+                        $productRating = $productRatings->get($item->id);
+                        $avarage_rating = $productRating ? round((float) $productRating->avg_rating, 2) : 0;
                       @endphp
                       <div class="content">
                         @if ($basicInfo->is_shop_rating == 1)

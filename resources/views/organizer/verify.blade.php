@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="page-header">
-        <h4 class="page-title">{{ __('Verify Email') }}</h4>
+        <h1 class="page-title">{{ __('Verificar email') }}</h1>
         <ul class="breadcrumbs">
             <li class="nav-home">
                 <a href="{{ route('organizer.dashboard') }}">
@@ -13,7 +13,7 @@
                 <i class="flaticon-right-arrow"></i>
             </li>
             <li class="nav-item">
-                <a href="#">{{ __('Verify Email') }}</a>
+                <a href="#">{{ __('Verificar email') }}</a>
             </li>
         </ul>
     </div>
@@ -24,7 +24,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="card-title">{{ __('Verify Email') }}</div>
+                            <div class="card-title">{{ __('Verificar email') }}</div>
                         </div>
                     </div>
                 </div>

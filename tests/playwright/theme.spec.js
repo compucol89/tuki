@@ -21,9 +21,19 @@ const ROUTES = [
   { name: 'withdraw', path: '/organizer/withdraw?language=es' },
 ];
 
-const USER = { username: 'Rumba Colombiana', password: '1234567890' };
+const USER = {
+  username: process.env.E2E_ORGANIZER_USERNAME,
+  password: process.env.E2E_ORGANIZER_PASSWORD,
+};
+
+function requireOrganizerCredentials() {
+  if (!USER.username || !USER.password) {
+    throw new Error('Configurá E2E_ORGANIZER_USERNAME y E2E_ORGANIZER_PASSWORD para ejecutar test:theme.');
+  }
+}
 
 async function login(page) {
+  requireOrganizerCredentials();
   await page.goto('/organizer/login', { waitUntil: 'load' });
   const alreadyIn = await page.evaluate(() => !!document.querySelector('.sidebar'));
   if (alreadyIn) {
@@ -89,6 +99,45 @@ async function themeAudit(page) {
     return { whiteSurfaces, darkText, blueIcons, overflow };
   });
 }
+
+test('@theme detalle evento dark: entradas no muestran islas claras al interactuar', async ({ page }) => {
+  await page.setViewportSize({ width: 600, height: 900 });
+  await page.addInitScript(() => localStorage.setItem('tuki-theme', 'dark'));
+  await page.goto('/reggaeton-old-school/123', { waitUntil: 'load' });
+
+  const option = page.locator('.ed-ticket-option').first();
+  await expect(option).toBeVisible();
+  await option.hover();
+
+  const hover = await option.evaluate((el) => {
+    const isLightSurface = (color) => {
+      const nums = (String(color).match(/[\d.]+/g) || []).map(Number);
+      if (nums.length < 3) return false;
+      const rgb = nums.slice(0, 3).map((n) => (n <= 1 ? n * 255 : n));
+      return rgb[0] > 240 && rgb[1] > 240 && rgb[2] > 240;
+    };
+    const bg = getComputedStyle(el).backgroundColor;
+    return { theme: document.documentElement.dataset.theme, bg, isLight: isLightSurface(bg) };
+  });
+
+  expect(hover.theme).toBe('dark');
+  expect(hover.isLight, `hover claro en entrada dark: ${hover.bg}`).toBe(false);
+
+  await option.locator('.quantity-up').click();
+
+  const focused = await option.evaluate((el) => {
+    const isLightSurface = (color) => {
+      const nums = (String(color).match(/[\d.]+/g) || []).map(Number);
+      if (nums.length < 3) return false;
+      const rgb = nums.slice(0, 3).map((n) => (n <= 1 ? n * 255 : n));
+      return rgb[0] > 240 && rgb[1] > 240 && rgb[2] > 240;
+    };
+    const bg = getComputedStyle(el).backgroundColor;
+    return { bg, isLight: isLightSurface(bg) };
+  });
+
+  expect(focused.isLight, `focus/cantidad claro en entrada dark: ${focused.bg}`).toBe(false);
+});
 
 test.describe('@theme contrato theming organizer', () => {
   for (const route of ROUTES) {

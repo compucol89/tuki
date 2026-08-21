@@ -1,7 +1,7 @@
 @extends('organizer.layout')
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Conversations') }}</h4>
+    <h1 class="page-title">{{ __('Conversaciones') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -18,7 +18,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Conversations') }}</a>
+        <a href="#">{{ __('Conversaciones') }}</a>
       </li>
     </ul>
   </div>
@@ -144,12 +144,12 @@
             <form action="{{ route('organizer.support_ticket.reply', $ticket->id) }}" id="ajaxform" method="POST"
               enctype="multipart/form-data">@csrf
               <div class="form-group">
-                <label for="">{{ __('Message') . ' **' }}</label>
+                <label for="descriptionTmce1">{{ __('Mensaje') . ' **' }}</label>
                 <textarea id="descriptionTmce1" name="reply" class="summernote" data-height="200"></textarea>
                 <p class="em text-danger mb-0" id="errreply"></p>
               </div>
               <div class="form-group">
-                <label for="">{{ __('Attachment') }}</label>
+                <label>{{ __('Adjunto') }}</label>
                 <div class="input-group">
                   <div class="custom-file">
                     <input type="file" name="file" class="custom-file-input"

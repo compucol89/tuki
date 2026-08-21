@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Edit Ticket Settings') }}</h4>
+    <h1 class="page-title">{{ __('Diseño de entrada') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -45,7 +45,7 @@
       </li>
 
       <li class="nav-item">
-        <a href="#">{{ __('Edit Ticket Settings') }}</a>
+        <a href="#">{{ __('Diseño de entrada') }}</a>
       </li>
     </ul>
   </div>
@@ -54,7 +54,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <div class="card-title d-inline-block">{{ __('Edit Ticket Settings') }}</div>
+          <div class="card-title d-inline-block">{{ __('Diseño de entrada') }}</div>
         </div>
 
         <div class="card-body">
@@ -68,7 +68,7 @@
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label for="">{{ __('Ticket Image') }} </label>
+                      <label>{{ __('Imagen de la entrada') }} </label>
                       <br>
                       <div class="thumb-preview">
                         <img
@@ -87,7 +87,7 @@
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label for="">{{ __('Ticket Logo') }} </label>
+                      <label>{{ __('Logo de la entrada') }} </label>
                       <br>
                       <div class="thumb-preview">
                         <img

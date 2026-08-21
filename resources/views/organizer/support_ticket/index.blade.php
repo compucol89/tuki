@@ -2,21 +2,21 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('All Tickets') }}</h4>
+    <h1 class="page-title">{{ __('All Tickets') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('Support Ticket') }}</a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('All Tickets') }}</a>
@@ -31,7 +31,7 @@
           <div class="row">
             <div class="col-lg-4">
               <div class="card-title d-inline-block">
-                {{ __('All Tickets') }}
+{{ __('Todos los tickets') }}
               </div>
             </div>
 
@@ -41,7 +41,8 @@
                 {{ __('Delete') }}</button>
 
               <form action="" class="float-lg-right float-none" method="GET">
-                <input type="text" name="ticket_id" class="form-control min-w-250" placeholder="{{ __('Search by Ticket ID') }}"
+                <label for="ticketSearch" class="visually-hidden">{{ __('Buscar por ID de ticket') }}</label>
+                <input type="text" name="ticket_id" id="ticketSearch" class="form-control min-w-250" placeholder="{{ __('Search by Ticket ID') }}"
                   value="{{ !empty(request()->input('ticket_id')) ? request()->input('ticket_id') : '' }}">
               </form>
             </div>
@@ -66,7 +67,7 @@
                     <thead>
                       <tr>
                         <th scope="col">
-                          <input type="checkbox" class="bulk-check" data-val="all">
+                          <input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}">
                         </th>
                         <th scope="col">{{ __('Ticket ID') }}</th>
                         <th scope="col">{{ __('Email') }}</th>

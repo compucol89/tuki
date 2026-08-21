@@ -3,15 +3,15 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Transactions') }}</h4>
+    <h1 class="page-title">{{ __('Transacciones') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('Transactions') }}</a>
@@ -30,7 +30,8 @@
 
             <div class="col-lg-4">
               <form action="" method="get">
-                <input type="text" onsubmit="e.preventDefault()" value="{{ request()->input('transcation_id') }}"
+                <label for="transSearch" class="visually-hidden">{{ __('Buscar por ID de transacción') }}</label>
+                <input id="transSearch" type="text" onsubmit="e.preventDefault()" value="{{ request()->input('transcation_id') }}"
                   name="transcation_id" placeholder="{{ __('Enter Transaction Id') }}" class="form-control">
               </form>
             </div>
@@ -47,12 +48,12 @@
                   <table class="table table-striped mt-3">
                     <thead>
                       <tr>
-                        <th scope="col">{{ __('Transaction Id') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Transaction Id') }}</th>
                         <th scope="col">{{ __('Transaction Type') }}</th>
                         <th scope="col">{{ __('Payment Method') }}</th>
-                        <th scope="col">{{ __('Pre Balance') }}</th>
-                        <th scope="col">{{ __('Amount') }}</th>
-                        <th scope="col">{{ __('After Balance') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Pre Balance') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Amount') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('After Balance') }}</th>
                         <th scope="col">{{ __('Status') }}</th>
                         <th scope="col">{{ __('Actions') }}</th>
                       </tr>
@@ -60,7 +61,7 @@
                     <tbody>
                       @foreach ($transcations as $transcation)
                         <tr>
-                          <td>#{{ $transcation->transcation_id }}</td>
+                          <td class="tuki-data tuki-data-id">#{{ $transcation->transcation_id }}</td>
                           <td>
                             @if ($transcation->transcation_type == 1)
                               {{ 'Event Booking' }}
@@ -88,12 +89,12 @@
                               {{ $transcation->payment_method == 'event_settlement' ? __('Liquidación de evento') : ($transcation->payment_method != null ? $transcation->payment_method : '-') }}
                             @endif
                           </td>
-                          <td>
+                          <td class="tuki-data-money">
                             {{ $transcation->currency_symbol_position == 'left' ? $transcation->currency_symbol : '' }}
                             {{ $transcation->pre_balance }}
                             {{ $transcation->currency_symbol_position == 'right' ? $transcation->currency_symbol : '' }}
                           </td>
-                          <td>
+                          <td class="tuki-data-money">
                             @if ($transcation->transcation_type == 3 || $transcation->transcation_type == 5)
                               <span class="text-danger">{{ '(-) ' }}</span>
                             @else
@@ -104,7 +105,7 @@
                             {{ $transcation->grand_total - $transcation->commission }}
                             {{ $transcation->currency_symbol_position == 'right' ? $transcation->currency_symbol : '' }}
                           </td>
-                          <td>
+                          <td class="tuki-data-money">
                             {{ $transcation->currency_symbol_position == 'left' ? $transcation->currency_symbol : '' }}
                             {{ $transcation->after_balance }}
                             {{ $transcation->currency_symbol_position == 'right' ? $transcation->currency_symbol : '' }}
@@ -126,8 +127,9 @@
                               @endphp
                               @if ($t_invoice)
                                   <a target="_blank" class="btn btn-secondary btn-sm mr-1"
-                                  href="{{ route('booking.ticket.download', $t_invoice->id) }}">
-                                  <i class="fas fa-eye"></i>
+                                  href="{{ route('booking.ticket.download', $t_invoice->id) }}"
+                                  aria-label="{{ __('Ver comprobante') }}">
+                                  <i class="fas fa-eye" aria-hidden="true"></i>
                                 </a>
                               @endif
                             @elseif ($transcation->transcation_type == 2)
@@ -136,8 +138,9 @@
                               @endphp
                               @if ($t_invoice)
                                 <a target="_blank" class="btn btn-secondary btn-sm mr-1"
-                                  href="{{ asset('assets/admin/file/order/invoices/' . $t_invoice->invoice) }}">
-                                  <i class="fas fa-eye"></i>
+                                  href="{{ asset('assets/admin/file/order/invoices/' . $t_invoice->invoice) }}"
+                                  aria-label="{{ __('Ver factura') }}">
+                                  <i class="fas fa-eye" aria-hidden="true"></i>
                                 </a>
                               @endif
                             @endif

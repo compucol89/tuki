@@ -2,24 +2,24 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Report') }}</h4>
+    <h1 class="page-title">{{ __('Reportes') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('Event Bookings') }}</a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Report') }}</a>
+        <a href="#">{{ __('Reportes') }}</a>
       </li>
     </ul>
   </div>
@@ -33,7 +33,7 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <h4 class="card-title mb-1">{{ __('Booking Report') }}</h4>
+          <h4 class="card-title mb-1">{{ __('Booking Report') }}</h1>
           <p class="card-category mb-0">{{ __('Filtra reservas por rango de fechas, metodo y estado de pago.') }}</p>
         </div>
 

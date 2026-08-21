@@ -13,7 +13,7 @@ class CacheControlMiddleware
     $response = $next($request);
     $path = $request->path();
 
-    if ($request->is('css/*') || $request->is('js/*') || $request->is('fonts/*')) {
+    if ($request->is('css/*') || $request->is('js/*') || $request->is('fonts/*') || $request->is('webfonts/*')) {
       $response->headers->set('Cache-Control', 'public, max-age=31536000, immutable');
     } elseif (preg_match('/\.(jpg|jpeg|png|gif|webp|svg|ico)$/i', $path)) {
       $response->headers->set('Cache-Control', 'public, max-age=604800');

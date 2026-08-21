@@ -1,0 +1,19 @@
+{
+  "generated": "2026-08-21",
+  "inline_styles": [
+    "resources/views/organizer/edit-profile.blade.php",
+    "resources/views/organizer/event/booking/details.blade.php",
+    "resources/views/organizer/event/booking/index.blade.php",
+    "resources/views/organizer/event/create.blade.php",
+    "resources/views/organizer/event/edit.blade.php",
+    "resources/views/organizer/event/index.blade.php",
+    "resources/views/organizer/event/partials/ai-generate-button.blade.php",
+    "resources/views/organizer/event/ticket/create.blade.php",
+    "resources/views/organizer/event/ticket/edit.blade.php",
+    "resources/views/organizer/event/ticket/index.blade.php",
+    "resources/views/organizer/index.blade.php",
+    "resources/views/organizer/telegram-bot/index.blade.php"
+  ],
+  "hardcoded_surfaces": 16,
+  "important_count": 882
+}

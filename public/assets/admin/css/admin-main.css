@@ -338,8 +338,8 @@ body[data-background-color="dark"] .version-header button[aria-expanded="false"]
 
 .version-body .list-group button::before {
   content: '\f101';
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 600;
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
   margin-right: 10px;
 }
 
@@ -748,9 +748,9 @@ span.tox-statusbar__branding {
 
 /* Número */
 .dashboard-items .card-stats .card-title {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace) !important;
     font-size: 32px !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     color: #173444 !important;
     line-height: 1 !important;
     margin-bottom: 4px !important;

@@ -34,8 +34,8 @@
       </div>
       <div class="col-lg-6 {{ $freeLimitEnabled ? '' : 'd-none' }}" id="free_ticket_limit_value">
         <div class="form-group mb-0">
-          <label>{{ __('Máximo gratis por persona en este evento') }}</label>
-          <input type="number" name="free_tickets_per_person_limit" min="1" max="10"
+          <label for="free_tickets_per_person_limit">{{ __('Máximo gratis por persona en este evento') }}</label>
+          <input type="number" name="free_tickets_per_person_limit" id="free_tickets_per_person_limit" min="1" max="10"
             value="{{ $freeLimitValue }}" class="form-control"
             placeholder="{{ __('Ej: 2') }}">
           <small class="form-text text-muted">

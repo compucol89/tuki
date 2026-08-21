@@ -949,6 +949,16 @@ class OrganizerController extends Controller
     return redirect()->back();
   }
 
+  public function saveSidebarState(Request $request)
+  {
+    $state = [];
+    foreach (['course', 'bookings', 'support_ticket'] as $key) {
+      $state[$key] = $request->boolean($key);
+    }
+    session(['sidebar_state' => $state]);
+    return response()->json(['ok' => true]);
+  }
+
   //transaction
   public function transaction(Request $request)
   {

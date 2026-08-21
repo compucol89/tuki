@@ -8,18 +8,18 @@
     $approvedAmount = $collection->where('status', 1)->sum('payable_amount');
   @endphp
   <div class="page-header">
-    <h4 class="page-title">{{ __('Withdraws') }}</h4>
+    <h1 class="page-title">{{ __('Retiros') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('My Withdraws') }}</a>
+        <a href="#">{{ __('Mis retiros') }}</a>
       </li>
     </ul>
   </div>
@@ -28,7 +28,7 @@
     <div class="col-md-12">
       <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center mb-4">
         <div class="mb-3 mb-lg-0">
-          <h4 class="mb-1">{{ __('Tus retiros') }}</h4>
+          <h4 class="mb-1">{{ __('Tus retiros') }}</h1>
           <p class="text-muted mb-0">{{ __('Desde aqui puedes revisar solicitudes, ver su estado y pedir un nuevo retiro.') }}</p>
         </div>
         <div class="d-flex flex-wrap">
@@ -82,7 +82,7 @@
 
       <div class="card ev-section-card">
         <div class="card-header ev-section-header">
-          <h4 class="card-title">{{ __('Historial de retiros') }}</h4>
+          <h4 class="card-title">{{ __('Historial de retiros') }}</h1>
         </div>
         <div class="card-body">
           @if (session()->has('course_status_warning'))
@@ -102,13 +102,13 @@
                 <thead>
                   <tr>
                     <th scope="col">
-                      <input type="checkbox" class="bulk-check" data-val="all">
+                      <input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}">
                     </th>
-                    <th scope="col">{{ __('Retiro') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Retiro') }}</th>
                     <th scope="col">{{ __('Metodo') }}</th>
-                    <th scope="col">{{ __('Solicitado') }}</th>
-                    <th scope="col">{{ __('Comision') }}</th>
-                    <th scope="col">{{ __('Cobras') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Solicitado') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Comision') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Cobras') }}</th>
                     <th scope="col">{{ __('Estado') }}</th>
                     <th scope="col">{{ __('Acciones') }}</th>
                   </tr>
@@ -119,23 +119,23 @@
                       <td>
                         <input type="checkbox" class="bulk-check" data-val="{{ $item->id }}">
                       </td>
-                      <td>
+                      <td class="tuki-data tuki-data-id">
                         {{ $item->withdraw_id }}
                       </td>
                       <td>
                         {{ optional($item->method)->name }}
                       </td>
-                      <td>
+                      <td class="tuki-data-money">
                         {{ $currencyInfo->base_currency_symbol_position == 'left' ? $currencyInfo->base_currency_symbol : '' }}
                         {{ $item->amount }}
                         {{ $currencyInfo->base_currency_symbol_position == 'right' ? $currencyInfo->base_currency_symbol : '' }}
                       </td>
-                      <td>
+                      <td class="tuki-data-money">
                         {{ $currencyInfo->base_currency_symbol_position == 'left' ? $currencyInfo->base_currency_symbol : '' }}
                         {{ $item->total_charge }}
                         {{ $currencyInfo->base_currency_symbol_position == 'right' ? $currencyInfo->base_currency_symbol : '' }}
                       </td>
-                      <td>
+                      <td class="tuki-data-money">
                         {{ $currencyInfo->base_currency_symbol_position == 'left' ? $currencyInfo->base_currency_symbol : '' }}
                         {{ $item->payable_amount }}
                         {{ $currencyInfo->base_currency_symbol_position == 'right' ? $currencyInfo->base_currency_symbol : '' }}
@@ -176,7 +176,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title" id="exampleModalLongTitle">{{ __('Withdraw Information') }}</h4>
+            <h4 class="modal-title" id="exampleModalLongTitle">{{ __('Withdraw Information') }}</h1>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

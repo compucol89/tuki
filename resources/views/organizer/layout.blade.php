@@ -43,6 +43,9 @@
 </head>
 
 <body data-background-color="{{ Auth::guard('organizer')->user()->theme_version == 'light' ? 'white' : 'dark' }}">
+  {{-- skip link (WCAG 2.4.1 Bypass Blocks) --}}
+  <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
   {{-- loader start --}}
   <div class="request-loader">
     <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="loader">
@@ -59,11 +62,11 @@
     {{-- side navbar area end --}}
 
     <div class="main-panel">
-      <div class="content">
+      <main class="content" id="main-content">
         <div class="page-inner">
           @yield('content')
         </div>
-      </div>
+      </main>
 
       {{-- footer area start --}}
       @includeIf('organizer.partials.footer')

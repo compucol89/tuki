@@ -13,7 +13,66 @@ label,
 .main-header,
 .page-title,
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif !important;
+  font-family: var(--tuki-font-ui, 'Inter', 'Helvetica Neue', Arial, sans-serif) !important;
+}
+
+/* Neutraliza la fuga "Lato" del tema Atlantis (atlantis.css:95-119). Lato NO está
+   cargada en el panel → sin esto los textos caían a fuente del sistema (Helvetica).
+   Se sobreescribe con la MISMA especificidad que atlantis y, como admin-skin.css se
+   incluye DESPUÉS, gana por orden. No toca Font Awesome: los iconos conservan su
+   propia font-family de fontawesome.css. */
+p, a, td, th, small, strong, em, b,
+.alert, .card-category,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.td-name, .navbar, .brand, .btn-simple,
+button.close {
+  font-family: var(--tuki-font-ui, 'Inter', 'Helvetica Neue', Arial, sans-serif);
+}
+
+/* Herencia base del shell admin al sistema tipográfico Inter */
+body,
+.main-panel,
+.sidebar,
+.main-header,
+.logo-header {
+  font-family: var(--tuki-font-ui, 'Inter', 'Helvetica Neue', Arial, sans-serif) !important;
+}
+
+/* =============================================
+   DATA TYPOGRAPHY — IBM Plex Mono para datos numéricos.
+   Semántico: se aplica a valores (montos, %, IDs, contadores), no a lenguaje.
+   font-variant-numeric: tabular-nums lining-nums → columnas estables.
+   ============================================= */
+.tuki-data,
+.tuki-data-money,
+.tuki-data-percent,
+.tuki-data-id,
+.tuki-data-count,
+.tuki-stat-value,
+.tuki-data table td:is(.tuki-data, .tuki-data-money, .tuki-data-percent, .tuki-data-id, .tuki-data-count) {
+  font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.tuki-data-money,
+.tuki-data-id,
+.tuki-data-count {
+  white-space: nowrap;
+}
+
+/* Columnas numéricas de tablas: mono + alineación derecha + padding estable */
+.table td.tuki-data,
+.table td.tuki-data-money,
+.table td.tuki-data-percent,
+.table td.tuki-data-id,
+.table td.tuki-data-count,
+.table th.tuki-data,
+.table th.tuki-data-money,
+.table th.tuki-data-percent,
+.table th.tuki-data-id,
+.table th.tuki-data-count {
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 /* =============================================
@@ -63,7 +122,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
-  color: #9ca3af !important;
+  color: var(--adm-muted) !important;
   margin-bottom: 10px !important;
 }
 
@@ -253,6 +312,10 @@ h1, h2, h3, h4, h5, h6 {
   --adm-ring: rgba(249, 115, 22, 0.18);
   --adm-sidebar: #1e2532;
   --adm-sidebar-soft: #252d3c;
+
+  /* Tipografía — Inter (UI/lenguaje) + IBM Plex Mono (datos numéricos) */
+  --tuki-font-ui: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --tuki-font-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
 
 body {
@@ -594,7 +657,7 @@ body[data-background-color="dark"],
 body[data-background-color="dark"] .main-panel,
 body[data-background-color="dark"] .main-panel > .content,
 body[data-background-color="dark"] .page-inner {
-  background: #1e2532 !important;
+  background: var(--adm-bg, #1c2433) !important;
 }
 
 body[data-background-color="dark"] .card,
@@ -1133,9 +1196,28 @@ label {
   align-items: stretch;
   display: grid !important;
   gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-left: 0 !important;
   margin-right: 0 !important;
+}
+
+/* Charts del dashboard: van debajo de las 4 stats. En desktop (4 columnas)
+   cada chart ocupa 2 columnas (mitad de ancho, lado a lado); en menos columnas
+   span 2 = ancho completo. */
+.dashboard-items > .col-lg-6:not(.col-xl-3) {
+  grid-column: span 2;
+}
+
+@media (max-width: 991.98px) {
+  .dashboard-items.row {
+    grid-template-columns: 1fr;
+  }
+
+  /* En una columna, span 2 crearía una columna implícita que rompe el layout
+     (stats 2-por-fila en móvil). Los charts vuelven a ocupar una celda. */
+  .dashboard-items > .col-lg-6:not(.col-xl-3) {
+    grid-column: auto;
+  }
 }
 
 .dashboard-items > [class*="col-"] {
@@ -1238,7 +1320,7 @@ label {
 
 @media (min-width: 1200px) {
   .dashboard-items.row {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -1928,4 +2010,561 @@ label {
 .admin-menu-builder .list-group-item .btn,
 .admin-menu-builder .dd3-content .btn {
   margin-left: auto;
+}
+
+/* =============================================
+   SKIP LINK (WCAG 2.4.1) — visible solo al recibir foco
+   ============================================= */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10000;
+  background: #f97316;
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.skip-link:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  left: 0;
+  color: #ffffff;
+  text-decoration: none;
+  outline: 2px solid #ffffff;
+  outline-offset: -2px;
+}
+
+/* Visually hidden — accessible to screen readers but hidden visually (WCAG 1.3.1) */
+.visually-hidden,
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Touch targets mínimos (WCAG 2.5.8 AA: 24×24px) */
+.topbar-toggler.more {
+  min-width: 40px;
+  min-height: 24px;
+  text-align: center;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Sidebar estable: sin transiciones de layout entre páginas.
+   El layout del menú no cambia al navegar (estado persistido en
+   localStorage); solo se permiten transiciones de color/hover. */
+.sidebar,
+.sidebar[data-background-color="white"],
+.sidebar .sidebar-wrapper,
+.sidebar[data-background-color="white"] .sidebar-wrapper {
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+/* Colapso suave y estable de los submenús (solo altura, easing suave) */
+.sidebar .collapse,
+.sidebar[data-background-color="white"] .collapse {
+  transition: height 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.sidebar .nav > .nav-item a .caret,
+.sidebar[data-background-color="white"] .nav > .nav-item a .caret {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Submenús: una sola línea por item, sin wrap ni textos apretados.
+   Padding del nav-item UNIFORME y estable (sin :has): Bootstrap cambia
+   las clases del collapse durante la animación (collapse → collapsing),
+   y un selector :has(> .collapse) hacía que el toggle encogiera/creciera
+   18px en plena transición (el "tambaleo" del título). */
+.sidebar .nav > .nav-item,
+.sidebar[data-background-color="white"] .nav > .nav-item {
+  padding: 0 10px !important;
+}
+.sidebar .nav-collapse li a,
+.sidebar[data-background-color="white"] .nav-collapse li a {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-height: 38px !important;
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+.sidebar .nav-collapse li a > i,
+.sidebar[data-background-color="white"] .nav-collapse li a > i {
+  width: 16px !important;
+  min-width: 16px !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  opacity: 0.75;
+}
+.sidebar .nav-collapse li a .sub-item,
+.sidebar[data-background-color="white"] .nav-collapse li a .sub-item {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+.sidebar .nav-collapse li a .sub-item:before,
+.sidebar[data-background-color="white"] .nav-collapse li a .sub-item:before {
+  display: none !important;
+}
+
+/* =============================================
+   SIDEBAR — tokens semánticos (light/dark)
+   ============================================= */
+:root {
+  --sidebar-bg: #ffffff;
+  --sidebar-surface: #f8fafc;
+  --sidebar-surface-hover: rgba(30, 37, 50, 0.06);
+  --sidebar-surface-active: rgba(249, 115, 22, 0.14);
+  --sidebar-text-primary: #1e2532;
+  --sidebar-text-secondary: #5f6b7d;
+  --sidebar-text-muted: #6b7686;
+  --sidebar-icon: #5f6b7d;
+  --sidebar-active-text: #9A3412;
+  --sidebar-active-icon: #1e2532;
+  --sidebar-border: rgba(30, 37, 50, 0.08);
+  --sidebar-accent: #F97316;
+}
+
+/* =============================================
+   TOKENS SEMÁNTICOS DE PÁGINA (componentes .oe-*,
+   .ob-*, .bod-*, .tb-*, formularios) — aliases que
+   mapean a la escala existente para migrar superficies
+   sin cambiar valores en runtime.
+   ============================================= */
+:root {
+  --surface-page: #f5f6f8;
+  --surface-card: #ffffff;
+  --surface-card-soft: #f8fafc;
+  --surface-toolbar: #fbfcfe;
+  --surface-input: #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-hover: rgba(30, 37, 50, 0.05);
+  --surface-active: rgba(249, 115, 22, 0.12);
+  --panel-surface: #f8fafc;
+  --panel-border: rgba(30, 37, 50, 0.08);
+  --panel-text-primary: #1e2532;
+
+
+  --text-primary: #1e2532;
+  --text-secondary: #5f6b7d;
+  --text-muted: #6b7686;
+  --text-on-accent: #ffffff;
+
+  --border-subtle: #eef1f5;
+  --border-default: #e7eaf0;
+  --border-strong: #d5dae3;
+
+  --status-success-bg: #f0fdf4;
+  --status-success-fg: #15803d;
+  --status-warning-bg: #fff7ed;
+  --status-warning-fg: #9a3412;
+  --status-danger-bg: #fff7f7;
+  --status-danger-fg: #b91c1c;
+  --status-info-bg: #e8f1ff;
+  --status-info-fg: #1d4ed8;
+
+  --focus-ring: rgba(249, 115, 22, 0.35);
+}
+
+html[data-theme="dark"] {
+  --surface-page: #171e2b;
+  --surface-card: #232c3b;
+  --surface-card-soft: #283242;
+  --surface-toolbar: #1f2637;
+  --surface-input: #232c3b;
+  --surface-elevated: #2a3444;
+  --surface-hover: rgba(255, 255, 255, 0.06);
+  --surface-active: rgba(249, 115, 22, 0.16);
+  --panel-surface: #232c3b;
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-text-primary: #f2f4f7;
+
+
+  --text-primary: #f2f4f7;
+  --text-secondary: #b8c0cc;
+  --text-muted: #8e98a8;
+  --text-on-accent: #ffffff;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --status-success-bg: rgba(22, 163, 74, 0.14);
+  --status-success-fg: #86efac;
+  --status-warning-bg: rgba(249, 115, 22, 0.12);
+  --status-warning-fg: #fdba74;
+  --status-danger-bg: rgba(220, 38, 38, 0.14);
+  --status-danger-fg: #fca5a5;
+  --status-info-bg: rgba(37, 99, 235, 0.16);
+  --status-info-fg: #93c5fd;
+}
+
+html[data-theme="dark"] {
+  --sidebar-bg: #171e2b;
+  --sidebar-surface: #232c3b;
+  --sidebar-surface-hover: #283242;
+  --sidebar-surface-active: #2b3443;
+  --sidebar-text-primary: #f2f4f7;
+  --sidebar-text-secondary: #b8c0cc;
+  --sidebar-text-muted: #8e98a8;
+  --sidebar-icon: #b8c0cc;
+  --sidebar-active-text: #ffffff;
+  --sidebar-active-icon: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-accent: #F97316;
+}
+
+/* Estados dark con tokens (html[data-theme="dark"] + sidebar oscuro) */
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]),
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .sidebar-wrapper,
+html[data-theme="dark"] .sidebar[data-background-color="dark2"] .sidebar-wrapper {
+  background: var(--sidebar-bg) !important;
+}
+
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a p,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a i,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a .caret {
+  color: var(--sidebar-text-secondary) !important;
+  background: transparent !important;
+}
+
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a:hover,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a:focus {
+  background: var(--sidebar-surface-hover) !important;
+  color: var(--sidebar-text-primary) !important;
+}
+
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a:hover p,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a:hover i,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a:focus p,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav > .nav-item a:focus i {
+  color: var(--sidebar-text-primary) !important;
+}
+
+/* ACTIVO / EXPANDIDO — override de máxima especificidad.
+   Vence a atlantis.css: .sidebar[data-background-color="dark2"].sidebar-style-2
+   .nav .nav-item.active>a { background:#fff; color:#1f283e !important } */
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item > a[data-toggle="collapse"][aria-expanded="true"] {
+  background: var(--sidebar-surface-active) !important;
+  box-shadow: inset 3px 0 0 var(--sidebar-accent) !important;
+  color: var(--sidebar-active-text) !important;
+}
+
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a p,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a i,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.active > a .caret,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a p,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a i,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a .caret,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item > a[data-toggle="collapse"][aria-expanded="true"] p,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item > a[data-toggle="collapse"][aria-expanded="true"] i,
+html[data-theme="dark"] body .sidebar[data-background-color="dark2"].sidebar-style-2 .nav.nav-primary > .nav-item > a[data-toggle="collapse"][aria-expanded="true"] .caret {
+  color: var(--sidebar-active-text) !important;
+}
+
+/* Sub-items y secciones en dark */
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav-collapse li a .sub-item {
+  color: var(--sidebar-text-secondary) !important;
+}
+
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav-collapse li.active > a,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav-collapse li a:hover {
+  background: var(--sidebar-surface-hover) !important;
+}
+
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav-collapse li.active > a .sub-item,
+html[data-theme="dark"] .sidebar:not([data-background-color="white"]) .nav-collapse li a:hover .sub-item {
+  color: var(--sidebar-active-text) !important;
+}
+
+html[data-theme="dark"] .sidebar .nav .nav-section .text-section {
+  color: var(--sidebar-text-muted) !important;
+}
+
+/* Focus visible: ring naranja siempre presente (nunca outline:none) */
+.sidebar a:focus-visible,
+.sidebar .nav > .nav-item a:focus-visible,
+.sidebar .nav-collapse li a:focus-visible {
+  outline: 2px solid var(--sidebar-accent) !important;
+  outline-offset: -2px;
+}
+
+/* Iconos: caja consistente 20px, alineación centrada */
+.sidebar .nav > .nav-item > a i {
+  width: 20px !important;
+  min-width: 20px !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  float: none !important;
+}
+
+/* Target size: filas principales 40px de alto */
+.sidebar .nav > .nav-item > a {
+  min-height: 40px !important;
+  align-items: center !important;
+}
+
+/* Buscador en dark: superficie + placeholder con contraste */
+html[data-theme="dark"] .sidebar-search.form-control {
+  background: var(--sidebar-surface) !important;
+  border-color: var(--sidebar-border) !important;
+  color: var(--sidebar-text-primary) !important;
+}
+html[data-theme="dark"] .sidebar-search.form-control::placeholder {
+  color: var(--sidebar-text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* =============================================
+   SIDEBAR — secciones semánticas: ritmo y labels
+   ============================================= */
+.sidebar .nav .nav-section,
+.sidebar[data-background-color="white"] .nav .nav-section {
+  margin: 0 !important;
+}
+
+.sidebar .nav .nav-section .text-section,
+.sidebar[data-background-color="white"] .nav .nav-section .text-section {
+  display: block !important;
+  margin: 20px 0 8px !important;
+  padding: 0 14px !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--sidebar-text-muted) !important;
+}
+
+.sidebar .nav .nav-section:first-of-type .text-section,
+.sidebar[data-background-color="white"] .nav .nav-section:first-of-type .text-section {
+  margin-top: 4px !important;
+}
+
+/* Separación entre grupos: último item de sección → label siguiente */
+.sidebar .nav > .nav-item + .nav-section .text-section {
+  margin-top: 22px !important;
+}
+
+/* Items con submenu: separación inferior para el submenu */
+.sidebar .nav > .nav-item .collapse {
+  margin-bottom: 4px;
+}
+
+/* =============================================
+   SIDEBAR — bloque de usuario: avatar + nombre
+   alineados verticalmente (flexbox centrado)
+   ============================================= */
+.sidebar .user,
+.sidebar[data-background-color] .user {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px;
+  margin: 16px 10px 14px !important;
+  padding: 0 10px 12px !important;
+}
+
+.sidebar .user .avatar-sm {
+  float: none !important;
+  margin: 0 !important;
+}
+
+.sidebar .user .info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar .user .info a,
+.sidebar[data-background-color="white"] .user .info a {
+  display: flex !important;
+}
+
+.sidebar .user .info a > span,
+.sidebar[data-background-color="white"] .user .info a > span {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.3 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar .user .info a > span .user-level,
+.sidebar[data-background-color="white"] .user .info a > span .user-level {
+  margin-top: 2px !important;
+  line-height: 1.3 !important;
+}
+
+/* Rol del usuario: secundario, más tenue que el nombre (dark) */
+html[data-theme="dark"] .sidebar .user .info a > span .user-level,
+html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > span .user-level {
+  color: var(--sidebar-text-muted) !important;
+}
+
+/* ============================================================
+   VENDOR OVERRIDE — iconos del sidebar (atlantis.css:866, 853)
+   Atlantis: .sidebar .nav.nav-primary > .nav-item.active a i
+   { color: #1572E8 !important } — selector DESCENDENTE que
+   alcanza a TODO el submenu del item activo (no solo el activo).
+   El grupo vendor incluye [data-background-color="white"] →
+   especificidad real (0,6,2). Igualamos con [data-background-color]
+   + !important + orden posterior (admin-skin carga después) → gana.
+   1. Neutralizador (alcance idéntico al vendor) → token icon.
+   2-5. Estados específicos declarados DESPUÉS → ganan.
+   ============================================================ */
+.sidebar[data-background-color] .nav.nav-primary > .nav-item.active a i,
+.sidebar[data-background-color] .nav.nav-primary > .nav-item.selected a i {
+  color: var(--sidebar-icon) !important;
+}
+
+.sidebar[data-background-color] .nav.nav-primary > .nav-item.active > a i,
+.sidebar[data-background-color] .nav.nav-primary > .nav-item.selected > a i {
+  color: var(--sidebar-active-icon) !important;
+}
+
+/* Toggle activo + expandido: el vendor (atlantis.css) lo pinta blanco con
+   spec (0,8,2) (.sidebar.sidebar-style-2 ... > a[data-toggle][aria-expanded] i).
+   Igualamos la especificidad y ganamos por orden posterior. */
+.sidebar[data-background-color].sidebar-style-2 .nav.nav-primary > .nav-item.active > a[data-toggle="collapse"][aria-expanded="true"] i,
+.sidebar[data-background-color].sidebar-style-2 .nav.nav-primary > .nav-item.selected > a[data-toggle="collapse"][aria-expanded="true"] i {
+  color: var(--sidebar-active-icon) !important;
+}
+
+.sidebar[data-background-color] .nav.nav-primary > .nav-item.active .nav-collapse li.active > a i,
+.sidebar[data-background-color] .nav.nav-primary > .nav-item.selected .nav-collapse li.active > a i {
+  color: var(--sidebar-active-text) !important;
+}
+
+.sidebar[data-background-color] .nav.nav-primary > .nav-item > a[data-toggle="collapse"][aria-expanded="true"] i {
+  color: var(--sidebar-text-primary) !important;
+}
+
+.sidebar[data-background-color] .nav.nav-primary > .nav-item a:hover i,
+.sidebar[data-background-color] .nav.nav-primary > .nav-item a:focus i {
+  color: var(--sidebar-text-primary) !important;
+}
+
+/* === Light-theme overrides (movidos desde theme-dark.css, GATE Fase D) === */
+
+html[data-theme="light"] .theme-toggle-panel .fa-sun {
+  display: none;
+}
+
+html[data-theme="light"] .sidebar[data-background-color] .nav .nav-section .text-section {
+  color: #5f6b7d;
+}
+
+html[data-theme="light"] .sidebar[data-background-color="white"] .user .info .user-level {
+  color: #5f6b7d;
+}
+
+html[data-theme="light"] .btn-outline-primary {
+  color: #0056b3;
+  border-color: #0056b3;
+}
+
+html[data-theme="light"] .tx-btn.tx-btn-primary {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  border-color: #9a3412;
+  color: #ffffff;
+}
+
+html[data-theme="light"] .btn-success {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  border-color: #065f46;
+  color: #ffffff;
+}
+
+html[data-theme="light"] .text-warning {
+  color: #a16207;
+}
+
+html[data-theme="light"] .tx-btn.tx-btn-light {
+  color: var(--adm-ink);
+  border-color: var(--adm-border);
+}
+
+html[data-theme="light"] .arca-line-muted {
+  color: var(--adm-muted);
+}
+
+html[data-theme="light"] .text-danger {
+  color: #b91c1c;
+}
+
+html[data-theme="light"] pre code {
+  color: #1e2532;
+}
+
+html[data-theme="light"] .sidebar .nav > .nav-item a:not(.dropdown-toggle) i {
+  color: var(--adm-muted, #b0b0b0);
+}
+
+html[data-theme="light"] .sidenav-toggler i {
+  color: #5f6b7d;
+}
+
+/* === Light-theme overrides (reglas mixtas divididas, Fase D) === */
+
+html[data-theme="light"] code,,
+html[data-theme="light"] .code-block,,
+html[data-theme="light"] pre {
+  color: var(--adm-ink-strong, #ffffff);
+}
+
+html[data-theme="light"] .sidebar .nav > .nav-item a i {
+  color: var(--adm-ink);
+}
+
+html[data-theme="light"] .navbar-toggler .navbar-toggler-icon i,,
+html[data-theme="light"] .topbar-toggler i {
+  background: var(--adm-bg-soft);
+  border-color: var(--adm-border);
+  color: var(--adm-ink);
+}
+
+/* =============================================
+   PREFERS-REDUCED-MOTION (WCAG 2.3.3) — panel admin
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

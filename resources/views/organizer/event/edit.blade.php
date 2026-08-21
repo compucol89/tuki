@@ -3,28 +3,28 @@
 @section('content')
   <div class="event-form-modern event-form-modern--edit">
   <div class="page-header">
-    <h4 class="page-title">{{ __('Edit Event') }}</h4>
+    <h1 class="page-title">{{ __('Editar evento') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('Event Management') }}</a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a
           href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code]) }}">{{ __('All Events') }}</a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       @php
         $event_title = DB::table('event_contents')
@@ -93,7 +93,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Edit Event') }}</a>
+        <a href="#">{{ __('Editar evento') }}</a>
       </li>
     </ul>
   </div>
@@ -130,7 +130,7 @@
           <div class="row">
             <div class="col-lg-8 offset-lg-2">
               <div class="alert alert-danger pb-1 dis-none" id="eventErrors">
-                <button type="button" class="close" data-dismiss="alert">x</button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="{{ __('Cerrar') }}">x</button>
                 <ul></ul>
               </div>
               <div class="card border mb-4 event-quick-guide-card">
@@ -200,7 +200,7 @@
               </div>
               <div class="card ev-section-card">
                 <div class="card-header ev-section-header">
-                  <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicación') }}</h4>
+                  <h4 class="card-title"><i class="fas fa-clipboard-check mr-2 text-primary"></i>{{ __('Checklist de publicación') }}</h1>
                 </div>
                 <div class="card-body">
                   @if ($publicationScore >= 100)
@@ -259,7 +259,7 @@
               </div>
               <div class="card ev-section-card event-media-card" id="section-media">
                 <div class="card-header ev-section-header">
-                  <h4 class="card-title"><i class="fas fa-images mr-2 text-primary"></i>{{ __('Imágenes del evento') }}</h4>
+                  <h4 class="card-title"><i class="fas fa-images mr-2 text-primary"></i>{{ __('Imágenes del evento') }}</h1>
                 </div>
                 <div class="card-body">
                   <div class="event-media-intro">
@@ -275,7 +275,7 @@
                 <div class="event-cover-box mb-4">
                   <div class="event-cover-box__intro">
                     <span class="event-cover-box__eyebrow">{{ __('Paso 1 · Portada principal') }}</span>
-                    <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h4>
+                    <h4 class="event-cover-box__title">{{ __('Imagen de portada') }}*</h1>
 	                    <p class="event-cover-box__text">{{ __('Es la imagen principal del evento. Aparece en el listado, la página del evento y cuando se comparte.') }}</p>
                   </div>
                   <div class="event-cover-box__body">
@@ -339,7 +339,7 @@
                 <input type="hidden" name="gallery_images" value="0">
                 <div class="card ev-section-card">
                   <div class="card-header ev-section-header">
-                    <h4 class="card-title"><i class="fas fa-calendar-alt mr-2 text-primary"></i>{{ __('Fechas y horarios') }}</h4>
+                    <h4 class="card-title"><i class="fas fa-calendar-alt mr-2 text-primary"></i>{{ __('Fechas y horarios') }}</h1>
                   </div>
                   <div class="card-body">
                 <div id="section-schedule" class="mb-3">
@@ -349,7 +349,7 @@
                 <div class="row">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Tipo de fecha') . '*' }}</label>
+                      <label>{{ __('Tipo de fecha') . '*' }}</label>
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="date_type" {{ $event->date_type == 'single' ? 'checked' : '' }}
@@ -370,7 +370,7 @@
                 <div class="row countDownStatus {{ $event->date_type == 'multiple' ? 'd-none' : '' }} ">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Contador regresivo') . '*' }}</label>
+                      <label>{{ __('Contador regresivo') . '*' }}</label>
                       <div class="selectgroup w-100">
                         <label class="selectgroup-item">
                           <input type="radio" name="countdown_status" value="1" class="selectgroup-input"
@@ -392,31 +392,31 @@
                 <div class="row {{ $event->date_type == 'multiple' ? 'd-none' : '' }}" id="single_dates">
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label>{{ __('Start Date') . '*' }}</label>
-                      <input type="date" name="start_date" value="{{ $event->start_date }}"
-                        placeholder="{{ __('Enter Start Date') }}" class="form-control">
+                      <label for="opb-start_date">{{ __('Fecha de inicio') . '*' }}</label>
+                      <input type="date" name="start_date" id="opb-start_date" value="{{ $event->start_date }}"
+                        placeholder="{{ __('Fecha de inicio') }}" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label for="">{{ __('Start Time') . '*' }}</label>
-                      <input type="time" name="start_time" value="{{ $event->start_time }}" class="form-control">
+                      <label for="opb-start_time">{{ __('Hora de inicio') . '*' }}</label>
+                      <input type="time" name="start_time" id="opb-start_time" value="{{ $event->start_time }}" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label>{{ __('End Date') . '*' }}</label>
-                      <input type="date" name="end_date" value="{{ $event->end_date }}"
-                        placeholder="{{ __('Enter End Date') }}" class="form-control">
+                      <label for="opb-end_date">{{ __('Fecha de fin') . '*' }}</label>
+                      <input type="date" name="end_date" id="opb-end_date" value="{{ $event->end_date }}"
+                        placeholder="{{ __('Fecha de fin') }}" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-lg-3">
                     <div class="form-group">
-                      <label for="">{{ __('End Time') . '*' }}</label>
-                      <input type="time" name="end_time" value="{{ $event->end_time }}" class="form-control">
+                      <label for="opb-end_time">{{ __('Hora de fin') . '*' }}</label>
+                      <input type="time" name="end_time" id="opb-end_time" value="{{ $event->end_time }}" class="form-control">
                     </div>
                   </div>
                 </div>
@@ -438,12 +438,12 @@
                         <table class="table table-bordered">
                           <thead>
                             <tr>
-                              <th>{{ __('Start Date') }}</th>
-                              <th>{{ __('Start Time') }}</th>
-                              <th>{{ __('End Date') }}</th>
-                              <th>{{ __('End Time') }}</th>
-                              <th><a href="javascrit:void(0)" class="btn btn-success addDateRow"><i
-                                    class="fas fa-plus-circle"></i></a></th>
+                              <th>{{ __('Fecha de inicio') }}</th>
+                              <th>{{ __('Hora de inicio') }}</th>
+                              <th>{{ __('Fecha de fin') }}</th>
+                              <th>{{ __('Hora de fin') }}</th>
+                              <th><a href="javascript:void(0)" class="btn btn-success addDateRow" role="button" aria-label="{{ __('Agregar fecha') }}"><i
+                                    class="fas fa-plus-circle" aria-hidden="true"></i></a></th>
                             </tr>
                           </thead>
                           <tbody>
@@ -452,40 +452,41 @@
                                 <tr>
                                   <td>
                                     <div class="form-group">
-                                      <label for="">{{ __('Start Date') . '*' }}</label>
+                                      <label>{{ __('Fecha de inicio') . '*' }}</label>
                                       <input type="date" name="m_start_date[]" class="form-control"
-                                        value="{{ $date->start_date }}">
+                                        value="{{ $date->start_date }}" aria-label="{{ __('Fecha de inicio') }}">
                                     </div>
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <label for="">{{ __('Start Time') . '*' }}</label>
+                                      <label>{{ __('Hora de inicio') . '*' }}</label>
                                       <input type="time" name="m_start_time[]" class="form-control"
-                                        value="{{ $date->start_time }}">
+                                        value="{{ $date->start_time }}" aria-label="{{ __('Hora de inicio') }}">
                                     </div>
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <label for="">{{ __('End Date') . '*' }}
+                                      <label>{{ __('Fecha de fin') . '*' }}
                                       </label>
                                       <input type="date" name="m_end_date[]" class="form-control"
-                                        value="{{ $date->end_date }}">
+                                        value="{{ $date->end_date }}" aria-label="{{ __('Fecha de fin') }}">
                                     </div>
                                   </td>
                                   <td>
                                     <div class="form-group">
-                                      <label for="">{{ __('End Time') . '*' }}
+                                      <label>{{ __('Hora de fin') . '*' }}
                                       </label>
                                       <input type="time" name="m_end_time[]" class="form-control"
-                                        value="{{ $date->end_time }}">
+                                        value="{{ $date->end_time }}" aria-label="{{ __('Hora de fin') }}">
                                     </div>
                                   </td>
                                   <input type="hidden" name="date_ids[]" value="{{ $date->id }}">
                                   <td>
                                     <a href="javascript:void(0)"
                                       data-url="{{ route('organizer.event.delete.date', $date->id) }}"
-                                      class="btn btn-danger deleteDateDbRow">
-                                      <i class="fas fa-minus"></i></a>
+                                      class="btn btn-danger deleteDateDbRow"
+                                      role="button" aria-label="{{ __('Eliminar fecha') }}">
+                                      <i class="fas fa-minus" aria-hidden="true"></i></a>
                                   </td>
                                 </tr>
                               @endforeach
@@ -493,33 +494,33 @@
                               <tr>
                                 <td>
                                   <div class="form-group">
-                                    <label for="">{{ __('Start Date') . '*' }}</label>
-                                    <input type="date" name="m_start_date[]" class="form-control">
+                                    <label>{{ __('Fecha de inicio') . '*' }}</label>
+                                    <input type="date" name="m_start_date[]" class="form-control" aria-label="{{ __('Fecha de inicio') }}">
                                   </div>
                                 </td>
                                 <td>
                                   <div class="form-group">
-                                    <label for="">{{ __('Start Time') . '*' }}</label>
-                                    <input type="time" name="m_start_time[]" class="form-control">
+                                    <label>{{ __('Hora de inicio') . '*' }}</label>
+                                    <input type="time" name="m_start_time[]" class="form-control" aria-label="{{ __('Hora de inicio') }}">
                                   </div>
                                 </td>
                                 <td>
                                   <div class="form-group">
-                                    <label for="">{{ __('End Date') . '*' }}
+                                    <label>{{ __('Fecha de fin') . '*' }}
                                     </label>
-                                    <input type="date" name="m_end_date[]" class="form-control">
+                                    <input type="date" name="m_end_date[]" class="form-control" aria-label="{{ __('Fecha de fin') }}">
                                   </div>
                                 </td>
                                 <td>
                                   <div class="form-group">
-                                    <label for="">{{ __('End Time') . '*' }}
+                                    <label>{{ __('Hora de fin') . '*' }}
                                     </label>
-                                    <input type="time" name="m_end_time[]" class="form-control">
+                                    <input type="time" name="m_end_time[]" class="form-control" aria-label="{{ __('Hora de fin') }}">
                                   </div>
                                 </td>
                                 <td>
-                                  <a href="javascript:void(0)" class="btn btn-danger deleteDateRow">
-                                    <i class="fas fa-minus"></i></a>
+                                  <a href="javascript:void(0)" class="btn btn-danger deleteDateRow" role="button" aria-label="{{ __('Eliminar fecha') }}">
+                                    <i class="fas fa-minus" aria-hidden="true"></i></a>
                                 </td>
                               </tr>
                             @endif
@@ -535,7 +536,7 @@
                 </div>
                 <div class="card ev-section-card">
                   <div class="card-header ev-section-header">
-                    <h4 class="card-title"><i class="fas fa-cog mr-2 text-primary"></i>{{ __('Configuración') }}</h4>
+                    <h4 class="card-title"><i class="fas fa-cog mr-2 text-primary"></i>{{ __('Configuración') }}</h1>
                   </div>
                   <div class="card-body">
                 <div id="section-settings" class="mb-3">
@@ -545,8 +546,8 @@
 
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label for="">{{ __('Estado') . '*' }}</label>
-                      <select name="status" class="form-control">
+                      <label for="opb-status">{{ __('Estado') . '*' }}</label>
+                      <select name="status" id="opb-status" class="form-control">
                         <option selected disabled>{{ __('Seleccioná un estado') }}</option>
                         <option {{ $event->status == '1' ? 'selected' : '' }} value="1">
                           {{ __('Activo') }}
@@ -559,8 +560,8 @@
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label for="">{{ __('Evento destacado') . '*' }}</label>
-                      <select name="is_featured" class="form-control">
+                      <label for="opb-is_featured">{{ __('Evento destacado') . '*' }}</label>
+                      <select name="is_featured" id="opb-is_featured" class="form-control">
                         <option selected disabled>{{ __('Seleccioná una opción') }}</option>
                         <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>
                           {{ __('Sí') }}
@@ -582,7 +583,7 @@
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Disponibilidad total de entradas') . '*' }}</label>
+                        <label>{{ __('Disponibilidad total de entradas') . '*' }}</label>
                         <div class="selectgroup w-100">
                           <label class="selectgroup-item">
                             <input type="radio" name="ticket_available_type" value="unlimited"
@@ -612,7 +613,7 @@
                     @if ($websiteInfo->event_guest_checkout_status != 1)
                       <div class="col-lg-6">
                         <div class="form-group mt-1">
-                          <label for="">{{ __('Límite por comprador') . '*' }}</label>
+                          <label>{{ __('Límite por comprador') . '*' }}</label>
                           <div class="selectgroup w-100">
                             <label class="selectgroup-item">
                               <input type="radio" name="max_ticket_buy_type" value="unlimited"
@@ -646,7 +647,7 @@
                     <div class="col-lg-4">
                       <div class="">
                         <div class="form-group">
-                          <label for="">{{ __('Precio de la entrada') }}
+                          <label for="ticket-pricing">{{ __('Precio de la entrada') }}
                             ({{ $getCurrencyInfo->base_currency_text }})
                             *</label>
                           <input type="number" name="price" id="ticket-pricing"
@@ -664,9 +665,9 @@
                     <div class="col-lg-8">
                       <div class="">
                         <div class="form-group">
-                          <label for="">{{ __('Enlace de acceso o meeting URL') }}
+                          <label for="opb-meeting_url">{{ __('Enlace de acceso o meeting URL') }}
                             *</label>
-                          <input type="text" name="meeting_url" value="{{ $event->meeting_url }}"
+                          <input type="text" name="meeting_url" id="opb-meeting_url" value="{{ $event->meeting_url }}"
                             placeholder="{{ __('Ej: enlace de Zoom, Meet o plataforma de acceso') }}" class="form-control">
                         </div>
                       </div>
@@ -679,7 +680,7 @@
                     id="early_bird_discount_free">
                     <div class="col-lg-12">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Descuento anticipado') . '*' }}</label>
+                        <label>{{ __('Descuento anticipado') . '*' }}</label>
                         <div class="selectgroup w-100">
                           <label class="selectgroup-item">
                             <input type="radio" name="early_bird_discount_type"
@@ -703,8 +704,8 @@
                       <div class="row">
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Descuento') }} *</label>
-                            <select name="discount_type" class="form-control discount_type">
+                            <label for="opb-discount_type">{{ __('Descuento') }} *</label>
+                            <select name="discount_type" id="opb-discount_type" class="form-control discount_type">
                               <option disabled>{{ __('Seleccioná el tipo de descuento') }}</option>
                               <option
                                 {{ optional($event->ticket)->early_bird_discount_type == 'fixed' ? 'selected' : '' }}
@@ -717,23 +718,23 @@
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Importe') }} *</label>
-                            <input type="number" name="early_bird_discount_amount"
+                            <label for="opb-early_bird_discount_amount">{{ __('Importe') }} *</label>
+                            <input type="number" name="early_bird_discount_amount" id="opb-early_bird_discount_amount"
                               value="{{ optional($event->ticket)->early_bird_discount_amount }}"
                               class="form-control early_bird_discount_amount">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Fecha límite del descuento') }} *</label>
-                            <input type="date" name="early_bird_discount_date"
+                            <label for="opb-early_bird_discount_date">{{ __('Fecha límite del descuento') }} *</label>
+                            <input type="date" name="early_bird_discount_date" id="opb-early_bird_discount_date"
                               value="{{ optional($event->ticket)->early_bird_discount_date }}" class="form-control">
                           </div>
                         </div>
                         <div class="col-lg-3">
                           <div class="form-group">
-                            <label for="">{{ __('Hora límite del descuento') }} *</label>
-                            <input type="time" name="early_bird_discount_time"
+                            <label for="opb-early_bird_discount_time">{{ __('Hora límite del descuento') }} *</label>
+                            <input type="time" name="early_bird_discount_time" id="opb-early_bird_discount_time"
                               value="{{ optional($event->ticket)->early_bird_discount_time }}" class="form-control">
                           </div>
                         </div>
@@ -781,8 +782,8 @@
                           <div class="row">
                             <div class="col-lg-6">
                               <div class="form-group">
-                                <label>{{ __('Título del evento') . '*' }}</label>
-                                <input type="text" class="form-control" name="{{ $language->code }}_title"
+                                <label for="opb-{{ $language->code }}_title">{{ __('Título del evento') . '*' }}</label>
+                                <input type="text" class="form-control" name="{{ $language->code }}_title" id="opb-{{ $language->code }}_title"
                                   value="{{ @$event_content->title }}" placeholder="{{ __('Ej: Fiesta de música en vivo en Buenos Aires') }}">
                               </div>
                             </div>
@@ -797,8 +798,8 @@
                                       ->get();
                                 @endphp
 
-                                <label for="">{{ __('Categoría') . '*' }}</label>
-                                <select name="{{ $language->code }}_category_id" class="form-control">
+                                <label for="opb-{{ $language->code }}_category_id">{{ __('Categoría') . '*' }}</label>
+                                <select name="{{ $language->code }}_category_id" id="opb-{{ $language->code }}_category_id" class="form-control">
 	                                  <option selected disabled>{{ __('Seleccioná una categoría') }}
                                   </option>
 
@@ -816,16 +817,16 @@
                             <div class="row">
                               <div class="col-lg-8">
                                 <div class="form-group">
-                                  <label for="">{{ __('Dirección') . '*' }}</label>
-                                  <input type="text" name="{{ $language->code }}_address"
+                                  <label for="opb-{{ $language->code }}_address">{{ __('Dirección') . '*' }}</label>
+                                  <input type="text" name="{{ $language->code }}_address" id="opb-{{ $language->code }}_address"
                                     class="form-control"
                                     placeholder="{{ __('Ej: Av. Corrientes 1234') }}" value="{{ @$event_content->address }}">
                                 </div>
                               </div>
                               <div class="col-lg-4">
                                 <div class="form-group">
-                                  <label for="">{{ __('País') . '*' }}</label>
-                                  <input type="text" name="{{ $language->code }}_country"
+                                  <label for="opb-{{ $language->code }}_country">{{ __('País') . '*' }}</label>
+                                  <input type="text" name="{{ $language->code }}_country" id="opb-{{ $language->code }}_country"
                                     placeholder="{{ __('Ej: Argentina') }}"
                                     class="form-control"
                                     value="{{ @$event_content->country }}">
@@ -833,25 +834,25 @@
                               </div>
                               <div class="col-lg-4">
                                 <div class="form-group">
-                                  <label for="">{{ __('Provincia') }}</label>
-                                  <input type="text" name="{{ $language->code }}_state"
+                                  <label for="opb-{{ $language->code }}_state">{{ __('Provincia') }}</label>
+                                  <input type="text" name="{{ $language->code }}_state" id="opb-{{ $language->code }}_state"
                                     class="form-control"
                                     placeholder="{{ __('Ej: Buenos Aires') }}" value="{{ @$event_content->state }}">
                                 </div>
                               </div>
                               <div class="col-lg-4">
                                 <div class="form-group">
-                                  <label for="">{{ __('Ciudad') . '*' }}</label>
-                                  <input type="text" name="{{ $language->code }}_city"
+                                  <label for="opb-{{ $language->code }}_city">{{ __('Ciudad') . '*' }}</label>
+                                  <input type="text" name="{{ $language->code }}_city" id="opb-{{ $language->code }}_city"
                                     class="form-control"
                                     placeholder="{{ __('Ej: CABA') }}" value="{{ @$event_content->city }}">
                                 </div>
                               </div>
                               <div class="col-lg-4">
                                 <div class="form-group">
-                                  <label for="">{{ __('Código postal') }}</label>
+                                  <label for="opb-{{ $language->code }}_zip_code">{{ __('Código postal') }}</label>
                                   <input type="text" placeholder="{{ __('Ej: C1043') }}"
-                                    name="{{ $language->code }}_zip_code"
+                                    name="{{ $language->code }}_zip_code" id="opb-{{ $language->code }}_zip_code"
                                     class="form-control"
                                     value="{{ @$event_content->zip_code }}">
                                 </div>
@@ -871,7 +872,7 @@
                           <div class="row">
                             <div class="col">
                               <div class="form-group">
-                                <label>{{ __('Descripción') . '*' }}</label>
+                                <label for="descriptionTmce{{ $language->id }}">{{ __('Descripción') . '*' }}</label>
                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
 	                                  name="{{ $language->code }}_description" placeholder="{{ __('Contá de qué se trata el evento, qué incluye la entrada y cualquier dato importante.') }}" data-height="300">{!! @$event_content->description !!}</textarea>
                               </div>
@@ -898,8 +899,8 @@
 	                              <div class="row">
 	                                <div class="col-lg-12">
 	                                  <div class="form-group">
-	                                    <label>{{ __('Palabras clave para Google') }}</label>
-	                                    <input class="form-control" name="{{ $language->code }}_meta_keywords"
+	                                    <label for="opb-{{ $language->code }}_meta_keywords">{{ __('Palabras clave para Google') }}</label>
+	                                    <input class="form-control" name="{{ $language->code }}_meta_keywords" id="opb-{{ $language->code }}_meta_keywords"
 	                                      value="{{ @$event_content->meta_keywords }}"
 	                                      placeholder="{{ __('Ej: recital, cumbia, buenos aires') }}" data-role="tagsinput">
 	                                  </div>
@@ -909,8 +910,8 @@
 	                              <div class="row">
 	                                <div class="col-lg-12">
 	                                  <div class="form-group">
-	                                    <label>{{ __('Descripción corta para Google') }}</label>
-	                                    <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="5"
+	                                    <label for="opb-{{ $language->code }}_meta_description">{{ __('Descripción corta para Google') }}</label>
+	                                    <textarea class="form-control" name="{{ $language->code }}_meta_description" id="opb-{{ $language->code }}_meta_description" rows="5"
 	                                      placeholder="{{ __('Una descripción breve y clara para buscadores y enlaces compartidos.') }}">{{ @$event_content->meta_description }}</textarea>
 	                                  </div>
 	                                </div>
@@ -964,16 +965,16 @@
 	                    <div class="row">
 	                      <div class="col-lg-6">
 	                        <div class="form-group">
-	                          <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace de Spotify') }}</label>
-                          <input type="url" class="form-control" name="spotify_url" value="{{ $event->spotify_url }}"
+	                          <label for="opb-spotify_url"><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace de Spotify') }}</label>
+                          <input type="url" class="form-control" name="spotify_url" id="opb-spotify_url" value="{{ $event->spotify_url }}"
                             placeholder="Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi">
 	                          <small class="text-muted">{{ __('Abrí Spotify, buscá al artista y copiá el enlace del perfil.') }}</small>
                         </div>
                       </div>
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label><i class="fab fa-youtube mr-1" style="color:#FF0000"></i> {{ __('Enlace del video en YouTube') }}</label>
-                          <input type="url" class="form-control" name="youtube_url" value="{{ $event->youtube_url }}"
+                          <label for="opb-youtube_url"><i class="fab fa-youtube mr-1" style="color:#FF0000"></i> {{ __('Enlace del video en YouTube') }}</label>
+                          <input type="url" class="form-control" name="youtube_url" id="opb-youtube_url" value="{{ $event->youtube_url }}"
                             placeholder="Ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
 	                          <small class="text-muted">{{ __('Pegá el enlace completo del video tal como aparece en el navegador.') }}</small>
                         </div>
@@ -999,20 +1000,20 @@
                     <div class="row">
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label><i class="fab fa-facebook mr-1"></i> {{ __('Meta Pixel ID (Facebook)') }}</label>
-                          <input type="text" class="form-control" name="meta_pixel_id" value="{{ $event->meta_pixel_id }}" placeholder="Ej: 1234567890123456">
+                          <label for="opb-meta_pixel_id"><i class="fab fa-facebook mr-1"></i> {{ __('Meta Pixel ID (Facebook)') }}</label>
+                          <input type="text" class="form-control" name="meta_pixel_id" id="opb-meta_pixel_id" value="{{ $event->meta_pixel_id }}" placeholder="Ej: 1234567890123456">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label><i class="fab fa-google mr-1"></i> {{ __('Google Analytics ID') }}</label>
-                          <input type="text" class="form-control" name="google_analytics_id" value="{{ $event->google_analytics_id }}" placeholder="Ej: G-XXXXXXXXXX">
+                          <label for="opb-google_analytics_id"><i class="fab fa-google mr-1"></i> {{ __('Google Analytics ID') }}</label>
+                          <input type="text" class="form-control" name="google_analytics_id" id="opb-google_analytics_id" value="{{ $event->google_analytics_id }}" placeholder="Ej: G-XXXXXXXXXX">
                         </div>
                       </div>
                       <div class="col-lg-4">
                         <div class="form-group">
-                          <label><i class="fab fa-tiktok mr-1"></i> {{ __('TikTok Pixel ID') }}</label>
-                          <input type="text" class="form-control" name="tiktok_pixel_id" value="{{ $event->tiktok_pixel_id }}" placeholder="Ej: CXXXXXXXXXXXXXXX">
+                          <label for="opb-tiktok_pixel_id"><i class="fab fa-tiktok mr-1"></i> {{ __('TikTok Pixel ID') }}</label>
+                          <input type="text" class="form-control" name="tiktok_pixel_id" id="opb-tiktok_pixel_id" value="{{ $event->tiktok_pixel_id }}" placeholder="Ej: CXXXXXXXXXXXXXXX">
                         </div>
                       </div>
                     </div>
@@ -1047,7 +1048,7 @@
     #my-dropzone {
       border: 2px dashed #d6d9e6;
       border-radius: 14px;
-      background: #f8f9fc;
+      background: var(--surface-card-soft);
       min-height: 128px;
       padding: 18px;
     }
@@ -1055,7 +1056,7 @@
     #my-dropzone .dz-message {
       display: block !important;
       margin: 1.5rem 0;
-      color: #334155;
+      color: var(--text-secondary);
       font-weight: 700;
       text-align: center;
     }
@@ -1120,7 +1121,7 @@
       padding: 6px 10px;
       border-radius: 999px;
       background: #e8f1ff;
-      color: #1d4ed8;
+      color: var(--status-info-fg);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: .08em;
@@ -1132,7 +1133,7 @@
       margin-bottom: 6px;
       font-size: 22px;
       font-weight: 700;
-      color: #0f172a;
+      color: var(--text-primary);
     }
 
     .event-cover-box__text,
@@ -1182,8 +1183,8 @@
       width: 46px;
       height: 46px;
       border-radius: 14px;
-      background: #dbeafe;
-      color: #2563eb;
+      background: var(--status-info-bg);
+      color: var(--status-info-fg);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1195,7 +1196,7 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
-      color: #0f172a;
+      color: var(--text-primary);
     }
 
     .event-cover-box__upload-copy strong {
@@ -1217,20 +1218,20 @@
       border: 1px solid #dbe7ff;
       border-radius: 14px;
       background: linear-gradient(180deg, #f8fbff 0%, #f2f7ff 100%);
-      color: #334155;
+      color: var(--text-secondary);
     }
 
     .event-sales-note-title {
       font-size: 15px;
       font-weight: 700;
-      color: #1e3a8a;
+      color: var(--status-info-fg);
       margin-bottom: 6px;
     }
 
     .event-sales-note p {
       font-size: 14px;
       line-height: 1.6;
-      color: #334155;
+      color: var(--text-secondary);
     }
 
     .media-upload-separator .border-top {
@@ -1250,7 +1251,7 @@
       align-items: center;
       justify-content: space-between;
       width: 170px;
-      background: #f8f9fc;
+      background: var(--surface-card-soft);
       border: 1px solid #eaecf0;
       border-radius: 14px;
       padding: 10px;
@@ -1280,7 +1281,7 @@
       align-items: center;
       justify-content: center;
       background: #fff1f2;
-      color: #dc2626;
+      color: var(--status-danger-fg);
       cursor: pointer;
       transition: transform 0.18s ease, background-color 0.18s ease;
     }
@@ -1309,7 +1310,7 @@
       border-left: 4px solid #3b82f6;
       border-radius: 8px;
       background: #f8fbff;
-      color: #1e2532;
+      color: var(--text-primary);
     }
 
     .async-progress-panel.is-success {
@@ -1326,20 +1327,20 @@
 
     .async-progress-panel.is-danger {
       border-color: #fecaca;
-      border-left-color: #dc2626;
+      border-left-color: var(--status-danger-fg);
       background: #fff7f7;
     }
 
     .async-progress-panel__percent {
       font-weight: 700;
-      color: #1e40af;
+      color: var(--status-info-fg);
       white-space: nowrap;
     }
 
     .async-progress-panel__bar {
       height: 10px;
       border-radius: 999px;
-      background: #dbeafe;
+      background: var(--status-info-bg);
       overflow: hidden;
     }
 
@@ -1357,7 +1358,7 @@
     }
 
     .async-progress-panel.is-danger .progress-bar {
-      background-color: #dc2626;
+      background-color: var(--status-danger-fg);
     }
 
     .async-progress-panel.is-indeterminate .progress-bar {
@@ -1402,7 +1403,7 @@
     }
 
     .ai-assistant-fact__value {
-      color: #1e2532;
+      color: var(--text-primary);
       font-weight: 600;
       text-align: right;
       word-break: break-word;

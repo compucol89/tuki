@@ -68,10 +68,8 @@
 .ed-info-card,
 .ei-card {
   border-radius: 20px;
-  border-color: rgba(30, 37, 50, 0.08);
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.78) inset,
-    0 12px 32px rgba(15,23,42,0.06);
+  border-color: var(--border);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
 }
 
 .ed-ticket-card {
@@ -99,7 +97,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 0 12px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--border);
   margin-top: 8px;
 }
 
@@ -3739,7 +3737,7 @@ body.page-event-detail .ed-ticket-picker__badge svg {
 body.page-event-detail .ed-ticket-card__body--premium .form-group.mb-3 {
   margin-bottom: 14px !important;
   padding: 12px 14px;
-  border: 1px solid #eef2f6;
+  border: 1px solid var(--border);
   border-radius: 14px;
   background: var(--card);
 }
@@ -3758,7 +3756,7 @@ body.page-event-detail .ed-ticket-picker__list {
   display: grid;
   gap: 0;
   border-top: 0;
-  border-bottom: 1px solid #eef2f6;
+  border-bottom: 1px solid var(--border);
 }
 
 body.page-event-detail .ed-ticket-option {
@@ -3774,7 +3772,7 @@ body.page-event-detail .ed-ticket-option {
 }
 
 body.page-event-detail .ed-ticket-option + .ed-ticket-option {
-  border-top: 1px solid #eef2f6;
+  border-top: 1px solid var(--border);
 }
 
 body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
@@ -4105,7 +4103,7 @@ body.page-event-detail .ed-body {
 }
 
 body.page-event-detail .ed-body {
-  border-top: 1px solid color-mix(in srgb, var(--foreground) 7%, transparent);
+  border-top: 1px solid var(--border);
 }
 
 body.page-event-detail .ed-card,
@@ -4122,7 +4120,7 @@ body.page-event-detail .ed-viewer-counter {
 
 body.page-event-detail .ed-card__head,
 body.page-event-detail .ed-info-card__head {
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--border);
   background: var(--card);
 }
 
@@ -4149,7 +4147,7 @@ body.page-event-detail .ed-info-item,
 body.page-event-detail .ed-refund-point,
 body.page-event-detail .event-addons--sidebar .addon-card {
   background: var(--card);
-  border-color: #eef0f3;
+  border-color: var(--border);
   box-shadow: none;
 }
 
@@ -4158,27 +4156,22 @@ body.page-event-detail .ed-ticket-card {
 }
 
 body.page-event-detail .ed-hero-grid__aside .ed-ticket-card {
-  background: rgba(255, 255, 255, 0.025);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: var(--card);
+  border-color: var(--border);
   border-radius: 24px;
-  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.14);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.1);
   overflow: hidden;
-  backdrop-filter: blur(9px) saturate(1.12);
-  -webkit-backdrop-filter: blur(9px) saturate(1.12);
 }
 
 body.page-event-detail .ed-ticket-card__head {
   border: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid var(--border);
   box-shadow: none;
 }
 
 body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
-  background:
-    linear-gradient(180deg, rgba(12, 16, 26, 0.08) 0%, rgba(12, 16, 26, 0.035) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px) saturate(1.12);
-  -webkit-backdrop-filter: blur(8px) saturate(1.12);
+  background: color-mix(in srgb, var(--card) 92%, var(--foreground) 4%);
+  border-bottom: 1px solid var(--border);
 }
 
 body.page-event-detail .ed-ticket-card__body,
@@ -4189,18 +4182,18 @@ body.page-event-detail .ed-ticket-card__body--premium {
 }
 
 body.page-event-detail .ed-ticket-picker__intro {
-  border-bottom-color: #eef0f3;
+  border-bottom-color: var(--border);
 }
 
 body.page-event-detail .ed-ticket-option {
   background: var(--card);
-  border-color: #eef0f3;
+  border-color: var(--border);
   box-shadow: none;
 }
 
 body.page-event-detail .ed-ticket-option:hover,
 body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
-  border-color: #d6dce5;
+  border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
   box-shadow: none;
 }
 
@@ -4209,12 +4202,12 @@ body.page-event-detail .ed-cta-zone,
 body.page-event-detail .ed-cta-zone--premium,
 body.page-event-detail .event-addons--sidebar {
   background: var(--card);
-  border-top-color: #eef0f3;
+  border-top-color: var(--border);
 }
 
 body.page-event-detail .ed-trust-integrated,
 body.page-event-detail .ed-cta-zone--premium .ed-trust-row {
-  border-top-color: #eef0f3;
+  border-top-color: var(--border);
 }
 
 body.page-event-detail .sidebar-sticky {

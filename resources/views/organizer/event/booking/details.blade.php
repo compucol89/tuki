@@ -5,15 +5,15 @@
     .organizer-booking-detail {
       max-width: 100%;
       overflow-x: hidden;
-      color: #1e2532;
+      color: var(--text-primary);
     }
 
     .bod-hero,
     .bod-kpi,
     .bod-panel {
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--border-default);
       border-radius: 8px;
-      background: #fff;
+      background: var(--surface-card);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
@@ -26,7 +26,7 @@
 
     .bod-eyebrow {
       margin-bottom: 5px;
-      color: #667085;
+      color: var(--text-muted);
       font-size: 12px;
       font-weight: 800;
       letter-spacing: 0;
@@ -35,7 +35,7 @@
 
     .bod-title {
       margin: 0;
-      color: #1e2532;
+      color: var(--text-primary);
       font-size: 21px;
       font-weight: 800;
       line-height: 1.25;
@@ -44,7 +44,7 @@
 
     .bod-id {
       margin-top: 7px;
-      color: #667085;
+      color: var(--text-muted);
       font-size: 13px;
       overflow-wrap: anywhere;
     }
@@ -79,7 +79,7 @@
 
     .bod-kpi__label,
     .bod-label {
-      color: #667085;
+      color: var(--text-muted);
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0;
@@ -88,7 +88,7 @@
 
     .bod-kpi__value {
       margin-top: 7px;
-      color: #1e2532;
+      color: var(--text-primary);
       font-size: 22px;
       font-weight: 800;
       line-height: 1.2;
@@ -97,7 +97,7 @@
 
     .bod-kpi__meta,
     .bod-muted {
-      color: #667085;
+      color: var(--text-muted);
       font-size: 12px;
       line-height: 1.35;
     }
@@ -123,12 +123,12 @@
       justify-content: space-between;
       gap: 12px;
       padding: 14px 16px;
-      border-bottom: 1px solid #eef1f5;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .bod-panel__title {
       margin: 0;
-      color: #1e2532;
+      color: var(--text-primary);
       font-size: 16px;
       font-weight: 800;
     }
@@ -151,7 +151,7 @@
       gap: 4px;
       min-width: 0;
       padding: 10px 0;
-      border-bottom: 1px solid #eef1f5;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .bod-info-item:last-child,
@@ -162,14 +162,14 @@
     }
 
     .bod-value {
-      color: #1e2532;
+      color: var(--text-primary);
       font-weight: 700;
       line-height: 1.35;
       overflow-wrap: anywhere;
     }
 
     .bod-money {
-      color: #1e2532;
+      color: var(--text-primary);
       font-weight: 800;
       white-space: nowrap;
     }
@@ -183,9 +183,9 @@
     .bod-ledger-row--highlight {
       margin-top: 6px;
       padding: 12px;
-      border: 1px solid #fed7aa;
+      border: 1px solid rgba(249, 115, 22, 0.35);
       border-radius: 7px;
-      background: #fff7ed;
+      background: var(--status-warning-bg);
     }
 
     .bod-status {
@@ -208,8 +208,8 @@
       min-height: 24px;
       padding: 3px 8px;
       border-radius: 999px;
-      background: #fff7ed;
-      color: #9a3412;
+      background: var(--status-warning-bg);
+      color: var(--status-warning-fg);
       font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
@@ -222,14 +222,14 @@
       overflow: hidden;
       margin-top: 6px;
       border-radius: 999px;
-      background: #e7eaf0;
+      background: var(--surface-hover);
     }
 
     .bod-progress span {
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: #F97316;
+      background: var(--sidebar-accent);
     }
 
     .bod-table {
@@ -241,7 +241,7 @@
 
     .bod-table th {
       border-top: 0;
-      color: #667085;
+      color: var(--text-muted);
       font-size: 10px;
       line-height: 1.25;
       padding: 9px 6px;
@@ -274,14 +274,14 @@
 
     .bod-ticket-name {
       display: block;
-      color: #1e2532;
+      color: var(--text-primary);
       font-weight: 800;
       overflow-wrap: anywhere;
     }
 
     .bod-empty {
       padding: 18px 10px;
-      color: #667085;
+      color: var(--text-muted);
       text-align: center;
     }
 
@@ -347,7 +347,7 @@
 
       .bod-table tr {
         padding: 10px 0;
-        border-bottom: 1px solid #eef1f5;
+        border-bottom: 1px solid var(--border-subtle);
       }
 
       .bod-table tr:last-child {
@@ -364,7 +364,7 @@
 
       .bod-table td::before {
         content: attr(data-label);
-        color: #667085;
+        color: var(--text-muted);
         font-size: 10px;
         font-weight: 800;
         text-transform: uppercase;
@@ -442,7 +442,7 @@
 
   <div class="organizer-booking-detail">
     <div class="page-header">
-      <h4 class="page-title">{{ __('Detalle de reserva') }}</h4>
+      <h1 class="page-title">{{ __('Detalle de reserva') }}</h1>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">

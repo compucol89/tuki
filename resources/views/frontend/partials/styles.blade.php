@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/flaticon.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/flaticon.css') }}"></noscript>
 <!-- Font Awesome 6 (self-hosted via Laravel Mix) -->
+<link rel="preload" href="{{ asset('webfonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}">
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}">

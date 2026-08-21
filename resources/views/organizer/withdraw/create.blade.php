@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Make a Withdrawal Request') }}</h4>
+    <h1 class="page-title">{{ __('Solicitar un retiro') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -13,7 +13,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Make a Withdrawal Request') }}</a>
+        <a href="#">{{ __('Solicitar un retiro') }}</a>
       </li>
     </ul>
   </div>
@@ -24,7 +24,7 @@
         <div class="card-header">
           <div class="row">
             <div class="col-lg-8">
-              <div class="card-title">{{ __('Make a Withdrawal Request') }}</div>
+              <div class="card-title">{{ __('Solicitar un retiro') }}</div>
             </div>
             <div class="col-lg-4">
               <div class="card-title float-left float-lg-right">{{ __('Your Balance') }} :
@@ -53,9 +53,9 @@
                   </div>
                 @endif
                 <div class="form-group">
-                  <label for="">{{ __('Withdraw Method') }} <span class="text-danger">*</span></label>
+                  <label for="withdraw_method">{{ __('Método de retiro') }} <span class="text-danger">*</span></label>
                   <select name="withdraw_method" id="withdraw_method" class="form-control" required>
-                    <option selected disabled value="">{{ __('Select Withdraw Method') }}</option>
+                    <option selected disabled value="">{{ __('Seleccioná el método de retiro') }}</option>
                     @foreach ($methods as $item)
                       <option value="{{ $item->id }}">{{ $item->name }}</option>
                     @endforeach

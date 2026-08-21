@@ -808,12 +808,12 @@
     <h4 class="page-title">{{ __('Perfil del organizador') }}</h4>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('Constructor de perfil') }}</a>
@@ -907,8 +907,8 @@
               <div class="row">
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label>{{ __('Email') . '*' }}</label>
-                    <input type="email" class="form-control" name="email" value="{{ $organizer->email }}">
+                    <label for="opb-email">{{ __('Email') . '*' }}</label>
+                    <input type="email" class="form-control" name="email" id="opb-email" value="{{ $organizer->email }}">
                     @if ($errors->has('email'))
                       <p class="mt-2 mb-0 text-danger em">{{ $errors->first('email') }}</p>
                     @endif
@@ -916,8 +916,8 @@
                 </div>
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label>{{ __('Teléfono') }}</label>
-                    <input type="tel" class="form-control" name="phone" value="{{ $organizer->phone }}">
+                    <label for="opb-phone">{{ __('Teléfono') }}</label>
+                    <input type="tel" class="form-control" name="phone" id="opb-phone" value="{{ $organizer->phone }}">
                     @if ($errors->has('phone'))
                       <p class="mt-2 mb-0 text-danger em">{{ $errors->first('phone') }}</p>
                     @endif
@@ -925,8 +925,8 @@
                 </div>
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label>{{ __('Usuario') . '*' }}</label>
-                    <input type="text" class="form-control" name="username" value="{{ $organizer->username }}">
+                    <label for="opb-username">{{ __('Usuario') . '*' }}</label>
+                    <input type="text" class="form-control" name="username" id="opb-username" value="{{ $organizer->username }}">
                     @if ($errors->has('username'))
                       <p class="mt-2 mb-0 text-danger em">{{ $errors->first('username') }}</p>
                     @endif
@@ -948,10 +948,10 @@
               <div class="opb-social-grid">
                 @foreach($socialFields as $field)
                   <div class="form-group">
-                    <label>{{ $field['label'] }}</label>
+                    <label for="opb-{{ $field['name'] }}">{{ $field['label'] }}</label>
                     <div class="opb-input-icon">
                       <i class="{{ $field['icon'] }}" aria-hidden="true"></i>
-                      <input type="url" class="form-control" name="{{ $field['name'] }}" value="{{ $field['value'] }}" placeholder="{{ $field['placeholder'] }}">
+                      <input type="url" class="form-control" name="{{ $field['name'] }}" id="opb-{{ $field['name'] }}" value="{{ $field['value'] }}" placeholder="{{ $field['placeholder'] }}">
                     </div>
                     @if ($errors->has($field['name']))
                       <p class="mt-2 mb-0 text-danger em">{{ $errors->first($field['name']) }}</p>
@@ -996,10 +996,10 @@
                         <div class="row">
                           <div class="col-lg-4">
                             <div class="form-group">
-                              <label>{{ __('Nombre público') . '*' }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_name"
+                              <label for="opb-{{ $language->code }}_name">{{ __('Nombre público') . '*' }}</label>
+                              <input type="text" class="form-control" name="{{ $language->code }}_name" id="opb-{{ $language->code }}_name"
                                 value="{{ $organizer_info ? $organizer_info->name : '' }}"
-                                placeholder="{{ __('Ej: Rumba Colombiana') }}"
+                                placeholder="{{ __('Ej: Nombre público del organizador') }}"
                                 {{ $isDefaultLanguage ? 'data-profile-live=name' : '' }}>
                               @if ($errors->has("$language->code" . '_name'))
                                 <p class="mt-2 mb-0 text-danger em">{{ $errors->first("$language->code" . '_name') }}</p>
@@ -1008,8 +1008,8 @@
                           </div>
                           <div class="col-lg-4">
                             <div class="form-group">
-                              <label>{{ __('Especialidad') }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_designation"
+                              <label for="opb-{{ $language->code }}_designation">{{ __('Especialidad') }}</label>
+                              <input type="text" class="form-control" name="{{ $language->code }}_designation" id="opb-{{ $language->code }}_designation"
                                 value="{{ $organizer_info ? $organizer_info->designation : '' }}"
                                 placeholder="{{ __('Ej: Fiestas, shows y experiencias culturales') }}"
                                 {{ $isDefaultLanguage ? 'data-profile-live=role' : '' }}>
@@ -1017,42 +1017,42 @@
                           </div>
                           <div class="col-lg-4">
                             <div class="form-group">
-                              <label>{{ __('País') }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_country"
+                              <label for="opb-{{ $language->code }}_country">{{ __('País') }}</label>
+                              <input type="text" class="form-control" name="{{ $language->code }}_country" id="opb-{{ $language->code }}_country"
                                 value="{{ $organizer_info ? $organizer_info->country : '' }}">
                             </div>
                           </div>
                           <div class="col-lg-4">
                             <div class="form-group">
-                              <label>{{ __('Ciudad') }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_city"
+                              <label for="opb-{{ $language->code }}_city">{{ __('Ciudad') }}</label>
+                              <input type="text" class="form-control" name="{{ $language->code }}_city" id="opb-{{ $language->code }}_city"
                                 value="{{ $organizer_info ? $organizer_info->city : '' }}">
                             </div>
                           </div>
                           <div class="col-lg-4">
                             <div class="form-group">
-                              <label>{{ __('Provincia / Estado') }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_state"
+                              <label for="opb-{{ $language->code }}_state">{{ __('Provincia / Estado') }}</label>
+                              <input type="text" class="form-control" name="{{ $language->code }}_state" id="opb-{{ $language->code }}_state"
                                 value="{{ $organizer_info ? $organizer_info->state : '' }}">
                             </div>
                           </div>
                           <div class="col-lg-4">
                             <div class="form-group">
-                              <label>{{ __('Código postal') }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_zip_code"
+                              <label for="opb-{{ $language->code }}_zip_code">{{ __('Código postal') }}</label>
+                              <input type="text" class="form-control" name="{{ $language->code }}_zip_code" id="opb-{{ $language->code }}_zip_code"
                                 value="{{ $organizer_info ? $organizer_info->zip_code : '' }}">
                             </div>
                           </div>
                           <div class="col-lg-12">
                             <div class="form-group">
-                              <label>{{ __('Dirección o zona de referencia') }}</label>
-                              <textarea name="{{ $language->code }}_address" class="form-control" rows="3">{{ $organizer_info ? $organizer_info->address : '' }}</textarea>
+                              <label for="opb-{{ $language->code }}_address">{{ __('Dirección o zona de referencia') }}</label>
+                              <textarea name="{{ $language->code }}_address" id="opb-{{ $language->code }}_address" class="form-control" rows="3">{{ $organizer_info ? $organizer_info->address : '' }}</textarea>
                             </div>
                           </div>
                           <div class="col-lg-12">
                             <div class="form-group">
-                              <label>{{ __('Descripción del organizador') }}</label>
-                              <textarea name="{{ $language->code }}_details" rows="7" class="form-control" {{ $isDefaultLanguage ? 'data-profile-live=bio' : '' }}>{{ $organizer_info ? $organizer_info->details : '' }}</textarea>
+                              <label for="opb-{{ $language->code }}_details">{{ __('Descripción del organizador') }}</label>
+                              <textarea name="{{ $language->code }}_details" id="opb-{{ $language->code }}_details" rows="7" class="form-control" {{ $isDefaultLanguage ? 'data-profile-live=bio' : '' }}>{{ $organizer_info ? $organizer_info->details : '' }}</textarea>
                               <p class="opb-help">
                                 {{ __('Recomendado: 2 a 4 frases concretas. Incluí tipo de eventos, ciudad o público, y una razón para seguirte.') }}
                                 @if($isDefaultLanguage)
@@ -1098,8 +1098,8 @@
             </div>
             <div class="opb-panel__body">
               <div class="form-group mb-0">
-                <label>{{ __('Meta Pixel ID') }}</label>
-                <input type="text" class="form-control" name="meta_pixel_id"
+                <label for="opb-meta_pixel_id">{{ __('Meta Pixel ID') }}</label>
+                <input type="text" class="form-control" name="meta_pixel_id" id="opb-meta_pixel_id"
                   value="{{ $organizer->meta_pixel_id }}" placeholder="Ej: 1234567890123456" inputmode="numeric" pattern="[0-9]{6,32}">
                 <p class="opb-help mt-2">{{ __('Sólo números, entre 6 y 32 dígitos. Se usa para PageView, ViewContent y Contact en tu perfil público.') }}</p>
                 @if ($errors->has('meta_pixel_id'))

@@ -11,9 +11,9 @@
   .ai-generate-panel {
     margin: 1rem 0 1.25rem;
     padding: 1rem;
-    border: 1px solid #e5eaf3;
+    border: 1px solid var(--border-default);
     border-radius: 10px;
-    background: #fff;
+    background: var(--surface-card);
     box-shadow: 0 8px 24px rgba(30, 37, 50, .06);
   }
   .ai-generate-panel__head {
@@ -25,13 +25,13 @@
   }
   .ai-generate-panel__title {
     margin: 0;
-    color: #1e2532;
+    color: var(--text-primary);
     font-weight: 700;
     font-size: .95rem;
   }
   .ai-generate-panel__hint {
     margin: .25rem 0 0;
-    color: #6b7280;
+    color: var(--text-muted);
     font-size: .82rem;
   }
   .ai-status-grid {
@@ -41,14 +41,14 @@
     margin-top: 1rem;
   }
   .ai-status-card {
-    border: 1px solid #e5eaf3;
+    border: 1px solid var(--border-default);
     border-radius: 8px;
     padding: .75rem;
     background: #f8fafc;
     min-height: 230px;
   }
   .ai-status-card.is-completed { background: #f8fff9; border-color: #bfe8ca; }
-  .ai-status-card.is-running { background: #fffaf5; border-color: #fed7aa; }
+  .ai-status-card.is-running { background: #fffaf5; border-color: rgba(249, 115, 22, 0.35); }
   .ai-status-card.is-failed { background: #fff7f7; border-color: #fecaca; }
   .ai-status-card__top {
     display: flex;
@@ -59,7 +59,7 @@
   }
   .ai-status-card__title {
     margin: 0;
-    color: #1e2532;
+    color: var(--text-primary);
     font-size: .9rem;
     font-weight: 700;
   }
@@ -74,7 +74,7 @@
     border-radius: 999px;
     padding: .18rem .5rem;
     background: #e2e8f0;
-    color: #475569;
+    color: var(--text-secondary);
     font-size: .7rem;
     font-weight: 700;
   }
@@ -110,9 +110,9 @@
     align-items: center;
     justify-content: center;
     aspect-ratio: 16 / 10;
-    border: 1px dashed #cbd5e1;
+    border: 1px dashed var(--border-strong);
     border-radius: 8px;
-    background: #fff;
+    background: var(--surface-card);
     overflow: hidden;
   }
   .ai-status-card__preview img {
@@ -121,7 +121,7 @@
     object-fit: cover;
   }
   .ai-status-card__empty {
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: .78rem;
     text-align: center;
     padding: .5rem;
@@ -139,13 +139,13 @@
     align-items: center;
     gap: .35rem;
     margin: 0;
-    color: #1e2532;
+    color: var(--text-primary);
     font-size: .78rem;
     font-weight: 700;
   }
   .ai-status-card__error {
     margin: .5rem 0 0;
-    color: #b91c1c;
+    color: var(--status-danger-fg);
     font-size: .75rem;
   }
   .ai-status-card__meta {
@@ -160,7 +160,7 @@
     gap: .75rem;
     margin-top: 1rem;
     padding-top: .75rem;
-    border-top: 1px solid #e5eaf3;
+    border-top: 1px solid var(--border-default);
   }
   .ai-apply-row.is-visible { display: flex; }
   .ai-apply-row__copy {

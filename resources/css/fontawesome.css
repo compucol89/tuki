@@ -1,7 +1,35 @@
 /* Font Awesome 6 Free - self-hosted via Laravel Mix */
-/* font-display:block -> swap transformado en PostCSS */
+/* font-display: block nativo de FA6 (sin FOUT: el glifo queda oculto hasta
+   que la fuente está lista; nunca se ve "cuadrado vacío → icono"). */
 /* Usamos CSS individuales por estilo (no all.css) según recomendación FA docs */
 @import '@fortawesome/fontawesome-free/css/fontawesome.css';
 @import '@fortawesome/fontawesome-free/css/solid.css';
 @import '@fortawesome/fontawesome-free/css/regular.css';
 @import '@fortawesome/fontawesome-free/css/brands.css';
+
+/* Sobrescribimos las @font-face para que apunten a /webfonts/ (la copia
+   versionada por Mix) en vez de /fonts/vendor/... — así el <link rel="preload">
+   del head y el CSS usan la MISMA URL y la fuente se descarga una sola vez. */
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url('/webfonts/fa-solid-900.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/webfonts/fa-regular-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/webfonts/fa-brands-400.woff2') format('woff2');
+}

@@ -3,7 +3,7 @@
 @section('style')
   <style>
     .organizer-booking-admin {
-      color: var(--adm-ink);
+      color: var(--text-primary);
     }
 
     .ob-summary {
@@ -16,22 +16,22 @@
     .ob-metric {
       min-height: 96px;
       padding: 16px;
-      border: 1px solid var(--adm-border);
+      border: 1px solid var(--border-default);
       border-radius: 8px;
-      background: var(--adm-card);
+      background: var(--surface-card);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
     .ob-metric__label {
       margin-bottom: 8px;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
     }
 
     .ob-metric__value {
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 24px;
       font-weight: 800;
       line-height: 1.2;
@@ -39,23 +39,23 @@
 
     .ob-metric__hint {
       margin-top: 5px;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 11px;
       line-height: 1.35;
     }
 
     .ob-toolbar {
-      border-bottom: 1px solid var(--adm-border);
-      background: var(--adm-card);
+      border-bottom: 1px solid var(--border-default);
+      background: var(--surface-card);
     }
 
     .ob-type-summary {
       max-width: 100%;
       overflow: hidden;
       margin-bottom: 18px;
-      border: 1px solid var(--adm-border);
+      border: 1px solid var(--border-default);
       border-radius: 8px;
-      background: var(--adm-card);
+      background: var(--surface-card);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
@@ -64,12 +64,12 @@
       justify-content: space-between;
       gap: 14px;
       padding: 16px 18px;
-      border-bottom: 1px solid var(--adm-border);
+      border-bottom: 1px solid var(--border-default);
     }
 
     .ob-type-summary__title {
       margin: 0;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 16px;
       font-weight: 800;
     }
@@ -91,10 +91,10 @@
       gap: 16px 20px;
       min-height: 72px;
       padding: 16px 18px 16px 20px;
-      border: 1px solid var(--adm-border);
-      border-left: 4px solid var(--adm-primary, #f05a28);
+      border: 1px solid var(--border-default);
+      border-left: 4px solid var(--adm-primary);
       border-radius: 10px;
-      background: var(--adm-card);
+      background: var(--surface-card);
       color: inherit;
       text-decoration: none;
       box-shadow: 0 4px 14px rgba(30, 37, 50, .04);
@@ -103,7 +103,7 @@
 
     .ob-event-row:hover,
     .ob-event-row:focus {
-      border-color: color-mix(in srgb, var(--adm-primary) 35%, var(--adm-border));
+      border-color: color-mix(in srgb, var(--adm-primary) 35%, var(--border-default));
       box-shadow: 0 8px 20px rgba(30, 37, 50, .08);
       color: inherit;
       text-decoration: none;
@@ -119,7 +119,7 @@
 
     .ob-event-row__title {
       margin: 0;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 15px;
       font-weight: 800;
       line-height: 1.3;
@@ -136,10 +136,10 @@
       align-items: center;
       min-height: 28px;
       padding: 4px 10px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--border-subtle);
       border-radius: 999px;
-      background: var(--adm-bg-soft, #f8fafc);
-      color: var(--adm-muted);
+      background: var(--surface-card-soft);
+      color: var(--text-secondary);
       font-size: 12px;
       font-weight: 600;
       white-space: nowrap;
@@ -158,13 +158,13 @@
       display: inline-flex;
       align-items: baseline;
       gap: 6px;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 12px;
       font-weight: 600;
     }
 
     .ob-event-row__kpi strong {
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 14px;
       font-weight: 800;
     }
@@ -177,8 +177,8 @@
       min-height: 40px;
       padding: 0 16px;
       border-radius: 8px;
-      background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
-      color: #ffffff;
+      background: linear-gradient(135deg, var(--adm-primary-dark) 0%, var(--adm-primary-strong) 100%);
+      color: var(--text-on-accent);
       font-size: 13px;
       font-weight: 700;
       white-space: nowrap;
@@ -203,9 +203,9 @@
 
     .ob-event-summary-card {
       overflow: hidden;
-      border: 1px solid var(--adm-border);
+      border: 1px solid var(--border-default);
       border-radius: 10px;
-      background: var(--adm-card);
+      background: var(--surface-card);
     }
 
     .ob-event-summary-card__head {
@@ -214,8 +214,8 @@
       gap: 16px;
       align-items: start;
       padding: 16px 18px;
-      border-bottom: 1px solid var(--adm-border);
-      background: linear-gradient(180deg, #fbfcfe 0%, #fff 100%);
+      border-bottom: 1px solid var(--border-default);
+      background: linear-gradient(180deg, var(--surface-toolbar) 0%, var(--surface-card) 100%);
     }
 
     .ob-event-summary-card__head > div {
@@ -224,7 +224,7 @@
 
     .ob-event-summary-card__title {
       margin: 0 0 7px;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 16px;
       font-weight: 800;
       line-height: 1.25;
@@ -234,7 +234,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 12px;
       font-weight: 600;
     }
@@ -244,9 +244,9 @@
       align-items: center;
       min-height: 24px;
       padding: 4px 8px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--border-subtle);
       border-radius: 999px;
-      background: var(--adm-card);
+      background: var(--surface-card);
       line-height: 1.2;
       white-space: nowrap;
     }
@@ -275,19 +275,19 @@
       grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
       gap: 1px;
       padding: 1px;
-      border-bottom: 1px solid var(--adm-border);
-      background: var(--adm-border);
+      border-bottom: 1px solid var(--border-default);
+      background: var(--border-default);
     }
 
     .ob-event-summary-stat {
       min-width: 0;
       padding: 12px 14px;
-      background: var(--adm-card);
+      background: var(--surface-card);
     }
 
     .ob-event-summary-stat span {
       display: block;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
@@ -296,7 +296,7 @@
     .ob-event-summary-stat strong {
       display: block;
       margin-top: 3px;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 18px;
       font-weight: 800;
       line-height: 1.15;
@@ -312,7 +312,7 @@
 
     .ob-type-table th {
       border-top: 0;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 10px;
       line-height: 1.25;
       padding: 8px 6px;
@@ -345,7 +345,7 @@
 
     .ob-type-name {
       display: block;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-weight: 800;
       overflow-wrap: anywhere;
     }
@@ -354,7 +354,7 @@
       display: block;
       max-width: 100%;
       overflow: hidden;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 12px;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -370,7 +370,7 @@
 
     .ob-table th {
       border-top: 0;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 12px;
       text-transform: uppercase;
       white-space: nowrap;
@@ -384,7 +384,7 @@
       display: block;
       max-width: 280px;
       overflow: hidden;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-weight: 700;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -392,12 +392,12 @@
 
     .ob-muted {
       display: block;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 12px;
     }
 
     .ob-money {
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-weight: 800;
       white-space: nowrap;
     }
@@ -434,7 +434,7 @@
     }
 
     .ob-detail-row td {
-      background: var(--adm-card);
+      background: var(--surface-card);
       border-top: 0;
     }
 
@@ -443,20 +443,20 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
       padding: 14px 16px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      background: var(--adm-card);
+      background: var(--surface-card);
     }
 
     .ob-detail-section {
       grid-column: 1 / -1;
       padding-top: 12px;
-      border-top: 1px solid var(--adm-border);
+      border-top: 1px solid var(--border-default);
     }
 
     .ob-detail-label {
       display: block;
-      color: var(--adm-muted);
+      color: var(--text-secondary);
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -465,7 +465,7 @@
     .ob-detail-value {
       display: block;
       margin-top: 4px;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-weight: 700;
     }
 
@@ -481,15 +481,15 @@
       gap: 10px;
       align-items: center;
       padding: 8px 10px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--border-subtle);
       border-radius: 7px;
-      background: var(--adm-card);
+      background: var(--surface-card);
     }
 
     .ob-mini-title {
       display: block;
       overflow-wrap: anywhere;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-weight: 800;
     }
 
@@ -499,8 +499,8 @@
       min-height: 24px;
       padding: 3px 8px;
       border-radius: 999px;
-      background: #fff7ed;
-      color: #9a3412;
+      background: var(--status-warning-bg);
+      color: var(--status-warning-fg);
       font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
@@ -512,14 +512,14 @@
       overflow: hidden;
       margin-top: 5px;
       border-radius: 999px;
-      background: #e7eaf0;
+      background: var(--surface-hover);
     }
 
     .ob-progress span {
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: #F97316;
+      background: var(--sidebar-accent);
     }
 
     .ob-mobile-list {
@@ -529,9 +529,9 @@
 
     .ob-mobile-booking {
       padding: 14px;
-      border: 1px solid var(--adm-border);
+      border: 1px solid var(--border-default);
       border-radius: 8px;
-      background: var(--adm-card);
+      background: var(--surface-card);
     }
 
     .ob-mobile-booking__head {
@@ -543,7 +543,7 @@
 
     .ob-mobile-booking__title {
       margin-bottom: 2px;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-weight: 800;
     }
 
@@ -557,7 +557,7 @@
     .ob-mobile-extra {
       padding-top: 10px;
       margin-top: 10px;
-      border-top: 1px solid var(--adm-border);
+      border-top: 1px solid var(--border-default);
     }
 
     .ob-empty {
@@ -566,13 +566,13 @@
     }
 
     .ob-empty i {
-      color: #9aa4b2;
+      color: var(--text-muted);
       font-size: 34px;
     }
 
     .ob-empty h3 {
       margin-top: 14px;
-      color: var(--adm-ink);
+      color: var(--text-primary);
       font-size: 18px;
       font-weight: 800;
     }
@@ -619,14 +619,14 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
         padding: 12px;
-        background: var(--adm-card);
+        background: var(--surface-card);
       }
 
       .ob-event-summary-stat {
         padding: 11px 12px;
-        border: 1px solid #eef1f5;
+        border: 1px solid var(--border-subtle);
         border-radius: 9px;
-        background: var(--adm-card);
+        background: var(--surface-card);
       }
 
       .ob-event-summary-stat strong {
@@ -648,8 +648,8 @@
 
       .ob-type-table {
         padding: 10px;
-        border-top: 1px solid var(--adm-border);
-        background: var(--adm-card);
+        border-top: 1px solid var(--border-default);
+        background: var(--surface-card);
         font-size: 12px;
       }
 
@@ -678,9 +678,9 @@
 
       .ob-type-table tr {
         padding: 10px 12px;
-        border: 1px solid #eef1f5;
+        border: 1px solid var(--border-subtle);
         border-radius: 10px;
-        background: var(--adm-card);
+        background: var(--surface-card);
         box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
       }
 
@@ -699,7 +699,7 @@
         min-height: 0;
         margin-bottom: 4px;
         padding: 0 0 9px;
-        border-bottom: 1px solid #f1f3f7;
+        border-bottom: 1px solid var(--border-subtle);
       }
 
       .ob-type-table td:first-child::before {
@@ -708,14 +708,14 @@
 
       .ob-type-table td::before {
         content: attr(data-label);
-        color: var(--adm-muted);
+        color: var(--text-secondary);
         font-size: 10px;
         font-weight: 800;
         text-transform: uppercase;
       }
 
       .ob-type-table td:not(:first-child) {
-        color: var(--adm-ink);
+        color: var(--text-primary);
         font-weight: 700;
       }
 
@@ -763,13 +763,13 @@
 
   <div class="organizer-booking-admin">
     <div class="page-header">
-      <h4 class="page-title">
+      <h1 class="page-title">
         @if ($focusedEventId)
           {{ __('Compradores') }}: {{ $focusedEventTitle }}
         @else
           {{ __('Reservas de eventos') }}
         @endif
-      </h4>
+      </h1>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
@@ -938,11 +938,11 @@
                     <thead>
                       <tr>
                         <th scope="col">{{ __('Entrada') }}</th>
-                        <th scope="col">{{ __('Vendidas') }}</th>
-                        <th scope="col">{{ __('Pendientes') }}</th>
-                        <th scope="col">{{ __('Rechazadas') }}</th>
-                        <th scope="col">{{ __('Escaneo') }}</th>
-                        <th scope="col">{{ __('Ingresos') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Vendidas') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Pendientes') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Rechazadas') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Escaneo') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Ingresos') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -951,14 +951,14 @@
                           <td data-label="{{ __('Entrada') }}">
                             <span class="ob-type-name">{{ $summaryRow['ticket_name'] }}</span>
                           </td>
-                          <td data-label="{{ __('Vendidas') }}"><span class="ob-pill">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
-                          <td data-label="{{ __('Pendientes') }}">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
-                          <td data-label="{{ __('Rechazadas') }}">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
+                          <td data-label="{{ __('Vendidas') }}"><span class="ob-pill tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
+                          <td data-label="{{ __('Pendientes') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
+                          <td data-label="{{ __('Rechazadas') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
                           <td data-label="{{ __('Escaneo') }}">
                             <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
                             <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
                           </td>
-                          <td data-label="{{ __('Ingresos') }}"><span class="ob-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
+                          <td data-label="{{ __('Ingresos') }}"><span class="ob-money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
                         </tr>
                       @endforeach
                     </tbody>
@@ -1079,7 +1079,7 @@
                             aria-label="{{ __('Ver datos adicionales de la reserva') }} #{{ $booking->booking_id }}">
                             <i class="fas fa-chevron-down" aria-hidden="true"></i>
                           </button>
-                          <strong>#{{ Str::limit($booking->booking_id, 12, '') }}</strong>
+                          <strong class="tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 12, '') }}</strong>
                           <span class="ob-muted">{{ optional($booking->created_at)->format('d/m/Y H:i') }}</span>
                         </td>
                         <td>
@@ -1095,7 +1095,7 @@
                           @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
                         </td>
                         <td>
-                          <div class="ob-money">{{ $formatMoney($paidTotal) }}</div>
+                          <div class="ob-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</div>
                           <span class="ob-muted">{{ __('Recibís') }}: {{ $formatMoney($organizerTotal) }}</span>
                         </td>
                         <td>

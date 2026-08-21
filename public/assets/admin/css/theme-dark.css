@@ -154,7 +154,7 @@ html[data-theme="dark"] .card .card-body {
 
 html[data-theme="dark"] .card .card-body .text-muted,
 html[data-theme="dark"] .text-muted {
-  color: #a3a3a3 !important;
+  color: var(--adm-muted) !important;
 }
 
 html[data-theme="dark"] .card .card-stats .icon-big i {
@@ -162,7 +162,7 @@ html[data-theme="dark"] .card .card-stats .icon-big i {
 }
 
 html[data-theme="dark"] .card-stats .numbers .card-category {
-  color: #a3a3a3;
+  color: var(--adm-muted);
 }
 
 /* ============ Tablas ============ */
@@ -202,7 +202,7 @@ html[data-theme="dark"] .dataTables_wrapper .dataTables_length select {
 
 html[data-theme="dark"] .dataTables_wrapper .dataTables_info,
 html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate {
-  color: #a3a3a3;
+  color: var(--adm-muted, #b0b0b0);
 }
 
 html[data-theme="dark"] .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -237,7 +237,8 @@ html[data-theme="dark"] .select2-container--default .select2-selection--single:f
 }
 
 html[data-theme="dark"] .form-control::placeholder {
-  color: #9aa3af;
+  color: #c8cdd6;
+  opacity: 1;
 }
 
 html[data-theme="dark"] .form-control:disabled,
@@ -547,7 +548,7 @@ html[data-theme="dark"] .nav-tabs {
 }
 
 html[data-theme="dark"] .nav-tabs .nav-link {
-  color: #a3a3a3;
+  color: var(--adm-muted, #b0b0b0);
 }
 
 html[data-theme="dark"] .nav-tabs .nav-link.active,
@@ -582,7 +583,7 @@ html[data-theme="dark"] .breadcrumb-item a {
 }
 
 html[data-theme="dark"] .breadcrumb-item.active {
-  color: #a3a3a3;
+  color: var(--adm-muted, #b0b0b0);
 }
 
 html[data-theme="dark"] hr,
@@ -731,9 +732,6 @@ html[data-theme="dark"] select:-webkit-autofill {
 }
 
 /* ============ Toggle del panel: icono según theme ============ */
-html[data-theme="light"] .theme-toggle-panel .fa-sun {
-  display: none;
-}
 
 html[data-theme="dark"] .theme-toggle-panel .fa-moon {
   display: none;
@@ -755,7 +753,7 @@ html[data-theme="dark"] {
   --adm-card: #2a3040;
   --adm-ink: #e5e5e5;
   --adm-ink-strong: #ffffff;
-  --adm-muted: #a3a3a3;
+  --adm-muted: #b0b0b0;
   --adm-border: #3d4354;
   --adm-primary: #e05d38;
   --adm-primary-dark: #f4845f;
@@ -843,7 +841,7 @@ html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-collapse li
 }
 
 html[data-theme="dark"] .sidebar[data-background-color="white"] .nav-section .text-section {
-  color: rgba(229, 229, 229, 0.5) !important;
+  color: rgba(229, 229, 229, 0.66) !important;
 }
 
 /* ============ Superficies puntuales (sidebar-search, métricas, thumbs) ============ */
@@ -892,6 +890,69 @@ html[data-theme="dark"] .od-score-panel {
   background-color: #2a3040 !important;
   border-color: #3d4354 !important;
   color: #e5e5e5 !important;
+}
+
+/* Score: tokens internos con override dark (los tokens od-* del blade son light).
+   Sin esto, 0%, "0/7 listo", copy y hints heredan colores de texto light (WCAG 1.4.3). */
+html[data-theme="dark"] .od-profile-score {
+  --od-text: #e5e5e5;
+  --od-muted: #b0b0b0;
+  --od-surface: #2a3040;
+  --od-border: #3d4354;
+  --od-soft: #3a3c44;
+}
+
+html[data-theme="dark"] .od-profile-score__eyebrow {
+  color: #f4845f !important;
+}
+
+html[data-theme="dark"] .od-profile-score__action-label {
+  color: #f78a63 !important;
+}
+
+html[data-theme="dark"] .od-profile-score__value strong {
+  color: var(--od-text) !important;
+}
+
+/* Botones del score: la regla global de enlaces del dark (a:not(...)) pisa el
+   color de los CTAs (naranja sobre naranja = 1.23:1). Se corrige por tema. */
+html[data-theme="dark"] .od-profile-score__buttons a {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .od-profile-score__buttons a:first-child {
+  background: #c2410c !important;
+  border-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .od-profile-score__buttons a:first-child:hover,
+html[data-theme="dark"] .od-profile-score__buttons a:first-child:focus {
+  background: #9a3412 !important;
+  border-color: #9a3412 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .od-profile-score__buttons a:not(:first-child) {
+  background: var(--adm-bg-soft, #2a303e) !important;
+  border-color: var(--adm-border, #3d4354) !important;
+  color: var(--adm-ink, #e5e5e5) !important;
+}
+
+html[data-theme="dark"] .od-profile-score__buttons a:not(:first-child):hover,
+html[data-theme="dark"] .od-profile-score__buttons a:not(:first-child):focus {
+  background: var(--adm-accent, #2a3656) !important;
+  color: var(--adm-accent-ink, #bfdbfe) !important;
+  border-color: var(--adm-accent, #2a3656) !important;
+}
+
+/* Logo: logo.png es oscuro y desaparece sobre sidebar oscuro (solo visible).
+   El logo tiene excepción WCAG, pero lo hacemos legible en dark. */
+html[data-theme="dark"] .logo-header .logo .navbar-brand,
+html[data-theme="dark"] .logo-header .navbar-brand,
+html[data-theme="dark"] .sidebar .logo img {
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
 }
 
 html[data-theme="dark"] .table-row {
@@ -1072,9 +1133,6 @@ html[data-theme="dark"] .sidebar .nav > .nav-item a i {
   color: inherit !important;
 }
 
-html[data-theme="light"] .sidebar[data-background-color] .nav .nav-section .text-section {
-  color: #5f6b7d !important;
-}
 
 /* ============ Usuario del sidebar: nombre y nivel por tema ============ */
 html[data-theme="dark"] .sidebar[data-background-color="white"] .user .info a,
@@ -1086,15 +1144,8 @@ html[data-theme="dark"] .sidebar[data-background-color="white"] .user .info .use
   color: var(--adm-muted) !important;
 }
 
-html[data-theme="light"] .sidebar[data-background-color="white"] .user .info .user-level {
-  color: #5f6b7d !important;
-}
 
 /* ============ A11y: botones outline por tema (AA) ============ */
-html[data-theme="light"] .btn-outline-primary {
-  color: #0056b3 !important;
-  border-color: #0056b3 !important;
-}
 
 html[data-theme="dark"] .btn-outline-primary {
   color: #7ab8ff !important;
@@ -1128,22 +1179,9 @@ html[data-theme="dark"] .tx-btn.tx-btn-primary:hover {
   color: #ffffff !important;
 }
 
-html[data-theme="light"] .tx-btn.tx-btn-primary {
-  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%) !important;
-  border-color: #9a3412 !important;
-  color: #ffffff !important;
-}
 
 html[data-theme="dark"] .btn-success,
-html[data-theme="light"] .btn-success {
-  background: linear-gradient(135deg, #047857 0%, #065f46 100%) !important;
-  border-color: #065f46 !important;
-  color: #ffffff !important;
-}
 
-html[data-theme="light"] .text-warning {
-  color: #a16207 !important;
-}
 
 html[data-theme="dark"] .text-warning {
   color: #fbbf24 !important;
@@ -1155,15 +1193,8 @@ html[data-theme="dark"] .tx-amount--positive {
 }
 
 html[data-theme="dark"] .tx-btn.tx-btn-light,
-html[data-theme="light"] .tx-btn.tx-btn-light {
-  color: var(--adm-ink) !important;
-  border-color: var(--adm-border) !important;
-}
 
 html[data-theme="dark"] .arca-line-muted,
-html[data-theme="light"] .arca-line-muted {
-  color: var(--adm-muted) !important;
-}
 
 html[data-theme="dark"] .arca-invoice-link {
   color: var(--adm-ink) !important;
@@ -1180,16 +1211,6 @@ html[data-theme="dark"] pre code {
   color: var(--adm-ink) !important;
 }
 
-html[data-theme="light"] .text-danger {
-  color: #b91c1c !important;
-}
-
-html[data-theme="light"] code,
-html[data-theme="light"] .code-block,
-html[data-theme="light"] pre,
-html[data-theme="light"] pre code {
-  color: #1e2532 !important;
-}
 
 /* Page title / breadcrumbs: admin-skin hardcodea #111827 */
 html[data-theme="dark"] .page-header .page-title {
@@ -1199,7 +1220,7 @@ html[data-theme="dark"] .page-header .page-title {
 html[data-theme="dark"] .page-header .breadcrumbs,
 html[data-theme="dark"] .page-header .breadcrumbs a,
 html[data-theme="dark"] .page-header .breadcrumbs li a {
-  color: var(--adm-muted, #a3a3a3) !important;
+  color: var(--adm-muted, #b0b0b0) !important;
 }
 
 /* Dashboard stat cards (también con #fff !important en admin-skin) */
@@ -1211,11 +1232,6 @@ html[data-theme="dark"] .dashboard-items .card-stats {
 /* ============ Atlantis: iconos del sidebar y nav-search (AA 1.4.11) ============ */
 html[data-theme="dark"] .sidebar .nav > .nav-item a i,
 html[data-theme="dark"] .sidebar .nav > .nav-item a:not(.dropdown-toggle) i,
-html[data-theme="light"] .sidebar .nav > .nav-item a i,
-html[data-theme="light"] .sidebar .nav > .nav-item a:not(.dropdown-toggle) i {
-  color: #a3a3a3 !important;
-}
-
 html[data-theme="dark"] .main-header .nav-search .form-control,
 html[data-theme="dark"] .navbar-header .nav-search .form-control {
   color: var(--adm-ink) !important;
@@ -1226,12 +1242,6 @@ html[data-theme="dark"] .navbar-toggler .navbar-toggler-icon i,
 html[data-theme="dark"] .topbar-toggler i,
 html[data-theme="dark"] .sidenav-toggler i {
   color: var(--adm-muted) !important;
-}
-
-html[data-theme="light"] .navbar-toggler .navbar-toggler-icon i,
-html[data-theme="light"] .topbar-toggler i,
-html[data-theme="light"] .sidenav-toggler i {
-  color: #5f6b7d !important;
 }
 
 /* ============ Menu builder: headers de columnas en dark (tokens, no blancos) ============ */
@@ -1246,4 +1256,27 @@ html[data-theme="dark"] .admin-menu-builder .card .card-header {
 html[data-theme="dark"] .admin-menu-builder .card-header.text-white,
 html[data-theme="dark"] .admin-menu-builder .bg-primary.text-white {
   color: var(--adm-ink) !important;
+}
+
+/* =============================================
+   Eventos — panel moderno (event/index.blade.php, .oe-*)
+   El blade usa tokens semánticos (--surface-*/--text-*/--border-*),
+   por lo que las superficies ya se adaptan solas. Solo quedan
+   overrides para widgets de plugin y controles de toolbar. */
+html[data-theme="dark"] .oe-toolbar .form-control,
+html[data-theme="dark"] .oe-toolbar select,
+html[data-theme="dark"] .oe-toolbar input {
+  background: var(--panel-surface) !important;
+  border-color: var(--panel-border) !important;
+  color: var(--panel-text-primary) !important;
+}
+
+html[data-theme="dark"] .oe-mobile-controls,
+html[data-theme="dark"] .oe-toolbar__actions .dropdown-menu {
+  background: var(--panel-surface) !important;
+  border-color: var(--panel-border) !important;
+html[data-theme="dark"] .ticket-free-limit__toggle {
+  background: var(--panel-surface) !important;
+  border-color: var(--panel-border) !important;
+  color: var(--panel-text-primary) !important;
 }

@@ -14,11 +14,11 @@
         <i class="fas fa-bars"></i>
       </span>
     </button>
-    <button class="topbar-toggler more"><i class="fas fa-ellipsis-v"></i></button>
+    <button class="topbar-toggler more" aria-label="{{ __('Más opciones') }}" aria-expanded="false"><i class="fas fa-ellipsis-v" aria-hidden="true"></i></button>
 
     <div class="nav-toggle">
-      <button class="btn btn-toggle toggle-sidebar">
-        <i class="fas fa-bars"></i>
+      <button class="btn btn-toggle toggle-sidebar" aria-label="{{ __('Alternar barra lateral') }}">
+        <i class="fas fa-bars" aria-hidden="true"></i>
       </button>
     </div>
   </div>
@@ -38,14 +38,14 @@
                 <input type="radio" name="theme_version" value="light" class="selectgroup-input"
                   {{ Auth::guard('organizer')->user()->theme_version == 'light' ? 'checked' : '' }}
                   onchange="this.form.submit()">
-                <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-sun"></i></span>
+                <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-sun" aria-hidden="true"></i></span>
               </label>
 
               <label class="selectgroup-item">
                 <input type="radio" name="theme_version" value="dark" class="selectgroup-input"
                   {{ Auth::guard('organizer')->user()->theme_version == 'dark' ? 'checked' : '' }}
                   onchange="this.form.submit()">
-                <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-moon"></i></span>
+                <span class="selectgroup-button selectgroup-button-icon"><i class="fa fa-moon" aria-hidden="true"></i></span>
               </label>
             </div>
           </div>
@@ -53,16 +53,16 @@
 
         <button type="button" class="btn btn-sm btn-secondary mr-2 theme-toggle-panel" data-theme-toggle-panel
           aria-pressed="false" aria-label="{{ __('Cambiar a modo oscuro') }}" title="{{ __('Cambiar tema claro/oscuro') }}">
-          <i class="fa fa-moon"></i>
-          <i class="fa fa-sun"></i>
+          <i class="fa fa-moon" aria-hidden="true"></i>
+          <i class="fa fa-sun" aria-hidden="true"></i>
         </button>
 
         <li class="nav-item dropdown hidden-caret">
-          <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
+          <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false" aria-label="{{ __('Menú de perfil') }}">
             <div class="avatar-sm">
               @if (Auth::guard('organizer')->user()->photo != null)
                 <img src="{{ asset('assets/admin/img/organizer-photo/' . Auth::guard('organizer')->user()->photo) }}"
-                  alt="Admin Image" class="avatar-img rounded-circle">
+                  alt="{{ Auth::guard('organizer')->user()->username }}" class="avatar-img rounded-circle">
               @else
                 <img src="{{ asset('assets/admin/img/blank_user.jpg') }}" alt=""
                   class="avatar-img rounded-circle">
@@ -78,7 +78,7 @@
                     @if (Auth::guard('organizer')->user()->photo != null)
                       <img
                         src="{{ asset('assets/admin/img/organizer-photo/' . Auth::guard('organizer')->user()->photo) }}"
-                        alt="Admin Image" class="avatar-img rounded-circle">
+                        alt="{{ Auth::guard('organizer')->user()->username }}" class="avatar-img rounded-circle">
                     @else
                       <img src="{{ asset('assets/admin/img/blank_user.jpg') }}" alt=""
                         class="avatar-img rounded-circle">
@@ -97,17 +97,17 @@
               <li>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ route('organizer.edit.profile') }}">
-                  {{ __('Edit Profile') }}
+                  {{ __('Editar perfil') }}
                 </a>
 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ route('organizer.change.password') }}">
-                  {{ __('Change Password') }}
+                  {{ __('Cambiar contraseña') }}
                 </a>
 
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ route('organizer.logout') }}">
-                  {{ __('Logout') }}
+                  {{ __('Cerrar sesión') }}
                 </a>
               </li>
             </div>

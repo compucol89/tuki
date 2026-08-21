@@ -66,6 +66,7 @@ Copia de .env
 "Copia de .env"
 .env.copy
 .env.bak
+.env.bak-*
 .env.save
 .env.dist
 # ── Dumps SQL sueltos en raíz ────────────────────────────────────────────────
@@ -98,3 +99,6 @@ $RECYCLE.BIN/
 
 # ── Third-party docs ─────────────────────────────────────────────────────────
 /docs/vendor/
+
+# ── Runtime artifacts ────────────────────────────────────────
+/storage/fonts/

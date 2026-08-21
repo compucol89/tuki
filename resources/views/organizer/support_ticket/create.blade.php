@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Add Ticket') }}</h4>
+    <h1 class="page-title">{{ __('Agregar ticket') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -19,7 +19,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Add Ticket') }}</a>
+        <a href="#">{{ __('Agregar ticket') }}</a>
       </li>
     </ul>
   </div>
@@ -29,7 +29,7 @@
       <div class="card">
         <form action="{{ route('organizer.support_ticket.store') }}" enctype="multipart/form-data" method="POST">
           <div class="card-header">
-            <div class="card-title d-inline-block">{{ __('Add Ticket') }}</div>
+            <div class="card-title d-inline-block">{{ __('Agregar ticket') }}</div>
           </div>
 
           <div class="card-body">
@@ -71,7 +71,7 @@
                   </div>
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label for="">{{ __('Attachment') }}</label>
+                      <label>{{ __('Adjunto') }}</label>
                       <div class="input-group">
                         <div class="custom-file">
                           <input type="file" name="attachment" accept=".zip" class="custom-file-input"

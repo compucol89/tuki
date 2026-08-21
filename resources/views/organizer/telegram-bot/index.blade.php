@@ -3,11 +3,11 @@
 @section('style')
   <style>
     .telegram-bot-page {
-      color: #1e2532;
+      color: var(--text-primary);
     }
 
     .telegram-bot-page .tb-card {
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--border-default);
       border-radius: 8px;
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
@@ -23,20 +23,20 @@
     }
 
     .tb-status--active {
-      background: #ecfdf3;
-      color: #027a48;
+      background: var(--status-success-bg);
+      color: var(--status-success-fg);
     }
 
     .tb-status--pending {
-      background: #fff7ed;
-      color: #9a3412;
+      background: var(--status-warning-bg);
+      color: var(--status-warning-fg);
     }
 
     .tb-token {
       padding: 12px;
-      border: 1px solid #dbe2ea;
+      border: 1px solid var(--border-default);
       border-radius: 7px;
-      background: #fbfcfe;
+      background: var(--surface-toolbar);
       overflow-wrap: anywhere;
       font-weight: 800;
     }
@@ -51,9 +51,9 @@
 
     .tb-command-list li {
       padding: 10px 12px;
-      border: 1px solid #eef1f5;
+      border: 1px solid var(--border-subtle);
       border-radius: 7px;
-      background: #fbfcfe;
+      background: var(--surface-toolbar);
     }
   </style>
 @endsection
@@ -66,7 +66,7 @@
 
   <div class="telegram-bot-page">
     <div class="page-header">
-      <h4 class="page-title">{{ __('Bot de Telegram') }}</h4>
+      <h1 class="page-title">{{ __('Bot de Telegram') }}</h1>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">

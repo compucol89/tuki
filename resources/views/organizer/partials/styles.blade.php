@@ -1,9 +1,16 @@
 <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ mix('css/app.css') }}"></noscript>
 
-{{-- Font Awesome 6 Free (self-hosted via Laravel Mix) --}}
-<link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}"></noscript>
+{{-- Preload de las fuentes críticas de iconos: descarga en paralelo con el HTML,
+  listas antes del primer paint (elimina el retraso del FOUT). Solid = iconos
+  del menú/navegación; Brands = Telegram/redes del sidebar. --}}
+<link rel="preload" href="{{ asset('webfonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ asset('webfonts/fa-brands-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+
+{{-- Font Awesome 6 Free (self-hosted via Laravel Mix).
+  Carga SINCRÓNICA: los iconos deben estar listos antes del primer paint
+  (evita el flash/FOUT de iconos en cada navegación). --}}
+<link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}">
 
 {{-- fontawesome icon picker css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/fontawesome-iconpicker.min.css') }}" media="print" onload="this.media='all'">

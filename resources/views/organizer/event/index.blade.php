@@ -5,7 +5,7 @@
     .organizer-events {
       max-width: 100%;
       overflow-x: hidden;
-      color: #1e2532;
+      color: var(--text-primary);
     }
 
     .oe-summary {
@@ -18,9 +18,9 @@
     .oe-metric,
     .oe-panel,
     .oe-mobile-event {
-      border: 1px solid #e7eaf0;
+      border: 1px solid var(--border-default);
       border-radius: 8px;
-      background: #fff;
+      background: var(--surface-card);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
@@ -31,7 +31,7 @@
 
     .oe-metric__label,
     .oe-label {
-      color: #667085;
+      color: var(--text-muted);
       font-size: 11px;
       font-weight: 800;
       text-transform: uppercase;
@@ -39,7 +39,7 @@
 
     .oe-metric__value {
       margin-top: 7px;
-      color: #1e2532;
+      color: var(--text-primary);
       font-size: 23px;
       font-weight: 800;
       line-height: 1.2;
@@ -47,7 +47,7 @@
 
     .oe-muted {
       display: block;
-      color: #667085;
+      color: var(--text-muted);
       font-size: 12px;
       line-height: 1.35;
     }
@@ -61,12 +61,12 @@
       justify-content: space-between;
       gap: 14px;
       padding: 16px 18px;
-      border-bottom: 1px solid #eef1f5;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .oe-panel__title {
       margin: 0;
-      color: #1e2532;
+      color: var(--text-primary);
       font-size: 17px;
       font-weight: 800;
     }
@@ -77,8 +77,8 @@
       align-items: flex-end;
       gap: 10px;
       padding: 16px 18px;
-      border-bottom: 1px solid #eef1f5;
-      background: #fbfcfe;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--surface-toolbar);
     }
 
     .oe-toolbar .form-group {
@@ -106,7 +106,7 @@
 
     .oe-table th {
       border-top: 0;
-      color: #667085;
+      color: var(--text-muted);
       font-size: 10px;
       line-height: 1.25;
       padding: 9px 6px;
@@ -158,7 +158,7 @@
       flex: 0 0 54px;
       overflow: hidden;
       border-radius: 7px;
-      background: #eef1f5;
+      background: var(--surface-hover);
     }
 
     .oe-thumb img {
@@ -170,7 +170,7 @@
 
     .oe-title {
       display: block;
-      color: #1e2532;
+      color: var(--text-primary);
       font-weight: 800;
       text-decoration: none;
       overflow-wrap: anywhere;
@@ -182,7 +182,7 @@
     }
 
     .oe-money {
-      color: #1e2532;
+      color: var(--text-primary);
       font-weight: 800;
       white-space: nowrap;
     }
@@ -193,7 +193,7 @@
       min-height: 24px;
       padding: 3px 8px;
       border-radius: 999px;
-      background: #fff7ed;
+      background: var(--status-warning-bg);
       color: #9a3412;
       font-size: 12px;
       font-weight: 800;
@@ -214,7 +214,7 @@
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: #F97316;
+      background: var(--sidebar-accent);
     }
 
     .oe-status-select {
@@ -264,7 +264,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       padding-top: 12px;
-      border-top: 1px solid #eef1f5;
+      border-top: 1px solid var(--border-subtle);
     }
 
     .oe-mobile-controls {
@@ -276,13 +276,13 @@
 
     .oe-empty {
       padding: 40px 16px;
-      color: #667085;
+      color: var(--text-muted);
       text-align: center;
     }
 
     .oe-empty h3 {
       margin-bottom: 8px;
-      color: #1e2532;
+      color: var(--text-primary);
       font-size: 18px;
       font-weight: 800;
     }
@@ -339,14 +339,14 @@
 
   <div class="organizer-events">
     <div class="page-header">
-      <h4 class="page-title">{{ __('Gestión de eventos') }}</h4>
+      <h1 class="page-title">{{ __('Gestión de eventos') }}</h1>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
             <i class="flaticon-home"></i>
           </a>
         </li>
-        <li class="separator"><i class="flaticon-right-arrow"></i></li>
+        <li class="separator"><i class="flaticon-right-arrow" aria-hidden="true"></i></li>
         <li class="nav-item"><a href="#">{{ __('Eventos') }}</a></li>
       </ul>
     </div>
@@ -415,7 +415,7 @@
         </div>
         <div class="form-group">
           <label>{{ __('Tipo') }}</label>
-          <select name="event_type" class="form-control">
+          <select name="event_type" class="form-control" aria-label="{{ __('Tipo de evento') }}">
             <option value="">{{ __('Todos') }}</option>
             <option value="venue" {{ request()->input('event_type') == 'venue' ? 'selected' : '' }}>{{ __('Presencial') }}</option>
             <option value="online" {{ request()->input('event_type') == 'online' ? 'selected' : '' }}>{{ __('Online') }}</option>
@@ -442,7 +442,8 @@
         </div>
       @else
         <div class="d-none d-lg-block">
-          <table class="table oe-table">
+          <div class="table-responsive">
+            <table class="table oe-table">
             <colgroup>
               <col class="oe-col-check">
               <col class="oe-col-event">
@@ -457,7 +458,7 @@
                 <th scope="col"><input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}"></th>
                 <th scope="col">{{ __('Evento') }}</th>
                 <th scope="col">{{ __('Tipo / categoría') }}</th>
-                <th scope="col">{{ __('Ventas') }}</th>
+                <th scope="col" class="tuki-data">{{ __('Ventas') }}</th>
                 <th scope="col">{{ __('Liquidación') }}</th>
                 <th scope="col">{{ __('Publicación') }}</th>
                 <th scope="col">{{ __('Acciones') }}</th>
@@ -492,7 +493,7 @@
                     <span class="oe-muted mt-1">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                   </td>
                   <td>
-                    <div class="oe-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</div>
+                    <div class="oe-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</div>
                     <span class="oe-muted">{{ __('Reservas pagas') }}: {{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span>
                     <span class="oe-muted">{{ __('Gratis') }}: {{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span>
                     <span class="oe-muted">{{ __('Entradas') }}: {{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
@@ -510,7 +511,7 @@
                       method="post">
                       @csrf
                       <select class="form-control form-control-sm oe-status-select {{ $event->status == 0 ? 'bg-warning text-dark' : 'bg-primary' }}"
-                        name="status" onchange="document.getElementById('statusForm-{{ $event->id }}').submit()">
+                        name="status" aria-label="{{ __('Estado del evento') }}" onchange="document.getElementById('statusForm-{{ $event->id }}').submit()">
                         <option value="1" {{ $event->status == 1 ? 'selected' : '' }}>{{ __('Activo') }}</option>
                         <option value="0" {{ $event->status == 0 ? 'selected' : '' }}>{{ __('Inactivo') }}</option>
                       </select>
@@ -519,7 +520,7 @@
                       action="{{ route('organizer.event_management.event.update_featured', ['id' => $event->id]) }}" method="post">
                       @csrf
                       <select class="form-control form-control-sm oe-status-select {{ $event->is_featured == 'yes' ? 'bg-success' : 'bg-danger' }}"
-                        name="is_featured" onchange="document.getElementById('featuredForm-{{ $event->id }}').submit()">
+                        name="is_featured" aria-label="{{ __('Evento destacado') }}" onchange="document.getElementById('featuredForm-{{ $event->id }}').submit()">
                         <option value="yes" {{ $event->is_featured == 'yes' ? 'selected' : '' }}>{{ __('Destacado') }}</option>
                         <option value="no" {{ $event->is_featured == 'no' ? 'selected' : '' }}>{{ __('No destacado') }}</option>
                       </select>
@@ -548,7 +549,8 @@
                 </tr>
               @endforeach
             </tbody>
-          </table>
+            </table>
+          </div>
         </div>
 
         <div class="oe-mobile-list d-lg-none">

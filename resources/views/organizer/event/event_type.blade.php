@@ -2,7 +2,7 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Choose Event Type') }}</h4>
+    <h1 class="page-title">{{ __('Elegir tipo de evento') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}">
@@ -20,7 +20,7 @@
         <i class="flaticon-right-arrow"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Choose Event Type') }}</a>
+        <a href="#">{{ __('Elegir tipo de evento') }}</a>
       </li>
     </ul>
   </div>

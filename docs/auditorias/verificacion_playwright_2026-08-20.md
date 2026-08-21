@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-08-20
 **Servidor:** Docker (`http://localhost:8801`)
-**Organizador:** Rumba Colombiana
+**Organizador:** Cuenta local de prueba
 **Herramienta:** Playwright MCP (headless Chrome)
 
 ---

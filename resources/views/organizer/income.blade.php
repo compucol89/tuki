@@ -2,18 +2,18 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Monthly Total Income') }}</h4>
+    <h1 class="page-title">{{ __('Ingreso mensual total') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Monthly Total Income') }}</a>
+        <a href="#">{{ __('Ingreso mensual total') }}</a>
       </li>
     </ul>
   </div>
@@ -25,7 +25,7 @@
           <div class="row">
             <div class="col-lg-5">
               <div class="card-title d-inline-block">
-                {{ __('Monthly Total Income') }}
+                {{ __('Ingreso mensual total') }}
               </div>
             </div>
             <div class="col-lg-7">
@@ -61,7 +61,7 @@
                 <thead>
                   <tr>
                     <th scope="col">{{ __('Month Name') }}</th>
-                    <th scope="col">{{ __('Total Income') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Total Income') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -76,7 +76,7 @@
                         {{ $monthName }}
                       </td>
 
-                      <td>
+                      <td class="tuki-data-money">
                         {{ $settings->base_currency_symbol_position == 'left' ? $settings->base_currency_symbol : '' }}
                         {{ round($value + $rejects[$key] - ($commissions[$key] + $expenses[$key]), 2) }}
                         {{ $settings->base_currency_symbol_position == 'right' ? $settings->base_currency_symbol : '' }}

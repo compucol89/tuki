@@ -8,21 +8,21 @@
 
 @section('content')
   <div class="page-header">
-    <h4 class="page-title">{{ __('Tickets') }}</h4>
+    <h1 class="page-title">{{ __('Entradas') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
-        <a href="{{ route('organizer.dashboard') }}">
+        <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
           <i class="flaticon-home"></i>
         </a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">{{ __('Event Management') }}</a>
       </li>
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a
@@ -30,7 +30,7 @@
       </li>
 
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a href="#">
@@ -39,11 +39,11 @@
       </li>
 
       <li class="separator">
-        <i class="flaticon-right-arrow"></i>
+        <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
         <a
-          href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => request()->input('event_id'), 'event_type' => request()->input('event_type')]) }}">{{ __('Tickets') }}</a>
+          href="{{ route('organizer.event.ticket', ['language' => $defaultLang->code, 'event_id' => request()->input('event_id'), 'event_type' => request()->input('event_type')]) }}">{{ __('Entradas') }}</a>
       </li>
     </ul>
   </div>
@@ -55,7 +55,7 @@
           <div class="row">
             <div class="col-lg-4">
               <div class="card-title d-inline-block">
-                {{ __('Tickets') }}
+                {{ __('Entradas') }}
               </div>
             </div>
 
@@ -63,7 +63,8 @@
               <form action="" method="get" id="LangFrom">
                 <input type="hidden" name="event_id" value="{{ request()->input('event_id') }}">
                 <input type="hidden" name="event_type" value="{{ request()->input('event_type') }}">
-                <select name="language" class="form-control" onchange="document.getElementById('LangFrom').submit()">
+                <label for="ticketLang" class="visually-hidden">{{ __('Idioma') }}</label>
+                <select name="language" id="ticketLang" class="form-control" onchange="document.getElementById('LangFrom').submit()">
                   <option selected disabled>{{ __('Select a Language') }}</option>
                   @foreach ($languages as $lang)
                     <option value="{{ $lang->code }}"
@@ -148,11 +149,11 @@
                     <thead>
                       <tr>
                         <th scope="col">
-                          <input type="checkbox" class="bulk-check" data-val="all">
+                          <input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}">
                         </th>
                         <th scope="col">{{ __('Title') }}</th>
-                        <th scope="col">{{ __('Ticket Available') }}</th>
-                        <th scope="col">{{ __('Price') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Ticket Available') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Price') }}</th>
                         <th scope="col">{{ __('Actions') }}</th>
                       </tr>
                     </thead>
@@ -171,7 +172,7 @@
                             @endphp
                             {{ @$ticket_content->title }}
                           </td>
-                          <td width="20%">
+                          <td width="20%" class="tuki-data tuki-data-count">
                             @if ($ticket->pricing_type == 'variation')
                               @php
                                 $variation = json_decode($ticket->variations, true);
@@ -195,7 +196,7 @@
                             @endif
 
                           </td>
-                          <td>
+                          <td class="tuki-data tuki-data-money">
                             @if ($ticket->pricing_type == 'normal')
                               @if ($ticket->early_bird_discount == 'enable')
                                 @php
@@ -327,23 +328,23 @@
       gap: 16px;
       align-items: center;
       padding: 16px;
-      border: 1px solid #dbeafe;
+      border: 1px solid rgba(37, 99, 235, 0.25);
       border-radius: 12px;
-      background: #f8fbff;
+      background: var(--surface-card-soft);
     }
 
     .ticket-free-limit__copy span,
     .ticket-free-limit__number span {
       display: block;
       margin-bottom: 6px;
-      color: #2563eb;
+      color: var(--status-info-fg);
       font-size: 11px;
       font-weight: 700;
     }
 
     .ticket-free-limit__copy strong {
       display: block;
-      color: #0f172a;
+      color: var(--text-primary);
       font-size: 15px;
       line-height: 1.3;
     }
@@ -370,10 +371,10 @@
       min-height: 40px;
       margin: 0;
       padding: 8px 12px;
-      border: 1px solid #cbd5e1;
+      border: 1px solid var(--border-default);
       border-radius: 10px;
-      background: #fff;
-      color: #0f172a;
+      background: var(--surface-card);
+      color: var(--text-primary);
       font-size: 12px;
       font-weight: 700;
       cursor: pointer;
@@ -381,7 +382,7 @@
 
     .ticket-free-limit__toggle input {
       margin-right: 8px;
-      accent-color: #f97316;
+      accent-color: var(--sidebar-accent);
     }
 
     .ticket-free-limit__number {

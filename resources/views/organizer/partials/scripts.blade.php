@@ -117,6 +117,98 @@
 @endphp
 <script type="text/javascript" src="{{ asset($adminMainJsPath) }}{{ is_file($adminMainJsFullPath) ? '?v=' . substr(md5_file($adminMainJsFullPath), 0, 12) : '' }}"></script>
 
+{{-- Sidebar: estado de secciones persistido en la SESIÓN del servidor.
+  El servidor renderiza el sidebar con el estado guardado (sin flash al navegar).
+  Este script solo notifica los cambios al backend. --}}
+<script>
+  'use strict';
+  (function () {
+    var SECTION_IDS = ['course', 'bookings', 'support_ticket'];
+    var $sidebar = $('.sidebar');
+
+    if (!$sidebar.length) {
+      return;
+    }
+
+    function persistState() {
+      var state = {};
+      SECTION_IDS.forEach(function (id) {
+        var $sec = $('#' + id);
+        if ($sec.length) {
+          state[id] = $sec.hasClass('show');
+        }
+      });
+      $.post({
+        url: '{{ route('organizer.sidebar.state') }}',
+        data: state,
+        dataType: 'json',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+      });
+    }
+
+    $sidebar.on('shown.bs.collapse hidden.bs.collapse', '.collapse', function () {
+      persistState();
+    });
+
+    // Preservar el scroll del sidebar entre navegaciones (sin "saltos" visuales)
+    var SCROLL_KEY = 'tuki-sidebar-scroll';
+
+    function currentScrollEl() {
+      return $sidebar.find('.sidebar-wrapper .scroll-content').first();
+    }
+
+    function saveScroll() {
+      try {
+        var $el = currentScrollEl();
+        if ($el.length) {
+          sessionStorage.setItem(SCROLL_KEY, String($el.scrollTop() || 0));
+        }
+      } catch (e) {}
+    }
+
+    $sidebar.on('click', 'a[href]', function (e) {
+      var href = this.getAttribute('href') || '';
+      if (href.charAt(0) === '#') {
+        return;
+      }
+      saveScroll();
+    });
+    window.addEventListener('beforeunload', saveScroll);
+
+    (function restoreScroll() {
+      try {
+        var saved = parseInt(sessionStorage.getItem(SCROLL_KEY) || '0', 10);
+        if (!saved) {
+          return;
+        }
+        var tries = 0;
+        var iv = setInterval(function () {
+          var $el = currentScrollEl();
+          tries += 1;
+          if ($el.length && $el.scrollTop() >= 0 && (tries > 40)) {
+            $el.scrollTop(saved);
+            clearInterval(iv);
+          }
+        }, 50);
+      } catch (e) {}
+    })();
+
+    // ESC cierra el submenú abierto y devuelve el foco al toggle
+    $(document).on('keydown', function (e) {
+      if (e.key !== 'Escape') {
+        return;
+      }
+      var $open = $sidebar.find('.collapse.show').first();
+      if ($open.length) {
+        var $toggle = $open.closest('.nav-item').find('[data-toggle="collapse"]');
+        $open.collapse('hide');
+        $toggle.focus();
+        e.preventDefault();
+      }
+    });
+  })();
+</script>
+
 @yield('variables')
 
 @yield('script')

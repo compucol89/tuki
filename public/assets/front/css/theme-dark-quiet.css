@@ -1,0 +1,192 @@
+/**
+ * Dark mode — bordes quietos (sitio completo).
+ * Apaga las “líneas blancas” hardcodeadas (#e5e7eb, #f3f4f6, color-mix foreground).
+ * Se carga después de style.css / event-detail / home.
+ */
+
+html[data-theme="dark"] {
+  --border: rgba(255, 255, 255, 0.07);
+  --input: rgba(255, 255, 255, 0.09);
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --tuki-border: rgba(255, 255, 255, 0.07);
+  --tuki-border-light: rgba(255, 255, 255, 0.05);
+  --tk-border: rgba(255, 255, 255, 0.07);
+  --tk-border-strong: rgba(255, 255, 255, 0.11);
+  --color-border-strong: rgba(255, 255, 255, 0.11);
+  --surface-card-border: rgba(255, 255, 255, 0.07);
+  --footer-border: rgba(255, 255, 255, 0.07);
+  --footer-border-strong: rgba(255, 255, 255, 0.11);
+  --header-btn-border: rgba(255, 255, 255, 0.08);
+  --header-btn-hover-border: rgba(255, 255, 255, 0.12);
+  --ev-card-border: rgba(255, 255, 255, 0.08);
+  --ev-ticket-edge: rgba(255, 255, 255, 0.1);
+}
+
+/* Separadores genéricos */
+html[data-theme="dark"] hr,
+html[data-theme="dark"] .border,
+html[data-theme="dark"] .border-top,
+html[data-theme="dark"] .border-bottom,
+html[data-theme="dark"] .border-left,
+html[data-theme="dark"] .border-right {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .card-header,
+html[data-theme="dark"] .card-footer,
+html[data-theme="dark"] .list-group-item,
+html[data-theme="dark"] .dropdown-menu,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .modal-footer,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .custom-select,
+html[data-theme="dark"] .input-group-text,
+html[data-theme="dark"] .table td,
+html[data-theme="dark"] .table th,
+html[data-theme="dark"] .table thead th {
+  border-color: var(--border) !important;
+}
+
+/* Home / cards de eventos: no mezclar con foreground claro */
+html[data-theme="dark"] .ev-card {
+  --ev-card-border: rgba(255, 255, 255, 0.08);
+  --ev-ticket-edge: rgba(255, 255, 255, 0.1);
+}
+
+html[data-theme="dark"] body.home-page .nav-tabs.events-tabs,
+html[data-theme="dark"] body.home-page .hs-chip,
+html[data-theme="dark"] .hs-header__cta,
+html[data-theme="dark"] .hs-sf,
+html[data-theme="dark"] .hs-sf__field,
+html[data-theme="dark"] .hs-sf__btn {
+  border-color: var(--border) !important;
+}
+
+/* Controles de cantidad (detalle + shop) */
+html[data-theme="dark"] .quantity-input button,
+html[data-theme="dark"] .quantity-input input,
+html[data-theme="dark"] .quantity {
+  border-color: var(--border) !important;
+}
+
+/* ============ Detalle de evento (event-detail.css hardcodes) ============ */
+html[data-theme="dark"] body.page-event-detail .ed-body {
+  border-top-color: var(--border) !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-card,
+html[data-theme="dark"] body.page-event-detail .ed-info-card,
+html[data-theme="dark"] body.page-event-detail .ei-card,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-card,
+html[data-theme="dark"] body.page-event-detail .ed-hero-grid__aside .ed-ticket-card,
+html[data-theme="dark"] body.page-event-detail .ed-countdown-wrap,
+html[data-theme="dark"] body.page-event-detail .ed-viewer-counter,
+html[data-theme="dark"] .ed-ticket-card,
+html[data-theme="dark"] .ed-info-card,
+html[data-theme="dark"] .ei-card {
+  border: 1px solid var(--border) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-card__head,
+html[data-theme="dark"] body.page-event-detail .ed-hero-grid__aside .ed-ticket-card__head {
+  border-bottom: 1px solid var(--border) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option + .ed-ticket-option,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__list,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__intro,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-card__body--premium .form-group.mb-3 {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__list > .ed-ticket-option,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option + .ed-ticket-option {
+  background: var(--card) !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option:hover,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option:focus-within,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option:has(.quantity[value]:not([value="0"])) {
+  background: color-mix(in srgb, var(--primary) 10%, var(--card)) !important;
+  border-color: color-mix(in srgb, var(--primary) 22%, var(--border)) !important;
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--primary) 55%, transparent) !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-card__head,
+html[data-theme="dark"] body.page-event-detail .ed-info-card__head,
+html[data-theme="dark"] body.page-event-detail .ed-total-row,
+html[data-theme="dark"] body.page-event-detail .ed-section,
+html[data-theme="dark"] body.page-event-detail .ed-event-quickfacts,
+html[data-theme="dark"] body.page-event-detail .ed-breadcrumbs--below-hero,
+html[data-theme="dark"] body.page-event-detail .ed-summary-item,
+html[data-theme="dark"] body.page-event-detail .ed-info-item,
+html[data-theme="dark"] body.page-event-detail .ed-refund-point,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__list,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__intro,
+html[data-theme="dark"] body.page-event-detail .ed-cta-zone,
+html[data-theme="dark"] body.page-event-detail .ed-subtotal,
+html[data-theme="dark"] body.page-event-detail .ei-org,
+html[data-theme="dark"] body.page-event-detail .ei-cal,
+html[data-theme="dark"] .ed-total-row,
+html[data-theme="dark"] .ei-org,
+html[data-theme="dark"] .ei-cal {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option + .ed-ticket-option,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__list > * + *,
+html[data-theme="dark"] body.page-event-detail .ed-faq-item,
+html[data-theme="dark"] body.page-event-detail .ed-section + .ed-section {
+  border-top-color: var(--border) !important;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-picker__list,
+html[data-theme="dark"] body.page-event-detail .ed-subtotal,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-card__body--premium .quantity-input,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-card__body--premium .quantity-input button,
+html[data-theme="dark"] body.page-event-detail .ed-ticket-card__body--premium .quantity-input input {
+  border-color: var(--border) !important;
+}
+
+/* Anula highlight inset blanco (luz “de papel”) en dark */
+html[data-theme="dark"] .ed-ticket-card,
+html[data-theme="dark"] .ed-info-card,
+html[data-theme="dark"] .ei-card {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32) !important;
+}
+
+/* Footer / header */
+html[data-theme="dark"] .main-footer,
+html[data-theme="dark"] .main-footer .footer-widget,
+html[data-theme="dark"] .main-footer .footer-bottom,
+html[data-theme="dark"] .main-header,
+html[data-theme="dark"] .main-header--premium,
+html[data-theme="dark"] .main-header--premium .sticky-header {
+  border-color: var(--border) !important;
+}
+
+/* Formularios / checkout-ish surfaces en front */
+html[data-theme="dark"] .checkout-area .card,
+html[data-theme="dark"] .account-area .card,
+html[data-theme="dark"] .dashboard-area .card,
+html[data-theme="dark"] .organizer-dashboard .card {
+  border-color: var(--border) !important;
+  box-shadow: none !important;
+}
+
+/* Toastr borde suave */
+html[data-theme="dark"] #toast-container > div {
+  border-color: var(--border) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4) !important;
+}

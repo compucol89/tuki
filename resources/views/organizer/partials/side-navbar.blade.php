@@ -1,3 +1,20 @@
+@php
+  $sb = session('sidebar_state', []);
+  $sbCourseOpen = $sb['course'] ?? (request()->routeIs('organizer.event_management.event')
+    || request()->routeIs('choose-event-type')
+    || request()->routeIs('organizer.event_management.ticket_setting')
+    || request()->routeIs('organizer.add.event.event')
+    || request()->routeIs('organizer.event_management.edit_event')
+    || request()->routeIs('organizer.event.ticket')
+    || request()->routeIs('organizer.event.add.ticket')
+    || request()->routeIs('organizer.event.edit.ticket'));
+  $sbBookingsOpen = $sb['bookings'] ?? (request()->routeIs('organizer.event.booking')
+    || request()->routeIs('organizer.event_booking.details')
+    || request()->routeIs('organizer.event_booking.report'));
+  $sbSupportOpen = $sb['support_ticket'] ?? (request()->routeIs('organizer.support_tickets')
+    || request()->routeIs('organizer.support_tickets.message')
+    || request()->routeIs('organizer.support_ticket.create'));
+@endphp
 <div class="sidebar sidebar-style-2"
   data-background-color="{{ Auth::guard('organizer')->user()->theme_version == 'light' ? 'white' : 'dark2' }}">
   <div class="sidebar-wrapper scrollbar scrollbar-inner">
@@ -6,7 +23,7 @@
         <div class="avatar-sm float-left mr-2">
           @if (Auth::guard('organizer')->user()->photo != null)
             <img src="{{ asset('assets/admin/img/organizer-photo/' . Auth::guard('organizer')->user()->photo) }}"
-              alt="Admin Image" class="avatar-img rounded-circle">
+              alt="Foto del organizador" class="avatar-img rounded-circle">
           @else
             <img src="{{ asset('assets/admin/img/blank_user.jpg') }}" alt="" class="avatar-img rounded-circle">
           @endif
@@ -18,7 +35,7 @@
             <span>
               {{ Auth::guard('organizer')->user()->username }}
 
-              <span class="user-level">{{ __('Organizer') }}</span>
+              <span class="user-level">{{ __('Organizador') }}</span>
             </span>
           </a>
 
@@ -31,19 +48,30 @@
           <div class="col-12">
             <form action="" onsubmit="return false">
               <div class="form-group py-0">
-                <input name="term" type="text" class="form-control sidebar-search ltr"
-                  placeholder="{{ __('Search Menu Here...') }}">
+                <label for="sidebar-search" class="visually-hidden">{{ __('Buscar menú') }}</label>
+                <input id="sidebar-search" name="term" type="text" class="form-control sidebar-search ltr"
+                  placeholder="{{ __('Buscar en el menú...') }}">
               </div>
             </form>
           </div>
         </div>
 
+        {{-- PANEL --}}
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Panel') }}</span>
+        </li>
+
         {{-- dashboard --}}
         <li class="nav-item @if (request()->routeIs('organizer.dashboard')) active @endif">
-          <a href="{{ route('organizer.dashboard') }}">
-            <i class="fas fa-palette"></i>
+          <a href="{{ route('organizer.dashboard') }}" @if (request()->routeIs('organizer.dashboard')) aria-current="page" @endif>
+            <i class="fas fa-palette" aria-hidden="true"></i>
             <p>{{ __('Dashboard') }}</p>
           </a>
+        </li>
+
+        {{-- EVENTOS --}}
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Eventos') }}</span>
         </li>
 
         <li
@@ -56,22 +84,15 @@
           @elseif (request()->routeIs('organizer.event.ticket')) active
               @elseif (request()->routeIs('organizer.event.add.ticket')) active
               @elseif (request()->routeIs('organizer.event.edit.ticket')) active @endif">
-          <a data-toggle="collapse" href="#course">
-            <i class="fas fa-book"></i>
-            <p>{{ __('Event Management') }}</p>
+          <a data-toggle="collapse" href="#course" aria-controls="course" aria-expanded="{{ $sbCourseOpen ? 'true' : 'false' }}">
+            <i class="fas fa-book" aria-hidden="true"></i>
+            <p>{{ __('Gestión de eventos') }}</p>
             <span class="caret"></span>
           </a>
 
           <div id="course"
             class="collapse
-            @if (request()->routeIs('organizer.event_management.event')) show
-            @elseif (request()->routeIs('choose-event-type')) show 
-            @elseif (request()->routeIs('organizer.event_management.ticket_setting')) show 
-            @elseif (request()->routeIs('organizer.add.event.event')) show 
-            @elseif (request()->routeIs('organizer.event_management.edit_event')) show 
-            @elseif (request()->routeIs('organizer.event.ticket')) show
-              @elseif (request()->routeIs('organizer.event.add.ticket')) show
-              @elseif (request()->routeIs('organizer.event.edit.ticket')) show @endif">
+            @if ($sbCourseOpen) show @endif">
             <ul class="nav nav-collapse">
 
               <li
@@ -81,8 +102,9 @@
               @elseif (request()->routeIs('organizer.add.event.event') && request()->input('type') == 'online') active 
               @elseif (request()->routeIs('organizer.add.event.event') && request()->input('type') == 'venue') active @endif
               ">
-                <a href="{{ route('choose-event-type', ['language' => $defaultLang->code]) }}">
-                  <span class="sub-item">{{ __('Add Event') }}</span>
+                <a href="{{ route('choose-event-type', ['language' => $defaultLang->code]) }}" @if (request()->routeIs('choose-event-type') || request()->routeIs('organizer.add.event.event')) aria-current="page" @endif>
+                  <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Agregar evento') }}</span>
                 </a>
               </li>
 
@@ -93,8 +115,9 @@
                   @elseif (request()->routeIs('organizer.event.ticket') && request()->input('event_type') == '') active
               @elseif (request()->routeIs('organizer.event.add.ticket') && request()->input('event_type') == '') active
               @elseif (request()->routeIs('organizer.event.edit.ticket') && request()->input('event_type') == '') active @endif">
-                <a href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code]) }}">
-                  <span class="sub-item">{{ __('All Events') }}</span>
+                <a href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code]) }}" @if (request()->routeIs('organizer.event_management.event') && request()->input('event_type') == '') aria-current="page" @endif>
+                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Todos los eventos') }}</span>
                 </a>
               </li>
 
@@ -105,8 +128,9 @@
               @elseif (request()->routeIs('organizer.event.add.ticket') && request()->input('event_type') == 'venue') active
               @elseif (request()->routeIs('organizer.event.edit.ticket') && request()->input('event_type') == 'venue') active @endif">
                 <a
-                  href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code, 'event_type' => 'venue']) }}">
-                  <span class="sub-item">{{ __('Venue Events') }}</span>
+                  href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code, 'event_type' => 'venue']) }}" @if (request()->routeIs('organizer.event_management.event') && request()->input('event_type') == 'venue') aria-current="page" @endif>
+                  <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Eventos del lugar') }}</span>
                 </a>
               </li>
 
@@ -115,8 +139,9 @@
               @if (request()->routeIs('organizer.event_management.event') && request()->input('event_type') == 'online') active @endif
               ">
                 <a
-                  href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code, 'event_type' => 'online']) }}">
-                  <span class="sub-item">{{ __('Online Events') }}</span>
+                  href="{{ route('organizer.event_management.event', ['language' => $defaultLang->code, 'event_type' => 'online']) }}" @if (request()->routeIs('organizer.event_management.event') && request()->input('event_type') == 'online') aria-current="page" @endif>
+                  <i class="fas fa-globe" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Eventos online') }}</span>
                 </a>
               </li>
             </ul>
@@ -128,82 +153,103 @@
           @if (request()->routeIs('organizer.event.booking')) active
           @elseif (request()->routeIs('organizer.event_booking.details')) active
           @elseif (request()->routeIs('organizer.event_booking.report')) active @endif">
-          <a data-toggle="collapse" href="#bookings">
-            <i class="fas fa-users-class"></i>
-            <p>{{ __('Event Bookings') }}</p>
+          <a data-toggle="collapse" href="#bookings" aria-controls="bookings" aria-expanded="{{ $sbBookingsOpen ? 'true' : 'false' }}">
+            <i class="fas fa-people-group" aria-hidden="true"></i>
+            <p>{{ __('Reservas de eventos') }}</p>
             <span class="caret"></span>
           </a>
 
           <div id="bookings"
             class="collapse
-          @if (request()->routeIs('organizer.event.booking')) show
-          @elseif (request()->routeIs('organizer.event_booking.details')) show
-          @elseif (request()->routeIs('organizer.event_booking.report')) show @endif">
+          @if ($sbBookingsOpen) show @endif">
             <ul class="nav nav-collapse">
               <li
                 class="
               @if (request()->routeIs('organizer.event.booking') && empty(request()->input('status'))) active  
               @elseif (request()->routeIs('organizer.event_booking.details')) active @endif">
-                <a href="{{ route('organizer.event.booking') }}">
-                  <span class="sub-item">{{ __('All Bookings') }}</span>
+                <a href="{{ route('organizer.event.booking') }}" @if (request()->routeIs('organizer.event.booking') && empty(request()->input('status'))) aria-current="page" @endif>
+                  <i class="fas fa-ticket-alt" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Todas las reservas') }}</span>
                 </a>
               </li>
 
               <li
                 class="{{ request()->routeIs('organizer.event.booking') && request()->input('status') == 'completed' ? 'active' : '' }}">
                 <a href="{{ route('organizer.event.booking', ['status' => 'completed']) }}">
-                  <span class="sub-item">{{ __('Completed Bookings') }}</span>
+                  <i class="fas fa-check-circle" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Reservas completadas') }}</span>
                 </a>
               </li>
 
               <li
                 class="{{ request()->routeIs('organizer.event.booking') && request()->input('status') == 'pending' ? 'active' : '' }}">
                 <a href="{{ route('organizer.event.booking', ['status' => 'pending']) }}">
-                  <span class="sub-item">{{ __('Pending Bookings') }}</span>
+                  <i class="fas fa-hourglass-half" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Reservas pendientes') }}</span>
                 </a>
               </li>
 
               <li
                 class="{{ request()->routeIs('organizer.event.booking') && request()->input('status') == 'rejected' ? 'active' : '' }}">
                 <a href="{{ route('organizer.event.booking', ['status' => 'rejected']) }}">
-                  <span class="sub-item">{{ __('Rejected Bookings') }}</span>
+                  <i class="fas fa-times-circle" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Reservas rechazadas') }}</span>
                 </a>
               </li>
 
               <li class="{{ request()->routeIs('organizer.event_booking.report') ? 'active' : '' }}">
-                <a href="{{ route('organizer.event_booking.report') }}">
-                  <span class="sub-item">{{ __('Report') }}</span>
+                <a href="{{ route('organizer.event_booking.report') }}" @if (request()->routeIs('organizer.event_booking.report')) aria-current="page" @endif>
+                  <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                  <span class="sub-item">{{ __('Reportes') }}</span>
                 </a>
               </li>
             </ul>
           </div>
         </li>
+
+        <li class="nav-item">
+          <a href="{{ route('organizer.pwa') }}" target="_blank">
+            <i class="fas fa-qrcode" aria-hidden="true"></i>
+            <p>{{ __('Escáner PWA') }}</p>
+          </a>
+        </li>
+
+        {{-- FINANZAS --}}
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Finanzas') }}</span>
+        </li>
+
         <li
           class="nav-item 
         @if (request()->routeIs('organizer.withdraw')) active 
         @elseif (request()->routeIs('organizer.withdraw.create')) active @endif">
-          <a href="{{ route('organizer.withdraw', ['language' => $defaultLang->code]) }}">
-            <i class="fas fa-donate"></i>
-            <p>{{ __('Withdraw') }}</p>
+          <a href="{{ route('organizer.withdraw', ['language' => $defaultLang->code]) }}" @if (request()->routeIs('organizer.withdraw')) aria-current="page" @endif>
+            <i class="fas fa-donate" aria-hidden="true"></i>
+            <p>{{ __('Retiro') }}</p>
           </a>
         </li>
         <li class="nav-item @if (request()->routeIs('organizer.transcation')) active @endif">
-          <a href="{{ route('organizer.transcation') }}">
-            <i class="fas fa-exchange-alt"></i>
-            <p>{{ __('Transactions') }}</p>
+          <a href="{{ route('organizer.transcation') }}" @if (request()->routeIs('organizer.transcation')) aria-current="page" @endif>
+            <i class="fas fa-exchange-alt" aria-hidden="true"></i>
+            <p>{{ __('Transacciones') }}</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="{{ route('organizer.pwa') }}" target="_blank">
-            <i class="fas fa-scanner"></i>
-            <p>{{ __('Pwa Scanner') }}</p>
-          </a>
+
+        {{-- HERRAMIENTAS --}}
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Herramientas') }}</span>
         </li>
+
         <li class="nav-item @if (request()->routeIs('organizer.telegram_bot.*')) active @endif">
           <a href="{{ route('organizer.telegram_bot.index') }}">
-            <i class="fab fa-telegram-plane"></i>
+            <i class="fab fa-telegram-plane" aria-hidden="true"></i>
             <p>{{ __('Bot de Telegram') }}</p>
           </a>
+        </li>
+
+        {{-- SOPORTE --}}
+        <li class="nav-section sidebar-nav-section">
+          <span class="text-section">{{ __('Soporte') }}</span>
         </li>
 
         @php
@@ -215,55 +261,35 @@
             class="nav-item @if (request()->routeIs('organizer.support_tickets')) active
             @elseif (request()->routeIs('organizer.support_tickets.message')) active
             @elseif (request()->routeIs('organizer.support_ticket.create')) active @endif">
-            <a data-toggle="collapse" href="#support_ticket">
-              <i class="fas fa-globe"></i>
-              <p>{{ __('Support Tickets') }}</p>
+            <a data-toggle="collapse" href="#support_ticket" aria-controls="support_ticket" aria-expanded="{{ $sbSupportOpen ? 'true' : 'false' }}">
+              <i class="fas fa-globe" aria-hidden="true"></i>
+              <p>{{ __('Tickets de soporte') }}</p>
               <span class="caret"></span>
             </a>
 
             <div id="support_ticket"
               class="collapse
-              @if (request()->routeIs('organizer.support_tickets')) show
-              @elseif (request()->routeIs('organizer.support_tickets.message')) show
-              @elseif (request()->routeIs('organizer.support_ticket.create')) show @endif">
+              @if ($sbSupportOpen) show @endif">
               <ul class="nav nav-collapse">
 
                 <li
                   class="@if (request()->routeIs('organizer.support_tickets')) active
               @elseif (request()->routeIs('organizer.support_tickets.message')) active @endif">
-                  <a href="{{ route('organizer.support_tickets') }}">
-                    <span class="sub-item">{{ __('All Tickets') }}</span>
+                  <a href="{{ route('organizer.support_tickets') }}" @if (request()->routeIs('organizer.support_tickets')) aria-current="page" @endif>
+                    <i class="fas fa-inbox" aria-hidden="true"></i>
+                    <span class="sub-item">{{ __('Todos los tickets') }}</span>
                   </a>
                 </li>
                 <li class="{{ request()->routeIs('organizer.support_ticket.create') ? 'active' : '' }}">
-                  <a href="{{ route('organizer.support_ticket.create') }}">
-                    <span class="sub-item">{{ __('Add Ticket') }}</span>
+                  <a href="{{ route('organizer.support_ticket.create') }}" @if (request()->routeIs('organizer.support_ticket.create')) aria-current="page" @endif>
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                    <span class="sub-item">{{ __('Agregar ticket') }}</span>
                   </a>
                 </li>
               </ul>
             </div>
           </li>
         @endif
-
-        <li class="nav-item
-                  @if (request()->routeIs('organizer.edit.profile')) active @endif">
-          <a href="{{ route('organizer.edit.profile') }}">
-            <i class="fas fa-user-edit"></i>
-            <p>{{ __('Edit Profile') }}</p>
-          </a>
-        </li>
-        <li class="nav-item @if (request()->routeIs('organizer.change.password')) active @endif">
-          <a href="{{ route('organizer.change.password') }}">
-            <i class="fas fa-key"></i>
-            <p>{{ __('Change Password') }}</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('organizer.logout') }}">
-            <i class="fas fa-sign-out "></i>
-            <p>{{ __('Logout') }}</p>
-          </a>
-        </li>
       </ul>
     </div>
   </div>

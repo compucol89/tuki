@@ -6,7 +6,7 @@
       --od-primary: #e05d38;
       --od-primary-strong: #bf4424;
       --od-text: #1e2532;
-      --od-muted: #6b7280;
+      --od-muted: #4b5563;
       --od-surface: #ffffff;
       --od-border: #dcdfe2;
       --od-soft: #f3f4f6;
@@ -24,10 +24,10 @@
 
     .od-profile-score__eyebrow {
       margin: 0 0 6px;
-      color: var(--od-primary);
+      color: #c2410c;
       font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .12em;
+      font-weight: 600;
+      letter-spacing: .10em;
       line-height: 1;
       text-transform: uppercase;
     }
@@ -36,7 +36,7 @@
       margin: 0;
       color: var(--od-text);
       font-size: 22px;
-      font-weight: 800;
+      font-weight: 600;
       line-height: 1.12;
     }
 
@@ -62,14 +62,14 @@
 
     .od-profile-score__value strong {
       font-size: 28px;
-      font-weight: 800;
+      font-weight: 600;
       line-height: 1;
     }
 
     .od-profile-score__value span {
       color: var(--od-muted);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 600;
     }
 
     .od-profile-score__bar {
@@ -102,7 +102,7 @@
       padding: 9px 12px;
       border-radius: 10px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 600;
       line-height: 1.1;
       text-decoration: none;
       transition: transform .16s ease, border-color .16s ease, color .16s ease, background .16s ease, box-shadow .16s ease;
@@ -128,8 +128,8 @@
     }
 
     .od-profile-score__buttons a:first-child {
-      border-color: var(--od-primary);
-      background: var(--od-primary);
+      border-color: #c2410c;
+      background: #c2410c;
       color: #fff;
     }
 
@@ -174,13 +174,14 @@
       margin-top: 2px;
       color: var(--od-muted);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.28;
     }
 
     .od-profile-score__buttons a:first-child:hover,
     .od-profile-score__buttons a:first-child:focus {
-      background: var(--od-primary-strong);
+      background: #9a3412;
+      border-color: #9a3412;
       color: #fff;
     }
 
@@ -219,13 +220,13 @@
   @endphp
 
   <div class="mt-2 mb-4">
-    <h2 class=" pb-2 ">{{ __('Welcome back') .','}} {{ Auth::guard('organizer')->user()->username . '!' }}</h2>
+    <h1 class=" pb-2 ">{{ __('Bienvenido de vuelta') .','}} {{ Auth::guard('organizer')->user()->username . '!' }}</h1>
   </div>
 
   @if (Session::get('secret_login') != true)
     @if (Auth::guard('organizer')->user()->status == 0 && $admin_setting->organizer_admin_approval == 1)
       <div class="mt-2 mb-4">
-        <div class="alert alert-danger text-dark">
+        <div class="alert alert-danger text-dark" role="alert">
           {{ $admin_setting->admin_approval_notice != null ? $admin_setting->admin_approval_notice : __('Tu cuenta esta pendiente de aprobacion por parte del equipo administrador.') }}
         </div>
       </div>
@@ -241,8 +242,8 @@
 
     <div class="od-profile-score__meter" aria-label="{{ __('Calidad del perfil público') }}">
       <div class="od-profile-score__value">
-        <strong>{{ $profileDashboard['percent'] }}%</strong>
-        <span>{{ $profileDashboard['done'] }}/{{ $profileDashboard['total'] }} {{ __('listo') }}</span>
+        <strong class="tuki-data">{{ $profileDashboard['percent'] }}%</strong>
+        <span class="tuki-data">{{ $profileDashboard['done'] }}/{{ $profileDashboard['total'] }} {{ __('listo') }}</span>
       </div>
       <div class="od-profile-score__bar" aria-hidden="true">
         <span style="width: {{ $profileDashboard['percent'] }}%;"></span>
@@ -283,7 +284,7 @@
             <div class="row">
               <div class="col-5">
                 <div class="icon-big text-center">
-                  <i class="fas fa-sack-dollar"></i>
+                   <i class="fas fa-sack-dollar" aria-hidden="true"></i>
                 </div>
               </div>
 
@@ -308,7 +309,7 @@
             <div class="row">
               <div class="col-5">
                 <div class="icon-big text-center">
-                  <i class="fas fa-calendar-alt"></i>
+                   <i class="fas fa-calendar-alt" aria-hidden="true"></i>
                 </div>
               </div>
 
@@ -331,7 +332,7 @@
             <div class="row">
               <div class="col-5">
                 <div class="icon-big text-center">
-                  <i class="fas fa-presentation"></i>
+                   <i class="fas fa-presentation" aria-hidden="true"></i>
                 </div>
               </div>
               <div class="col-7 col-stats">
@@ -352,7 +353,7 @@
             <div class="row">
               <div class="col-5">
                 <div class="icon-big text-center">
-                  <i class="fas fa-exchange-alt"></i>
+                   <i class="fas fa-exchange-alt" aria-hidden="true"></i>
                 </div>
               </div>
 
@@ -376,7 +377,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <canvas id="incomeChart"></canvas>
+            <canvas id="incomeChart" role="img" aria-label="{{ __('Event Booking Monthly Income') }} ({{ date('Y') }})"><span class="visually-hidden">{{ __('Gráfico de ingresos mensuales por reservas de eventos.') }}</span></canvas>
           </div>
         </div>
       </div>
@@ -390,7 +391,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <canvas id="TotalEventBookingChart"></canvas>
+            <canvas id="TotalEventBookingChart" role="img" aria-label="{{ __('Monthly Event Bookings') }} ({{ date('Y') }})"><span class="visually-hidden">{{ __('Gráfico de reservas mensuales por eventos.') }}</span></canvas>
           </div>
         </div>
       </div>

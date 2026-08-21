@@ -20,15 +20,15 @@
   <div class="row">
     <div class="col-md-6">
       <div class="form-group mb-md-0">
-        <label>{{ __('Latitud') }}</label>
-        <input type="text" name="latitude" class="form-control js-venue-latitude" placeholder="-34.6037"
+        <label for="js-venue-latitude">{{ __('Latitud') }}</label>
+        <input type="text" name="latitude" id="js-venue-latitude" class="form-control js-venue-latitude" placeholder="-34.6037"
           value="{{ old('latitude', $latitude ?? '') }}" readonly>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group mb-0">
-        <label>{{ __('Longitud') }}</label>
-        <input type="text" name="longitude" class="form-control js-venue-longitude" placeholder="-58.3816"
+        <label for="js-venue-longitude">{{ __('Longitud') }}</label>
+        <input type="text" name="longitude" id="js-venue-longitude" class="form-control js-venue-longitude" placeholder="-58.3816"
           value="{{ old('longitude', $longitude ?? '') }}" readonly>
       </div>
     </div>

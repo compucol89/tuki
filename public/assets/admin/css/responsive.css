@@ -1567,8 +1567,10 @@
   }
 
   .mentor-details-area .mentor-content .mentor-item ul li a {
-    height: 40px;
-    width: 40px;
+    min-height: 44px;
+    min-width: 44px;
+    height: auto;
+    width: auto;
     margin-right: 12px;
     line-height: 36px;
     font-size: 13px;
@@ -1645,9 +1647,11 @@
   }
 
   .course-grid-area .pagination-item nav ul li a {
-    height: 30px;
-    width: 30px;
-    line-height: 30px;
+    min-height: 44px;
+    min-width: 44px;
+    height: auto;
+    width: auto;
+    line-height: 44px;
     font-size: 13px;
   }
 

@@ -188,6 +188,8 @@
 
     /* Tipografía — Inter unificado (Fontsource self-hosted) */
     --tuki-font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --tuki-font-ui: var(--tuki-font-sans);
+    --tuki-font-data: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
     --base-font: var(--tuki-font-sans);
     --heading-font: var(--tuki-font-sans);
     --font-sans: var(--tuki-font-sans);
@@ -5658,8 +5660,9 @@ html[data-theme="dark"] {
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
 
-  --border: #3d4354;
-  --input: #3d4354;
+  /* Bordes quietos: nada de “líneas blancas” marcadas */
+  --border: rgba(255, 255, 255, 0.07);
+  --input: rgba(255, 255, 255, 0.09);
   --ring: var(--primary);
 
   --chart-1: #86a7c8;
@@ -5674,7 +5677,7 @@ html[data-theme="dark"] {
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #2a3656;
   --sidebar-accent-foreground: #bfdbfe;
-  --sidebar-border: #3d4354;
+  --sidebar-border: rgba(255, 255, 255, 0.07);
   --sidebar-ring: var(--primary);
 
   --primary-hover: #f0704a;
@@ -5684,10 +5687,19 @@ html[data-theme="dark"] {
   --surface-selected: #333b55;
   --card-soft: rgba(42, 48, 64, 0.74);
   --header-btn-bg: rgba(42, 48, 64, 0.72);
-  --header-btn-border: rgba(255, 255, 255, 0.1);
+  --header-btn-border: rgba(255, 255, 255, 0.08);
   --header-btn-hover-bg: rgba(58, 66, 86, 0.9);
-  --header-btn-hover-border: rgba(255, 255, 255, 0.16);
+  --header-btn-hover-border: rgba(255, 255, 255, 0.12);
   --scrim: rgba(0, 0, 0, 0.62);
+
+  --tuki-border: rgba(255, 255, 255, 0.07);
+  --tuki-border-light: rgba(255, 255, 255, 0.05);
+  --tk-border: rgba(255, 255, 255, 0.07);
+  --tk-border-strong: rgba(255, 255, 255, 0.11);
+  --color-border-strong: rgba(255, 255, 255, 0.11);
+  --surface-card-border: rgba(255, 255, 255, 0.07);
+  --footer-border: rgba(255, 255, 255, 0.07);
+  --footer-border-strong: rgba(255, 255, 255, 0.11);
 
   --success-light: #134e4a;
   --warning-light: #713f12;

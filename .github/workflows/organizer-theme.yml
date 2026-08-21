@@ -1,0 +1,101 @@
+name: Organizer Theme Quality Gates
+
+on:
+  push:
+    branches: [main, 'remediation/*']
+  pull_request:
+
+concurrency:
+  group: organizer-theme-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  static-audit:
+    name: Static audit (NO NEW DEBT)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile assets (regenera mix-manifest y hashes)
+        run: npm run dev
+
+      - name: Run theme debt audit
+        run: bash scripts/audit-organizer-theme.sh
+
+  playwright-theme:
+    name: Playwright theme contract (light × dark)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: static-audit
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare .env para CI
+        run: |
+          cp .env.example .env
+          sed -i 's/^DB_HOST=.*/DB_HOST=db/' .env
+          sed -i 's/^DB_PORT=.*/DB_PORT=3306/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=eventos/' .env
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=root/' .env
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=tukipass/' .env
+          sed -i 's/^APP_ENV=.*/APP_ENV=local/' .env
+
+      - name: Levantar stack (app + mysql con seed tukipass.sql)
+        run: docker compose up -d --build
+
+      - name: Esperar healthcheck de la app
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:8801/; then
+              echo "App lista"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "App no respondió a tiempo"
+          exit 1
+
+      - name: Generar APP_KEY si falta
+        run: |
+          if ! grep -q '^APP_KEY=base64' .env; then
+            docker compose exec -T app php artisan key:generate
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Instalar navegador Chromium de Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: Run theme tests
+        env:
+          # Credenciales de test del seed (tukipass.sql). Sobrescribibles con
+          # secrets del repo si el entorno de CI usa otros datos.
+          E2E_ORGANIZER_USERNAME: ${{ secrets.E2E_ORGANIZER_USERNAME || 'Rumba Colombiana' }}
+          E2E_ORGANIZER_PASSWORD: ${{ secrets.E2E_ORGANIZER_PASSWORD || '1234567890' }}
+        run: npm run test:theme
+
+      - name: Subir artefactos de fallos (screenshots/traces)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results/
+          retention-days: 7
+
+      - name: Apagar stack
+        if: always()
+        run: docker compose down -v

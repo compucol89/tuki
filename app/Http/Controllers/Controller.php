@@ -108,8 +108,9 @@ class Controller extends BaseController
     ];
 
     $messages = [
-      'email_id.required' => 'Please enter your email address.',
-      'email_id.unique' => 'This email address is already exist!'
+      'email_id.required' => __('Ingresá tu correo electrónico.'),
+      'email_id.email' => __('Ingresá un correo electrónico válido.'),
+      'email_id.unique' => __('Este correo ya está suscripto.'),
     ];
 
     $validator = Validator::make($request->all(), $rules, $messages);
@@ -123,7 +124,7 @@ class Controller extends BaseController
     Subscriber::create($request->all());
 
     return Response::json([
-      'success' => 'You have successfully subscribed to our newsletter.'
+      'success' => __('Te suscribiste correctamente al newsletter.'),
     ], 200);
   }
 }

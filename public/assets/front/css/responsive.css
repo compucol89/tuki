@@ -319,8 +319,10 @@
     }
 
     .event-details-images .slick-arrow {
-        height: 40px;
-        width: 40px;
+        min-height: 44px;
+        min-width: 44px;
+        height: auto;
+        width: auto;
     }
 
     .event-details-images .prev {

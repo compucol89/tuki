@@ -76,10 +76,19 @@ warning-color : #ffa534
 danger-color : #f3545d
 
 -------------------------------------------------------------------*/
-*:focus {
+:focus {
   outline: 0 !important;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
+}
+
+/* Foco visible por teclado (WCAG 2.4.7 / 2.4.13): reemplaza el outline:0 global
+   con un anillo claro solo para :focus-visible, visible en claro y oscuro. */
+:focus-visible {
+  outline: 2px solid #f97316 !important;
+  outline-offset: 2px !important;
+  -webkit-box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.35) !important;
 }
 
 /* Typography */

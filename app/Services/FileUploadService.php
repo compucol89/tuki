@@ -178,6 +178,16 @@ class FileUploadService
     return asset($relativeDir . $filename);
   }
 
+  public static function imagePath(string $relativeDir, string $filename): string
+  {
+    $webp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filename);
+    $path = ($webp !== $filename && file_exists(public_path($relativeDir . $webp)))
+      ? $relativeDir . $webp
+      : $relativeDir . $filename;
+
+    return '/' . ltrim($path, '/');
+  }
+
   public static function imageExists(string $relativeDir, string $filename): bool
   {
     if ($filename === '') {

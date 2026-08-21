@@ -21,6 +21,20 @@ const ROUTES = [
   { name: 'withdraw', path: '/organizer/withdraw?language=es' },
 ];
 
+const PUBLIC_DARK_ROUTES = [
+  {
+    name: 'home',
+    path: '/',
+    surfaces: [
+      '.hero-collage-section',
+      '.hero-slideshow',
+      '.hs-search-form',
+      '.events-section .ev-card',
+      '.events-section .ev-card__body-panel',
+    ],
+  },
+];
+
 const USER = {
   username: process.env.E2E_ORGANIZER_USERNAME,
   password: process.env.E2E_ORGANIZER_PASSWORD,
@@ -62,6 +76,64 @@ async function setTheme(page, theme) {
     if (s) s.setAttribute('data-background-color', t === 'dark' ? 'dark2' : 'white');
   }, theme);
   await page.waitForTimeout(200);
+}
+
+async function setPublicTheme(page, theme) {
+  await page.addInitScript((t) => localStorage.setItem('tuki-theme', t), theme);
+  await page.evaluate((t) => {
+    localStorage.setItem('tuki-theme', t);
+    document.documentElement.dataset.theme = t;
+  }, theme).catch(() => {});
+}
+
+async function publicThemeAudit(page, selectors) {
+  return page.evaluate((surfaceSelectors) => {
+    const normalize = (values) => {
+      const rgba = values.map(Number);
+      const rgb = rgba.slice(0, 3).map((n) => (n <= 1 ? n * 255 : n));
+      const alpha = rgba.length >= 4 ? rgba[3] : 1;
+
+      return { rgb, alpha };
+    };
+    const parseColor = (color) => {
+      const values = (String(color).match(/[\d.]+/g) || []).map(Number);
+      if (values.length < 3) return null;
+
+      return normalize(values);
+    };
+    const luminance = ([r, g, b]) => {
+      const convert = (channel) => {
+        const value = channel / 255;
+
+        return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+      };
+
+      return 0.2126 * convert(r) + 0.7152 * convert(g) + 0.0722 * convert(b);
+    };
+    const isBrightSurface = (color, image) => {
+      if (image && image !== 'none') {
+        return false;
+      }
+      const parsed = parseColor(color);
+      if (!parsed || parsed.alpha < 0.5) {
+        return false;
+      }
+
+      return luminance(parsed.rgb) > 0.86;
+    };
+
+    const brightSurfaces = [];
+    for (const selector of surfaceSelectors) {
+      document.querySelectorAll(selector).forEach((el) => {
+        const styles = getComputedStyle(el);
+        if (isBrightSurface(styles.backgroundColor, styles.backgroundImage)) {
+          brightSurfaces.push(`${selector} -> ${styles.backgroundColor}`);
+        }
+      });
+    }
+
+    return brightSurfaces;
+  }, selectors);
 }
 
 async function themeAudit(page) {
@@ -137,6 +209,62 @@ test('@theme detalle evento dark: entradas no muestran islas claras al interactu
   });
 
   expect(focused.isLight, `focus/cantidad claro en entrada dark: ${focused.bg}`).toBe(false);
+});
+
+test.describe('@theme contrato theming público', () => {
+  for (const route of PUBLIC_DARK_ROUTES) {
+    test(`${route.name} dark sin islas light`, async ({ page }) => {
+      await setPublicTheme(page, 'dark');
+      await page.goto(route.path, { waitUntil: 'load' });
+      await setPublicTheme(page, 'dark');
+
+      const brightSurfaces = await publicThemeAudit(page, route.surfaces);
+
+      expect(brightSurfaces, `islas claras en dark: ${route.name}`).toEqual([]);
+    });
+  }
+});
+
+test('@theme home dark conserva hero Tangerine y CTA Buscar visible', async ({ page }) => {
+  await setPublicTheme(page, 'dark');
+  await page.goto('/', { waitUntil: 'load' });
+  await setPublicTheme(page, 'dark');
+
+  const hero = await page.locator('body.home-page .hero-collage-section').evaluate((el) => {
+    const slideshow = el.querySelector('.hero-slideshow');
+    const heroRect = el.getBoundingClientRect();
+    const slideRect = slideshow ? slideshow.getBoundingClientRect() : null;
+    const slideStyle = slideshow ? getComputedStyle(slideshow) : null;
+
+    return {
+      flexDirection: getComputedStyle(el).flexDirection,
+      slidePosition: slideStyle ? slideStyle.position : '',
+      slideWidth: slideRect ? slideRect.width : 0,
+      heroWidth: heroRect.width,
+    };
+  });
+
+  expect(hero.flexDirection).toBe('column');
+  expect(hero.slidePosition).toBe('relative');
+  expect(hero.slideWidth).toBeLessThan(hero.heroWidth);
+
+  const searchButton = await page.locator('body.home-page .hs-sf__btn').evaluate((el) => {
+    const cs = getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+
+    return {
+      backgroundColor: cs.backgroundColor,
+      backgroundImage: cs.backgroundImage,
+      color: cs.color,
+      width: rect.width,
+      height: rect.height,
+    };
+  });
+
+  expect(searchButton.width).toBeGreaterThan(80);
+  expect(searchButton.height).toBeGreaterThan(40);
+  expect(`${searchButton.backgroundColor} ${searchButton.backgroundImage}`).not.toContain('rgba(0, 0, 0, 0) none');
+  expect(searchButton.color).toBe('rgb(255, 255, 255)');
 });
 
 test.describe('@theme contrato theming organizer', () => {

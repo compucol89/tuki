@@ -52,7 +52,7 @@
         </div>
       @empty
         <div class="hero-slide" style="aspect-ratio: 1920 / 800;">
-          <img class="hero-slide__image" src="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}" width="1920" height="800" alt="" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
+          <img class="hero-slide__image" src="{{ \App\Services\FileUploadService::imagePath('assets/admin/img/', $basicInfo->breadcrumb ?? 'noimage.jpg') }}" width="1920" height="800" alt="" loading="eager" fetchpriority="high" decoding="sync" aria-hidden="true">
         </div>
       @endforelse
     </div>
@@ -180,7 +180,8 @@
         {{-- Keyword --}}
         <div class="hs-sf__field hs-sf__field--grow">
           <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" name="search-input" class="hs-sf__input" placeholder="¿Qué evento buscás?" autocomplete="off">
+          <label for="hs-search-input" class="sr-only">{{ __('Buscar por nombre del evento') }}</label>
+          <input type="text" id="hs-search-input" name="search-input" class="hs-sf__input" placeholder="¿Qué evento buscás?" autocomplete="off">
         </div>
 
         <div class="hs-sf__divider"></div>
@@ -188,7 +189,8 @@
         {{-- Ubicación --}}
         <div class="hs-sf__field hs-sf__field--location">
           <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <input type="text" name="location" class="hs-sf__input" placeholder="Ciudad o ubicación" autocomplete="off">
+          <label for="hs-search-location" class="sr-only">{{ __('Ciudad o ubicación') }}</label>
+          <input type="text" id="hs-search-location" name="location" class="hs-sf__input" placeholder="Ciudad o ubicación" autocomplete="off">
         </div>
 
         <div class="hs-sf__divider"></div>
@@ -232,7 +234,7 @@
 
   <!-- Events Section Start -->
   @if ($secInfo->featured_section_status == 1)
-    <section class="events-section bg-lighter">
+    <section class="events-section bg-lighter" aria-labelledby="featuredEventsHeading">
       <div class="container">
 
         @if ($eventCategories->isEmpty())
@@ -241,7 +243,29 @@
           @php
             $ev_wishlist_map = $wishlistMap ?? [];
             $eventsall = $featuredEventsAll ?? collect();
+            $eventCategoriesWithEvents = $eventCategories->filter(function ($item) use ($featuredEventsByCategory) {
+              return ($featuredEventsByCategory[$item->id] ?? collect())->isNotEmpty();
+            });
           @endphp
+          <div class="hs-header mb-32">
+            <div class="hs-header__left">
+              <h2 class="hs-header__title" id="featuredEventsHeading">{{ __('Eventos destacados') }}</h2>
+              <p class="hs-header__sub">{{ __('Elegí una categoría o mirá toda la selección destacada.') }}</p>
+            </div>
+            <a href="{{ route('events') }}" class="hs-header__cta">{{ __('Ver todos') }}</a>
+          </div>
+
+          <nav class="hs-tabs-nav mb-32" aria-label="{{ __('Filtrar eventos destacados') }}">
+            <div class="nav nav-tabs events-tabs" id="nav-tab" role="tablist">
+              <a class="nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab"
+                 aria-controls="nav-all" aria-selected="true">{{ __('Todos') }}</a>
+              @foreach ($eventCategoriesWithEvents as $item)
+                <a class="nav-link" id="nav-{{ $item->id }}-tab" data-toggle="tab" href="#nav-{{ $item->id }}" role="tab"
+                   aria-controls="nav-{{ $item->id }}" aria-selected="false">{{ $item->name }}</a>
+              @endforeach
+            </div>
+          </nav>
+
           <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
               <div class="row">
@@ -252,7 +276,7 @@
                 @endforeach
               </div>
             </div>
-            @foreach ($eventCategories as $item)
+            @foreach ($eventCategoriesWithEvents as $item)
               @php
                 $events = $featuredEventsByCategory[$item->id] ?? collect();
               @endphp

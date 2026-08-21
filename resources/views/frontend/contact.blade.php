@@ -741,7 +741,7 @@ body.contact-page-premium main {
       {{-- ── COLUMNA INFO ── --}}
       <div class="ctp-info">
         <p class="ctp-info__label">Información de contacto</p>
-        <h2 class="ctp-info__heading">Contacto</h2>
+        <h1 class="ctp-info__heading">Contacto</h1>
         <p class="ctp-info__desc">Estamos para ayudarte. Te respondemos a la brevedad.</p>
 
         <div class="ctp-cards">

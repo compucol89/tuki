@@ -28,7 +28,6 @@ const PUBLIC_DARK_ROUTES = [
     surfaces: [
       '.hero-collage-section',
       '.hero-slideshow',
-      '.hero-search-panel',
       '.hs-search-form',
       '.events-section .ev-card',
       '.events-section .ev-card__body-panel',
@@ -226,7 +225,7 @@ test.describe('@theme contrato theming público', () => {
   }
 });
 
-test('@theme home dark conserva hero cinematografico y CTA Buscar visible', async ({ page }) => {
+test('@theme home dark conserva hero con fondo y buscador separado', async ({ page }) => {
   await setPublicTheme(page, 'dark');
   await page.goto('/', { waitUntil: 'load' });
   await setPublicTheme(page, 'dark');
@@ -244,7 +243,7 @@ test('@theme home dark conserva hero cinematografico y CTA Buscar visible', asyn
       slideHeight: slideRect ? slideRect.height : 0,
       heroWidth: heroRect.width,
       heroHeight: heroRect.height,
-      searchInHero: !!el.querySelector('.hero-search-panel #hsSearchForm'),
+      searchInHero: !!el.querySelector('#hsSearchForm'),
     };
   });
 
@@ -252,7 +251,8 @@ test('@theme home dark conserva hero cinematografico y CTA Buscar visible', asyn
   expect(hero.slidePosition).toBe('absolute');
   expect(hero.slideWidth).toBeGreaterThanOrEqual(hero.heroWidth);
   expect(hero.slideHeight).toBeGreaterThanOrEqual(hero.heroHeight);
-  expect(hero.searchInHero).toBe(true);
+  expect(hero.searchInHero).toBe(false);
+  await expect(page.locator('body.home-page .hs-search-wrap #hsSearchForm')).toBeVisible();
 
   const searchButton = await page.locator('body.home-page .hs-sf__btn').evaluate((el) => {
     const cs = getComputedStyle(el);

@@ -59,7 +59,8 @@ test('@e2e home destacados usan tabs, labels y cards semánticas', async ({ page
 
   await expect(page.getByLabel('Buscar por nombre del evento')).toBeVisible();
   await expect(page.getByLabel('Ciudad o ubicación')).toBeVisible();
-  await expect(page.locator('.hero-search-panel #hsSearchForm')).toBeVisible();
+  await expect(page.locator('#hsSearchForm')).toBeVisible();
+  await expect(page.locator('.hero-collage-section #hsSearchForm')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Eventos destacados' })).toBeVisible();
 
   const heroImageSrc = await page.locator('#heroCollageBg .hero-slide__image').first().getAttribute('src');

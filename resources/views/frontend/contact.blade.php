@@ -20,7 +20,7 @@
 .contact-page-premium .ctp-premium {
   --ctp-ink: var(--foreground);
   --ctp-ink-soft: var(--muted-foreground);
-  --ctp-muted: var(--muted-foreground);
+  --ctp-muted: #5a6472;
   --ctp-line: var(--border);
   --ctp-accent: var(--primary);
   --ctp-accent-hover: var(--primary-hover);
@@ -428,7 +428,7 @@ body.contact-page-premium {
   --ctp-bg: var(--tk-bg, #e8ebed);
   --ctp-ink: var(--tk-ink, #1e2532);
   --ctp-muted: var(--tk-muted, #687386);
-  --ctp-subtle: #8a95a6;
+  --ctp-subtle: #5a6472;
   --ctp-line: rgba(30, 37, 50, 0.1);
   --ctp-line-strong: rgba(30, 37, 50, 0.16);
   --ctp-accent: var(--tk-primary, #e05d38);
@@ -804,7 +804,7 @@ body.contact-page-premium main {
 
       {{-- ── COLUMNA FORMULARIO ── --}}
       <div class="ctp-form-wrap">
-        <h3 class="ctp-form-wrap__title">Formulario de contacto</h3>
+        <h2 class="ctp-form-wrap__title">Formulario de contacto</h2>
         <p class="ctp-form-wrap__sub">Completá el formulario y te respondemos a la brevedad.</p>
 
         @if(Session::has('success'))

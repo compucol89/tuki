@@ -2252,7 +2252,7 @@ body.events-page .hs-search-wrap--events .hs-sf__btn {
   align-self: stretch;
   flex: 0 0 clamp(138px, 11vw, 164px);
   margin-left: 0;
-  color: var(--foreground);
+  color: #fff;
 }
 
 body.events-page .hs-search-wrap--events .hs-search-chips {

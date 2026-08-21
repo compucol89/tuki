@@ -52,7 +52,7 @@
 @endsection
 @section('content')
   <a href="#contenido-principal" class="about-skip-link sr-only sr-only-focusable">{{ __('Saltar al contenido principal') }}</a>
-  <main id="contenido-principal" class="about-page-main" tabindex="-1">
+  <div id="contenido-principal" class="about-page-main" tabindex="-1">
   <!-- About Section Start -->
   @if ($secInfo->about_section_status == 1)
     <section class="about-section about-page__band about-page__band--surface-a" id="contenido-principal-sobre-nosotros"
@@ -335,7 +335,7 @@
     </section>
   @endif
   <!-- Client Logo End -->
-  </main>
+  </div>
 @endsection
 
 @push('styles')

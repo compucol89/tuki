@@ -62,7 +62,6 @@
 <article class="ev-card"
          data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}"
          tabindex="0"
-         role="link"
          aria-labelledby="{{ $ev_card_title_id }}">
 
   {{-- ── 1. IMAGEN (overlay solo aquí) ── --}}

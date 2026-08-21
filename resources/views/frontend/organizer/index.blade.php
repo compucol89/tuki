@@ -25,7 +25,7 @@
   <section class="page-banner overlay pt-120 pb-125 rpt-90 rpb-95 lazy"
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
-      <div class="banner-inner">
+      <div class="banner-inner" role="region" aria-label="{{ __('Encabezado de la página') }}">
         <h1 class="page-title">
           @if (!empty($pageHeading))
             {{ $pageHeading->organizer_page_title ?? __('Organizadores') }}

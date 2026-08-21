@@ -249,8 +249,8 @@
 
 .bl-filter--active {
   background: #fff !important;
-  border-color: color-mix(in srgb, var(--primary) 55%, transparent) !important;
-  color: var(--primary-text-color) !important;
+  border-color: var(--primary-text-color) !important;
+  color: #a8431f !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.95) inset,
     0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent),
@@ -258,7 +258,7 @@
 }
 
 .bl-filter--active span {
-  color: var(--primary-text-color) !important;
+  color: #a8431f !important;
   background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
 }
 
@@ -1101,7 +1101,7 @@ body.blog-site:not(.blog-detail) {
   --bl-line: color-mix(in srgb, var(--foreground) 10%, transparent);
   --bl-line-strong: color-mix(in srgb, var(--foreground) 16%, transparent);
   --bl-primary: var(--primary);
-  --bl-primary-dark: var(--primary-hover);
+  --bl-primary-dark: #8f3718;
   --bl-primary-soft: color-mix(in srgb, var(--primary) 8%, var(--card));
   --bl-green: var(--success);
   --bl-radius: var(--radius-sm);

@@ -178,5 +178,5 @@
 @endsection
 
 @section('script')
-  <script type="text/javascript" src="{{ asset('assets/admin/js/blog.js') }}"></script>
+  <script defer type="text/javascript" src="{{ asset('assets/admin/js/blog.js') }}"></script>
 @endsection

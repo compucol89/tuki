@@ -158,7 +158,7 @@
   <!-- Event Images Marquee End -->
 @endsection
 @section('content')
-<main id="main-content" tabindex="-1">
+<div id="main-content" tabindex="-1">
 
   {{-- ── BUSCADOR HOME — Modern SaaS UI ── --}}
   @php
@@ -279,7 +279,7 @@
     </section>
   @endif
   <!-- Events Section End -->
-</main>
+</div>
 @endsection
 
 @push('scripts')

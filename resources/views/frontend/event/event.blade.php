@@ -189,7 +189,7 @@
 
 {{-- ─── CONTENT ─── --}}
 @section('content')
-<main id="main-content" class="events-page-main" tabindex="-1">
+<div id="main-content" class="events-page-main" tabindex="-1">
 
 @php
   $evf_total = $information['events']->total();
@@ -363,7 +363,7 @@
   </div>
 </section>
 
-</main>
+</div>
 @endsection
 
 @push('scripts')

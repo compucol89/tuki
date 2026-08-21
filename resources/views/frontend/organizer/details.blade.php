@@ -296,7 +296,7 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
 @endpush
 
 @section('content')
-<main id="main-content" class="org-public-profile" tabindex="-1">
+<div id="main-content" class="org-public-profile" tabindex="-1">
   @if($profilePixelPageViewUrl !== '')
     <noscript class="org-profile-pixel-noscript"><img height="1" width="1" alt="" style="display:none" src="{{ $profilePixelPageViewUrl }}"></noscript>
   @endif
@@ -601,5 +601,5 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
       </div>
     </div>
   </div>
-</main>
+</div>
 @endsection

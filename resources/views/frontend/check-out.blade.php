@@ -41,7 +41,7 @@
 
 <section class="checkout-v2 pt-60 pb-80{{ $isGuestCheckout ? ' checkout-v2--guest' : '' }}">
   <div class="container">
-    <main id="checkout-main" class="checkout-main">
+    <div id="checkout-main" class="checkout-main">
 
     {{-- Page header --}}
     <div class="co-page-header mb-40">
@@ -552,7 +552,7 @@
       </div>
     </form>
 
-    </main>
+    </div>
   </div>
 </section>
 @endsection

@@ -69,3 +69,19 @@
 5. **Fix theme desync** → unify toggle to also persist to DB
 6. **Fix focus suppression** → remove `outline:0` from `:focus`, keep only `:focus-visible`
 7. **Conditional CSS/JS loading** → reduce dashboard payload by ~800 KB
+
+## Reauditoría sistémica 2026-08-21 (tarde) — FASE A-D completa
+
+| Hora | Trabajo | Resultado |
+|------|---------|-----------|
+| 09:30 | Baseline git + evidence/git-baseline.txt | ✅ 51 archivos preexistentes clasificados |
+| 09:35 | Runtime map del dashboard (queries, charts, cascade) | ✅ F1 |
+| 09:40 | Fix THEME-001: changeTheme whitelist+JSON; layout JS unificado con fetch+fallback | ✅ DB sincronizada, radios OK, reload coherente |
+| 09:50 | Migración TOKEN-001: event/index (4) + event/edit (40) + ticket forms (4) = 48 raw colors → 0 | ✅ |
+| 09:55 | Fix CASC-001: .event-cover-box override documentado | ✅ gradient aplica |
+| 10:00 | Fix CHART-001/002/003: guard anti-reinit + pointBorder token + tukiRethemeCharts | ✅ re-theme hot sin duplicar |
+| 10:05 | Fix DATA-001: get()->count() → count() ×3; Language firstOr | ✅ |
+| 10:10 | Fix A11Y-001/002/003: token muted 4.91:1, aria-label radios, estructura ul/li | ✅ axe 0 violaciones light+dark |
+| 10:15 | Gate extendido: blade_raw_colors + outline_suppression; baseline 5 checks | ✅ PASS |
+| 10:20 | Docs 06-21 (16 archivos) + issues.csv (26 issues) + worklog | ✅ |
+| — | Suites: test:theme 14/14, a11y dashboard 2/2, audit PASS | ✅ |

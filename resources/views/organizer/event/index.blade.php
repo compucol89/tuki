@@ -177,7 +177,7 @@
     }
 
     .oe-title:hover {
-      color: #2563eb;
+      color: var(--status-info-fg);
       text-decoration: none;
     }
 
@@ -194,7 +194,7 @@
       padding: 3px 8px;
       border-radius: 999px;
       background: var(--status-warning-bg);
-      color: #9a3412;
+      color: var(--status-warning-fg);
       font-size: 12px;
       font-weight: 800;
       white-space: nowrap;
@@ -207,7 +207,7 @@
       overflow: hidden;
       margin-top: 5px;
       border-radius: 999px;
-      background: #e7eaf0;
+      background: var(--border-default);
     }
 
     .oe-progress span {
@@ -222,7 +222,7 @@
       min-height: 32px;
       border: 0;
       border-radius: 7px;
-      color: #fff;
+      color: var(--text-on-accent);
       font-size: 12px;
       font-weight: 700;
     }

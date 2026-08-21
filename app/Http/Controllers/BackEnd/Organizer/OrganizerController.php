@@ -42,9 +42,9 @@ class OrganizerController extends Controller
   {
     $organizer = Auth::guard('organizer')->user();
     $organizerId = $organizer->id;
-    $information['total_events'] = Event::where('organizer_id', $organizerId)->get()->count();
-    $information['total_event_bookings'] = Booking::where('organizer_id', $organizerId)->get()->count();
-    $information['transcation_count'] = Transaction::where('organizer_id', $organizerId)->get()->count();
+    $information['total_events'] = Event::where('organizer_id', $organizerId)->count();
+    $information['total_event_bookings'] = Booking::where('organizer_id', $organizerId)->count();
+    $information['transcation_count'] = Transaction::where('organizer_id', $organizerId)->count();
     $information['settlementSummary'] = $eventSettlementService->dashboardSummaryForOrganizer($organizerId);
     $publishedEvents = Event::where('organizer_id', $organizerId)->where('status', 1);
     $profileEventStats = [
@@ -130,7 +130,7 @@ class OrganizerController extends Controller
 
   private function profileDashboard(Organizer $organizer, array $profileEventStats): array
   {
-    $defaultLanguage = Language::where('is_default', 1)->first() ?: Language::first();
+    $defaultLanguage = Language::where('is_default', 1)->firstOr(fn () => Language::first());
     $defaultInfo = $defaultLanguage
       ? OrganizerInfo::where('organizer_id', $organizer->id)->where('language_id', $defaultLanguage->id)->first()
       : null;
@@ -943,9 +943,13 @@ class OrganizerController extends Controller
 
   public function changeTheme(Request $request)
   {
-    $organizerInfo = Organizer::where('id', Auth::guard('organizer')->user()->id)->first();
-    $organizerInfo->theme_version = $request->theme_version;
-    $organizerInfo->save();
+    $theme = in_array($request->theme_version, ['light', 'dark'], true) ? $request->theme_version : 'light';
+    Organizer::where('id', Auth::guard('organizer')->user()->id)->update(['theme_version' => $theme]);
+
+    if ($request->expectsJson() || $request->ajax()) {
+      return response()->json(['ok' => true, 'theme_version' => $theme]);
+    }
+
     return redirect()->back();
   }
 

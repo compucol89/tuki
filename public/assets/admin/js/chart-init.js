@@ -18,7 +18,8 @@ function tukiChartPalette() {
     tick: dark ? '#c8cdd6' : '#6b7280',
     legend: dark ? '#c8cdd6' : '#6b7280',
     grid: dark ? 'rgba(255,255,255,.10)' : 'rgba(0,0,0,.08)',
-    zeroGrid: dark ? 'rgba(255,255,255,.10)' : 'rgba(0,0,0,.08)'
+    zeroGrid: dark ? 'rgba(255,255,255,.10)' : 'rgba(0,0,0,.08)',
+    pointBorder: dark ? '#171e2b' : '#ffffff'
   };
 }
 
@@ -48,7 +49,7 @@ function tukiInitLineChart(id, label, getData, border, fill, opts) {
   if (opts && opts.stepSize) {
     options.scales.yAxes[0].ticks.stepSize = opts.stepSize;
   }
-  return new Chart(canvas.getContext('2d'), {
+  var chart = new Chart(canvas.getContext('2d'), {
     type: 'line',
     data: {
       labels: monthArr,
@@ -56,7 +57,7 @@ function tukiInitLineChart(id, label, getData, border, fill, opts) {
         label: label,
         data: data,
         borderColor: border,
-        pointBorderColor: '#fff',
+        pointBorderColor: p.pointBorder,
         pointBackgroundColor: border,
         pointBorderWidth: 2,
         pointHoverRadius: 5,
@@ -69,7 +70,50 @@ function tukiInitLineChart(id, label, getData, border, fill, opts) {
     },
     options: options
   });
+
+  // Guard anti-reinit: el mismo canvas no debe recibir dos instancias.
+  // Reutilizable para re-theme en caliente (tukiRethemeCharts).
+  if (!window.__tukiCharts) window.__tukiCharts = {};
+  window.__tukiCharts[id] = chart;
+
+  return chart;
 }
+
+/* Re-theme en caliente: actualiza colores de texto/grid/puntos según el
+   tema actual SIN recrear el chart (evita duplicar instancias). */
+function tukiRethemeCharts() {
+  var p = tukiChartPalette();
+  Object.keys(window.__tukiCharts || {}).forEach(function (id) {
+    var chart = window.__tukiCharts[id];
+    if (!chart || !chart.options) return;
+    var ds = chart.data.datasets[0];
+    if (ds) ds.pointBorderColor = p.pointBorder;
+    if (chart.options.legend && chart.options.legend.labels) {
+      chart.options.legend.labels.fontColor = p.legend;
+    }
+    if (chart.options.scales) {
+      (chart.options.scales.xAxes || []).forEach(function (axis) {
+        axis.ticks.fontColor = p.tick;
+        axis.gridLines.color = p.grid;
+      });
+      (chart.options.scales.yAxes || []).forEach(function (axis) {
+        axis.ticks.fontColor = p.tick;
+        axis.gridLines.color = p.grid;
+      });
+    }
+    chart.update();
+  });
+}
+
+/* Reaccionar al toggle de theme del panel (sin duplicar instancias) */
+document.addEventListener('DOMContentLoaded', function () {
+  var toggle = document.querySelector('[data-theme-toggle-panel]');
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      setTimeout(tukiRethemeCharts, 50);
+    });
+  }
+});
 
 tukiInitLineChart('incomeChart', 'Ingresos mensuales', function () { return incomeArr; }, '#f97316', 'rgba(249,115,22,.08)');
 tukiInitLineChart('TotalEventBookingChart', 'Reservas mensuales', function () { return totalBookings; }, '#6366f1', 'rgba(99,102,241,.08)', { stepSize: 1 });

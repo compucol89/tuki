@@ -564,7 +564,7 @@
     .ticket-form-header__text,.ticket-form-intro__text,.ticket-form-content-intro__text,.ticket-form-footer__text{margin-bottom:0;color:var(--text-muted);line-height:1.7}
     .ticket-form-header__actions{display:flex;gap:10px;flex-wrap:wrap}
     .ticket-form-header__btn{border-radius:12px;padding-inline:16px}
-    .ticket-form-intro,.ticket-form-content-intro{margin-bottom:18px;padding:18px 20px;border:1px solid var(--border-default);border-radius:20px;background:linear-gradient(180deg,#fcfdff 0%,#f8fbff 100%)}
+    .ticket-form-intro,.ticket-form-content-intro{margin-bottom:18px;padding:18px 20px;border:1px solid var(--border-default);border-radius:20px;background:linear-gradient(180deg,var(--surface-card) 0%,var(--surface-card-soft) 100%)}
     #eventForm>.row{padding:20px;border:1px solid var(--border-default);border-radius:20px;background:var(--surface-card);box-shadow:0 14px 30px rgba(15,23,42,.05)}
     #eventForm .form-control{min-height:46px;border-radius:12px}
     #eventForm label{color:var(--text-primary);font-weight:700;margin-bottom:8px}

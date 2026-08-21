@@ -87,14 +87,33 @@
         document.documentElement.dataset.theme = theme;
         // activar el dark nativo de admin-skin (body[data-background-color="dark"])
         document.body.setAttribute('data-background-color', theme === 'dark' ? 'dark' : 'white');
+        // sincronizar los radios del formulario de theme (DB) con el estado visual
+        document.querySelectorAll('input[name="theme_version"]').forEach(function (r) {
+          r.checked = r.value === theme;
+        });
         if (persist) {
           try { localStorage.setItem('tuki-theme', theme); } catch (e) { /* noop */ }
+          persistServerTheme(theme);
         }
         document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {
           b.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
           b.setAttribute('aria-label', theme === 'dark'
             ? 'Cambiar a modo claro'
             : 'Cambiar a modo oscuro');
+        });
+      }
+      function persistServerTheme(theme) {
+        var token = document.querySelector('meta[name="csrf-token"]');
+        fetch('{{ route('organizer.change_theme') }}', {
+          method: 'POST',
+          headers: token ? { 'X-CSRF-TOKEN': token.getAttribute('content') } : {},
+          body: new URLSearchParams({ theme_version: theme }),
+          credentials: 'same-origin'
+        }).catch(function () {
+          // fallo de red/servidor: revertir a lo persistido en DB (radios)
+          var dbTheme = document.querySelector('input[name="theme_version"]:checked');
+          var fallback = dbTheme ? dbTheme.value : 'light';
+          applyTheme(fallback, false);
         });
       }
       document.querySelectorAll('[data-theme-toggle-panel]').forEach(function (b) {

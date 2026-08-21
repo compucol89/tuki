@@ -1046,7 +1046,7 @@
 @section('style')
   <style>
     #my-dropzone {
-      border: 2px dashed #d6d9e6;
+      border: 2px dashed var(--border-strong);
       border-radius: 14px;
       background: var(--surface-card-soft);
       min-height: 128px;
@@ -1068,7 +1068,7 @@
       height: 52px;
       margin: 0 auto 14px;
       border-radius: 16px;
-      background-color: #e8f1ff;
+      background-color: var(--status-info-bg);
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232564eb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='17 8 12 3 7 8'/%3E%3Cline x1='12' y1='3' x2='12' y2='15'/%3E%3Cpath d='M8 15a4 4 0 0 1 .9-7.9A5 5 0 0 1 18.8 8A3.5 3.5 0 0 1 19 15'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: center;
@@ -1103,12 +1103,15 @@
       margin: 0 auto;
     }
 
-    .event-cover-box {
-      padding: 22px;
-      border: 1px solid #dbe5f3;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.04);
+    /* !important: event-form-modern.css (cargado después del <style> inline)
+       define .event-form-modern .event-cover-box { transparent; 0; 0 } y gana
+       por orden; este override de página debe prevalecer. */
+    .event-form-modern .event-cover-box {
+      padding: 22px !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: 18px !important;
+      background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.04) !important;
     }
 
     .event-cover-box__intro {
@@ -1120,7 +1123,7 @@
       align-items: center;
       padding: 6px 10px;
       border-radius: 999px;
-      background: #e8f1ff;
+      background: var(--status-info-bg);
       color: var(--status-info-fg);
       font-size: 11px;
       font-weight: 700;
@@ -1169,9 +1172,9 @@
       width: 100%;
       margin: 0;
       padding: 14px 16px;
-      border: 1px dashed #bfdbfe;
+      border: 1px dashed rgba(37, 99, 235, 0.35);
       border-radius: 16px;
-      background: #eff6ff;
+      background: var(--status-info-bg);
       cursor: pointer;
     }
 
@@ -1215,9 +1218,9 @@
 
     .event-sales-note {
       padding: 18px 20px;
-      border: 1px solid #dbe7ff;
+      border: 1px solid var(--border-default);
       border-radius: 14px;
-      background: linear-gradient(180deg, #f8fbff 0%, #f2f7ff 100%);
+      background: linear-gradient(180deg, var(--surface-card-soft) 0%, var(--status-info-bg) 100%);
       color: var(--text-secondary);
     }
 
@@ -1235,7 +1238,7 @@
     }
 
     .media-upload-separator .border-top {
-      border-color: #e5e7eb !important;
+      border-color: var(--border-default) !important;
     }
 
     #img-table,
@@ -1252,7 +1255,7 @@
       justify-content: space-between;
       width: 170px;
       background: var(--surface-card-soft);
-      border: 1px solid #eaecf0;
+      border: 1px solid var(--border-default);
       border-radius: 14px;
       padding: 10px;
       margin-bottom: 0;
@@ -1269,7 +1272,7 @@
       height: 72px;
       object-fit: cover;
       border-radius: 10px;
-      border: 1px solid #dbe1ea;
+      border: 1px solid var(--border-default);
       display: block;
     }
 
@@ -1280,7 +1283,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #fff1f2;
+      background: var(--status-danger-bg);
       color: var(--status-danger-fg);
       cursor: pointer;
       transition: transform 0.18s ease, background-color 0.18s ease;
@@ -1288,11 +1291,11 @@
 
     #img-table .rmvbtndb:hover {
       transform: scale(1.05);
-      background: #ffe4e6;
+      background: var(--status-danger-bg);
     }
 
     .ai-assistant-card {
-      border: 1px solid #dcdfe2;
+      border: 1px solid var(--border-default);
       border-radius: 8px;
       box-shadow: 0 6px 18px rgba(30, 37, 50, .06);
     }
@@ -1300,35 +1303,35 @@
     .ai-assistant-facts {
       max-height: 260px;
       overflow: auto;
-      background: #fff;
+      background: var(--surface-card);
     }
 
     .async-progress-panel {
       margin-top: 12px;
       padding: 12px;
-      border: 1px solid #dbeafe;
-      border-left: 4px solid #3b82f6;
+      border: 1px solid var(--border-default);
+      border-left: 4px solid var(--status-info-fg);
       border-radius: 8px;
-      background: #f8fbff;
+      background: var(--surface-card-soft);
       color: var(--text-primary);
     }
 
     .async-progress-panel.is-success {
-      border-color: #bbf7d0;
-      border-left-color: #16a34a;
-      background: #f7fef9;
+      border-color: rgba(22, 163, 74, 0.35);
+      border-left-color: var(--status-success-fg);
+      background: var(--status-success-bg);
     }
 
     .async-progress-panel.is-warning {
-      border-color: #fed7aa;
-      border-left-color: #f97316;
-      background: #fffaf5;
+      border-color: rgba(249, 115, 22, 0.35);
+      border-left-color: var(--sidebar-accent);
+      background: var(--status-warning-bg);
     }
 
     .async-progress-panel.is-danger {
-      border-color: #fecaca;
+      border-color: rgba(220, 38, 38, 0.35);
       border-left-color: var(--status-danger-fg);
-      background: #fff7f7;
+      background: var(--status-danger-bg);
     }
 
     .async-progress-panel__percent {
@@ -1345,16 +1348,16 @@
     }
 
     .async-progress-panel__bar .progress-bar {
-      background-color: #3b82f6;
+      background-color: var(--status-info-fg);
       transition: width .35s ease;
     }
 
     .async-progress-panel.is-success .progress-bar {
-      background-color: #16a34a;
+      background-color: var(--status-success-fg);
     }
 
     .async-progress-panel.is-warning .progress-bar {
-      background-color: #f97316;
+      background-color: var(--sidebar-accent);
     }
 
     .async-progress-panel.is-danger .progress-bar {
@@ -1395,7 +1398,7 @@
       justify-content: space-between;
       gap: 12px;
       padding: 10px 12px;
-      border-bottom: 1px solid #eef0f3;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
     .ai-assistant-fact:last-child {

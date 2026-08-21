@@ -83,6 +83,65 @@ check_important() {
   fi
 }
 
+# --- 4. raw colors en blades migrados (tokens obligatorios) --------------
+# Los blades ya tokenizados NO deben reintroducir colores raw en su <style>.
+MIGRATED_BLADES=(
+  "organizer/event/index.blade.php"
+  "organizer/event/edit.blade.php"
+  "organizer/event/booking/index.blade.php"
+  "organizer/event/booking/details.blade.php"
+  "organizer/event/create.blade.php"
+  "organizer/event/ticket/index.blade.php"
+  "organizer/event/ticket/create.blade.php"
+  "organizer/event/ticket/edit.blade.php"
+  "organizer/telegram-bot/index.blade.php"
+  "organizer/event/partials/ai-generate-button.blade.php"
+)
+check_blade_raw_colors() {
+  local total=0
+  local offenders=""
+  for blade in "${MIGRATED_BLADES[@]}"; do
+    [ -f "$ROOT/resources/views/$blade" ] || continue
+    local n
+    n=$(awk '/<style>/,/<\/style>/' "$ROOT/resources/views/$blade" \
+        | grep -vE 'white-space|whitespace|box-shadow|text-shadow' \
+        | grep -oE '#[0-9a-fA-F]{3,8}\b|rgba?\([0-9]|hsla?\([0-9]|\b(white|black)\b' \
+        | wc -l | tr -d ' ')
+    if [ "$n" -gt 0 ]; then
+      total=$((total + n))
+      offenders="$offenders\n    $blade ($n)"
+    fi
+  done
+  local baseline_total
+  baseline_total=$(python3 -c "import json;print(json.load(open('$BASELINE'))['blade_raw_colors'])")
+  if [ "$total" -gt "$baseline_total" ]; then
+    echo "FAIL [blade raw colors]: $total en blades migrados (baseline $baseline_total):$offenders"
+    FAIL=1
+  else
+    echo "OK   [blade raw colors]: $total (baseline $baseline_total)"
+  fi
+}
+
+# --- 5. outline:none / outline:0 en CSS propio ---------------------------
+check_outline_suppression() {
+  local css_files=(admin-main.css admin-skin.css)
+  local total=0
+  for f in "${css_files[@]}"; do
+    [ -f "$ROOT/public/assets/admin/css/$f" ] || continue
+    local n
+    n=$(grep -cE 'outline:\s*(none|0)' "$ROOT/public/assets/admin/css/$f")
+    total=$((total + n))
+  done
+  local baseline_total
+  baseline_total=$(python3 -c "import json;print(json.load(open('$BASELINE'))['outline_suppressions'])")
+  if [ "$total" -gt "$baseline_total" ]; then
+    echo "FAIL [outline suppression]: $total (baseline $baseline_total)"
+    FAIL=1
+  else
+    echo "OK   [outline suppression]: $total (baseline $baseline_total)"
+  fi
+}
+
 # --- init: genera baseline ----------------------------------------------
 init_baseline() {
   local inline_files
@@ -97,16 +156,30 @@ init_baseline() {
     n=$(grep -c '!important' "$ROOT/public/assets/admin/css/$f")
     important=$((important + n))
   done
-  python3 - "$inline_files" "$hardcoded" "$important" << 'PYEOF'
+  local blade_raw=0
+  for blade in "${MIGRATED_BLADES[@]}"; do
+    [ -f "$ROOT/resources/views/$blade" ] || continue
+    n=$(awk '/<style>/,/<\/style>/' "$ROOT/resources/views/$blade" \
+        | grep -vE 'white-space|whitespace|box-shadow|text-shadow' \
+        | grep -oE '#[0-9a-fA-F]{3,8}\b|rgba?\([0-9]|hsla?\([0-9]|\b(white|black)\b' \
+        | wc -l | tr -d ' ')
+    blade_raw=$((blade_raw + n))
+  done
+  local outline=0
+  for f in admin-main.css admin-skin.css; do
+    n=$(grep -cE 'outline:\s*(none|0)' "$ROOT/public/assets/admin/css/$f")
+    outline=$((outline + n))
+  done
+  python3 - "$inline_files" "$hardcoded" "$important" "$blade_raw" "$outline" << 'PYEOF'
 import json, sys
 baseline = {
     "generated": "2026-08-21",
     "inline_styles": json.loads(sys.argv[1]),
     "hardcoded_surfaces": int(sys.argv[2]),
     "important_count": int(sys.argv[3]),
+    "blade_raw_colors": int(sys.argv[4]),
+    "outline_suppressions": int(sys.argv[5]),
 }
-with open(sys.argv[0] if False else "/dev/stdout", "w") as f:
-    pass
 print(json.dumps(baseline, indent=2))
 PYEOF
   echo "Baseline (preview arriba). Guardar como: scripts/baseline-theme.json"
@@ -119,6 +192,8 @@ case "${1:-}" in
     check_inline_styles
     check_hardcoded_colors
     check_important
+    check_blade_raw_colors
+    check_outline_suppression
     echo ""
     if [ "$FAIL" -eq 0 ]; then
       echo "PASS — sin deuda de theming nueva"

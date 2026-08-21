@@ -42,20 +42,21 @@
           <div class="clearfix"></div>
         </div>
       </div>
-      <ul class="nav nav-primary">
-        {{-- search --}}
-        <div class="row mb-3">
-          <div class="col-12">
-            <form action="" onsubmit="return false">
-              <div class="form-group py-0">
-                <label for="sidebar-search" class="visually-hidden">{{ __('Buscar menú') }}</label>
-                <input id="sidebar-search" name="term" type="text" class="form-control sidebar-search ltr"
-                  placeholder="{{ __('Buscar en el menú...') }}">
-              </div>
-            </form>
-          </div>
+      {{-- search (fuera del <ul> para estructura semántica válida: el <ul> solo
+          puede tener <li> como hijos directos, axe rule "list") --}}
+      <div class="row mb-3">
+        <div class="col-12">
+          <form action="" onsubmit="return false">
+            <div class="form-group py-0">
+              <label for="sidebar-search" class="visually-hidden">{{ __('Buscar menú') }}</label>
+              <input id="sidebar-search" name="term" type="text" class="form-control sidebar-search ltr"
+                placeholder="{{ __('Buscar en el menú...') }}">
+            </div>
+          </form>
         </div>
+      </div>
 
+      <ul class="nav nav-primary">
         {{-- PANEL --}}
         <li class="nav-section sidebar-nav-section">
           <span class="text-section">{{ __('Panel') }}</span>

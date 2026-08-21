@@ -1,0 +1,68 @@
+=== GIT BASELINE ===
+fecha: 2026-08-21 09:51:31 UTC
+branch: remediation/audit-2026-08-21
+HEAD: 77002119ea78921a29f7eb29ee14b326c3445e79
+
+=== git status --short ===
+ M PENDIENTES.md
+ M docs/audits/production-seo-meta-validation-2026-07-23.md
+ M public/assets/front/css/event-detail.min.css
+ M public/assets/front/css/events.css
+ M public/assets/front/css/events.min.css
+ M public/assets/front/css/responsive.min.css
+ M public/assets/front/css/style.min.css
+ M public/assets/front/js/script.min.js
+ M resources/views/frontend/customer/forget-password.blade.php
+ M resources/views/frontend/customer/reset-password.blade.php
+ M resources/views/frontend/customer/signup.blade.php
+ M resources/views/frontend/organizer/forget-password.blade.php
+ M resources/views/frontend/organizer/reset-password.blade.php
+ M skills-lock.json
+ M tests/playwright/a11y.spec.js
+ M tests/playwright/aria.spec.js
+ M tests/playwright/e2e.spec.js
+ M tests/playwright/visual.spec.js
+?? dashboard-snapshot.md
+?? docs/ai-llm-seo/
+?? docs/arca/
+?? docs/auditorias/organizer-dashboard/evidence/
+?? docs/bots-seo-ia/
+?? docs/cdnjs/
+?? docs/docs-google-search/
+?? docs/easypanel/
+?? docs/email-promocional/
+?? docs/email-transaccional/
+?? docs/fontawesome/
+?? docs/fontsource/
+?? docs/google-calendar/
+?? docs/htmlpurifier/
+?? docs/laravel_12/
+?? docs/lighthouse/
+?? docs/mercadopago/
+?? docs/meta-webmasters/
+?? docs/metapixel/
+?? docs/ogp/
+?? docs/pdf-tickets-export/
+?? docs/recaptcha/
+?? docs/socialite/
+?? docs/stweakcn/
+?? docs/superpowers/plans/2026-06-03-openai-event-ai-images.md
+?? docs/superpowers/plans/2026-07-23-organizer-profile-builder.md
+?? docs/superpowers/specs/2026-06-03-openai-event-ai-images-design.md
+?? docs/superpowers/specs/2026-06-08-event-detail-section-redesign.md
+?? docs/superpowers/specs/2026-06-18-event-booking-list-redesign.md
+?? docs/superpowers/specs/2026-07-23-organizer-profile-builder-design.md
+?? docs/unlighthouse/
+?? docs/web-push-pwa/
+?? docs/webp/
+?? opencode.json
+
+=== git diff --stat ===
+ .../frontend/organizer/forget-password.blade.php   |  29 +---
+ .../frontend/organizer/reset-password.blade.php    |   2 +-
+ skills-lock.json                                   |  48 ++++++
+ tests/playwright/a11y.spec.js                      |  10 +-
+ tests/playwright/aria.spec.js                      |  73 +++++----
+ tests/playwright/e2e.spec.js                       |  10 +-
+ tests/playwright/visual.spec.js                    |   4 +-
+ 18 files changed, 172 insertions(+), 373 deletions(-)

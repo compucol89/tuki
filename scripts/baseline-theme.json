@@ -15,5 +15,7 @@
     "resources/views/organizer/telegram-bot/index.blade.php"
   ],
   "hardcoded_surfaces": 16,
-  "important_count": 882
+  "important_count": 882,
+  "blade_raw_colors": 37,
+  "outline_suppressions": 3
 }

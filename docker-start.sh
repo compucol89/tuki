@@ -91,12 +91,17 @@ mkdir -p /app/storage/logs
 printf '*/1 * * * * php /app/artisan schedule:run >> /app/storage/logs/cron.log 2>&1\n' > /etc/crontabs/root
 crond -b -l 2 || true
 
-# === Queue workers (cola database) — el contenedor corre web + workers + cron ===
-# Flags críticos: --memory por encima del pico de los jobs IA (default del worker: 128M
-# mata jobs a mitad de ejecución) y --timeout acorde a cada cola.
-php artisan queue:work database --queue=default --memory=512 --timeout=300 --tries=3 >> /app/storage/logs/worker-default.log 2>&1 &
-php artisan queue:work database --queue=ai-content --memory=1024 --timeout=300 --tries=3 >> /app/storage/logs/worker-ai-content.log 2>&1 &
-php artisan queue:work database --queue=ai-images --memory=1024 --timeout=600 --tries=3 >> /app/storage/logs/worker-ai-images.log 2>&1 &
+# === Scheduler de Laravel (reconcile de stock H4, reset de views, futuros schedulados).
+# EasyPanel no tiene cron por servicio: crond dentro del contenedor (busybox alpine).
+mkdir -p /app/storage/logs
+printf '*/1 * * * * php /app/artisan schedule:run >> /app/storage/logs/cron.log 2>&1\n' > /etc/crontabs/root
+crond -b -l 2 || true
+
+# === Queue workers ===
+# Los workers de cola corren en el SERVICIO DEDICADO "worker" de EasyPanel (comando
+# queue:work con flags por cola). El contenedor web NO procesa colas: se evita la
+# duplicación de workers y se aísla el procesamiento pesado (AI) del tráfico web.
+# (Incidente 2026-08-11: ver docs/ops/worker-incident-2026-08-11.md)
 
 mkdir -p /app/.router-root
 # zlib.output_compression: gzip del HTML (los estáticos los comprime docker-router.php vía ob_gzhandler)

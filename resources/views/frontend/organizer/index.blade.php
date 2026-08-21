@@ -26,13 +26,13 @@
     data-bg="{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}">
     <div class="container">
       <div class="banner-inner">
-        <h2 class="page-title">
+        <h1 class="page-title">
           @if (!empty($pageHeading))
             {{ $pageHeading->organizer_page_title ?? __('Organizadores') }}
           @else
             {{ __('Organizadores') }}
           @endif
-        </h2>
+        </h1>
         <nav aria-label="{{ __('Ruta de navegación') }}">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ route('index') }}">{{ __('Inicio') }}</a></li>
@@ -86,7 +86,7 @@
       <div class="product-filter">
         <div class="row justify-content-between align-items-center">
           <div class="col-lg-4 col-md-6">
-            <h6 class="mb-20">{{ __('Organizadores encontrados') }}: {{ $collection->total() }}</h6>
+            <p class="h6 mb-20">{{ __('Organizadores encontrados') }}: {{ $collection->total() }}</p>
           </div>
         </div>
       </div>
@@ -118,7 +118,7 @@
                 </a>
               </figure>
               <div class="card-content">
-                <h5 class="card-title mb-1"><a href="{{ $organizerUrl }}">{{ $organizerName }}</a></h5>
+                <h3 class="card-title mb-1 h5"><a href="{{ $organizerUrl }}">{{ $organizerName }}</a></h3>
                 <div>
                   <span class="text-muted mb-1"><a href="{{ $organizerUrl }}">{{ '@' . $item->username }}</a></span>
                 </div>
@@ -137,7 +137,7 @@
         @empty
           <div class="col-12">
             <div class="text-center py-5">
-              <h4>{{ __('No encontramos organizadores con esos filtros.') }}</h4>
+              <p class="h4">{{ __('No encontramos organizadores con esos filtros.') }}</p>
               <a href="{{ route('frontend.all.organizer') }}" class="theme-btn mt-20">{{ __('Limpiar búsqueda') }}</a>
             </div>
           </div>

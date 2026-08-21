@@ -29,7 +29,7 @@
                   <i class="{{ $item->icon }}"></i>
                 </div>
                 <div class="feature-content">
-                  <h5>{{ $item->title }}</h5>
+                  <h3 class="h5">{{ $item->title }}</h3>
                   <p>{{ $item->text }}</p>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                 @endif
                 <span class="pluse"><i class="fas fa-plus"></i></span>
               </div>
-              <h6>{{ $testimonialData ? $testimonialData->review_text : __('Opiniones de nuestra comunidad') }}</h6>
+              <p class="h6">{{ $testimonialData ? $testimonialData->review_text : __('Opiniones de nuestra comunidad') }}</p>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
                           loading="lazy"
                           alt="{{ __('Foto de quien dejó la reseña') }}">
                         <div class="content">
-                          <h5>{{ $item->name }}</h5>
+                          <p class="h5">{{ $item->name }}</p>
                           <span>{{ $item->occupation }}</span>
                           <div class="ratting">
                             @for ($i = 1; $i <= $item->rating; $i++)
@@ -96,7 +96,7 @@
                 @endforeach
               </div>
             @else
-              <h4 class="text-center">{{ __('Todavía no hay reseñas publicadas.') }}</h4>
+              <p class="h4 text-center">{{ __('Todavía no hay reseñas publicadas.') }}</p>
             @endif
           </div>
         </div>

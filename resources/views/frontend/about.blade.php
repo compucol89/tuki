@@ -257,7 +257,7 @@
                   @endif
                   <span class="pluse"><i class="fas fa-plus"></i></span>
                 </div>
-                <h6>{{ $testimonialData ? $testimonialData->review_text : __('0 Clients Reviews') }}</h6>
+                <p class="h6">{{ $testimonialData ? $testimonialData->review_text : __('0 Clients Reviews') }}</p>
               </div>
             </div>
           </div>
@@ -287,7 +287,7 @@
                   @endforeach
                 </div>
               @else
-                <h4 class="text-center">{{ __('No Review Found') }}</h4>
+                <p class="h4 text-center">{{ __('No Review Found') }}</p>
               @endif
             </div>
           </div>

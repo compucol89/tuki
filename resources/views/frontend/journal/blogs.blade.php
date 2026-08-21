@@ -38,12 +38,12 @@
     '@context' => 'https://schema.org',
     '@type' => 'Blog',
     'name' => $pageTitle,
-    'description' => $metaDescription ?: __('Novedades, ideas y consejos de Tukipass.'),
+    'description' => $metaDescription ?: __('Novedades, ideas y consejos de TukiPass.'),
     'url' => url()->current(),
     'mainEntityOfPage' => url()->current(),
     'publisher' => [
       '@type' => 'Organization',
-      'name' => 'Tukipass',
+      'name' => 'TukiPass',
       'url' => route('index'),
     ],
     'blogPost' => $blogSchemaPosts,
@@ -113,7 +113,7 @@
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M4 4.5A2.5 2.5 0 016.5 2H20v20H6.5A2.5 2.5 0 014 19.5z"/><path d="M8 7h8M8 11h6"/></svg>
         </span>
         <h2>No encontramos artículos para mostrar</h2>
-        <p>Probá con otra búsqueda o volvé pronto para leer novedades de Tukipass.</p>
+        <p>Probá con otra búsqueda o volvé pronto para leer novedades de TukiPass.</p>
         @if($searchTitle || $activeCategory)
           <a href="{{ route('blogs') }}" class="bl-empty__link">Ver todas las notas</a>
         @endif

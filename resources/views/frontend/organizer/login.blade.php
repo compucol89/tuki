@@ -143,9 +143,15 @@
             <label for="password" class="mb-0">{{ __('organizer.login.password_label') }}</label>
             <a href="{{ route('organizer.forget.password') }}" class="auth-forgot-link">{{ __('organizer.login.forgot_password') }}</a>
           </div>
-          <input type="password" name="password" id="password"
-                 class="form-control @error('password') is-invalid @enderror"
-                 placeholder="{{ __('organizer.login.password_placeholder') }}" autocomplete="current-password">
+          <div class="position-relative">
+            <input type="password" name="password" id="password"
+                   class="form-control pr-5 @error('password') is-invalid @enderror"
+                   placeholder="{{ __('organizer.login.password_placeholder') }}" autocomplete="current-password">
+            <button type="button" class="auth-password-toggle" aria-label="{{ __('Mostrar contraseña') }}"
+              aria-pressed="false" data-toggle-target="password">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+            </button>
+          </div>
           @error('password')
             <p class="text-danger mt-1" style="font-size:13px">{{ $message }}</p>
           @enderror
@@ -174,4 +180,47 @@
   </div>
 
 </div>
+@endsection
+
+@section('script')
+  <style>
+    .auth-password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      background: none;
+      border: 0;
+      color: var(--secondary-foreground, #6b7280);
+      cursor: pointer;
+      min-width: 24px;
+      min-height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      z-index: 2;
+    }
+
+    .auth-password-toggle:hover,
+    .auth-password-toggle:focus-visible {
+      color: var(--primary, #f97316);
+      outline: 2px solid var(--primary, #f97316);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+  </style>
+  <script>
+    document.querySelectorAll('.auth-password-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(this.getAttribute('data-toggle-target'));
+        if (!input) return;
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        this.setAttribute('aria-pressed', show ? 'true' : 'false');
+        this.setAttribute('aria-label', show ? '{{ __('Ocultar contraseña') }}' : '{{ __('Mostrar contraseña') }}');
+        this.querySelector('i').className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+      });
+    });
+  </script>
 @endsection

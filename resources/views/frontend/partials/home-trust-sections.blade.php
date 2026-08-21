@@ -19,7 +19,7 @@
           </div>
         </div>
         @if ($featureEventItems->isEmpty())
-          <h2>{{ __('Pronto vas a ver más razones para elegir Tukipass.') }}</h2>
+          <h2>{{ __('Pronto vas a ver más razones para elegir TukiPass.') }}</h2>
         @endif
         <div class="row justify-content-center feature-grid">
           @foreach ($featureEventItems as $item)
@@ -48,7 +48,7 @@
         <div class="col-lg-4">
           <div class="testimonial-content pt-10 rmb-55">
             <div class="section-title mb-30">
-              <h2>{{ $testimonialData ? $testimonialData->title : __('Lo que dicen quienes usan Tukipass') }}</h2>
+              <h2>{{ $testimonialData ? $testimonialData->title : __('Lo que dicen quienes usan TukiPass') }}</h2>
             </div>
             <p>{{ $testimonialData ? $testimonialData->text : '' }}</p>
             <div class="total-client-reviews mt-40 bg-lighter">
@@ -104,7 +104,7 @@
       @if ($secInfo->partner_section_status == 1 && $partners->isNotEmpty())
         <div class="trust-partners" aria-label="{{ __('Aliados estratégicos') }}">
           <div class="trust-partners__intro">
-            <h3>{{ __('También eligen Tukipass') }}</h3>
+            <h3>{{ __('También eligen TukiPass') }}</h3>
             <p>{{ __('Marcas y organizaciones que confían en nuestra plataforma para crecer.') }}</p>
           </div>
           <div class="client-logo-wrap trust-partners__logos">

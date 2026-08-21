@@ -1,5 +1,5 @@
 {{--
-  Event Card v6 — Tukipass
+  Event Card v6 — TukiPass
   Variables: $event (stdClass de event_contents JOIN events)
   Contexto: $websiteInfo y $currentLanguageInfo disponibles en la vista padre
 --}}

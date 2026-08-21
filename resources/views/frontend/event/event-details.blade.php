@@ -2350,7 +2350,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
             </div>
           @endif
 
-          {{-- Refund policy card (siempre visible: evento u política general Tukipass) --}}
+          {{-- Refund policy card (siempre visible: evento u política general TukiPass) --}}
           <section class="ed-refund-band ed-refund-band--policy" role="note" aria-labelledby="ed-refund-band-title">
             <div class="ed-refund-band__head">
               <span class="ed-refund-band__icon" aria-hidden="true">
@@ -2372,7 +2372,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                 </span>
                 <span class="ed-refund-band__point-copy">
                   <strong>{{ __('Venta online') }}</strong>
-                  <span>{{ __('Tukipass presta el servicio tecnológico de reserva y venta de entradas.') }} {{ $fiscalName }} — CUIT {{ $fiscalCuit }}.</span>
+                  <span>{{ __('TukiPass presta el servicio tecnológico de reserva y venta de entradas.') }} {{ $fiscalName }} — CUIT {{ $fiscalCuit }}.</span>
                 </span>
               </li>
               <li class="ed-refund-band__point" role="listitem">
@@ -2390,7 +2390,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                 </span>
                 <span class="ed-refund-band__point-copy">
                   <strong>{{ __('Reembolsos') }}</strong>
-                  <span>{{ __('Aplican la política de Tukipass, las condiciones del organizador y la Ley 24.240 cuando corresponda.') }}</span>
+                  <span>{{ __('Aplican la política de TukiPass, las condiciones del organizador y la Ley 24.240 cuando corresponda.') }}</span>
                 </span>
               </li>
             </ul>

@@ -19,16 +19,16 @@
 @section('body-class', 'home-page')
 
 @php
-  $metaKeywords    = !empty($seo->meta_keyword_home)    ? $seo->meta_keyword_home    : 'eventos, entradas, tickets, conciertos, shows, teatro, deportes, Argentina, Tukipass';
-  $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'Tukipass — Descubrí y comprá entradas para conciertos, teatro, deportes y más en Argentina. Si organizás eventos, también podés vender online con Tukipass.';
+  $metaKeywords    = !empty($seo->meta_keyword_home)    ? $seo->meta_keyword_home    : 'eventos, entradas, tickets, conciertos, shows, teatro, deportes, Argentina, TukiPass';
+  $metaDescription = !empty($seo->meta_description_home) ? $seo->meta_description_home : 'TukiPass — Descubrí y comprá entradas para conciertos, teatro, deportes y más en Argentina. Si organizás eventos, también podés vender online con TukiPass.';
   $ogImage = asset('assets/front/img/og/tukipass-og.jpg');
 @endphp
 @section('meta-keywords',    $metaKeywords)
 @section('meta-description', $metaDescription)
-@section('og-title',       'Tukipass — Entradas y Tickets Online para Eventos en Argentina')
+@section('og-title',       'TukiPass — Entradas y Tickets Online para Eventos en Argentina')
 @section('og-description', $metaDescription)
 @section('og-image',       $ogImage)
-@section('og-image-alt',   'Tukipass, plataforma para descubrir y comprar entradas de eventos en Argentina')
+@section('og-image-alt',   'TukiPass, plataforma para descubrir y comprar entradas de eventos en Argentina')
 @section('og-image-width', '1200')
 @section('og-image-height','630')
 @section('og-type',        'website')
@@ -68,14 +68,14 @@
 
     <div class="container hero-content-wrapper">
       <div class="hero-content hero-content--premium text-center">
-        <span class="hero-kicker">{{ __('Tukipass Argentina') }}</span>
+        <span class="hero-kicker">{{ __('TukiPass Argentina') }}</span>
         <h1 id="heroHeadingHome">{{ __('Reservá entradas para vivir lo que viene') }}</h1>
         <p class="hero-lede">{{ __('Agenda real, eventos cerca tuyo y una experiencia de reserva simple, clara y segura.') }}</p>
         <div class="hero-actions justify-content-center">
           <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Explorar eventos') }}</a>
           <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Publicar un evento') }}</a>
         </div>
-        <div class="hero-proof" aria-label="{{ __('Beneficios de Tukipass') }}">
+        <div class="hero-proof" aria-label="{{ __('Beneficios de TukiPass') }}">
           <span>{{ __('Entrada digital') }}</span>
           <span>{{ __('Pago seguro') }}</span>
           <span>{{ __('Soporte local') }}</span>

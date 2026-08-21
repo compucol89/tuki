@@ -17,8 +17,8 @@
     })();
   </script>
   @php
-    $siteName = trim((string) ($websiteInfo->website_title ?? config('app.name', 'Tukipass'))) ?: 'Tukipass';
-    $siteDefaultDescription = 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online de forma segura.';
+    $siteName = trim((string) ($websiteInfo->website_title ?? config('app.name', 'TukiPass'))) ?: 'TukiPass';
+    $siteDefaultDescription = 'TukiPass es una plataforma argentina para descubrir eventos y reservar entradas online de forma segura.';
     $defaultOgImagePath = 'assets/front/img/og/tukipass-og.jpg';
     $defaultOgImageBase = asset($defaultOgImagePath);
     $defaultOgImage = $defaultOgImageBase . (is_file(public_path($defaultOgImagePath)) ? '?v=' . substr(md5_file(public_path($defaultOgImagePath)), 0, 12) : '');
@@ -125,10 +125,10 @@
       '@context' => 'https://schema.org',
       '@type' => 'Organization',
       '@id' => url('/#organization'),
-      'name' => $websiteInfo->website_title ?? 'Tukipass',
+      'name' => $websiteInfo->website_title ?? 'TukiPass',
       'url' => url('/'),
       'logo' => asset('brand/icon-192.png'),
-      'description' => 'Tukipass es una plataforma argentina para descubrir eventos y reservar entradas online.',
+      'description' => 'TukiPass es una plataforma argentina para descubrir eventos y reservar entradas online.',
       'sameAs' => collect($socialMediaInfos ?? [])
         ->pluck('url')
         ->filter(fn ($url) => is_string($url) && filter_var($url, FILTER_VALIDATE_URL))
@@ -141,7 +141,7 @@
       '@context' => 'https://schema.org',
       '@type' => 'WebSite',
       '@id' => url('/#website'),
-      'name' => $websiteInfo->website_title ?? 'Tukipass',
+      'name' => $websiteInfo->website_title ?? 'TukiPass',
       'url' => url('/'),
       'inLanguage' => 'es-AR',
       'publisher' => ['@id' => url('/#organization')],
@@ -168,6 +168,8 @@
   @stack('critical-styles')
   @yield('custom-style')
   @stack('styles')
+  {{-- Último: dark quiet gana a hardcodes de event-detail/home (#e5e7eb, #f3f4f6, etc.) --}}
+  <link rel="stylesheet" href="{{ $rootAsset('assets/front/css/theme-dark-quiet.css') }}">
   <style>
     :root {
       /* Únicos tokens que dependen del servidor/DB */
@@ -222,7 +224,9 @@
 
     @yield('hero-section')
 
-    @yield('content')
+    <main id="main-content" tabindex="-1">
+      @yield('content')
+    </main>
 
     @includeIf('frontend.partials.footer.footer')
 

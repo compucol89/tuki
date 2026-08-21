@@ -781,7 +781,7 @@ body.contact-page-premium main {
             <div>
               <p class="ctp-card__label">Teléfono</p>
               @foreach($contactPhones as $phone)
-                <p class="ctp-card__value"><a href="tel:{{ $phone }}">{{ $phone }}</a></p>
+                <p class="ctp-card__value"><a href="{{ \App\Support\PhoneFormatter::tel($phone) }}">{{ \App\Support\PhoneFormatter::display($phone) }}</a></p>
               @endforeach
             </div>
           </div>
@@ -890,12 +890,12 @@ body.contact-page-premium main {
 
 {{-- ── MAPA ── --}}
 @if ($mapAddress !== '')
-<section class="ctp-map-section" aria-label="Ubicación Tukipass">
+<section class="ctp-map-section" aria-label="Ubicación TukiPass">
   <p class="ctp-map-address-line">{{ $mapAddress }}</p>
   <div class="ctp-map ctp-map-frame">
     <iframe
       src="https://www.google.com/maps?q={{ urlencode($mapAddress) }}&amp;z=16&amp;hl=es&amp;output=embed"
-      title="Ubicación Tukipass: {{ $mapAddress }}"
+      title="Ubicación TukiPass: {{ $mapAddress }}"
       frameborder="0"
       scrolling="no"
       allowfullscreen>

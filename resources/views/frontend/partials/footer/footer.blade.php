@@ -57,10 +57,10 @@
     @endphp
 
     <div class="footer-layout">
-      <section class="footer-layout__brand" aria-label="{{ config('app.name', 'Tukipass') }}">
+      <section class="footer-layout__brand" aria-label="{{ config('app.name', 'TukiPass') }}">
         <div class="footer-logo">
           <a href="{{ route('index') }}">
-            <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'Tukipass') }}">
+            <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'TukiPass') }}">
           </a>
         </div>
         <div class="footer-copy summernote-content">{!! $footerInfo ? $footerInfo->about_company : '' !!}</div>
@@ -125,6 +125,13 @@
         }
       @endphp
       <div class="footer-bar__top">
+        @if (!empty($phones))
+          <p class="footer-section__phone">
+            @foreach ($phones as $phone)
+              <a href="{{ \App\Support\PhoneFormatter::wa($phone) }}" target="_blank" rel="noopener">{{ __('WhatsApp') }}: {{ \App\Support\PhoneFormatter::display($phone) }}</a>
+            @endforeach
+          </p>
+        @endif
         <div class="footer-section__legal">{!! !empty($footerInfo->copyright_text) ? $footer_text : '' !!}</div>
         <button type="button" class="scroll-top scroll-to-target" data-target="html" aria-label="{{ __('Volver arriba') }}">
           <span class="fa fa-angle-up" aria-hidden="true"></span>

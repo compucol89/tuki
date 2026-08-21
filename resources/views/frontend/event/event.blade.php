@@ -136,13 +136,13 @@
 
 @php
   $metaKeywords    = !empty($seo->meta_keyword_event)    ? $seo->meta_keyword_event    : 'eventos, entradas, tickets, conciertos, shows, teatro, Argentina';
-  $metaDescription = !empty($seo->meta_description_event) ? $seo->meta_description_event : 'Encontrá los mejores eventos en Argentina. Reservá entradas online de forma fácil, rápida y segura en Tukipass.';
+  $metaDescription = !empty($seo->meta_description_event) ? $seo->meta_description_event : 'Encontrá los mejores eventos en Argentina. Reservá entradas online de forma fácil, rápida y segura en TukiPass.';
   $ogImage = asset('assets/front/img/og/tukipass-og.jpg');
 @endphp
 
 @section('meta-keywords', $metaKeywords)
 @section('meta-description', $metaDescription)
-@section('og-title',       'Eventos en Argentina · Entradas y Tickets Online | Tukipass')
+@section('og-title',       'Eventos en Argentina · Entradas y Tickets Online | TukiPass')
 @section('og-description', $metaDescription)
 @section('og-image',       $ogImage)
 @section('og-type',        'website')
@@ -172,7 +172,7 @@
 
   <div class="container hero-content-wrapper">
     <div class="hero-content hero-content--premium text-center">
-      <span class="hero-kicker">{{ __('Catálogo Tukipass') }}</span>
+      <span class="hero-kicker">{{ __('Catálogo TukiPass') }}</span>
       <h1 id="heroHeading">Eventos para elegir<br>sin perder tiempo</h1>
       <p class="hero-lede">Filtrá la agenda real, compará opciones y reservá tu entrada con una experiencia clara y segura.</p>
       <ul class="hero-trust" aria-label="{{ __('Beneficios') }}">

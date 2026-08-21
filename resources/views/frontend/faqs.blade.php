@@ -14,7 +14,7 @@
   $rawMetaKeywords = !empty($seo->meta_keyword_faq) ? $seo->meta_keyword_faq : '';
   $rawMetaDescription = !empty($seo->meta_description_faq) ? $seo->meta_description_faq : '';
   $metaKeywords = str_contains($rawMetaKeywords, '<?') ? 'preguntas frecuentes, ayuda, entradas, eventos, tukipass' : $rawMetaKeywords;
-  $metaDescription = str_contains($rawMetaDescription, '<?') ? 'Respondé tus dudas sobre compras, entradas, acceso a eventos y cuentas en Tukipass.' : $rawMetaDescription;
+  $metaDescription = str_contains($rawMetaDescription, '<?') ? 'Respondé tus dudas sobre compras, entradas, acceso a eventos y cuentas en TukiPass.' : $rawMetaDescription;
 @endphp
 @section('meta-keywords', $metaKeywords)
 @section('meta-description', $metaDescription)
@@ -83,11 +83,11 @@
     $fallbackFaqGroups = [
       [
         'slug' => 'sobre',
-        'label' => 'Sobre Tukipass',
+        'label' => 'Sobre TukiPass',
         'items' => [
           [
-            'question' => '¿Qué es Tukipass?',
-            'answer' => 'Tukipass es una plataforma para descubrir eventos, comprar entradas online y gestionar experiencias en un solo lugar. También permite a organizadores publicar eventos, vender entradas y seguir sus ventas en tiempo real.',
+            'question' => '¿Qué es TukiPass?',
+            'answer' => 'TukiPass es una plataforma para descubrir eventos, comprar entradas online y gestionar experiencias en un solo lugar. También permite a organizadores publicar eventos, vender entradas y seguir sus ventas en tiempo real.',
           ],
         ],
       ],
@@ -101,7 +101,7 @@
           ],
           [
             'question' => '¿Cómo pago mis entradas?',
-            'answer' => 'Podés pagar con los medios habilitados en el checkout de cada evento. Tukipass muestra las opciones disponibles antes de confirmar la compra para que elijas la que mejor te cierre.',
+            'answer' => 'Podés pagar con los medios habilitados en el checkout de cada evento. TukiPass muestra las opciones disponibles antes de confirmar la compra para que elijas la que mejor te cierre.',
           ],
           [
             'question' => '¿Dónde recibo mis entradas?',
@@ -140,7 +140,7 @@
         'label' => 'Organizadores',
         'items' => [
           [
-            'question' => 'Quiero publicar un evento en Tukipass, ¿qué tengo que hacer?',
+            'question' => 'Quiero publicar un evento en TukiPass, ¿qué tengo que hacer?',
             'answer' => 'Creá tu cuenta de organizador, completá la información del evento y configurá tus entradas. Cuando tengas todo listo, vas a poder publicarlo y empezar a vender online.',
           ],
         ],

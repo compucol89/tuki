@@ -12,11 +12,11 @@
   $eventsCssPath = app()->environment('production') ? 'assets/front/css/events.min.css' : 'assets/front/css/events.css';
   $homeCssPath = app()->environment('production') ? 'assets/front/css/home.min.css' : 'assets/front/css/home.css';
   $organizerCssPath = app()->environment('production') ? 'assets/front/css/organizer.min.css' : 'assets/front/css/organizer.css';
-  $profileName = trim((string) ($publicOrganizerName ?? $organizer->username ?? config('app.name', 'Tukipass')));
+  $profileName = trim((string) ($publicOrganizerName ?? $organizer->username ?? config('app.name', 'TukiPass')));
   $profileHandle = trim((string) ($organizer->username ?? $profileName));
   $profileTagline = trim((string) ($organizer_info->designation ?? ''));
   $profileDescription = trim((string) ($publicOrganizerDescription ?? ''));
-  $profileFallbackDescription = __('Conocé los eventos publicados por :name en Tukipass, sus próximas fechas, redes oficiales y datos de contacto.', ['name' => $profileName]);
+  $profileFallbackDescription = __('Conocé los eventos publicados por :name en TukiPass, sus próximas fechas, redes oficiales y datos de contacto.', ['name' => $profileName]);
   $profileDescriptionText = $profileDescription !== '' ? $profileDescription : $profileFallbackDescription;
   $profileUrl = $publicOrganizerUrl ?? url()->current();
   $profileCreatedAt = !empty($organizer->created_at) ? \Carbon\Carbon::parse($organizer->created_at)->toIso8601String() : null;
@@ -108,7 +108,7 @@
     '@type' => 'ProfilePage',
     '@id' => $profileUrl . '#profile',
     'url' => $profileUrl,
-    'name' => $profileName . ' | Organizador en Tukipass',
+    'name' => $profileName . ' | Organizador en TukiPass',
     'description' => $profileDescriptionText,
     'dateCreated' => $profileCreatedAt,
     'dateModified' => $profileUpdatedAt,
@@ -174,10 +174,10 @@
 @endphp
 
 @section('body-class', 'organizer-details-page')
-@section('pageHeading', $profileName . ' | Organizador en Tukipass')
-@section('meta-keywords', $profileName . ', eventos, organizador, entradas, Tukipass')
+@section('pageHeading', $profileName . ' | Organizador en TukiPass')
+@section('meta-keywords', $profileName . ', eventos, organizador, entradas, TukiPass')
 @section('meta-description', $profileMetaDescription)
-@section('og-title', $profileName . ' | Organizador en Tukipass')
+@section('og-title', $profileName . ' | Organizador en TukiPass')
 @section('og-description', $profileMetaDescription)
 @section('og-image', $ogImage)
 @section('og-type', 'website')
@@ -327,7 +327,7 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
             </figure>
 
             <div class="org-profile-panel__identity">
-              <p class="org-profile-panel__eyebrow">{{ __('Organizador en Tukipass') }}</p>
+              <p class="org-profile-panel__eyebrow">{{ __('Organizador en TukiPass') }}</p>
               <h1 id="organizer-profile-title">{{ $profileName }}</h1>
               @if($profileTagline !== '')
                 <p class="org-profile-panel__tagline">{{ $profileTagline }}</p>
@@ -374,8 +374,8 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
 
             <div class="org-profile-actions" aria-label="{{ __('Acciones del perfil') }}">
               <button type="button" class="org-profile-action" data-org-share-profile
-                data-share-title="{{ $profileName . ' | Organizador en Tukipass' }}"
-                data-share-text="{{ __('Conocé el perfil y los eventos de :name en Tukipass.', ['name' => $profileName]) }}"
+                data-share-title="{{ $profileName . ' | Organizador en TukiPass' }}"
+                data-share-text="{{ __('Conocé el perfil y los eventos de :name en TukiPass.', ['name' => $profileName]) }}"
                 data-share-url="{{ $profileUrl }}">
                 <i class="fas fa-share-alt" aria-hidden="true"></i>
                 <span>{{ __('Compartir') }}</span>
@@ -431,7 +431,7 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
             <aside class="org-active-agenda__context" aria-label="{{ __('Resumen de agenda') }}">
               <p class="org-active-agenda__eyebrow">{{ __('Agenda actual') }}</p>
               <h3>{{ __('Una fecha activa disponible') }}</h3>
-              <p>{{ __('Perfil oficial de :name: próximas fechas, historial y canales de contacto en Tukipass.', ['name' => $profileName]) }}</p>
+              <p>{{ __('Perfil oficial de :name: próximas fechas, historial y canales de contacto en TukiPass.', ['name' => $profileName]) }}</p>
 
               <dl class="org-active-agenda__facts">
                 <div>
@@ -451,8 +451,8 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
                   {{ __('Contactar organizador') }}
                 </button>
                 <button type="button" class="org-active-agenda__secondary" data-org-share-profile
-                  data-share-title="{{ $profileName . ' | Organizador en Tukipass' }}"
-                  data-share-text="{{ __('Conocé el perfil y los eventos de :name en Tukipass.', ['name' => $profileName]) }}"
+                  data-share-title="{{ $profileName . ' | Organizador en TukiPass' }}"
+                  data-share-text="{{ __('Conocé el perfil y los eventos de :name en TukiPass.', ['name' => $profileName]) }}"
                   data-share-url="{{ $profileUrl }}">
                   <i class="fas fa-share-alt" aria-hidden="true"></i>
                   <span>{{ __('Compartir perfil') }}</span>

@@ -1,0 +1,61 @@
+> SOURCE OF TRUTH - TukiPass. No editar.
+> Fuente publica: https://raw.githubusercontent.com/w3c/wcag/main/understanding/20/info-and-relationships.html
+> Espejo oficial: w3c/wcag (GitHub)
+> Capturado: 2026-08-21
+
+# Understanding Info and Relationships
+
+## In brief
+
+Goal
+    Information about content structure is available to more people.
+What to do
+    Use code to reinforce relationships and information conveyed through presentation.
+Why it's important
+    People can adapt the presentation to suit their needs while preserving the original meaning.
+
+## Intent of Info and Relationships
+
+The intent of this success criterion is to ensure that information and relationships that are implied by visual or auditory formatting are preserved when the presentation format changes. For example, the presentation format changes when the content is read by a screen reader or when a user style sheet is substituted for the style sheet provided by the author. 
+
+Sighted users perceive structure and relationships through various visual cues — headings are often in a larger, bold font separated from paragraphs by blank lines; list items are preceded by a bullet and perhaps indented; paragraphs are separated by a blank line; items that share a common characteristic are organized into tabular rows and columns; form fields may be positioned as groups that share text labels; a different background color may be used to indicate that several items are related to each other; words that have special status are indicated by changing the font family and /or bolding, italicizing, or underlining them; items that share a common characteristic are organized into a table where the relationship of cells sharing the same row or column and the relationship of each cell to its row and/or column header are necessary for understanding; and so on. Having these structures and these relationships programmatically determined or available in text ensures that information important for comprehension will be perceivable to all. 
+
+Auditory cues may be used as well. For example, a chime might indicate the beginning of a new section; a change in voice pitch or speech rate may be used to emphasize important information or to indicate quoted text; etc. 
+
+When such relationships are perceivable to one set of users, those relationships can be made to be perceivable to all. One method of determining whether or not information has been properly provided to all users is to access the information serially in different modalities. 
+
+If links to glossary items are implemented using anchor elements (or the proper link element for the technology in use) and identified using a different font face, a screen reader user will hear that the item is a link when the glossary term is encountered even though they may not receive information about the change in font face. An on-line catalog may indicate prices using a larger font colored red. A screen reader or person who cannot perceive red, still has the information about the price as long as it is preceded by the currency symbol. 
+
+Some technologies do not provide a means to programmatically determine some types of information and relationships. In that case then there should be a text description of the information and relationships. For instance, "all required fields are marked with an asterisk (*)". The text description should be near the information it is describing (when the page is linearized), such as in the parent element or in the adjacent element. 
+
+There may also be cases where it may be a judgment call as to whether the relationships should be programmatically determined or be presented in text. However, when technologies support programmatic relationships, it is strongly encouraged that information and relationships be programmatically determined rather than described in text. 
+
+It is not required that color values be programmatically determined. The information conveyed by color cannot be adequately presented simply by exposing the value. Therefore, [Success Criterion 1.4.1 Use of Color](use-of-color) addresses the specific case of color, rather than Success Criterion 1.3.1 Info and Relationships. 
+
+## Benefits of Info and Relationships
+
+  * This success criterion helps people with different disabilities by allowing user agents to adapt content according to the needs of individual users. 
+  * Users who are blind (using a screen reader) benefit when information conveyed through color is also available in text (including text alternatives for images that use color to convey information). 
+  * Users who are deaf-blind using braille (text) refreshable displays may be unable to access color-dependent information. 
+
+
+
+## Examples of Info and Relationships
+
+A form with required fields
+    A form contains several required fields. The labels for the required fields are displayed in red. In addition, at the end of each label is an asterisk character, *. The instructions for completing the form indicate that "all required fields are displayed in red and marked with an asterisk *", followed by an example.
+A form that uses color and text to indicate required fields
+    A form contains both required and optional fields. Instructions at the top of the form explain that required fields are labeled with red text and also with an icon whose text alternative says, "Required." Both the red text and the icon are programmatically associated with the appropriate form fields so that assistive technology users can determine the required fields.
+A bus schedule table where the headers for each cell can be programmatically determined
+    A bus schedule consists of a table with the bus stops listed vertically in the first column and the different buses listed horizontally across the first row. Each cell contains the time when the bus will be at that bus stop. The bus stop and bus cells are identified as headers for their corresponding row or column so that assistive technology can programmatically determine which bus and which bus stop are associated with the time in each cell.
+A form where the labels for the checkboxes can be programmatically determined
+    In a form, the labels for each checkbox can be programmatically determined by assistive technology.
+A text document
+    A simple text document is formatted with double blank lines before titles, asterisks to indicate list items and other standard formatting conventions so that its structure can be programmatically determined.
+
+## Resources for Info and Relationships
+
+  * [WebAIM: Semantic Structure](http://webaim.org/techniques/semanticstructure/)
+  * [Heading Tags](http://accessibility.psu.edu/headingshtml/)
+
+{% # Data for associated techniques is defined in understanding/understanding.11tydata.js %} {% include "understanding/techniques.html" %} 

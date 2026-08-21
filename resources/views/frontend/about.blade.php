@@ -332,14 +332,23 @@
               <div class="client-logo-item">
                 @php
                   $partnerUrl = trim((string) ($item->url ?? ''));
+                  $partnerImage = (string) ($item->image ?? '');
+                  $partnerImagePath = 'assets/admin/img/partner/' . $partnerImage;
+                  $cleanPartnerImagePath = 'assets/front/img/partner-logos/' . $partnerImage;
+                  $partnerImageUrl = asset($partnerImagePath);
+
+                  if ($partnerImage !== '' && is_file(public_path($cleanPartnerImagePath))) {
+                    $partnerImageVersion = substr(md5_file(public_path($cleanPartnerImagePath)), 0, 12);
+                    $partnerImageUrl = asset($cleanPartnerImagePath) . '?v=' . $partnerImageVersion;
+                  }
                 @endphp
                 @if ($partnerUrl !== '')
                   <a href="{{ $partnerUrl }}" target="_blank" rel="noopener noreferrer"
                     aria-label="{{ __('Visitar sitio del aliado estratégico') }}"><img class="lazy"
-                      data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></a>
+                      data-src="{{ $partnerImageUrl }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></a>
                 @else
                   <span><img class="lazy"
-                      data-src="{{ asset('assets/admin/img/partner/' . $item->image) }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></span>
+                      data-src="{{ $partnerImageUrl }}" alt="{{ __('Logo de aliado') }}" loading="lazy"></span>
                 @endif
               </div>
             @endforeach

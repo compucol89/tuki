@@ -96,3 +96,12 @@
 | AdminController@changeTheme whitelist + JSON | ✅ |
 | Verificado: dark→light y light→dark con sidebar cambiando; reload coherente; DB sync | ✅ |
 | Suites: @theme 14/14, a11y dashboard 2/2, audit PASS | ✅ |
+
+## Fix i18n alt de anuncios (2026-08-21)
+
+| Trabajo | Resultado |
+|---------|-----------|
+| Helper.php:127 `alt="advertisement"` → `alt="{{ __('Anuncio') }}"` | ✅ |
+| Clave "Anuncio" agregada a resources/lang/es.json + lang/es.json | ✅ |
+| cache:clear + view:clear | ✅ |
+| Verificado runtime: /politica-de-cookies, home, /blog → alt="Anuncio", 0 alts inglés | ✅ |

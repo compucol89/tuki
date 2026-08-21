@@ -6,8 +6,21 @@ const { test, expect } = require('@playwright/test');
  * Complementa Axe: congela la jerarquía (toMatchAriaSnapshot en GATE de regresión).
  */
 
+async function dismissPublicOverlays(page) {
+  await page.evaluate(() => {
+    for (const sel of ['.mfp-bg', '.mfp-wrap', '.announcement-popup', '.popup-wrapper', '.cookie-alert', '.cookie-consent']) {
+      document.querySelectorAll(sel).forEach((el) => el.remove());
+    }
+    document.documentElement.classList.remove('mfp-ready', 'mfp-removing');
+    document.body.classList.remove('mfp-zoom-out-cur');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  });
+}
+
 test('@aria home tiene un único h1 y jerarquía sin saltos', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
+  await dismissPublicOverlays(page);
   const levels = await page.locator('h1, h2, h3, h4, h5, h6').evaluateAll((els) =>
     els.map((el) => Number(el.tagName.slice(1))),
   );
@@ -19,6 +32,7 @@ test('@aria home tiene un único h1 y jerarquía sin saltos', async ({ page }) =
 
 test('@aria organizadores tiene un único h1 y jerarquía sin saltos', async ({ page }) => {
   await page.goto('/organizadores', { waitUntil: 'networkidle' });
+  await dismissPublicOverlays(page);
   const levels = await page.locator('h1, h2, h3, h4, h5, h6').evaluateAll((els) =>
     els.map((el) => Number(el.tagName.slice(1))),
   );
@@ -30,6 +44,7 @@ test('@aria organizadores tiene un único h1 y jerarquía sin saltos', async ({ 
 
 test('@aria contacto tiene un único h1 y jerarquía sin saltos', async ({ page }) => {
   await page.goto('/contacto', { waitUntil: 'networkidle' });
+  await dismissPublicOverlays(page);
   const levels = await page.locator('h1, h2, h3, h4, h5, h6').evaluateAll((els) =>
     els.map((el) => Number(el.tagName.slice(1))),
   );
@@ -41,5 +56,6 @@ test('@aria contacto tiene un único h1 y jerarquía sin saltos', async ({ page 
 
 test('@aria sobre-nosotros tiene un único h1', async ({ page }) => {
   await page.goto('/sobre-nosotros', { waitUntil: 'networkidle' });
+  await dismissPublicOverlays(page);
   await expect(page.locator('h1')).toHaveCount(1);
 });

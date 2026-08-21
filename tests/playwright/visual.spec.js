@@ -51,11 +51,15 @@ async function stabilizePage(page) {
         ]);
       }),
     );
-    for (const sel of ['.announcement-popup', '.popup-wrapper', '.cookie-alert', '.cookie-consent', '[id*="cookie"]']) {
+    for (const sel of ['.mfp-bg', '.mfp-wrap', '.announcement-popup', '.popup-wrapper', '.cookie-alert', '.cookie-consent', '[id*="cookie"]']) {
       document.querySelectorAll(sel).forEach((el) => {
-        el.style.display = 'none';
+        el.remove();
       });
     }
+    document.documentElement.classList.remove('mfp-ready', 'mfp-removing');
+    document.body.classList.remove('mfp-zoom-out-cur');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
   });
   await page.waitForTimeout(400);
 }

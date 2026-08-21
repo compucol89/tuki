@@ -38,6 +38,12 @@
 @push('critical-styles')
 @endpush
 
+@php
+  $today = \Carbon\Carbon::now();
+  $weekendStart = $today->copy()->next(\Carbon\Carbon::FRIDAY);
+  $weekendEnd = $weekendStart->copy()->addDays(2);
+@endphp
+
 @section('hero-section')
   <!-- Hero Section Start -->
   <section class="hero-section hero-collage-section hero-collage-section--premium" id="heroSection" aria-labelledby="heroHeadingHome">
@@ -67,11 +73,11 @@
     <div class="hero-noise" aria-hidden="true"></div>
 
     <div class="container hero-content-wrapper">
-      <div class="hero-content hero-content--premium text-center">
+      <div class="hero-content hero-content--premium">
         <span class="hero-kicker">{{ __('TukiPass Argentina') }}</span>
         <h1 id="heroHeadingHome">{{ __('Reservá entradas para vivir lo que viene') }}</h1>
         <p class="hero-lede">{{ __('Agenda real, eventos cerca tuyo y una experiencia de reserva simple, clara y segura.') }}</p>
-        <div class="hero-actions justify-content-center">
+        <div class="hero-actions">
           <a href="{{ route('events') }}" class="hero-btn hero-btn--primary">{{ __('Explorar eventos') }}</a>
           <a href="{{ route('organizer.signup') }}" class="hero-btn hero-btn--secondary">{{ __('Publicar un evento') }}</a>
         </div>
@@ -79,6 +85,60 @@
           <span>{{ __('Entrada digital') }}</span>
           <span>{{ __('Pago seguro') }}</span>
           <span>{{ __('Soporte local') }}</span>
+        </div>
+
+        <div class="hero-search-panel" aria-labelledby="heroSearchHeading">
+          <div class="hero-search-copy">
+            <h2 class="hero-search-title" id="heroSearchHeading">{{ __('Encontrá tu próxima salida') }}</h2>
+            <p class="hero-search-sub">{{ __('Buscá por nombre, ciudad o categoría y reservá sin vueltas.') }}</p>
+          </div>
+
+          <form action="{{ route('events') }}" method="GET" class="hs-search-form" id="hsSearchForm">
+            <div class="hs-sf__field hs-sf__field--grow">
+              <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <label for="hs-search-input" class="sr-only">{{ __('Buscar por nombre del evento') }}</label>
+              <input type="text" id="hs-search-input" name="search-input" class="hs-sf__input" placeholder="¿Qué evento buscás?" autocomplete="off">
+            </div>
+
+            <div class="hs-sf__divider"></div>
+
+            <div class="hs-sf__field hs-sf__field--location">
+              <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <label for="hs-search-location" class="sr-only">{{ __('Ciudad o ubicación') }}</label>
+              <input type="text" id="hs-search-location" name="location" class="hs-sf__input" placeholder="Ciudad o ubicación" autocomplete="off">
+            </div>
+
+            <div class="hs-sf__divider"></div>
+
+            <div class="hs-sf__field hs-sf__field--select">
+              <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <select name="category" class="hs-sf__select" aria-label="{{ __('Categoría del evento') }}">
+                <option value="">{{ __('Categorías') }}</option>
+                @foreach ($categories as $cat)
+                  <option value="{{ $cat->slug }}">{{ $cat->name }}</option>
+                @endforeach
+              </select>
+            </div>
+
+            <button type="submit" class="hs-sf__btn">
+              <span class="hs-sf__btn-inner">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                {{ __('Buscar') }}
+              </span>
+            </button>
+          </form>
+
+          <div class="hs-search-chips">
+            <span class="hs-search-chips__label">{{ __('Explorá:') }}</span>
+            <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Todos') }}</a>
+            <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">{{ __('Gratis') }}</a>
+            <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">{{ __('Pagos') }}</a>
+            <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' a ' . $today->format('Y-m-d')]) }}" class="hs-chip">{{ __('Hoy') }}</a>
+            <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' a ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">{{ __('Este finde') }}</a>
+            @foreach ($categories->take(4) as $cat)
+              <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip hs-chip--category">{{ $cat->name }}</a>
+            @endforeach
+          </div>
         </div>
       </div>
     </div>
@@ -159,78 +219,6 @@
 @endsection
 @section('content')
 <div id="main-content" tabindex="-1">
-
-  {{-- ── BUSCADOR HOME — Modern SaaS UI ── --}}
-  @php
-    $today = \Carbon\Carbon::now();
-    $weekendStart = $today->copy()->next(\Carbon\Carbon::FRIDAY);
-    $weekendEnd = $weekendStart->copy()->addDays(2);
-  @endphp
-  <section class="hs-search-wrap">
-    <div class="container">
-      <div class="hs-search-head">
-        <div>
-          <h2 class="hs-search-head__title">{{ __('Encontrá tu próxima salida') }}</h2>
-          <p class="hs-search-head__sub">{{ __('Buscá por nombre, ciudad o categoría y reservá sin vueltas.') }}</p>
-        </div>
-      </div>
-
-      <form action="{{ route('events') }}" method="GET" class="hs-search-form" id="hsSearchForm">
-
-        {{-- Keyword --}}
-        <div class="hs-sf__field hs-sf__field--grow">
-          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <label for="hs-search-input" class="sr-only">{{ __('Buscar por nombre del evento') }}</label>
-          <input type="text" id="hs-search-input" name="search-input" class="hs-sf__input" placeholder="¿Qué evento buscás?" autocomplete="off">
-        </div>
-
-        <div class="hs-sf__divider"></div>
-
-        {{-- Ubicación --}}
-        <div class="hs-sf__field hs-sf__field--location">
-          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <label for="hs-search-location" class="sr-only">{{ __('Ciudad o ubicación') }}</label>
-          <input type="text" id="hs-search-location" name="location" class="hs-sf__input" placeholder="Ciudad o ubicación" autocomplete="off">
-        </div>
-
-        <div class="hs-sf__divider"></div>
-
-        {{-- Categoría --}}
-        <div class="hs-sf__field hs-sf__field--select">
-          <svg class="hs-sf__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          <select name="category" class="hs-sf__select" aria-label="{{ __('Categoría del evento') }}">
-            <option value="">{{ __('Categorías') }}</option>
-            @foreach ($categories as $cat)
-              <option value="{{ $cat->slug }}">{{ $cat->name }}</option>
-            @endforeach
-          </select>
-        </div>
-
-        {{-- CTA — inner centra icono+texto sin depender del padding asimétrico --}}
-        <button type="submit" class="hs-sf__btn">
-          <span class="hs-sf__btn-inner">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            {{ __('Buscar') }}
-          </span>
-        </button>
-
-      </form>
-
-      {{-- Quick filters --}}
-      <div class="hs-search-chips">
-        <span class="hs-search-chips__label">{{ __('Explorá:') }}</span>
-        <a href="{{ route('events') }}" class="hs-chip hs-chip--active">{{ __('Todos') }}</a>
-        <a href="{{ route('events', ['pricing' => 'free']) }}" class="hs-chip hs-chip--free">{{ __('Gratis') }}</a>
-        <a href="{{ route('events', ['pricing' => 'paid']) }}" class="hs-chip">{{ __('Pagos') }}</a>
-        <a href="{{ route('events', ['dates' => $today->format('Y-m-d') . ' a ' . $today->format('Y-m-d')]) }}" class="hs-chip">{{ __('Hoy') }}</a>
-        <a href="{{ route('events', ['dates' => $weekendStart->format('Y-m-d') . ' a ' . $weekendEnd->format('Y-m-d')]) }}" class="hs-chip">{{ __('Este finde') }}</a>
-        @foreach ($categories->take(4) as $cat)
-          <a href="{{ route('events', ['category' => $cat->slug]) }}" class="hs-chip hs-chip--category">{{ $cat->name }}</a>
-        @endforeach
-      </div>
-
-    </div>
-  </section>
 
   <!-- Events Section Start -->
   @if ($secInfo->featured_section_status == 1)

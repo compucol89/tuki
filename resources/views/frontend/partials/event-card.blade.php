@@ -59,10 +59,9 @@
   }
 @endphp
 
-<article class="ev-card"
-         data-event-url="{{ route('event.details', [$event->slug, $event->id]) }}"
-         tabindex="0"
-         aria-labelledby="{{ $ev_card_title_id }}">
+<a class="ev-card"
+   href="{{ route('event.details', [$event->slug, $event->id]) }}"
+   aria-labelledby="{{ $ev_card_title_id }}">
 
   {{-- ── 1. IMAGEN (overlay solo aquí) ── --}}
   <div class="ev-card__visual">
@@ -171,4 +170,4 @@
 
   </div>{{-- /.ev-card__body --}}
   </div>{{-- /.ev-card__body-panel --}}
-</article>{{-- /.ev-card --}}
+</a>{{-- /.ev-card --}}

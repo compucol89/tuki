@@ -65,6 +65,33 @@ test('@e2e home mobile mantiene ancho usable en buscador', async ({ page }) => {
   expect(searchGeometry.inputWidth).toBeGreaterThan(240);
 });
 
+test('@e2e home destacados usan tabs, labels y cards semánticas', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'load' });
+
+  await expect(page.getByLabel('Buscar por nombre del evento')).toBeVisible();
+  await expect(page.getByLabel('Ciudad o ubicación')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Eventos destacados' })).toBeVisible();
+
+  const heroImageSrc = await page.locator('#heroCollageBg .hero-slide__image').first().getAttribute('src');
+  expect(heroImageSrc).toMatch(/^\/assets\//);
+
+  const tabs = page.locator('#nav-tab [role="tab"]');
+  await expect(tabs.first()).toHaveText('Todos');
+
+  const tabCount = await tabs.count();
+  if (tabCount > 1) {
+    await tabs.nth(1).click();
+    await expect(tabs.nth(1)).toHaveAttribute('aria-selected', 'true');
+  }
+
+  const firstCard = page.locator('.events-section a.ev-card[href]').first();
+  await expect(firstCard).toBeVisible();
+  await expect(page.locator('.events-section .ev-card[data-event-url]')).toHaveCount(0);
+
+  const href = await firstCard.getAttribute('href');
+  expect(href).toMatch(/\/[^/]+\/\d+$/);
+});
+
 test('@e2e sobre-nosotros mantiene ritmo vertical de bandas', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/sobre-nosotros', { waitUntil: 'load' });

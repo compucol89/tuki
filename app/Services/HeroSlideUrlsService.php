@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\File;
 class HeroSlideUrlsService
 {
     /**
-     * @return array<int, string> URLs absolutas para background-image
+     * @return array<int, string> URLs raíz-relativas para background-image
      */
     public static function build(int $maxSlides = 8): array
     {
-        $cacheKey = 'hero_slide_urls_'.$maxSlides.'_'.request()->getHttpHost();
+        $cacheKey = 'hero_slide_urls_'.$maxSlides;
 
         return Cache::remember($cacheKey, 3600, function () use ($maxSlides) {
             $campaignDir = public_path('assets/front/img/hero-campaign');
@@ -36,7 +36,7 @@ class HeroSlideUrlsService
                     ->values();
 
                 foreach ($campaignFiles as $file) {
-                    $campaignUrls[] = FileUploadService::imageUrl('assets/front/img/hero-campaign/', $file->getFilename());
+                    $campaignUrls[] = FileUploadService::imagePath('assets/front/img/hero-campaign/', $file->getFilename());
                 }
             }
 
@@ -49,7 +49,7 @@ class HeroSlideUrlsService
                 ->all();
 
             $eventUrls = array_map(
-                static fn (string $img) => FileUploadService::imageUrl('assets/admin/img/event-gallery/', $img),
+                static fn (string $img) => FileUploadService::imagePath('assets/admin/img/event-gallery/', $img),
                 $eventFilenames
             );
 
@@ -79,7 +79,7 @@ class HeroSlideUrlsService
             if ($slides === []) {
                 $breadcrumb = Basic::query()->value('breadcrumb');
                 if (! empty($breadcrumb) && file_exists(public_path('assets/admin/img/'.$breadcrumb))) {
-                    $slides[] = FileUploadService::imageUrl('assets/admin/img/', $breadcrumb);
+                    $slides[] = FileUploadService::imagePath('assets/admin/img/', $breadcrumb);
                 }
             }
 

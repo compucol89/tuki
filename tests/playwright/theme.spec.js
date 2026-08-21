@@ -23,6 +23,17 @@ const ROUTES = [
 
 const PUBLIC_DARK_ROUTES = [
   {
+    name: 'home',
+    path: '/',
+    surfaces: [
+      '.hero-collage-section',
+      '.hero-slideshow',
+      '.hs-search-form',
+      '.events-section .ev-card',
+      '.events-section .ev-card__body-panel',
+    ],
+  },
+  {
     name: 'sobre-nosotros',
     path: '/sobre-nosotros',
     surfaces: [
@@ -229,6 +240,48 @@ test.describe('@theme contrato theming público', () => {
       expect(brightSurfaces, `islas claras en dark: ${route.name}`).toEqual([]);
     });
   }
+});
+
+test('@theme home dark conserva hero Tangerine y CTA Buscar visible', async ({ page }) => {
+  await setPublicTheme(page, 'dark');
+  await page.goto('/', { waitUntil: 'load' });
+  await setPublicTheme(page, 'dark');
+
+  const hero = await page.locator('body.home-page .hero-collage-section').evaluate((el) => {
+    const slideshow = el.querySelector('.hero-slideshow');
+    const heroRect = el.getBoundingClientRect();
+    const slideRect = slideshow ? slideshow.getBoundingClientRect() : null;
+    const slideStyle = slideshow ? getComputedStyle(slideshow) : null;
+
+    return {
+      flexDirection: getComputedStyle(el).flexDirection,
+      slidePosition: slideStyle ? slideStyle.position : '',
+      slideWidth: slideRect ? slideRect.width : 0,
+      heroWidth: heroRect.width,
+    };
+  });
+
+  expect(hero.flexDirection).toBe('column');
+  expect(hero.slidePosition).toBe('relative');
+  expect(hero.slideWidth).toBeLessThan(hero.heroWidth);
+
+  const searchButton = await page.locator('body.home-page .hs-sf__btn').evaluate((el) => {
+    const cs = getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+
+    return {
+      backgroundColor: cs.backgroundColor,
+      backgroundImage: cs.backgroundImage,
+      color: cs.color,
+      width: rect.width,
+      height: rect.height,
+    };
+  });
+
+  expect(searchButton.width).toBeGreaterThan(80);
+  expect(searchButton.height).toBeGreaterThan(40);
+  expect(`${searchButton.backgroundColor} ${searchButton.backgroundImage}`).not.toContain('rgba(0, 0, 0, 0) none');
+  expect(searchButton.color).toBe('rgb(255, 255, 255)');
 });
 
 test.describe('@theme contrato theming organizer', () => {

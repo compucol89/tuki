@@ -368,20 +368,6 @@
             });
         }
 
-        // Event card click delegation
-        $(document).on('click', '.ev-card[data-event-url]', function (e) {
-            if (!$(e.target).closest('a, button').length) {
-                window.location.href = this.dataset.eventUrl;
-            }
-        });
-        $(document).on('keydown', '.ev-card[data-event-url]', function (e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                if (!$(e.target).closest('a, button').length) {
-                    e.preventDefault();
-                    window.location.href = this.dataset.eventUrl;
-                }
-            }
-        });
     });
 
 

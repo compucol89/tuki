@@ -141,7 +141,7 @@ class HomeController extends Controller
     });
 
     // Hero: intercala imágenes de campaña (hero-campaign) con fotos reales de eventos
-    $heroSlideUrls = Cache::remember('home_hero_slide_urls', 3600, fn () =>
+    $heroSlideUrls = Cache::remember('home_hero_slide_paths_v2', 3600, fn () =>
       HeroSlideUrlsService::build(maxSlides: 3)
     );
     $queryResult['heroSlideUrls'] = $heroSlideUrls;

@@ -15,8 +15,8 @@ Se auditó el AI Event Assistant V2 (forensic discovery) y se implementó la arq
 | Facts | `CanonicalEventFacts` (value/source/confidence/verified/sensitive/copy_safe) con resolución determinista por prioridad de fuente; builder para evento y para flujo temporal; precios de tickets ahora llegan al contexto (copy_safe=false) |
 | Contexto | `PlatformContext` (marca TAYRONA/TukiPass, rol, legal como restricción no boilerplate), `BrandVoice` (voz es-AR, clichés prohibidos), `EventArchetypes` (taxonomía + few-shot contextual) |
 | Etapas | 6 clases de prompt + 5 schemas versionados; pipeline `EventAiOrchestrator`; auditor INDEPENDIENTE con rúbrica; repair dirigido; escalación condicional por confianza baja |
-| Gates | QualityGate (estructura/terminología), PolicyGate (escasez/notas internas/volátiles/gratis), GenericnessGate (score 0-10 + señales) |
-| Evals | 16 fixtures + integridad + `ai:eval-run` (capture live / grade offline) |
+| Gates | QualityGate (estructura/terminología), PolicyGate (escasez/notas internas/volátiles/gratis), GenericnessGate runtime (bloquea `score > 4` + señales) |
+| Evals | 16 fixtures + integridad + `ai:eval-run` (capture live V2/V3 explícito / grade offline / comparación baseline-candidate) |
 | Integración | Rama flag-gated en `analyzeTemporaryCover` y `GenerateEventContentDraftJob`; payload final fusionado al contrato V2 |
 | Config | `openai.event_assistant.v3.*`, `features.event_ai_assistant_v3_enabled`, cuota temporal unificada en config (6, documentado) |
 
@@ -32,7 +32,9 @@ Ninguna. V3 reutiliza el modelo de datos V2 (runs/reviews/drafts). Rollback = ap
 
 ## Tests
 
-- Suite completa: **222 tests, 0 fallos** (deprecations preexistentes de PHPUnit: 6).
+- Suite completa: **225 tests, 0 fallos** (deprecations preexistentes de PHPUnit en `SecurityHeadersTest`).
+- Regresiones dirigidas pre-prod: runner V2/V3, SEO post-repair, gate de genericidad runtime, prompts/schemas/gates V3.
+- Compilación de vistas: **PASS** (`php artisan view:cache && php artisan view:clear`).
 - Playwright: wizard venue con flag V3 OFF renderiza correctamente (regresión V2 = PASS).
 
 ## V2 vs V3

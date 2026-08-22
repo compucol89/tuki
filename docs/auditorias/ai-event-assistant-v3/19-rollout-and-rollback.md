@@ -3,10 +3,11 @@
 ## Activación (gradual)
 
 1. Staging: `AI_EVENT_ASSISTANT_V3_ENABLED=true` + `OPENAI_API_KEY` presente.
-2. Capturar baseline V2: `php artisan ai:eval-run --capture` con flag off (bundle v2), luego flag on (bundle v3).
-3. Comparar: `--grade` + métricas de 17-eval-methodology.
-4. Producir `20-v2-vs-v3-results.md` y evaluar promotion gates.
-5. Producción: activar flag. Monitorear runs (`event_ai_assistant_runs`), costos y errores.
+2. Capturar baseline V2 real: `php artisan ai:eval-run --capture --pipeline=v2 --bundle=2026-08-21-v2`.
+3. Capturar candidato V3: `php artisan ai:eval-run --capture --pipeline=v3 --bundle=2026-08-21-v3`.
+4. Comparar: `php artisan ai:eval-run --grade --baseline=2026-08-21-v2 --candidate=2026-08-21-v3`.
+5. Producir `20-v2-vs-v3-results.md` y evaluar promotion gates.
+6. Producción: activar flag. Monitorear runs (`event_ai_assistant_runs`), costos y errores.
 
 ## Rollback inmediato
 

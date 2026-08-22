@@ -11,6 +11,7 @@ use App\Services\OpenAI\EventAI\Prompts\EventRepairPrompt;
 use App\Services\OpenAI\EventAI\Prompts\EventSeoPrompt;
 use App\Services\OpenAI\EventAI\Prompts\EventStrategyPrompt;
 use App\Services\OpenAI\EventAI\Prompts\FlyerExtractionPrompt;
+use App\Services\OpenAI\EventAI\Quality\EventContentGenericnessGate;
 use App\Services\OpenAI\EventAI\Quality\EventContentPolicyGate;
 use App\Services\OpenAI\EventAI\Quality\EventContentQualityGate;
 use App\Services\OpenAI\EventAI\Schemas\EventAuditSchema;
@@ -122,6 +123,7 @@ class EventAiOrchestrator
       while ($audit['status'] === 'repair' && $attempts > 0) {
         $attempts--;
         $copy = $this->repair($copy, $audit['blocking_failures'], $audit['repair_instructions'], $facts);
+        $seo = $this->seo($facts, $copy);
         $audit = $this->audit($facts, $strategy, $copy, $seo);
       }
     }
@@ -138,6 +140,12 @@ class EventAiOrchestrator
     $policyFailures = app(EventContentPolicyGate::class)->failures($payload, $facts);
     if ($policyFailures !== []) {
       throw new RuntimeException('El paquete generado no pasó los gates de política: ' . implode(' ', $policyFailures));
+    }
+
+    $genericness = app(EventContentGenericnessGate::class)->score($payload, $facts);
+    if ((float) ($genericness['score'] ?? 0) > 4) {
+      $signals = implode(' ', $genericness['signals'] ?? []);
+      throw new RuntimeException('El paquete generado no pasó el gate de genericidad: score ' . $genericness['score'] . '/10. ' . $signals);
     }
 
     return $payload;

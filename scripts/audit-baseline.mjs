@@ -11,10 +11,18 @@ const ROOT = path.resolve(__dirname, '..');
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:8801';
 const OUT_DIR = path.join(ROOT, 'docs/auditorias/admin-citrus-console-2026-08-22/baseline');
 
-const ORG_USER = process.env.E2E_ORGANIZER_USERNAME || 'audit-citrus';
-const ORG_PASS = process.env.E2E_ORGANIZER_PASSWORD || 'AuditCitrus2026!';
-const ADM_USER = process.env.E2E_ADMIN_USERNAME || 'adminaudit';
-const ADM_PASS = process.env.E2E_ADMIN_PASSWORD || 'AdminAudit2026!';
+function requiredEnv(name) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Configurá ${name} para ejecutar el baseline de auditoría.`);
+  }
+  return value;
+}
+
+const ORG_USER = requiredEnv('E2E_ORGANIZER_USERNAME');
+const ORG_PASS = requiredEnv('E2E_ORGANIZER_PASSWORD');
+const ADM_USER = requiredEnv('E2E_ADMIN_USERNAME');
+const ADM_PASS = requiredEnv('E2E_ADMIN_PASSWORD');
 
 const VIEWPORTS = [
   [1440, 900], [1366, 768], [1280, 800], [1024, 768], [768, 1024],

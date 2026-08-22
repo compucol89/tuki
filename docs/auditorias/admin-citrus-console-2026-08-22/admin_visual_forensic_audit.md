@@ -184,4 +184,4 @@ IDs (`createEventWizard`, `ewOpenWizardBtn`, `ewBackBtn/NextBtn/SkipAdvancedBtn`
 
 - El stack Docker en `127.0.0.1:8801` monta el worktree `~/.config/superpowers/worktrees/tuki/codex-master-final` (no la carpeta principal). Los cambios de esta rama quedaron **sincronizados ahí como modificaciones sin commitear** para que puedas verlos en el navegador. No commitees desde ese worktree sin revisar.
 - `route:clear` ejecutado en el contenedor (había route cache stale que causaba 404 en `event-management/events`).
-- Credenciales de prueba creadas: organizer `audit-citrus` / `AuditCitrus2026!` (evento de prueba id 126) y admin `adminaudit` / `AdminAudit2026!`.
+- Credenciales de prueba creadas localmente para Playwright; las claves se pasan por variables `E2E_ORGANIZER_*` y `E2E_ADMIN_*` y no quedan versionadas.

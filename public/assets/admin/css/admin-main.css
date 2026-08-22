@@ -24,8 +24,8 @@
 body[data-background-color=dark] .ui-state-default,
 body[data-background-color=dark2] .ui-state-default
 {
-  background-color: #1a2035 !important;
-  border: 1px solid #1a2035 !important;
+  background-color: var(--surface-input, #1a2035) !important;
+  border: 1px solid var(--surface-input, #1a2035) !important;
 }
 
 .sidebar.sidebar-style-2 .nav .nav-item .selected>a {
@@ -66,12 +66,12 @@ body[data-background-color="dark"] ::-webkit-calendar-picker-indicator {
 
 /* bootstrap form control customize start */
 body[data-background-color="dark"] .form-control[readonly] {
-  background-color: #1a2035 !important;
+  background-color: var(--surface-input, #1a2035) !important;
   border-color: #2f374b !important;
 }
 
 body[data-background-color="dark"] .form-control[disabled] {
-  background-color: #1a2035 !important;
+  background-color: var(--surface-input, #1a2035) !important;
   border-color: #2f374b !important;
 }
 
@@ -247,12 +247,12 @@ label.note-form-label {
 
 .custom-file-label::after {
   color: #fff;
-  background-color: #1a2035;
+  background-color: var(--surface-input, #1a2035);
   border-left: 1px solid #2f374b;
 }
 
 label.custom-file-label {
-  background-color: #1a2035;
+  background-color: var(--surface-input, #1a2035);
   border: 1px solid #2f374b;
 }
 
@@ -610,7 +610,7 @@ select.bg-danger {
 
 [data-background-color="dark"] .select2-container--default .select2-selection--multiple,
 [data-background-color="dark"] .select-auto .select2-container--default .select2-selection--multiple {
-  background-color: #1a2035;
+  background-color: var(--surface-input, #1a2035);
   color: rgba(169, 175, 187, 0.92);
   border-color: #2f374b;
 }
@@ -641,7 +641,7 @@ select.bg-danger {
 }
 
 [data-background-color="dark"] .select2-container--default .select2-selection--single{
-  background-color: #1a2035;
+  background-color: var(--surface-input, #1a2035);
   color: #fff;
   border-color: #2f374b;
 }

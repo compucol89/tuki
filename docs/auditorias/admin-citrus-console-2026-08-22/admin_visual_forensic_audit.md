@@ -116,6 +116,72 @@
 ## 8. Estado
 
 - [x] repo inspeccionado · [x] UI inventory · [x] baseline capturado · [x] auditorías (CSS/blade/JS/medición) · [x] informe
-- [ ] remediación por bloques (3.1→3.6) · [ ] verificación adversarial · [ ] certificación final
+- [x] remediación por bloques (3.1→3.6) · [x] verificación adversarial · [x] certificación final
 
-Los bloques de remediación se ejecutan en commits separados sobre esta rama; este informe se actualiza al cierre con scores AFTER.
+Los bloques de remediación se ejecutaron en commits separados sobre esta rama; el cierre queda documentado abajo.
+
+---
+
+# CIERRE — Resultados AFTER (2026-08-22)
+
+## Scores finales
+
+| Dimensión | Antes | Después | Nota |
+|---|---|---|---|
+| Visual System | 55 | **80** | 1 sistema de naranja canónico (#F97316 light+dark); --event-* alias; --od-* identificado |
+| Geometry | 60 | **85** | Wizard 980×640 intacto con radius 16 y footer 8/16; 0 overflow de documento en 99 capturas |
+| Spacing | 45 | **65** | Fraccionarios eliminados (12/13/14); escala de radios declarada (8/10/14/16); queda sopa legacy en admin-skin (P3) |
+| Typography | 58 | **75** | Jerarquía h1 shell → h2 modal → h3 pasos; Inter (brief) |
+| Components | 55 | **82** | Fin de la guerra de especificidad en modales; botones/forms/cards consolidados |
+| Responsive | 52 | **85** | Breakpoints unificados (.98); stepper 2×3 ≤575px; 0 overflow en matriz completa |
+| Mobile | 50 | **85** | 360/375/390/430 verificados: fullscreen, stepper visible, footer accesible |
+| Dark Mode | 60 | **82** | Naranja coherente, superficies tokenizadas (surface-input), sin islas en suites @theme |
+| Accessibility | 42 | **78** | 26 labels con for, aria-current válido, focus trap + retorno, errores con aria-live/invalid |
+| CSS Maintainability | 35 | **62** | !important 882→860, hex 630→~595, 5 sistemas → 1 canónico + aliases; Atlantis sigue (vendor freeze) |
+| Data Integrity | 82 | **88** | Moneda dinámica (ARS), progreso unificado, placeholders neutralizados |
+| Regression Safety | 70 | **85** | e2e/a11y/aria/theme/seo/legal verdes + baseline AFTER congelado + gate de deuda PASS |
+
+**Estado final: PASS WITH CONDITIONS** (la condición: deuda residual P2/P3 documentada abajo).
+
+## Verificación (evidencia)
+
+- **Baseline AFTER**: 99 capturas (11 rutas × 9 viewports), `0` overflow de documento, `0` errores. BEFORE: 8 fallas — 2 eran el 404 de `?language` (capturas inválidas), 1 falso positivo leaflet (clipped), 3 rect del stepper (scroll contenido), 2 del botón de header del 404.
+- **Suites Playwright**: e2e 20/20 · a11y 18/18 · aria 18/18 · theme 18/18 · seo 12/12 · legal 8/8.
+- **test:visual**: 4 fallas clasificadas **environmental** (iframe de mapas + lazy-load; alturas varían entre runs 2702↔2735px; frontend intacto md5-idéntico; reproducidas con el evento de prueba oculto).
+- **Detector Impeccable**: 0 errores; 6 warnings preexistentes (side-tabs del wizard = identidad aprobada; Inter = tipografía de marca del brief).
+- **Gate `audit-organizer-theme.sh`**: PASS — !important 882→860, hardcoded surfaces 16→15, sin `<style>` nuevos ni outline:none nuevos.
+- **`npm run production`**: OK. Los minificados frontend regenerados se revirtieron (drift de master, fuera de alcance).
+
+## Contratos preservados (cero rotos)
+
+IDs (`createEventWizard`, `ewOpenWizardBtn`, `ewBackBtn/NextBtn/SkipAdvancedBtn`, `EventSubmit`, `eventForm`, `eventErrors`, `free_ticket`, `ticket-pricing`, `ewVenueTicketToggle`, `ewLangSync`, `ewAiExtractBtn`, `my-dropzone`, `eventVenueMapCreateOrganizer`), `data-wizard-*`, `data-ew-*`, `data-review-*`, y campos `pricing_type`/`date_type`/`event_type`/`thumbnail` — sin cambios. Verificado con navegación real 1→5 (review "ARS 12000").
+
+## Hallazgos corregidos
+
+| ID | Antes | Después |
+|---|---|---|
+| A-01 | radius 14px (pisado) | 16px (token 2xl, blindado vs Atlantis) |
+| A-02 | footer 77px / 18-22px | 56px / 8-16px (diseño del wizard) |
+| A-03 | stepper 6×72px con scroll oculto | grid 2×3 ≤575px, todos los pasos visibles |
+| A-04 | botón header 405px @390 | **falso positivo** — era la página 404; ruta corregida (?language=es) |
+| A-05 | leaflet tiles "overflow" | **falso positivo** — tiles clippeados, scrollWidth limpio |
+| A-06/07/08/09 | a11y wizard | labels/aria-current/focus trap/headings corregidos |
+| B-01..B-11 | deuda sistémica | tokens, modales, botones, forms, breakpoints, moneda, JS |
+
+## Residual debt (explícita, sin ocultar)
+
+| Item | Sev | Por qué queda | Acción recomendada |
+|---|---|---|---|
+| Atlantis vendor (920 reglas sidebar, 794 !important) | P2 | Vendor freeze (§43) | overrides first-party al migrar vistas |
+| Minificados frontend stale en master | P2 | Fuera de alcance del audit admin | rebuild + commit dedicado en master |
+| `?language` obligatorio en listados (404 sin él) | P2 | Cambio funcional en controllers | default al idioma principal si falta el param |
+| `--od-*` con definición light en blade (profile builder) | P3 | Riesgo de tocar otro flujo | tokenizar en 3.5-next |
+| Side-tab borders del wizard (detector) | P3 | Identidad aprobada por el brief | mantener |
+| Transitions de height/width (collapse) | P3 | Bootstrap collapse nativo | mantener |
+| Snapshot visuales no commiteados (17MB) | P3 | Peso en repo | evidencia local referenciada |
+
+## Entorno local (importante)
+
+- El stack Docker en `127.0.0.1:8801` monta el worktree `~/.config/superpowers/worktrees/tuki/codex-master-final` (no la carpeta principal). Los cambios de esta rama quedaron **sincronizados ahí como modificaciones sin commitear** para que puedas verlos en el navegador. No commitees desde ese worktree sin revisar.
+- `route:clear` ejecutado en el contenedor (había route cache stale que causaba 404 en `event-management/events`).
+- Credenciales de prueba creadas: organizer `audit-citrus` / `AuditCitrus2026!` (evento de prueba id 126) y admin `adminaudit` / `AdminAudit2026!`.

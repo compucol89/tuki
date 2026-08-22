@@ -2524,7 +2524,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   font-size: 24px !important;
   font-weight: 720 !important;
   line-height: 1.05 !important;
-  letter-spacing: -0.015em !important;
+  letter-spacing: 0 !important;
   font-variant-numeric: tabular-nums lining-nums !important;
 }
 

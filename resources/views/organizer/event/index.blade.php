@@ -58,7 +58,7 @@
       font-size: var(--oe-value-size);
       font-weight: 720;
       line-height: 1.05;
-      letter-spacing: -.015em;
+      letter-spacing: 0;
       font-variant-numeric: tabular-nums lining-nums;
     }
 
@@ -194,8 +194,9 @@
       overflow-wrap: anywhere;
     }
 
-    .oe-title:hover {
-      color: var(--status-info-fg);
+    .oe-title:hover,
+    .oe-title:focus {
+      color: var(--adm-primary-dark);
       text-decoration: none;
     }
 
@@ -275,29 +276,139 @@
     }
 
     .oe-mobile-event {
-      padding: 14px;
+      padding: 13px 14px 14px;
     }
 
     .oe-mobile-event__head {
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: 11px;
+    }
+
+    .oe-mobile-event__main {
+      display: grid;
+      flex: 1 1 auto;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .oe-mobile-event__topline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+
+    .oe-mobile-event .oe-title {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      font-size: 14px;
+      line-height: 1.25;
     }
 
     .oe-mobile-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      column-gap: 16px;
+      row-gap: 10px;
       padding-top: 12px;
       border-top: 1px solid var(--border-subtle);
     }
 
+    .oe-mobile-stat {
+      min-width: 0;
+    }
+
+    .oe-mobile-stat .oe-money {
+      display: block;
+      margin-top: 3px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .oe-mobile-stat .oe-muted {
+      margin-top: 3px;
+    }
+
+    .oe-mobile-settlement {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .oe-mobile-settlement__copy {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      min-width: 0;
+    }
+
     .oe-mobile-controls {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
       gap: 8px;
       margin-top: 12px;
+    }
+
+    .oe-mobile-controls--single {
+      grid-template-columns: 1fr;
+    }
+
+    .oe-mobile-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      gap: 7px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .oe-mobile-btn--secondary {
+      border-color: var(--border-strong) !important;
+      background-color: var(--surface-card) !important;
+      color: var(--text-primary) !important;
+    }
+
+    .oe-mobile-btn--secondary:hover,
+    .oe-mobile-btn--secondary:focus {
+      border-color: rgba(249, 115, 22, .45) !important;
+      background-color: var(--surface-active) !important;
+      color: var(--adm-primary-dark) !important;
+    }
+
+    .oe-mobile-btn--primary {
+      border-color: var(--adm-primary-dark) !important;
+      background-color: var(--adm-primary-dark) !important;
+      color: #ffffff !important;
+    }
+
+    .oe-mobile-btn--primary:hover,
+    .oe-mobile-btn--primary:focus {
+      border-color: var(--adm-primary-strong) !important;
+      background-color: var(--adm-primary-strong) !important;
+      color: #ffffff !important;
+    }
+
+    html[data-theme="dark"] .organizer-events .oe-mobile-btn--secondary:hover,
+    html[data-theme="dark"] .organizer-events .oe-mobile-btn--secondary:focus {
+      color: var(--status-warning-fg) !important;
+    }
+
+    .oe-mobile-btn:focus {
+      box-shadow: 0 0 0 3px var(--focus-ring);
     }
 
     .oe-empty {
@@ -359,11 +470,6 @@
       .oe-toolbar {
         padding: 14px 16px;
       }
-
-      .oe-mobile-grid,
-      .oe-mobile-controls {
-        grid-template-columns: 1fr;
-      }
     }
 
     @media (max-width: 420px) {
@@ -371,6 +477,16 @@
       .oe-toolbar,
       .oe-toolbar__actions {
         grid-template-columns: 1fr;
+      }
+
+      .oe-mobile-grid,
+      .oe-mobile-controls {
+        grid-template-columns: 1fr;
+      }
+
+      .oe-mobile-settlement {
+        align-items: flex-start;
+        flex-direction: column;
       }
     }
   </style>
@@ -529,13 +645,14 @@
                       ? ($settlementStatusLabels[$settlement['status']] ?? $settlementStatusLabels['pending'])
                       : $settlementStatusLabels['no_balance'];
                   $thumb = $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg');
+                  $fallbackThumb = asset('assets/admin/img/noimage.jpg');
                 @endphp
                 <tr>
                   <td><input type="checkbox" class="bulk-check" data-val="{{ $event->id }}" aria-label="{{ __('Seleccionar evento') }} {{ $event->title }}"></td>
                   <td>
                     <div class="oe-event">
                       <div class="oe-thumb">
-                        <img src="{{ $thumb }}" alt="{{ $event->title }}" loading="lazy">
+                        <img src="{{ $thumb }}" alt="{{ $event->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ $fallbackThumb }}';">
                       </div>
                       <div>
                         <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
@@ -618,47 +735,51 @@
                   ? ($settlementStatusLabels[$settlement['status']] ?? $settlementStatusLabels['pending'])
                   : $settlementStatusLabels['no_balance'];
               $thumb = $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg');
+              $fallbackThumb = asset('assets/admin/img/noimage.jpg');
             @endphp
             <article class="oe-mobile-event">
               <div class="oe-mobile-event__head">
-                <div class="oe-thumb"><img src="{{ $thumb }}" alt="{{ $event->title }}" loading="lazy"></div>
-                <div>
+                <div class="oe-thumb">
+                  <img src="{{ $thumb }}" alt="{{ $event->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ $fallbackThumb }}';">
+                </div>
+                <div class="oe-mobile-event__main">
+                  <div class="oe-mobile-event__topline">
+                    <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
+                    <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
+                  </div>
                   <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
                     class="oe-title">{{ $event->title }}</a>
-                  <span class="oe-muted">{{ __('Función') }}: {{ $metrics['date_label'] ?? '-' }}</span>
+                  <span class="oe-muted">{{ __('Función') }}: <span class="oe-data-value">{{ $metrics['date_label'] ?? '-' }}</span></span>
+                  <span class="oe-muted">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                 </div>
               </div>
               <div class="oe-mobile-grid">
-                <div>
+                <div class="oe-mobile-stat">
                   <span class="oe-label">{{ __('Ventas') }}</span>
                   <span class="oe-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</span>
                   <span class="oe-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
                   <span class="oe-muted">{{ __('Gratis') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
                 </div>
-                <div>
+                <div class="oe-mobile-stat">
                   <span class="oe-label">{{ __('Escaneo') }}</span>
                   <span class="oe-money tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
                   <div class="oe-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
                 </div>
-                <div>
-                  <span class="oe-label">{{ __('Liquidación') }}</span>
-                  <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                  <span class="oe-muted">{{ __('Pendiente') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
-                </div>
-                <div>
-                  <span class="oe-label">{{ __('Tipo') }}</span>
-                  <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
-                  <span class="oe-muted">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
-                </div>
               </div>
-              <div class="oe-mobile-controls">
-                <a href="{{ route('organizer.event_management.edit_event', ['id' => $event->id]) }}" class="btn btn-outline-primary btn-sm">
-                  <i class="fas fa-edit mr-1" aria-hidden="true"></i>{{ __('Editar') }}
+              <div class="oe-mobile-settlement">
+                <span class="oe-mobile-settlement__copy">
+                  <span class="oe-label">{{ __('Liquidación') }}</span>
+                  <span class="oe-muted">{{ __('Pendiente') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
+                </span>
+              </div>
+              <div class="oe-mobile-controls {{ $event->event_type == 'venue' ? '' : 'oe-mobile-controls--single' }}">
+                <a href="{{ route('organizer.event_management.edit_event', ['id' => $event->id]) }}" class="btn btn-sm oe-mobile-btn oe-mobile-btn--secondary">
+                  <i class="fas fa-edit" aria-hidden="true"></i>{{ __('Editar') }}
                 </a>
                 @if ($event->event_type == 'venue')
                   <a href="{{ route('organizer.event.ticket', ['language' => request()->input('language'), 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
-                    class="btn btn-outline-success btn-sm">
-                    <i class="fas fa-ticket-alt mr-1" aria-hidden="true"></i>{{ __('Entradas') }}
+                    class="btn btn-sm oe-mobile-btn oe-mobile-btn--primary">
+                    <i class="fas fa-ticket-alt" aria-hidden="true"></i>{{ __('Entradas') }}
                   </a>
                 @endif
               </div>

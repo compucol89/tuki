@@ -1,0 +1,5215 @@
+{
+  "generated": "2026-08-22T16:59:07.013Z",
+  "baseUrl": "http://127.0.0.1:8801",
+  "results": [
+    {
+      "viewport": "1440x900",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/1440x900.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/1440x900.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "349.5px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 230,
+              "y": 24,
+              "w": 980,
+              "h": 640,
+              "radius": "14px",
+              "maxHeight": "640px"
+            },
+            "header": {
+              "x": 253,
+              "y": 43,
+              "w": 934,
+              "h": 85,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 231,
+              "y": 224,
+              "w": 978,
+              "h": 363,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 231,
+              "y": 587,
+              "w": 978,
+              "h": 77,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 253,
+              "y": 128,
+              "w": 934,
+              "h": 76,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 319,
+              "y": 132,
+              "w": 30,
+              "h": 30,
+              "radius": "11px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 1070,
+              "y": 606,
+              "w": 117,
+              "h": 40,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/1440x900.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 1619
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 1619
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "5902.09px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/1440x900.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/1440x900.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "236.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/1440x900.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/1440x900.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "198.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/1440x900.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/1440x900.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/1440x900.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1440,
+            "clientWidth": 1440,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "3182.33px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/1440x900.png"
+        }
+      ]
+    },
+    {
+      "viewport": "1366x768",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/1366x768.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/1366x768.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "349.5px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 193,
+              "y": 24,
+              "w": 980,
+              "h": 640,
+              "radius": "14px",
+              "maxHeight": "640px"
+            },
+            "header": {
+              "x": 216,
+              "y": 43,
+              "w": 934,
+              "h": 85,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 194,
+              "y": 224,
+              "w": 978,
+              "h": 363,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 194,
+              "y": 587,
+              "w": 978,
+              "h": 77,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 216,
+              "y": 128,
+              "w": 934,
+              "h": 76,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 282,
+              "y": 132,
+              "w": 30,
+              "h": 30,
+              "radius": "11px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 1033,
+              "y": 606,
+              "w": 117,
+              "h": 40,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/1366x768.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "5930.03px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/1366x768.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/1366x768.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "236.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/1366x768.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/1366x768.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "198.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/1366x768.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/1366x768.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/1366x768.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1366,
+            "clientWidth": 1366,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "3182.33px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/1366x768.png"
+        }
+      ]
+    },
+    {
+      "viewport": "1280x800",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "129.062px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/1280x800.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/1280x800.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "349.5px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 150,
+              "y": 24,
+              "w": 980,
+              "h": 640,
+              "radius": "14px",
+              "maxHeight": "640px"
+            },
+            "header": {
+              "x": 173,
+              "y": 43,
+              "w": 934,
+              "h": 85,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 151,
+              "y": 224,
+              "w": 978,
+              "h": 363,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 151,
+              "y": 587,
+              "w": 978,
+              "h": 77,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 173,
+              "y": 128,
+              "w": 934,
+              "h": 76,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 239,
+              "y": 132,
+              "w": 30,
+              "h": 30,
+              "radius": "11px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 990,
+              "y": 606,
+              "w": 117,
+              "h": 40,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/1280x800.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 1283
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 1283
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "6014px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/1280x800.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/1280x800.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "236.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/1280x800.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/1280x800.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "198.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/1280x800.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/1280x800.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/1280x800.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1280,
+            "clientWidth": 1280,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "3182.33px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/1280x800.png"
+        }
+      ]
+    },
+    {
+      "viewport": "1024x768",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/1024x768.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/1024x768.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "387.5px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 24,
+              "y": 24,
+              "w": 976,
+              "h": 640,
+              "radius": "14px",
+              "maxHeight": "640px"
+            },
+            "header": {
+              "x": 47,
+              "y": 43,
+              "w": 930,
+              "h": 85,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 25,
+              "y": 224,
+              "w": 974,
+              "h": 363,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 25,
+              "y": 587,
+              "w": 974,
+              "h": 77,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 47,
+              "y": 128,
+              "w": 930,
+              "h": 76,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 113,
+              "y": 132,
+              "w": 30,
+              "h": 30,
+              "radius": "11px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 860,
+              "y": 606,
+              "w": 117,
+              "h": 40,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/1024x768.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 1155
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 1155
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "6275.56px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/1024x768.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/1024x768.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "236.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/1024x768.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/1024x768.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "198.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/1024x768.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/1024x768.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/1024x768.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 1024,
+            "clientWidth": 1024,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "40px",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "3324.05px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/1024x768.png"
+        }
+      ]
+    },
+    {
+      "viewport": "768x1024",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/768x1024.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/768x1024.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "387.5px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 24,
+              "y": 24,
+              "w": 720,
+              "h": 640,
+              "radius": "14px",
+              "maxHeight": "640px"
+            },
+            "header": {
+              "x": 47,
+              "y": 43,
+              "w": 674,
+              "h": 85,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 25,
+              "y": 224,
+              "w": 718,
+              "h": 363,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 25,
+              "y": 587,
+              "w": 718,
+              "h": 77,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 47,
+              "y": 128,
+              "w": 674,
+              "h": 76,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 91,
+              "y": 132,
+              "w": 30,
+              "h": 30,
+              "radius": "11px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 604,
+              "y": 606,
+              "w": 117,
+              "h": 40,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/768x1024.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 902
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 902
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "7653.55px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/768x1024.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/768x1024.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "257.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/768x1024.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/768x1024.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "227.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/768x1024.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "116px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/768x1024.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/768x1024.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 768,
+            "clientWidth": 768,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "4253.92px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/768x1024.png"
+        }
+      ]
+    },
+    {
+      "viewport": "430x932",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102.688px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/430x932.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/430x932.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 5,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 5,
+            "offenders": [
+              {
+                "tag": "li",
+                "cls": "event-wizard-stepper__item",
+                "right": 477
+              },
+              {
+                "tag": "button",
+                "cls": "event-wizard-stepper__btn",
+                "right": 477
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__node",
+                "right": 454
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__label",
+                "right": 477
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__opt",
+                "right": 472
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "479.75px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 0,
+              "y": 0,
+              "w": 430,
+              "h": 932,
+              "radius": "14px",
+              "maxHeight": "932px"
+            },
+            "header": {
+              "x": 23,
+              "y": 19,
+              "w": 384,
+              "h": 73,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 1,
+              "y": 194,
+              "w": 428,
+              "h": 629,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 1,
+              "y": 824,
+              "w": 428,
+              "h": 108,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 23,
+              "y": 92,
+              "w": 384,
+              "h": 83,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 54,
+              "y": 99,
+              "w": 32,
+              "h": 32,
+              "radius": "10px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 222,
+              "y": 843,
+              "w": 185,
+              "h": 46,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/430x932.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 477
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 477
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "9579.77px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/430x932.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/430x932.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "253.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/430x932.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/430x932.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "223.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/430x932.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/430x932.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/430x932.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 430,
+            "clientWidth": 430,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "4921.08px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/430x932.png"
+        }
+      ]
+    },
+    {
+      "viewport": "390x844",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102.688px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/390x844.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 1,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 1,
+            "offenders": [
+              {
+                "tag": "a",
+                "cls": "header-ingresar-btn",
+                "right": 405
+              }
+            ],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/390x844.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 3,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 3,
+            "offenders": [
+              {
+                "tag": "li",
+                "cls": "event-wizard-stepper__item",
+                "right": 395
+              },
+              {
+                "tag": "button",
+                "cls": "event-wizard-stepper__btn",
+                "right": 395
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__connector",
+                "right": 410
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "500px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 0,
+              "y": 0,
+              "w": 390,
+              "h": 844,
+              "radius": "14px",
+              "maxHeight": "844px"
+            },
+            "header": {
+              "x": 23,
+              "y": 19,
+              "w": 344,
+              "h": 73,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 1,
+              "y": 194,
+              "w": 388,
+              "h": 541,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 1,
+              "y": 736,
+              "w": 388,
+              "h": 108,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 23,
+              "y": 92,
+              "w": 344,
+              "h": 83,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 54,
+              "y": 99,
+              "w": 32,
+              "h": 32,
+              "radius": "10px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 182,
+              "y": 755,
+              "w": 185,
+              "h": 46,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/390x844.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 457
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 457
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "9923.95px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/390x844.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/390x844.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "253.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/390x844.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/390x844.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "249.75px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/390x844.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/390x844.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 1,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 1,
+            "offenders": [
+              {
+                "tag": "a",
+                "cls": "header-ingresar-btn",
+                "right": 405
+              }
+            ],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/390x844.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 390,
+            "clientWidth": 390,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "4995.8px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/390x844.png"
+        }
+      ]
+    },
+    {
+      "viewport": "375x812",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102.688px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/375x812.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 1,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 1,
+            "offenders": [
+              {
+                "tag": "a",
+                "cls": "header-ingresar-btn",
+                "right": 405
+              }
+            ],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/375x812.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 4,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 4,
+            "offenders": [
+              {
+                "tag": "li",
+                "cls": "event-wizard-stepper__item",
+                "right": 395
+              },
+              {
+                "tag": "button",
+                "cls": "event-wizard-stepper__btn",
+                "right": 395
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__node",
+                "right": 378
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__label",
+                "right": 383
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "500px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 0,
+              "y": 0,
+              "w": 375,
+              "h": 812,
+              "radius": "14px",
+              "maxHeight": "812px"
+            },
+            "header": {
+              "x": 23,
+              "y": 19,
+              "w": 329,
+              "h": 73,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 1,
+              "y": 194,
+              "w": 373,
+              "h": 509,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 1,
+              "y": 704,
+              "w": 373,
+              "h": 108,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 23,
+              "y": 92,
+              "w": 329,
+              "h": 83,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 54,
+              "y": 99,
+              "w": 32,
+              "h": 32,
+              "radius": "10px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 167,
+              "y": 723,
+              "w": 185,
+              "h": 46,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/375x812.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 449
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 449
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "10186.6px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/375x812.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/375x812.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "253.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/375x812.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/375x812.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "249.75px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/375x812.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/375x812.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 1,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 1,
+            "offenders": [
+              {
+                "tag": "a",
+                "cls": "header-ingresar-btn",
+                "right": 405
+              }
+            ],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/375x812.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 375,
+            "clientWidth": 375,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "5075.39px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/375x812.png"
+        }
+      ]
+    },
+    {
+      "viewport": "360x800",
+      "organizer": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102.688px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/dashboard/360x800.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/events-list/360x800.png"
+        },
+        {
+          "slug": "wizard",
+          "overflow": 5,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 5,
+            "offenders": [
+              {
+                "tag": "li",
+                "cls": "event-wizard-stepper__item",
+                "right": 395
+              },
+              {
+                "tag": "button",
+                "cls": "event-wizard-stepper__btn",
+                "right": 395
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__node",
+                "right": 378
+              },
+              {
+                "tag": "i",
+                "cls": "fas.fa-rocket",
+                "right": 368
+              },
+              {
+                "tag": "span",
+                "cls": "event-wizard-stepper__label",
+                "right": 383
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "500px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "auto",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "block"
+              }
+            }
+          },
+          "wiz": {
+            "content": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "radius": "14px",
+              "maxHeight": "800px"
+            },
+            "header": {
+              "x": 23,
+              "y": 19,
+              "w": 314,
+              "h": 73,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "body": {
+              "x": 1,
+              "y": 194,
+              "w": 358,
+              "h": 497,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "footer": {
+              "x": 1,
+              "y": 692,
+              "w": 358,
+              "h": 108,
+              "radius": "0px 0px 4.8px 4.8px",
+              "maxHeight": "none"
+            },
+            "stepper": {
+              "x": 23,
+              "y": 92,
+              "w": 314,
+              "h": 83,
+              "radius": "0px",
+              "maxHeight": "none"
+            },
+            "node": {
+              "x": 54,
+              "y": 99,
+              "w": 32,
+              "h": 32,
+              "radius": "10px",
+              "maxHeight": "none"
+            },
+            "nextBtn": {
+              "x": 152,
+              "y": 711,
+              "w": 185,
+              "h": 46,
+              "radius": "9px",
+              "maxHeight": "none"
+            },
+            "labelSize": "12px"
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/360x800.png"
+        },
+        {
+          "slug": "edit-event",
+          "overflow": 2,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 2,
+            "offenders": [
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 442
+              },
+              {
+                "tag": "img",
+                "cls": "leaflet-tile.leaflet-tile-loaded",
+                "right": 442
+              }
+            ],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "10383.8px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/edit-event/360x800.png"
+        },
+        {
+          "slug": "bookings",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/bookings/360x800.png"
+        },
+        {
+          "slug": "transactions",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "253.719px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/transactions/360x800.png"
+        },
+        {
+          "slug": "profile",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": null,
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/profile/360x800.png"
+        },
+        {
+          "slug": "support",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "249.75px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "wiz": null,
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/support/360x800.png"
+        }
+      ],
+      "admin": [
+        {
+          "slug": "dashboard",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "102px",
+                "radius": "14px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/dashboard/360x800.png"
+        },
+        {
+          "slug": "events-list",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "",
+              "surfacePage": "",
+              "surfaceCard": "#ffffff",
+              "textPrimary": ""
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": null,
+              "formControl": null,
+              "card": null,
+              "badge": null
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/events-list/360x800.png"
+        },
+        {
+          "slug": "add-event",
+          "overflow": 0,
+          "m": {
+            "scrollWidth": 360,
+            "clientWidth": 360,
+            "overflowCount": 0,
+            "offenders": [],
+            "tokens": {
+              "admPrimary": "#F97316",
+              "surfacePage": "#f5f6f8",
+              "surfaceCard": "#ffffff",
+              "textPrimary": "#1e2532"
+            },
+            "bodyFont": "Inter, system-ui, -apple-system, \"system-ui\", \"Segoe UI\", sans-serif",
+            "samples": {
+              "btn": {
+                "height": "auto",
+                "radius": "9px",
+                "padding": "9px 16px",
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "display": "inline-flex"
+              },
+              "formControl": {
+                "height": "40.6875px",
+                "radius": "8px",
+                "padding": "9.6px 16px",
+                "fontSize": "13px",
+                "fontWeight": "400",
+                "display": "block"
+              },
+              "card": {
+                "height": "5126.02px",
+                "radius": "10px",
+                "padding": "0px",
+                "fontSize": "14px",
+                "fontWeight": "400",
+                "display": "flex"
+              },
+              "badge": {
+                "height": "21px",
+                "radius": "999px",
+                "padding": "5px 9px",
+                "fontSize": "11px",
+                "fontWeight": "700",
+                "display": "inline-block"
+              }
+            }
+          },
+          "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/add-event/360x800.png"
+        }
+      ]
+    },
+    {
+      "viewport": "1366x650",
+      "lowHeightWizard": {
+        "wiz": {
+          "content": {
+            "x": 193,
+            "y": 24,
+            "w": 980,
+            "h": 594,
+            "radius": "14px",
+            "maxHeight": "602px"
+          },
+          "header": {
+            "x": 216,
+            "y": 43,
+            "w": 934,
+            "h": 85,
+            "radius": "0px",
+            "maxHeight": "none"
+          },
+          "body": {
+            "x": 194,
+            "y": 224,
+            "w": 978,
+            "h": 317,
+            "radius": "0px",
+            "maxHeight": "none"
+          },
+          "footer": {
+            "x": 194,
+            "y": 541,
+            "w": 978,
+            "h": 77,
+            "radius": "0px 0px 4.8px 4.8px",
+            "maxHeight": "none"
+          },
+          "stepper": {
+            "x": 216,
+            "y": 128,
+            "w": 934,
+            "h": 76,
+            "radius": "0px",
+            "maxHeight": "none"
+          },
+          "node": {
+            "x": 282,
+            "y": 132,
+            "w": 30,
+            "h": 30,
+            "radius": "11px",
+            "maxHeight": "none"
+          },
+          "nextBtn": {
+            "x": 1033,
+            "y": 560,
+            "w": 117,
+            "h": 40,
+            "radius": "9px",
+            "maxHeight": "none"
+          },
+          "labelSize": "12px"
+        },
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/1366x650-lowheight.png"
+      }
+    },
+    {
+      "viewport": "375x667",
+      "lowHeightWizard": {
+        "wiz": {
+          "content": {
+            "x": 0,
+            "y": 0,
+            "w": 375,
+            "h": 667,
+            "radius": "14px",
+            "maxHeight": "667px"
+          },
+          "header": {
+            "x": 23,
+            "y": 19,
+            "w": 329,
+            "h": 73,
+            "radius": "0px",
+            "maxHeight": "none"
+          },
+          "body": {
+            "x": 1,
+            "y": 194,
+            "w": 373,
+            "h": 364,
+            "radius": "0px",
+            "maxHeight": "none"
+          },
+          "footer": {
+            "x": 1,
+            "y": 559,
+            "w": 373,
+            "h": 108,
+            "radius": "0px 0px 4.8px 4.8px",
+            "maxHeight": "none"
+          },
+          "stepper": {
+            "x": 23,
+            "y": 92,
+            "w": 329,
+            "h": 83,
+            "radius": "0px",
+            "maxHeight": "none"
+          },
+          "node": {
+            "x": 54,
+            "y": 99,
+            "w": 32,
+            "h": 32,
+            "radius": "10px",
+            "maxHeight": "none"
+          },
+          "nextBtn": {
+            "x": 167,
+            "y": 578,
+            "w": 185,
+            "h": 46,
+            "radius": "9px",
+            "maxHeight": "none"
+          },
+          "labelSize": "12px"
+        },
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/wizard/375x667-lowheight.png"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "dark": {
+        "slug": "org-dashboard",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/org-dashboard-dark/1440x900.png"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "dark": {
+        "slug": "org-wizard",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/org-wizard-dark/1440x900.png"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "dark": {
+        "slug": "org-edit-event",
+        "overflow": 2,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/org-edit-event-dark/1440x900.png"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "dark": {
+        "slug": "adm-dashboard",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/adm-dashboard-dark/1440x900.png"
+      }
+    },
+    {
+      "viewport": "1440x900",
+      "dark": {
+        "slug": "adm-add-event",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/adm-add-event-dark/1440x900.png"
+      }
+    },
+    {
+      "viewport": "390x844",
+      "dark": {
+        "slug": "org-dashboard",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/org-dashboard-dark/390x844.png"
+      }
+    },
+    {
+      "viewport": "390x844",
+      "dark": {
+        "slug": "org-wizard",
+        "overflow": 3,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/org-wizard-dark/390x844.png"
+      }
+    },
+    {
+      "viewport": "390x844",
+      "dark": {
+        "slug": "org-edit-event",
+        "overflow": 2,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/organizer/org-edit-event-dark/390x844.png"
+      }
+    },
+    {
+      "viewport": "390x844",
+      "dark": {
+        "slug": "adm-dashboard",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/adm-dashboard-dark/390x844.png"
+      }
+    },
+    {
+      "viewport": "390x844",
+      "dark": {
+        "slug": "adm-add-event",
+        "overflow": 0,
+        "shot": "docs/auditorias/admin-citrus-console-2026-08-22/baseline/admin/adm-add-event-dark/390x844.png"
+      }
+    }
+  ],
+  "errors": []
+}

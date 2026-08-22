@@ -2492,8 +2492,9 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-booking-admin .ob-type-summary__title,
 .organizer-transactions .card-title {
   color: var(--text-primary) !important;
-  font-size: 16px !important;
-  font-weight: 800 !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
   letter-spacing: 0 !important;
 }
 
@@ -2503,8 +2504,31 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .event-form-modern label {
   color: var(--text-secondary) !important;
   font-size: 12px !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
   letter-spacing: 0 !important;
+}
+
+.organizer-events .oe-metric__label {
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.organizer-events .oe-metric__value {
+  color: var(--text-primary) !important;
+  font-size: 24px !important;
+  font-weight: 720 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.015em !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.organizer-events .oe-toolbar {
+  align-items: end !important;
 }
 
 .organizer-events .table-responsive,

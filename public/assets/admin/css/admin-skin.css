@@ -2068,10 +2068,10 @@ label {
   transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease !important;
 }
 
-/* Colapso suave y estable de los submenús (solo altura, easing suave) */
+/* Submenús sin animación de altura para evitar reflow durante navegación. */
 .sidebar .collapse,
 .sidebar[data-background-color="white"] .collapse {
-  transition: height 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: none !important;
 }
 .sidebar .nav > .nav-item a .caret,
 .sidebar[data-background-color="white"] .nav > .nav-item a .caret {

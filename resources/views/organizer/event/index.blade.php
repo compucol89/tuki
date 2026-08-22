@@ -10,10 +10,37 @@
       --oe-meta-size: 12px;
       --oe-title-size: 17px;
       --oe-value-size: 24px;
+      --oe-card-bg: var(--surface-card);
+      --oe-card-alt-bg: #fffaf6;
+      --oe-card-alt-border: rgba(194, 65, 12, .26);
+      --oe-card-focus-border: rgba(194, 65, 12, .56);
+      --oe-control-border: #9A3412;
+      --oe-control-hover-bg: rgba(249, 115, 22, .08);
+      --oe-button-primary-bg: #9A3412;
+      --oe-button-primary-hover-bg: #7C2D12;
+      --oe-warning-bg: #9A3412;
+      --oe-warning-fg: #ffffff;
+      --oe-success-bg: #166534;
+      --oe-success-fg: #ffffff;
       max-width: 100%;
       overflow-x: clip;
       overflow-y: visible;
       color: var(--text-primary);
+    }
+
+    html[data-theme="dark"] .organizer-events {
+      --oe-card-bg: var(--surface-card);
+      --oe-card-alt-bg: #283242;
+      --oe-card-alt-border: rgba(253, 186, 116, .38);
+      --oe-card-focus-border: rgba(253, 186, 116, .72);
+      --oe-control-border: #fdba74;
+      --oe-control-hover-bg: rgba(253, 186, 116, .10);
+      --oe-button-primary-bg: #9A3412;
+      --oe-button-primary-hover-bg: #7C2D12;
+      --oe-warning-bg: rgba(253, 186, 116, .16);
+      --oe-warning-fg: #fdba74;
+      --oe-success-bg: rgba(134, 239, 172, .16);
+      --oe-success-fg: #86efac;
     }
 
     .oe-summary {
@@ -28,7 +55,7 @@
     .oe-mobile-event {
       border: 1px solid var(--border-default);
       border-radius: 8px;
-      background: var(--surface-card);
+      background: var(--oe-card-bg);
       box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
@@ -279,6 +306,33 @@
       padding: 13px 14px 14px;
     }
 
+    .oe-mobile-event:nth-child(even) {
+      border-color: var(--oe-card-alt-border);
+      background: var(--oe-card-alt-bg);
+    }
+
+    .oe-mobile-event:focus-within {
+      border-color: var(--oe-card-focus-border);
+      box-shadow: 0 0 0 3px var(--focus-ring), 0 10px 24px rgba(30, 37, 50, .08);
+    }
+
+    .oe-mobile-event .badge-warning {
+      border: 1px solid var(--oe-warning-bg) !important;
+      background-color: var(--oe-warning-bg) !important;
+      color: var(--oe-warning-fg) !important;
+    }
+
+    .oe-mobile-event .badge-success {
+      border: 1px solid var(--oe-success-bg) !important;
+      background-color: var(--oe-success-bg) !important;
+      color: var(--oe-success-fg) !important;
+    }
+
+    html[data-theme="dark"] .organizer-events .oe-mobile-event .badge-warning,
+    html[data-theme="dark"] .organizer-events .oe-mobile-event .badge-success {
+      border-color: currentColor !important;
+    }
+
     .oe-mobile-event__head {
       display: flex;
       gap: 10px;
@@ -377,34 +431,34 @@
     }
 
     .oe-mobile-btn--secondary {
-      border-color: var(--border-strong) !important;
-      background-color: var(--surface-card) !important;
+      border-color: var(--oe-control-border) !important;
+      background-color: transparent !important;
       color: var(--text-primary) !important;
     }
 
     .oe-mobile-btn--secondary:hover,
     .oe-mobile-btn--secondary:focus {
-      border-color: rgba(249, 115, 22, .45) !important;
-      background-color: var(--surface-active) !important;
-      color: var(--adm-primary-dark) !important;
+      border-color: var(--oe-control-border) !important;
+      background-color: var(--oe-control-hover-bg) !important;
+      color: #7C2D12 !important;
     }
 
     .oe-mobile-btn--primary {
-      border-color: var(--adm-primary-dark) !important;
-      background-color: var(--adm-primary-dark) !important;
+      border-color: var(--oe-button-primary-bg) !important;
+      background-color: var(--oe-button-primary-bg) !important;
       color: #ffffff !important;
     }
 
     .oe-mobile-btn--primary:hover,
     .oe-mobile-btn--primary:focus {
-      border-color: var(--adm-primary-strong) !important;
-      background-color: var(--adm-primary-strong) !important;
+      border-color: var(--oe-button-primary-hover-bg) !important;
+      background-color: var(--oe-button-primary-hover-bg) !important;
       color: #ffffff !important;
     }
 
     html[data-theme="dark"] .organizer-events .oe-mobile-btn--secondary:hover,
     html[data-theme="dark"] .organizer-events .oe-mobile-btn--secondary:focus {
-      color: var(--status-warning-fg) !important;
+      color: #fdba74 !important;
     }
 
     .oe-mobile-btn:focus {
@@ -773,12 +827,14 @@
                 </span>
               </div>
               <div class="oe-mobile-controls {{ $event->event_type == 'venue' ? '' : 'oe-mobile-controls--single' }}">
-                <a href="{{ route('organizer.event_management.edit_event', ['id' => $event->id]) }}" class="btn btn-sm oe-mobile-btn oe-mobile-btn--secondary">
+                <a href="{{ route('organizer.event_management.edit_event', ['id' => $event->id]) }}" class="btn btn-sm oe-mobile-btn oe-mobile-btn--secondary"
+                  aria-label="{{ __('Editar') }} {{ $event->title }}">
                   <i class="fas fa-edit" aria-hidden="true"></i>{{ __('Editar') }}
                 </a>
                 @if ($event->event_type == 'venue')
                   <a href="{{ route('organizer.event.ticket', ['language' => request()->input('language'), 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
-                    class="btn btn-sm oe-mobile-btn oe-mobile-btn--primary">
+                    class="btn btn-sm oe-mobile-btn oe-mobile-btn--primary"
+                    aria-label="{{ __('Entradas') }} {{ $event->title }}">
                     <i class="fas fa-ticket-alt" aria-hidden="true"></i>{{ __('Entradas') }}
                   </a>
                 @endif

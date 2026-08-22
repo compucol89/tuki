@@ -131,6 +131,18 @@ html[data-theme="dark"] .ev-section-header {
   color: var(--adm-ink, #e5e5e5) !important;
 }
 
+html[data-theme="dark"] .footer {
+  background: var(--surface-toolbar, #1f2637) !important;
+  border-top-color: var(--border-default, rgba(255, 255, 255, .12)) !important;
+  color: var(--text-secondary, #b8c0cc) !important;
+}
+
+html[data-theme="dark"] .footer p,
+html[data-theme="dark"] .footer strong,
+html[data-theme="dark"] .footer a {
+  color: inherit !important;
+}
+
 html[data-theme="dark"] .card .card-header .card-title,
 html[data-theme="dark"] .card .card-title,
 html[data-theme="dark"] .page-title,

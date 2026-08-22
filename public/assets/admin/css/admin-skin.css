@@ -307,8 +307,10 @@ body,
   --adm-radius: 8px;
   --adm-radius-lg: 10px;
   --adm-radius-xl: 14px;
+  --adm-radius-2xl: 16px;
   --adm-shadow: 0 18px 42px rgba(30, 37, 50, 0.10);
   --adm-shadow-sm: 0 1px 2px rgba(30, 37, 50, 0.06);
+  --adm-shadow-lg: 0 24px 64px rgba(15, 23, 42, 0.20);
   --adm-ring: rgba(249, 115, 22, 0.18);
   --adm-sidebar: #1e2532;
   --adm-sidebar-soft: #252d3c;

@@ -3,19 +3,30 @@
 @section('style')
   <style>
     .organizer-booking-admin {
+      --ob-gap-tight: 8px;
+      --ob-gap: 12px;
+      --ob-gap-loose: 18px;
+      --ob-label-size: 12px;
+      --ob-meta-size: 12px;
+      --ob-title-size: 17px;
+      --ob-value-size: 24px;
       color: var(--text-primary);
     }
 
     .ob-summary {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: var(--ob-gap);
+      margin-bottom: var(--ob-gap-loose);
     }
 
     .ob-metric {
-      min-height: 96px;
-      padding: 16px;
+      display: flex;
+      min-height: 78px;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      padding: 14px 15px;
       border: 1px solid var(--border-default);
       border-radius: 8px;
       background: var(--surface-card);
@@ -23,24 +34,28 @@
     }
 
     .ob-metric__label {
-      margin-bottom: 8px;
+      margin-bottom: 0;
       color: var(--text-secondary);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-size: var(--ob-label-size);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: 0;
+      text-transform: none;
     }
 
     .ob-metric__value {
       color: var(--text-primary);
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.2;
+      font-size: var(--ob-value-size);
+      font-weight: 720;
+      line-height: 1.05;
+      letter-spacing: -.015em;
+      font-variant-numeric: tabular-nums;
     }
 
     .ob-metric__hint {
-      margin-top: 5px;
+      margin-top: 0;
       color: var(--text-secondary);
-      font-size: 11px;
+      font-size: var(--ob-meta-size);
       line-height: 1.35;
     }
 
@@ -54,10 +69,13 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 8px 10px;
+      padding: 14px 16px;
       border-color: var(--border-default) !important;
       border-radius: var(--adm-radius-lg) !important;
       background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
       color: var(--text-secondary) !important;
+      font-size: 13px;
+      line-height: 1.55;
       box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
     }
 
@@ -82,8 +100,9 @@
     .ob-type-summary__title {
       margin: 0;
       color: var(--text-primary);
-      font-size: 16px;
-      font-weight: 800;
+      font-size: var(--ob-title-size);
+      font-weight: 700;
+      line-height: 1.2;
     }
 
     .ob-type-summary__body {
@@ -132,7 +151,7 @@
       margin: 0;
       color: var(--text-primary);
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 700;
       line-height: 1.3;
     }
 
@@ -177,7 +196,8 @@
     .ob-event-row__kpi strong {
       color: var(--text-primary);
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
     }
 
     .ob-event-row__cta {
@@ -237,7 +257,7 @@
       margin: 0 0 7px;
       color: var(--text-primary);
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 700;
       line-height: 1.25;
     }
 
@@ -264,7 +284,7 @@
 
     .ob-event-summary-card__date {
       color: var(--adm-primary);
-      font-weight: 800;
+      font-weight: 650;
     }
 
     .ob-event-summary-card__status {
@@ -276,9 +296,9 @@
       border-radius: 999px;
       background: var(--adm-primary-soft);
       color: var(--adm-primary-dark);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 650;
+      text-transform: none;
     }
 
     .ob-event-summary-stats {
@@ -299,9 +319,10 @@
     .ob-event-summary-stat span {
       display: block;
       color: var(--text-secondary);
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.25;
+      text-transform: none;
     }
 
     .ob-event-summary-stat strong {
@@ -309,8 +330,9 @@
       margin-top: 3px;
       color: var(--text-primary);
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 720;
       line-height: 1.15;
+      font-variant-numeric: tabular-nums;
       overflow-wrap: anywhere;
     }
 
@@ -324,10 +346,11 @@
     .ob-type-table th {
       border-top: 0;
       color: var(--text-secondary);
-      font-size: 10px;
+      font-size: 11px;
       line-height: 1.25;
       padding: 8px 6px;
-      text-transform: uppercase;
+      font-weight: 650;
+      text-transform: none;
       white-space: normal;
     }
 
@@ -357,7 +380,7 @@
     .ob-type-name {
       display: block;
       color: var(--text-primary);
-      font-weight: 800;
+      font-weight: 700;
       overflow-wrap: anywhere;
     }
 
@@ -405,11 +428,13 @@
       display: block;
       color: var(--text-secondary);
       font-size: 12px;
+      line-height: 1.4;
     }
 
     .ob-money {
       color: var(--text-primary);
-      font-weight: 800;
+      font-weight: 720;
+      font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
@@ -469,8 +494,9 @@
       display: block;
       color: var(--text-secondary);
       font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: 600;
+      line-height: 1.25;
+      text-transform: none;
     }
 
     .ob-detail-value {
@@ -501,7 +527,7 @@
       display: block;
       overflow-wrap: anywhere;
       color: var(--text-primary);
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .ob-pill {
@@ -513,7 +539,7 @@
       background: var(--status-warning-bg);
       color: var(--status-warning-fg);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 650;
       white-space: nowrap;
     }
 
@@ -555,7 +581,7 @@
     .ob-mobile-booking__title {
       margin-bottom: 2px;
       color: var(--text-primary);
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .ob-mobile-booking__grid {
@@ -572,7 +598,7 @@
     }
 
     .ob-empty {
-      padding: 42px 16px;
+      padding: 32px 16px;
       text-align: center;
     }
 
@@ -585,22 +611,34 @@
       margin-top: 14px;
       color: var(--text-primary);
       font-size: 18px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     @media (max-width: 1199px) {
-      .ob-summary,
       .ob-detail-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .ob-summary {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 767px) {
-      .ob-summary,
       .ob-detail-grid,
       .ob-mobile-booking__grid,
       .ob-mini-row {
         grid-template-columns: 1fr;
+      }
+
+      .organizer-booking-admin {
+        --ob-gap-loose: 16px;
+        --ob-title-size: 16px;
+        --ob-value-size: 23px;
+      }
+
+      .ob-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .ob-type-summary__body {
@@ -645,12 +683,12 @@
       }
 
       .ob-metric {
-        min-height: 82px;
+        min-height: 72px;
         padding: 12px;
       }
 
       .ob-metric__value {
-        font-size: 20px;
+        font-size: var(--ob-value-size);
       }
 
       .ob-type-summary__head {
@@ -720,9 +758,9 @@
       .ob-type-table td::before {
         content: attr(data-label);
         color: var(--text-secondary);
-        font-size: 10px;
-        font-weight: 800;
-        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: none;
       }
 
       .ob-type-table td:not(:first-child) {
@@ -741,6 +779,7 @@
     }
 
     @media (max-width: 360px) {
+      .ob-summary,
       .ob-event-summary-stats {
         grid-template-columns: 1fr;
       }

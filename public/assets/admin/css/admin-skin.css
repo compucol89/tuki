@@ -2527,6 +2527,42 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   font-variant-numeric: tabular-nums !important;
 }
 
+.organizer-booking-admin .ob-metric__label,
+.organizer-booking-admin .ob-detail-label,
+.organizer-booking-admin .ob-event-summary-stat span,
+.organizer-booking-admin .ob-type-table td::before {
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.organizer-booking-admin .ob-metric__value,
+.organizer-booking-admin .ob-event-summary-stat strong,
+.organizer-booking-admin .ob-event-row__kpi strong,
+.organizer-booking-admin .ob-money {
+  color: var(--text-primary) !important;
+  font-weight: 720 !important;
+  letter-spacing: -0.015em !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.organizer-booking-admin .ob-metric__value {
+  font-size: 24px !important;
+  line-height: 1.05 !important;
+}
+
+.organizer-booking-admin .ob-event-row__title,
+.organizer-booking-admin .ob-event-summary-card__title,
+.organizer-booking-admin .ob-type-name,
+.organizer-booking-admin .ob-mobile-booking__title {
+  color: var(--text-primary) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
 .organizer-events .oe-toolbar {
   align-items: end !important;
 }

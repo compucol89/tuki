@@ -35,7 +35,7 @@ class GenerateEventContentDraftJob implements ShouldQueue, ShouldBeUnique
 
   public function handle(EventAiAssistantService $assistant): void
   {
-    $draft = EventAiContentDraft::with(['review', 'run'])->findOrFail($this->draftId);
+    $draft = EventAiContentDraft::with(['review.event', 'run'])->findOrFail($this->draftId);
     $startedAt = microtime(true);
 
     try {
@@ -46,7 +46,24 @@ class GenerateEventContentDraftJob implements ShouldQueue, ShouldBeUnique
       $preferences = EventAiDraftPreferences::fromReview($draft->review);
 
       $draft->run?->markProgress(25, 'Adaptando el enfoque comercial', 'Tomamos público, tono, objetivo e intereses para orientar el mensaje.');
-      $generated = $assistant->generateContent($draft->review->canonical_event_facts ?? [], $preferences);
+
+      $orchestrator = app(\App\Services\OpenAI\EventAI\EventAiOrchestrator::class);
+      if ($orchestrator->isEnabled()) {
+        $event = $draft->review->event;
+        $factsV3 = app(\App\Services\EventAi\CanonicalEventFactsBuilder::class)->build(
+          $event,
+          $draft->review->canonical_event_facts ?? [],
+        );
+
+        $generated = $orchestrator->generate(
+          $factsV3,
+          $preferences,
+          (string) ($factsV3->resolve('category')['value'] ?? ''),
+          (string) ($event->event_type ?? 'venue'),
+        );
+      } else {
+        $generated = $assistant->generateContent($draft->review->canonical_event_facts ?? [], $preferences);
+      }
 
       $draft->run?->markProgress(75, 'Revisando copy y SEO', 'Validamos consistencia, políticas y textos para Google y redes.');
       $moderationSource = trim(implode("\n", array_filter([

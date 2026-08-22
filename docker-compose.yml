@@ -22,6 +22,9 @@ services:
       - DB_DATABASE=${DB_DATABASE:-eventos}
       - DB_USERNAME=${DB_USERNAME:-root}
       - DB_PASSWORD=${DB_PASSWORD}
+      # Dev/test: los tests Playwright loguean en paralelo (mismo IP) y el
+      # throttle:5,1 default los bloquea con 429. Producción no usa este compose.
+      - ORGANIZER_LOGIN_THROTTLE_PER_MINUTE=${ORGANIZER_LOGIN_THROTTLE_PER_MINUTE:-200}
     volumes:
       - .:/app
       - /app/vendor

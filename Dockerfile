@@ -84,7 +84,8 @@ RUN rm -rf \
     /app/storage/debugbar \
     /app/storage/logs/laravel.log
 
-RUN php artisan storage:link --force || true
+RUN rm -f bootstrap/cache/config.php bootstrap/cache/packages.php bootstrap/cache/services.php \
+    && php artisan storage:link --force || true
 
 EXPOSE 8080
 

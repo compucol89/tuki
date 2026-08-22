@@ -72,8 +72,14 @@ return [
             'max_runs_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_RUNS_PER_ORGANIZER_DAY', 10),
             'max_content_drafts_per_event' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_EVENT', 2),
             'max_content_drafts_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_CONTENT_DRAFTS_PER_ORGANIZER_DAY', 10),
-            'max_temp_cover_analysis_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_TEMP_COVER_ANALYSIS_PER_ORGANIZER_DAY', 2),
+            'max_temp_cover_analysis_per_organizer_day' => (int) env('AI_EVENT_ASSISTANT_MAX_TEMP_COVER_ANALYSIS_PER_ORGANIZER_DAY', 6),
             'max_repair_attempts' => (int) env('AI_EVENT_ASSISTANT_MAX_REPAIR_ATTEMPTS', 1),
+        ],
+        'v3' => [
+            'bundle_version' => env('AI_EVENT_ASSISTANT_V3_BUNDLE_VERSION', '2026-08-21-v3'),
+            'audit_enabled' => (bool) env('AI_EVENT_ASSISTANT_V3_AUDIT_ENABLED', true),
+            'escalation_enabled' => (bool) env('AI_EVENT_ASSISTANT_V3_ESCALATION_ENABLED', true),
+            'max_repair_attempts' => (int) env('AI_EVENT_ASSISTANT_V3_MAX_REPAIR_ATTEMPTS', 1),
         ],
         'progress' => [
             'analysis_estimate_seconds' => (int) env('AI_EVENT_ASSISTANT_ANALYSIS_ESTIMATE_SECONDS', 90),

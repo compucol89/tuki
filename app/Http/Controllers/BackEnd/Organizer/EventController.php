@@ -287,6 +287,26 @@ class EventController extends Controller
         $ticket = Ticket::create($in);
       }
 
+      if ($request->event_type == 'venue' && ($request->filled('pricing_type') || $request->filled('price'))) {
+        $isFree = $request->filled('pricing_type');
+        Ticket::create([
+          'event_id' => $event->id,
+          'event_type' => 'venue',
+          'pricing_type' => $isFree ? 'free' : 'normal',
+          'price' => $isFree ? 0 : $request->price,
+          'f_price' => $isFree ? 0 : $request->price,
+          'ticket_available_type' => $request->input('ticket_available_type', 'unlimited'),
+          'ticket_available' => $request->input('ticket_available'),
+          'max_ticket_buy_type' => $request->input('max_ticket_buy_type', 'unlimited'),
+          'max_buy_ticket' => $request->input('max_buy_ticket'),
+          'early_bird_discount' => $request->input('early_bird_discount_type'),
+          'early_bird_discount_type' => $request->input('discount_type'),
+          'early_bird_discount_amount' => $request->input('early_bird_discount_amount'),
+          'early_bird_discount_date' => $request->input('early_bird_discount_date'),
+          'early_bird_discount_time' => $request->input('early_bird_discount_time'),
+        ]);
+      }
+
       $slders = $request->slider_images ?? [];
       $temporaryImageIds = session()->get('organizer_event_image_ids', []);
 
@@ -326,7 +346,14 @@ class EventController extends Controller
 
     Session::flash('success', __('organizer.flash.added_successfully'));
 
-    $response = ['status' => 'success'];
+    $defaultLang = Language::where('is_default', 1)->first();
+
+    $response = [
+      'status' => 'success',
+      'redirect_url' => $defaultLang
+        ? route('organizer.event_management.event', ['language' => $defaultLang->code])
+        : null,
+    ];
 
     return response()->json($response, 200);
   }

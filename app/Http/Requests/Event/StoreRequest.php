@@ -107,6 +107,13 @@ use ValidatesVenueGeocoding;
     if ($this->event_type == 'venue') {
       $ruleArray['latitude'] = 'nullable|numeric|between:-90,90';
       $ruleArray['longitude'] = 'nullable|numeric|between:-180,180';
+      $ruleArray['price'] = 'nullable|numeric|min:0';
+      $ruleArray['ticket_available'] = 'nullable|integer|min:1';
+      $ruleArray['max_buy_ticket'] = 'nullable|integer|min:1';
+      $ruleArray['discount_type'] = 'required_if:early_bird_discount_type,enable';
+      $ruleArray['early_bird_discount_amount'] = 'nullable|required_if:early_bird_discount_type,enable|numeric|min:1';
+      $ruleArray['early_bird_discount_date'] = 'required_if:early_bird_discount_type,enable';
+      $ruleArray['early_bird_discount_time'] = 'required_if:early_bird_discount_type,enable';
     }
 
     $languages = Language::all();
@@ -172,6 +179,11 @@ use ValidatesVenueGeocoding;
     $messageArray['start_time.required'] = 'La hora de inicio es obligatoria.';
     $messageArray['end_date.required'] = 'La fecha de finalizacion es obligatoria.';
     $messageArray['end_time.required'] = 'La hora de finalizacion es obligatoria.';
+
+    $messageArray['discount_type.required_if'] = 'Seleccioná el tipo de descuento anticipado.';
+    $messageArray['early_bird_discount_amount.required_if'] = 'Ingresá el importe del descuento anticipado.';
+    $messageArray['early_bird_discount_date.required_if'] = 'Ingresá la fecha límite del descuento anticipado.';
+    $messageArray['early_bird_discount_time.required_if'] = 'Ingresá la hora límite del descuento anticipado.';
 
     return $messageArray;
   }

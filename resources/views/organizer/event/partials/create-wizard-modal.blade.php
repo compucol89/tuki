@@ -22,7 +22,7 @@
               <span>{{ __('Nuevo evento') }}</span>
               <span>{{ $eventType == 'venue' ? __('Presencial') : __('Online') }}</span>
             </span>
-            <h5 class="event-wizard__title" id="createEventWizardTitle">{{ __('Creá tu evento paso a paso') }}</h5>
+            <h2 class="event-wizard__title" id="createEventWizardTitle">{{ __('Creá tu evento paso a paso') }}</h2>
             <p class="event-wizard__subtitle" id="createEventWizardSubtitle">{{ __('Te guiamos con todo: portada, copy, entradas y publicación.') }}</p>
           </div>
           <button type="button" class="event-wizard__close" aria-label="{{ __('Cerrar asistente') }}">
@@ -80,14 +80,14 @@
 
       <div class="modal-body event-wizard__body">
         <div class="event-wizard__errors">
-          <div class="alert alert-danger pb-1 dis-none" id="eventErrors">
-            <button type="button" class="close" data-dismiss="alert">×</button>
+          <div class="alert alert-danger pb-1 dis-none" id="eventErrors" role="alert" aria-live="assertive">
+            <button type="button" class="close" data-dismiss="alert" aria-label="{{ __('Cerrar aviso de errores') }}">×</button>
             <ul></ul>
           </div>
         </div>
 
         <form id="eventForm" action="{{ route('organizer.event_management.store_event') }}" method="POST"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data" data-currency="{{ $getCurrencyInfo->base_currency_text }}">
           @csrf
           <input type="hidden" name="event_type" value="{{ $eventType }}">
 
@@ -146,8 +146,8 @@
                 <div class="row">
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <label>{{ __('Título del evento') . '*' }}</label>
-                      <input type="text" class="form-control" name="{{ $defaultCode }}_title" data-ew-gate="title"
+                      <label for="{{ $defaultCode }}_title">{{ __('Título del evento') . '*' }}</label>
+                      <input type="text" class="form-control" id="{{ $defaultCode }}_title" name="{{ $defaultCode }}_title" data-ew-gate="title"
                         placeholder="{{ __('Ej: Fiesta de música en vivo en Buenos Aires') }}">
                     </div>
                   </div>
@@ -160,8 +160,8 @@
                             ->orderBy('serial_number', 'asc')
                             ->get();
                       @endphp
-                      <label for="">{{ __('Categoría') . '*' }}</label>
-                      <select name="{{ $defaultCode }}_category_id" class="form-control" data-ew-gate="category">
+                      <label for="{{ $defaultCode }}_category_id">{{ __('Categoría') . '*' }}</label>
+                      <select name="{{ $defaultCode }}_category_id" id="{{ $defaultCode }}_category_id" class="form-control" data-ew-gate="category">
                         <option selected disabled>{{ __('Seleccioná una categoría') }}</option>
                         @foreach ($categories as $category)
                           <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -174,8 +174,8 @@
                 <div class="row">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Tipo de fecha') . '*' }}</label>
-                      <div class="selectgroup w-100">
+                      <label>{{ __('Tipo de fecha') . '*' }}</label>
+                      <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Tipo de fecha') }}">
                         <label class="selectgroup-item">
                           <input type="radio" name="date_type" value="single" class="selectgroup-input eventDateType" checked>
                           <span class="selectgroup-button">{{ __('Fecha única') }}</span>
@@ -192,8 +192,8 @@
                 <div class="row countDownStatus">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Contador regresivo') . '*' }}</label>
-                      <div class="selectgroup w-100">
+                      <label>{{ __('Contador regresivo') . '*' }}</label>
+                      <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Contador regresivo') }}">
                         <label class="selectgroup-item">
                           <input type="radio" name="countdown_status" value="1" class="selectgroup-input" checked>
                           <span class="selectgroup-button">{{ __('Activo') }}</span>
@@ -210,26 +210,26 @@
                 <div class="row" id="single_dates">
                   <div class="col-lg-3 col-md-6">
                     <div class="form-group">
-                      <label>{{ __('Fecha de inicio') . '*' }}</label>
-                      <input type="date" name="start_date" class="form-control" data-ew-gate="dates">
+                      <label for="start_date">{{ __('Fecha de inicio') . '*' }}</label>
+                      <input type="date" name="start_date" id="start_date" class="form-control" data-ew-gate="dates">
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-6">
                     <div class="form-group">
-                      <label for="">{{ __('Hora de inicio') . '*' }}</label>
-                      <input type="time" name="start_time" class="form-control" data-ew-gate="dates">
+                      <label for="start_time">{{ __('Hora de inicio') . '*' }}</label>
+                      <input type="time" name="start_time" id="start_time" class="form-control" data-ew-gate="dates">
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-6">
                     <div class="form-group">
-                      <label>{{ __('Fecha de fin') . '*' }}</label>
-                      <input type="date" name="end_date" class="form-control" data-ew-gate="dates">
+                      <label for="end_date">{{ __('Fecha de fin') . '*' }}</label>
+                      <input type="date" name="end_date" id="end_date" class="form-control" data-ew-gate="dates">
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-6">
                     <div class="form-group">
-                      <label for="">{{ __('Hora de fin') . '*' }}</label>
-                      <input type="time" name="end_time" class="form-control" data-ew-gate="dates">
+                      <label for="end_time">{{ __('Hora de fin') . '*' }}</label>
+                      <input type="time" name="end_time" id="end_time" class="form-control" data-ew-gate="dates">
                     </div>
                   </div>
                 </div>
@@ -244,7 +244,7 @@
                             <th>{{ __('Hora inicio') }}</th>
                             <th>{{ __('Fecha fin') }}</th>
                             <th>{{ __('Hora fin') }}</th>
-                            <th><a href="javascript:void(0)" class="btn btn-success addDateRow"><i class="fas fa-plus-circle"></i></a></th>
+                            <th><button type="button" class="btn btn-success addDateRow" aria-label="{{ __('Agregar fecha') }}"><i class="fas fa-plus-circle"></i></button></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -270,7 +270,7 @@
                               </div>
                             </td>
                             <td>
-                              <a href="javascript:void(0)" class="btn btn-danger deleteDateRow"><i class="fas fa-minus"></i></a>
+                              <button type="button" class="btn btn-danger deleteDateRow" aria-label="{{ __('Quitar fecha') }}"><i class="fas fa-minus"></i></button>
                             </td>
                           </tr>
                         </tbody>
@@ -340,15 +340,15 @@
               <div class="row">
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label>{{ __('Palabras clave para Google') }}</label>
-                    <input class="form-control" name="{{ $defaultCode }}_meta_keywords"
+                    <label for="{{ $defaultCode }}_meta_keywords">{{ __('Palabras clave para Google') }}</label>
+                    <input class="form-control" id="{{ $defaultCode }}_meta_keywords" name="{{ $defaultCode }}_meta_keywords"
                       placeholder="{{ __('Ej: festival, buenos aires, música en vivo') }}" data-role="tagsinput">
                   </div>
                 </div>
                 <div class="col-lg-12">
                   <div class="form-group">
-                    <label>{{ __('Descripción corta para Google') }}</label>
-                    <textarea class="form-control" name="{{ $defaultCode }}_meta_description" rows="3"
+                    <label for="{{ $defaultCode }}_meta_description">{{ __('Descripción corta para Google') }}</label>
+                    <textarea class="form-control" id="{{ $defaultCode }}_meta_description" name="{{ $defaultCode }}_meta_description" rows="3"
                       placeholder="{{ __('Una descripción breve y clara para buscadores y enlaces compartidos.') }}"></textarea>
                   </div>
                 </div>
@@ -370,8 +370,8 @@
               <div class="row">
                 <div class="col-lg-6">
                   <div class="form-group mt-1">
-                    <label for="">{{ __('Disponibilidad total de entradas') . '*' }}</label>
-                    <div class="selectgroup w-100">
+                    <label>{{ __('Disponibilidad total de entradas') . '*' }}</label>
+                    <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Disponibilidad total de entradas') }}">
                       <label class="selectgroup-item">
                         <input type="radio" name="ticket_available_type" value="unlimited" class="selectgroup-input" checked>
                         <span class="selectgroup-button">{{ __('Sin límite') }}</span>
@@ -385,15 +385,15 @@
                 </div>
                 <div class="col-lg-6 d-none" id="ticket_available">
                   <div class="form-group">
-                    <label>{{ __('Cantidad total disponible') . '*' }}</label>
-                    <input type="number" name="ticket_available" placeholder="{{ __('Ej: 500') }}" class="form-control">
+                    <label for="ticket_available_qty">{{ __('Cantidad total disponible') . '*' }}</label>
+                    <input type="number" name="ticket_available" id="ticket_available_qty" placeholder="{{ __('Ej: 500') }}" class="form-control">
                   </div>
                 </div>
                 @if ($websiteInfo->event_guest_checkout_status != 1)
                   <div class="col-lg-6">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Límite por comprador') . '*' }}</label>
-                      <div class="selectgroup w-100">
+                      <label>{{ __('Límite por comprador') . '*' }}</label>
+                      <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Límite por comprador') }}">
                         <label class="selectgroup-item">
                           <input type="radio" name="max_ticket_buy_type" value="unlimited" class="selectgroup-input" checked>
                           <span class="selectgroup-button">{{ __('Sin límite') }}</span>
@@ -410,14 +410,14 @@
                 @endif
                 <div class="col-lg-6 d-none" id="max_buy_ticket">
                   <div class="form-group">
-                    <label>{{ __('Cantidad máxima por comprador') . '*' }}</label>
-                    <input type="number" name="max_buy_ticket" placeholder="{{ __('Ej: 4') }}" class="form-control">
+                    <label for="max_buy_ticket_qty">{{ __('Cantidad máxima por comprador') . '*' }}</label>
+                    <input type="number" name="max_buy_ticket" id="max_buy_ticket_qty" placeholder="{{ __('Ej: 4') }}" class="form-control">
                   </div>
                 </div>
 
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label for="">{{ __('Precio de la entrada') }} ({{ $getCurrencyInfo->base_currency_text }}) *</label>
+                    <label for="ticket-pricing">{{ __('Precio de la entrada') }} ({{ $getCurrencyInfo->base_currency_text }}) *</label>
                     <input type="number" name="price" id="ticket-pricing" class="form-control" placeholder="{{ __('Ej: 12000') }}" data-ew-gate="price">
                   </div>
                   <div class="form-group">
@@ -427,8 +427,8 @@
                 </div>
                 <div class="col-lg-8">
                   <div class="form-group">
-                    <label for="">{{ __('Enlace de acceso o meeting URL') }} *</label>
-                    <input type="text" name="meeting_url" class="form-control" data-ew-gate="meeting"
+                    <label for="meeting_url">{{ __('Enlace de acceso o meeting URL') }} *</label>
+                    <input type="text" name="meeting_url" id="meeting_url" class="form-control" data-ew-gate="meeting"
                       placeholder="{{ __('Ej: enlace de Zoom, Meet o plataforma de acceso') }}">
                   </div>
                 </div>
@@ -437,8 +437,8 @@
               <div class="row" id="early_bird_discount_free">
                 <div class="col-lg-12">
                   <div class="form-group mt-1">
-                    <label for="">{{ __('Descuento anticipado') . '*' }}</label>
-                    <div class="selectgroup w-100">
+                    <label>{{ __('Descuento anticipado') . '*' }}</label>
+                    <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Descuento anticipado') }}">
                       <label class="selectgroup-item">
                         <input type="radio" name="early_bird_discount_type" value="disable" class="selectgroup-input" checked>
                         <span class="selectgroup-button">{{ __('No usar') }}</span>
@@ -454,8 +454,8 @@
                   <div class="row">
                     <div class="col-lg-3 col-md-6">
                       <div class="form-group">
-                        <label for="">{{ __('Descuento') }} *</label>
-                        <select name="discount_type" class="form-control">
+                        <label for="discount_type">{{ __('Descuento') }} *</label>
+                        <select name="discount_type" id="discount_type" class="form-control">
                           <option disabled>{{ __('Seleccioná el tipo de descuento') }}</option>
                           <option value="fixed">{{ __('Monto fijo') }}</option>
                           <option value="percentage">{{ __('Porcentaje') }}</option>
@@ -464,20 +464,20 @@
                     </div>
                     <div class="col-lg-3 col-md-6">
                       <div class="form-group">
-                        <label for="">{{ __('Importe') }} *</label>
-                        <input type="number" name="early_bird_discount_amount" class="form-control">
+                        <label for="early_bird_discount_amount">{{ __('Importe') }} *</label>
+                        <input type="number" name="early_bird_discount_amount" id="early_bird_discount_amount" class="form-control">
                       </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                       <div class="form-group">
-                        <label for="">{{ __('Fecha límite del descuento') }} *</label>
-                        <input type="date" name="early_bird_discount_date" class="form-control">
+                        <label for="early_bird_discount_date">{{ __('Fecha límite del descuento') }} *</label>
+                        <input type="date" name="early_bird_discount_date" id="early_bird_discount_date" class="form-control">
                       </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                       <div class="form-group">
-                        <label for="">{{ __('Hora límite del descuento') }} *</label>
-                        <input type="time" name="early_bird_discount_time" class="form-control">
+                        <label for="early_bird_discount_time">{{ __('Hora límite del descuento') }} *</label>
+                        <input type="time" name="early_bird_discount_time" id="early_bird_discount_time" class="form-control">
                       </div>
                     </div>
                   </div>
@@ -499,8 +499,8 @@
                 <div class="row">
                   <div class="col-lg-6">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Disponibilidad total de entradas') . '*' }}</label>
-                      <div class="selectgroup w-100">
+                      <label>{{ __('Disponibilidad total de entradas') . '*' }}</label>
+                      <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Disponibilidad total de entradas') }}">
                         <label class="selectgroup-item">
                           <input type="radio" name="ticket_available_type" value="unlimited" class="selectgroup-input" checked>
                           <span class="selectgroup-button">{{ __('Sin límite') }}</span>
@@ -514,15 +514,15 @@
                   </div>
                   <div class="col-lg-6 d-none" id="ticket_available">
                     <div class="form-group">
-                      <label>{{ __('Cantidad total disponible') . '*' }}</label>
-                      <input type="number" name="ticket_available" placeholder="{{ __('Ej: 500') }}" class="form-control">
+                      <label for="ticket_available_qty">{{ __('Cantidad total disponible') . '*' }}</label>
+                      <input type="number" name="ticket_available" id="ticket_available_qty" placeholder="{{ __('Ej: 500') }}" class="form-control">
                     </div>
                   </div>
                   @if ($websiteInfo->event_guest_checkout_status != 1)
                     <div class="col-lg-6">
                       <div class="form-group mt-1">
-                        <label for="">{{ __('Límite por comprador') . '*' }}</label>
-                        <div class="selectgroup w-100">
+                        <label>{{ __('Límite por comprador') . '*' }}</label>
+                        <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Límite por comprador') }}">
                           <label class="selectgroup-item">
                             <input type="radio" name="max_ticket_buy_type" value="unlimited" class="selectgroup-input" checked>
                             <span class="selectgroup-button">{{ __('Sin límite') }}</span>
@@ -539,14 +539,14 @@
                   @endif
                   <div class="col-lg-6 d-none" id="max_buy_ticket">
                     <div class="form-group">
-                      <label>{{ __('Cantidad máxima por comprador') . '*' }}</label>
-                      <input type="number" name="max_buy_ticket" placeholder="{{ __('Ej: 4') }}" class="form-control">
+                      <label for="max_buy_ticket_qty">{{ __('Cantidad máxima por comprador') . '*' }}</label>
+                      <input type="number" name="max_buy_ticket" id="max_buy_ticket_qty" placeholder="{{ __('Ej: 4') }}" class="form-control">
                     </div>
                   </div>
 
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label for="">{{ __('Precio de la entrada') }} ({{ $getCurrencyInfo->base_currency_text }}) *</label>
+                      <label for="ticket-pricing">{{ __('Precio de la entrada') }} ({{ $getCurrencyInfo->base_currency_text }}) *</label>
                       <input type="number" name="price" id="ticket-pricing" class="form-control" placeholder="{{ __('Ej: 12000') }}" data-ew-gate="price">
                     </div>
                     <div class="form-group">
@@ -567,8 +567,8 @@
                 <div class="row" id="early_bird_discount_free">
                   <div class="col-lg-12">
                     <div class="form-group mt-1">
-                      <label for="">{{ __('Descuento anticipado') . '*' }}</label>
-                      <div class="selectgroup w-100">
+                      <label>{{ __('Descuento anticipado') . '*' }}</label>
+                      <div class="selectgroup w-100" role="radiogroup" aria-label="{{ __('Descuento anticipado') }}">
                         <label class="selectgroup-item">
                           <input type="radio" name="early_bird_discount_type" value="disable" class="selectgroup-input" checked>
                           <span class="selectgroup-button">{{ __('No usar') }}</span>
@@ -584,8 +584,8 @@
                     <div class="row">
                       <div class="col-lg-3 col-md-6">
                         <div class="form-group">
-                          <label for="">{{ __('Descuento') }} *</label>
-                          <select name="discount_type" class="form-control">
+                          <label for="discount_type">{{ __('Descuento') }} *</label>
+                          <select name="discount_type" id="discount_type" class="form-control">
                             <option disabled>{{ __('Seleccioná el tipo de descuento') }}</option>
                             <option value="fixed">{{ __('Monto fijo') }}</option>
                             <option value="percentage">{{ __('Porcentaje') }}</option>
@@ -594,20 +594,20 @@
                       </div>
                       <div class="col-lg-3 col-md-6">
                         <div class="form-group">
-                          <label for="">{{ __('Importe') }} *</label>
-                          <input type="number" name="early_bird_discount_amount" class="form-control">
+                          <label for="early_bird_discount_amount">{{ __('Importe') }} *</label>
+                          <input type="number" name="early_bird_discount_amount" id="early_bird_discount_amount" class="form-control">
                         </div>
                       </div>
                       <div class="col-lg-3 col-md-6">
                         <div class="form-group">
-                          <label for="">{{ __('Fecha límite del descuento') }} *</label>
-                          <input type="date" name="early_bird_discount_date" class="form-control">
+                          <label for="early_bird_discount_date">{{ __('Fecha límite del descuento') }} *</label>
+                          <input type="date" name="early_bird_discount_date" id="early_bird_discount_date" class="form-control">
                         </div>
                       </div>
                       <div class="col-lg-3 col-md-6">
                         <div class="form-group">
-                          <label for="">{{ __('Hora límite del descuento') }} *</label>
-                          <input type="time" name="early_bird_discount_time" class="form-control">
+                          <label for="early_bird_discount_time">{{ __('Hora límite del descuento') }} *</label>
+                          <input type="time" name="early_bird_discount_time" id="early_bird_discount_time" class="form-control">
                         </div>
                       </div>
                     </div>
@@ -635,34 +635,34 @@
               <div class="ew-location-grid">
                 <div>
                   <div class="form-group">
-                    <label>{{ __('Dirección') . '*' }}</label>
-                    <input type="text" name="{{ $defaultCode }}_address" class="form-control" data-ew-gate="address"
+                    <label for="{{ $defaultCode }}_address">{{ __('Dirección') . '*' }}</label>
+                    <input type="text" name="{{ $defaultCode }}_address" id="{{ $defaultCode }}_address" class="form-control" data-ew-gate="address"
                       placeholder="{{ __('Ej: Av. Corrientes 1234') }}">
                   </div>
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>{{ __('País') . '*' }}</label>
-                        <input type="text" name="{{ $defaultCode }}_country" placeholder="{{ __('Ej: Argentina') }}" class="form-control" data-ew-gate="address">
+                        <label for="{{ $defaultCode }}_country">{{ __('País') . '*' }}</label>
+                        <input type="text" name="{{ $defaultCode }}_country" id="{{ $defaultCode }}_country" placeholder="{{ __('Ej: Argentina') }}" class="form-control" data-ew-gate="address">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>{{ __('Provincia') }}</label>
-                        <input type="text" name="{{ $defaultCode }}_state" class="form-control" placeholder="{{ __('Ej: Buenos Aires') }}">
+                        <label for="{{ $defaultCode }}_state">{{ __('Provincia') }}</label>
+                        <input type="text" name="{{ $defaultCode }}_state" id="{{ $defaultCode }}_state" class="form-control" placeholder="{{ __('Ej: Buenos Aires') }}">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>{{ __('Ciudad') . '*' }}</label>
-                        <input type="text" name="{{ $defaultCode }}_city" class="form-control" data-ew-gate="address"
+                        <label for="{{ $defaultCode }}_city">{{ __('Ciudad') . '*' }}</label>
+                        <input type="text" name="{{ $defaultCode }}_city" id="{{ $defaultCode }}_city" class="form-control" data-ew-gate="address"
                           placeholder="{{ __('Ej: CABA') }}">
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
-                        <label>{{ __('Código postal') }}</label>
-                        <input type="text" placeholder="{{ __('Ej: C1043') }}" name="{{ $defaultCode }}_zip_code" class="form-control">
+                        <label for="{{ $defaultCode }}_zip_code">{{ __('Código postal') }}</label>
+                        <input type="text" id="{{ $defaultCode }}_zip_code" placeholder="{{ __('Ej: C1043') }}" name="{{ $defaultCode }}_zip_code" class="form-control">
                       </div>
                     </div>
                   </div>
@@ -747,8 +747,8 @@
             <div class="row">
               <div class="col-lg-4 col-md-6">
                 <div class="form-group">
-                  <label for="">{{ __('Estado') . '*' }}</label>
-                  <select name="status" class="form-control">
+                  <label for="event_status">{{ __('Estado') . '*' }}</label>
+                  <select name="status" id="event_status" class="form-control">
                     <option disabled>{{ __('Seleccioná un estado') }}</option>
                     <option value="1" selected>{{ __('Activo') }}</option>
                     <option value="0">{{ __('Borrador') }}</option>
@@ -757,8 +757,8 @@
               </div>
               <div class="col-lg-4 col-md-6">
                 <div class="form-group">
-                  <label for="">{{ __('Destacado') . '*' }}</label>
-                  <select name="is_featured" class="form-control">
+                  <label for="event_is_featured">{{ __('Destacado') . '*' }}</label>
+                  <select name="is_featured" id="event_is_featured" class="form-control">
                     <option disabled>{{ __('Seleccioná una opción') }}</option>
                     <option value="yes">{{ __('Sí') }}</option>
                     <option value="no" selected>{{ __('No') }}</option>
@@ -787,7 +787,7 @@
               <div class="ew-lang-sync">
                 <div class="custom-control custom-switch">
                   <input type="checkbox" class="custom-control-input" id="ewLangSync" checked>
-                  <label class="custom-control-label" for="ewLangSync"></label>
+                  <label class="custom-control-label" for="ewLangSync"><span class="sr-only">{{ __('Usar el mismo contenido para todos los idiomas') }}</span></label>
                 </div>
                 <div class="ew-lang-sync__copy">
                   <strong>{{ __('Usar el mismo contenido para todos los idiomas') }}</strong>
@@ -817,8 +817,8 @@
                         <div class="row">
                           <div class="col-lg-6">
                             <div class="form-group">
-                              <label>{{ __('Título del evento') . '*' }}</label>
-                              <input type="text" class="form-control" name="{{ $language->code }}_title"
+                              <label for="{{ $language->code }}_title">{{ __('Título del evento') . '*' }}</label>
+                              <input type="text" class="form-control" id="{{ $language->code }}_title" name="{{ $language->code }}_title"
                                 placeholder="{{ __('Ej: Fiesta de música en vivo en Buenos Aires') }}">
                             </div>
                           </div>
@@ -831,8 +831,8 @@
                                     ->orderBy('serial_number', 'asc')
                                     ->get();
                               @endphp
-                              <label for="">{{ __('Categoría') . '*' }}</label>
-                              <select name="{{ $language->code }}_category_id" class="form-control">
+                              <label for="{{ $language->code }}_category_id">{{ __('Categoría') . '*' }}</label>
+                              <select name="{{ $language->code }}_category_id" id="{{ $language->code }}_category_id" class="form-control">
                                 <option selected disabled>{{ __('Seleccioná una categoría') }}</option>
                                 @foreach ($langCategories as $category)
                                   <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -846,40 +846,40 @@
                           <div class="row">
                             <div class="col-lg-8">
                               <div class="form-group">
-                                <label for="">{{ __('Dirección') . '*' }}</label>
-                                <input type="text" name="{{ $language->code }}_address" class="form-control"
+                                <label for="{{ $language->code }}_address">{{ __('Dirección') . '*' }}</label>
+                                <input type="text" name="{{ $language->code }}_address" id="{{ $language->code }}_address" class="form-control"
                                   placeholder="{{ __('Ej: Av. Corrientes 1234') }}">
                               </div>
                             </div>
                             <div class="col-lg-4">
                               <div class="form-group">
-                                <label for="">{{ __('País') . '*' }}</label>
-                                <input type="text" name="{{ $language->code }}_country" placeholder="{{ __('Ej: Argentina') }}" class="form-control">
+                                <label for="{{ $language->code }}_country">{{ __('País') . '*' }}</label>
+                                <input type="text" name="{{ $language->code }}_country" id="{{ $language->code }}_country" placeholder="{{ __('Ej: Argentina') }}" class="form-control">
                               </div>
                             </div>
                             <div class="col-lg-4">
                               <div class="form-group">
-                                <label for="">{{ __('Provincia') }}</label>
-                                <input type="text" name="{{ $language->code }}_state" class="form-control" placeholder="{{ __('Ej: Buenos Aires') }}">
+                                <label for="{{ $language->code }}_state">{{ __('Provincia') }}</label>
+                                <input type="text" name="{{ $language->code }}_state" id="{{ $language->code }}_state" class="form-control" placeholder="{{ __('Ej: Buenos Aires') }}">
                               </div>
                             </div>
                             <div class="col-lg-4">
                               <div class="form-group">
-                                <label for="">{{ __('Ciudad') . '*' }}</label>
-                                <input type="text" name="{{ $language->code }}_city" class="form-control" placeholder="{{ __('Ej: CABA') }}">
+                                <label for="{{ $language->code }}_city">{{ __('Ciudad') . '*' }}</label>
+                                <input type="text" name="{{ $language->code }}_city" id="{{ $language->code }}_city" class="form-control" placeholder="{{ __('Ej: CABA') }}">
                               </div>
                             </div>
                             <div class="col-lg-4">
                               <div class="form-group">
-                                <label for="">{{ __('Código postal') }}</label>
-                                <input type="text" placeholder="{{ __('Ej: C1043') }}" name="{{ $language->code }}_zip_code" class="form-control">
+                                <label for="{{ $language->code }}_zip_code">{{ __('Código postal') }}</label>
+                                <input type="text" id="{{ $language->code }}_zip_code" placeholder="{{ __('Ej: C1043') }}" name="{{ $language->code }}_zip_code" class="form-control">
                               </div>
                             </div>
                           </div>
                         @endif
 
                         <div class="form-group">
-                          <label>{{ __('Descripción') . '*' }}</label>
+                          <label for="descriptionTmce{{ $language->id }}">{{ __('Descripción') . '*' }}</label>
                           <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
                             name="{{ $language->code }}_description" data-height="240"></textarea>
                         </div>
@@ -887,15 +887,15 @@
                         <div class="row">
                           <div class="col-lg-12">
                             <div class="form-group">
-                              <label>{{ __('Palabras clave para Google') }}</label>
-                              <input class="form-control" name="{{ $language->code }}_meta_keywords"
+                              <label for="{{ $language->code }}_meta_keywords">{{ __('Palabras clave para Google') }}</label>
+                              <input class="form-control" id="{{ $language->code }}_meta_keywords" name="{{ $language->code }}_meta_keywords"
                                 placeholder="{{ __('Ej: festival, buenos aires, música en vivo') }}" data-role="tagsinput">
                             </div>
                           </div>
                           <div class="col-lg-12">
                             <div class="form-group">
-                              <label>{{ __('Descripción corta para Google') }}</label>
-                              <textarea class="form-control" name="{{ $language->code }}_meta_description" rows="3"
+                              <label for="{{ $language->code }}_meta_description">{{ __('Descripción corta para Google') }}</label>
+                              <textarea class="form-control" id="{{ $language->code }}_meta_description" name="{{ $language->code }}_meta_description" rows="3"
                                 placeholder="{{ __('Una descripción breve y clara para buscadores y enlaces compartidos.') }}"></textarea>
                             </div>
                           </div>
@@ -924,7 +924,7 @@
                     <div class="form-group">
                       <label><i class="fab fa-spotify mr-1" style="color:#1DB954"></i> {{ __('Enlace de Spotify') }}</label>
                       <input type="url" class="form-control" name="spotify_url"
-                        placeholder="Ej: https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi">
+                        placeholder="{{ __('Ej: https://open.spotify.com/artist/12345') }}">
                       <small class="text-muted">{{ __('Abrí Spotify, buscá al artista, hacé clic en los tres puntos → Compartir → Copiar enlace del artista.') }}</small>
                     </div>
                   </div>
@@ -932,7 +932,7 @@
                     <div class="form-group">
                       <label><i class="fab fa-youtube mr-1" style="color:#FF0000"></i> {{ __('Enlace del video en YouTube') }}</label>
                       <input type="url" class="form-control" name="youtube_url"
-                        placeholder="Ej: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                        placeholder="{{ __('Ej: https://www.youtube.com/watch?v=1234567890ab') }}">
                       <small class="text-muted">{{ __('Pegá el enlace del video de YouTube tal como aparece en el navegador.') }}</small>
                     </div>
                   </div>

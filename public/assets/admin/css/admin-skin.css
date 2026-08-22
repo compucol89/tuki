@@ -1512,7 +1512,7 @@ label {
   font-weight: 400 !important;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   .page-inner {
     padding: 22px 22px 34px !important;
   }
@@ -1852,7 +1852,7 @@ label {
   margin-bottom: 0;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1199.98px) {
   .admin-menu-builder .card.border-primary > .card-body {
     padding: 12px !important;
   }
@@ -1865,7 +1865,7 @@ label {
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
   .admin-menu-builder .card-body .row > [class*="col-"] {
     display: block;
   }

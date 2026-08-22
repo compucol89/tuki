@@ -23,7 +23,7 @@ const VIEWPORTS = [
 
 const ORGANIZER_ROUTES = [
   { slug: 'dashboard', url: '/organizer/dashboard' },
-  { slug: 'events-list', url: '/organizer/event-management/events' },
+  { slug: 'events-list', url: '/organizer/event-management/events?language=es' },
   { slug: 'wizard', url: '/organizer/add-event?type=venue', wizard: true },
   { slug: 'edit-event', url: '/organizer/edit-event/126' },
   { slug: 'bookings', url: '/organizer/event-booking' },
@@ -34,7 +34,7 @@ const ORGANIZER_ROUTES = [
 
 const ADMIN_ROUTES = [
   { slug: 'dashboard', url: '/admin/dashboard' },
-  { slug: 'events-list', url: '/admin/event-management/events' },
+  { slug: 'events-list', url: '/admin/event-management/events?language=es' },
   { slug: 'add-event', url: '/admin/add-event' },
 ];
 

@@ -42,7 +42,7 @@
             <div class="event-wizard-shell__icon">
               <i class="fas fa-magic"></i>
             </div>
-            <h4 class="event-wizard-shell__title">{{ __('Creá tu evento paso a paso') }}</h4>
+            <h1 class="event-wizard-shell__title">{{ __('Creá tu evento paso a paso') }}</h1>
             <p class="event-wizard-shell__text">
               {{ __('Un asistente te va a guiar por todo el proceso: portada, copy con IA, entradas, ubicación y publicación. En pocos minutos tu evento queda listo.') }}
             </p>
@@ -428,7 +428,7 @@
         progressPanel.querySelector('[data-progress-title]').textContent = state === 'success' ? 'Evento preparado con IA' : 'Armando evento con IA';
         progressPanel.querySelector('[data-progress-stage]').textContent = stage;
         progressPanel.querySelector('[data-progress-message]').textContent = message;
-        progressPanel.querySelector('[data-progress-estimate]').textContent = 'Normalmente tarda entre 30 segundos y 3 minutos.';
+        progressPanel.querySelector('[data-progress-estimate]').textContent = 'Normalmente tarda entre 20 segundos y 2 minutos.';
 
         if (typeof percent === 'number') {
           progressPanel.querySelector('[data-progress-percent]').textContent = Math.round(percent) + '% estimado';

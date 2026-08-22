@@ -539,31 +539,31 @@ $(document).ready(function () {
     var tr = `<tr>
                 <td>
                   <div class="form-group">
-                    <label for="">Start Date *</label>
+                    <label>Fecha inicio *</label>
                     <input type="date" name="m_start_date[]" class="form-control">
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
-                    <label for="">Start Time *</label>
+                    <label>Hora inicio *</label>
                     <input type="time" name="m_start_time[]" class="form-control">
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
-                    <label for="">End Date *</label>
+                    <label>Fecha fin *</label>
                     <input type="date" name="m_end_date[]" class="form-control">
                   </div>
                 </td>
                 <td>
                   <div class="form-group">
-                    <label for="">End Time *</label>
+                    <label>Hora fin *</label>
                     <input type="time" name="m_end_time[]" class="form-control">
                   </div>
                 </td>
                 <td>
-                  <a href="javascript:void(0)" class="btn btn-danger deleteDateRow">
-                    <i class="fas fa-minus"></i></a>
+                  <button type="button" class="btn btn-danger deleteDateRow" aria-label="Quitar fecha">
+                    <i class="fas fa-minus"></i></button>
                 </td>
               </tr>`;
     $('tbody').append(tr);

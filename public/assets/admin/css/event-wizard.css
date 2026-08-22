@@ -1223,7 +1223,7 @@ html[data-theme="dark"] .event-wizard-modal .modal-content {
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
   .ew-step1-grid {
     grid-template-columns: 1fr;
   }
@@ -1237,7 +1237,7 @@ html[data-theme="dark"] .event-wizard-modal .modal-content {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
   .event-wizard-modal.modal {
     padding: 0;
     margin: 0;
@@ -1367,7 +1367,7 @@ html[data-theme="dark"] .event-wizard-modal .modal-content {
 }
 
 /* ---------- Stepper mobile: grid 2×3 (todos los pasos visibles, sin scroll oculto) ---------- */
-@media (max-width: 575px) {
+@media (max-width: 575.98px) {
   .event-wizard-stepper {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

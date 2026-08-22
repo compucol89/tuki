@@ -31,6 +31,13 @@
   function escapeHtml(value) { return $('<div>').text(value || '').html(); }
   function stripTags(value) { return String(value || '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim(); }
 
+  (function resolveCurrency() {
+    var form = qs('#eventForm');
+    if (form && form.dataset && form.dataset.currency) {
+      cfg.currency = form.dataset.currency;
+    }
+  })();
+
   /* ---------- TinyMCE helpers ---------- */
   function tinyFor(field) {
     var tiny = window.tinymce || window.tinyMCE;
@@ -179,7 +186,11 @@
   /* ---------- Errores inline ---------- */
   function clearFieldErrors() {
     qsa('.event-wizard__field-error').forEach(function (el) { el.remove(); });
-    qsa('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+    qsa('.is-invalid').forEach(function (el) {
+      el.classList.remove('is-invalid');
+      el.removeAttribute('aria-invalid');
+      el.removeAttribute('aria-describedby');
+    });
   }
 
   function showFieldErrors(errors) {
@@ -191,10 +202,17 @@
       if (target && !target.querySelector('.event-wizard__field-error')) {
         var msg = document.createElement('span');
         msg.className = 'event-wizard__field-error';
+        msg.setAttribute('role', 'alert');
         msg.textContent = error.message;
         target.appendChild(msg);
       }
-      if (field.classList) field.classList.add('is-invalid');
+      if (field.classList) {
+        field.classList.add('is-invalid');
+        field.setAttribute('aria-invalid', 'true');
+        var errMsg = target ? target.querySelector('.event-wizard__field-error') : null;
+        if (errMsg && !errMsg.id) errMsg.id = 'ew-field-error-' + Math.random().toString(36).slice(2, 9);
+        if (errMsg) field.setAttribute('aria-describedby', errMsg.id);
+      }
     });
   }
 
@@ -226,7 +244,11 @@
       var btn = qs('[data-wizard-go="' + step + '"]');
       if (btn) {
         btn.disabled = step > maxVisited && !(step === 6 && currentStep === 5);
-        btn.setAttribute('aria-current', step === currentStep ? 'step' : 'false');
+        if (step === currentStep) {
+          btn.setAttribute('aria-current', 'step');
+        } else {
+          btn.removeAttribute('aria-current');
+        }
       }
     });
   }
@@ -334,7 +356,7 @@
           tickets.textContent = 'Evento gratuito';
           tickets.classList.remove('is-empty');
         } else if (price && price.value) {
-          tickets.textContent = 'Entrada general · $' + price.value;
+          tickets.textContent = 'Entrada general · ' + (cfg.currency || '$') + ' ' + price.value;
           tickets.classList.remove('is-empty');
         } else {
           tickets.textContent = 'Sin precio definido';
@@ -344,7 +366,7 @@
         if (free && free.checked) {
           tickets.textContent = 'Evento gratuito';
         } else if (price && price.value) {
-          tickets.textContent = 'Entrada · $' + price.value;
+          tickets.textContent = 'Entrada · ' + (cfg.currency || '$') + ' ' + price.value;
         } else {
           tickets.textContent = 'Sin precio definido';
         }
@@ -805,6 +827,28 @@
     watchServerErrors();
     initModalClose();
 
+    // Foco: trampa de Tab dentro del wizard + retorno al disparador al cerrar
+    $(modalEl).on('keydown', function (e) {
+      if (e.key !== 'Tab') return;
+      var focusables = modalEl.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+    $(modalEl).on('shown.bs.modal', function () {
+      modalEl.focus();
+    });
+    $(modalEl).on('hidden.bs.modal', function () {
+      if (openBtn) openBtn.focus();
+    });
+
     if (openBtn) {
       openBtn.addEventListener('click', openWizard);
     }
@@ -815,14 +859,16 @@
       openWizard();
     }
 
-    document.addEventListener('input', function () {
-      updateCreateChecklist();
-      if (currentStep === 5) updateReview();
-    });
-    document.addEventListener('change', function () {
-      updateCreateChecklist();
-      if (currentStep === 5) updateReview();
-    });
+    var checklistTimer = null;
+    var scheduleChecklist = function () {
+      if (checklistTimer) clearTimeout(checklistTimer);
+      checklistTimer = setTimeout(function () {
+        updateCreateChecklist();
+        if (currentStep === 5) updateReview();
+      }, 250);
+    };
+    document.addEventListener('input', scheduleChecklist);
+    document.addEventListener('change', scheduleChecklist);
 
     setTimeout(updateCreateChecklist, 300);
     refreshFooter();

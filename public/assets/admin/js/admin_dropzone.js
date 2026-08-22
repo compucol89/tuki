@@ -115,7 +115,7 @@
     });
 
     //   load event slider images
-    if (loadImgs.length > 0) {
+    if (loadImgs && loadImgs.length > 0) {
         $.get(loadImgs, function (data) {
             for (var i = 0; i < data.length; i++) {
                 let msg = `<tr class="table-row" id="trdb${data[i].id}">

@@ -295,7 +295,9 @@
 
   /* ---------- Paso 4: dropzone + mapa ---------- */
   function initStep4Widgets() {
-    window.dispatchEvent(new Event('resize'));
+    // Evita dispatch de resize global (dispara listeners ajenos); el mapa y
+    // el dropzone se sincronizan con el evento propio 'ew:wizard-step4'.
+    document.dispatchEvent(new CustomEvent('ew:wizard-step4'));
 
     var el = byId('my-dropzone');
     if (el && window.Dropzone && Dropzone.forElement) {

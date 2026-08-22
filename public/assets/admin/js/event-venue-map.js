@@ -110,6 +110,15 @@
     setTimeout(function () {
       map.invalidateSize();
     }, 300);
+
+    // El wizard de creación muestra el mapa recién en el paso 4 (el contenedor
+    // estuvo oculto al inicializar Leaflet) → re-calcula el tamaño cuando el
+    // paso se abre, sin depender de un resize global de window.
+    document.addEventListener('ew:wizard-step4', function () {
+      setTimeout(function () {
+        map.invalidateSize();
+      }, 150);
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function () {

@@ -1106,9 +1106,20 @@ $("#EventSubmit").on('click', function (e) {
 
       $('.request-loader').removeClass('show');
 
-      $('html, body').animate({
-        scrollTop: $('#eventErrors').offset().top - 100
-      }, 1000);
+      // Si el wizard está abierto, scrollea el BODY del modal (el error vive
+      // dentro del modal; animar la página era un scroll-jump sin destino).
+      if ($('#createEventWizard').hasClass('show')) {
+        var modalBody = $('.event-wizard-modal .modal-body');
+        if (modalBody.length) {
+          modalBody.animate({
+            scrollTop: modalBody.scrollTop() + ($('#eventErrors').offset().top - modalBody.offset().top) - 80
+          }, 400);
+        }
+      } else {
+        $('html, body').animate({
+          scrollTop: $('#eventErrors').offset().top - 100
+        }, 1000);
+      }
     }
 
   });

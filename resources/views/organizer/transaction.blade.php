@@ -2,6 +2,7 @@
 
 
 @section('content')
+  <div class="organizer-transactions">
   <div class="page-header">
     <h1 class="page-title">{{ __('Transacciones') }}</h1>
     <ul class="breadcrumbs">
@@ -14,7 +15,7 @@
         <i class="flaticon-right-arrow" aria-hidden="true"></i>
       </li>
       <li class="nav-item">
-        <a href="#">{{ __('Transactions') }}</a>
+        <a href="#">{{ __('Transacciones') }}</a>
       </li>
     </ul>
   </div>
@@ -25,14 +26,21 @@
         <div class="card-header">
           <div class="row">
             <div class="col-lg-4">
-              <div class="card-title d-inline-block">{{ __('Transactions') }}</div>
+              <div class="card-title d-inline-block">{{ __('Transacciones') }}</div>
             </div>
 
             <div class="col-lg-4">
-              <form action="" method="get">
+              <form action="" method="get" class="ot-filter">
                 <label for="transSearch" class="visually-hidden">{{ __('Buscar por ID de transacción') }}</label>
-                <input id="transSearch" type="text" onsubmit="e.preventDefault()" value="{{ request()->input('transcation_id') }}"
-                  name="transcation_id" placeholder="{{ __('Enter Transaction Id') }}" class="form-control">
+                <div class="input-group">
+                  <input id="transSearch" type="text" value="{{ request()->input('transcation_id') }}"
+                    name="transcation_id" placeholder="{{ __('Buscar por ID de transacción') }}" class="form-control">
+                  <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary" aria-label="{{ __('Buscar transacción') }}">
+                      <i class="fas fa-search" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
@@ -42,20 +50,24 @@
           <div class="row">
             <div class="col-lg-12">
               @if (count($transcations) == 0)
-                <h3 class="text-center mt-3">{{ __('NO TRANSCATION FOUND') . '!' }}</h3>
+                <div class="ot-empty" role="status">
+                  <i class="fas fa-receipt" aria-hidden="true"></i>
+                  <h2>{{ __('No encontramos transacciones') }}</h2>
+                  <p>{{ __('Probá con otro ID o limpiá la búsqueda para ver todo el historial.') }}</p>
+                </div>
               @else
                 <div class="table-responsive">
                   <table class="table table-striped mt-3">
                     <thead>
                       <tr>
-                        <th scope="col" class="tuki-data">{{ __('Transaction Id') }}</th>
-                        <th scope="col">{{ __('Transaction Type') }}</th>
-                        <th scope="col">{{ __('Payment Method') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Pre Balance') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Amount') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('After Balance') }}</th>
-                        <th scope="col">{{ __('Status') }}</th>
-                        <th scope="col">{{ __('Actions') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('ID de transacción') }}</th>
+                        <th scope="col">{{ __('Tipo') }}</th>
+                        <th scope="col">{{ __('Medio de pago') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Saldo anterior') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Importe') }}</th>
+                        <th scope="col" class="tuki-data">{{ __('Saldo posterior') }}</th>
+                        <th scope="col">{{ __('Estado') }}</th>
+                        <th scope="col">{{ __('Acciones') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -64,15 +76,15 @@
                           <td class="tuki-data tuki-data-id">#{{ $transcation->transcation_id }}</td>
                           <td>
                             @if ($transcation->transcation_type == 1)
-                              {{ 'Event Booking' }}
+                              {{ __('Reserva de evento') }}
                             @elseif ($transcation->transcation_type == 2)
-                              {{ 'Product Order' }}
+                              {{ __('Pedido de producto') }}
                             @elseif ($transcation->transcation_type == 3)
-                              {{ 'Withdraw' }}
+                              {{ __('Retiro') }}
                             @elseif ($transcation->transcation_type == 4)
-                              {{ 'Balance Add' }}
+                              {{ __('Carga de saldo') }}
                             @elseif ($transcation->transcation_type == 5)
-                              {{ $transcation->payment_method == 'event_settlement' ? __('Liquidación de evento') : 'Balance Subtract' }}
+                              {{ $transcation->payment_method == 'event_settlement' ? __('Liquidación de evento') : __('Descuento de saldo') }}
                             @endif
                           </td>
                           <td>
@@ -112,11 +124,11 @@
                           </td>
                           <td>
                             @if ($transcation->payment_status == 1)
-                              <span class="badge badge-success">{{ __('Paid') }}</span>
+                              <span class="badge badge-success">{{ __('Pagado') }}</span>
                             @elseif ($transcation->payment_status == 2)
-                              <span class="badge badge-warning">{{ __('Decline') }}</span>
+                              <span class="badge badge-warning text-dark">{{ __('Rechazado') }}</span>
                             @else
-                              <span class="badge badge-danger">{{ __('Unpaid') }}</span>
+                              <span class="badge badge-danger">{{ __('Pendiente') }}</span>
                             @endif
                           </td>
 
@@ -155,6 +167,7 @@
           </div>
         </div>
 
+        @if (count($transcations) > 0)
         <div class="card-footer text-center">
           <div class="d-inline-block mt-3">
             {{ $transcations->appends([
@@ -162,7 +175,9 @@
                 ])->links() }}
           </div>
         </div>
+        @endif
       </div>
     </div>
+  </div>
   </div>
 @endsection

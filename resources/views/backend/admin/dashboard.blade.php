@@ -316,7 +316,7 @@
 
           <div class="card-body">
             <div class="chart-container">
-              <canvas id="incomeChart"></canvas>
+              <canvas id="incomeChart" role="img" aria-label="{{ __('Ganancia mensual de reservas de eventos') }} ({{ date('Y') }})"><span class="visually-hidden">{{ __('Gráfico de ganancia mensual por reservas de eventos.') }}</span></canvas>
             </div>
           </div>
         </div>
@@ -330,7 +330,7 @@
 
           <div class="card-body">
             <div class="chart-container">
-              <canvas id="TotalEventBookingChart"></canvas>
+              <canvas id="TotalEventBookingChart" role="img" aria-label="{{ __('Reservas mensuales de eventos') }} ({{ date('Y') }})"><span class="visually-hidden">{{ __('Gráfico de reservas mensuales por eventos.') }}</span></canvas>
             </div>
           </div>
         </div>
@@ -347,7 +347,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <canvas id="ProductOrderChart"></canvas>
+            <canvas id="ProductOrderChart" role="img" aria-label="{{ __('Ingresos mensuales de productos') }} ({{ date('Y') }})"><span class="visually-hidden">{{ __('Gráfico de ingresos mensuales por productos.') }}</span></canvas>
           </div>
         </div>
       </div>
@@ -363,7 +363,7 @@
 
         <div class="card-body">
           <div class="chart-container">
-            <canvas id="TotalProductOrderChart"></canvas>
+            <canvas id="TotalProductOrderChart" role="img" aria-label="{{ __('Pedidos mensuales de productos') }} ({{ date('Y') }})"><span class="visually-hidden">{{ __('Gráfico de pedidos mensuales de productos.') }}</span></canvas>
           </div>
         </div>
       </div>

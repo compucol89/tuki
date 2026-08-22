@@ -49,6 +49,18 @@
       background: var(--surface-card);
     }
 
+    .ob-context-note {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 10px;
+      border-color: var(--border-default) !important;
+      border-radius: var(--adm-radius-lg) !important;
+      background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
+      color: var(--text-secondary) !important;
+      box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
+    }
+
     .ob-type-summary {
       max-width: 100%;
       overflow: hidden;
@@ -92,12 +104,11 @@
       min-height: 72px;
       padding: 16px 18px 16px 20px;
       border: 1px solid var(--border-default);
-      border-left: 4px solid var(--adm-primary);
       border-radius: 10px;
       background: var(--surface-card);
       color: inherit;
       text-decoration: none;
-      box-shadow: 0 4px 14px rgba(30, 37, 50, .04);
+      box-shadow: 0 4px 14px rgba(30, 37, 50, .04), inset 0 1px 0 rgba(249, 115, 22, .10);
       transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
     }
 
@@ -794,14 +805,14 @@
     </div>
 
     @if ($focusedEventId)
-      <p class="alert alert-light border mb-3">
+      <p class="alert alert-light border mb-3 ob-context-note">
         <a href="{{ route('organizer.event.booking') }}" class="btn btn-sm btn-outline-secondary mr-2">
           <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>{{ __('Volver a eventos') }}
         </a>
         {{ __('Personas que reservaron este evento (incluye invitados con nombre, email y teléfono).') }}
       </p>
     @else
-      <p class="alert alert-light border mb-3">
+      <p class="alert alert-light border mb-3 ob-context-note">
         {{ __('Lista de eventos con reservas. Entrá a un evento para ver tipos de entrada, compradores y acciones.') }}
       </p>
     @endif

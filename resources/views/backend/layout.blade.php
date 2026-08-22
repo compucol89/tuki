@@ -42,6 +42,9 @@
   </head>
 
   <body data-background-color="{{ $settings->admin_theme_version == 'light' ? 'white' : 'dark' }}">
+    {{-- skip link (WCAG 2.4.1 Bypass Blocks) --}}
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
     {{-- loader start --}}
     <div class="request-loader">
       <img src="{{ asset('assets/admin/img/loader.gif') }}" alt="{{ __('Loader') }}">
@@ -58,11 +61,11 @@
       {{-- side navbar area end --}}
 
       <div class="main-panel">
-        <div class="content">
+        <main class="content" id="main-content">
           <div class="page-inner">
             @yield('content')
           </div>
-        </div>
+        </main>
 
         {{-- footer area start --}}
         @includeIf('backend.partials.footer')

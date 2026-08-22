@@ -3,28 +3,21 @@
 @section('style')
   <style>
     .od-profile-score {
-      --od-primary: #e05d38;
-      --od-primary-strong: #bf4424;
-      --od-text: #1e2532;
-      --od-muted: #4b5563;
-      --od-surface: #ffffff;
-      --od-border: #dcdfe2;
-      --od-soft: #f3f4f6;
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr) auto;
       gap: 18px;
       align-items: center;
       margin-bottom: 22px;
       padding: 18px 20px;
-      border: 1px solid var(--od-border);
-      border-radius: 12px;
-      background: var(--od-surface);
+      border: 1px solid var(--border-default);
+      border-radius: var(--adm-radius-2xl);
+      background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%);
       box-shadow: 0 14px 30px rgba(30, 37, 50, .07);
     }
 
     .od-profile-score__eyebrow {
       margin: 0 0 6px;
-      color: #c2410c;
+      color: var(--adm-primary-dark);
       font-size: 11px;
       font-weight: 600;
       letter-spacing: .10em;
@@ -34,7 +27,7 @@
 
     .od-profile-score h3 {
       margin: 0;
-      color: var(--od-text);
+      color: var(--text-primary);
       font-size: 22px;
       font-weight: 600;
       line-height: 1.12;
@@ -42,7 +35,7 @@
 
     .od-profile-score__copy {
       margin: 6px 0 0;
-      color: var(--od-muted);
+      color: var(--text-secondary);
       font-size: 13px;
       line-height: 1.5;
     }
@@ -57,7 +50,7 @@
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 8px;
-      color: var(--od-text);
+      color: var(--text-primary);
     }
 
     .od-profile-score__value strong {
@@ -67,7 +60,7 @@
     }
 
     .od-profile-score__value span {
-      color: var(--od-muted);
+      color: var(--text-secondary);
       font-size: 12px;
       font-weight: 600;
     }
@@ -76,14 +69,14 @@
       height: 9px;
       overflow: hidden;
       border-radius: 999px;
-      background: var(--od-soft);
+      background: var(--border-default);
     }
 
     .od-profile-score__bar span {
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: var(--od-primary);
+      background: var(--adm-primary);
     }
 
     .od-profile-score__actions {
@@ -109,9 +102,9 @@
     }
 
     .od-profile-score__actions a {
-      border: 1px solid rgba(224, 93, 56, .18);
-      background: rgba(224, 93, 56, .08);
-      color: var(--od-primary-strong);
+      border: 1px solid rgba(249, 115, 22, .22);
+      background: var(--adm-primary-soft);
+      color: var(--adm-primary-strong);
     }
 
     .od-profile-score__buttons {
@@ -121,15 +114,15 @@
     }
 
     .od-profile-score__buttons a {
-      border: 1px solid var(--od-border);
-      background: #fff;
-      color: var(--od-text);
+      border: 1px solid var(--border-default);
+      background: var(--surface-card);
+      color: var(--text-primary);
       white-space: nowrap;
     }
 
     .od-profile-score__buttons a:first-child {
-      border-color: #c2410c;
-      background: #c2410c;
+      border-color: var(--adm-primary-dark);
+      background: var(--adm-primary-dark);
       color: #fff;
     }
 
@@ -137,11 +130,11 @@
     .od-profile-score__actions a:focus,
     .od-profile-score__buttons a:hover,
     .od-profile-score__buttons a:focus {
-      border-color: var(--od-primary);
-      color: var(--od-primary-strong);
+      border-color: var(--adm-primary);
+      color: var(--adm-primary-strong);
       text-decoration: none;
       transform: translateY(-1px);
-      box-shadow: 0 0 0 4px rgba(224, 93, 56, .14);
+      box-shadow: 0 0 0 4px var(--adm-ring);
     }
 
     .od-profile-score__actions a {
@@ -157,7 +150,7 @@
       height: 28px;
       place-items: center;
       border-radius: 999px;
-      background: rgba(224, 93, 56, .12);
+      background: rgba(249, 115, 22, .12);
       font-size: 13px;
     }
 
@@ -172,7 +165,7 @@
     .od-profile-score__action-hint {
       display: block;
       margin-top: 2px;
-      color: var(--od-muted);
+      color: var(--text-secondary);
       font-size: 11px;
       font-weight: 500;
       line-height: 1.28;
@@ -180,8 +173,8 @@
 
     .od-profile-score__buttons a:first-child:hover,
     .od-profile-score__buttons a:first-child:focus {
-      background: #9a3412;
-      border-color: #9a3412;
+      background: var(--adm-primary-strong);
+      border-color: var(--adm-primary-strong);
       color: #fff;
     }
 

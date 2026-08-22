@@ -2464,6 +2464,172 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   color: var(--sidebar-text-primary) !important;
 }
 
+/* =============================================
+   CITRUS ROUTE CONFORMANCE — organizer/admin clave
+   ============================================= */
+.organizer-events .oe-metric,
+.organizer-events .oe-panel,
+.organizer-booking-admin .ob-metric,
+.organizer-booking-admin .ob-type-summary,
+.organizer-transactions .card,
+.event-form-modern > .row > .col-md-12 > .card {
+  border-color: var(--border-default) !important;
+  border-radius: var(--adm-radius-2xl) !important;
+  background: var(--surface-card) !important;
+  box-shadow: 0 12px 30px rgba(30, 37, 50, 0.07) !important;
+}
+
+.organizer-events .oe-panel__header,
+.organizer-events .oe-toolbar,
+.organizer-booking-admin .ob-type-summary__head,
+.organizer-booking-admin .ob-toolbar,
+.organizer-transactions .card-header {
+  border-color: var(--border-subtle) !important;
+  background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
+}
+
+.organizer-events .oe-panel__title,
+.organizer-booking-admin .ob-type-summary__title,
+.organizer-transactions .card-title {
+  color: var(--text-primary) !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+}
+
+.organizer-events label,
+.organizer-booking-admin label,
+.organizer-transactions label,
+.event-form-modern label {
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+.organizer-events .table-responsive,
+.organizer-booking-admin .table-responsive,
+.organizer-transactions .table-responsive,
+.event-form-modern .table-responsive {
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--adm-radius-lg) !important;
+  background: var(--surface-card) !important;
+}
+
+.organizer-events .table thead th,
+.organizer-booking-admin .table thead th,
+.organizer-transactions .table thead th,
+.event-form-modern .table thead th {
+  background: var(--surface-card-soft) !important;
+  color: var(--text-secondary) !important;
+}
+
+.organizer-events .table tbody td,
+.organizer-booking-admin .table tbody td,
+.organizer-transactions .table tbody td,
+.event-form-modern .table tbody td {
+  color: var(--text-primary) !important;
+  border-color: var(--border-subtle) !important;
+}
+
+.organizer-transactions .card-header .row {
+  align-items: end;
+  gap: 10px 0;
+}
+
+.organizer-transactions .ot-filter .input-group {
+  min-width: min(100%, 320px);
+}
+
+.organizer-transactions .ot-filter .form-control,
+.organizer-transactions .ot-filter .btn {
+  min-height: 40px !important;
+}
+
+.organizer-transactions .ot-filter .btn {
+  width: 44px;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.organizer-events .oe-empty,
+.organizer-booking-admin .ob-empty,
+.organizer-transactions .ot-empty {
+  margin: 0;
+  padding: 42px 18px;
+  border: 1px dashed var(--border-default);
+  border-radius: var(--adm-radius-xl);
+  background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.organizer-transactions .ot-empty i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 14px;
+  border-radius: 999px;
+  background: var(--adm-primary-soft);
+  color: var(--adm-primary-dark);
+  font-size: 18px;
+}
+
+.organizer-transactions .ot-empty h2 {
+  margin: 0 0 8px;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.organizer-transactions .ot-empty p {
+  max-width: 440px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.organizer-booking-admin .ob-context-note {
+  border-color: var(--border-default) !important;
+  background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
+  color: var(--text-secondary) !important;
+}
+
+html[data-theme="dark"] .organizer-events .oe-metric,
+html[data-theme="dark"] .organizer-events .oe-panel,
+html[data-theme="dark"] .organizer-booking-admin .ob-metric,
+html[data-theme="dark"] .organizer-booking-admin .ob-type-summary,
+html[data-theme="dark"] .organizer-transactions .card,
+html[data-theme="dark"] .event-form-modern > .row > .col-md-12 > .card {
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18) !important;
+}
+
+html[data-theme="dark"] .organizer-transactions .ot-filter .form-control {
+  background: var(--surface-input) !important;
+  border-color: var(--border-default) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] .organizer-transactions .ot-empty i {
+  background: rgba(249, 115, 22, 0.14);
+  color: #FDBA74;
+}
+
+@media (max-width: 767px) {
+  .organizer-transactions .card-header .row > [class*="col-"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .organizer-transactions .ot-filter .input-group {
+    min-width: 0;
+  }
+}
+
 /* === Light-theme overrides (movidos desde theme-dark.css, GATE Fase D) === */
 
 html[data-theme="light"] .theme-toggle-panel .fa-sun {
@@ -2526,8 +2692,8 @@ html[data-theme="light"] .sidenav-toggler i {
 
 /* === Light-theme overrides (reglas mixtas divididas, Fase D) === */
 
-html[data-theme="light"] code,,
-html[data-theme="light"] .code-block,,
+html[data-theme="light"] code,
+html[data-theme="light"] .code-block,
 html[data-theme="light"] pre {
   color: var(--adm-ink-strong, #ffffff);
 }
@@ -2536,7 +2702,7 @@ html[data-theme="light"] .sidebar .nav > .nav-item a i {
   color: var(--adm-ink);
 }
 
-html[data-theme="light"] .navbar-toggler .navbar-toggler-icon i,,
+html[data-theme="light"] .navbar-toggler .navbar-toggler-icon i,
 html[data-theme="light"] .topbar-toggler i {
   background: var(--adm-bg-soft);
   border-color: var(--adm-border);

@@ -4,7 +4,8 @@
   <style>
     .organizer-events {
       max-width: 100%;
-      overflow-x: hidden;
+      overflow-x: clip;
+      overflow-y: visible;
       color: var(--text-primary);
     }
 
@@ -399,9 +400,9 @@
           <input type="hidden" name="language" value="{{ request()->input('language') ?: optional($language)->code }}">
         @endif
         <div class="form-group">
-          <label>{{ __('Idioma') }}</label>
+          <label for="organizerEventsLanguage">{{ __('Idioma') }}</label>
           @if (!empty($langs) && count($langs) > 1)
-            <select name="language" class="form-control"
+            <select id="organizerEventsLanguage" name="language" class="form-control"
               onchange="window.location='{{ url()->current() . '?language=' }}' + this.value+'&event_type='+'{{ request()->input('event_type') }}'">
               @foreach ($langs as $lang)
                 <option value="{{ $lang->code }}" {{ $lang->code == request()->input('language') ? 'selected' : '' }}>
@@ -410,20 +411,20 @@
               @endforeach
             </select>
           @else
-            <input type="text" class="form-control" value="{{ optional($language)->name }}" disabled>
+            <input id="organizerEventsLanguage" type="text" class="form-control" value="{{ optional($language)->name }}" disabled>
           @endif
         </div>
         <div class="form-group">
-          <label>{{ __('Tipo') }}</label>
-          <select name="event_type" class="form-control" aria-label="{{ __('Tipo de evento') }}">
+          <label for="organizerEventsType">{{ __('Tipo') }}</label>
+          <select id="organizerEventsType" name="event_type" class="form-control">
             <option value="">{{ __('Todos') }}</option>
             <option value="venue" {{ request()->input('event_type') == 'venue' ? 'selected' : '' }}>{{ __('Presencial') }}</option>
             <option value="online" {{ request()->input('event_type') == 'online' ? 'selected' : '' }}>{{ __('Online') }}</option>
           </select>
         </div>
         <div class="form-group oe-toolbar__search">
-          <label>{{ __('Evento') }}</label>
-          <input type="text" name="title" value="{{ request()->input('title') }}" class="form-control"
+          <label for="organizerEventsTitle">{{ __('Evento') }}</label>
+          <input id="organizerEventsTitle" type="text" name="title" value="{{ request()->input('title') }}" class="form-control"
             placeholder="{{ __('Buscar por nombre del evento') }}">
         </div>
         <div class="oe-toolbar__actions">

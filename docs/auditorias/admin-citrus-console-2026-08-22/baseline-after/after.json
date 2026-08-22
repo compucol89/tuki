@@ -1,0 +1,600 @@
+{
+  "generated": "2026-08-22T17:31:00.581Z",
+  "results": [
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "1440x900",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "1366x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "1280x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "1024x768",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "768x1024",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "430x932",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "390x844",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "375x812",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/dashboard",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-management/events?language=es",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/add-event?type=venue",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-event/126",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/event-booking",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/transaction",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/edit-profile",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "organizer",
+      "slug": "/organizer/support-tikcet/tickets",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/dashboard",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/event-management/events?language=es",
+      "vp": "360x800",
+      "overflow": false
+    },
+    {
+      "panel": "admin",
+      "slug": "/admin/add-event",
+      "vp": "360x800",
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

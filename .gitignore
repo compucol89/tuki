@@ -104,5 +104,10 @@ $RECYCLE.BIN/
 /storage/fonts/
 
 # ── Audit baselines (evidencia local, 17MB screenshots) ────
-docs/auditorias/admin-citrus-console-2026-08-22/baseline/*.png
+docs/auditorias/admin-citrus-console-2026-08-22/baseline/**/*.png
 docs/auditorias/admin-citrus-console-2026-08-22/baseline/.state-*.json
+docs/auditorias/admin-citrus-console-2026-08-22/baseline-after/**/*.png
+
+# ── Playwright runtime artifacts ────────────────────────────
+/playwright-report/
+/test-results/

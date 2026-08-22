@@ -2520,11 +2520,18 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 
 .organizer-events .oe-metric__value {
   color: var(--text-primary) !important;
+  font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace) !important;
   font-size: 24px !important;
   font-weight: 720 !important;
   line-height: 1.05 !important;
   letter-spacing: -0.015em !important;
-  font-variant-numeric: tabular-nums !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
+}
+
+.organizer-events .oe-money,
+.organizer-events .oe-data-value {
+  font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace) !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
 }
 
 .organizer-booking-admin .ob-metric__label,

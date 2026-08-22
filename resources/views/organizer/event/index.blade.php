@@ -54,11 +54,12 @@
     .oe-metric__value {
       margin-top: 0;
       color: var(--text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
       font-size: var(--oe-value-size);
       font-weight: 720;
       line-height: 1.05;
       letter-spacing: -.015em;
-      font-variant-numeric: tabular-nums;
+      font-variant-numeric: tabular-nums lining-nums;
     }
 
     .oe-muted {
@@ -200,8 +201,15 @@
 
     .oe-money {
       color: var(--text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
       font-weight: 700;
-      font-variant-numeric: tabular-nums;
+      font-variant-numeric: tabular-nums lining-nums;
+      white-space: nowrap;
+    }
+
+    .oe-data-value {
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
+      font-variant-numeric: tabular-nums lining-nums;
       white-space: nowrap;
     }
 
@@ -402,19 +410,19 @@
     <section class="oe-summary" aria-label="{{ __('Resumen de eventos') }}">
       <div class="oe-metric">
         <div class="oe-metric__label">{{ __('Eventos') }}</div>
-        <div class="oe-metric__value">{{ number_format($eventKpis['total'] ?? 0, 0, ',', '.') }}</div>
+        <div class="oe-metric__value tuki-data tuki-data-count">{{ number_format($eventKpis['total'] ?? 0, 0, ',', '.') }}</div>
       </div>
       <div class="oe-metric">
         <div class="oe-metric__label">{{ __('Activos') }}</div>
-        <div class="oe-metric__value">{{ number_format($eventKpis['active'] ?? 0, 0, ',', '.') }}</div>
+        <div class="oe-metric__value tuki-data tuki-data-count">{{ number_format($eventKpis['active'] ?? 0, 0, ',', '.') }}</div>
       </div>
       <div class="oe-metric">
         <div class="oe-metric__label">{{ __('Pendiente por liquidar') }}</div>
-        <div class="oe-metric__value">{{ $formatMoney($dashboardSettlementSummary['pending_organizer_amount'] ?? 0) }}</div>
+        <div class="oe-metric__value tuki-data tuki-data-money">{{ $formatMoney($dashboardSettlementSummary['pending_organizer_amount'] ?? 0) }}</div>
       </div>
       <div class="oe-metric">
         <div class="oe-metric__label">{{ __('Liquidado') }}</div>
-        <div class="oe-metric__value">{{ $formatMoney($dashboardSettlementSummary['covered_organizer_amount'] ?? 0) }}</div>
+        <div class="oe-metric__value tuki-data tuki-data-money">{{ $formatMoney($dashboardSettlementSummary['covered_organizer_amount'] ?? 0) }}</div>
       </div>
     </section>
 
@@ -422,7 +430,7 @@
       <div class="oe-panel__header">
         <div>
           <h2 id="organizer-events-title" class="oe-panel__title">{{ __('Eventos') }}</h2>
-          <span class="oe-muted">{{ optional($language)->name }} · {{ number_format($events->total(), 0, ',', '.') }} {{ __('resultados') }}</span>
+          <span class="oe-muted">{{ optional($language)->name }} · <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($events->total(), 0, ',', '.') }}</span> {{ __('resultados') }}</span>
         </div>
         <div class="oe-actions">
           <div class="dropdown">
@@ -506,7 +514,7 @@
                 <th scope="col"><input type="checkbox" class="bulk-check" data-val="all" aria-label="{{ __('Seleccionar todos') }}"></th>
                 <th scope="col">{{ __('Evento') }}</th>
                 <th scope="col">{{ __('Tipo / categoría') }}</th>
-                <th scope="col" class="tuki-data">{{ __('Ventas') }}</th>
+                <th scope="col">{{ __('Ventas') }}</th>
                 <th scope="col">{{ __('Liquidación') }}</th>
                 <th scope="col">{{ __('Publicación') }}</th>
                 <th scope="col">{{ __('Acciones') }}</th>
@@ -542,16 +550,16 @@
                   </td>
                   <td>
                     <div class="oe-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</div>
-                    <span class="oe-muted">{{ __('Reservas pagas') }}: {{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span>
-                    <span class="oe-muted">{{ __('Gratis') }}: {{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span>
-                    <span class="oe-muted">{{ __('Entradas') }}: {{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
-                    <span class="oe-muted">{{ __('Escaneo') }}: {{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
+                    <span class="oe-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                    <span class="oe-muted">{{ __('Gratis') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                    <span class="oe-muted">{{ __('Entradas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span></span>
+                    <span class="oe-muted">{{ __('Escaneo') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span></span>
                     <div class="oe-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
                   </td>
                   <td>
                     <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                    <span class="oe-muted mt-1">{{ __('Pendiente') }}: {{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span>
-                    <span class="oe-muted">{{ __('Recibís') }}: {{ $formatMoney($metrics['organizer_amount'] ?? 0) }}</span>
+                    <span class="oe-muted mt-1">{{ __('Pendiente') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
+                    <span class="oe-muted">{{ __('Recibís') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($metrics['organizer_amount'] ?? 0) }}</span></span>
                   </td>
                   <td>
                     <form id="statusForm-{{ $event->id }}" class="mb-1"
@@ -623,19 +631,19 @@
               <div class="oe-mobile-grid">
                 <div>
                   <span class="oe-label">{{ __('Ventas') }}</span>
-                  <span class="oe-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</span>
-                  <span class="oe-muted">{{ __('Reservas pagas') }}: {{ $metrics['paid_bookings'] ?? 0 }}</span>
-                  <span class="oe-muted">{{ __('Gratis') }}: {{ $metrics['free_bookings'] ?? 0 }}</span>
+                  <span class="oe-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</span>
+                  <span class="oe-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                  <span class="oe-muted">{{ __('Gratis') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
                 </div>
                 <div>
                   <span class="oe-label">{{ __('Escaneo') }}</span>
-                  <span class="oe-money">{{ $metrics['scanned'] ?? 0 }}/{{ $metrics['tickets'] ?? 0 }}</span>
+                  <span class="oe-money tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
                   <div class="oe-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
                 </div>
                 <div>
                   <span class="oe-label">{{ __('Liquidación') }}</span>
                   <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                  <span class="oe-muted">{{ __('Pendiente') }}: {{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span>
+                  <span class="oe-muted">{{ __('Pendiente') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
                 </div>
                 <div>
                   <span class="oe-label">{{ __('Tipo') }}</span>

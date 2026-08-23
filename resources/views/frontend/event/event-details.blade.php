@@ -62,7 +62,13 @@
     || ($eventLocationLabel !== '' && !\Illuminate\Support\Str::contains($seoBaseLower, \Illuminate\Support\Str::lower($eventLocationLabel)))
     || ($eventDateLabel !== 'próximamente' && !\Illuminate\Support\Str::contains($seoBaseLower, \Illuminate\Support\Str::lower($eventDateLabel)));
 
-  if ($seoBaseDescription !== '') {
+  if ($over ?? false) {
+    $finishedPlaceLabel = $content->event_type == 'online'
+      ? 'en modalidad online'
+      : ($eventLocationLabel !== '' ? 'en ' . $eventLocationLabel : 'en TukiPass');
+    $finishedDateLabel = $eventDateLabel !== 'próximamente' ? ', ' . $eventDateLabel : '';
+    $seoDescription = "{$eventName}: evento finalizado {$finishedPlaceLabel}{$finishedDateLabel}. Venta online cerrada.";
+  } elseif ($seoBaseDescription !== '') {
     $seoDescription = $needsSeoLead && $seoLead !== '' ? $seoLead . '. ' . $seoBaseDescription : $seoBaseDescription;
   } else {
     $seoDescription = "{$eventName} es un evento {$eventMode} en TukiPass. Reservá tu lugar para el {$eventDateLabel} y accedé a toda la información.";
@@ -1204,28 +1210,37 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
       $publicOrganizerName = 'TukiPass';
     }
     $isOnlineEvent = $content->event_type == 'online';
-    $heroNudges = $isOnlineEvent
-      ? [
-          __('Confirmación al instante.'),
-          __('Reservá en minutos, sin vueltas.'),
-          __('Tu acceso llega por email.'),
-          __('Entrada 100% digital.'),
-          __('Desde el celular o la PC.'),
-          __('Pago seguro. Precio claro.'),
-          __('Reservá hoy. El evento, en vivo.'),
-        ]
-      : [
-          __('Reservá online. Tu lugar, listo.'),
-          __('Entrada en el celular.'),
-          __('Confirmación al instante.'),
-          __('Llegás y mostrás el QR.'),
-          __('Sin filas en taquilla.'),
-          __('Reservá en minutos.'),
-          __('Instrucciones en tu mail.'),
-        ];
+    if ($over ?? false) {
+      $heroNudges = [
+        __('Evento finalizado.'),
+        __('Venta online finalizada.'),
+        __('Información publicada disponible.'),
+      ];
+    } else {
+      $heroNudges = $isOnlineEvent
+        ? [
+            __('Confirmación al instante.'),
+            __('Reservá en minutos, sin vueltas.'),
+            __('Tu acceso llega por email.'),
+            __('Entrada 100% digital.'),
+            __('Desde el celular o la PC.'),
+            __('Pago seguro. Precio claro.'),
+            __('Reservá hoy. El evento, en vivo.'),
+          ]
+        : [
+            __('Reservá online. Tu lugar, listo.'),
+            __('Entrada en el celular.'),
+            __('Confirmación al instante.'),
+            __('Llegás y mostrás el QR.'),
+            __('Sin filas en taquilla.'),
+            __('Reservá en minutos.'),
+            __('Instrucciones en tu mail.'),
+          ];
+    }
     $interestCountLabel = number_format((int) ($edInterestIndicator ?? 0));
+    $showTicketSignal = !($over ?? false) && (int) ($edInterestIndicator ?? 0) >= 20;
     $ticketSignalMessages = [
-      ['lead' => $interestCountLabel, 'copy' => __('movimientos recientes en este evento')],
+      ['lead' => $interestCountLabel, 'copy' => __('interacciones reales en las últimas 24 h')],
       ['lead' => __('Reservá online'), 'copy' => __('y recibí la confirmación al instante')],
       ['lead' => __('Entrada digital'), 'copy' => __('la mostrás desde el celular, sin imprimir nada')],
       ['lead' => __('Tu lugar'), 'copy' => __('queda reservado en pocos minutos')],
@@ -1249,6 +1264,34 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
     if ($locationPrimary === '') {
       $locationPrimary = __('Lugar a confirmar');
     }
+
+    $availabilityLabel = __('Consultar');
+    $availabilityMeta = __('Disponibilidad no especificada');
+    $availabilityModifier = '';
+    if ($over ?? false) {
+      $availabilityLabel = __('Evento finalizado');
+      $availabilityMeta = __('Venta finalizada');
+      $availabilityModifier = 'closed';
+    } elseif ($ticketSummary['has_unlimited_stock']) {
+      $availabilityLabel = __('Venta online activa');
+      $availabilityMeta = __('Cupos disponibles en este momento');
+      $availabilityModifier = 'available';
+    } elseif (($signalStock ?? 0) > 0) {
+      $availabilityLabel = ($signalStock ?? 0) <= 10 ? __('Alta demanda') : __('Venta online activa');
+      $availabilityMeta = __('Reservá con anticipación');
+      $availabilityModifier = ($signalStock ?? 0) <= 10 ? 'low' : 'available';
+    }
+    $availabilityInfoClass = $availabilityModifier !== '' ? ' ed-info-item__value--' . $availabilityModifier : '';
+    $availabilityHeroClass = $availabilityModifier !== '' ? ' ed-hero-fact__value--' . $availabilityModifier : '';
+
+    $ticketDisplayTitle = function ($title) {
+      $rawTitle = trim((string) $title);
+      $cleanTitle = trim(preg_replace('/\s*(?:[-—–:|])?\s*agotad[ao]s?\s*$/iu', '', $rawTitle));
+      return $cleanTitle !== '' ? $cleanTitle : $rawTitle;
+    };
+    $ticketSoldOut = function ($stock) {
+      return is_numeric($stock) && (int) $stock <= 0;
+    };
   @endphp
   @php
     if ($content->pricing_type == 'free' || !is_numeric($ticketSummary['min_ticket_price'])) {
@@ -1262,6 +1305,9 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
     } else {
       $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']);
     }
+    $mobileBarLabel = ($over ?? false) ? __('Estado del evento') : __('Entradas desde');
+    $heroPriceLabel = ($over ?? false) ? __('Venta finalizada') : $heroPriceLabel;
+    $mobileBarValue = $heroPriceLabel;
   @endphp
 
   {{-- Hero Evento: Collage Slideshow --}}
@@ -1387,18 +1433,8 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
               </span>
               <div class="ed-info-item__content">
                 <span class="ed-info-item__label">{{ __('Disponibilidad') }}</span>
-                @if ($ticketSummary['has_unlimited_stock'])
-                  <strong class="ed-info-item__value ed-info-item__value--available">{{ __('Venta online activa') }}</strong>
-                  <span class="ed-info-item__meta">{{ __('Cupos disponibles en este momento') }}</span>
-                @elseif (($signalStock ?? 0) > 0)
-                  <strong class="ed-info-item__value{{ ($signalStock ?? 0) <= 10 ? ' ed-info-item__value--low' : ' ed-info-item__value--available' }}">
-                    {{ ($signalStock ?? 0) <= 10 ? __('Alta demanda') : __('Venta online activa') }}
-                  </strong>
-                  <span class="ed-info-item__meta">{{ __('Reservá con anticipación') }}</span>
-                @else
-                  <strong class="ed-info-item__value">{{ __('Consultar') }}</strong>
-                  <span class="ed-info-item__meta">{{ __('Disponibilidad no especificada') }}</span>
-                @endif
+                <strong class="ed-info-item__value{{ $availabilityInfoClass }}">{{ $availabilityLabel }}</strong>
+                <span class="ed-info-item__meta">{{ $availabilityMeta }}</span>
               </div>
             </div>
           </div>
@@ -1449,18 +1485,8 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
             </span>
             <span class="ed-hero-fact__copy">
               <span class="ed-hero-fact__label">{{ __('Disponibilidad') }}</span>
-              @if ($ticketSummary['has_unlimited_stock'])
-                <strong class="ed-hero-fact__value ed-hero-fact__value--available">{{ __('Venta online activa') }}</strong>
-                <span class="ed-hero-fact__meta">{{ __('Cupos disponibles') }}</span>
-              @elseif (($signalStock ?? 0) > 0)
-                <strong class="ed-hero-fact__value{{ ($signalStock ?? 0) <= 10 ? ' ed-hero-fact__value--low' : ' ed-hero-fact__value--available' }}">
-                  {{ ($signalStock ?? 0) <= 10 ? __('Alta demanda') : __('Venta online activa') }}
-                </strong>
-                <span class="ed-hero-fact__meta">{{ __('Reservá con anticipación') }}</span>
-              @else
-                <strong class="ed-hero-fact__value">{{ __('Consultar') }}</strong>
-                <span class="ed-hero-fact__meta">{{ __('Disponibilidad no especificada') }}</span>
-              @endif
+              <strong class="ed-hero-fact__value {{ $availabilityHeroClass }}">{{ $availabilityLabel }}</strong>
+              <span class="ed-hero-fact__meta">{{ $availabilityMeta }}</span>
             </span>
           </div>
         </div>
@@ -1499,17 +1525,17 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
         </div>
         {{-- /ed-hero-grid__main --}}
 
-        <aside class="ed-hero-grid__aside" aria-label="{{ __('Reservar entradas') }}">
+        <aside class="ed-hero-grid__aside" aria-label="{{ ($over ?? false) ? __('Entradas del evento finalizado') : __('Reservar entradas') }}">
             {{-- CARD 1: Ticket form (única instancia #event-booking-card) --}}
-            <div class="ed-ticket-card" id="event-booking-card">
-              @if (($edInterestIndicator ?? 0) > 0)
-                <div class="ed-ticket-card__head ed-ticket-card__head--interest ed-ticket-card__head--signal" aria-label="{{ __('Interés del evento') }}" data-ticket-signal-rotator>
+            <div class="ed-ticket-card {{ ($over ?? false) ? 'ed-ticket-card--closed' : '' }}" id="event-booking-card">
+              @if ($showTicketSignal)
+                <div class="ed-ticket-card__head ed-ticket-card__head--interest ed-ticket-card__head--signal" aria-label="{{ __('Actividad reciente del evento') }}" data-ticket-signal-rotator>
                   <span id="ed-ticket-signal-live" class="sr-only" aria-live="polite" aria-atomic="true">
                     {{ $ticketSignalMessages[0]['lead'] }} {{ $ticketSignalMessages[0]['copy'] }}
                   </span>
                   <span class="ed-ticket-signal__eyebrow">
                     <span class="ed-ticket-signal__dot" aria-hidden="true"></span>
-                    {{ __('Se está moviendo') }}
+                    {{ __('Actividad reciente') }}
                   </span>
                   <span class="ed-ticket-signal__rail" aria-hidden="true">
                     @foreach ($ticketSignalMessages as $messageIndex => $signalMessage)
@@ -1565,10 +1591,10 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                     <div class="ed-ticket-picker__intro">
                       <p class="ed-ticket-picker__title" id="ed-ticket-picker-label">
-                        {{ __('Elegí tu acceso') }}
+                        {{ ($over ?? false) ? __('Entradas publicadas') : __('Elegí tu acceso') }}
                         <svg class="ed-ticket-picker__title-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
                       </p>
-                      <p class="ed-ticket-picker__sub">{{ __('Seleccioná cantidad. Reservás online. Recibís tu entrada digital al instante.') }}</p>
+                      <p class="ed-ticket-picker__sub">{{ ($over ?? false) ? __('La venta online para este evento ya finalizó. Podés consultar los accesos que estuvieron publicados.') : __('Seleccioná cantidad. Reservás online. Recibís tu entrada digital al instante.') }}</p>
                     </div>
                     <div class="ed-ticket-picker__list" role="group" aria-labelledby="ed-ticket-picker-label">
 
@@ -1742,10 +1768,18 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                   $purchase = ['status' => 'false', 'p_qty' => 0];
                               }
 
+                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
+                              $isTicketSoldOut = $ticketSoldOut($stock);
+
                             @endphp
                             <div class="ed-ticket-option">
                             <div class="ed-ticket-option__head">
-                              <p class="ed-ticket-option__title mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
+                              <p class="ed-ticket-option__title mb-0">
+                                <strong>{{ __($ticketTitle) }}</strong>
+                              </p>
+                              @if ($isTicketSoldOut)
+                                <span class="ed-ticket-option__status ed-ticket-option__status--sold-out">{{ __('Agotadas') }}</span>
+                              @endif
                             </div>
                             <div class="click-show ed-ticket-option__desc">
                               <div class="show-content">
@@ -1850,11 +1884,18 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 if (empty($ticket_content)) {
                                     $ticket_content = App\Models\Event\TicketContent::where([['ticket_id', $ticket->id]])->first();
                                 }
+                                $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
+                                $variationStock = $item->ticket_available_type == 'limited' ? $item->ticket_available : 'unlimited';
+                                $isTicketSoldOut = $ticketSoldOut($variationStock);
                               @endphp
                               <div class="ed-ticket-option">
                               <div class="ed-ticket-option__head">
-                                <p class="ed-ticket-option__title mb-0"><strong>{{ __(@$ticket_content->title ?: '') }} —
-                                  {{ __(@$varition_names[$key]['name'] ?: '') }}</strong></p>
+                                <p class="ed-ticket-option__title mb-0">
+                                  <strong>{{ __($ticketTitle) }} — {{ __(@$varition_names[$key]['name'] ?: '') }}</strong>
+                                </p>
+                                @if ($isTicketSoldOut)
+                                  <span class="ed-ticket-option__status ed-ticket-option__status--sold-out">{{ __('Agotadas') }}</span>
+                                @endif
                               </div>
                               <div class="click-show ed-ticket-option__desc">
                                 <div class="show-content">
@@ -1968,10 +2009,17 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                   $purchase = ['status' => 'false', 'p_qty' => 0];
                               }
                               $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
+                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
+                              $isTicketSoldOut = $ticketSoldOut($stock);
                             @endphp
                             <div class="ed-ticket-option ed-ticket-option--free">
                             <div class="ed-ticket-option__head">
-                              <p class="ed-ticket-option__title mb-0"><strong>{{ __(@$ticket_content->title ?: '') }}</strong></p>
+                              <p class="ed-ticket-option__title mb-0">
+                                <strong>{{ __($ticketTitle) }}</strong>
+                              </p>
+                              @if ($isTicketSoldOut)
+                                <span class="ed-ticket-option__status ed-ticket-option__status--sold-out">{{ __('Agotadas') }}</span>
+                              @endif
                             </div>
                             <div class="click-show ed-ticket-option__desc">
                               <div class="show-content">
@@ -2013,11 +2061,11 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                     </div>{{-- /.ed-ticket-picker__list --}}
 
                     @if ($tickets_count > 0)
-                      <div class="ed-total-row ed-total-row--premium" role="group" aria-labelledby="ed-booking-total-label" aria-describedby="ed-booking-total-note">
-                        <span class="ed-total-label" id="ed-booking-total-label">{{ __('Subtotal entradas') }}</span>
+                      <div class="ed-total-row ed-total-row--premium {{ ($over ?? false) ? 'ed-total-row--closed' : '' }}" role="group" aria-labelledby="ed-booking-total-label" aria-describedby="ed-booking-total-note">
+                        <span class="ed-total-label" id="ed-booking-total-label">{{ ($over ?? false) ? __('Estado de venta') : __('Subtotal entradas') }}</span>
                         <span class="ed-total-protection">
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                          {{ __('Reserva protegida') }}
+                          {{ ($over ?? false) ? __('Venta finalizada') : __('Reserva protegida') }}
                         </span>
                         <span class="ed-total-value" dir="ltr" aria-live="polite" aria-atomic="true">
                           @if ($basicInfo->base_currency_symbol_position == 'left')
@@ -2027,7 +2075,9 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                           @endif
                         </span>
                         <p class="ed-total-row__note" id="ed-booking-total-note">
-                          @if (($basicInfo->tax ?? 0) > 0)
+                          @if ($over ?? false)
+                            {{ __('La venta online para este evento ya finalizó. No se pueden iniciar nuevas reservas desde esta ficha.') }}
+                          @elseif (($basicInfo->tax ?? 0) > 0)
                             {{ __('Incluye el precio publicado de las entradas. Los impuestos (:pct%) y otros cargos del medio de pago, si correspondieran, se muestran desglosados antes de pagar.', ['pct' => number_format((float) $basicInfo->tax, 2, ',', '.')]) }}
                           @else
                             {{ __('Incluye el precio publicado de las entradas. Cargos del medio de pago u otros conceptos, si correspondieran, se muestran antes de pagar.') }}
@@ -2152,7 +2202,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                 </span>
                 <h2 class="ed-info-card__title">{{ __('Datos del evento') }}</h2>
               </div>
-              <span class="ed-info-card__verified-pill" role="status">{{ __('Reserva verificada') }}</span>
+              <span class="ed-info-card__verified-pill" role="status">{{ ($over ?? false) ? __('Evento finalizado') : __('Reserva verificada') }}</span>
             </div>
             <div class="ed-info-card__body">
               <div class="ed-info-grid" role="list">
@@ -2216,22 +2266,8 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                   </span>
                   <div class="ed-info-item__content">
                     <span class="ed-info-item__label">{{ __('Disponibilidad') }}</span>
-                    @if ($ticketSummary['has_unlimited_stock'])
-                      <strong class="ed-info-item__value ed-info-item__value--available">{{ __('Venta online activa') }}</strong>
-                      <span class="ed-info-item__meta">{{ __('Cupos disponibles en este momento') }}</span>
-                    @elseif (($signalStock ?? 0) > 0)
-                      <strong class="ed-info-item__value{{ ($signalStock ?? 0) <= 10 ? ' ed-info-item__value--low' : ' ed-info-item__value--available' }}">
-                        @if (($signalStock ?? 0) <= 10)
-                          {{ __('Alta demanda') }}
-                        @else
-                          {{ __('Venta online activa') }}
-                        @endif
-                      </strong>
-                      <span class="ed-info-item__meta">{{ __('Reservá con anticipación') }}</span>
-                    @else
-                      <strong class="ed-info-item__value">{{ __('Consultar') }}</strong>
-                      <span class="ed-info-item__meta">{{ __('Disponibilidad no especificada') }}</span>
-                    @endif
+                    <strong class="ed-info-item__value{{ $availabilityInfoClass }}">{{ $availabilityLabel }}</strong>
+                    <span class="ed-info-item__meta">{{ $availabilityMeta }}</span>
                   </div>
                 </div>
               </div>
@@ -2291,8 +2327,8 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                       </span>
                       <div class="ed-refund-band__content">
-                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con reserva simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con reserva simple, confirmación inmediata y entrada digital.') }}</p>
-                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Reservás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Reservás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
+                        <p class="ed-refund-band__lead">{{ ($over ?? false) ? __('Este evento ya finalizó y la venta online está cerrada.') : ($isOnlineEvent ? __('Sumate a este evento online con reserva simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con reserva simple, confirmación inmediata y entrada digital.')) }}</p>
+                        <p class="ed-refund-band__desc">{{ ($over ?? false) ? __('La información publicada queda disponible para consulta. No se pueden iniciar nuevas reservas desde esta ficha.') : ($isOnlineEvent ? __('Reservás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Reservás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.')) }}</p>
                       </div>
                     </div>
                     @if ($content->event_type != 'online' && !empty($map_address))
@@ -2308,10 +2344,10 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                     @endif
                   @else
                     <div class="summernote-content mt-4">
-                      <p><strong>{{ __('Antes de reservar, tené en cuenta esto:') }}</strong></p>
+                      <p><strong>{{ ($over ?? false) ? __('Información del evento publicado:') : __('Antes de reservar, tené en cuenta esto:') }}</strong></p>
                       <ul>
                         <li>{{ $isOnlineEvent ? __('Acceso online desde tu celular o computadora.') : __('Entrada digital disponible para mostrar desde tu celular.') }}</li>
-                        <li>{{ __('Confirmación enviada por email apenas se acredita tu reserva.') }}</li>
+                        <li>{{ ($over ?? false) ? __('La venta online ya no acepta nuevas reservas.') : __('Confirmación enviada por email apenas se acredita tu reserva.') }}</li>
                         <li>{{ $isOnlineEvent ? __('Los datos de ingreso quedan disponibles en tu confirmación para que te conectes sin vueltas.') : __('Toda la información clave del acceso queda disponible en tu confirmación.') }}</li>
                       </ul>
                     </div>
@@ -2320,8 +2356,8 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                       </span>
                       <div class="ed-refund-band__content">
-                        <p class="ed-refund-band__lead">{{ $isOnlineEvent ? __('Sumate a este evento online con reserva simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con reserva simple, confirmación inmediata y entrada digital.') }}</p>
-                        <p class="ed-refund-band__desc">{{ $isOnlineEvent ? __('Reservás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Reservás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.') }}</p>
+                        <p class="ed-refund-band__lead">{{ ($over ?? false) ? __('Este evento ya finalizó y la venta online está cerrada.') : ($isOnlineEvent ? __('Sumate a este evento online con reserva simple, confirmación inmediata y acceso digital.') : __('Reservá tu lugar para este evento con reserva simple, confirmación inmediata y entrada digital.')) }}</p>
+                        <p class="ed-refund-band__desc">{{ ($over ?? false) ? __('La información publicada queda disponible para consulta. No se pueden iniciar nuevas reservas desde esta ficha.') : ($isOnlineEvent ? __('Reservás online, recibís la confirmación al instante y accedés desde tu celular o computadora con los datos de ingreso enviados por email.') : __('Reservás online, recibís la confirmación al instante y tenés tu entrada digital lista para mostrar desde el celular el día del evento.')) }}</p>
                       </div>
                     </div>
                     @if ($content->event_type != 'online' && !empty($map_address))
@@ -2525,16 +2561,17 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
   </section>
   <!-- Event Details V2 End -->
 
-  <div class="ed-mobile-bar d-lg-none" aria-label="{{ __('Acceso rápido a la reserva') }}">
+  <div class="ed-mobile-bar d-lg-none {{ ($over ?? false) ? 'ed-mobile-bar--closed' : '' }}" aria-label="{{ ($over ?? false) ? __('Estado del evento') : __('Acceso rápido a la reserva') }}">
     <div class="container">
       <div class="ed-mobile-bar__inner">
         <div class="ed-mobile-bar__price">
-          <span class="ed-mobile-bar__label">{{ __('Entradas desde') }}</span>
-          <strong class="ed-mobile-bar__value" id="mobileStickyPrice">{{ $heroPriceLabel }}</strong>
+          <span class="ed-mobile-bar__label">{{ $mobileBarLabel }}</span>
+          <strong class="ed-mobile-bar__value" id="mobileStickyPrice">{{ $mobileBarValue }}</strong>
         </div>
         <a href="#event-booking-card"
           class="ed-mobile-bar__cta {{ $over ? 'ed-mobile-bar__cta--disabled' : '' }}"
-          data-scroll-target="#event-booking-card">
+          data-scroll-target="#event-booking-card"
+          @if ($over) aria-disabled="true" tabindex="-1" @endif>
           {{ $over ? __('Evento finalizado') : __('Reservar mi lugar') }}
         </a>
       </div>

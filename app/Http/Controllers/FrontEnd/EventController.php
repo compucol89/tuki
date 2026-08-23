@@ -392,7 +392,18 @@ class EventController extends Controller
         $seoBaseDescription = '';
       }
 
-      if ($seoBaseDescription !== '') {
+      if ($statusMeta['over']) {
+        $finishedPlaceText = $content->event_type == 'online'
+          ? __('en modalidad online')
+          : ($locationSearchText !== '' ? __('en :location', ['location' => $locationSearchText]) : __('en TukiPass'));
+        $finishedDateText = !empty($eventDateText) ? ', ' . $eventDateText : '';
+        $seoDescription = __(':title: evento finalizado :place:date. Venta online cerrada.', [
+          'title' => $normalizedTitle,
+          'place' => $finishedPlaceText,
+          'date' => $finishedDateText,
+        ]);
+        $seoDescription = Str::limit($cleanText($seoDescription), 158, '');
+      } elseif ($seoBaseDescription !== '') {
         $seoLead = collect([
           $normalizedTitle,
           $locationSearchText !== '' ? ($content->event_type == 'online' ? __('online') : __('en :location', ['location' => $locationSearchText])) : null,
@@ -591,99 +602,26 @@ class EventController extends Controller
 
   private function buildInterestIndicator(int $eventId, $content): array
   {
-    $createdAt = \Carbon\Carbon::parse($content->created_at ?? now());
-    $hoursSincePublication = max(0, (int) $createdAt->diffInHours(now()));
-
-    // Seed estable por evento: mismo evento = misma base para todos los usuarios.
-    $seed = abs(crc32('tukipass-event-interest-' . $eventId));
-    $normalized = ($seed % 1000) / 1000;
-
-    // Día de vida para progresión suave (no cambia en cada refresh, cambia por día).
-    $eventAgeDays = (int) floor($hoursSincePublication / 24);
-    $dailySeed = abs(crc32('tukipass-event-interest-day-' . $eventId . '-' . $eventAgeDays));
-
-    if ($hoursSincePublication < 24) {
-      $base = 19 + (int) floor($normalized * 44); // 19–62
-      $timeGrowth = 0;
-    } else {
-      $base = 146 + (int) floor($normalized * 45); // 146–190
-      $dailyGrowth = min($eventAgeDays * 6, 180);
-      $dailyVariation = $dailySeed % 7;
-      $timeGrowth = $dailyGrowth + $dailyVariation;
-    }
-
-    $viewsCount = (int) ($content->views_count ?? 0);
-
     $wishlistCount = \App\Models\Event\Wishlist::where('event_id', $eventId)->count();
+    $recentWishlistCount = \App\Models\Event\Wishlist::where('event_id', $eventId)
+      ->where('created_at', '>=', now()->subDay())
+      ->count();
 
     $bookingCount = (int) \App\Models\Event\Booking::where('event_id', $eventId)
-      ->where('paymentStatus', 'paid')
+      ->whereIn('paymentStatus', ['paid', 'completed', 'free', '1'])
       ->sum('quantity');
 
-    // Señales reales ponderadas — alimentan el interés compuesto, no se muestran como visitas.
-    $signalScore = (int) floor(
-      ($viewsCount * 0.05) +
-      ($wishlistCount * 0.30) +
-      ($bookingCount * 0.50)
-    );
+    $recentBookingCount = (int) \App\Models\Event\Booking::where('event_id', $eventId)
+      ->whereIn('paymentStatus', ['paid', 'completed', 'free', '1'])
+      ->where('created_at', '>=', now()->subDay())
+      ->sum('quantity');
 
-    $interest = min($base + $timeGrowth + $signalScore, 5000);
+    $interest = max(0, (int) ($content->views_last_24h ?? 0)) + $recentWishlistCount + $recentBookingCount;
 
     return [
       'interest' => max(0, (int) $interest),
       'wishlist_count' => $wishlistCount,
       'booking_count' => $bookingCount,
-    ];
-  }
-
-  private function buildSignalMeta(int $eventId, int $signalStock): array
-  {
-    $viewersKey = 'ev_viewers_' . $eventId;
-    $viewers = Cache::get($viewersKey);
-
-    if (!$viewers) {
-      $viewers = rand(80, 160);
-      Cache::put($viewersKey, $viewers, now()->addDays(90));
-    } elseif (rand(1, 100) <= 40) {
-      $viewers = min($viewers + rand(1, 2), 340);
-      Cache::put($viewersKey, $viewers, now()->addDays(90));
-    }
-
-    $savedKey = 'ev_saved_' . $eventId;
-    $saved = Cache::get($savedKey);
-
-    if (!$saved) {
-      $saved = rand(40, 120);
-      Cache::put($savedKey, $saved, now()->addDays(90));
-    } elseif (rand(1, 100) <= 25) {
-      $saved = min($saved + rand(1, 2), 480);
-      Cache::put($savedKey, $saved, now()->addDays(90));
-    }
-
-    $nudgePool = [
-      ['icon' => 'fire', 'text' => __('Este evento se está agotando rápido')],
-      ['icon' => 'zap', 'text' => __('Alta demanda') . ' — ' . __('no te quedes sin tu entrada')],
-      ['icon' => 'trending', 'text' => __('Evento popular en tu zona')],
-      ['icon' => 'heart', 'text' => '<strong>' . $saved . '</strong> ' . __('personas guardaron este evento')],
-      ['icon' => 'clock', 'text' => __('No esperes al último momento') . ' — ' . __('asegurá tu lugar ahora')],
-      ['icon' => 'star', 'text' => __('Uno de los eventos más buscados esta semana')],
-      ['icon' => 'shield', 'text' => __('Compra protegida') . ' — ' . __('reembolso garantizado')],
-      ['icon' => 'calendar', 'text' => __('La fecha se acerca') . ' — ' . __('comprá con anticipación')],
-    ];
-
-    if ($signalStock > 0 && $signalStock <= 20) {
-      $nudgePool[] = [
-        'icon' => 'alert',
-        'text' => __('Quedan solo') . ' <strong>' . $signalStock . '</strong> ' . ($signalStock == 1 ? __('entrada') : __('entradas')),
-      ];
-    }
-
-    shuffle($nudgePool);
-
-    return [
-      'viewers' => $viewers,
-      'saved' => $saved,
-      'nudge_pool' => $nudgePool,
     ];
   }
 

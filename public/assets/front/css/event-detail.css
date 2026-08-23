@@ -8887,3 +8887,137 @@ body.page-event-detail {
   --ed-hero-bg-height: 100%;
   --ed-sidebar-reserve: 168px;
 }
+
+/* ============ Estado finalizado: presentación pública no-conversional ============ */
+body.page-event-detail .ed-info-item__value--closed,
+body.page-event-detail .ed-hero-fact__value--closed,
+body.page-event-detail .ed-hero-info .ed-info-item__value--closed {
+  color: #991b1b;
+}
+
+body.page-event-detail .ed-ticket-card--closed .ed-ticket-card__body--premium {
+  border-color: #e4e8ee;
+  background: color-mix(in srgb, var(--card) 82%, var(--muted));
+}
+
+body.page-event-detail .ed-ticket-card--closed .ed-ticket-picker__sub,
+body.page-event-detail .ed-ticket-card--closed .ed-ticket-option__desc .show-content {
+  color: #5f6b7d;
+}
+
+body.page-event-detail .ed-ticket-option__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+  min-width: 0;
+}
+
+body.page-event-detail .ed-ticket-option__title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+  min-width: 0;
+}
+
+body.page-event-detail .ed-ticket-option__title strong {
+  min-width: 0;
+}
+
+body.page-event-detail .ed-ticket-option__status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0.18rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.67rem;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+body.page-event-detail .ed-ticket-option__status--sold-out {
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #991b1b;
+}
+
+body.page-event-detail .read-more-btn span {
+  color: var(--primary-text);
+}
+
+body.page-event-detail .ed-total-row--premium.ed-total-row--closed .ed-total-protection {
+  color: #991b1b;
+}
+
+body.page-event-detail .ed-total-row--premium.ed-total-row--closed .ed-total-value {
+  display: none !important;
+}
+
+body.page-event-detail .ed-total-row--premium.ed-total-row--closed .ed-total-row__note {
+  max-width: none;
+}
+
+body.page-event-detail .ed-mobile-bar__cta--disabled {
+  border: 1px solid #cbd5e1;
+  background: #e5e7eb !important;
+  cursor: not-allowed;
+  color: #334155 !important;
+}
+
+@media (max-width: 991.98px) {
+  body.page-event-detail .ed-mobile-bar--closed .ed-mobile-bar__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  body.page-event-detail .ed-mobile-bar--closed .ed-mobile-bar__price {
+    min-width: 0;
+  }
+
+  body.page-event-detail .ed-mobile-bar--closed .ed-mobile-bar__value {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: clamp(0.95rem, 4.2vw, 1.08rem);
+  }
+
+  body.page-event-detail .ed-mobile-bar--closed .ed-mobile-bar__cta {
+    flex: 0 0 auto;
+    min-width: 8.6rem;
+    padding-inline: 0.75rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  body.page-event-detail .ed-mobile-bar--closed .ed-mobile-bar__cta {
+    min-width: 7.65rem;
+    padding-inline: 0.62rem;
+    font-size: 0.76rem;
+  }
+
+  body.page-event-detail .ed-mobile-bar--closed .ed-mobile-bar__value {
+    font-size: 0.94rem;
+  }
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-info-item__value--closed,
+html[data-theme="dark"] body.page-event-detail .ed-hero-fact__value--closed,
+html[data-theme="dark"] body.page-event-detail .ed-hero-info .ed-info-item__value--closed,
+html[data-theme="dark"] body.page-event-detail .ed-total-row--premium.ed-total-row--closed .ed-total-protection {
+  color: #fecaca;
+}
+
+html[data-theme="dark"] body.page-event-detail .ed-ticket-option__status--sold-out {
+  border-color: color-mix(in srgb, #fecaca 42%, transparent);
+  background: color-mix(in srgb, #7f1d1d 34%, var(--card));
+  color: #fecaca;
+}

@@ -3,9 +3,28 @@
 @section('style')
   <style>
     .organizer-booking-detail {
+      --bod-card-bg: var(--surface-card);
+      --bod-card-alt-bg: #fffaf6;
+      --bod-card-alt-border: rgba(194, 65, 12, .26);
+      --bod-card-focus-border: rgba(194, 65, 12, .56);
+      --bod-warning-bg: #fff7ed;
+      --bod-warning-fg: #9a3412;
+      --bod-success-bg: #166534;
+      --bod-success-fg: #ffffff;
       max-width: 100%;
       overflow-x: hidden;
       color: var(--text-primary);
+    }
+
+    html[data-theme="dark"] .organizer-booking-detail {
+      --bod-card-bg: var(--surface-card);
+      --bod-card-alt-bg: #283242;
+      --bod-card-alt-border: rgba(253, 186, 116, .38);
+      --bod-card-focus-border: rgba(253, 186, 116, .72);
+      --bod-warning-bg: rgba(253, 186, 116, .16);
+      --bod-warning-fg: #fdba74;
+      --bod-success-bg: rgba(134, 239, 172, .16);
+      --bod-success-fg: #86efac;
     }
 
     .bod-hero,
@@ -170,7 +189,15 @@
 
     .bod-money {
       color: var(--text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
       font-weight: 800;
+      font-variant-numeric: tabular-nums lining-nums;
+      white-space: nowrap;
+    }
+
+    .bod-data-value {
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
+      font-variant-numeric: tabular-nums lining-nums;
       white-space: nowrap;
     }
 
@@ -285,6 +312,133 @@
       text-align: center;
     }
 
+    .bod-ticket-mobile-list {
+      display: none;
+    }
+
+    .bod-ticket-mobile-card {
+      display: grid;
+      gap: 0;
+      padding: 13px 14px 14px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--adm-radius-2xl);
+      background: var(--bod-card-bg);
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
+    }
+
+    .bod-ticket-mobile-card:nth-child(even) {
+      border-color: var(--bod-card-alt-border);
+      background: var(--bod-card-alt-bg);
+    }
+
+    .bod-ticket-mobile-card:focus-within {
+      border-color: var(--bod-card-focus-border);
+      box-shadow: 0 0 0 3px var(--focus-ring), 0 10px 24px rgba(30, 37, 50, .08);
+    }
+
+    .bod-ticket-mobile-card__head {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 11px;
+    }
+
+    .bod-ticket-mobile-card__main {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .bod-ticket-thumb {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: var(--adm-radius-lg);
+      background: var(--surface-hover);
+      color: var(--adm-primary-dark);
+    }
+
+    html[data-theme="dark"] .organizer-booking-detail .bod-ticket-thumb {
+      color: var(--adm-primary);
+    }
+
+    .bod-ticket-thumb i {
+      font-size: 18px;
+    }
+
+    .bod-ticket-mobile-card__title {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .bod-ticket-mobile-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .bod-ticket-mobile-card__badges {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
+      min-width: 0;
+    }
+
+    .bod-ticket-mobile-card__badges .bod-pill {
+      max-width: 104px;
+      justify-content: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bod-ticket-mobile-card__badges .bod-pill--success {
+      border: 1px solid var(--bod-success-bg);
+      background: var(--bod-success-bg);
+      color: var(--bod-success-fg);
+    }
+
+    .bod-ticket-mobile-card__badges .bod-pill--warning {
+      border: 1px solid var(--bod-warning-bg);
+      background: var(--bod-warning-bg);
+      color: var(--bod-warning-fg);
+    }
+
+    .bod-ticket-mobile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 18px;
+      padding-top: 11px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .bod-ticket-mobile-stat {
+      display: grid;
+      align-content: start;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .bod-ticket-mobile-card .bod-progress {
+      max-width: 145px;
+      height: 6px;
+      margin-top: 5px;
+    }
+
     @media (min-width: 768px) {
       .bod-hero {
         grid-template-columns: minmax(0, 1fr) auto;
@@ -320,6 +474,10 @@
     @media (max-width: 767px) {
       .bod-title {
         font-size: 19px;
+      }
+
+      .bod-panel__body--tickets {
+        padding: 12px;
       }
 
       .bod-panel__header {
@@ -372,6 +530,30 @@
 
       .bod-ledger-row {
         grid-template-columns: 1fr;
+      }
+
+      .bod-table--tickets {
+        display: none;
+      }
+
+      .bod-ticket-mobile-list {
+        display: grid;
+        gap: 12px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .bod-ticket-mobile-card__head,
+      .bod-ticket-mobile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bod-ticket-mobile-card__badges {
+        justify-items: start;
+      }
+
+      .bod-ticket-mobile-grid {
+        row-gap: 10px;
       }
     }
   </style>
@@ -548,8 +730,8 @@
             <h3 id="bod-tickets-title" class="bod-panel__title">{{ __('Info de entradas') }}</h3>
             <span class="bod-pill">{{ (int) $booking->quantity }} {{ (int) $booking->quantity == 1 ? __('entrada') : __('entradas') }}</span>
           </div>
-          <div class="bod-panel__body">
-            <table class="table bod-table">
+          <div class="bod-panel__body bod-panel__body--tickets">
+            <table class="table bod-table bod-table--tickets">
               <colgroup>
                 <col class="bod-col-ticket">
                 <col class="bod-col-small">
@@ -575,23 +757,75 @@
                         <span class="bod-muted">{{ __('Descuento') }}: {{ $formatMoney($ticketInfo['discount']) }}</span>
                       @endif
                     </td>
-                    <td data-label="{{ __('Cant.') }}"><span class="bod-pill">{{ $ticketInfo['quantity'] }}</span></td>
+                    <td data-label="{{ __('Cant.') }}"><span class="bod-pill tuki-data tuki-data-count">{{ $ticketInfo['quantity'] }}</span></td>
                     <td data-label="{{ __('Precio unit.') }}">
-                      <span class="bod-money">{{ $formatMoney($ticketInfo['unit_final']) }}</span>
+                      <span class="bod-money tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['unit_final']) }}</span>
                       @if ($ticketInfo['unit_discount'] > 0)
-                        <del class="bod-muted">{{ $formatMoney($ticketInfo['unit_price']) }}</del>
+                        <del class="bod-muted tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['unit_price']) }}</del>
                       @endif
                     </td>
-                    <td data-label="{{ __('Subtotal') }}"><span class="bod-money">{{ $formatMoney($ticketInfo['subtotal']) }}</span></td>
+                    <td data-label="{{ __('Subtotal') }}"><span class="bod-money tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['subtotal']) }}</span></td>
                     <td data-label="{{ __('Escaneo') }}">
-                      <strong>{{ $ticketInfo['scanned'] }}/{{ $ticketInfo['quantity'] }}</strong>
-                      <span class="bod-muted">{{ __('Faltan') }}: {{ $ticketInfo['pending'] }}</span>
+                      <strong class="bod-data-value tuki-data tuki-data-count">{{ $ticketInfo['scanned'] }}/{{ $ticketInfo['quantity'] }}</strong>
+                      <span class="bod-muted">{{ __('Faltan') }}: <span class="tuki-data tuki-data-count">{{ $ticketInfo['pending'] }}</span></span>
                       <div class="bod-progress" aria-hidden="true"><span style="width: {{ $ticketInfo['scan_percent'] }}%"></span></div>
                     </td>
                   </tr>
                 @endforeach
               </tbody>
             </table>
+
+            <div class="bod-ticket-mobile-list" role="list" aria-label="{{ __('Entradas de la reserva') }}">
+              @foreach ($ticketBreakdown as $ticketInfo)
+                @php
+                  $ticketName = trim((string) $ticketInfo['name']);
+                  $ticketDisplayName = trim((string) preg_replace('/^\s*Entrada\s+/iu', '', $ticketName));
+                  $ticketDisplayName = $ticketDisplayName !== '' ? Str::ucfirst($ticketDisplayName) : ($ticketName ?: __('Entrada'));
+                  $ticketQuantity = (int) ($ticketInfo['quantity'] ?? 0);
+                  $ticketScanned = (int) ($ticketInfo['scanned'] ?? 0);
+                  $ticketPending = (int) ($ticketInfo['pending'] ?? max(0, $ticketQuantity - $ticketScanned));
+                  $ticketIsComplete = $ticketQuantity > 0 && $ticketPending <= 0;
+                @endphp
+                <article class="bod-ticket-mobile-card" role="listitem" aria-labelledby="bookingTicketTitle{{ $loop->index }}">
+                  <div class="bod-ticket-mobile-card__head">
+                    <div class="bod-ticket-thumb" aria-hidden="true">
+                      <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="bod-ticket-mobile-card__main">
+                      <h4 id="bookingTicketTitle{{ $loop->index }}" class="bod-ticket-mobile-card__title">{{ $ticketDisplayName }}</h4>
+                      <div class="bod-ticket-mobile-card__meta">
+                        <span>{{ __('Precio unit.') }}: <span class="bod-data-value tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['unit_final']) }}</span></span>
+                        @if ($ticketInfo['discount'] > 0)
+                          <span>{{ __('Descuento') }}: <span class="bod-data-value tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['discount']) }}</span></span>
+                        @endif
+                      </div>
+                    </div>
+                    <div class="bod-ticket-mobile-card__badges">
+                      <span class="bod-pill tuki-data tuki-data-count">{{ $ticketQuantity }} {{ $ticketQuantity == 1 ? __('entrada') : __('entradas') }}</span>
+                      <span class="bod-pill {{ $ticketIsComplete ? 'bod-pill--success' : 'bod-pill--warning' }}">
+                        {{ $ticketIsComplete ? __('Escaneada') : __('Pendiente') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="bod-ticket-mobile-grid" role="group" aria-label="{{ __('Resumen de entrada') }}">
+                    <div class="bod-ticket-mobile-stat">
+                      <span class="bod-label">{{ __('Subtotal') }}</span>
+                      <span class="bod-money tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['subtotal']) }}</span>
+                      @if ($ticketInfo['unit_discount'] > 0)
+                        <span class="bod-muted">{{ __('Antes') }}: <del class="tuki-data tuki-data-money">{{ $formatMoney($ticketInfo['unit_price']) }}</del></span>
+                      @endif
+                    </div>
+                    <div class="bod-ticket-mobile-stat">
+                      <span class="bod-label">{{ __('Escaneo') }}</span>
+                      <span class="bod-money tuki-data tuki-data-count">{{ $ticketScanned }}/{{ $ticketQuantity }}</span>
+                      <div class="bod-progress" aria-hidden="true"><span style="width: {{ $ticketInfo['scan_percent'] }}%"></span></div>
+                      <span class="bod-muted">{{ __('Faltan') }}: <span class="tuki-data tuki-data-count">{{ $ticketPending }}</span></span>
+                    </div>
+                  </div>
+                </article>
+              @endforeach
+            </div>
           </div>
         </section>
 

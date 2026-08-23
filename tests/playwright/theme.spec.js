@@ -18,6 +18,7 @@ const ROUTES = [
   { name: 'choose-type', path: '/organizer/choose-event-type?language=es' },
   { name: 'booking', path: '/organizer/event-booking' },
   { name: 'booking-focused', path: '/organizer/event-booking/evento/118' },
+  { name: 'booking-details', path: '/organizer/event-booking/details/214' },
   { name: 'monthly-income', path: '/organizer/monthly-income' },
   { name: 'telegram', path: '/organizer/telegram-bot' },
   { name: 'withdraw', path: '/organizer/withdraw?language=es' },
@@ -168,7 +169,7 @@ async function themeAudit(page) {
     };
 
     const whiteSurfaces = [];
-    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
+    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .bod-ticket-mobile-card, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
       const bg = getComputedStyle(el).backgroundColor;
       if (bg && bg !== 'rgba(0, 0, 0, 0)' && isWhite(bg)) {
         whiteSurfaces.push(el.className.toString().slice(0, 40));
@@ -176,7 +177,7 @@ async function themeAudit(page) {
     });
 
     const darkText = [];
-    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
+    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .bod-ticket-mobile-card__title, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
       const c = getComputedStyle(el).color;
       if (isDarkText(c)) darkText.push(el.className.toString().slice(0, 40));
     });
@@ -700,6 +701,62 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.order[2]).toContain('ob-mobile-booking__grid');
       expect(geom.actionLabels.every((label) => /reserva/i.test(label))).toBe(true);
       expect(geom.buttonHeights.every((height) => height >= 40)).toBe(true);
+      expect(geom.allDataFonts).toBe(true);
+      expect(geom.overflowX).toBe(false);
+    }
+  });
+
+  test('@theme reserva detalle mobile: entradas usan card citrus', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 503, height: 872 });
+
+    for (const theme of ['light', 'dark']) {
+      await page.goto('/organizer/event-booking/details/214', { waitUntil: 'networkidle' });
+      await setTheme(page, theme);
+
+      const geom = await page.evaluate(() => {
+        const panel = document.querySelector('#bod-tickets-title')?.closest('.bod-panel');
+        const table = panel?.querySelector('.bod-table--tickets');
+        const cards = Array.from(panel?.querySelectorAll('.bod-ticket-mobile-card') || []);
+        const first = cards[0];
+        const head = first?.querySelector('.bod-ticket-mobile-card__head');
+        const thumb = first?.querySelector('.bod-ticket-thumb');
+        const title = first?.querySelector('.bod-ticket-mobile-card__title');
+        const badges = first ? Array.from(first.querySelectorAll('.bod-ticket-mobile-card__badges .bod-pill')) : [];
+        const grid = first?.querySelector('.bod-ticket-mobile-grid');
+        const progress = first?.querySelector('.bod-progress');
+        const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .bod-money, .bod-data-value')).map((el) => getComputedStyle(el).fontFamily) : [];
+        const cardStyles = first ? getComputedStyle(first) : null;
+
+        return {
+          cardCount: cards.length,
+          tableDisplay: table ? getComputedStyle(table).display : null,
+          headColumns: head ? getComputedStyle(head).gridTemplateColumns.split(' ').length : 0,
+          thumbSize: thumb ? [Math.round(thumb.getBoundingClientRect().width), Math.round(thumb.getBoundingClientRect().height)] : null,
+          titleText: title?.textContent?.trim() || '',
+          titleLines: title ? Math.round(title.getBoundingClientRect().height / parseFloat(getComputedStyle(title).lineHeight)) : 0,
+          badgesRight: badges.length > 0 && title ? badges.every((badge) => badge.getBoundingClientRect().left > title.getBoundingClientRect().left) : false,
+          gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
+          progressWidth: progress ? Math.round(progress.getBoundingClientRect().width) : 0,
+          cardRadius: cardStyles?.borderTopLeftRadius || '',
+          allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
+          overflowX: document.documentElement.scrollWidth > window.innerWidth,
+          text: first?.textContent?.trim().replace(/\s+/g, ' ') || '',
+        };
+      });
+
+      expect(geom.cardCount).toBeGreaterThan(0);
+      expect(geom.tableDisplay).toBe('none');
+      expect(geom.headColumns).toBe(3);
+      expect(geom.thumbSize).toEqual([54, 54]);
+      expect(geom.titleText).not.toMatch(/^entrada\s+/i);
+      expect(geom.titleLines).toBeLessThanOrEqual(2);
+      expect(geom.badgesRight).toBe(true);
+      expect(geom.gridColumns).toBe(2);
+      expect(geom.progressWidth).toBeGreaterThan(100);
+      expect(geom.cardRadius).toBe('16px');
+      expect(geom.text).toMatch(/Subtotal/i);
+      expect(geom.text).toMatch(/Escaneo/i);
       expect(geom.allDataFonts).toBe(true);
       expect(geom.overflowX).toBe(false);
     }

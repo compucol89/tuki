@@ -900,7 +900,7 @@
     .ob-money {
       color: var(--ob-text-primary);
       font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
-      font-weight: 760;
+      font-weight: 700;
       letter-spacing: 0;
       font-variant-numeric: tabular-nums lining-nums;
       white-space: nowrap;
@@ -1077,13 +1077,13 @@
     .ob-mobile-booking {
       display: grid;
       gap: 0;
-      padding: 12px 13px;
+      padding: 13px 14px 14px;
       border: 1px solid var(--border-default);
-      border-radius: var(--adm-radius-2xl);
+      border-radius: 8px;
       background: var(--surface-card);
       scroll-margin-top: 80px;
       scroll-margin-bottom: 72px;
-      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
+      box-shadow: 0 6px 18px rgba(30, 37, 50, .04);
     }
 
     .ob-mobile-booking:nth-child(even) {
@@ -1119,7 +1119,13 @@
     }
 
     .ob-mobile-booking__title {
-      color: inherit;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.25;
       text-decoration: none;
     }
 
@@ -1175,8 +1181,8 @@
     .ob-mobile-booking__grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 0;
-      row-gap: 0;
+      column-gap: 16px;
+      row-gap: 10px;
       padding: 10px 0;
       margin-top: 10px;
       border-top: 1px solid var(--border-subtle);
@@ -1189,8 +1195,8 @@
       align-items: center;
       min-width: 0;
       gap: 8px;
-      padding-top: 9px;
-      margin-top: 9px;
+      padding-top: 10px;
+      margin-top: 10px;
       border-top: 1px solid var(--border-subtle);
       color: var(--ob-text-secondary);
       font-size: 12px;
@@ -1229,6 +1235,7 @@
 
     .ob-mobile-buyerline__contact {
       overflow-wrap: anywhere;
+      gap: 4px 7px;
     }
 
     .ob-mobile-buyerline__badge {
@@ -1254,13 +1261,6 @@
       gap: 5px;
       align-content: start;
       min-width: 0;
-      padding-right: 12px;
-    }
-
-    .ob-mobile-stat + .ob-mobile-stat {
-      padding-right: 0;
-      padding-left: 12px;
-      border-left: 1px solid var(--border-subtle);
     }
 
     .ob-mobile-stat__line {
@@ -1276,7 +1276,7 @@
     .ob-mobile-stat__label {
       flex: 0 0 auto;
       color: var(--ob-text-secondary);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: 0;
       line-height: 1.25;
@@ -1286,8 +1286,8 @@
     .ob-mobile-stat__value {
       margin-top: 0;
       color: var(--ob-text-primary);
-      font-size: 14px;
-      font-weight: 720;
+      font-size: 15px;
+      font-weight: 700;
       line-height: 1.2;
     }
 
@@ -1365,8 +1365,8 @@
     }
 
     .ob-mobile-extra {
-      padding-top: 9px;
-      margin-top: 9px;
+      padding-top: 10px;
+      margin-top: 10px;
       border-top: 1px solid var(--border-subtle);
     }
 

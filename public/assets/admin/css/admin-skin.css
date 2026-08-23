@@ -2599,7 +2599,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-booking-admin .ob-money {
   color: var(--ob-text-primary, var(--text-primary)) !important;
   font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace) !important;
-  font-weight: 760 !important;
+  font-weight: 700 !important;
   letter-spacing: 0 !important;
   font-variant-numeric: tabular-nums lining-nums !important;
 }
@@ -2637,7 +2637,6 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 
 .organizer-booking-admin .ob-event-row__title,
 .organizer-booking-admin .ob-mobile-booking__title {
-  color: var(--ob-text-primary, var(--text-primary)) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
 }

@@ -619,6 +619,7 @@ test.describe('@theme contrato theming organizer', () => {
         const order = first ? Array.from(first.children).map((el) => el.className.toString()) : [];
         const panelStyles = panel ? getComputedStyle(panel) : null;
         const headingStyles = heading ? getComputedStyle(heading) : null;
+        const titleStyles = title ? getComputedStyle(title) : null;
         const buyerRows = buyer
           ? Array.from(buyer.querySelectorAll('.ob-mobile-buyerline__identity, .ob-mobile-buyerline__contact, .ob-mobile-buyerline__badge'))
             .map((el) => el.getBoundingClientRect().top)
@@ -638,9 +639,9 @@ test.describe('@theme contrato theming organizer', () => {
             : false,
           titleText: title?.textContent?.trim() || '',
           headingText: heading?.textContent?.trim() || '',
-          titleClamp: headingStyles?.webkitLineClamp || headingStyles?.lineClamp || '',
-          titleOverflow: headingStyles?.textOverflow || '',
-          headingLines: heading ? Math.round(heading.getBoundingClientRect().height / parseFloat(headingStyles.lineHeight)) : 0,
+          titleClamp: titleStyles?.webkitLineClamp || titleStyles?.lineClamp || '',
+          titleOverflow: titleStyles?.textOverflow || '',
+          headingLines: title ? Math.round(title.getBoundingClientRect().height / parseFloat(titleStyles.lineHeight)) : 0,
           refInHeading: !!ref && !!heading && ref.parentElement === heading,
           metaText: meta?.textContent?.trim() || '',
           metaHasDataFont: !!meta?.querySelector('.tuki-data'),
@@ -673,9 +674,9 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.panelFlat).toBe(true);
       expect(geom.titleText.length).toBeGreaterThan(44);
       expect(geom.titleText).not.toContain('...');
-      expect(['none', 'initial', '']).toContain(geom.titleClamp);
-      expect(geom.titleOverflow).not.toBe('ellipsis');
-      expect(geom.headingLines).toBeGreaterThanOrEqual(2);
+      expect(geom.titleClamp).toBe('2');
+      expect(['clip', 'ellipsis']).toContain(geom.titleOverflow);
+      expect(geom.headingLines).toBeLessThanOrEqual(2);
       expect(geom.refInHeading).toBe(true);
       expect(geom.headingText).toContain('#');
       expect(geom.metaText).not.toMatch(/funci[oó]n/i);
@@ -695,7 +696,7 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.paymentText).toMatch(/mercado|pago|-/i);
       expect(geom.hasTicketsBlock).toBe(true);
       expect(geom.ticketTitle).not.toMatch(/^entrada\s+/i);
-      expect(geom.cardHeight).toBeLessThan(410);
+      expect(geom.cardHeight).toBeLessThan(430);
       expect(geom.order[0]).toContain('ob-mobile-booking__head');
       expect(geom.order[1]).toContain('ob-mobile-buyerline');
       expect(geom.order[2]).toContain('ob-mobile-booking__grid');

@@ -846,17 +846,17 @@ test.describe('@theme contrato theming organizer', () => {
       await setTheme(page, theme);
 
       const geom = await page.evaluate(() => {
-        const panel = document.querySelector('#bod-tickets-title')?.closest('.bod-panel');
+        const panel = document.querySelector('#bod-tickets-title')?.closest('.oc-panel');
         const table = panel?.querySelector('.bod-table--tickets');
-        const cards = Array.from(panel?.querySelectorAll('.bod-ticket-mobile-card') || []);
+        const cards = Array.from(panel?.querySelectorAll('.oc-mobile-card') || []);
         const first = cards[0];
-        const head = first?.querySelector('.bod-ticket-mobile-card__head');
+        const head = first?.querySelector('.oc-mobile-card__head');
         const thumb = first?.querySelector('.bod-ticket-thumb');
-        const title = first?.querySelector('.bod-ticket-mobile-card__title');
-        const badges = first ? Array.from(first.querySelectorAll('.bod-ticket-mobile-card__badges .bod-pill')) : [];
-        const grid = first?.querySelector('.bod-ticket-mobile-grid');
-        const progress = first?.querySelector('.bod-progress');
-        const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .bod-money, .bod-data-value')).map((el) => getComputedStyle(el).fontFamily) : [];
+        const title = first?.querySelector('.oc-title');
+        const badges = first ? Array.from(first.querySelectorAll('.oc-mobile-card__badges .oc-pill')) : [];
+        const grid = first?.querySelector('.oc-mobile-card__grid');
+        const progress = first?.querySelector('.oc-progress');
+        const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .oc-money, .oc-data-value')).map((el) => getComputedStyle(el).fontFamily) : [];
         const cardStyles = first ? getComputedStyle(first) : null;
 
         return {
@@ -885,7 +885,7 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.badgesRight).toBe(true);
       expect(geom.gridColumns).toBe(2);
       expect(geom.progressWidth).toBeGreaterThan(100);
-      expect(geom.cardRadius).toBe('16px');
+      expect(geom.cardRadius).toBe('8px');
       expect(geom.text).toMatch(/Subtotal/i);
       expect(geom.text).toMatch(/Escaneo/i);
       expect(geom.allDataFonts).toBe(true);

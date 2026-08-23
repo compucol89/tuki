@@ -25,8 +25,9 @@
       --ob-kpi-money-bg: #fff7ed;
       --ob-kpi-money-fg: var(--ob-text-primary);
       --ob-control-hover-bg: rgba(249, 115, 22, .08);
-      --ob-button-primary-bg: var(--adm-primary-dark);
-      --ob-button-primary-hover-bg: var(--adm-primary-strong);
+      --ob-control-border: #9A3412;
+      --ob-button-primary-bg: #9A3412;
+      --ob-button-primary-hover-bg: #7C2D12;
       max-width: 100%;
       overflow-x: clip;
       overflow-y: visible;
@@ -49,6 +50,7 @@
       --ob-kpi-money-bg: rgba(124, 45, 18, .32);
       --ob-kpi-money-fg: #ffedd5;
       --ob-control-hover-bg: rgba(253, 186, 116, .10);
+      --ob-control-border: #fdba74;
       --ob-button-primary-bg: #9A3412;
       --ob-button-primary-hover-bg: #7C2D12;
     }
@@ -1348,16 +1350,29 @@
     }
 
     .ob-mobile-btn--secondary {
-      border-color: var(--ob-control-hover-bg);
+      border-color: var(--ob-control-border);
       background-color: transparent;
       color: var(--ob-text-primary);
     }
 
     .ob-mobile-btn--secondary:hover,
     .ob-mobile-btn--secondary:focus {
-      border-color: var(--ob-card-focus-border);
+      border-color: var(--ob-control-border);
       background-color: var(--ob-control-hover-bg);
       color: var(--ob-button-primary-hover-bg);
+    }
+
+    .ob-mobile-btn--primary {
+      border-color: var(--ob-button-primary-bg);
+      background-color: var(--ob-button-primary-bg);
+      color: #ffffff;
+    }
+
+    .ob-mobile-btn--primary:hover,
+    .ob-mobile-btn--primary:focus {
+      border-color: var(--ob-button-primary-hover-bg);
+      background-color: var(--ob-button-primary-hover-bg);
+      color: #ffffff;
     }
 
     .ob-mobile-btn:focus {
@@ -2237,7 +2252,7 @@
 
                     <div class="ob-mobile-controls">
                       <a href="{{ route('organizer.event_booking.details', ['id' => $booking->id]) }}"
-                        class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary"
+                        class="btn btn-sm ob-mobile-btn ob-mobile-btn--primary"
                         aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
                         <i class="fas fa-eye" aria-hidden="true"></i>{{ __('Ver') }}
                       </a>

@@ -2,9 +2,9 @@
 
 
 @section('content')
-  <div class="organizer-transactions">
+  <div class="organizer-transactions oc-page">
   <div class="page-header">
-    <h1 class="page-title">{{ __('Transacciones') }}</h1>
+    <h1 class="page-title oc-page__title">{{ __('Transacciones') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
@@ -22,11 +22,11 @@
 
   <div class="row">
     <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
+      <div class="card oc-panel">
+        <div class="card-header oc-panel__header">
           <div class="row">
             <div class="col-lg-4">
-              <div class="card-title d-inline-block">{{ __('Transacciones') }}</div>
+              <div class="card-title oc-panel__title d-inline-block">{{ __('Transacciones') }}</div>
             </div>
 
             <div class="col-lg-4">
@@ -36,7 +36,7 @@
                   <input id="transSearch" type="text" value="{{ request()->input('transcation_id') }}"
                     name="transcation_id" placeholder="{{ __('Buscar por ID de transacción') }}" class="form-control">
                   <div class="input-group-append">
-                    <button type="submit" class="btn btn-primary" aria-label="{{ __('Buscar transacción') }}">
+                    <button type="submit" class="btn btn-primary oc-btn oc-btn--primary" aria-label="{{ __('Buscar transacción') }}">
                       <i class="fas fa-search" aria-hidden="true"></i>
                     </button>
                   </div>
@@ -46,18 +46,18 @@
           </div>
         </div>
 
-        <div class="card-body">
+        <div class="card-body oc-panel__body">
           <div class="row">
             <div class="col-lg-12">
               @if (count($transcations) == 0)
-                <div class="ot-empty" role="status">
+                <div class="ot-empty oc-empty" role="status">
                   <i class="fas fa-receipt" aria-hidden="true"></i>
                   <h2>{{ __('No encontramos transacciones') }}</h2>
                   <p>{{ __('Probá con otro ID o limpiá la búsqueda para ver todo el historial.') }}</p>
                 </div>
               @else
                 <div class="table-responsive">
-                  <table class="table table-striped mt-3">
+                  <table class="table table-striped mt-3 oc-table">
                     <thead>
                       <tr>
                         <th scope="col" class="tuki-data">{{ __('ID de transacción') }}</th>
@@ -124,11 +124,11 @@
                           </td>
                           <td>
                             @if ($transcation->payment_status == 1)
-                              <span class="badge badge-success">{{ __('Pagado') }}</span>
-                            @elseif ($transcation->payment_status == 2)
-                              <span class="badge badge-warning text-dark">{{ __('Rechazado') }}</span>
+                            <span class="badge badge-success oc-pill">{{ __('Pagado') }}</span>
+                          @elseif ($transcation->payment_status == 2)
+                              <span class="badge badge-warning text-dark oc-pill">{{ __('Rechazado') }}</span>
                             @else
-                              <span class="badge badge-danger">{{ __('Pendiente') }}</span>
+                              <span class="badge badge-danger oc-pill">{{ __('Pendiente') }}</span>
                             @endif
                           </td>
 
@@ -138,7 +138,7 @@
                                 $t_invoice = $transcation->event_booking()->first();
                               @endphp
                               @if ($t_invoice)
-                                  <a target="_blank" class="btn btn-secondary btn-sm mr-1"
+                                  <a target="_blank" class="btn btn-secondary btn-sm mr-1 oc-btn"
                                   href="{{ route('booking.ticket.download', $t_invoice->id) }}"
                                   aria-label="{{ __('Ver comprobante') }}">
                                   <i class="fas fa-eye" aria-hidden="true"></i>
@@ -149,7 +149,7 @@
                                 $t_invoice = $transcation->product_order()->first();
                               @endphp
                               @if ($t_invoice)
-                                <a target="_blank" class="btn btn-secondary btn-sm mr-1"
+                                <a target="_blank" class="btn btn-secondary btn-sm mr-1 oc-btn"
                                   href="{{ asset('assets/admin/file/order/invoices/' . $t_invoice->invoice) }}"
                                   aria-label="{{ __('Ver factura') }}">
                                   <i class="fas fa-eye" aria-hidden="true"></i>
@@ -168,7 +168,7 @@
         </div>
 
         @if (count($transcations) > 0)
-        <div class="card-footer text-center">
+        <div class="card-footer text-center oc-panel__footer">
           <div class="d-inline-block mt-3">
             {{ $transcations->appends([
                     'transcation_id' => request()->input('transcation_id'),

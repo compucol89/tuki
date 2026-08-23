@@ -61,6 +61,13 @@
 <link rel="stylesheet" href="{{ asset($adminSkinPath) }}{{ is_file($adminSkinFullPath) ? '?v=' . substr(md5_file($adminSkinFullPath), 0, 12) : '' }}">
 <?php /* organizer-v1 */ ?>
 
+@php
+  $organizerCitrusPath = 'assets/admin/css/organizer-citrus.css';
+  $organizerCitrusFullPath = public_path($organizerCitrusPath);
+@endphp
+{{-- organizer citrus: primitivas visuales compartidas del panel Organizer --}}
+<link rel="stylesheet" href="{{ asset($organizerCitrusPath) }}{{ is_file($organizerCitrusFullPath) ? '?v=' . substr(md5_file($organizerCitrusFullPath), 0, 12) : '' }}">
+
 {{-- theme-dark: capa dark de los paneles (html[data-theme="dark"]) --}}
 <link rel="stylesheet" href="{{ frontAsset('assets/admin/css/theme-dark.css') }}">
 

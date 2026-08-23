@@ -574,9 +574,9 @@
     ];
   @endphp
 
-  <div class="organizer-events">
+  <div class="organizer-events oc-page">
     <div class="page-header">
-      <h1 class="page-title">{{ __('Gestión de eventos') }}</h1>
+      <h1 class="page-title oc-page__title">{{ __('Gestión de eventos') }}</h1>
       <ul class="breadcrumbs">
         <li class="nav-home">
           <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
@@ -588,34 +588,34 @@
       </ul>
     </div>
 
-    <section class="oe-summary" aria-label="{{ __('Resumen de eventos') }}">
-      <div class="oe-metric">
-        <div class="oe-metric__label">{{ __('Eventos') }}</div>
-        <div class="oe-metric__value tuki-data tuki-data-count">{{ number_format($eventKpis['total'] ?? 0, 0, ',', '.') }}</div>
+    <section class="oe-summary oc-summary" aria-label="{{ __('Resumen de eventos') }}">
+      <div class="oe-metric oc-metric">
+        <div class="oe-metric__label oc-metric__label">{{ __('Eventos') }}</div>
+        <div class="oe-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($eventKpis['total'] ?? 0, 0, ',', '.') }}</div>
       </div>
-      <div class="oe-metric">
-        <div class="oe-metric__label">{{ __('Activos') }}</div>
-        <div class="oe-metric__value tuki-data tuki-data-count">{{ number_format($eventKpis['active'] ?? 0, 0, ',', '.') }}</div>
+      <div class="oe-metric oc-metric">
+        <div class="oe-metric__label oc-metric__label">{{ __('Activos') }}</div>
+        <div class="oe-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($eventKpis['active'] ?? 0, 0, ',', '.') }}</div>
       </div>
-      <div class="oe-metric">
-        <div class="oe-metric__label">{{ __('Pendiente por liquidar') }}</div>
-        <div class="oe-metric__value tuki-data tuki-data-money">{{ $formatMoney($dashboardSettlementSummary['pending_organizer_amount'] ?? 0) }}</div>
+      <div class="oe-metric oc-metric">
+        <div class="oe-metric__label oc-metric__label">{{ __('Pendiente por liquidar') }}</div>
+        <div class="oe-metric__value oc-metric__value tuki-data tuki-data-money">{{ $formatMoney($dashboardSettlementSummary['pending_organizer_amount'] ?? 0) }}</div>
       </div>
-      <div class="oe-metric">
-        <div class="oe-metric__label">{{ __('Liquidado') }}</div>
-        <div class="oe-metric__value tuki-data tuki-data-money">{{ $formatMoney($dashboardSettlementSummary['covered_organizer_amount'] ?? 0) }}</div>
+      <div class="oe-metric oc-metric">
+        <div class="oe-metric__label oc-metric__label">{{ __('Liquidado') }}</div>
+        <div class="oe-metric__value oc-metric__value tuki-data tuki-data-money">{{ $formatMoney($dashboardSettlementSummary['covered_organizer_amount'] ?? 0) }}</div>
       </div>
     </section>
 
-    <section class="oe-panel" aria-labelledby="organizer-events-title">
-      <div class="oe-panel__header">
+    <section class="oe-panel oc-panel" aria-labelledby="organizer-events-title">
+      <div class="oe-panel__header oc-panel__header">
         <div>
-          <h2 id="organizer-events-title" class="oe-panel__title">{{ __('Eventos') }}</h2>
-          <span class="oe-muted">{{ optional($language)->name }} · <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($events->total(), 0, ',', '.') }}</span> {{ __('resultados') }}</span>
+          <h2 id="organizer-events-title" class="oe-panel__title oc-panel__title">{{ __('Eventos') }}</h2>
+          <span class="oe-muted oc-muted">{{ optional($language)->name }} · <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($events->total(), 0, ',', '.') }}</span> {{ __('resultados') }}</span>
         </div>
         <div class="oe-actions">
           <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle oe-action-btn" type="button" id="organizerEventCreateDropdown"
+            <button class="btn btn-primary dropdown-toggle oe-action-btn oc-btn oc-btn--primary" type="button" id="organizerEventCreateDropdown"
               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <i class="fas fa-plus" aria-hidden="true"></i>{{ __('Crear') }}
             </button>
@@ -624,14 +624,14 @@
               <a href="{{ route('organizer.add.event.event', ['type' => 'venue']) }}" class="dropdown-item">{{ __('Evento presencial') }}</a>
             </div>
           </div>
-          <button class="btn btn-danger d-none bulk-delete oe-action-btn"
+          <button class="btn btn-danger d-none bulk-delete oe-action-btn oc-btn"
             data-href="{{ route('organizer.event_management.bulk_delete_event') }}">
             <i class="flaticon-interface-5" aria-hidden="true"></i>{{ __('Eliminar') }}
           </button>
         </div>
       </div>
 
-      <form action="" method="get" class="oe-toolbar">
+      <form action="" method="get" class="oe-toolbar oc-toolbar">
         @if (empty($langs) || count($langs) <= 1)
           <input type="hidden" name="language" value="{{ request()->input('language') ?: optional($language)->code }}">
         @endif
@@ -663,24 +663,24 @@
           <input id="organizerEventsTitle" type="text" name="title" value="{{ request()->input('title') }}" class="form-control"
             placeholder="{{ __('Buscar por nombre del evento') }}">
         </div>
-        <div class="oe-toolbar__actions">
-          <button type="submit" class="btn btn-primary oe-action-btn">
+        <div class="oe-toolbar__actions oc-toolbar__actions">
+          <button type="submit" class="btn btn-primary oe-action-btn oc-btn oc-btn--primary">
             <i class="fas fa-search" aria-hidden="true"></i>{{ __('Buscar') }}
           </button>
           <a href="{{ route('organizer.event_management.event', ['language' => request()->input('language') ?: optional($language)->code]) }}"
-            class="btn btn-light oe-action-btn">{{ __('Limpiar') }}</a>
+            class="btn btn-light oe-action-btn oc-btn oc-btn--secondary">{{ __('Limpiar') }}</a>
         </div>
       </form>
 
       @if (count($events) == 0)
-        <div class="oe-empty">
+        <div class="oe-empty oc-empty">
           <h3>{{ __('No encontramos eventos') }}</h3>
           <p class="mb-0">{{ __('Probá con otro filtro o creá un evento nuevo.') }}</p>
         </div>
       @else
         <div class="d-none d-lg-block">
           <div class="table-responsive">
-            <table class="table oe-table">
+            <table class="table oe-table oc-table">
             <colgroup>
               <col class="oe-col-check">
               <col class="oe-col-event">
@@ -723,27 +723,27 @@
                       </div>
                       <div>
                         <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
-                          class="oe-title">{{ $event->title }}</a>
-                        <span class="oe-muted">{{ __('Función') }}: {{ $metrics['date_label'] ?? '-' }}</span>
+                          class="oe-title oc-title">{{ $event->title }}</a>
+                        <span class="oe-muted oc-muted">{{ __('Función') }}: {{ $metrics['date_label'] ?? '-' }}</span>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
-                    <span class="oe-muted mt-1">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
+                    <span class="oe-pill oc-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
+                    <span class="oe-muted oc-muted mt-1">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                   </td>
                   <td>
-                    <div class="oe-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</div>
-                    <span class="oe-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
-                    <span class="oe-muted">{{ __('Gratis') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
-                    <span class="oe-muted">{{ __('Entradas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span></span>
-                    <span class="oe-muted">{{ __('Escaneo') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span></span>
-                    <div class="oe-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
+                    <div class="oe-money oc-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</div>
+                    <span class="oe-muted oc-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                    <span class="oe-muted oc-muted">{{ __('Gratis') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                    <span class="oe-muted oc-muted">{{ __('Entradas') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span></span>
+                    <span class="oe-muted oc-muted">{{ __('Escaneo') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span></span>
+                    <div class="oe-progress oc-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
                   </td>
                   <td>
                     <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                    <span class="oe-muted mt-1">{{ __('Pendiente') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
-                    <span class="oe-muted">{{ __('Recibís') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($metrics['organizer_amount'] ?? 0) }}</span></span>
+                    <span class="oe-muted oc-muted mt-1">{{ __('Pendiente') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
+                    <span class="oe-muted oc-muted">{{ __('Recibís') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-money">{{ $formatMoney($metrics['organizer_amount'] ?? 0) }}</span></span>
                   </td>
                   <td>
                     <form id="statusForm-{{ $event->id }}" class="mb-1"
@@ -768,7 +768,7 @@
                   </td>
                   <td>
                     <div class="dropdown">
-                      <button class="btn btn-secondary dropdown-toggle btn-sm oe-action-btn" type="button"
+                      <button class="btn btn-secondary dropdown-toggle btn-sm oe-action-btn oc-btn" type="button"
                         id="organizerEventActions-{{ $event->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('Acciones') }}
                       </button>
@@ -793,7 +793,7 @@
           </div>
         </div>
 
-        <div class="oe-mobile-list d-lg-none">
+        <div class="oe-mobile-list oc-mobile-list d-lg-none">
           @foreach ($events as $event)
             @php
               $metrics = $eventMetrics[$event->id] ?? [];
@@ -806,49 +806,49 @@
               $thumb = ($thumbPath !== '' && is_file($thumbPath)) ? asset('assets/admin/img/event/thumbnail/' . $thumbName) : asset('assets/admin/img/noimage.jpg');
               $fallbackThumb = asset('assets/admin/img/noimage.jpg');
             @endphp
-            <article class="oe-mobile-event">
-              <div class="oe-mobile-event__head">
+            <article class="oe-mobile-event oc-mobile-card">
+              <div class="oe-mobile-event__head oc-mobile-card__head">
                 <div class="oe-thumb">
                   <img src="{{ $thumb }}" alt="{{ $event->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ $fallbackThumb }}';">
                 </div>
-                <div class="oe-mobile-event__main">
+                <div class="oe-mobile-event__main oc-mobile-card__main">
                   <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
-                    class="oe-title">{{ $event->title }}</a>
-                  <span class="oe-muted">{{ __('Función') }}: <span class="oe-data-value">{{ $metrics['date_label'] ?? '-' }}</span></span>
-                  <span class="oe-muted">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
+                    class="oe-title oc-title">{{ $event->title }}</a>
+                  <span class="oe-muted oc-muted">{{ __('Función') }}: <span class="oe-data-value oc-data-value">{{ $metrics['date_label'] ?? '-' }}</span></span>
+                  <span class="oe-muted oc-muted">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
                 </div>
-                <div class="oe-mobile-event__badges">
+                <div class="oe-mobile-event__badges oc-mobile-card__badges">
                   <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                  <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
+                  <span class="oe-pill oc-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
                 </div>
               </div>
-              <div class="oe-mobile-grid">
+              <div class="oe-mobile-grid oc-mobile-card__grid">
                 <div class="oe-mobile-stat">
-                  <span class="oe-label">{{ __('Ventas') }}</span>
-                  <span class="oe-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</span>
-                  <span class="oe-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
-                  <span class="oe-muted">{{ __('Gratis') }}: <span class="oe-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                  <span class="oe-label oc-label">{{ __('Ventas') }}</span>
+                  <span class="oe-money oc-money tuki-data tuki-data-money">{{ $formatMoney($metrics['charged_amount'] ?? 0) }}</span>
+                  <span class="oe-muted oc-muted">{{ __('Reservas pagas') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($metrics['paid_bookings'] ?? 0, 0, ',', '.') }}</span></span>
+                  <span class="oe-muted oc-muted">{{ __('Gratis') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-count">{{ number_format($metrics['free_bookings'] ?? 0, 0, ',', '.') }}</span></span>
                 </div>
                 <div class="oe-mobile-stat">
-                  <span class="oe-label">{{ __('Escaneo') }}</span>
-                  <span class="oe-money tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
-                  <div class="oe-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
+                  <span class="oe-label oc-label">{{ __('Escaneo') }}</span>
+                  <span class="oe-money oc-money tuki-data tuki-data-count">{{ number_format($metrics['scanned'] ?? 0, 0, ',', '.') }}/{{ number_format($metrics['tickets'] ?? 0, 0, ',', '.') }}</span>
+                  <div class="oe-progress oc-progress" aria-hidden="true"><span style="width: {{ $metrics['scan_percent'] ?? 0 }}%"></span></div>
                 </div>
               </div>
               <div class="oe-mobile-settlement">
                 <span class="oe-mobile-settlement__copy">
-                  <span class="oe-label">{{ __('Liquidación') }}</span>
-                  <span class="oe-muted">{{ __('Pendiente') }}: <span class="oe-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
+                  <span class="oe-label oc-label">{{ __('Liquidación') }}</span>
+                  <span class="oe-muted oc-muted">{{ __('Pendiente') }}: <span class="oe-data-value oc-data-value tuki-data tuki-data-money">{{ $formatMoney($settlement['pending_organizer_amount'] ?? 0) }}</span></span>
                 </span>
               </div>
-              <div class="oe-mobile-controls {{ $event->event_type == 'venue' ? '' : 'oe-mobile-controls--single' }}">
-                <a href="{{ route('organizer.event_management.edit_event', ['id' => $event->id]) }}" class="btn btn-sm oe-mobile-btn oe-mobile-btn--secondary"
+              <div class="oe-mobile-controls oc-mobile-card__controls {{ $event->event_type == 'venue' ? '' : 'oe-mobile-controls--single oc-mobile-card__controls--single' }}">
+                <a href="{{ route('organizer.event_management.edit_event', ['id' => $event->id]) }}" class="btn btn-sm oe-mobile-btn oe-mobile-btn--secondary oc-btn oc-btn--secondary"
                   aria-label="{{ __('Editar') }} {{ $event->title }}">
                   <i class="fas fa-edit" aria-hidden="true"></i>{{ __('Editar') }}
                 </a>
                 @if ($event->event_type == 'venue')
                   <a href="{{ route('organizer.event.ticket', ['language' => request()->input('language'), 'event_id' => $event->id, 'event_type' => $event->event_type]) }}"
-                    class="btn btn-sm oe-mobile-btn oe-mobile-btn--primary"
+                    class="btn btn-sm oe-mobile-btn oe-mobile-btn--primary oc-btn oc-btn--primary"
                     aria-label="{{ __('Entradas') }} {{ $event->title }}">
                     <i class="fas fa-ticket-alt" aria-hidden="true"></i>{{ __('Entradas') }}
                   </a>

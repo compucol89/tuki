@@ -1655,9 +1655,9 @@
     };
   @endphp
 
-  <div class="organizer-booking-admin">
+  <div class="organizer-booking-admin oc-page">
     <div class="page-header">
-      <h1 class="page-title">
+      <h1 class="page-title oc-page__title">
         @if ($focusedEventId)
           {{ __('Compradores') }}: {{ $focusedEventTitle }}
         @else
@@ -1688,44 +1688,44 @@
     </div>
 
     @if (!$focusedEventId)
-      <p class="alert alert-light border mb-3 ob-context-note">
+      <p class="alert alert-light border mb-3 ob-context-note oc-muted">
         {{ __('Lista de eventos con reservas. Entrá a un evento para ver tipos de entrada, compradores y acciones.') }}
       </p>
     @endif
 
-    <div class="ob-summary" role="group" aria-label="{{ __('Resumen de reservas') }}">
-      <div class="ob-metric ob-metric--primary">
-        <div class="ob-metric__label">{{ __('Reservas') }}</div>
-        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['total'] ?? 0, 0, ',', '.') }}</div>
+    <div class="ob-summary oc-summary" role="group" aria-label="{{ __('Resumen de reservas') }}">
+      <div class="ob-metric ob-metric--primary oc-metric">
+        <div class="ob-metric__label oc-metric__label">{{ __('Reservas') }}</div>
+        <div class="ob-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($kpis['total'] ?? 0, 0, ',', '.') }}</div>
       </div>
-      <div class="ob-metric ob-metric--money">
-        <div class="ob-metric__label">{{ __('Total cobrado') }}</div>
-        <div class="ob-metric__value tuki-data tuki-data-money">{{ $formatBaseMoney($kpis['charged'] ?? 0) }}</div>
-        <div class="ob-metric__hint">{{ __('Lo que pagaron los clientes') }}</div>
+      <div class="ob-metric ob-metric--money oc-metric">
+        <div class="ob-metric__label oc-metric__label">{{ __('Total cobrado') }}</div>
+        <div class="ob-metric__value oc-metric__value tuki-data tuki-data-money">{{ $formatBaseMoney($kpis['charged'] ?? 0) }}</div>
+        <div class="ob-metric__hint oc-muted">{{ __('Lo que pagaron los clientes') }}</div>
       </div>
-      <div class="ob-metric ob-metric--money">
-        <div class="ob-metric__label">{{ __('Recibís') }}</div>
-        <div class="ob-metric__value tuki-data tuki-data-money">{{ $formatBaseMoney($kpis['organizer_net'] ?? 0) }}</div>
-        <div class="ob-metric__hint">{{ __('Entradas menos comisión') }}</div>
+      <div class="ob-metric ob-metric--money oc-metric">
+        <div class="ob-metric__label oc-metric__label">{{ __('Recibís') }}</div>
+        <div class="ob-metric__value oc-metric__value tuki-data tuki-data-money">{{ $formatBaseMoney($kpis['organizer_net'] ?? 0) }}</div>
+        <div class="ob-metric__hint oc-muted">{{ __('Entradas menos comisión') }}</div>
       </div>
-      <div class="ob-metric">
-        <div class="ob-metric__label">{{ __('Completadas') }}</div>
-        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['completed'] ?? 0, 0, ',', '.') }}</div>
+      <div class="ob-metric oc-metric">
+        <div class="ob-metric__label oc-metric__label">{{ __('Completadas') }}</div>
+        <div class="ob-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($kpis['completed'] ?? 0, 0, ',', '.') }}</div>
       </div>
-      <div class="ob-metric">
-        <div class="ob-metric__label">{{ __('Pendientes') }}</div>
-        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['pending'] ?? 0, 0, ',', '.') }}</div>
+      <div class="ob-metric oc-metric">
+        <div class="ob-metric__label oc-metric__label">{{ __('Pendientes') }}</div>
+        <div class="ob-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($kpis['pending'] ?? 0, 0, ',', '.') }}</div>
       </div>
-      <div class="ob-metric">
-        <div class="ob-metric__label">{{ __('Gratis') }}</div>
-        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['free'] ?? 0, 0, ',', '.') }}</div>
+      <div class="ob-metric oc-metric">
+        <div class="ob-metric__label oc-metric__label">{{ __('Gratis') }}</div>
+        <div class="ob-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($kpis['free'] ?? 0, 0, ',', '.') }}</div>
       </div>
     </div>
 
-    <section class="ob-type-summary" aria-labelledby="organizerTicketTypeSummaryTitle">
-      <div class="ob-type-summary__head">
+    <section class="ob-type-summary oc-panel" aria-labelledby="organizerTicketTypeSummaryTitle">
+      <div class="ob-type-summary__head oc-panel__header">
         <div class="ob-type-summary__heading">
-          <h2 id="organizerTicketTypeSummaryTitle" class="ob-type-summary__title">
+          <h2 id="organizerTicketTypeSummaryTitle" class="ob-type-summary__title oc-panel__title">
             @if ($focusedEventId)
               {{ __('Resumen del evento') }}
             @else
@@ -1733,7 +1733,7 @@
             @endif
           </h2>
           @unless ($focusedEventId)
-            <div class="ob-muted">
+            <div class="ob-muted oc-muted">
               {{ __('Ordenado por fecha. Tocá un evento para ver todo.') }}
             </div>
             <div class="ob-type-summary__formula">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
@@ -1743,9 +1743,9 @@
             @endphp
             @if ($focusedMetaSummary)
               <div class="ob-focused-meta">
-                <span class="ob-chip">{{ $focusedMetaSummary['date_label'] }}</span>
-                <span class="ob-chip">{{ number_format($focusedMetaSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
-                <span class="ob-chip">{{ count($focusedMetaSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+                <span class="ob-chip oc-pill">{{ $focusedMetaSummary['date_label'] }}</span>
+                <span class="ob-chip oc-pill">{{ number_format($focusedMetaSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                <span class="ob-chip oc-pill">{{ count($focusedMetaSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
                 <span class="ob-event-summary-card__status">{{ $focusedMetaSummary['date_status'] }}</span>
               </div>
             @endif
@@ -1753,7 +1753,7 @@
         </div>
       </div>
       @if (empty($ticketSalesByEvent ?? []))
-          <div class="ob-empty py-3">
+          <div class="ob-empty oc-empty py-3">
             <p class="text-muted mb-0">{{ __('No hay entradas para resumir con estos filtros.') }}</p>
           </div>
         @else
@@ -1770,43 +1770,43 @@
                   $categoryLabel = $eventSummary['category_label'] ?? '-';
                   $eventTypeLabel = $eventSummary['event_type_label'] ?? '-';
                 @endphp
-                <a role="listitem" class="ob-event-row"
+                <a role="listitem" class="ob-event-row oc-mobile-card"
                   href="{{ route('organizer.event_booking.by_event', $eventSummary['event_id']) }}">
                   <div class="ob-event-row__main">
-                    <div class="ob-event-row__head">
+                    <div class="ob-event-row__head oc-mobile-card__head">
                       <div class="ob-event-row__thumb">
                         <img src="{{ $thumb }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='{{ $fallbackThumb }}';">
                       </div>
-                      <div class="ob-event-row__text">
-                        <h3 class="ob-event-row__title">{{ $eventSummary['event_title'] }}</h3>
-                        <span class="ob-event-row__date">
+                      <div class="ob-event-row__text oc-mobile-card__main">
+                        <h3 class="ob-event-row__title oc-title">{{ $eventSummary['event_title'] }}</h3>
+                        <span class="ob-event-row__date oc-muted">
                           <span class="ob-event-row__date-label">{{ __('Función') }}:</span>
-                          <span class="ob-event-row__date-value">{{ $eventSummary['date_label'] }}</span>
+                          <span class="ob-event-row__date-value oc-data-value">{{ $eventSummary['date_label'] }}</span>
                         </span>
-                        <span class="ob-event-row__category">{{ __('Categoría') }}: {{ $categoryLabel ?: '-' }}</span>
+                        <span class="ob-event-row__category oc-muted">{{ __('Categoría') }}: {{ $categoryLabel ?: '-' }}</span>
                       </div>
-                      <div class="ob-event-row__badges">
-                        <span class="ob-event-row__badge ob-event-row__badge--status">{{ $eventSummary['date_status'] }}</span>
-                        <span class="ob-event-row__badge ob-event-row__badge--type">{{ __($eventTypeLabel) }}</span>
+                      <div class="ob-event-row__badges oc-mobile-card__badges">
+                        <span class="ob-event-row__badge ob-event-row__badge--status oc-pill">{{ $eventSummary['date_status'] }}</span>
+                        <span class="ob-event-row__badge ob-event-row__badge--type oc-pill">{{ __($eventTypeLabel) }}</span>
                       </div>
                     </div>
-                    <div class="ob-event-row__grid" role="group" aria-label="{{ __('Totales del evento') }}">
+                    <div class="ob-event-row__grid oc-mobile-card__grid" role="group" aria-label="{{ __('Totales del evento') }}">
                       <div class="ob-event-row__stat">
-                        <span class="ob-event-row__label">{{ __('Reservas') }}</span>
-                        <strong class="ob-event-row__value tuki-data tuki-data-count">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }}</strong>
-                        <span class="ob-event-row__muted">{{ __('Vendidas') }}: <span class="tuki-data tuki-data-count">{{ number_format($eventSummary['sold'], 0, ',', '.') }}</span></span>
-                        <span class="ob-event-row__muted">{{ __('Pendientes') }}: <span class="tuki-data tuki-data-count">{{ number_format($eventSummary['pending'], 0, ',', '.') }}</span></span>
+                        <span class="ob-event-row__label oc-label">{{ __('Reservas') }}</span>
+                        <strong class="ob-event-row__value oc-data-value tuki-data tuki-data-count">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }}</strong>
+                        <span class="ob-event-row__muted oc-muted">{{ __('Vendidas') }}: <span class="oc-data-value tuki-data tuki-data-count">{{ number_format($eventSummary['sold'], 0, ',', '.') }}</span></span>
+                        <span class="ob-event-row__muted oc-muted">{{ __('Pendientes') }}: <span class="oc-data-value tuki-data tuki-data-count">{{ number_format($eventSummary['pending'], 0, ',', '.') }}</span></span>
                       </div>
                       <div class="ob-event-row__stat">
-                        <span class="ob-event-row__label">{{ __('Escaneo') }}</span>
-                        <strong class="ob-event-row__value tuki-data tuki-data-count">{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
-                        <div class="ob-event-row__progress" aria-hidden="true"><span style="width: {{ $eventSummary['scan_percent'] ?? 0 }}%"></span></div>
+                        <span class="ob-event-row__label oc-label">{{ __('Escaneo') }}</span>
+                        <strong class="ob-event-row__value oc-data-value tuki-data tuki-data-count">{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
+                        <div class="ob-event-row__progress oc-progress" aria-hidden="true"><span style="width: {{ $eventSummary['scan_percent'] ?? 0 }}%"></span></div>
                       </div>
                     </div>
                     <div class="ob-event-row__settlement">
                       <span class="ob-event-row__settlement-copy">
-                        <span class="ob-event-row__label">{{ __('Ingreso neto') }}</span>
-                        <span class="ob-event-row__muted">{{ __('Neto') }}: <span class="ob-event-row__money tuki-data tuki-data-money">{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</span></span>
+                        <span class="ob-event-row__label oc-label">{{ __('Ingreso neto') }}</span>
+                        <span class="ob-event-row__muted oc-muted">{{ __('Neto') }}: <span class="ob-event-row__money oc-money tuki-data tuki-data-money">{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</span></span>
                       </span>
                     </div>
                   </div>
@@ -1824,38 +1824,38 @@
                   @php
                     $tone = $obTicketTone($summaryRow['ticket_name']);
                   @endphp
-                  <article role="listitem" class="ob-ticket-card ob-ticket-card--{{ $tone['key'] }}">
+                  <article role="listitem" class="ob-ticket-card ob-ticket-card--{{ $tone['key'] }} oc-mobile-card">
                     <div class="ob-ticket-card__head">
                       <div class="ob-ticket-card__icon" aria-hidden="true">
                         <i class="fas {{ $tone['icon'] }}"></i>
                       </div>
                       <div class="ob-ticket-card__main">
-                        <h4 class="ob-ticket-card__title">{{ $summaryRow['ticket_name'] }}</h4>
+                        <h4 class="ob-ticket-card__title oc-title">{{ $summaryRow['ticket_name'] }}</h4>
                       </div>
-                      <span class="ob-ticket-card__badge">{{ $tone['label'] }}</span>
+                      <span class="ob-ticket-card__badge oc-pill">{{ $tone['label'] }}</span>
                     </div>
                     <div class="ob-ticket-card__stats">
                       <div class="ob-ticket-stat">
-                        <span class="ob-ticket-stat__label">{{ __('Vendidas') }}</span>
-                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</strong>
+                        <span class="ob-ticket-stat__label oc-label">{{ __('Vendidas') }}</span>
+                        <strong class="ob-ticket-stat__value oc-data-value tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</strong>
                       </div>
                       <div class="ob-ticket-stat">
-                        <span class="ob-ticket-stat__label">{{ __('Pendientes') }}</span>
-                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</strong>
+                        <span class="ob-ticket-stat__label oc-label">{{ __('Pendientes') }}</span>
+                        <strong class="ob-ticket-stat__value oc-data-value tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</strong>
                       </div>
                       <div class="ob-ticket-stat">
-                        <span class="ob-ticket-stat__label">{{ __('Rechazadas') }}</span>
-                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</strong>
+                        <span class="ob-ticket-stat__label oc-label">{{ __('Rechazadas') }}</span>
+                        <strong class="ob-ticket-stat__value oc-data-value tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</strong>
                       </div>
                       <div class="ob-ticket-stat ob-ticket-stat--scan">
-                        <span class="ob-ticket-stat__label">{{ __('Escaneo') }}</span>
-                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
-                        <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
+                        <span class="ob-ticket-stat__label oc-label">{{ __('Escaneo') }}</span>
+                        <strong class="ob-ticket-stat__value oc-data-value tuki-data tuki-data-count">{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
+                        <div class="ob-progress oc-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
                       </div>
                     </div>
                     <div class="ob-ticket-card__foot">
-                      <span class="ob-ticket-card__money-label">{{ __('Ingresos') }}</span>
-                      <span class="ob-ticket-card__money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span>
+                      <span class="ob-ticket-card__money-label oc-label">{{ __('Ingresos') }}</span>
+                      <span class="ob-ticket-card__money oc-money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span>
                     </div>
                   </article>
                 @endforeach
@@ -1867,10 +1867,10 @@
 
     @if ($focusedEventId)
     <section class="ob-panel ob-panel--flat" aria-labelledby="organizerBuyersTitle">
-      <div class="ob-panel__header">
+      <div class="ob-panel__header oc-panel__header">
         <div>
-          <h2 id="organizerBuyersTitle" class="ob-panel__title">{{ __('Compradores') }}</h2>
-          <span class="ob-muted">{{ __('Personas que reservaron este evento') }} · <span class="ob-data-value">{{ number_format($bookings->total(), 0, ',', '.') }}</span> {{ __('resultados') }}</span>
+          <h2 id="organizerBuyersTitle" class="ob-panel__title oc-panel__title">{{ __('Compradores') }}</h2>
+          <span class="ob-muted oc-muted">{{ __('Personas que reservaron este evento') }} · <span class="ob-data-value oc-data-value">{{ number_format($bookings->total(), 0, ',', '.') }}</span> {{ __('resultados') }}</span>
         </div>
         <div>
           <button class="btn btn-danger d-none bulk-delete"
@@ -1880,7 +1880,7 @@
         </div>
       </div>
 
-      <form id="organizerBookingFiltersForm" action="{{ $bookingFiltersAction }}" method="GET" class="ob-toolbar">
+      <form id="organizerBookingFiltersForm" action="{{ $bookingFiltersAction }}" method="GET" class="ob-toolbar oc-toolbar">
         <div class="form-group">
           <label for="organizerBookingId">{{ __('Reserva') }}</label>
           <input id="organizerBookingId" name="booking_id" type="text" class="form-control"
@@ -1902,24 +1902,24 @@
             <option value="rejected" {{ request()->input('status') == 'rejected' ? 'selected' : '' }}>{{ __('Rechazado') }}</option>
           </select>
         </div>
-        <div class="ob-toolbar__actions">
-          <button type="submit" class="btn btn-primary">
+        <div class="ob-toolbar__actions oc-toolbar__actions">
+          <button type="submit" class="btn btn-primary oc-btn oc-btn--primary">
             <i class="fas fa-search" aria-hidden="true"></i>{{ __('Buscar') }}
           </button>
-          <a href="{{ $bookingFiltersAction }}" class="btn btn-light">{{ __('Limpiar') }}</a>
+          <a href="{{ $bookingFiltersAction }}" class="btn btn-light oc-btn oc-btn--secondary">{{ __('Limpiar') }}</a>
         </div>
       </form>
 
-      <div class="ob-panel__body">
+      <div class="ob-panel__body oc-panel__body">
             @if (count($bookings) == 0)
-              <div class="ob-empty">
+              <div class="ob-empty oc-empty">
                 <i class="fas fa-ticket-alt" aria-hidden="true"></i>
                 <h3>{{ __('No se encontraron reservas') }}</h3>
                 <p class="text-muted mb-0">{{ __('Probá ajustar los filtros de búsqueda.') }}</p>
               </div>
             @else
-              <div class="table-responsive d-none d-lg-block">
-                <table class="table ob-table">
+                <div class="table-responsive d-none d-lg-block">
+                <table class="table ob-table oc-table">
                   <thead>
                     <tr>
                       <th scope="col">
@@ -1975,64 +1975,64 @@
                             <i class="fas fa-chevron-down" aria-hidden="true"></i>
                           </button>
                           <strong class="tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 12, '') }}</strong>
-                          <span class="ob-muted">{{ optional($booking->created_at)->format('d/m/Y H:i') }}</span>
+                          <span class="ob-muted oc-muted">{{ optional($booking->created_at)->format('d/m/Y H:i') }}</span>
                         </td>
                         <td>
                           @if ($eventInfo)
-                            <a class="ob-title" href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
+                            <a class="ob-title oc-title" href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
                               target="_blank" rel="noopener" title="{{ $title }}">{{ $title }}</a>
                           @else
-                            <span class="ob-title">-</span>
+                            <span class="ob-title oc-title">-</span>
                           @endif
-                          <span class="ob-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
+                          <span class="ob-muted oc-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
                         </td>
                         <td>
                           @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
                         </td>
                         <td>
-                          <div class="ob-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</div>
-                          <span class="ob-muted">{{ __('Recibís') }}: {{ $formatMoney($organizerTotal) }}</span>
+                          <div class="ob-money oc-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</div>
+                          <span class="ob-muted oc-muted">{{ __('Recibís') }}: {{ $formatMoney($organizerTotal) }}</span>
                         </td>
                         <td>
                           <span class="badge badge-{{ $status['class'] }} ob-status">
                             <i class="fas {{ $status['icon'] }}" aria-hidden="true"></i>{{ $status['label'] }}
                           </span>
-                          <span class="ob-muted">{{ $booking->paymentMethod ?: '-' }}</span>
+                          <span class="ob-muted oc-muted">{{ $booking->paymentMethod ?: '-' }}</span>
                         </td>
                         <td>
                           @if ((int) $booking->quantity <= 0)
                             <strong>{{ __('Datos incompletos') }}</strong>
-                            <span class="ob-muted">{{ __('Sin entradas registradas') }}</span>
+                            <span class="ob-muted oc-muted">{{ __('Sin entradas registradas') }}</span>
                           @else
                             <strong>{{ $scannedCount }}/{{ $booking->quantity }}</strong>
-                            <span class="ob-muted">{{ __('Faltan') }}: {{ $pendingScanCount }}</span>
+                            <span class="ob-muted oc-muted">{{ __('Faltan') }}: {{ $pendingScanCount }}</span>
                           @endif
-                          <div class="ob-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
+                          <div class="ob-progress oc-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                         </td>
                         <td>
                           <div class="ob-actions">
                             <a href="{{ route('organizer.event_booking.details', ['id' => $booking->id]) }}"
-                              class="btn btn-outline-primary ob-action-btn" title="{{ __('Ver detalles') }}"
+                              class="btn btn-outline-primary ob-action-btn oc-btn" title="{{ __('Ver detalles') }}"
                               aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
                               <i class="fas fa-eye" aria-hidden="true"></i>
                             </a>
                             @if ($hasInvoiceFile)
                               <a href="{{ route('booking.ticket.download', $booking->id) }}"
-                                class="btn btn-outline-secondary ob-action-btn" target="_blank" rel="noopener" title="{{ __('Descargar entrada') }}"
+                                class="btn btn-outline-secondary ob-action-btn oc-btn" target="_blank" rel="noopener" title="{{ __('Descargar entrada') }}"
                                 aria-label="{{ __('Descargar entrada de la reserva') }} #{{ $booking->booking_id }}">
                                 <i class="fas fa-file-pdf" aria-hidden="true"></i>
                               </a>
                             @endif
                             @if (!is_null($booking->attachmentFile))
                               <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}"
-                                class="btn btn-outline-info ob-action-btn" title="{{ __('Ver comprobante') }}"
+                                class="btn btn-outline-info ob-action-btn oc-btn" title="{{ __('Ver comprobante') }}"
                                 aria-label="{{ __('Ver comprobante de la reserva') }} #{{ $booking->booking_id }}">
                                 <i class="fas fa-paperclip" aria-hidden="true"></i>
                               </a>
                             @endif
                             <form class="deleteForm d-inline-block" action="{{ route('organizer.event_booking.delete', ['id' => $booking->id]) }}" method="post">
                               @csrf
-                              <button type="submit" class="btn btn-outline-danger ob-action-btn deleteBtn"
+                              <button type="submit" class="btn btn-outline-danger ob-action-btn oc-btn deleteBtn"
                                 title="{{ __('Eliminar') }}" aria-label="{{ __('Eliminar reserva') }} #{{ $booking->booking_id }}">
                                 <i class="fas fa-trash" aria-hidden="true"></i>
                               </button>
@@ -2044,20 +2044,20 @@
                         <td colspan="8">
                           <div class="ob-detail-grid">
                             <div>
-                              <span class="ob-detail-label">{{ __('Método de pago') }}</span>
-                              <span class="ob-detail-value">{{ $booking->paymentMethod ?: '-' }}</span>
+                              <span class="ob-detail-label oc-data-label">{{ __('Método de pago') }}</span>
+                              <span class="ob-detail-value oc-data-value">{{ $booking->paymentMethod ?: '-' }}</span>
                             </div>
                             <div>
-                              <span class="ob-detail-label">{{ __('Fecha / función') }}</span>
-                              <span class="ob-detail-value">{{ $eventDateLabel }}</span>
+                              <span class="ob-detail-label oc-data-label">{{ __('Fecha / función') }}</span>
+                              <span class="ob-detail-value oc-data-value">{{ $eventDateLabel }}</span>
                             </div>
                             <div>
-                              <span class="ob-detail-label">{{ __('Comisión') }}</span>
-                              <span class="ob-detail-value">{{ $formatMoney($booking->commission ?? 0) }}</span>
+                              <span class="ob-detail-label oc-data-label">{{ __('Comisión') }}</span>
+                              <span class="ob-detail-value oc-data-value">{{ $formatMoney($booking->commission ?? 0) }}</span>
                             </div>
                             <div>
-                              <span class="ob-detail-label">{{ __('Add-ons') }}</span>
-                              <span class="ob-detail-value">{{ $addonsCount > 0 ? $addonsCount . ' - ' . $formatMoney($addonsTotal) : '-' }}</span>
+                              <span class="ob-detail-label oc-data-label">{{ __('Add-ons') }}</span>
+                              <span class="ob-detail-value oc-data-value">{{ $addonsCount > 0 ? $addonsCount . ' - ' . $formatMoney($addonsTotal) : '-' }}</span>
                             </div>
                             <div class="ob-detail-section">
                               <span class="ob-detail-label">{{ __('Tipos de entrada') }}</span>
@@ -2100,7 +2100,7 @@
                 </table>
               </div>
 
-              <div class="ob-mobile-list d-lg-none">
+              <div class="ob-mobile-list oc-mobile-list d-lg-none">
                 @foreach ($bookings as $booking)
                   @php
                     $eventInfo = $eventInfos[$booking->event_id] ?? null;
@@ -2133,19 +2133,19 @@
                     $invoiceExtension = pathinfo((string) $booking->invoice, PATHINFO_EXTENSION);
                     $hasInvoiceFile = $invoiceExtension == 'pdf' && $booking->hasInvoiceFile();
                   @endphp
-                  <article class="ob-mobile-booking" aria-labelledby="organizerMobileBookingTitle{{ $booking->id }}">
-                    <div class="ob-mobile-booking__head">
-                      <div class="ob-mobile-booking__main">
-                        <h3 class="ob-mobile-booking__heading">@if ($eventInfo)<a id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title"
+                  <article class="ob-mobile-booking oc-mobile-card" aria-labelledby="organizerMobileBookingTitle{{ $booking->id }}">
+                    <div class="ob-mobile-booking__head oc-mobile-card__head">
+                      <div class="ob-mobile-booking__main oc-mobile-card__main">
+                        <h3 class="ob-mobile-booking__heading">@if ($eventInfo)<a id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title oc-title"
                               href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
-                              target="_blank" rel="noopener">{{ $title }}</a>@else<span id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title">-</span>@endif
-                          <span class="ob-mobile-booking__ref tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 16, '') }}</span>
+                              target="_blank" rel="noopener">{{ $title }}</a>@else<span id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title oc-title">-</span>@endif
+                          <span class="ob-mobile-booking__ref oc-data-value tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 16, '') }}</span>
                         </h3>
-                        <div id="organizerMobileBookingMeta{{ $booking->id }}" class="ob-mobile-booking__meta">
+                        <div id="organizerMobileBookingMeta{{ $booking->id }}" class="ob-mobile-booking__meta oc-muted">
                           <span>{{ $eventDateLabel }}</span>
                         </div>
                       </div>
-                      <div class="ob-mobile-booking__badges">
+                      <div class="ob-mobile-booking__badges oc-mobile-card__badges">
                         <span class="badge badge-{{ $status['class'] }} ob-status"
                           aria-label="{{ __('Estado de pago') }}: {{ $status['label'] }}">{{ $status['label'] }}</span>
                       </div>
@@ -2154,7 +2154,7 @@
                     <section class="ob-mobile-buyerline" aria-label="{{ __('Comprador') }}">
                       <div class="ob-mobile-buyerline__main">
                         <div class="ob-mobile-buyerline__identity">
-                          <span class="ob-mobile-buyerline__label">{{ __('Comprador') }}</span>
+                          <span class="ob-mobile-buyerline__label oc-label">{{ __('Comprador') }}</span>
                           <strong class="ob-mobile-buyerline__name">{{ $buyerDisplayName }}</strong>
                         </div>
                         <div class="ob-mobile-buyerline__contact">
@@ -2171,40 +2171,40 @@
                       @endif
                     </section>
 
-                    <div class="ob-mobile-booking__grid" role="group" aria-label="{{ __('Resumen de la reserva') }}">
+                    <div class="ob-mobile-booking__grid oc-mobile-card__grid" role="group" aria-label="{{ __('Resumen de la reserva') }}">
                       <div class="ob-mobile-stat ob-mobile-stat--amount">
                         <div class="ob-mobile-stat__line ob-mobile-stat__line--primary">
-                          <span class="ob-mobile-stat__label">{{ __('Importe') }}</span>
-                          <span class="ob-mobile-stat__value ob-money ob-mobile-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
+                          <span class="ob-mobile-stat__label oc-label">{{ __('Importe') }}</span>
+                          <span class="ob-mobile-stat__value ob-money ob-mobile-money oc-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
                         </div>
                         <div class="ob-mobile-stat__line ob-mobile-stat__line--support">
-                          <span class="ob-mobile-stat__label">{{ __('Neto') }}</span>
-                          <span class="ob-mobile-stat__value tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span>
+                          <span class="ob-mobile-stat__label oc-label">{{ __('Neto') }}</span>
+                          <span class="ob-mobile-stat__value oc-data-value tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span>
                         </div>
                       </div>
                       <div class="ob-mobile-stat ob-mobile-stat--scan">
                         <div class="ob-mobile-stat__line ob-mobile-stat__line--primary">
-                          <span class="ob-mobile-stat__label">{{ __('Escaneo') }}</span>
+                          <span class="ob-mobile-stat__label oc-label">{{ __('Escaneo') }}</span>
                           @if ((int) $booking->quantity <= 0)
                             <span class="ob-mobile-stat__value">{{ __('Datos incompletos') }}</span>
                           @else
-                            <span class="ob-mobile-stat__value tuki-data tuki-data-count">{{ $scannedCount }}/{{ $booking->quantity }}</span>
+                            <span class="ob-mobile-stat__value oc-data-value tuki-data tuki-data-count">{{ $scannedCount }}/{{ $booking->quantity }}</span>
                           @endif
                         </div>
                         @if ((int) $booking->quantity > 0)
                           <div class="ob-mobile-stat__line ob-mobile-stat__line--support">
-                            <span class="ob-mobile-stat__label">{{ __('Faltan') }}</span>
-                            <span class="ob-mobile-stat__value tuki-data tuki-data-count">{{ $pendingScanCount }}</span>
+                            <span class="ob-mobile-stat__label oc-label">{{ __('Faltan') }}</span>
+                            <span class="ob-mobile-stat__value oc-data-value tuki-data tuki-data-count">{{ $pendingScanCount }}</span>
                           </div>
                         @endif
-                        <div class="ob-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
+                        <div class="ob-progress oc-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                       </div>
                     </div>
 
                     <section class="ob-mobile-extra ob-mobile-extra--tickets" aria-labelledby="organizerMobileTicketsTitle{{ $booking->id }}">
                       <div class="ob-mobile-extra__head">
-                        <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label">{{ __('Entradas') }}</span>
-                        <span class="ob-mobile-payment"><span class="ob-mobile-payment__label">{{ __('Pago') }}</span> <span>{{ $paymentMethodLabel }}</span></span>
+                        <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label oc-label">{{ __('Entradas') }}</span>
+                        <span class="ob-mobile-payment oc-pill"><span class="ob-mobile-payment__label">{{ __('Pago') }}</span> <span>{{ $paymentMethodLabel }}</span></span>
                       </div>
                       <div class="ob-mini-list">
                         @foreach ($ticketBreakdown as $ticketItem)
@@ -2215,15 +2215,15 @@
                           @endphp
                           <div class="ob-mini-row">
                             <div class="ob-mini-row__main">
-                              <span class="ob-mini-title">{{ $ticketDisplayName }}</span>
-                              <span class="ob-muted">
+                              <span class="ob-mini-title oc-title">{{ $ticketDisplayName }}</span>
+                              <span class="ob-muted oc-muted">
                                 {{ __('Escaneo') }}:
                                 <span class="tuki-data tuki-data-count">{{ $ticketItem['scanned'] }}/{{ $ticketItem['quantity'] }}</span>
                                 · {{ __('Cantidad') }}:
                                 <span class="tuki-data tuki-data-count">{{ $ticketItem['quantity'] }}</span>
                               </span>
                             </div>
-                            <span class="ob-detail-value ob-mini-row__amount ob-money tuki-data tuki-data-money">{{ $formatMoney($ticketItem['subtotal']) }}</span>
+                            <span class="ob-detail-value ob-mini-row__amount ob-money oc-money tuki-data tuki-data-money">{{ $formatMoney($ticketItem['subtotal']) }}</span>
                           </div>
                         @endforeach
                       </div>
@@ -2231,7 +2231,7 @@
 
                     @if (count($addonBreakdown) > 0)
                       <section class="ob-mobile-extra" aria-label="{{ __('Add-ons') }}">
-                        <span class="ob-detail-label">
+                        <span class="ob-detail-label oc-label">
                           {{ __('Add-ons') }}:
                           <span class="tuki-data tuki-data-count">{{ $addonsCount }}</span>
                           · <span class="tuki-data tuki-data-money">{{ $formatMoney($addonsTotal) }}</span>
@@ -2240,37 +2240,37 @@
                           @foreach ($addonBreakdown as $addonItem)
                             <div class="ob-mini-row">
                               <div class="ob-mini-row__main">
-                                <span class="ob-mini-title">{{ $addonItem['title'] }}</span>
-                                <span class="ob-muted">{{ $addonItem['redeemed'] ? __('Canjeado') : __('Pendiente de canje') }}</span>
+                                <span class="ob-mini-title oc-title">{{ $addonItem['title'] }}</span>
+                                <span class="ob-muted oc-muted">{{ $addonItem['redeemed'] ? __('Canjeado') : __('Pendiente de canje') }}</span>
                               </div>
-                              <span class="ob-detail-value ob-mini-row__amount ob-money tuki-data tuki-data-money">{{ $formatMoney($addonItem['subtotal']) }}</span>
+                              <span class="ob-detail-value ob-mini-row__amount ob-money oc-money tuki-data tuki-data-money">{{ $formatMoney($addonItem['subtotal']) }}</span>
                             </div>
                           @endforeach
                         </div>
                       </section>
                     @endif
 
-                    <div class="ob-mobile-controls">
+                    <div class="ob-mobile-controls oc-mobile-card__controls">
                       <a href="{{ route('organizer.event_booking.details', ['id' => $booking->id]) }}"
-                        class="btn btn-sm ob-mobile-btn ob-mobile-btn--primary"
+                        class="btn btn-sm ob-mobile-btn ob-mobile-btn--primary oc-btn oc-btn--primary"
                         aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
                         <i class="fas fa-eye" aria-hidden="true"></i>{{ __('Ver') }}
                       </a>
                       @if ($hasInvoiceFile)
-                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary" target="_blank" rel="noopener"
+                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary oc-btn oc-btn--secondary" target="_blank" rel="noopener"
                           aria-label="{{ __('Descargar entrada de la reserva') }} #{{ $booking->booking_id }}">
                           <i class="fas fa-file-pdf" aria-hidden="true"></i>{{ __('Entrada') }}
                         </a>
                       @endif
                       @if (!is_null($booking->attachmentFile))
-                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary"
+                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary oc-btn oc-btn--secondary"
                           aria-label="{{ __('Ver comprobante de la reserva') }} #{{ $booking->booking_id }}">
                           <i class="fas fa-paperclip" aria-hidden="true"></i>{{ __('Comprobante') }}
                         </a>
                       @endif
                       <form class="deleteForm d-inline-block m-0" action="{{ route('organizer.event_booking.delete', ['id' => $booking->id]) }}" method="post">
                         @csrf
-                        <button type="submit" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary deleteBtn"
+                        <button type="submit" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary oc-btn oc-btn--secondary deleteBtn"
                           aria-label="{{ __('Eliminar reserva') }} #{{ $booking->booking_id }}">
                           <i class="fas fa-trash" aria-hidden="true"></i>{{ __('Eliminar') }}
                         </button>
@@ -2287,7 +2287,7 @@
       </div>
 
       @if (count($bookings) > 0)
-        <div class="ob-panel__footer">
+        <div class="ob-panel__footer oc-panel__footer">
           <div class="d-inline-block">
             {{ $bookings->links() }}
           </div>

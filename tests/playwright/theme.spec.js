@@ -169,7 +169,7 @@ async function themeAudit(page) {
     };
 
     const whiteSurfaces = [];
-    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .ob-ticket-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .bod-ticket-mobile-card, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
+    document.querySelectorAll('.card, .oc-panel, .oc-toolbar, .oc-metric, .oc-mobile-card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .ob-ticket-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .bod-ticket-mobile-card, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
       const bg = getComputedStyle(el).backgroundColor;
       if (bg && bg !== 'rgba(0, 0, 0, 0)' && isWhite(bg)) {
         whiteSurfaces.push(el.className.toString().slice(0, 40));
@@ -177,7 +177,7 @@ async function themeAudit(page) {
     });
 
     const darkText = [];
-    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .ob-ticket-card__title, .ob-ticket-stat__value, .ob-ticket-card__money, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .bod-ticket-mobile-card__title, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
+    document.querySelectorAll('.oc-panel__title, .oc-metric__value, .oc-title, .oc-money, .oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .ob-ticket-card__title, .ob-ticket-stat__value, .ob-ticket-card__money, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .bod-ticket-mobile-card__title, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
       const c = getComputedStyle(el).color;
       if (isDarkText(c)) darkText.push(el.className.toString().slice(0, 40));
     });
@@ -462,6 +462,82 @@ test.describe('@theme contrato theming organizer', () => {
     expect(geom.panelBottomGap).toBeGreaterThanOrEqual(12);
     expect(geom.panelBottomGap).toBeLessThanOrEqual(24);
     expect(geom.overflowX).toBe(false);
+  });
+
+  test('@theme eventos baseline: primitivas Organizer Citrus sin drift visual', async ({ page }) => {
+    await login(page);
+
+    for (const theme of ['light', 'dark']) {
+      await page.setViewportSize({ width: 538, height: 872 });
+      await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'networkidle' });
+      await setTheme(page, theme);
+
+      const geom = await page.evaluate(() => {
+        const readBox = (selector) => {
+          const el = document.querySelector(selector);
+          if (!el) return null;
+          const rect = el.getBoundingClientRect();
+          const style = getComputedStyle(el);
+          return {
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+            paddingTop: style.paddingTop,
+            paddingRight: style.paddingRight,
+            paddingBottom: style.paddingBottom,
+            paddingLeft: style.paddingLeft,
+            borderRadius: style.borderRadius,
+            fontFamily: style.fontFamily,
+            fontSize: style.fontSize,
+            fontWeight: Number(style.fontWeight),
+          };
+        };
+
+        const pageRoot = document.querySelector('.organizer-events');
+        const panel = document.querySelector('.organizer-events .oe-panel');
+        const metric = document.querySelector('.organizer-events .oe-metric');
+        const mobileCard = document.querySelector('.organizer-events .oe-mobile-event');
+        const mobileTitle = mobileCard?.querySelector('.oe-title');
+        const mobileMoney = mobileCard?.querySelector('.oe-money');
+        const mobileBtn = mobileCard?.querySelector('.oe-mobile-btn--primary');
+
+        return {
+          hasOcPage: pageRoot?.classList.contains('oc-page') || false,
+          hasOcPanel: panel?.classList.contains('oc-panel') || false,
+          hasOcMetric: metric?.classList.contains('oc-metric') || false,
+          hasOcMobileCard: mobileCard?.classList.contains('oc-mobile-card') || false,
+          hasOcTitle: mobileTitle?.classList.contains('oc-title') || false,
+          hasOcMoney: mobileMoney?.classList.contains('oc-money') || false,
+          hasOcButton: mobileBtn?.classList.contains('oc-btn') || false,
+          panel: readBox('.organizer-events .oe-panel'),
+          metric: readBox('.organizer-events .oe-metric'),
+          mobileCard: readBox('.organizer-events .oe-mobile-event'),
+          mobileTitle: readBox('.organizer-events .oe-mobile-event .oe-title'),
+          mobileMoney: readBox('.organizer-events .oe-mobile-event .oe-money'),
+          mobileButton: readBox('.organizer-events .oe-mobile-event .oe-mobile-btn--primary'),
+          overflowX: document.documentElement.scrollWidth > window.innerWidth,
+        };
+      });
+
+      expect(geom.hasOcPage).toBe(true);
+      expect(geom.hasOcPanel).toBe(true);
+      expect(geom.hasOcMetric).toBe(true);
+      expect(geom.hasOcMobileCard).toBe(true);
+      expect(geom.hasOcTitle).toBe(true);
+      expect(geom.hasOcMoney).toBe(true);
+      expect(geom.hasOcButton).toBe(true);
+      expect(geom.panel.borderRadius).toBe('16px');
+      expect(geom.metric.height).toBeGreaterThanOrEqual(72);
+      expect(geom.metric.borderRadius).toBe('16px');
+      expect(geom.mobileCard.paddingTop).toBe('13px');
+      expect(geom.mobileCard.paddingRight).toBe('14px');
+      expect(geom.mobileCard.paddingBottom).toBe('14px');
+      expect(geom.mobileCard.paddingLeft).toBe('14px');
+      expect(geom.mobileTitle.fontSize).toBe('14px');
+      expect(geom.mobileTitle.fontWeight).toBe(700);
+      expect(geom.mobileMoney.fontFamily).toContain('IBM Plex Mono');
+      expect(geom.mobileButton.height).toBeGreaterThanOrEqual(40);
+      expect(geom.overflowX).toBe(false);
+    }
   });
 
   test('@theme reservas mobile: filas profesionales y datos mono', async ({ page }) => {

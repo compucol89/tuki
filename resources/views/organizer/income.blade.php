@@ -406,7 +406,7 @@
   @endphp
 
   <div class="page-header">
-    <h1 class="page-title">{{ __('Ingresos mensuales') }}</h1>
+    <h1 class="page-title oc-page__title">{{ __('Ingresos mensuales') }}</h1>
     <ul class="breadcrumbs">
       <li class="nav-home">
         <a href="{{ route('organizer.dashboard') }}" aria-label="{{ __('Ir al panel') }}">
@@ -422,33 +422,33 @@
     </ul>
   </div>
 
-  <div class="organizer-income-admin">
-    <section class="oi-summary" aria-label="{{ __('Resumen de ingresos mensuales') }}">
-      <div class="oi-metric">
-        <div class="oi-metric__label">{{ __('Neto del año') }}</div>
-        <div class="oi-metric__value tuki-data tuki-data-money">{{ $formatMoney($yearTotal) }}</div>
-        <div class="oi-metric__hint">{{ $selectedYear }}</div>
+  <div class="organizer-income-admin oc-page">
+    <section class="oi-summary oc-summary" aria-label="{{ __('Resumen de ingresos mensuales') }}">
+      <div class="oi-metric oc-metric">
+        <div class="oi-metric__label oc-metric__label">{{ __('Neto del año') }}</div>
+        <div class="oi-metric__value oc-metric__value tuki-data tuki-data-money">{{ $formatMoney($yearTotal) }}</div>
+        <div class="oi-metric__hint oc-muted">{{ $selectedYear }}</div>
       </div>
-      <div class="oi-metric">
-        <div class="oi-metric__label">{{ __('Mejor mes') }}</div>
-        <div class="oi-metric__value tuki-data tuki-data-money">{{ $formatMoney($bestMonthValue ?? 0) }}</div>
-        <div class="oi-metric__hint">{{ $bestMonthName }}</div>
+      <div class="oi-metric oc-metric">
+        <div class="oi-metric__label oc-metric__label">{{ __('Mejor mes') }}</div>
+        <div class="oi-metric__value oc-metric__value tuki-data tuki-data-money">{{ $formatMoney($bestMonthValue ?? 0) }}</div>
+        <div class="oi-metric__hint oc-muted">{{ $bestMonthName }}</div>
       </div>
-      <div class="oi-metric">
-        <div class="oi-metric__label">{{ __('Meses con ingresos') }}</div>
-        <div class="oi-metric__value tuki-data tuki-data-count">{{ number_format($activeMonths, 0, ',', '.') }}/12</div>
+      <div class="oi-metric oc-metric">
+        <div class="oi-metric__label oc-metric__label">{{ __('Meses con ingresos') }}</div>
+        <div class="oi-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($activeMonths, 0, ',', '.') }}/12</div>
       </div>
-      <div class="oi-metric">
-        <div class="oi-metric__label">{{ __('Meses negativos') }}</div>
-        <div class="oi-metric__value tuki-data tuki-data-count">{{ number_format($negativeMonths, 0, ',', '.') }}</div>
+      <div class="oi-metric oc-metric">
+        <div class="oi-metric__label oc-metric__label">{{ __('Meses negativos') }}</div>
+        <div class="oi-metric__value oc-metric__value tuki-data tuki-data-count">{{ number_format($negativeMonths, 0, ',', '.') }}</div>
       </div>
     </section>
 
-    <section class="oi-panel" aria-labelledby="monthlyIncomeTitle">
-      <div class="oi-panel__header">
+    <section class="oi-panel oc-panel" aria-labelledby="monthlyIncomeTitle">
+      <div class="oi-panel__header oc-panel__header">
         <div>
-          <h2 id="monthlyIncomeTitle" class="oi-panel__title">{{ __('Detalle mensual') }}</h2>
-          <div class="oi-panel__copy">{{ __('Ingresos netos por mes, descontando comisiones y ajustes.') }}</div>
+          <h2 id="monthlyIncomeTitle" class="oi-panel__title oc-panel__title">{{ __('Detalle mensual') }}</h2>
+          <div class="oi-panel__copy oc-muted">{{ __('Ingresos netos por mes, descontando comisiones y ajustes.') }}</div>
         </div>
         <form action="{{ route('organizer.monthly_income') }}" id="monthlyIncomeYearForm" class="oi-year-form" method="get">
           <div class="form-group">
@@ -463,9 +463,9 @@
         </form>
       </div>
 
-      <div class="oi-panel__body">
+      <div class="oi-panel__body oc-panel__body">
         <div class="table-responsive d-none d-lg-block">
-          <table class="table oi-table">
+          <table class="table oi-table oc-table">
             <caption class="sr-only">{{ __('Ingresos mensuales') }} {{ $selectedYear }}</caption>
             <thead>
               <tr>
@@ -481,14 +481,14 @@
                 @endphp
                 <tr>
                   <td>
-                    <div class="oi-month-name">{{ $row['name'] }}</div>
-                    <div class="oi-month-bar" aria-hidden="true"><span style="width: {{ $barWidth }}%"></span></div>
+                    <div class="oi-month-name oc-title">{{ $row['name'] }}</div>
+                    <div class="oi-month-bar oc-progress" aria-hidden="true"><span style="width: {{ $barWidth }}%"></span></div>
                   </td>
                   <td>
-                    <span class="oi-status oi-status--{{ $row['status'] }}">{{ $row['status_label'] }}</span>
+                    <span class="oi-status oi-status--{{ $row['status'] }} oc-pill">{{ $row['status_label'] }}</span>
                   </td>
                   <td class="text-right">
-                    <span class="oi-money tuki-data tuki-data-money {{ $row['value'] < 0 ? 'oi-money--negative' : '' }}">
+                    <span class="oi-money oc-money tuki-data tuki-data-money {{ $row['value'] < 0 ? 'oi-money--negative' : '' }}">
                       {{ $formatMoney($row['value']) }}
                     </span>
                   </td>
@@ -498,22 +498,22 @@
           </table>
         </div>
 
-        <div class="oi-mobile-list d-lg-none">
+        <div class="oi-mobile-list oc-mobile-list d-lg-none">
           @foreach ($monthlyRows as $row)
             @php
               $barWidth = min(100, round((abs($row['value']) / $maxAbsValue) * 100));
             @endphp
-            <article class="oi-mobile-month">
+            <article class="oi-mobile-month oc-mobile-card">
               <div class="oi-mobile-month__head">
                 <div>
-                  <div class="oi-month-name">{{ $row['name'] }}</div>
-                  <div class="oi-month-bar" aria-hidden="true"><span style="width: {{ $barWidth }}%"></span></div>
+                  <div class="oi-month-name oc-title">{{ $row['name'] }}</div>
+                  <div class="oi-month-bar oc-progress" aria-hidden="true"><span style="width: {{ $barWidth }}%"></span></div>
                 </div>
-                <span class="oi-status oi-status--{{ $row['status'] }}">{{ $row['status_label'] }}</span>
+                <span class="oi-status oi-status--{{ $row['status'] }} oc-pill">{{ $row['status_label'] }}</span>
               </div>
               <div class="oi-mobile-month__meta">
-                <span class="oi-label">{{ __('Ingreso neto') }}</span>
-                <span class="oi-money tuki-data tuki-data-money {{ $row['value'] < 0 ? 'oi-money--negative' : '' }}">
+                <span class="oi-label oc-label">{{ __('Ingreso neto') }}</span>
+                <span class="oi-money oc-money tuki-data tuki-data-money {{ $row['value'] < 0 ? 'oi-money--negative' : '' }}">
                   {{ $formatMoney($row['value']) }}
                 </span>
               </div>

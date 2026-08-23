@@ -344,6 +344,12 @@ test.describe('@theme contrato theming organizer', () => {
 
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await expect(page.locator('.footer')).toBeVisible();
+
+    const footerText = await page.locator('.footer').innerText();
+    expect(footerText).not.toContain('TAYRONA GROUP SAS');
+    expect(footerText).not.toContain('CUIT');
+    expect(footerText).not.toContain('WhatsApp');
+    expect(footerText).toMatch(/©\s*20\d{2}\s+Tukipass\.com\s*\|\s*Todos los derechos reservados\./);
   });
 
   test('@theme sidebar: iconos de items activos = token (nunca #1572E8)', async ({ page }) => {

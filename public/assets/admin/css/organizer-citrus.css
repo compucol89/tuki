@@ -8,6 +8,12 @@
   --oc-meta-size: 12px;
   --oc-title-size: 17px;
   --oc-value-size: 24px;
+  --oc-label-color: var(--text-secondary);
+  --oc-meta-color: var(--text-secondary);
+  --oc-label-weight: 500;
+  --oc-title-weight: 700;
+  --oc-text-value-weight: 500;
+  --oc-data-value-weight: 700;
   --oc-card-bg: var(--surface-card);
   --oc-card-alt-bg: var(--adm-primary-soft);
   --oc-card-alt-border: rgba(194, 65, 12, .26);
@@ -47,7 +53,7 @@ html[data-theme="dark"] {
 .oc-page__title {
   color: var(--text-primary);
   font-size: 24px;
-  font-weight: 760;
+  font-weight: 700;
   line-height: 1.14;
   letter-spacing: 0;
 }
@@ -55,7 +61,7 @@ html[data-theme="dark"] {
 .oc-page__subtitle,
 .oc-muted {
   display: block;
-  color: var(--text-muted);
+  color: var(--oc-meta-color);
   font-size: var(--oc-meta-size);
   line-height: 1.35;
 }
@@ -87,9 +93,9 @@ html[data-theme="dark"] {
 .oc-metric__label,
 .oc-label,
 .oc-data-label {
-  color: var(--text-muted);
+  color: var(--oc-label-color);
   font-size: var(--oc-label-size);
-  font-weight: 600;
+  font-weight: var(--oc-label-weight);
   line-height: 1.25;
   letter-spacing: 0;
   text-transform: none;
@@ -100,7 +106,7 @@ html[data-theme="dark"] {
   color: var(--text-primary);
   font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace);
   font-size: var(--oc-value-size);
-  font-weight: 720;
+  font-weight: var(--oc-data-value-weight);
   line-height: 1.05;
   letter-spacing: 0;
   font-variant-numeric: tabular-nums lining-nums;
@@ -125,7 +131,7 @@ html[data-theme="dark"] {
   margin: 0;
   color: var(--text-primary);
   font-size: var(--oc-title-size);
-  font-weight: 700;
+  font-weight: var(--oc-title-weight);
   line-height: 1.2;
   letter-spacing: 0;
 }
@@ -190,9 +196,9 @@ html[data-theme="dark"] {
 
 .oc-table thead th {
   border-top: 0;
-  color: var(--text-muted);
+  color: var(--oc-label-color);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.25;
   padding: 10px 8px;
   text-transform: uppercase;
@@ -247,7 +253,7 @@ html[data-theme="dark"] {
   display: flex;
   flex-wrap: wrap;
   gap: 2px 8px;
-  color: var(--text-muted);
+  color: var(--oc-meta-color);
   font-size: var(--oc-meta-size);
   line-height: 1.35;
 }
@@ -292,7 +298,7 @@ html[data-theme="dark"] {
 
 .oc-title {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--oc-title-weight);
   line-height: 1.25;
   letter-spacing: 0;
   text-decoration: none;
@@ -314,14 +320,16 @@ html[data-theme="dark"] {
 }
 
 .oc-money,
-.oc-data-value {
+.tuki-data-money,
+.tuki-data-count,
+.tuki-data-id {
   font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace);
   font-variant-numeric: tabular-nums lining-nums;
 }
 
 .oc-money {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: var(--oc-data-value-weight);
   line-height: 1.25;
   white-space: nowrap;
 }
@@ -341,8 +349,21 @@ html[data-theme="dark"] {
 
 .oc-data-value {
   color: var(--text-primary);
-  font-weight: 700;
+  font-family: var(--tuki-font-ui, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  font-weight: var(--oc-text-value-weight);
+  line-height: 1.35;
   letter-spacing: 0;
+  white-space: normal;
+}
+
+.oc-data-value.tuki-data,
+.oc-data-value.tuki-data-money,
+.oc-data-value.tuki-data-count,
+.oc-data-value.tuki-data-id,
+.oc-data-value.tuki-data-percent {
+  font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace);
+  font-weight: var(--oc-data-value-weight);
+  font-variant-numeric: tabular-nums lining-nums;
   white-space: nowrap;
 }
 
@@ -356,7 +377,7 @@ html[data-theme="dark"] {
   background: var(--surface-card-soft);
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -398,7 +419,7 @@ html[data-theme="dark"] {
   gap: 7px;
   border-radius: var(--adm-radius);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
   transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
@@ -537,9 +558,9 @@ html[data-theme="dark"] .oc-btn--secondary:focus {
 
   .oc-table td::before {
     content: attr(data-label);
-    color: var(--text-muted);
+    color: var(--oc-label-color);
     font-size: 10px;
-    font-weight: 800;
+    font-weight: 600;
     text-transform: uppercase;
   }
 }

@@ -856,7 +856,58 @@ test.describe('@theme contrato theming organizer', () => {
         const badges = first ? Array.from(first.querySelectorAll('.oc-mobile-card__badges .oc-pill')) : [];
         const grid = first?.querySelector('.oc-mobile-card__grid');
         const progress = first?.querySelector('.oc-progress');
-        const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .oc-money, .oc-data-value')).map((el) => getComputedStyle(el).fontFamily) : [];
+        const dataFonts = Array.from(document.querySelectorAll('.organizer-booking-detail .tuki-data, .organizer-booking-detail .oc-money')).map((el) => getComputedStyle(el).fontFamily);
+        const textValueFonts = Array.from(document.querySelectorAll('.organizer-booking-detail .oc-data-value:not(.tuki-data)')).map((el) => getComputedStyle(el).fontFamily);
+        const fontWeight = (selector) => {
+          const el = document.querySelector(selector);
+          return el ? Number.parseFloat(getComputedStyle(el).fontWeight) : 0;
+        };
+        const maxWeight = (selector) => Math.max(
+          0,
+          ...Array.from(document.querySelectorAll(selector)).map((el) => Number.parseFloat(getComputedStyle(el).fontWeight) || 0),
+        );
+        const parseColor = (value) => {
+          const nums = String(value).match(/[\d.]+/g)?.map(Number) || [];
+          if (nums.length < 3) return null;
+          return { r: nums[0], g: nums[1], b: nums[2], a: nums[3] ?? 1 };
+        };
+        const relLum = ({ r, g, b }) => {
+          const channel = (v) => {
+            const n = v / 255;
+            return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4;
+          };
+          return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+        };
+        const contrast = (fg, bg) => {
+          const a = relLum(fg);
+          const b = relLum(bg);
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        };
+        const blend = (top, bottom) => ({
+          r: top.r * top.a + bottom.r * (1 - top.a),
+          g: top.g * top.a + bottom.g * (1 - top.a),
+          b: top.b * top.a + bottom.b * (1 - top.a),
+          a: 1,
+        });
+        const backgroundFor = (el) => {
+          const layers = [];
+          let node = el;
+          while (node && node !== document.documentElement) {
+            const parsed = parseColor(getComputedStyle(node).backgroundColor);
+            if (parsed && parsed.a > 0) layers.push(parsed);
+            node = node.parentElement;
+          }
+          const bodyBg = parseColor(getComputedStyle(document.body).backgroundColor) || { r: 255, g: 255, b: 255, a: 1 };
+          return layers.reverse().reduce((bg, layer) => (layer.a >= 1 ? layer : blend(layer, bg)), bodyBg);
+        };
+        const contrastAudit = Array.from(document.querySelectorAll('.organizer-booking-detail .oc-data-label, .organizer-booking-detail .oc-data-value:not(.tuki-data), .organizer-booking-detail .oc-muted'))
+          .filter((el) => el.textContent.trim())
+          .map((el) => {
+            const styles = getComputedStyle(el);
+            const fg = parseColor(styles.color);
+            return fg ? contrast(fg, backgroundFor(el)) : null;
+          })
+          .filter((ratio) => Number.isFinite(ratio));
         const cardStyles = first ? getComputedStyle(first) : null;
         const progressStyles = progress ? getComputedStyle(progress) : null;
 
@@ -876,6 +927,12 @@ test.describe('@theme contrato theming organizer', () => {
           cardRadius: cardStyles?.borderTopLeftRadius || '',
           cardPadding: cardStyles ? [cardStyles.paddingTop, cardStyles.paddingRight, cardStyles.paddingBottom, cardStyles.paddingLeft].join(' ') : '',
           allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
+          allTextValuesInter: textValueFonts.length > 0 && textValueFonts.every((font) => font.includes('Inter') && !font.includes('IBM Plex Mono')),
+          titleWeight: fontWeight('.bod-title'),
+          eyebrowWeight: fontWeight('.bod-eyebrow'),
+          labelMaxWeight: maxWeight('.organizer-booking-detail .oc-data-label, .organizer-booking-detail .oc-metric__label'),
+          pillMaxWeight: maxWeight('.organizer-booking-detail .oc-pill'),
+          minTextContrast: contrastAudit.length ? Math.min(...contrastAudit) : 0,
           overflowX: document.documentElement.scrollWidth > window.innerWidth,
           text: first?.textContent?.trim().replace(/\s+/g, ' ') || '',
         };
@@ -898,6 +955,12 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.text).toMatch(/Subtotal/i);
       expect(geom.text).toMatch(/Escaneo/i);
       expect(geom.allDataFonts).toBe(true);
+      expect(geom.allTextValuesInter).toBe(true);
+      expect(geom.titleWeight).toBeLessThanOrEqual(700);
+      expect(geom.eyebrowWeight).toBeLessThanOrEqual(600);
+      expect(geom.labelMaxWeight).toBeLessThanOrEqual(500);
+      expect(geom.pillMaxWeight).toBeLessThanOrEqual(700);
+      expect(geom.minTextContrast).toBeGreaterThanOrEqual(4.5);
       expect(geom.overflowX).toBe(false);
     }
   });

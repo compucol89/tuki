@@ -24,7 +24,7 @@
       margin-bottom: 5px;
       color: var(--text-muted);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 600;
       letter-spacing: 0;
       text-transform: uppercase;
     }
@@ -33,7 +33,7 @@
       margin: 0;
       color: var(--text-primary);
       font-size: 21px;
-      font-weight: 800;
+      font-weight: 700;
       line-height: 1.25;
       overflow-wrap: anywhere;
     }
@@ -42,6 +42,7 @@
       margin-top: 7px;
       color: var(--text-muted);
       font-size: 13px;
+      font-weight: 500;
       overflow-wrap: anywhere;
     }
 
@@ -115,7 +116,7 @@
       padding: 6px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
     }
 
     .bod-status i {
@@ -143,7 +144,7 @@
     .bod-ticket-name {
       display: block;
       color: var(--text-primary);
-      font-weight: 800;
+      font-weight: 700;
       overflow-wrap: anywhere;
     }
 
@@ -334,7 +335,7 @@
         <h2 id="booking-detail-title" class="bod-title">
           {{ $eventInfo ? $eventInfo->title : __('Evento no disponible') }}
         </h2>
-        <div class="bod-id">#{{ $booking->booking_id }}</div>
+        <div class="bod-id tuki-data tuki-data-id">#{{ $booking->booking_id }}</div>
       </div>
 
       <div class="bod-actions">
@@ -371,19 +372,19 @@
       </div>
       <div class="oc-metric">
         <div class="oc-metric__label">{{ __('Total cobrado') }}</div>
-        <div class="oc-metric__value">{{ $formatMoney($paidTotal) }}</div>
-        <div class="oc-muted">{{ __('Base entradas') }}: {{ $formatMoney($booking->price ?? 0) }}</div>
+        <div class="oc-metric__value tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</div>
+        <div class="oc-muted">{{ __('Base entradas') }}: <span class="tuki-data tuki-data-money">{{ $formatMoney($booking->price ?? 0) }}</span></div>
       </div>
       <div class="oc-metric">
         <div class="oc-metric__label">{{ __('Recibís') }}</div>
-        <div class="oc-metric__value">{{ $formatMoney($organizerTotal) }}</div>
-        <div class="oc-muted">{{ __('Comisión plataforma') }}: {{ $formatMoney($booking->commission ?? 0) }}</div>
+        <div class="oc-metric__value tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</div>
+        <div class="oc-muted">{{ __('Comisión plataforma') }}: <span class="tuki-data tuki-data-money">{{ $formatMoney($booking->commission ?? 0) }}</span></div>
       </div>
       <div class="oc-metric">
         <div class="oc-metric__label">{{ __('Escaneo') }}</div>
-        <div class="oc-metric__value">{{ $scannedCount }}/{{ (int) $booking->quantity }}</div>
+        <div class="oc-metric__value tuki-data tuki-data-count">{{ $scannedCount }}/{{ (int) $booking->quantity }}</div>
         <div class="oc-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
-        <div class="oc-muted">{{ __('Faltan') }}: {{ $pendingScanCount }}</div>
+        <div class="oc-muted">{{ __('Faltan') }}: <span class="tuki-data tuki-data-count">{{ $pendingScanCount }}</span></div>
       </div>
     </section>
 
@@ -537,42 +538,42 @@
                   <span class="oc-data-label">{{ __('Base entradas') }}</span>
                   <span class="oc-muted">{{ __('Importe antes de impuestos') }}</span>
                 </div>
-                <span class="oc-money">{{ $formatMoney($booking->price ?? 0) }}</span>
+                <span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($booking->price ?? 0) }}</span>
               </div>
               <div class="bod-ledger-row">
                 <div>
                   <span class="oc-data-label">{{ __('Impuestos / cargos') }}</span>
                   <span class="oc-muted">{{ $booking->tax_percentage ? $booking->tax_percentage . '%' : __('Sin porcentaje informado') }}</span>
                 </div>
-                <span class="oc-money">{{ $formatMoney($booking->tax ?? 0) }}</span>
+                <span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($booking->tax ?? 0) }}</span>
               </div>
               <div class="bod-ledger-row">
                 <div>
                   <span class="oc-data-label">{{ __('Total cobrado') }}</span>
                   <span class="oc-muted">{{ __('Total pagado por el cliente') }}</span>
                 </div>
-                <span class="oc-money">{{ $formatMoney($paidTotal) }}</span>
+                <span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
               </div>
               <div class="bod-ledger-row">
                 <div>
                   <span class="oc-data-label">{{ __('Comisión plataforma') }}</span>
                   <span class="oc-muted">{{ $booking->commission_percentage ? $booking->commission_percentage . '%' : __('Sin porcentaje informado') }}</span>
                 </div>
-                <span class="oc-money">{{ $formatMoney($booking->commission ?? 0) }}</span>
+                <span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($booking->commission ?? 0) }}</span>
               </div>
               <div class="bod-ledger-row">
                 <div>
                   <span class="oc-data-label">{{ __('Descuentos') }}</span>
                   <span class="oc-muted">{{ __('Cupón') }}: {{ $formatMoney($booking->discount ?? 0) }} - {{ __('Anticipada') }}: {{ $formatMoney($booking->early_bird_discount ?? 0) }}</span>
                 </div>
-                <span class="oc-money">{{ $formatMoney((float) ($booking->discount ?? 0) + (float) ($booking->early_bird_discount ?? 0)) }}</span>
+                <span class="oc-money tuki-data tuki-data-money">{{ $formatMoney((float) ($booking->discount ?? 0) + (float) ($booking->early_bird_discount ?? 0)) }}</span>
               </div>
               <div class="bod-ledger-row bod-ledger-row--highlight">
                 <div>
                   <span class="oc-data-label">{{ __('Recibís') }}</span>
                   <span class="oc-muted">{{ __('Base entradas menos comisión de plataforma') }}</span>
                 </div>
-                <span class="oc-money">{{ $formatMoney($organizerTotal) }}</span>
+                <span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span>
               </div>
             </div>
           </div>
@@ -581,7 +582,7 @@
         <section class="oc-panel" aria-labelledby="bod-addons-title">
           <div class="oc-panel__header">
             <h3 id="bod-addons-title" class="oc-panel__title">{{ __('Add-ons') }}</h3>
-            <span class="oc-pill">{{ $addonsCount }} - {{ $formatMoney($addonsTotal) }}</span>
+            <span class="oc-pill tuki-data tuki-data-count">{{ $addonsCount }} - <span class="tuki-data-money">{{ $formatMoney($addonsTotal) }}</span></span>
           </div>
           <div class="oc-panel__body">
             @if (count($addonBreakdown) > 0)
@@ -606,9 +607,9 @@
                   @foreach ($addonBreakdown as $addon)
                     <tr>
                       <td data-label="{{ __('Producto') }}"><span class="bod-ticket-name">{{ $addon['title'] }}</span></td>
-                      <td data-label="{{ __('Cant.') }}"><span class="oc-pill">{{ $addon['quantity'] }}</span></td>
-                      <td data-label="{{ __('Precio unit.') }}"><span class="oc-money">{{ $formatMoney($addon['unit_price']) }}</span></td>
-                      <td data-label="{{ __('Subtotal') }}"><span class="oc-money">{{ $formatMoney($addon['subtotal']) }}</span></td>
+                      <td data-label="{{ __('Cant.') }}"><span class="oc-pill tuki-data tuki-data-count">{{ $addon['quantity'] }}</span></td>
+                      <td data-label="{{ __('Precio unit.') }}"><span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($addon['unit_price']) }}</span></td>
+                      <td data-label="{{ __('Subtotal') }}"><span class="oc-money tuki-data tuki-data-money">{{ $formatMoney($addon['subtotal']) }}</span></td>
                       <td data-label="{{ __('Estado') }}">{{ $addon['redeemed'] ? __('Canjeado') : __('Pendiente') }}</td>
                     </tr>
                   @endforeach
@@ -668,23 +669,30 @@
             <div class="oc-data-list">
               <div class="oc-data-row">
                 <span class="oc-data-label">{{ __('ID interno') }}</span>
-                <span class="oc-data-value">#{{ $booking->id }}</span>
+                <span class="oc-data-value tuki-data tuki-data-id">#{{ $booking->id }}</span>
               </div>
               <div class="oc-data-row">
                 <span class="oc-data-label">{{ __('Código') }}</span>
-                <span class="oc-data-value">#{{ $booking->booking_id }}</span>
+                <span class="oc-data-value tuki-data tuki-data-id">#{{ $booking->booking_id }}</span>
               </div>
               <div class="oc-data-row">
                 <span class="oc-data-label">{{ __('Entradas') }}</span>
-                <span class="oc-data-value">{{ (int) $booking->quantity }}</span>
+                <span class="oc-data-value tuki-data tuki-data-count">{{ (int) $booking->quantity }}</span>
               </div>
               <div class="oc-data-row">
                 <span class="oc-data-label">{{ __('Tipos') }}</span>
-                <span class="oc-data-value">{{ count($ticketBreakdown) }}</span>
+                <span class="oc-data-value tuki-data tuki-data-count">{{ count($ticketBreakdown) }}</span>
               </div>
               <div class="oc-data-row">
                 <span class="oc-data-label">{{ __('Add-ons') }}</span>
-                <span class="oc-data-value">{{ $addonsCount > 0 ? $addonsCount . ' - ' . $formatMoney($addonsTotal) : '-' }}</span>
+                <span class="oc-data-value">
+                  @if ($addonsCount > 0)
+                    <span class="tuki-data tuki-data-count">{{ $addonsCount }}</span> -
+                    <span class="tuki-data tuki-data-money">{{ $formatMoney($addonsTotal) }}</span>
+                  @else
+                    -
+                  @endif
+                </span>
               </div>
             </div>
           </div>

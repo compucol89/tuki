@@ -321,6 +321,31 @@ test.describe('@theme contrato theming organizer', () => {
     }
   }
 
+  test('@theme monthly-income footer queda en flujo scrolleable', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 538, height: 872 });
+    await page.goto('/organizer/monthly-income', { waitUntil: 'load' });
+    await setTheme(page, 'light');
+
+    const flow = await page.evaluate(() => {
+      const footer = document.querySelector('.footer');
+      const rect = footer.getBoundingClientRect();
+
+      return {
+        panelClass: document.querySelector('.main-panel').className,
+        footerPosition: getComputedStyle(footer).position,
+        canReachFooter: document.documentElement.scrollHeight >= rect.bottom + window.scrollY - 2,
+      };
+    });
+
+    expect(flow.panelClass).toContain('main-panel--flow-footer');
+    expect(flow.footerPosition).toBe('static');
+    expect(flow.canReachFooter).toBe(true);
+
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect(page.locator('.footer')).toBeVisible();
+  });
+
   test('@theme sidebar: iconos de items activos = token (nunca #1572E8)', async ({ page }) => {
     await login(page);
     await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'load' });

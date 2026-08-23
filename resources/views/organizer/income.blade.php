@@ -1,7 +1,26 @@
 @extends('organizer.layout')
 
+@section('panel-class', 'main-panel--flow-footer')
+
 @section('style')
   <style>
+    .main-panel--flow-footer {
+      display: flex;
+      height: auto;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .main-panel--flow-footer > .content {
+      flex: 1 0 auto;
+      overflow: visible;
+    }
+
+    .main-panel--flow-footer > .footer {
+      position: static;
+      flex: 0 0 auto;
+    }
+
     .organizer-income-admin {
       --oi-gap-tight: 8px;
       --oi-gap: 12px;

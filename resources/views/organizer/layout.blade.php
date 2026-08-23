@@ -61,7 +61,7 @@
     @includeIf('organizer.partials.side-navbar')
     {{-- side navbar area end --}}
 
-    <div class="main-panel">
+    <div class="main-panel @yield('panel-class')">
       <main class="content" id="main-content">
         <div class="page-inner">
           @yield('content')

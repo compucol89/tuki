@@ -376,11 +376,11 @@ html[data-theme="dark"] {
 .oc-progress {
   width: 100%;
   max-width: 145px;
-  height: 5px;
+  height: 6px;
   overflow: hidden;
   margin-top: 6px;
   border-radius: 999px;
-  background: var(--border-subtle);
+  background: var(--border-default);
 }
 
 .oc-progress span {

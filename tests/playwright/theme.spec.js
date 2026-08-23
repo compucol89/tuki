@@ -858,9 +858,11 @@ test.describe('@theme contrato theming organizer', () => {
         const progress = first?.querySelector('.oc-progress');
         const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .oc-money, .oc-data-value')).map((el) => getComputedStyle(el).fontFamily) : [];
         const cardStyles = first ? getComputedStyle(first) : null;
+        const progressStyles = progress ? getComputedStyle(progress) : null;
 
         return {
           cardCount: cards.length,
+          legacyCardShells: panel ? panel.querySelectorAll('.bod-ticket-mobile-card, .bod-ticket-mobile-grid').length : 0,
           tableDisplay: table ? getComputedStyle(table).display : null,
           headColumns: head ? getComputedStyle(head).gridTemplateColumns.split(' ').length : 0,
           thumbSize: thumb ? [Math.round(thumb.getBoundingClientRect().width), Math.round(thumb.getBoundingClientRect().height)] : null,
@@ -869,7 +871,10 @@ test.describe('@theme contrato theming organizer', () => {
           badgesRight: badges.length > 0 && title ? badges.every((badge) => badge.getBoundingClientRect().left > title.getBoundingClientRect().left) : false,
           gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
           progressWidth: progress ? Math.round(progress.getBoundingClientRect().width) : 0,
+          progressHeight: progress ? Math.round(progress.getBoundingClientRect().height) : 0,
+          progressBg: progressStyles?.backgroundColor || '',
           cardRadius: cardStyles?.borderTopLeftRadius || '',
+          cardPadding: cardStyles ? [cardStyles.paddingTop, cardStyles.paddingRight, cardStyles.paddingBottom, cardStyles.paddingLeft].join(' ') : '',
           allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
           overflowX: document.documentElement.scrollWidth > window.innerWidth,
           text: first?.textContent?.trim().replace(/\s+/g, ' ') || '',
@@ -877,6 +882,7 @@ test.describe('@theme contrato theming organizer', () => {
       });
 
       expect(geom.cardCount).toBeGreaterThan(0);
+      expect(geom.legacyCardShells).toBe(0);
       expect(geom.tableDisplay).toBe('none');
       expect(geom.headColumns).toBe(3);
       expect(geom.thumbSize).toEqual([54, 54]);
@@ -885,7 +891,10 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.badgesRight).toBe(true);
       expect(geom.gridColumns).toBe(2);
       expect(geom.progressWidth).toBeGreaterThan(100);
+      expect(geom.progressHeight).toBe(6);
+      expect(geom.progressBg).not.toBe('');
       expect(geom.cardRadius).toBe('8px');
+      expect(geom.cardPadding).toBe('13px 14px 14px 14px');
       expect(geom.text).toMatch(/Subtotal/i);
       expect(geom.text).toMatch(/Escaneo/i);
       expect(geom.allDataFonts).toBe(true);

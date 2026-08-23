@@ -188,6 +188,172 @@
         flex-wrap: wrap;
       }
     }
+
+    .organizer-dashboard-page {
+      --od-section-gap: 24px;
+      --od-card-gap: 16px;
+    }
+
+    .organizer-dashboard-page .od-page-header {
+      margin: 0 0 var(--od-section-gap) !important;
+    }
+
+    .organizer-dashboard-page .od-page-header h1 {
+      margin: 0;
+      color: var(--text-primary);
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 1.18;
+    }
+
+    .organizer-dashboard-page .od-profile-score {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+      margin-bottom: var(--od-section-gap);
+      padding: 20px;
+    }
+
+    .organizer-dashboard-page .od-profile-score__actions {
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .organizer-dashboard-page .od-profile-score__buttons {
+      min-width: 0;
+    }
+
+    .organizer-dashboard-page .dashboard-items.row {
+      gap: var(--od-card-gap);
+      grid-template-columns: 1fr;
+      margin-bottom: var(--od-section-gap);
+    }
+
+    .organizer-dashboard-page .dashboard-items > .col-lg-6:not(.col-xl-3) {
+      grid-column: 1 / -1;
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats {
+      min-height: 108px;
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats .card-body {
+      padding: 18px !important;
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats .card-body > .row {
+      gap: 14px;
+      grid-template-columns: 50px minmax(0, 1fr);
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats .icon-big {
+      height: 50px;
+      width: 50px;
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats .numbers .card-category {
+      margin-bottom: 6px !important;
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats .numbers .card-title {
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace) !important;
+      font-size: 21px !important;
+      font-weight: 600 !important;
+      letter-spacing: 0 !important;
+    }
+
+    .organizer-dashboard-page .dashboard-items .card-stats .numbers small {
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .organizer-dashboard-page .od-chart-card {
+      height: 100%;
+      margin-bottom: 0 !important;
+      border: 1px solid var(--border-default);
+      border-radius: var(--adm-radius-xl);
+      box-shadow: var(--adm-shadow-sm);
+    }
+
+    .organizer-dashboard-page .od-chart-card .card-header {
+      min-height: 56px;
+      padding: 16px 20px !important;
+    }
+
+    .organizer-dashboard-page .od-chart-card .card-body {
+      padding: 18px !important;
+    }
+
+    .organizer-dashboard-page .od-chart-card .chart-container {
+      height: 260px;
+      min-height: 260px;
+    }
+
+    @media (min-width: 480px) {
+      .organizer-dashboard-page .dashboard-items.row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .organizer-dashboard-page .od-profile-score {
+        grid-template-columns: minmax(260px, .75fr) minmax(500px, 1.25fr) minmax(154px, auto);
+        gap: 24px;
+        align-items: center;
+        padding: 20px 22px;
+      }
+
+      .organizer-dashboard-page .od-profile-score__actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .organizer-dashboard-page .od-profile-score__actions a {
+        min-height: 58px;
+      }
+
+      .organizer-dashboard-page .dashboard-items.row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .organizer-dashboard-page .dashboard-items > .col-lg-6:not(.col-xl-3) {
+        grid-column: span 2;
+      }
+
+      .organizer-dashboard-page .od-chart-card .chart-container {
+        height: 300px;
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 479.98px) {
+      .organizer-dashboard-page {
+        --od-section-gap: 22px;
+        --od-card-gap: 12px;
+      }
+
+      .organizer-dashboard-page .od-page-header h1 {
+        font-size: 26px;
+      }
+
+      .organizer-dashboard-page .dashboard-items .card-stats {
+        min-height: 102px;
+      }
+
+      .organizer-dashboard-page .dashboard-items .card-stats .card-body {
+        padding: 16px !important;
+      }
+
+      .organizer-dashboard-page .dashboard-items .card-stats .card-body > .row {
+        gap: 12px;
+        grid-template-columns: 48px minmax(0, 1fr);
+      }
+
+      .organizer-dashboard-page .od-chart-card .chart-container {
+        height: 230px;
+        min-height: 230px;
+      }
+    }
   </style>
 @endsection
 
@@ -212,8 +378,9 @@
     ];
   @endphp
 
-  <div class="mt-2 mb-4">
-    <h1 class=" pb-2 ">{{ __('Bienvenido de vuelta') .','}} {{ Auth::guard('organizer')->user()->username . '!' }}</h1>
+  <div class="organizer-dashboard-page">
+  <div class="mt-2 mb-4 od-page-header">
+    <h1>{{ __('Bienvenido de vuelta') .','}} {{ Auth::guard('organizer')->user()->username . '!' }}</h1>
   </div>
 
   @if (Session::get('secret_login') != true)
@@ -284,7 +451,7 @@
               <div class="col-7 col-stats">
                 <div class="numbers">
                   <p class="card-category">{{ __('Pendiente por liquidar') }}</p>
-                  <h4 class="card-title">
+                  <h4 class="card-title tuki-data tuki-data-money">
                     {{ $formatDashboardMoney($settlementSummary['pending_organizer_amount'] ?? 0) }}
                   </h4>
                   <small class="d-block">{{ __('Disponible') }}: {{ $formatDashboardMoney(Auth::guard('organizer')->user()->amount) }}</small>
@@ -309,7 +476,7 @@
               <div class="col-7 col-stats">
                 <div class="numbers">
                   <p class="card-category">{{ __('Events') }}</p>
-                  <h4 class="card-title">{{ $total_events }}</h4>
+                  <h4 class="card-title tuki-data tuki-data-count">{{ $total_events }}</h4>
                   <small class="d-block">{{ __('Pendientes') }}: {{ $settlementSummary['pending_events_count'] ?? 0 }}</small>
                 </div>
               </div>
@@ -331,7 +498,7 @@
               <div class="col-7 col-stats">
                 <div class="numbers">
                   <p class="card-category">{{ __('Total Event Bookings') }}</p>
-                  <h4 class="card-title">{{ $total_event_bookings }}</h4>
+                  <h4 class="card-title tuki-data tuki-data-count">{{ $total_event_bookings }}</h4>
                 </div>
               </div>
             </div>
@@ -353,7 +520,7 @@
               <div class="col-7 col-stats">
                 <div class="numbers">
                   <p class="card-category">{{ __('Total Transcation') }}</p>
-                  <h4 class="card-title">{{ $transcation_count }}
+                  <h4 class="card-title tuki-data tuki-data-count">{{ $transcation_count }}
                   </h4>
                 </div>
               </div>
@@ -363,7 +530,7 @@
       </a>
     </div>
     <div class="col-lg-6">
-      <div class="card">
+      <div class="card od-chart-card">
         <div class="card-header">
           <div class="card-title">{{ __('Event Booking Monthly Income') }} ({{ date('Y') }})</div>
         </div>
@@ -377,7 +544,7 @@
     </div>
 
     <div class="col-lg-6">
-      <div class="card">
+      <div class="card od-chart-card">
         <div class="card-header">
           <div class="card-title">{{ __('Monthly Event Bookings') }} ({{ date('Y') }})</div>
         </div>
@@ -390,6 +557,7 @@
       </div>
     </div>
 
+  </div>
   </div>
 @endsection
 

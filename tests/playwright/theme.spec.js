@@ -352,6 +352,71 @@ test.describe('@theme contrato theming organizer', () => {
     expect(footerText).toMatch(/©\s*20\d{2}\s+Tukipass\.com\s*\|\s*Todos los derechos reservados\./);
   });
 
+  test('@theme dashboard mantiene geometría visual de módulos', async ({ page }) => {
+    await login(page);
+
+    const viewports = [
+      { width: 1440, height: 900, rows: [4, 2], gap: 16, maxProfile: 210 },
+      { width: 768, height: 1024, rows: [2, 2, 1, 1], gap: 16, maxProfile: 430 },
+      { width: 538, height: 872, rows: [2, 2, 1, 1], gap: 16, maxProfile: 430 },
+      { width: 390, height: 844, rows: [1, 1, 1, 1, 1, 1], gap: 12, maxProfile: 480 },
+    ];
+
+    for (const viewport of viewports) {
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      await page.goto('/organizer/dashboard', { waitUntil: 'networkidle' });
+      await setTheme(page, 'light');
+
+      const geom = await page.evaluate(() => {
+        const rect = (el) => {
+          const r = el.getBoundingClientRect();
+          return {
+            top: Math.round(r.top),
+            width: Math.round(r.width),
+            height: Math.round(r.height),
+            bottom: Math.round(r.bottom),
+          };
+        };
+        const items = Array.from(document.querySelectorAll('.dashboard-items > [class*="col-"]')).map(rect);
+        const rows = Object.values(items.reduce((acc, item) => {
+          acc[item.top] = (acc[item.top] || 0) + 1;
+          return acc;
+        }, {}));
+        const gaps = [];
+        for (let i = 1; i < items.length; i += 1) {
+          if (Math.abs(items[i].top - items[i - 1].top) > 3) {
+            gaps.push(items[i].top - items[i - 1].bottom);
+          }
+        }
+        const statCards = Array.from(document.querySelectorAll('.dashboard-items .card-stats')).map(rect);
+        const statFonts = Array.from(document.querySelectorAll('.dashboard-items .card-stats .card-title'))
+          .map((el) => getComputedStyle(el).fontFamily);
+        const chartTicks = window.__tukiCharts && window.__tukiCharts.TotalEventBookingChart
+          ? window.__tukiCharts.TotalEventBookingChart.scales['y-axis-0'].ticks.length
+          : 0;
+
+        return {
+          overflowX: document.documentElement.scrollWidth > window.innerWidth,
+          rows,
+          gaps,
+          statHeights: statCards.map((card) => card.height),
+          statFonts,
+          profileHeight: rect(document.querySelector('.od-profile-score')).height,
+          chartTicks,
+        };
+      });
+
+      expect(geom.overflowX, `dashboard overflow ${viewport.width}`).toBe(false);
+      expect(geom.rows, `dashboard grid rows ${viewport.width}`).toEqual(viewport.rows);
+      expect(Math.max(...geom.statHeights) - Math.min(...geom.statHeights), `stat height drift ${viewport.width}`).toBeLessThanOrEqual(4);
+      expect(geom.gaps.every((gap) => gap === viewport.gap), `dashboard gaps ${viewport.width}: ${geom.gaps.join(',')}`).toBe(true);
+      expect(geom.profileHeight, `profile score height ${viewport.width}`).toBeLessThanOrEqual(viewport.maxProfile);
+      expect(geom.statFonts.every((font) => font.includes('IBM Plex Mono')), `stat font ${viewport.width}`).toBe(true);
+      expect(geom.chartTicks, `booking chart tick density ${viewport.width}`).toBeGreaterThan(0);
+      expect(geom.chartTicks, `booking chart tick density ${viewport.width}`).toBeLessThanOrEqual(6);
+    }
+  });
+
   test('@theme sidebar: iconos de items activos = token (nunca #1572E8)', async ({ page }) => {
     await login(page);
     await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'load' });

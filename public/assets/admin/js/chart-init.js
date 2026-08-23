@@ -46,8 +46,16 @@ function tukiInitLineChart(id, label, getData, border, fill, opts) {
       yAxes: [{ gridLines: { color: p.grid }, ticks: { fontColor: p.tick, fontSize: 11, fontFamily: 'IBM Plex Mono' } }]
     }
   };
+  options.scales.yAxes[0].ticks.beginAtZero = true;
+  options.scales.yAxes[0].ticks.maxTicksLimit = (opts && opts.maxTicksLimit) || 6;
   if (opts && opts.stepSize) {
     options.scales.yAxes[0].ticks.stepSize = opts.stepSize;
+  }
+  if (opts && opts.integer) {
+    options.scales.yAxes[0].ticks.precision = 0;
+    options.scales.yAxes[0].ticks.callback = function (value) {
+      return Number.isInteger(value) ? value : '';
+    };
   }
   var chart = new Chart(canvas.getContext('2d'), {
     type: 'line',
@@ -116,6 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 tukiInitLineChart('incomeChart', 'Ingresos mensuales', function () { return incomeArr; }, '#f97316', 'rgba(249,115,22,.08)');
-tukiInitLineChart('TotalEventBookingChart', 'Reservas mensuales', function () { return totalBookings; }, '#6366f1', 'rgba(99,102,241,.08)', { stepSize: 1 });
+tukiInitLineChart('TotalEventBookingChart', 'Reservas mensuales', function () { return totalBookings; }, '#6366f1', 'rgba(99,102,241,.08)', { integer: true });
 tukiInitLineChart('ProductOrderChart', 'Ingresos mensuales', function () { return productIncome; }, '#10b981', 'rgba(16,185,129,.08)');
-tukiInitLineChart('TotalProductOrderChart', 'Pedidos mensuales', function () { return totalOders; }, '#3b82f6', 'rgba(59,130,246,.08)', { stepSize: 1 });
+tukiInitLineChart('TotalProductOrderChart', 'Pedidos mensuales', function () { return totalOders; }, '#3b82f6', 'rgba(59,130,246,.08)', { integer: true });

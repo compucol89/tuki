@@ -275,6 +275,12 @@
       border-bottom: 1px solid var(--border-default);
     }
 
+    .ob-type-summary__heading {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
     .ob-type-summary__title {
       margin: 0;
       color: var(--ob-text-primary);
@@ -598,7 +604,7 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 6px;
-      padding: 14px 16px 2px;
+      padding: 8px 0 0;
     }
 
     .ob-chip {
@@ -632,9 +638,9 @@
 
     .ob-ticket-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 12px;
-      padding: 2px 16px 16px;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+      padding: 16px;
     }
 
     .ob-ticket-card {
@@ -783,8 +789,8 @@
 
     .ob-ticket-card__stats {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
     }
 
     .ob-ticket-stat {
@@ -1518,7 +1524,15 @@
       }
 
       .ob-focused-meta {
-        padding: 12px 12px 2px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, max-content));
+        justify-content: start;
+        gap: 4px 6px;
+        padding: 8px 0 0;
+      }
+
+      .ob-focused-meta > * {
+        justify-self: start;
       }
 
       .ob-metric {
@@ -1536,11 +1550,7 @@
 
       .ob-ticket-grid {
         grid-template-columns: 1fr;
-        padding: 2px 12px 12px;
-      }
-
-      .ob-ticket-card__stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 12px;
       }
 
       .ob-progress {
@@ -1609,6 +1619,19 @@
         'free' => ['label' => __('Gratis'), 'class' => 'primary', 'icon' => 'fa-gift'],
     ];
     $ticketSummaryByEventId = collect($ticketSalesByEvent ?? [])->keyBy('event_id');
+    $obTicketTone = function ($ticketName) {
+        $name = mb_strtolower(trim((string) $ticketName));
+        if (preg_match('/(vip|mesa|box|premium|palco|vvip)/u', $name)) {
+          return ['key' => 'premium', 'label' => __('Premium'), 'icon' => 'fa-crown'];
+        }
+        if (preg_match('/(gratis|gratuit|free|lista|sin cargo|sin costo|cortesía|cortesia)/u', $name)) {
+          return ['key' => 'free', 'label' => __('Gratis'), 'icon' => 'fa-gift'];
+        }
+        if (preg_match('/(general|entrada|early|anticipada|standard|normal)/u', $name)) {
+          return ['key' => 'general', 'label' => __('General'), 'icon' => 'fa-ticket-alt'];
+        }
+        return ['key' => 'other', 'label' => __('Otro'), 'icon' => 'fa-tag'];
+    };
   @endphp
 
   <div class="organizer-booking-admin">
@@ -1680,7 +1703,7 @@
 
     <section class="ob-type-summary" aria-labelledby="organizerTicketTypeSummaryTitle">
       <div class="ob-type-summary__head">
-        <div>
+        <div class="ob-type-summary__heading">
           <h2 id="organizerTicketTypeSummaryTitle" class="ob-type-summary__title">
             @if ($focusedEventId)
               {{ __('Resumen del evento') }}
@@ -1688,15 +1711,25 @@
               {{ __('Eventos') }}
             @endif
           </h2>
-          <div class="ob-muted">
-            @if ($focusedEventId)
-              {{ __('Tipos de entrada de este evento.') }}
-            @else
+          @unless ($focusedEventId)
+            <div class="ob-muted">
               {{ __('Ordenado por fecha. Tocá un evento para ver todo.') }}
+            </div>
+            <div class="ob-type-summary__formula">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
+          @else
+            @php
+              $focusedMetaSummary = $ticketSummaryByEventId->get($focusedEventId);
+            @endphp
+            @if ($focusedMetaSummary)
+              <div class="ob-focused-meta">
+                <span class="ob-chip">{{ $focusedMetaSummary['date_label'] }}</span>
+                <span class="ob-chip">{{ number_format($focusedMetaSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                <span class="ob-chip">{{ count($focusedMetaSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+                <span class="ob-event-summary-card__status">{{ $focusedMetaSummary['date_status'] }}</span>
+              </div>
             @endif
-          </div>
+          @endunless
         </div>
-        <div class="ob-type-summary__formula">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
       </div>
       @if (empty($ticketSalesByEvent ?? []))
           <div class="ob-empty py-3">
@@ -1765,28 +1798,6 @@
             </div>
           @else
             @foreach ($ticketSalesByEvent as $eventSummary)
-              @php
-                $obTicketTone = function ($ticketName) {
-                    $name = mb_strtolower(trim((string) $ticketName));
-                    if (preg_match('/(vip|mesa|box|premium|palco|vvip)/u', $name)) {
-                      return ['key' => 'premium', 'label' => __('Premium'), 'icon' => 'fa-crown'];
-                    }
-                    if (preg_match('/(gratis|gratuit|free|lista|sin cargo|sin costo|cortesía|cortesia)/u', $name)) {
-                      return ['key' => 'free', 'label' => __('Gratis'), 'icon' => 'fa-gift'];
-                    }
-                    if (preg_match('/(general|entrada|early|anticipada|standard|normal)/u', $name)) {
-                      return ['key' => 'general', 'label' => __('General'), 'icon' => 'fa-ticket-alt'];
-                    }
-                    return ['key' => 'other', 'label' => __('Otro'), 'icon' => 'fa-tag'];
-                };
-              @endphp
-              <div class="ob-focused-meta">
-                <span class="ob-chip">{{ $eventSummary['date_label'] }}</span>
-                <span class="ob-chip">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
-                <span class="ob-chip">{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
-                <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
-              </div>
-
               <div class="ob-ticket-grid" role="list">
                 @foreach ($eventSummary['tickets'] as $summaryRow)
                   @php

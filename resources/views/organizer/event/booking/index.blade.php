@@ -640,6 +640,7 @@
     .ob-ticket-card {
       --ticket-accent: #64748b;
       --ticket-soft: #f8fafc;
+      --ticket-soft-alt: #f2f4f8;
       --ticket-fg: #475569;
       --ticket-border: var(--border-default);
       display: grid;
@@ -652,9 +653,14 @@
       box-shadow: 0 6px 18px rgba(30, 37, 50, .045);
     }
 
+    .ob-ticket-card:nth-child(even) {
+      background: linear-gradient(180deg, var(--surface-card) 0%, var(--ticket-soft-alt) 130%);
+    }
+
     .ob-ticket-card--premium {
       --ticket-accent: #16a34a;
       --ticket-soft: #f0fdf4;
+      --ticket-soft-alt: #e7f9ee;
       --ticket-fg: #166534;
       --ticket-border: rgba(22, 163, 74, .28);
     }
@@ -662,6 +668,7 @@
     .ob-ticket-card--free {
       --ticket-accent: #2563eb;
       --ticket-soft: #eff6ff;
+      --ticket-soft-alt: #e5efff;
       --ticket-fg: #1d4ed8;
       --ticket-border: rgba(37, 99, 235, .24);
     }
@@ -669,6 +676,7 @@
     .ob-ticket-card--general {
       --ticket-accent: #f97316;
       --ticket-soft: #fff7ed;
+      --ticket-soft-alt: #ffeeda;
       --ticket-fg: #9a3412;
       --ticket-border: rgba(249, 115, 22, .26);
     }
@@ -676,35 +684,35 @@
     .ob-ticket-card--other {
       --ticket-accent: #64748b;
       --ticket-soft: #f8fafc;
+      --ticket-soft-alt: #f2f4f8;
       --ticket-fg: #475569;
       --ticket-border: var(--border-default);
     }
 
-    .ob-ticket-card--other:nth-child(even) {
-      --ticket-soft: #fdf7f1;
-      --ticket-border: var(--ob-card-alt-border);
-    }
-
     html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card {
       --ticket-soft: rgba(100, 116, 139, .14);
+      --ticket-soft-alt: rgba(100, 116, 139, .22);
       --ticket-fg: #cbd5e1;
       --ticket-border: var(--border-default);
     }
 
     html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--premium {
       --ticket-soft: rgba(22, 163, 74, .16);
+      --ticket-soft-alt: rgba(22, 163, 74, .26);
       --ticket-fg: #86efac;
       --ticket-border: rgba(74, 222, 128, .30);
     }
 
     html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--free {
       --ticket-soft: rgba(37, 99, 235, .16);
+      --ticket-soft-alt: rgba(37, 99, 235, .26);
       --ticket-fg: #93c5fd;
       --ticket-border: rgba(147, 197, 253, .28);
     }
 
     html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--general {
       --ticket-soft: rgba(249, 115, 22, .14);
+      --ticket-soft-alt: rgba(249, 115, 22, .24);
       --ticket-fg: #fdba74;
       --ticket-border: rgba(253, 186, 116, .30);
     }
@@ -1711,7 +1719,7 @@
                     if (preg_match('/(vip|mesa|box|premium|palco|vvip)/u', $name)) {
                       return ['key' => 'premium', 'label' => __('Premium')];
                     }
-                    if (preg_match('/(gratis|free|lista|sin cargo|cortesía|cortesia)/u', $name)) {
+                    if (preg_match('/(gratis|gratuit|free|lista|sin cargo|sin costo|cortesía|cortesia)/u', $name)) {
                       return ['key' => 'free', 'label' => __('Gratis')];
                     }
                     if (preg_match('/(general|entrada|early|anticipada|standard|normal)/u', $name)) {

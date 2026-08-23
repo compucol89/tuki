@@ -17,6 +17,7 @@ const ROUTES = [
   { name: 'eventos', path: '/organizer/event-management/events?language=es' },
   { name: 'choose-type', path: '/organizer/choose-event-type?language=es' },
   { name: 'booking', path: '/organizer/event-booking' },
+  { name: 'monthly-income', path: '/organizer/monthly-income' },
   { name: 'telegram', path: '/organizer/telegram-bot' },
   { name: 'withdraw', path: '/organizer/withdraw?language=es' },
 ];
@@ -166,7 +167,7 @@ async function themeAudit(page) {
     };
 
     const whiteSurfaces = [];
-    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-event-summary-card, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
+    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-event-summary-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
       const bg = getComputedStyle(el).backgroundColor;
       if (bg && bg !== 'rgba(0, 0, 0, 0)' && isWhite(bg)) {
         whiteSurfaces.push(el.className.toString().slice(0, 40));
@@ -174,7 +175,7 @@ async function themeAudit(page) {
     });
 
     const darkText = [];
-    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-detail-value, .bod-title, .bod-value, .bod-ticket-name, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
+    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-detail-value, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
       const c = getComputedStyle(el).color;
       if (isDarkText(c)) darkText.push(el.className.toString().slice(0, 40));
     });

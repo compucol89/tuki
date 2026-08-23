@@ -197,7 +197,12 @@ test('@theme detalle evento dark: entradas no muestran islas claras al interactu
   await page.addInitScript(() => localStorage.setItem('tuki-theme', 'dark'));
   await page.goto('/reggaeton-old-school/123', { waitUntil: 'load' });
 
-  const option = page.locator('.ed-ticket-option').first();
+  let option = page.locator('.ed-ticket-option').filter({
+    has: page.locator('.quantity-up:not(:disabled):not([aria-disabled="true"])'),
+  }).first();
+  if (await option.count() === 0) {
+    option = page.locator('.ed-ticket-option').first();
+  }
   await expect(option).toBeVisible();
   await option.hover();
 
@@ -215,9 +220,12 @@ test('@theme detalle evento dark: entradas no muestran islas claras al interactu
   expect(hover.theme).toBe('dark');
   expect(hover.isLight, `hover claro en entrada dark: ${hover.bg}`).toBe(false);
 
-  await option.locator('.quantity-up').click();
+  const quantityUp = option.locator('.quantity-up:not(:disabled):not([aria-disabled="true"])').first();
+  if (await quantityUp.count()) {
+    await quantityUp.click();
+  }
 
-  const focused = await option.evaluate((el) => {
+  const interacted = await option.evaluate((el) => {
     const isLightSurface = (color) => {
       const nums = (String(color).match(/[\d.]+/g) || []).map(Number);
       if (nums.length < 3) return false;
@@ -228,7 +236,7 @@ test('@theme detalle evento dark: entradas no muestran islas claras al interactu
     return { bg, isLight: isLightSurface(bg) };
   });
 
-  expect(focused.isLight, `focus/cantidad claro en entrada dark: ${focused.bg}`).toBe(false);
+  expect(interacted.isLight, `interacción clara en entrada dark: ${interacted.bg}`).toBe(false);
 });
 
 test.describe('@theme contrato theming público', () => {

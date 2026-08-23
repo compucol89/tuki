@@ -273,7 +273,7 @@
       var widths = ['25%', '50%', '75%', '100%'];
       var colors = ['#b91c1c', '#c2410c', '#a16207', '#15803d'];
       var lvl = { w: widths[idx], color: colors[idx], text: strengthLabels[idx] };
-      fill.style.width = lvl.w;
+      fill.style.setProperty('--cp-strength', parseInt(lvl.w, 10) / 100);
       fill.style.background = lvl.color;
       fill.dataset.level = idx;
       label.textContent = lvl.text;

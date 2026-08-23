@@ -27,6 +27,8 @@ SYNC_PATHS=(
   "app/Services"
   "public/assets/admin/css"
   "public/assets/admin/js"
+  "public/assets/front/css"
+  "public/assets/front/js"
   "resources/views/organizer"
   "resources/views/backend"
   "resources/views/partials"

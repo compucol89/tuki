@@ -256,7 +256,7 @@
         var idx = Math.max(0, Math.min(score - 1, strengthLabels.length - 1));
         var widths = ['25%', '50%', '75%', '100%'];
         var colors = ['#b91c1c', '#c2410c', '#a16207', '#15803d'];
-        fill.style.width = widths[idx];
+        fill.style.setProperty('--cp-strength', parseInt(widths[idx], 10) / 100);
         fill.style.background = colors[idx];
         label.textContent = strengthLabels[idx];
         label.style.color = colors[idx];

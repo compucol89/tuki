@@ -334,7 +334,8 @@
     }
 
     .oe-mobile-event__head {
-      display: flex;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
       gap: 10px;
       align-items: flex-start;
       margin-bottom: 11px;
@@ -347,12 +348,22 @@
       gap: 3px;
     }
 
-    .oe-mobile-event__topline {
-      display: flex;
-      flex-wrap: wrap;
+    .oe-mobile-event__badges {
+      display: grid;
       gap: 6px;
+      justify-items: end;
+      min-width: 0;
+    }
+
+    .oe-mobile-event__badges .badge,
+    .oe-mobile-event__badges .oe-pill {
+      display: inline-flex;
       align-items: center;
-      margin-bottom: 2px;
+      justify-content: center;
+      max-width: 104px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .oe-mobile-event .oe-title {
@@ -797,14 +808,14 @@
                   <img src="{{ $thumb }}" alt="{{ $event->title }}" loading="lazy" onerror="this.onerror=null;this.src='{{ $fallbackThumb }}';">
                 </div>
                 <div class="oe-mobile-event__main">
-                  <div class="oe-mobile-event__topline">
-                    <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
-                    <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
-                  </div>
                   <a target="_blank" rel="noopener" href="{{ route('event.details', ['slug' => $event->slug, 'id' => $event->id]) }}"
                     class="oe-title">{{ $event->title }}</a>
                   <span class="oe-muted">{{ __('Función') }}: <span class="oe-data-value">{{ $metrics['date_label'] ?? '-' }}</span></span>
                   <span class="oe-muted">{{ __('Categoría') }}: {{ $event->category ?: '-' }}</span>
+                </div>
+                <div class="oe-mobile-event__badges">
+                  <span class="badge badge-{{ $settlementStatus['class'] }}">{{ $settlementStatus['label'] }}</span>
+                  <span class="oe-pill">{{ $event->event_type === 'venue' ? __('Presencial') : __('Online') }}</span>
                 </div>
               </div>
               <div class="oe-mobile-grid">
@@ -844,7 +855,7 @@
         </div>
       @endif
 
-      @if (count($events) > 0)
+      @if (count($events) > 0 && $events->hasPages())
         <div class="card-footer text-center">
           <div class="d-inline-block mt-3">
             {{ $events->appends([

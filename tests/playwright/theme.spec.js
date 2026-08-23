@@ -417,6 +417,51 @@ test.describe('@theme contrato theming organizer', () => {
     }
   });
 
+  test('@theme eventos mobile: cards cierran limpio y tipo no empuja título', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 538, height: 872 });
+    await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'networkidle' });
+    await setTheme(page, 'light');
+
+    const geom = await page.evaluate(() => {
+      const rect = (el) => {
+        const r = el.getBoundingClientRect();
+        return {
+          top: Math.round(r.top),
+          bottom: Math.round(r.bottom),
+          height: Math.round(r.height),
+        };
+      };
+      const cards = Array.from(document.querySelectorAll('.oe-mobile-event'));
+      const first = cards[0];
+      const last = cards[cards.length - 1];
+      const panel = document.querySelector('.organizer-events .oe-panel:nth-of-type(2)');
+      const status = first?.querySelector('.oe-mobile-event__badges .badge');
+      const type = first?.querySelector('.oe-mobile-event__badges .oe-pill');
+      const title = first?.querySelector('.oe-title');
+      const footer = document.querySelector('.organizer-events .oe-panel:nth-of-type(2) > .card-footer');
+
+      return {
+        cardCount: cards.length,
+        hasEmptyFooter: !!footer && footer.innerText.trim() === '',
+        typeInsideTitleColumn: !!first?.querySelector('.oe-mobile-event__main .oe-pill'),
+        typeBelowStatus: type && status ? rect(type).top >= rect(status).bottom : false,
+        titleStartsWithStatus: title && status ? Math.abs(rect(title).top - rect(status).top) <= 2 : false,
+        panelBottomGap: panel && last ? Math.round(panel.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom) : null,
+        overflowX: document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+
+    expect(geom.cardCount).toBeGreaterThan(0);
+    expect(geom.hasEmptyFooter).toBe(false);
+    expect(geom.typeInsideTitleColumn).toBe(false);
+    expect(geom.typeBelowStatus).toBe(true);
+    expect(geom.titleStartsWithStatus).toBe(true);
+    expect(geom.panelBottomGap).toBeGreaterThanOrEqual(12);
+    expect(geom.panelBottomGap).toBeLessThanOrEqual(24);
+    expect(geom.overflowX).toBe(false);
+  });
+
   test('@theme sidebar: iconos de items activos = token (nunca #1572E8)', async ({ page }) => {
     await login(page);
     await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'load' });

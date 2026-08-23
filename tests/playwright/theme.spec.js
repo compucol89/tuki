@@ -17,6 +17,7 @@ const ROUTES = [
   { name: 'eventos', path: '/organizer/event-management/events?language=es' },
   { name: 'choose-type', path: '/organizer/choose-event-type?language=es' },
   { name: 'booking', path: '/organizer/event-booking' },
+  { name: 'booking-focused', path: '/organizer/event-booking/evento/118' },
   { name: 'monthly-income', path: '/organizer/monthly-income' },
   { name: 'telegram', path: '/organizer/telegram-bot' },
   { name: 'withdraw', path: '/organizer/withdraw?language=es' },
@@ -167,7 +168,7 @@ async function themeAudit(page) {
     };
 
     const whiteSurfaces = [];
-    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-event-summary-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
+    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
       const bg = getComputedStyle(el).backgroundColor;
       if (bg && bg !== 'rgba(0, 0, 0, 0)' && isWhite(bg)) {
         whiteSurfaces.push(el.className.toString().slice(0, 40));
@@ -175,7 +176,7 @@ async function themeAudit(page) {
     });
 
     const darkText = [];
-    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-detail-value, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
+    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
       const c = getComputedStyle(el).color;
       if (isDarkText(c)) darkText.push(el.className.toString().slice(0, 40));
     });
@@ -582,6 +583,76 @@ test.describe('@theme contrato theming organizer', () => {
     await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'networkidle' });
     const createButtonStyle = await readButtonStyle(page.locator('#organizerEventCreateDropdown'));
     expect(ctaBeforeHover).toEqual(createButtonStyle);
+  });
+
+  test('@theme reservas evento mobile: ventas ordenadas y panel plano', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 538, height: 872 });
+
+    for (const theme of ['light', 'dark']) {
+      await page.goto('/organizer/event-booking/evento/118', { waitUntil: 'networkidle' });
+      await setTheme(page, theme);
+
+      const geom = await page.evaluate(() => {
+        const panel = document.querySelector('.ob-panel--flat');
+        const cards = Array.from(document.querySelectorAll('.ob-mobile-booking'));
+        const first = cards[0];
+        const title = first?.querySelector('.ob-mobile-booking__title');
+        const status = first?.querySelector('.ob-mobile-booking__badges .ob-status');
+        const buyer = first?.querySelector('.ob-mobile-section--buyer');
+        const grid = first?.querySelector('.ob-mobile-booking__grid');
+        const payment = first?.querySelector('.ob-mobile-section:not(.ob-mobile-section--buyer)');
+        const tickets = first?.querySelector('.ob-mobile-extra');
+        const controls = first?.querySelector('.ob-mobile-controls');
+        const actionLabels = controls ? Array.from(controls.querySelectorAll('a, button')).map((el) => el.getAttribute('aria-label') || '') : [];
+        const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .ob-money')).map((el) => getComputedStyle(el).fontFamily) : [];
+        const buttonHeights = controls ? Array.from(controls.querySelectorAll('a, button')).map((el) => Math.round(el.getBoundingClientRect().height)) : [];
+        const order = first ? Array.from(first.children).map((el) => el.className.toString()) : [];
+        const panelStyles = panel ? getComputedStyle(panel) : null;
+        const titleStyles = title ? getComputedStyle(title) : null;
+
+        return {
+          cardCount: cards.length,
+          panelFlat: panelStyles
+            ? panelStyles.boxShadow === 'none' && panelStyles.backgroundColor === 'rgba(0, 0, 0, 0)'
+            : false,
+          titleText: title?.textContent?.trim() || '',
+          titleClamp: titleStyles?.webkitLineClamp || titleStyles?.lineClamp || '',
+          titleOverflow: titleStyles?.textOverflow || '',
+          titleLines: title ? Math.round(title.getBoundingClientRect().height / parseFloat(titleStyles.lineHeight)) : 0,
+          statusRightColumn: status && title ? status.getBoundingClientRect().left > title.getBoundingClientRect().left : false,
+          hasBuyerBlock: !!buyer,
+          gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
+          hasPaymentBlock: !!payment,
+          hasTicketsBlock: !!tickets,
+          actionLabels,
+          buttonHeights,
+          allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
+          order,
+          overflowX: document.documentElement.scrollWidth > window.innerWidth,
+        };
+      });
+
+      expect(geom.cardCount).toBeGreaterThan(0);
+      expect(geom.panelFlat).toBe(true);
+      expect(geom.titleText.length).toBeGreaterThan(44);
+      expect(geom.titleText).not.toContain('...');
+      expect(['none', 'initial', '']).toContain(geom.titleClamp);
+      expect(geom.titleOverflow).not.toBe('ellipsis');
+      expect(geom.titleLines).toBeGreaterThanOrEqual(2);
+      expect(geom.statusRightColumn).toBe(true);
+      expect(geom.hasBuyerBlock).toBe(true);
+      expect(geom.gridColumns).toBe(2);
+      expect(geom.hasPaymentBlock).toBe(true);
+      expect(geom.hasTicketsBlock).toBe(true);
+      expect(geom.order[0]).toContain('ob-mobile-booking__head');
+      expect(geom.order[1]).toContain('ob-mobile-section--buyer');
+      expect(geom.order[2]).toContain('ob-mobile-booking__grid');
+      expect(geom.actionLabels.every((label) => /reserva/i.test(label))).toBe(true);
+      expect(geom.buttonHeights.every((height) => height >= 40)).toBe(true);
+      expect(geom.allDataFonts).toBe(true);
+      expect(geom.overflowX).toBe(false);
+    }
   });
 
   test('@theme reservas contraste WCAG AA en light y dark', async ({ page }) => {

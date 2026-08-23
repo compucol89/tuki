@@ -108,19 +108,26 @@ test.describe('@a11y rutas del organizer', () => {
     });
   }
 
-  for (const theme of ['light', 'dark']) {
-    test(`@a11y organizer-event-booking (${theme}) sin violaciones axe`, async ({ page }) => {
-      await organizerLogin(page);
-      await page.goto('/organizer/event-booking', { waitUntil: 'load' });
-      await page.evaluate((t) => {
-        document.documentElement.dataset.theme = t;
-        document.body.setAttribute('data-background-color', t === 'dark' ? 'dark' : 'white');
-        const s = document.querySelector('.sidebar');
-        if (s) s.setAttribute('data-background-color', t === 'dark' ? 'dark2' : 'white');
-      }, theme);
-      await page.waitForTimeout(400);
+  const bookingRoutes = [
+    { name: 'organizer-event-booking', path: '/organizer/event-booking' },
+    { name: 'organizer-event-booking-focused', path: '/organizer/event-booking/evento/118' },
+  ];
 
-      await axeScan(page, `organizer-event-booking (${theme})`);
-    });
+  for (const route of bookingRoutes) {
+    for (const theme of ['light', 'dark']) {
+      test(`@a11y ${route.name} (${theme}) sin violaciones axe`, async ({ page }) => {
+        await organizerLogin(page);
+        await page.goto(route.path, { waitUntil: 'load' });
+        await page.evaluate((t) => {
+          document.documentElement.dataset.theme = t;
+          document.body.setAttribute('data-background-color', t === 'dark' ? 'dark' : 'white');
+          const s = document.querySelector('.sidebar');
+          if (s) s.setAttribute('data-background-color', t === 'dark' ? 'dark2' : 'white');
+        }, theme);
+        await page.waitForTimeout(400);
+
+        await axeScan(page, `${route.name} (${theme})`);
+      });
+    }
   }
 });

@@ -172,6 +172,44 @@
       background: var(--surface-card-soft);
     }
 
+    .ob-panel--flat {
+      display: grid;
+      gap: var(--ob-gap);
+      margin-bottom: 18px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .ob-panel--flat > .ob-panel__header {
+      align-items: flex-end;
+      padding: 0 2px 2px;
+      border-bottom: 0;
+      background: transparent;
+    }
+
+    .ob-panel--flat > .ob-panel__body {
+      padding: 0;
+    }
+
+    .ob-panel--flat > .ob-panel__footer {
+      padding: 4px 0 0;
+      border-top: 0;
+      background: transparent;
+    }
+
+    .ob-panel--flat .ob-toolbar {
+      border: 1px solid var(--border-default);
+      border-radius: var(--adm-radius-2xl);
+      background: var(--surface-card);
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
+    }
+
+    .ob-panel--flat .ob-mobile-list {
+      padding: 0;
+    }
+
     .ob-toolbar {
       display: grid;
       grid-template-columns: minmax(150px, .75fr) minmax(150px, .75fr) minmax(150px, .6fr) auto;
@@ -885,11 +923,15 @@
     }
 
     .ob-mobile-booking {
-      padding: 13px 14px 14px;
+      display: grid;
+      gap: 0;
+      padding: 14px;
       border: 1px solid var(--border-default);
       border-radius: var(--adm-radius-2xl);
       background: var(--surface-card);
-      box-shadow: 0 6px 18px rgba(30, 37, 50, .045);
+      scroll-margin-top: 80px;
+      scroll-margin-bottom: 72px;
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
     }
 
     .ob-mobile-booking:nth-child(even) {
@@ -903,24 +945,67 @@
     }
 
     .ob-mobile-booking__head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 11px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 10px;
     }
 
     .ob-mobile-booking__main {
+      display: grid;
+      gap: 4px;
       min-width: 0;
-      flex: 1 1 auto;
     }
 
     .ob-mobile-booking__title {
-      margin-bottom: 2px;
+      display: block;
+      margin: 0;
       color: var(--ob-text-primary);
+      font-size: 14px;
       font-weight: 700;
-      line-height: 1.3;
+      line-height: 1.25;
       overflow-wrap: anywhere;
+      text-decoration: none;
+    }
+
+    .ob-mobile-booking__title:hover,
+    .ob-mobile-booking__title:focus {
+      color: var(--adm-primary-dark);
+      text-decoration: none;
+    }
+
+    .ob-mobile-booking__title:focus-visible {
+      outline: 2px solid var(--adm-primary);
+      outline-offset: 3px;
+      border-radius: 6px;
+    }
+
+    .ob-mobile-booking__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 8px;
+      color: var(--ob-text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .ob-mobile-booking__meta .tuki-data {
+      font-weight: 500;
+    }
+
+    .ob-mobile-booking__badges {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
+      min-width: 0;
+    }
+
+    .ob-mobile-booking__badges .ob-status {
+      max-width: 112px;
+      justify-content: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .ob-mobile-booking__grid {
@@ -929,16 +1014,26 @@
       column-gap: 16px;
       row-gap: 12px;
       padding-top: 12px;
-      margin: 0;
+      margin-top: 12px;
       border-top: 1px solid var(--border-subtle);
     }
 
-    .ob-mobile-stat {
-      min-width: 0;
+    .ob-mobile-section {
+      display: grid;
+      gap: 5px;
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid var(--border-subtle);
     }
 
-    .ob-mobile-stat--buyer {
-      grid-column: 1 / -1;
+    .ob-mobile-section--buyer {
+      padding-top: 11px;
+    }
+
+    .ob-mobile-stat {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
     }
 
     .ob-mobile-money {
@@ -994,8 +1089,26 @@
 
     .ob-mobile-extra {
       padding-top: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
       border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-mobile-booking .ob-mini-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      padding: 10px;
+    }
+
+    .ob-mini-row__main {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .ob-mini-row__amount {
+      align-self: start;
+      margin-top: 0;
+      font-size: 13px;
     }
 
     .ob-empty {
@@ -1040,6 +1153,10 @@
         grid-template-columns: 1fr;
       }
 
+      .ob-mobile-booking .ob-mini-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
       .organizer-booking-admin {
         --ob-gap-loose: 16px;
         --ob-title-size: 16px;
@@ -1059,6 +1176,11 @@
       .ob-toolbar {
         grid-template-columns: 1fr;
         padding: 14px 16px;
+      }
+
+      .ob-panel--flat > .ob-panel__header {
+        padding-right: 0;
+        padding-left: 0;
       }
 
       .ob-toolbar__actions {
@@ -1177,6 +1299,14 @@
       .ob-mobile-controls {
         grid-template-columns: 1fr;
       }
+
+      .ob-mobile-booking__head {
+        grid-template-columns: 1fr;
+      }
+
+      .ob-mobile-booking__badges {
+        justify-items: start;
+      }
     }
   </style>
 @endsection
@@ -1203,6 +1333,7 @@
         'rejected' => ['label' => __('Rechazado'), 'class' => 'danger', 'icon' => 'fa-times-circle'],
         'free' => ['label' => __('Gratis'), 'class' => 'primary', 'icon' => 'fa-gift'],
     ];
+    $ticketSummaryByEventId = collect($ticketSalesByEvent ?? [])->keyBy('event_id');
   @endphp
 
   <div class="organizer-booking-admin">
@@ -1409,7 +1540,7 @@
     </section>
 
     @if ($focusedEventId)
-    <section class="ob-panel" aria-labelledby="organizerBuyersTitle">
+    <section class="ob-panel ob-panel--flat" aria-labelledby="organizerBuyersTitle">
       <div class="ob-panel__header">
         <div>
           <h2 id="organizerBuyersTitle" class="ob-panel__title">{{ __('Compradores') }}</h2>
@@ -1499,7 +1630,8 @@
                         $scannedCount = $booking->scannedTicketsCount();
                         $pendingScanCount = $booking->pendingTicketsCount();
                         $scanPercent = $booking->scanPercent();
-                        $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : '-';
+                        $eventSummaryInfo = $ticketSummaryByEventId->get($booking->event_id);
+                        $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : ($eventSummaryInfo['date_label'] ?? '-');
                         $status = $statusOptions[$booking->paymentStatus] ?? ['label' => ucfirst((string) $booking->paymentStatus), 'class' => 'secondary', 'icon' => 'fa-circle'];
                         $invoiceExtension = pathinfo((string) $booking->invoice, PATHINFO_EXTENSION);
                         $hasInvoiceFile = $invoiceExtension == 'pdf' && $booking->hasInvoiceFile();
@@ -1647,6 +1779,7 @@
                   @php
                     $eventInfo = $eventInfos[$booking->event_id] ?? null;
                     $title = $eventInfo ? $eventInfo->title : '-';
+                    $slug = $eventInfo ? $eventInfo->slug : '';
                     $customer = $booking->customerInfo;
                     $position = $booking->currencyTextPosition;
                     $symbol = $booking->currencySymbol;
@@ -1663,78 +1796,102 @@
                     $scannedCount = $booking->scannedTicketsCount();
                     $pendingScanCount = $booking->pendingTicketsCount();
                     $scanPercent = $booking->scanPercent();
-                    $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : '-';
+                    $eventSummaryInfo = $ticketSummaryByEventId->get($booking->event_id);
+                    $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : ($eventSummaryInfo['date_label'] ?? '-');
                     $status = $statusOptions[$booking->paymentStatus] ?? ['label' => ucfirst((string) $booking->paymentStatus), 'class' => 'secondary', 'icon' => 'fa-circle'];
                     $invoiceExtension = pathinfo((string) $booking->invoice, PATHINFO_EXTENSION);
                     $hasInvoiceFile = $invoiceExtension == 'pdf' && $booking->hasInvoiceFile();
                   @endphp
-                  <div class="ob-mobile-booking">
+                  <article class="ob-mobile-booking" aria-labelledby="organizerMobileBookingTitle{{ $booking->id }}">
                     <div class="ob-mobile-booking__head">
                       <div class="ob-mobile-booking__main">
-                        <div class="ob-mobile-booking__title">{{ Str::limit($title, 44) }}</div>
-                        <span class="ob-muted">#{{ Str::limit($booking->booking_id, 16, '') }} · {{ __('Función') }}: {{ $eventDateLabel }}</span>
+                        @if ($eventInfo)
+                          <a id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title"
+                            href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
+                            target="_blank" rel="noopener">
+                            {{ $title }}
+                          </a>
+                        @else
+                          <h3 id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title">-</h3>
+                        @endif
+                        <div class="ob-mobile-booking__meta">
+                          <span class="tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 16, '') }}</span>
+                          <span>{{ __('Función') }}: <span class="tuki-data tuki-data-count">{{ $eventDateLabel }}</span></span>
+                        </div>
                       </div>
-                      <span class="badge badge-{{ $status['class'] }} ob-status">{{ $status['label'] }}</span>
+                      <div class="ob-mobile-booking__badges">
+                        <span class="badge badge-{{ $status['class'] }} ob-status"
+                          aria-label="{{ __('Estado de pago') }}: {{ $status['label'] }}">{{ $status['label'] }}</span>
+                      </div>
                     </div>
 
-                    <div class="ob-mobile-booking__grid">
-                      <div class="ob-mobile-stat ob-mobile-stat--buyer">
-                        <span class="ob-detail-label">{{ __('Comprador') }}</span>
-                        @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
-                      </div>
+                    <section class="ob-mobile-section ob-mobile-section--buyer" aria-label="{{ __('Comprador') }}">
+                      <span class="ob-detail-label">{{ __('Comprador') }}</span>
+                      @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
+                    </section>
+
+                    <div class="ob-mobile-booking__grid" role="group" aria-label="{{ __('Resumen de la reserva') }}">
                       <div class="ob-mobile-stat">
                         <span class="ob-detail-label">{{ __('Importe') }}</span>
-                        <span class="ob-money ob-mobile-money">{{ $formatMoney($paidTotal) }}</span>
-                        <span class="ob-muted">{{ __('Recibís') }}: {{ $formatMoney($organizerTotal) }}</span>
+                        <span class="ob-money ob-mobile-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
+                        <span class="ob-muted">{{ __('Recibís') }}: <span class="tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span></span>
                       </div>
                       <div class="ob-mobile-stat">
                         <span class="ob-detail-label">{{ __('Escaneo') }}</span>
                         @if ((int) $booking->quantity <= 0)
                           <span class="ob-detail-value">{{ __('Datos incompletos') }}</span>
                         @else
-                          <span class="ob-detail-value">{{ $scannedCount }}/{{ $booking->quantity }}</span>
-                          <span class="ob-muted">{{ __('Faltan') }}: {{ $pendingScanCount }}</span>
+                          <span class="ob-detail-value tuki-data tuki-data-count">{{ $scannedCount }}/{{ $booking->quantity }}</span>
+                          <span class="ob-muted">{{ __('Faltan') }}: <span class="tuki-data tuki-data-count">{{ $pendingScanCount }}</span></span>
                         @endif
                         <div class="ob-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                       </div>
-                      <div class="ob-mobile-stat">
-                        <span class="ob-detail-label">{{ __('Pago') }}</span>
-                        <span class="ob-detail-value">{{ $booking->paymentMethod ?: '-' }}</span>
-                      </div>
                     </div>
 
-                    <div class="ob-mobile-extra">
-                      <span class="ob-detail-label">{{ __('Entradas') }}</span>
+                    <section class="ob-mobile-section" aria-label="{{ __('Pago') }}">
+                      <span class="ob-detail-label">{{ __('Pago') }}</span>
+                      <span class="ob-detail-value">{{ $booking->paymentMethod ?: '-' }}</span>
+                    </section>
+
+                    <section class="ob-mobile-extra" aria-labelledby="organizerMobileTicketsTitle{{ $booking->id }}">
+                      <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label">{{ __('Entradas') }}</span>
                       <div class="ob-mini-list">
                         @foreach ($ticketBreakdown as $ticketItem)
                           <div class="ob-mini-row">
-                            <div>
+                            <div class="ob-mini-row__main">
                               <span class="ob-mini-title">{{ $ticketItem['name'] }}</span>
-                              <span class="ob-muted">{{ __('Escaneo') }}: {{ $ticketItem['scanned'] }}/{{ $ticketItem['quantity'] }}</span>
+                              <span class="ob-muted">
+                                {{ __('Escaneo') }}:
+                                <span class="tuki-data tuki-data-count">{{ $ticketItem['scanned'] }}/{{ $ticketItem['quantity'] }}</span>
+                                · {{ __('Cantidad') }}:
+                                <span class="tuki-data tuki-data-count">{{ $ticketItem['quantity'] }}</span>
+                              </span>
                             </div>
-                            <span class="ob-pill">{{ $ticketItem['quantity'] }}</span>
-                            <span class="ob-detail-value">{{ $formatMoney($ticketItem['subtotal']) }}</span>
+                            <span class="ob-detail-value ob-mini-row__amount ob-money tuki-data tuki-data-money">{{ $formatMoney($ticketItem['subtotal']) }}</span>
                           </div>
                         @endforeach
                       </div>
-                    </div>
+                    </section>
 
                     @if (count($addonBreakdown) > 0)
-                      <div class="ob-mobile-extra">
-                        <span class="ob-detail-label">{{ __('Add-ons') }}: {{ $addonsCount }} · {{ $formatMoney($addonsTotal) }}</span>
+                      <section class="ob-mobile-extra" aria-label="{{ __('Add-ons') }}">
+                        <span class="ob-detail-label">
+                          {{ __('Add-ons') }}:
+                          <span class="tuki-data tuki-data-count">{{ $addonsCount }}</span>
+                          · <span class="tuki-data tuki-data-money">{{ $formatMoney($addonsTotal) }}</span>
+                        </span>
                         <div class="ob-mini-list">
                           @foreach ($addonBreakdown as $addonItem)
                             <div class="ob-mini-row">
-                              <div>
+                              <div class="ob-mini-row__main">
                                 <span class="ob-mini-title">{{ $addonItem['title'] }}</span>
                                 <span class="ob-muted">{{ $addonItem['redeemed'] ? __('Canjeado') : __('Pendiente de canje') }}</span>
                               </div>
-                              <span class="ob-pill">{{ $addonItem['quantity'] }} x {{ $formatMoney($addonItem['unit_price']) }}</span>
-                              <span class="ob-detail-value">{{ $formatMoney($addonItem['subtotal']) }}</span>
+                              <span class="ob-detail-value ob-mini-row__amount ob-money tuki-data tuki-data-money">{{ $formatMoney($addonItem['subtotal']) }}</span>
                             </div>
                           @endforeach
                         </div>
-                      </div>
+                      </section>
                     @endif
 
                     <div class="ob-mobile-controls">
@@ -1744,23 +1901,26 @@
                         <i class="fas fa-eye" aria-hidden="true"></i>{{ __('Ver') }}
                       </a>
                       @if ($hasInvoiceFile)
-                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary" target="_blank" rel="noopener">
+                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary" target="_blank" rel="noopener"
+                          aria-label="{{ __('Descargar entrada de la reserva') }} #{{ $booking->booking_id }}">
                           <i class="fas fa-file-pdf" aria-hidden="true"></i>{{ __('Entrada') }}
                         </a>
                       @endif
                       @if (!is_null($booking->attachmentFile))
-                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary">
+                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary"
+                          aria-label="{{ __('Ver comprobante de la reserva') }} #{{ $booking->booking_id }}">
                           <i class="fas fa-paperclip" aria-hidden="true"></i>{{ __('Comprobante') }}
                         </a>
                       @endif
                       <form class="deleteForm d-inline-block m-0" action="{{ route('organizer.event_booking.delete', ['id' => $booking->id]) }}" method="post">
                         @csrf
-                        <button type="submit" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary deleteBtn">
+                        <button type="submit" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary deleteBtn"
+                          aria-label="{{ __('Eliminar reserva') }} #{{ $booking->booking_id }}">
                           <i class="fas fa-trash" aria-hidden="true"></i>{{ __('Eliminar') }}
                         </button>
                       </form>
                     </div>
-                  </div>
+                  </article>
                 @endforeach
               </div>
 

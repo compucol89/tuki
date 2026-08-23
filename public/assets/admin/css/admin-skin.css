@@ -2490,7 +2490,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-events .oe-panel,
 .organizer-booking-admin .ob-metric,
 .organizer-booking-admin .ob-type-summary,
-.organizer-booking-admin .ob-panel,
+.organizer-booking-admin .ob-panel:not(.ob-panel--flat),
 .organizer-transactions .card,
 .event-form-modern > .row > .col-md-12 > .card {
   border-color: var(--border-default) !important;
@@ -2512,7 +2512,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-events .oe-panel__header,
 .organizer-events .oe-toolbar,
 .organizer-booking-admin .ob-type-summary__head,
-.organizer-booking-admin .ob-panel__header,
+.organizer-booking-admin .ob-panel:not(.ob-panel--flat) > .ob-panel__header,
 .organizer-booking-admin .ob-toolbar,
 .organizer-transactions .card-header {
   border-color: var(--border-subtle) !important;

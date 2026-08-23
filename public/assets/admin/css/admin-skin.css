@@ -2584,8 +2584,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   text-transform: uppercase !important;
 }
 
-.organizer-booking-admin .ob-detail-label,
-.organizer-booking-admin .ob-type-table td::before {
+.organizer-booking-admin .ob-detail-label {
   color: var(--ob-text-secondary, var(--text-secondary)) !important;
   font-size: 11px !important;
   font-weight: 700 !important;
@@ -2637,7 +2636,6 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 }
 
 .organizer-booking-admin .ob-event-row__title,
-.organizer-booking-admin .ob-type-name,
 .organizer-booking-admin .ob-mobile-booking__title {
   color: var(--ob-text-primary, var(--text-primary)) !important;
   font-weight: 700 !important;

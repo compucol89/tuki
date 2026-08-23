@@ -630,67 +630,182 @@
       text-transform: none;
     }
 
-    .ob-type-table {
-      width: 100%;
-      table-layout: fixed;
-      margin-bottom: 0;
-      font-size: 11px;
+    .ob-ticket-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+      padding: 2px 16px 16px;
     }
 
-    .ob-focused-meta + .ob-type-table {
-      margin-bottom: 16px;
+    .ob-ticket-card {
+      --ticket-accent: #64748b;
+      --ticket-soft: #f8fafc;
+      --ticket-fg: #475569;
+      --ticket-border: var(--border-default);
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--ticket-border);
+      border-radius: var(--adm-radius-2xl);
+      background: linear-gradient(180deg, var(--surface-card) 0%, var(--ticket-soft) 130%);
+      box-shadow: 0 6px 18px rgba(30, 37, 50, .045);
     }
 
-    .ob-type-table th {
-      border-top: 0;
-      color: var(--ob-text-secondary);
-      font-size: 11px;
-      line-height: 1.25;
-      padding: 8px 6px;
+    .ob-ticket-card--premium {
+      --ticket-accent: #16a34a;
+      --ticket-soft: #f0fdf4;
+      --ticket-fg: #166534;
+      --ticket-border: rgba(22, 163, 74, .28);
+    }
+
+    .ob-ticket-card--free {
+      --ticket-accent: #2563eb;
+      --ticket-soft: #eff6ff;
+      --ticket-fg: #1d4ed8;
+      --ticket-border: rgba(37, 99, 235, .24);
+    }
+
+    .ob-ticket-card--general {
+      --ticket-accent: #f97316;
+      --ticket-soft: #fff7ed;
+      --ticket-fg: #9a3412;
+      --ticket-border: rgba(249, 115, 22, .26);
+    }
+
+    .ob-ticket-card--other {
+      --ticket-accent: #64748b;
+      --ticket-soft: #f8fafc;
+      --ticket-fg: #475569;
+      --ticket-border: var(--border-default);
+    }
+
+    .ob-ticket-card--other:nth-child(even) {
+      --ticket-soft: #fdf7f1;
+      --ticket-border: var(--ob-card-alt-border);
+    }
+
+    html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card {
+      --ticket-soft: rgba(100, 116, 139, .14);
+      --ticket-fg: #cbd5e1;
+      --ticket-border: var(--border-default);
+    }
+
+    html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--premium {
+      --ticket-soft: rgba(22, 163, 74, .16);
+      --ticket-fg: #86efac;
+      --ticket-border: rgba(74, 222, 128, .30);
+    }
+
+    html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--free {
+      --ticket-soft: rgba(37, 99, 235, .16);
+      --ticket-fg: #93c5fd;
+      --ticket-border: rgba(147, 197, 253, .28);
+    }
+
+    html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--general {
+      --ticket-soft: rgba(249, 115, 22, .14);
+      --ticket-fg: #fdba74;
+      --ticket-border: rgba(253, 186, 116, .30);
+    }
+
+    .ob-ticket-card__head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .ob-ticket-card__dot {
+      width: 9px;
+      height: 9px;
+      flex: 0 0 9px;
+      border-radius: 999px;
+      background: var(--ticket-accent);
+    }
+
+    .ob-ticket-card__title {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+      color: var(--ob-text-primary);
+      font-size: 14px;
       font-weight: 700;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .ob-ticket-card__badge {
+      flex: 0 0 auto;
+      max-width: 92px;
+      overflow: hidden;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--ticket-soft);
+      color: var(--ticket-fg);
+      font-size: 10.5px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ob-ticket-card__stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .ob-ticket-stat {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .ob-ticket-stat__label {
+      color: var(--ob-text-secondary);
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.25;
       letter-spacing: .04em;
       text-transform: uppercase;
-      white-space: normal;
     }
 
-    .ob-type-table td {
-      padding: 9px 6px;
-      vertical-align: middle;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-    }
-
-    .ob-type-table__ticket {
-      width: 43%;
-    }
-
-    .ob-type-table__counts {
-      width: 10%;
-    }
-
-    .ob-type-table__scan {
-      width: 15%;
-    }
-
-    .ob-type-table__money {
-      width: 12%;
-    }
-
-    .ob-type-name {
-      display: block;
+    .ob-ticket-stat__value {
       color: var(--ob-text-primary);
-      font-weight: 760;
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums lining-nums;
       overflow-wrap: anywhere;
     }
 
-    .ob-type-event {
-      display: block;
-      max-width: 100%;
-      overflow: hidden;
+    .ob-ticket-card__foot {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-ticket-card__money-label {
       color: var(--ob-text-secondary);
-      font-size: 12px;
-      font-weight: 500;
-      text-overflow: ellipsis;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .ob-ticket-card__money {
+      color: var(--ob-text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace);
+      font-size: 17px;
+      font-weight: 760;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums lining-nums;
       white-space: nowrap;
     }
 
@@ -1371,83 +1486,13 @@
         flex-direction: column;
       }
 
-      .ob-type-table {
-        padding: 10px;
-        border-top: 1px solid var(--border-default);
-        background: var(--surface-card);
-        font-size: 12px;
+      .ob-ticket-grid {
+        grid-template-columns: 1fr;
+        padding: 2px 12px 12px;
       }
 
-      .ob-type-table,
-      .ob-type-table thead,
-      .ob-type-table tbody,
-      .ob-type-table tr,
-      .ob-type-table th,
-      .ob-type-table td {
-        display: block;
-        width: 100%;
-      }
-
-      .ob-type-table thead {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-      }
-
-      .ob-type-table tbody {
-        display: grid;
-        gap: 10px;
-      }
-
-      .ob-type-table tr {
-        padding: 10px 12px;
-        border: 1px solid var(--border-subtle);
-        border-radius: 10px;
-        background: var(--surface-card);
-        box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
-      }
-
-      .ob-type-table td {
-        display: grid;
-        grid-template-columns: minmax(92px, 38%) minmax(0, 1fr);
-        gap: 10px;
-        align-items: center;
-        min-height: 28px;
-        padding: 6px 0;
-        border-top: 0;
-      }
-
-      .ob-type-table td:first-child {
-        display: block;
-        min-height: 0;
-        margin-bottom: 4px;
-        padding: 0 0 9px;
-        border-bottom: 1px solid var(--border-subtle);
-      }
-
-      .ob-type-table td:first-child::before {
-        display: none;
-      }
-
-      .ob-type-table td::before {
-        content: attr(data-label);
-        color: var(--ob-text-secondary);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: .04em;
-        text-transform: uppercase;
-      }
-
-      .ob-type-table td:not(:first-child) {
-        color: var(--ob-text-primary);
-        font-weight: 760;
-      }
-
-      .ob-type-name {
-        font-size: 13px;
-        line-height: 1.3;
+      .ob-ticket-card__stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .ob-progress {
@@ -1660,6 +1705,21 @@
             </div>
           @else
             @foreach ($ticketSalesByEvent as $eventSummary)
+              @php
+                $obTicketTone = function ($ticketName) {
+                    $name = mb_strtolower(trim((string) $ticketName));
+                    if (preg_match('/(vip|mesa|box|premium|palco|vvip)/u', $name)) {
+                      return ['key' => 'premium', 'label' => __('Premium')];
+                    }
+                    if (preg_match('/(gratis|free|lista|sin cargo|cortesía|cortesia)/u', $name)) {
+                      return ['key' => 'free', 'label' => __('Gratis')];
+                    }
+                    if (preg_match('/(general|entrada|early|anticipada|standard|normal)/u', $name)) {
+                      return ['key' => 'general', 'label' => __('General')];
+                    }
+                    return ['key' => 'other', 'label' => __('Otro')];
+                };
+              @endphp
               <div class="ob-focused-meta">
                 <span class="ob-chip">{{ $eventSummary['date_label'] }}</span>
                 <span class="ob-chip">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
@@ -1667,43 +1727,43 @@
                 <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
               </div>
 
-              <table class="table ob-type-table">
-                <colgroup>
-                  <col class="ob-type-table__ticket">
-                  <col class="ob-type-table__counts">
-                  <col class="ob-type-table__counts">
-                  <col class="ob-type-table__counts">
-                  <col class="ob-type-table__scan">
-                  <col class="ob-type-table__money">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th scope="col">{{ __('Entrada') }}</th>
-                    <th scope="col" class="tuki-data">{{ __('Vendidas') }}</th>
-                    <th scope="col" class="tuki-data">{{ __('Pendientes') }}</th>
-                    <th scope="col" class="tuki-data">{{ __('Rechazadas') }}</th>
-                    <th scope="col" class="tuki-data">{{ __('Escaneo') }}</th>
-                    <th scope="col" class="tuki-data">{{ __('Ingresos') }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($eventSummary['tickets'] as $summaryRow)
-                    <tr>
-                      <td data-label="{{ __('Entrada') }}">
-                        <span class="ob-type-name">{{ $summaryRow['ticket_name'] }}</span>
-                      </td>
-                      <td data-label="{{ __('Vendidas') }}"><span class="ob-pill tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
-                      <td data-label="{{ __('Pendientes') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
-                      <td data-label="{{ __('Rechazadas') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
-                      <td data-label="{{ __('Escaneo') }}">
-                        <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
+              <div class="ob-ticket-grid" role="list">
+                @foreach ($eventSummary['tickets'] as $summaryRow)
+                  @php
+                    $tone = $obTicketTone($summaryRow['ticket_name']);
+                  @endphp
+                  <article role="listitem" class="ob-ticket-card ob-ticket-card--{{ $tone['key'] }}">
+                    <div class="ob-ticket-card__head">
+                      <span class="ob-ticket-card__dot" aria-hidden="true"></span>
+                      <h4 class="ob-ticket-card__title">{{ $summaryRow['ticket_name'] }}</h4>
+                      <span class="ob-ticket-card__badge">{{ $tone['label'] }}</span>
+                    </div>
+                    <div class="ob-ticket-card__stats">
+                      <div class="ob-ticket-stat">
+                        <span class="ob-ticket-stat__label">{{ __('Vendidas') }}</span>
+                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</strong>
+                      </div>
+                      <div class="ob-ticket-stat">
+                        <span class="ob-ticket-stat__label">{{ __('Pendientes') }}</span>
+                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</strong>
+                      </div>
+                      <div class="ob-ticket-stat">
+                        <span class="ob-ticket-stat__label">{{ __('Rechazadas') }}</span>
+                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</strong>
+                      </div>
+                      <div class="ob-ticket-stat ob-ticket-stat--scan">
+                        <span class="ob-ticket-stat__label">{{ __('Escaneo') }}</span>
+                        <strong class="ob-ticket-stat__value tuki-data tuki-data-count">{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
                         <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
-                      </td>
-                      <td data-label="{{ __('Ingresos') }}"><span class="ob-money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                    <div class="ob-ticket-card__foot">
+                      <span class="ob-ticket-card__money-label">{{ __('Ingresos') }}</span>
+                      <span class="ob-ticket-card__money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span>
+                    </div>
+                  </article>
+                @endforeach
+              </div>
             @endforeach
           @endunless
         @endif

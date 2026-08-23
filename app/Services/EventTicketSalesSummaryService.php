@@ -82,7 +82,7 @@ class EventTicketSalesSummaryService
     return $rows;
   }
 
-  public function summarizeByEvent($bookings, array $eventInfos = [], $events = null): array
+  public function summarizeByEvent($bookings, array $eventInfos = [], $events = null, array $categoryNames = []): array
   {
     $ticketRows = $this->summarize($bookings, $eventInfos);
     $eventModels = collect($events ?: [])->keyBy('id');
@@ -94,12 +94,23 @@ class EventTicketSalesSummaryService
 
       if (!isset($groups[$eventId])) {
         $event = $eventModels->get($eventId);
+        $eventInfo = $eventInfos[$eventId] ?? null;
         $meta = $this->eventDateMeta($event);
         $eventBookings = $bookingGroups->get($eventId, collect());
+        $eventType = $event ? (string) ($event->event_type ?? '') : '';
+        $eventTypeLabel = $eventType === 'venue'
+          ? 'Presencial'
+          : ($eventType === 'online' ? 'Online' : '-');
 
         $groups[$eventId] = [
           'event_id' => $eventId,
           'event_title' => $row['event_title'],
+          'thumbnail' => $event ? $event->thumbnail : null,
+          'event_type' => $eventType,
+          'event_type_label' => $eventTypeLabel,
+          'category_label' => $eventInfo && !empty($eventInfo->event_category_id)
+            ? ($categoryNames[$eventInfo->event_category_id] ?? '-')
+            : '-',
           'date_label' => $meta['label'],
           'date_sort' => $meta['sort'],
           'date_status' => $meta['status'],

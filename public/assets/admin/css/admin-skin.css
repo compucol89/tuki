@@ -2118,6 +2118,19 @@ label {
   margin-left: 0 !important;
   padding-left: 0 !important;
 }
+
+.sidebar[data-background-color="white"] .nav-collapse li a .sub-item {
+  color: #475569 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+}
+
+.sidebar[data-background-color="white"] .nav-collapse li.active > a .sub-item,
+.sidebar[data-background-color="white"] .nav-collapse li a:hover .sub-item,
+.sidebar[data-background-color="white"] .nav-collapse li a:focus .sub-item {
+  color: #1e2532 !important;
+  font-weight: 600 !important;
+}
 .sidebar .nav-collapse li a .sub-item:before,
 .sidebar[data-background-color="white"] .nav-collapse li a .sub-item:before {
   display: none !important;
@@ -2479,6 +2492,16 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   box-shadow: 0 12px 30px rgba(30, 37, 50, 0.07) !important;
 }
 
+.organizer-booking-admin .ob-metric--primary {
+  border-color: rgba(30, 37, 50, 0.18) !important;
+  background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
+}
+
+.organizer-booking-admin .ob-metric--money {
+  border-color: rgba(154, 52, 18, 0.24) !important;
+  background: linear-gradient(180deg, var(--surface-card) 0%, #fff7ed 100%) !important;
+}
+
 .organizer-events .oe-panel__header,
 .organizer-events .oe-toolbar,
 .organizer-booking-admin .ob-type-summary__head,
@@ -2496,6 +2519,22 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   font-weight: 700 !important;
   line-height: 1.2 !important;
   letter-spacing: 0 !important;
+}
+
+.organizer-booking-admin .page-header .page-title,
+.organizer-booking-admin .page-title {
+  color: var(--ob-text-primary, var(--text-primary)) !important;
+  font-size: 24px !important;
+  font-weight: 760 !important;
+  line-height: 1.14 !important;
+  letter-spacing: 0 !important;
+}
+
+.organizer-booking-admin .ob-type-summary__title {
+  color: var(--ob-text-primary, var(--text-primary)) !important;
+  font-size: 19px !important;
+  font-weight: 760 !important;
+  line-height: 1.16 !important;
 }
 
 .organizer-events label,
@@ -2538,22 +2577,24 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-booking-admin .ob-detail-label,
 .organizer-booking-admin .ob-event-summary-stat span,
 .organizer-booking-admin .ob-type-table td::before {
-  color: var(--text-secondary) !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
+  color: var(--ob-text-secondary, var(--text-secondary)) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
   line-height: 1.25 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
 }
 
 .organizer-booking-admin .ob-metric__value,
 .organizer-booking-admin .ob-event-summary-stat strong,
-.organizer-booking-admin .ob-event-row__kpi strong,
+.organizer-booking-admin .ob-event-row__value,
+.organizer-booking-admin .ob-event-row__money,
 .organizer-booking-admin .ob-money {
-  color: var(--text-primary) !important;
-  font-weight: 720 !important;
-  letter-spacing: -0.015em !important;
-  font-variant-numeric: tabular-nums !important;
+  color: var(--ob-text-primary, var(--text-primary)) !important;
+  font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, monospace) !important;
+  font-weight: 760 !important;
+  letter-spacing: 0 !important;
+  font-variant-numeric: tabular-nums lining-nums !important;
 }
 
 .organizer-booking-admin .ob-metric__value {
@@ -2561,11 +2602,37 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   line-height: 1.05 !important;
 }
 
+.organizer-booking-admin .ob-metric--primary .ob-metric__value,
+.organizer-booking-admin .ob-metric--money .ob-metric__value {
+  font-size: 25px !important;
+  font-weight: 760 !important;
+}
+
+.organizer-booking-admin .ob-event-row__value {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+}
+
+.organizer-booking-admin .ob-event-row__money {
+  color: var(--ob-kpi-money-fg, var(--ob-text-primary, var(--text-primary))) !important;
+  font-weight: 600 !important;
+}
+
+.organizer-booking-admin .ob-event-row__label {
+  color: var(--ob-event-muted, var(--text-secondary)) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
 .organizer-booking-admin .ob-event-row__title,
 .organizer-booking-admin .ob-event-summary-card__title,
 .organizer-booking-admin .ob-type-name,
 .organizer-booking-admin .ob-mobile-booking__title {
-  color: var(--text-primary) !important;
+  color: var(--ob-text-primary, var(--text-primary)) !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
 }
@@ -2663,7 +2730,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-booking-admin .ob-context-note {
   border-color: var(--border-default) !important;
   background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
-  color: var(--text-secondary) !important;
+  color: var(--ob-text-secondary, var(--text-secondary)) !important;
 }
 
 html[data-theme="dark"] .organizer-events .oe-metric,
@@ -2673,6 +2740,11 @@ html[data-theme="dark"] .organizer-booking-admin .ob-type-summary,
 html[data-theme="dark"] .organizer-transactions .card,
 html[data-theme="dark"] .event-form-modern > .row > .col-md-12 > .card {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18) !important;
+}
+
+html[data-theme="dark"] .organizer-booking-admin .ob-metric--primary,
+html[data-theme="dark"] .organizer-booking-admin .ob-metric--money {
+  background: linear-gradient(180deg, var(--surface-card) 0%, rgba(253, 186, 116, 0.08) 100%) !important;
 }
 
 html[data-theme="dark"] .organizer-transactions .ot-filter .form-control {

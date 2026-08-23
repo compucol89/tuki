@@ -23,6 +23,8 @@ if [ ! -d "$WT/public" ]; then
 fi
 
 SYNC_PATHS=(
+  "app/Http/Controllers/BackEnd/Organizer"
+  "app/Services"
   "public/assets/admin/css"
   "public/assets/admin/js"
   "resources/views/organizer"

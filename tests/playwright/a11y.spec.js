@@ -85,7 +85,7 @@ async function organizerLogin(page) {
   throw new Error('No se pudo autenticar al organizer (3 intentos, sesión no persistida).');
 }
 
-test.describe('@a11y dashboard del organizer', () => {
+test.describe('@a11y rutas del organizer', () => {
   test.skip(!USER.username || !USER.password, 'Requiere E2E_ORGANIZER_USERNAME y E2E_ORGANIZER_PASSWORD.');
 
   // Serial: el login usa la sesión file de Laravel (lock por request); con
@@ -105,6 +105,22 @@ test.describe('@a11y dashboard del organizer', () => {
       await page.waitForTimeout(400);
 
       await axeScan(page, `organizer-dashboard (${theme})`);
+    });
+  }
+
+  for (const theme of ['light', 'dark']) {
+    test(`@a11y organizer-event-booking (${theme}) sin violaciones axe`, async ({ page }) => {
+      await organizerLogin(page);
+      await page.goto('/organizer/event-booking', { waitUntil: 'load' });
+      await page.evaluate((t) => {
+        document.documentElement.dataset.theme = t;
+        document.body.setAttribute('data-background-color', t === 'dark' ? 'dark' : 'white');
+        const s = document.querySelector('.sidebar');
+        if (s) s.setAttribute('data-background-color', t === 'dark' ? 'dark2' : 'white');
+      }, theme);
+      await page.waitForTimeout(400);
+
+      await axeScan(page, `organizer-event-booking (${theme})`);
     });
   }
 });

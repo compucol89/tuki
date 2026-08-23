@@ -462,6 +462,198 @@ test.describe('@theme contrato theming organizer', () => {
     expect(geom.overflowX).toBe(false);
   });
 
+  test('@theme reservas mobile: filas profesionales y datos mono', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 538, height: 872 });
+    await page.goto('/organizer/event-booking', { waitUntil: 'networkidle' });
+    await setTheme(page, 'light');
+
+    const geom = await page.evaluate(() => {
+      const rows = Array.from(document.querySelectorAll('.ob-event-row'));
+      const first = rows[0];
+      const second = rows[1];
+      const stats = first ? Array.from(first.querySelectorAll('.ob-event-row__stat')) : [];
+      const statRows = Object.values(stats.reduce((acc, item) => {
+        const top = Math.round(item.getBoundingClientRect().top);
+        acc[top] = (acc[top] || 0) + 1;
+        return acc;
+      }, {}));
+      const panel = document.querySelector('.ob-type-summary');
+      const last = rows[rows.length - 1];
+      const cta = first?.querySelector('.ob-event-row__cta');
+      const thumb = first?.querySelector('.ob-event-row__thumb');
+      const status = first?.querySelector('.ob-event-row__badge--status');
+      const type = first?.querySelector('.ob-event-row__badge--type');
+      const grid = first?.querySelector('.ob-event-row__grid');
+      const settlement = first?.querySelector('.ob-event-row__settlement');
+      const fonts = [
+        ...Array.from(document.querySelectorAll('.ob-metric__value')),
+        ...Array.from(document.querySelectorAll('.ob-event-row__value')),
+        ...Array.from(document.querySelectorAll('.ob-event-row__muted .tuki-data')),
+        ...Array.from(document.querySelectorAll('.ob-event-row__money')),
+      ].map((el) => getComputedStyle(el).fontFamily);
+      const dateText = first?.querySelector('.ob-event-row__date')?.innerText || '';
+      const categoryText = first?.querySelector('.ob-event-row__category')?.innerText || '';
+      const settlementText = first?.querySelector('.ob-event-row__settlement')?.innerText || '';
+      const styleOf = (selector) => {
+        const el = document.querySelector(selector);
+        const cs = getComputedStyle(el);
+        return {
+          fontSize: parseFloat(cs.fontSize),
+          fontWeight: Number(cs.fontWeight),
+          textTransform: cs.textTransform,
+        };
+      };
+
+      return {
+        rowCount: rows.length,
+        firstBg: first ? getComputedStyle(first).backgroundColor : null,
+        secondBg: second ? getComputedStyle(second).backgroundColor : null,
+        statRows,
+        allDataFonts: fonts.length > 0 && fonts.every((font) => font.includes('IBM Plex Mono')),
+        ctaRatio: first && cta ? cta.getBoundingClientRect().width / first.getBoundingClientRect().width : 0,
+        thumbSize: thumb ? {
+          width: Math.round(thumb.getBoundingClientRect().width),
+          height: Math.round(thumb.getBoundingClientRect().height),
+        } : null,
+        typeBelowStatus: status && type ? type.getBoundingClientRect().top > status.getBoundingClientRect().top : false,
+        gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
+        hasSettlement: !!settlement,
+        dateReadsLikeEvents: /^Función:\s+/.test(dateText),
+        categoryReadsLikeEvents: /^Categoría:\s+/.test(categoryText),
+        settlementReadsAsNet: /Ingreso neto\s+Neto:/.test(settlementText.replace(/\n/g, ' ')),
+        panelBottomGap: panel && last ? Math.round(panel.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom) : null,
+        pageTitle: styleOf('.organizer-booking-admin .page-title'),
+        sectionTitle: styleOf('.ob-type-summary__title'),
+        rowTitle: styleOf('.ob-event-row__title'),
+        metricLabel: styleOf('.ob-metric__label'),
+        metricValue: styleOf('.ob-metric__value'),
+        statLabel: styleOf('.ob-event-row__label'),
+        statValue: styleOf('.ob-event-row__value'),
+        overflowX: document.documentElement.scrollWidth > window.innerWidth,
+      };
+    });
+
+    expect(geom.rowCount).toBeGreaterThan(0);
+    expect(geom.firstBg).not.toBe(geom.secondBg);
+    expect(geom.thumbSize).toEqual({ width: 54, height: 54 });
+    expect(geom.typeBelowStatus).toBe(true);
+    expect(geom.gridColumns).toBe(2);
+    expect(geom.statRows).toEqual([2]);
+    expect(geom.hasSettlement).toBe(true);
+    expect(geom.allDataFonts).toBe(true);
+    expect(geom.ctaRatio).toBeGreaterThan(0.85);
+    expect(geom.dateReadsLikeEvents).toBe(true);
+    expect(geom.categoryReadsLikeEvents).toBe(true);
+    expect(geom.settlementReadsAsNet).toBe(true);
+    expect(geom.panelBottomGap).toBeGreaterThanOrEqual(12);
+    expect(geom.panelBottomGap).toBeLessThanOrEqual(24);
+    expect(geom.pageTitle.fontSize).toBeGreaterThan(geom.sectionTitle.fontSize);
+    expect(geom.sectionTitle.fontSize).toBeGreaterThan(geom.rowTitle.fontSize);
+    expect(geom.rowTitle.fontWeight).toBe(700);
+    expect(geom.metricLabel.textTransform).toBe('uppercase');
+    expect(geom.metricLabel.fontSize).toBeLessThan(geom.metricValue.fontSize);
+    expect(geom.metricValue.fontWeight).toBeGreaterThanOrEqual(740);
+    expect(geom.statLabel.textTransform).toBe('none');
+    expect(geom.statLabel.fontWeight).toBe(600);
+    expect(geom.statLabel.fontSize).toBeLessThan(geom.statValue.fontSize);
+    expect(geom.statValue.textTransform).toBe('none');
+    expect(geom.statValue.fontWeight).toBe(700);
+    expect(geom.overflowX).toBe(false);
+  });
+
+  test('@theme reservas contraste WCAG AA en light y dark', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 538, height: 872 });
+
+    const selectors = [
+      '.organizer-booking-admin .page-title',
+      '.ob-context-note',
+      '.ob-metric__label',
+      '.ob-metric__value',
+      '.ob-metric__hint',
+      '.ob-type-summary__title',
+      '.ob-muted',
+      '.ob-type-summary__formula',
+      '.ob-event-row__title',
+      '.ob-event-row__date',
+      '.ob-event-row__category',
+      '.ob-event-row__badge',
+      '.ob-event-row__badge--status',
+      '.ob-event-row__badge--type',
+      '.ob-event-row__label',
+      '.ob-event-row__value',
+      '.ob-event-row__muted',
+      '.ob-event-row__money',
+      '.ob-event-row__cta',
+    ];
+
+    for (const theme of ['light', 'dark']) {
+      await page.goto('/organizer/event-booking', { waitUntil: 'networkidle' });
+      await setTheme(page, theme);
+
+      const audit = await page.evaluate((selectors) => {
+        const parseColor = (value) => {
+          const nums = String(value).match(/[\d.]+/g)?.map(Number) || [];
+          if (nums.length < 3) return null;
+          return {
+            r: nums[0] <= 1 ? nums[0] * 255 : nums[0],
+            g: nums[1] <= 1 ? nums[1] * 255 : nums[1],
+            b: nums[2] <= 1 ? nums[2] * 255 : nums[2],
+            a: nums.length >= 4 ? nums[3] : 1,
+          };
+        };
+        const composite = (top, bottom) => ({
+          r: top.r * top.a + bottom.r * (1 - top.a),
+          g: top.g * top.a + bottom.g * (1 - top.a),
+          b: top.b * top.a + bottom.b * (1 - top.a),
+          a: 1,
+        });
+        const luminance = ({ r, g, b }) => {
+          const linear = [r, g, b].map((value) => {
+            value /= 255;
+            return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+        };
+        const contrast = (fg, bg) => {
+          const f = luminance(fg);
+          const b = luminance(bg);
+          return (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05);
+        };
+        const effectiveBg = (el) => {
+          const layers = [];
+          for (let node = el; node && node.nodeType === 1; node = node.parentElement) {
+            const parsed = parseColor(getComputedStyle(node).backgroundColor);
+            if (parsed && parsed.a > 0) layers.push(parsed);
+          }
+          return layers.reverse().reduce((bg, layer) => composite(layer, bg), { r: 255, g: 255, b: 255, a: 1 });
+        };
+
+        return selectors.map((selector) => {
+          const el = document.querySelector(selector);
+          if (!el) return { selector, missing: true };
+          const fg = parseColor(getComputedStyle(el).color);
+          const bg = effectiveBg(el);
+          return {
+            selector,
+            ratio: fg ? contrast(fg, bg) : 0,
+          };
+        });
+      }, selectors);
+
+      const failures = audit.filter((item) => item.missing || item.ratio < 4.5);
+      expect(failures, `contraste AA texto en reservas ${theme}: ${JSON.stringify(failures)}`).toEqual([]);
+
+      await page.locator('.ob-event-row').first().focus();
+      const focus = await page.locator('.ob-event-row').first().evaluate((el) => ({
+        borderColor: getComputedStyle(el).borderColor,
+      }));
+
+      expect(focus.borderColor, `borde de foco visible reservas ${theme}`).not.toBe('rgba(0, 0, 0, 0)');
+    }
+  });
+
   test('@theme sidebar: iconos de items activos = token (nunca #1572E8)', async ({ page }) => {
     await login(page);
     await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'load' });

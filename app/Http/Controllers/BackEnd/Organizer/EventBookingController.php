@@ -8,6 +8,7 @@ use App\Models\BasicSettings\Basic;
 use App\Models\BasicSettings\MailTemplate;
 use App\Models\Event;
 use App\Models\Event\Booking;
+use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
 use App\Models\PaymentGateway\OfflineGateway;
 use App\Models\PaymentGateway\OnlineGateway;
@@ -146,8 +147,11 @@ class EventBookingController extends Controller
       })
       ->all();
     $summaryEvents = Event::with('dates')->whereIn('id', $eventIdsForInfo)->get();
+    $eventCategoryNames = EventCategory::whereIn('id', collect($eventInfos)->pluck('event_category_id')->filter()->unique())
+      ->pluck('name', 'id')
+      ->all();
     $ticketSummaryService = app(EventTicketSalesSummaryService::class);
-    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents);
+    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents, $eventCategoryNames);
 
     return view('organizer.event.booking.index', compact(
       'bookings',

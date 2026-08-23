@@ -10,7 +10,60 @@
       --ob-meta-size: 12px;
       --ob-title-size: 17px;
       --ob-value-size: 24px;
-      color: var(--text-primary);
+      --ob-card-bg: var(--surface-card);
+      --ob-card-alt-bg: #fffdfb;
+      --ob-card-alt-border: rgba(194, 65, 12, .22);
+      --ob-card-focus-border: #9A3412;
+      --ob-text-primary: #1e2532;
+      --ob-text-secondary: #5f6b7d;
+      --ob-text-muted: #5f6b7d;
+      --ob-event-muted: #6b7686;
+      --ob-chip-bg: #f8fafc;
+      --ob-chip-strong-bg: #fff7ed;
+      --ob-chip-strong-fg: #7C2D12;
+      --ob-kpi-bg: #ffffff;
+      --ob-kpi-money-bg: #fff7ed;
+      --ob-kpi-money-fg: var(--ob-text-primary);
+      --ob-control-hover-bg: rgba(249, 115, 22, .08);
+      --ob-button-primary-bg: #9A3412;
+      --ob-button-primary-hover-bg: #7C2D12;
+      max-width: 100%;
+      overflow-x: clip;
+      overflow-y: visible;
+      color: var(--ob-text-primary);
+    }
+
+    html[data-theme="dark"] .organizer-booking-admin {
+      --ob-card-bg: var(--surface-card);
+      --ob-card-alt-bg: #283242;
+      --ob-card-alt-border: rgba(253, 186, 116, .38);
+      --ob-card-focus-border: #fdba74;
+      --ob-text-primary: #f8fafc;
+      --ob-text-secondary: #cbd5e1;
+      --ob-text-muted: #cbd5e1;
+      --ob-event-muted: #cbd5e1;
+      --ob-chip-bg: #202a37;
+      --ob-chip-strong-bg: rgba(124, 45, 18, .40);
+      --ob-chip-strong-fg: #ffedd5;
+      --ob-kpi-bg: rgba(15, 23, 42, .22);
+      --ob-kpi-money-bg: rgba(124, 45, 18, .32);
+      --ob-kpi-money-fg: #ffedd5;
+      --ob-control-hover-bg: rgba(253, 186, 116, .10);
+      --ob-button-primary-bg: #9A3412;
+      --ob-button-primary-hover-bg: #7C2D12;
+    }
+
+    .organizer-booking-admin .page-title {
+      color: var(--ob-text-primary);
+      font-size: 24px;
+      font-weight: 760;
+      line-height: 1.14;
+      letter-spacing: 0;
+    }
+
+    .organizer-booking-admin .breadcrumbs a,
+    .organizer-booking-admin .breadcrumbs i {
+      color: var(--ob-text-secondary);
     }
 
     .ob-summary {
@@ -35,28 +88,51 @@
 
     .ob-metric__label {
       margin-bottom: 0;
-      color: var(--text-secondary);
-      font-size: var(--ob-label-size);
-      font-weight: 600;
+      color: var(--ob-event-muted);
+      font-size: 11px;
+      font-weight: 700;
       line-height: 1.25;
-      letter-spacing: 0;
-      text-transform: none;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
 
     .ob-metric__value {
-      color: var(--text-primary);
+      color: var(--ob-text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
       font-size: var(--ob-value-size);
       font-weight: 720;
       line-height: 1.05;
-      letter-spacing: -.015em;
-      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums lining-nums;
     }
 
     .ob-metric__hint {
       margin-top: 0;
-      color: var(--text-secondary);
+      color: var(--ob-text-muted);
       font-size: var(--ob-meta-size);
-      line-height: 1.35;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .ob-metric--primary {
+      border-color: rgba(30, 37, 50, .18);
+      background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%);
+    }
+
+    .ob-metric--money {
+      border-color: rgba(154, 52, 18, .24);
+      background: linear-gradient(180deg, var(--surface-card) 0%, #fff7ed 100%);
+    }
+
+    .ob-metric--primary .ob-metric__value,
+    .ob-metric--money .ob-metric__value {
+      font-size: 25px;
+      font-weight: 760;
+    }
+
+    html[data-theme="dark"] .organizer-booking-admin .ob-metric--primary,
+    html[data-theme="dark"] .organizer-booking-admin .ob-metric--money {
+      background: linear-gradient(180deg, var(--surface-card) 0%, rgba(253, 186, 116, .08) 100%);
     }
 
     .ob-toolbar {
@@ -73,15 +149,16 @@
       border-color: var(--border-default) !important;
       border-radius: var(--adm-radius-lg) !important;
       background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-soft) 100%) !important;
-      color: var(--text-secondary) !important;
-      font-size: 13px;
+      color: var(--ob-text-secondary) !important;
+      font-size: 14px;
+      font-weight: 500;
       line-height: 1.55;
       box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
     }
 
     .ob-type-summary {
       max-width: 100%;
-      overflow: hidden;
+      overflow: visible;
       margin-bottom: 18px;
       border: 1px solid var(--border-default);
       border-radius: 8px;
@@ -99,42 +176,62 @@
 
     .ob-type-summary__title {
       margin: 0;
-      color: var(--text-primary);
-      font-size: var(--ob-title-size);
-      font-weight: 700;
+      color: var(--ob-text-primary);
+      font-size: 19px;
+      font-weight: 760;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .ob-type-summary__formula {
+      align-self: flex-start;
+      padding: 6px 9px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 999px;
+      background: var(--ob-chip-bg);
+      color: var(--ob-text-secondary);
+      font-size: 12px;
+      font-weight: 650;
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .ob-type-summary__body {
-      padding: 18px;
+      padding: 16px;
     }
 
     .ob-event-list {
-      display: flex;
-      flex-direction: column;
+      display: grid;
       gap: 12px;
     }
 
     .ob-event-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 16px 20px;
+      align-items: stretch;
+      gap: 14px 16px;
       min-height: 72px;
-      padding: 16px 18px 16px 20px;
+      padding: 14px;
       border: 1px solid var(--border-default);
-      border-radius: 10px;
-      background: var(--surface-card);
+      border-radius: 16px;
+      background: var(--ob-card-bg);
       color: inherit;
       text-decoration: none;
-      box-shadow: 0 4px 14px rgba(30, 37, 50, .04), inset 0 1px 0 rgba(249, 115, 22, .10);
+      scroll-margin-top: 80px;
+      scroll-margin-bottom: 72px;
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
       transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+    }
+
+    .ob-event-row:nth-child(even) {
+      border-color: var(--ob-card-alt-border);
+      background: var(--ob-card-alt-bg);
     }
 
     .ob-event-row:hover,
     .ob-event-row:focus {
-      border-color: color-mix(in srgb, var(--adm-primary) 35%, var(--border-default));
-      box-shadow: 0 8px 20px rgba(30, 37, 50, .08);
+      border-color: var(--ob-card-focus-border);
+      box-shadow: 0 0 0 3px var(--focus-ring), 0 16px 34px rgba(30, 37, 50, .10);
       color: inherit;
       text-decoration: none;
       transform: translateY(-1px);
@@ -142,62 +239,203 @@
 
     .ob-event-row__main {
       min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      display: grid;
+      gap: 11px;
+    }
+
+    .ob-event-row__head {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .ob-event-row__thumb {
+      width: 54px;
+      height: 54px;
+      flex: 0 0 54px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: var(--surface-hover);
+    }
+
+    .ob-event-row__thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ob-event-row__text {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
     }
 
     .ob-event-row__title {
+      display: -webkit-box;
       margin: 0;
-      color: var(--text-primary);
-      font-size: 15px;
+      overflow: hidden;
+      color: var(--ob-text-primary);
+      font-size: 14px;
       font-weight: 700;
-      line-height: 1.3;
+      line-height: 1.25;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow-wrap: anywhere;
+      text-decoration: none;
     }
 
-    .ob-event-row__meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .ob-event-row__date {
+      display: block;
+      color: var(--ob-event-muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
     }
 
-    .ob-event-row__chip {
+    .ob-event-row__date-label {
+      font-weight: 400;
+    }
+
+    .ob-event-row__category {
+      display: block;
+      color: var(--ob-event-muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .ob-event-row__badges {
+      display: grid;
+      gap: 6px;
+      justify-items: end;
+      align-self: start;
+      min-width: 0;
+    }
+
+    .ob-event-row__badge {
       display: inline-flex;
       align-items: center;
-      min-height: 28px;
-      padding: 4px 10px;
+      justify-content: center;
+      gap: 4px;
+      min-height: 24px;
+      max-width: 104px;
+      padding: 3px 8px;
       border: 1px solid var(--border-subtle);
       border-radius: 999px;
-      background: var(--surface-card-soft);
-      color: var(--text-secondary);
+      background: var(--ob-chip-bg);
+      color: var(--ob-text-secondary);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
+      line-height: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .ob-event-row__kpis {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
+    .ob-event-row__badge--status {
+      border-color: rgba(154, 52, 18, .22);
+      background: var(--ob-chip-strong-bg);
+      color: var(--ob-chip-strong-fg);
+      font-weight: 700;
     }
 
-    .ob-event-row__kpi {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 6px;
-      color: var(--text-secondary);
+    .ob-event-row__badge--type {
+      border-color: rgba(154, 52, 18, .18);
+      background: var(--ob-chip-strong-bg);
+      color: var(--ob-chip-strong-fg);
+      font-size: 12px;
+    }
+
+    .ob-event-row__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 16px;
+      row-gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-event-row__stat {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
+      color: var(--ob-event-muted);
+      line-height: 1.25;
+    }
+
+    .ob-event-row__label {
+      display: block;
+      color: var(--ob-event-muted);
       font-size: 12px;
       font-weight: 600;
+      letter-spacing: 0;
+      text-transform: none;
     }
 
-    .ob-event-row__kpi strong {
-      color: var(--text-primary);
-      font-size: 14px;
-      font-weight: 720;
-      font-variant-numeric: tabular-nums;
+    .ob-event-row__value {
+      display: block;
+      margin-top: 3px;
+      color: var(--ob-text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: 0;
+      text-transform: none;
+      font-variant-numeric: tabular-nums lining-nums;
+      overflow-wrap: anywhere;
+    }
+
+    .ob-event-row__muted {
+      display: block;
+      color: var(--ob-event-muted);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .ob-event-row__muted .tuki-data {
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .ob-event-row__progress {
+      height: 5px;
+      max-width: 144px;
+      overflow: hidden;
+      margin-top: 4px;
+      border-radius: 999px;
+      background: var(--border-default);
+    }
+
+    .ob-event-row__progress span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--adm-primary);
+    }
+
+    .ob-event-row__settlement {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-event-row__settlement-copy {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .ob-event-row__money {
+      color: var(--ob-kpi-money-fg);
     }
 
     .ob-event-row__cta {
@@ -208,22 +446,42 @@
       min-height: 40px;
       padding: 0 16px;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--adm-primary-dark) 0%, var(--adm-primary-strong) 100%);
+      background: var(--ob-button-primary-bg);
       color: var(--text-on-accent);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       white-space: nowrap;
       pointer-events: none;
+    }
+
+    .ob-event-row:hover .ob-event-row__cta,
+    .ob-event-row:focus .ob-event-row__cta {
+      background: var(--ob-button-primary-hover-bg);
+      color: var(--text-on-accent);
     }
 
     @media (max-width: 767px) {
       .ob-event-row {
         grid-template-columns: 1fr;
-        gap: 14px;
+        gap: 12px;
+        padding: 13px 14px 14px;
+      }
+
+      .ob-event-row__main {
+        gap: 10px;
+      }
+
+      .ob-event-row__head {
+        grid-template-columns: 54px minmax(0, 1fr) auto;
+      }
+
+      .ob-event-row__badges {
+        max-width: 112px;
       }
 
       .ob-event-row__cta {
         width: 100%;
+        min-height: 40px;
       }
     }
 
@@ -235,8 +493,9 @@
     .ob-event-summary-card {
       overflow: hidden;
       border: 1px solid var(--border-default);
-      border-radius: 10px;
+      border-radius: 16px;
       background: var(--surface-card);
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
     }
 
     .ob-event-summary-card__head {
@@ -255,9 +514,9 @@
 
     .ob-event-summary-card__title {
       margin: 0 0 7px;
-      color: var(--text-primary);
+      color: var(--ob-text-primary);
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 760;
       line-height: 1.25;
     }
 
@@ -265,7 +524,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      color: var(--text-secondary);
+      color: var(--ob-text-secondary);
       font-size: 12px;
       font-weight: 600;
     }
@@ -283,8 +542,8 @@
     }
 
     .ob-event-summary-card__date {
-      color: var(--adm-primary);
-      font-weight: 650;
+      color: var(--ob-chip-strong-fg);
+      font-weight: 700;
     }
 
     .ob-event-summary-card__status {
@@ -294,10 +553,10 @@
       padding: 5px 9px;
       border: 1px solid color-mix(in srgb, var(--adm-primary) 22%, transparent);
       border-radius: 999px;
-      background: var(--adm-primary-soft);
-      color: var(--adm-primary-dark);
+      background: var(--ob-chip-strong-bg);
+      color: var(--ob-chip-strong-fg);
       font-size: 12px;
-      font-weight: 650;
+      font-weight: 700;
       text-transform: none;
     }
 
@@ -318,21 +577,24 @@
 
     .ob-event-summary-stat span {
       display: block;
-      color: var(--text-secondary);
-      font-size: 12px;
-      font-weight: 600;
+      color: var(--ob-text-secondary);
+      font-size: 11px;
+      font-weight: 700;
       line-height: 1.25;
-      text-transform: none;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
 
     .ob-event-summary-stat strong {
       display: block;
       margin-top: 3px;
-      color: var(--text-primary);
+      color: var(--ob-text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
       font-size: 18px;
-      font-weight: 720;
+      font-weight: 760;
       line-height: 1.15;
-      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums lining-nums;
       overflow-wrap: anywhere;
     }
 
@@ -345,12 +607,13 @@
 
     .ob-type-table th {
       border-top: 0;
-      color: var(--text-secondary);
+      color: var(--ob-text-secondary);
       font-size: 11px;
       line-height: 1.25;
       padding: 8px 6px;
-      font-weight: 650;
-      text-transform: none;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
       white-space: normal;
     }
 
@@ -379,8 +642,8 @@
 
     .ob-type-name {
       display: block;
-      color: var(--text-primary);
-      font-weight: 700;
+      color: var(--ob-text-primary);
+      font-weight: 760;
       overflow-wrap: anywhere;
     }
 
@@ -388,8 +651,9 @@
       display: block;
       max-width: 100%;
       overflow: hidden;
-      color: var(--text-secondary);
+      color: var(--ob-text-secondary);
       font-size: 12px;
+      font-weight: 500;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
@@ -404,7 +668,7 @@
 
     .ob-table th {
       border-top: 0;
-      color: var(--text-secondary);
+      color: var(--ob-text-secondary);
       font-size: 12px;
       text-transform: uppercase;
       white-space: nowrap;
@@ -418,23 +682,26 @@
       display: block;
       max-width: 280px;
       overflow: hidden;
-      color: var(--text-primary);
-      font-weight: 700;
+      color: var(--ob-text-primary);
+      font-weight: 760;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
     .ob-muted {
       display: block;
-      color: var(--text-secondary);
+      color: var(--ob-text-secondary);
       font-size: 12px;
-      line-height: 1.4;
+      font-weight: 500;
+      line-height: 1.45;
     }
 
     .ob-money {
-      color: var(--text-primary);
-      font-weight: 720;
-      font-variant-numeric: tabular-nums;
+      color: var(--ob-text-primary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
+      font-weight: 760;
+      letter-spacing: 0;
+      font-variant-numeric: tabular-nums lining-nums;
       white-space: nowrap;
     }
 
@@ -492,18 +759,19 @@
 
     .ob-detail-label {
       display: block;
-      color: var(--text-secondary);
+      color: var(--ob-text-secondary);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 700;
       line-height: 1.25;
-      text-transform: none;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
 
     .ob-detail-value {
       display: block;
       margin-top: 4px;
-      color: var(--text-primary);
-      font-weight: 700;
+      color: var(--ob-text-primary);
+      font-weight: 760;
     }
 
     .ob-mini-list {
@@ -526,8 +794,8 @@
     .ob-mini-title {
       display: block;
       overflow-wrap: anywhere;
-      color: var(--text-primary);
-      font-weight: 700;
+      color: var(--ob-text-primary);
+      font-weight: 760;
     }
 
     .ob-pill {
@@ -580,8 +848,8 @@
 
     .ob-mobile-booking__title {
       margin-bottom: 2px;
-      color: var(--text-primary);
-      font-weight: 700;
+      color: var(--ob-text-primary);
+      font-weight: 760;
     }
 
     .ob-mobile-booking__grid {
@@ -603,15 +871,15 @@
     }
 
     .ob-empty i {
-      color: var(--text-muted);
+      color: var(--ob-text-muted);
       font-size: 34px;
     }
 
     .ob-empty h3 {
       margin-top: 14px;
-      color: var(--text-primary);
+      color: var(--ob-text-primary);
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 760;
     }
 
     @media (max-width: 1199px) {
@@ -757,15 +1025,16 @@
 
       .ob-type-table td::before {
         content: attr(data-label);
-        color: var(--text-secondary);
+        color: var(--ob-text-secondary);
         font-size: 11px;
-        font-weight: 600;
-        text-transform: none;
+        font-weight: 700;
+        letter-spacing: .04em;
+        text-transform: uppercase;
       }
 
       .ob-type-table td:not(:first-child) {
-        color: var(--text-primary);
-        font-weight: 700;
+        color: var(--ob-text-primary);
+        font-weight: 760;
       }
 
       .ob-type-name {
@@ -856,32 +1125,32 @@
       </p>
     @endif
 
-    <div class="ob-summary" aria-label="{{ __('Resumen de reservas') }}">
-      <div class="ob-metric">
+    <div class="ob-summary" role="group" aria-label="{{ __('Resumen de reservas') }}">
+      <div class="ob-metric ob-metric--primary">
         <div class="ob-metric__label">{{ __('Reservas') }}</div>
-        <div class="ob-metric__value">{{ number_format($kpis['total'] ?? 0, 0, ',', '.') }}</div>
+        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['total'] ?? 0, 0, ',', '.') }}</div>
       </div>
-      <div class="ob-metric">
+      <div class="ob-metric ob-metric--money">
         <div class="ob-metric__label">{{ __('Total cobrado') }}</div>
-        <div class="ob-metric__value">{{ $formatBaseMoney($kpis['charged'] ?? 0) }}</div>
+        <div class="ob-metric__value tuki-data tuki-data-money">{{ $formatBaseMoney($kpis['charged'] ?? 0) }}</div>
         <div class="ob-metric__hint">{{ __('Lo que pagaron los clientes') }}</div>
       </div>
-      <div class="ob-metric">
+      <div class="ob-metric ob-metric--money">
         <div class="ob-metric__label">{{ __('Recibís') }}</div>
-        <div class="ob-metric__value">{{ $formatBaseMoney($kpis['organizer_net'] ?? 0) }}</div>
+        <div class="ob-metric__value tuki-data tuki-data-money">{{ $formatBaseMoney($kpis['organizer_net'] ?? 0) }}</div>
         <div class="ob-metric__hint">{{ __('Entradas menos comisión') }}</div>
       </div>
       <div class="ob-metric">
         <div class="ob-metric__label">{{ __('Completadas') }}</div>
-        <div class="ob-metric__value">{{ number_format($kpis['completed'] ?? 0, 0, ',', '.') }}</div>
+        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['completed'] ?? 0, 0, ',', '.') }}</div>
       </div>
       <div class="ob-metric">
         <div class="ob-metric__label">{{ __('Pendientes') }}</div>
-        <div class="ob-metric__value">{{ number_format($kpis['pending'] ?? 0, 0, ',', '.') }}</div>
+        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['pending'] ?? 0, 0, ',', '.') }}</div>
       </div>
       <div class="ob-metric">
         <div class="ob-metric__label">{{ __('Gratis') }}</div>
-        <div class="ob-metric__value">{{ number_format($kpis['free'] ?? 0, 0, ',', '.') }}</div>
+        <div class="ob-metric__value tuki-data tuki-data-count">{{ number_format($kpis['free'] ?? 0, 0, ',', '.') }}</div>
       </div>
     </div>
 
@@ -903,7 +1172,7 @@
             @endif
           </div>
         </div>
-        <div class="ob-muted">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
+        <div class="ob-type-summary__formula">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
       </div>
       <div class="ob-type-summary__body">
         @if (empty($ticketSalesByEvent ?? []))
@@ -914,21 +1183,53 @@
           @unless ($focusedEventId)
             <div class="ob-event-list" role="list">
               @foreach ($ticketSalesByEvent as $eventSummary)
+                @php
+                  $thumb = !empty($eventSummary['thumbnail'] ?? null)
+                    ? asset('assets/admin/img/event/thumbnail/' . $eventSummary['thumbnail'])
+                    : asset('assets/admin/img/noimage.jpg');
+                  $fallbackThumb = asset('assets/admin/img/noimage.jpg');
+                  $categoryLabel = $eventSummary['category_label'] ?? '-';
+                  $eventTypeLabel = $eventSummary['event_type_label'] ?? '-';
+                @endphp
                 <a role="listitem" class="ob-event-row"
                   href="{{ route('organizer.event_booking.by_event', $eventSummary['event_id']) }}">
                   <div class="ob-event-row__main">
-                    <h3 class="ob-event-row__title">{{ $eventSummary['event_title'] }}</h3>
-                    <div class="ob-event-row__meta">
-                      <span class="ob-event-row__chip">{{ $eventSummary['date_label'] }}</span>
-                      <span class="ob-event-row__chip">{{ $eventSummary['date_status'] }}</span>
-                      <span class="ob-event-row__chip">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                    <div class="ob-event-row__head">
+                      <div class="ob-event-row__thumb">
+                        <img src="{{ $thumb }}" alt="" loading="lazy" onerror="this.onerror=null;this.src='{{ $fallbackThumb }}';">
+                      </div>
+                      <div class="ob-event-row__text">
+                        <h3 class="ob-event-row__title">{{ $eventSummary['event_title'] }}</h3>
+                        <span class="ob-event-row__date">
+                          <span class="ob-event-row__date-label">{{ __('Función') }}:</span>
+                          <span class="ob-event-row__date-value">{{ $eventSummary['date_label'] }}</span>
+                        </span>
+                        <span class="ob-event-row__category">{{ __('Categoría') }}: {{ $categoryLabel ?: '-' }}</span>
+                      </div>
+                      <div class="ob-event-row__badges">
+                        <span class="ob-event-row__badge ob-event-row__badge--status">{{ $eventSummary['date_status'] }}</span>
+                        <span class="ob-event-row__badge ob-event-row__badge--type">{{ __($eventTypeLabel) }}</span>
+                      </div>
                     </div>
-                    <ul class="ob-event-row__kpis" aria-label="{{ __('Totales del evento') }}">
-                      <li class="ob-event-row__kpi"><span>{{ __('Vendidas') }}</span> <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong></li>
-                      <li class="ob-event-row__kpi"><span>{{ __('Pendientes') }}</span> <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong></li>
-                      <li class="ob-event-row__kpi"><span>{{ __('Escaneadas') }}</span> <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong></li>
-                      <li class="ob-event-row__kpi"><span>{{ __('Neto') }}</span> <strong>{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</strong></li>
-                    </ul>
+                    <div class="ob-event-row__grid" role="group" aria-label="{{ __('Totales del evento') }}">
+                      <div class="ob-event-row__stat">
+                        <span class="ob-event-row__label">{{ __('Reservas') }}</span>
+                        <strong class="ob-event-row__value tuki-data tuki-data-count">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }}</strong>
+                        <span class="ob-event-row__muted">{{ __('Vendidas') }}: <span class="tuki-data tuki-data-count">{{ number_format($eventSummary['sold'], 0, ',', '.') }}</span></span>
+                        <span class="ob-event-row__muted">{{ __('Pendientes') }}: <span class="tuki-data tuki-data-count">{{ number_format($eventSummary['pending'], 0, ',', '.') }}</span></span>
+                      </div>
+                      <div class="ob-event-row__stat">
+                        <span class="ob-event-row__label">{{ __('Escaneo') }}</span>
+                        <strong class="ob-event-row__value tuki-data tuki-data-count">{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
+                        <div class="ob-event-row__progress" aria-hidden="true"><span style="width: {{ $eventSummary['scan_percent'] ?? 0 }}%"></span></div>
+                      </div>
+                    </div>
+                    <div class="ob-event-row__settlement">
+                      <span class="ob-event-row__settlement-copy">
+                        <span class="ob-event-row__label">{{ __('Ingreso neto') }}</span>
+                        <span class="ob-event-row__muted">{{ __('Neto') }}: <span class="ob-event-row__money tuki-data tuki-data-money">{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</span></span>
+                      </span>
+                    </div>
                   </div>
                   <span class="ob-event-row__cta">
                     {{ __('Abrir evento') }}
@@ -953,7 +1254,7 @@
                     <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
                   </div>
 
-                  <div class="ob-event-summary-stats" aria-label="{{ __('Totales del evento') }}">
+                  <div class="ob-event-summary-stats" role="group" aria-label="{{ __('Totales del evento') }}">
                     <div class="ob-event-summary-stat">
                       <span>{{ __('Entradas vendidas') }}</span>
                       <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong>

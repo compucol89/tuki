@@ -597,19 +597,34 @@ test.describe('@theme contrato theming organizer', () => {
         const panel = document.querySelector('.ob-panel--flat');
         const cards = Array.from(document.querySelectorAll('.ob-mobile-booking'));
         const first = cards[0];
+        const heading = first?.querySelector('.ob-mobile-booking__heading');
         const title = first?.querySelector('.ob-mobile-booking__title');
+        const ref = first?.querySelector('.ob-mobile-booking__ref');
+        const meta = first?.querySelector('.ob-mobile-booking__meta');
         const status = first?.querySelector('.ob-mobile-booking__badges .ob-status');
-        const buyer = first?.querySelector('.ob-mobile-section--buyer');
+        const buyer = first?.querySelector('.ob-mobile-buyerline');
         const grid = first?.querySelector('.ob-mobile-booking__grid');
-        const payment = first?.querySelector('.ob-mobile-section:not(.ob-mobile-section--buyer)');
-        const tickets = first?.querySelector('.ob-mobile-extra');
+        const payment = first?.querySelector('.ob-mobile-payment');
+        const tickets = first?.querySelector('.ob-mobile-extra--tickets');
+        const ticketTitle = first?.querySelector('.ob-mobile-extra--tickets .ob-mini-title');
         const controls = first?.querySelector('.ob-mobile-controls');
         const actionLabels = controls ? Array.from(controls.querySelectorAll('a, button')).map((el) => el.getAttribute('aria-label') || '') : [];
         const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .ob-money')).map((el) => getComputedStyle(el).fontFamily) : [];
         const buttonHeights = controls ? Array.from(controls.querySelectorAll('a, button')).map((el) => Math.round(el.getBoundingClientRect().height)) : [];
         const order = first ? Array.from(first.children).map((el) => el.className.toString()) : [];
         const panelStyles = panel ? getComputedStyle(panel) : null;
-        const titleStyles = title ? getComputedStyle(title) : null;
+        const headingStyles = heading ? getComputedStyle(heading) : null;
+        const buyerRows = buyer
+          ? Array.from(buyer.children)
+            .map((el) => el.getBoundingClientRect().top)
+            .sort((a, b) => a - b)
+            .reduce((rows, top) => {
+              if (rows.length === 0 || Math.abs(top - rows[rows.length - 1]) > 10) {
+                rows.push(top);
+              }
+              return rows;
+            }, []).length
+          : 0;
 
         return {
           cardCount: cards.length,
@@ -617,14 +632,21 @@ test.describe('@theme contrato theming organizer', () => {
             ? panelStyles.boxShadow === 'none' && panelStyles.backgroundColor === 'rgba(0, 0, 0, 0)'
             : false,
           titleText: title?.textContent?.trim() || '',
-          titleClamp: titleStyles?.webkitLineClamp || titleStyles?.lineClamp || '',
-          titleOverflow: titleStyles?.textOverflow || '',
-          titleLines: title ? Math.round(title.getBoundingClientRect().height / parseFloat(titleStyles.lineHeight)) : 0,
+          headingText: heading?.textContent?.trim() || '',
+          titleClamp: headingStyles?.webkitLineClamp || headingStyles?.lineClamp || '',
+          titleOverflow: headingStyles?.textOverflow || '',
+          headingLines: heading ? Math.round(heading.getBoundingClientRect().height / parseFloat(headingStyles.lineHeight)) : 0,
+          refInHeading: !!ref && !!heading && ref.parentElement === heading,
+          metaText: meta?.textContent?.trim() || '',
+          metaHasDataFont: !!meta?.querySelector('.tuki-data'),
           statusRightColumn: status && title ? status.getBoundingClientRect().left > title.getBoundingClientRect().left : false,
           hasBuyerBlock: !!buyer,
+          buyerRows,
           gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
-          hasPaymentBlock: !!payment,
+          hasPaymentChip: !!payment,
           hasTicketsBlock: !!tickets,
+          ticketTitle: ticketTitle?.textContent?.trim() || '',
+          cardHeight: first ? Math.round(first.getBoundingClientRect().height) : 0,
           actionLabels,
           buttonHeights,
           allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
@@ -639,14 +661,21 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.titleText).not.toContain('...');
       expect(['none', 'initial', '']).toContain(geom.titleClamp);
       expect(geom.titleOverflow).not.toBe('ellipsis');
-      expect(geom.titleLines).toBeGreaterThanOrEqual(2);
+      expect(geom.headingLines).toBeGreaterThanOrEqual(2);
+      expect(geom.refInHeading).toBe(true);
+      expect(geom.headingText).toContain('#');
+      expect(geom.metaText).not.toMatch(/funci[oó]n/i);
+      expect(geom.metaHasDataFont).toBe(false);
       expect(geom.statusRightColumn).toBe(true);
       expect(geom.hasBuyerBlock).toBe(true);
+      expect(geom.buyerRows).toBeLessThanOrEqual(2);
       expect(geom.gridColumns).toBe(2);
-      expect(geom.hasPaymentBlock).toBe(true);
+      expect(geom.hasPaymentChip).toBe(true);
       expect(geom.hasTicketsBlock).toBe(true);
+      expect(geom.ticketTitle).not.toMatch(/^entrada\s+/i);
+      expect(geom.cardHeight).toBeLessThan(410);
       expect(geom.order[0]).toContain('ob-mobile-booking__head');
-      expect(geom.order[1]).toContain('ob-mobile-section--buyer');
+      expect(geom.order[1]).toContain('ob-mobile-buyerline');
       expect(geom.order[2]).toContain('ob-mobile-booking__grid');
       expect(geom.actionLabels.every((label) => /reserva/i.test(label))).toBe(true);
       expect(geom.buttonHeights.every((height) => height >= 40)).toBe(true);

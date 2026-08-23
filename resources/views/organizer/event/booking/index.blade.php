@@ -925,7 +925,7 @@
     .ob-mobile-booking {
       display: grid;
       gap: 0;
-      padding: 14px;
+      padding: 12px 13px;
       border: 1px solid var(--border-default);
       border-radius: var(--adm-radius-2xl);
       background: var(--surface-card);
@@ -948,23 +948,26 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: start;
-      gap: 10px;
+      gap: 8px;
     }
 
     .ob-mobile-booking__main {
       display: grid;
-      gap: 4px;
+      gap: 3px;
       min-width: 0;
     }
 
-    .ob-mobile-booking__title {
-      display: block;
+    .ob-mobile-booking__heading {
       margin: 0;
       color: var(--ob-text-primary);
       font-size: 14px;
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.22;
       overflow-wrap: anywhere;
+    }
+
+    .ob-mobile-booking__title {
+      color: inherit;
       text-decoration: none;
     }
 
@@ -978,6 +981,15 @@
       outline: 2px solid var(--adm-primary);
       outline-offset: 3px;
       border-radius: 6px;
+    }
+
+    .ob-mobile-booking__ref {
+      margin-left: 6px;
+      color: var(--ob-text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      vertical-align: baseline;
+      white-space: nowrap;
     }
 
     .ob-mobile-booking__meta {
@@ -1011,34 +1023,80 @@
     .ob-mobile-booking__grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 16px;
-      row-gap: 12px;
-      padding-top: 12px;
-      margin-top: 12px;
+      column-gap: 12px;
+      row-gap: 8px;
+      padding-top: 9px;
+      margin-top: 9px;
       border-top: 1px solid var(--border-subtle);
     }
 
-    .ob-mobile-section {
-      display: grid;
-      gap: 5px;
-      padding-top: 12px;
-      margin-top: 12px;
+    .ob-mobile-buyerline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      min-width: 0;
+      gap: 3px 7px;
+      padding-top: 9px;
+      margin-top: 9px;
       border-top: 1px solid var(--border-subtle);
+      color: var(--ob-text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
     }
 
-    .ob-mobile-section--buyer {
-      padding-top: 11px;
+    .ob-mobile-buyerline__label {
+      color: var(--ob-text-secondary);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .ob-mobile-buyerline__name {
+      color: var(--ob-text-primary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .ob-mobile-buyerline__contact {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .ob-mobile-buyerline a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .ob-mobile-buyerline a:hover,
+    .ob-mobile-buyerline a:focus {
+      color: var(--adm-primary-dark);
+      text-decoration: none;
     }
 
     .ob-mobile-stat {
       display: grid;
-      gap: 3px;
+      gap: 2px;
       min-width: 0;
+    }
+
+    .ob-mobile-stat__line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .ob-mobile-stat__line .ob-detail-value,
+    .ob-mobile-stat__line .ob-mobile-money {
+      margin-top: 0;
     }
 
     .ob-mobile-money {
       display: block;
-      margin-top: 3px;
+      margin-top: 0;
       font-size: 15px;
       line-height: 1.25;
     }
@@ -1047,8 +1105,8 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px;
-      margin-top: 12px;
-      padding-top: 12px;
+      margin-top: 10px;
+      padding-top: 10px;
       border-top: 1px solid var(--border-subtle);
     }
 
@@ -1088,25 +1146,70 @@
     }
 
     .ob-mobile-extra {
-      padding-top: 10px;
-      margin-top: 12px;
+      padding-top: 9px;
+      margin-top: 9px;
       border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-mobile-extra--tickets {
+      display: grid;
+      gap: 7px;
+    }
+
+    .ob-mobile-extra__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .ob-mobile-payment {
+      display: inline-flex;
+      align-items: center;
+      max-width: 56%;
+      min-height: 24px;
+      padding: 3px 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--ob-chip-bg);
+      color: var(--ob-text-secondary);
+      font-size: 11px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .ob-mobile-booking .ob-mini-list {
+      gap: 0;
+      margin-top: 0;
     }
 
     .ob-mobile-booking .ob-mini-row {
       grid-template-columns: minmax(0, 1fr) auto;
-      align-items: start;
-      padding: 10px;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border: 0;
+      border-top: 1px solid var(--border-subtle);
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .ob-mobile-booking .ob-mini-row:first-child {
+      border-top: 0;
     }
 
     .ob-mini-row__main {
-      display: grid;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
       min-width: 0;
-      gap: 3px;
+      gap: 2px 8px;
     }
 
     .ob-mini-row__amount {
-      align-self: start;
+      align-self: center;
       margin-top: 0;
       font-size: 13px;
     }
@@ -1798,6 +1901,11 @@
                     $scanPercent = $booking->scanPercent();
                     $eventSummaryInfo = $ticketSummaryByEventId->get($booking->event_id);
                     $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : ($eventSummaryInfo['date_label'] ?? '-');
+                    $buyerName = $booking->buyerName();
+                    $buyerEmail = $booking->buyerEmail();
+                    $buyerPhone = $booking->buyerPhone();
+                    $buyerDisplayName = $buyerName !== '' ? $buyerName : __('Invitado');
+                    $paymentMethodLabel = $booking->paymentMethod ?: '-';
                     $status = $statusOptions[$booking->paymentStatus] ?? ['label' => ucfirst((string) $booking->paymentStatus), 'class' => 'secondary', 'icon' => 'fa-circle'];
                     $invoiceExtension = pathinfo((string) $booking->invoice, PATHINFO_EXTENSION);
                     $hasInvoiceFile = $invoiceExtension == 'pdf' && $booking->hasInvoiceFile();
@@ -1805,18 +1913,13 @@
                   <article class="ob-mobile-booking" aria-labelledby="organizerMobileBookingTitle{{ $booking->id }}">
                     <div class="ob-mobile-booking__head">
                       <div class="ob-mobile-booking__main">
-                        @if ($eventInfo)
-                          <a id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title"
-                            href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
-                            target="_blank" rel="noopener">
-                            {{ $title }}
-                          </a>
-                        @else
-                          <h3 id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title">-</h3>
-                        @endif
-                        <div class="ob-mobile-booking__meta">
-                          <span class="tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 16, '') }}</span>
-                          <span>{{ __('Función') }}: <span class="tuki-data tuki-data-count">{{ $eventDateLabel }}</span></span>
+                        <h3 class="ob-mobile-booking__heading">@if ($eventInfo)<a id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title"
+                              href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
+                              target="_blank" rel="noopener">{{ $title }}</a>@else<span id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title">-</span>@endif
+                          <span class="ob-mobile-booking__ref tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 16, '') }}</span>
+                        </h3>
+                        <div id="organizerMobileBookingMeta{{ $booking->id }}" class="ob-mobile-booking__meta">
+                          <span>{{ $eventDateLabel }}</span>
                         </div>
                       </div>
                       <div class="ob-mobile-booking__badges">
@@ -1825,41 +1928,59 @@
                       </div>
                     </div>
 
-                    <section class="ob-mobile-section ob-mobile-section--buyer" aria-label="{{ __('Comprador') }}">
-                      <span class="ob-detail-label">{{ __('Comprador') }}</span>
-                      @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
+                    <section class="ob-mobile-buyerline" aria-label="{{ __('Comprador') }}">
+                      <span class="ob-mobile-buyerline__label">{{ __('Comprador') }}</span>
+                      <strong class="ob-mobile-buyerline__name">{{ $buyerDisplayName }}</strong>
+                      @if ($booking->isGuestBuyer())
+                        <span class="badge badge-secondary ob-buyer__badge">{{ __('Invitado') }}</span>
+                      @endif
+                      @if ($buyerEmail !== '')
+                        <a class="ob-mobile-buyerline__contact" href="mailto:{{ $buyerEmail }}">{{ $buyerEmail }}</a>
+                      @endif
+                      @if ($buyerPhone !== '')
+                        <a class="ob-mobile-buyerline__contact tuki-data tuki-data-count" href="tel:{{ preg_replace('/\s+/', '', $buyerPhone) }}">{{ $buyerPhone }}</a>
+                      @endif
                     </section>
 
                     <div class="ob-mobile-booking__grid" role="group" aria-label="{{ __('Resumen de la reserva') }}">
                       <div class="ob-mobile-stat">
-                        <span class="ob-detail-label">{{ __('Importe') }}</span>
-                        <span class="ob-money ob-mobile-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
+                        <div class="ob-mobile-stat__line">
+                          <span class="ob-detail-label">{{ __('Importe') }}</span>
+                          <span class="ob-money ob-mobile-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
+                        </div>
                         <span class="ob-muted">{{ __('Recibís') }}: <span class="tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span></span>
                       </div>
                       <div class="ob-mobile-stat">
-                        <span class="ob-detail-label">{{ __('Escaneo') }}</span>
+                        <div class="ob-mobile-stat__line">
+                          <span class="ob-detail-label">{{ __('Escaneo') }}</span>
                         @if ((int) $booking->quantity <= 0)
                           <span class="ob-detail-value">{{ __('Datos incompletos') }}</span>
                         @else
                           <span class="ob-detail-value tuki-data tuki-data-count">{{ $scannedCount }}/{{ $booking->quantity }}</span>
+                        @endif
+                        </div>
+                        @if ((int) $booking->quantity > 0)
                           <span class="ob-muted">{{ __('Faltan') }}: <span class="tuki-data tuki-data-count">{{ $pendingScanCount }}</span></span>
                         @endif
                         <div class="ob-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                       </div>
                     </div>
 
-                    <section class="ob-mobile-section" aria-label="{{ __('Pago') }}">
-                      <span class="ob-detail-label">{{ __('Pago') }}</span>
-                      <span class="ob-detail-value">{{ $booking->paymentMethod ?: '-' }}</span>
-                    </section>
-
-                    <section class="ob-mobile-extra" aria-labelledby="organizerMobileTicketsTitle{{ $booking->id }}">
-                      <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label">{{ __('Entradas') }}</span>
+                    <section class="ob-mobile-extra ob-mobile-extra--tickets" aria-labelledby="organizerMobileTicketsTitle{{ $booking->id }}">
+                      <div class="ob-mobile-extra__head">
+                        <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label">{{ __('Entradas') }}</span>
+                        <span class="ob-mobile-payment"><span class="sr-only">{{ __('Pago') }}: </span>{{ $paymentMethodLabel }}</span>
+                      </div>
                       <div class="ob-mini-list">
                         @foreach ($ticketBreakdown as $ticketItem)
+                          @php
+                            $ticketName = trim((string) $ticketItem['name']);
+                            $ticketDisplayName = trim((string) preg_replace('/^\s*Entrada\s+/iu', '', $ticketName));
+                            $ticketDisplayName = $ticketDisplayName !== '' ? Str::ucfirst($ticketDisplayName) : $ticketName;
+                          @endphp
                           <div class="ob-mini-row">
                             <div class="ob-mini-row__main">
-                              <span class="ob-mini-title">{{ $ticketItem['name'] }}</span>
+                              <span class="ob-mini-title">{{ $ticketDisplayName }}</span>
                               <span class="ob-muted">
                                 {{ __('Escaneo') }}:
                                 <span class="tuki-data tuki-data-count">{{ $ticketItem['scanned'] }}/{{ $ticketItem['quantity'] }}</span>

@@ -111,6 +111,7 @@ test.describe('@a11y rutas del organizer', () => {
   const bookingRoutes = [
     { name: 'organizer-event-booking', path: '/organizer/event-booking' },
     { name: 'organizer-event-booking-focused', path: '/organizer/event-booking/evento/118' },
+    { name: 'organizer-event-booking-ticket-types', path: '/organizer/event-booking/evento/119' },
     { name: 'organizer-event-booking-details', path: '/organizer/event-booking/details/214' },
   ];
 

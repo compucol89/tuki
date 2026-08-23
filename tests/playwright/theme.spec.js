@@ -169,7 +169,7 @@ async function themeAudit(page) {
     };
 
     const whiteSurfaces = [];
-    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .bod-ticket-mobile-card, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
+    document.querySelectorAll('.card, .oe-panel, .oe-toolbar, .oe-metric, .oe-mobile-event, .ob-event-row, .ob-mobile-booking, .ob-event-summary-card, .ob-ticket-card, .oi-panel, .oi-metric, .oi-mobile-month, .bod-panel, .bod-hero, .bod-kpi, .bod-ledger, .bod-ticket-mobile-card, .tb-card, .tb-token, .ticket-free-limit, .ticket-form-intro, .ticket-form-content-intro, .ticket-form-language .version, .event-cover-box, .ai-assistant-card, .ai-generate-panel, .ai-status-card, .async-progress-panel, .create-cover-ai-panel').forEach((el) => {
       const bg = getComputedStyle(el).backgroundColor;
       if (bg && bg !== 'rgba(0, 0, 0, 0)' && isWhite(bg)) {
         whiteSurfaces.push(el.className.toString().slice(0, 40));
@@ -177,7 +177,7 @@ async function themeAudit(page) {
     });
 
     const darkText = [];
-    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .bod-ticket-mobile-card__title, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
+    document.querySelectorAll('.oe-panel__title, .oe-metric__value, .ob-event-row__title, .ob-mobile-booking__title, .ob-detail-value, .ob-ticket-card__title, .ob-ticket-stat__value, .ob-ticket-card__money, .oi-panel__title, .oi-metric__value, .oi-money, .bod-title, .bod-value, .bod-ticket-name, .bod-ticket-mobile-card__title, .tb-status, .ticket-form-header__title, .ai-status-card__title').forEach((el) => {
       const c = getComputedStyle(el).color;
       if (isDarkText(c)) darkText.push(el.className.toString().slice(0, 40));
     });
@@ -701,6 +701,53 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.order[2]).toContain('ob-mobile-booking__grid');
       expect(geom.actionLabels.every((label) => /reserva/i.test(label))).toBe(true);
       expect(geom.buttonHeights.every((height) => height >= 40)).toBe(true);
+      expect(geom.allDataFonts).toBe(true);
+      expect(geom.overflowX).toBe(false);
+    }
+  });
+
+  test('@theme reservas evento mobile: tipos de entrada con icono y tonos', async ({ page }) => {
+    await login(page);
+    await page.setViewportSize({ width: 503, height: 872 });
+
+    for (const theme of ['light', 'dark']) {
+      await page.goto('/organizer/event-booking/evento/119', { waitUntil: 'networkidle' });
+      await setTheme(page, theme);
+
+      const geom = await page.evaluate(() => {
+        const cards = Array.from(document.querySelectorAll('.ob-ticket-card'));
+        const first = cards[0];
+        const head = first?.querySelector('.ob-ticket-card__head');
+        const icon = first?.querySelector('.ob-ticket-card__icon');
+        const title = first?.querySelector('.ob-ticket-card__title');
+        const badge = first?.querySelector('.ob-ticket-card__badge');
+        const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .ob-ticket-card__money, .ob-ticket-stat__value')).map((el) => getComputedStyle(el).fontFamily) : [];
+        const tones = cards.map((card) => Array.from(card.classList).find((className) => className.startsWith('ob-ticket-card--'))).filter(Boolean);
+
+        return {
+          cardCount: cards.length,
+          tones,
+          headColumns: head ? getComputedStyle(head).gridTemplateColumns.split(' ').length : 0,
+          iconSize: icon ? [Math.round(icon.getBoundingClientRect().width), Math.round(icon.getBoundingClientRect().height)] : null,
+          hasIconGlyph: !!icon?.querySelector('i.fas'),
+          titleText: title?.textContent?.trim() || '',
+          titleLines: title ? Math.round(title.getBoundingClientRect().height / parseFloat(getComputedStyle(title).lineHeight)) : 0,
+          badgeText: badge?.textContent?.trim() || '',
+          badgeRight: !!badge && !!title && badge.getBoundingClientRect().left > title.getBoundingClientRect().left,
+          allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
+          overflowX: document.documentElement.scrollWidth > window.innerWidth,
+        };
+      });
+
+      expect(geom.cardCount).toBeGreaterThan(0);
+      expect(new Set(geom.tones).size).toBeGreaterThanOrEqual(2);
+      expect(geom.headColumns).toBe(3);
+      expect(geom.iconSize).toEqual([54, 54]);
+      expect(geom.hasIconGlyph).toBe(true);
+      expect(geom.titleText.length).toBeGreaterThan(3);
+      expect(geom.titleLines).toBeLessThanOrEqual(2);
+      expect(geom.badgeText.length).toBeGreaterThan(0);
+      expect(geom.badgeRight).toBe(true);
       expect(geom.allDataFonts).toBe(true);
       expect(geom.overflowX).toBe(false);
     }

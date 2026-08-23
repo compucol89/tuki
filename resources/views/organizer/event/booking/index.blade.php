@@ -643,6 +643,7 @@
       --ticket-soft-alt: #f2f4f8;
       --ticket-fg: #475569;
       --ticket-border: var(--border-default);
+      --ticket-icon-bg: var(--ticket-soft);
       display: grid;
       gap: 12px;
       min-width: 0;
@@ -694,6 +695,7 @@
       --ticket-soft-alt: rgba(100, 116, 139, .22);
       --ticket-fg: #cbd5e1;
       --ticket-border: var(--border-default);
+      --ticket-icon-bg: rgba(100, 116, 139, .18);
     }
 
     html[data-theme="dark"] .organizer-booking-admin .ob-ticket-card--premium {
@@ -718,23 +720,42 @@
     }
 
     .ob-ticket-card__head {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) auto;
+      align-items: flex-start;
+      gap: 10px;
       min-width: 0;
     }
 
-    .ob-ticket-card__dot {
-      width: 9px;
-      height: 9px;
-      flex: 0 0 9px;
-      border-radius: 999px;
-      background: var(--ticket-accent);
+    .ob-ticket-card__icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--ticket-accent) 18%, transparent);
+      border-radius: var(--adm-radius-lg);
+      background: var(--ticket-icon-bg);
+      color: var(--ticket-fg);
+    }
+
+    .ob-ticket-card__icon i {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .ob-ticket-card__main {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
     }
 
     .ob-ticket-card__title {
-      flex: 1 1 auto;
+      display: -webkit-box;
       min-width: 0;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
       margin: 0;
       color: var(--ob-text-primary);
       font-size: 14px;
@@ -744,14 +765,16 @@
     }
 
     .ob-ticket-card__badge {
-      flex: 0 0 auto;
-      max-width: 92px;
+      justify-self: end;
+      max-width: 104px;
       overflow: hidden;
-      padding: 3px 8px;
+      min-height: 24px;
+      padding: 4px 9px;
+      border: 1px solid color-mix(in srgb, var(--ticket-accent) 20%, transparent);
       border-radius: 999px;
       background: var(--ticket-soft);
       color: var(--ticket-fg);
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 700;
       line-height: 1.2;
       text-overflow: ellipsis;
@@ -1746,15 +1769,15 @@
                 $obTicketTone = function ($ticketName) {
                     $name = mb_strtolower(trim((string) $ticketName));
                     if (preg_match('/(vip|mesa|box|premium|palco|vvip)/u', $name)) {
-                      return ['key' => 'premium', 'label' => __('Premium')];
+                      return ['key' => 'premium', 'label' => __('Premium'), 'icon' => 'fa-crown'];
                     }
                     if (preg_match('/(gratis|gratuit|free|lista|sin cargo|sin costo|cortesía|cortesia)/u', $name)) {
-                      return ['key' => 'free', 'label' => __('Gratis')];
+                      return ['key' => 'free', 'label' => __('Gratis'), 'icon' => 'fa-gift'];
                     }
                     if (preg_match('/(general|entrada|early|anticipada|standard|normal)/u', $name)) {
-                      return ['key' => 'general', 'label' => __('General')];
+                      return ['key' => 'general', 'label' => __('General'), 'icon' => 'fa-ticket-alt'];
                     }
-                    return ['key' => 'other', 'label' => __('Otro')];
+                    return ['key' => 'other', 'label' => __('Otro'), 'icon' => 'fa-tag'];
                 };
               @endphp
               <div class="ob-focused-meta">
@@ -1771,8 +1794,12 @@
                   @endphp
                   <article role="listitem" class="ob-ticket-card ob-ticket-card--{{ $tone['key'] }}">
                     <div class="ob-ticket-card__head">
-                      <span class="ob-ticket-card__dot" aria-hidden="true"></span>
-                      <h4 class="ob-ticket-card__title">{{ $summaryRow['ticket_name'] }}</h4>
+                      <div class="ob-ticket-card__icon" aria-hidden="true">
+                        <i class="fas {{ $tone['icon'] }}"></i>
+                      </div>
+                      <div class="ob-ticket-card__main">
+                        <h4 class="ob-ticket-card__title">{{ $summaryRow['ticket_name'] }}</h4>
+                      </div>
                       <span class="ob-ticket-card__badge">{{ $tone['label'] }}</span>
                     </div>
                     <div class="ob-ticket-card__stats">

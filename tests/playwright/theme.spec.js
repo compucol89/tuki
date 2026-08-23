@@ -723,6 +723,8 @@ test.describe('@theme contrato theming organizer', () => {
         const badge = first?.querySelector('.ob-ticket-card__badge');
         const dataFonts = first ? Array.from(first.querySelectorAll('.tuki-data, .ob-ticket-card__money, .ob-ticket-stat__value')).map((el) => getComputedStyle(el).fontFamily) : [];
         const tones = cards.map((card) => Array.from(card.classList).find((className) => className.startsWith('ob-ticket-card--'))).filter(Boolean);
+        const buyersTitle = document.querySelector('#organizerBuyersTitle');
+        const buyersHeader = buyersTitle?.closest('.ob-panel__header');
 
         return {
           cardCount: cards.length,
@@ -734,6 +736,9 @@ test.describe('@theme contrato theming organizer', () => {
           titleLines: title ? Math.round(title.getBoundingClientRect().height / parseFloat(getComputedStyle(title).lineHeight)) : 0,
           badgeText: badge?.textContent?.trim() || '',
           badgeRight: !!badge && !!title && badge.getBoundingClientRect().left > title.getBoundingClientRect().left,
+          buyersTitleLeftDelta: buyersTitle && buyersHeader
+            ? Math.round(buyersTitle.getBoundingClientRect().left - buyersHeader.getBoundingClientRect().left)
+            : null,
           allDataFonts: dataFonts.length > 0 && dataFonts.every((font) => font.includes('IBM Plex Mono')),
           overflowX: document.documentElement.scrollWidth > window.innerWidth,
         };
@@ -748,6 +753,8 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.titleLines).toBeLessThanOrEqual(2);
       expect(geom.badgeText.length).toBeGreaterThan(0);
       expect(geom.badgeRight).toBe(true);
+      expect(geom.buyersTitleLeftDelta).toBeGreaterThanOrEqual(0);
+      expect(geom.buyersTitleLeftDelta).toBeLessThanOrEqual(3);
       expect(geom.allDataFonts).toBe(true);
       expect(geom.overflowX).toBe(false);
     }

@@ -1510,8 +1510,14 @@
       }
 
       .ob-panel--flat > .ob-panel__header {
+        align-items: stretch;
         padding-right: 0;
         padding-left: 0;
+        text-align: left;
+      }
+
+      .ob-panel--flat > .ob-panel__header > div:first-child {
+        width: 100%;
       }
 
       .ob-toolbar__actions {

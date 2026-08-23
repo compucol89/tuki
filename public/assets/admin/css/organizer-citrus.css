@@ -334,6 +334,10 @@ html[data-theme="dark"] {
   white-space: nowrap;
 }
 
+.oc-mobile-card .oc-money {
+  font-size: 15px;
+}
+
 .oc-data-list {
   display: grid;
   gap: 8px;

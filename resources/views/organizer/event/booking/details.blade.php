@@ -339,23 +339,23 @@
       </div>
 
       <div class="bod-actions">
-        <a class="btn btn-light oc-btn" href="{{ route('organizer.event.booking') }}">
+        <a class="btn oc-btn oc-btn--secondary" href="{{ route('organizer.event.booking') }}">
           <i class="fas fa-arrow-left" aria-hidden="true"></i>{{ __('Volver') }}
         </a>
         @if ($eventInfo)
-          <a class="btn btn-outline-primary oc-btn" href="{{ route('event.details', ['slug' => $eventInfo->slug, 'id' => $eventInfo->event_id]) }}"
+          <a class="btn oc-btn oc-btn--primary" href="{{ route('event.details', ['slug' => $eventInfo->slug, 'id' => $eventInfo->event_id]) }}"
             target="_blank" rel="noopener">
             <i class="fas fa-external-link-alt" aria-hidden="true"></i>{{ __('Ver evento') }}
           </a>
         @endif
         @if ($hasInvoiceFile)
-          <a class="btn btn-outline-secondary oc-btn" href="{{ route('booking.ticket.download', $booking->id) }}"
+          <a class="btn oc-btn oc-btn--secondary" href="{{ route('booking.ticket.download', $booking->id) }}"
             target="_blank" rel="noopener">
             <i class="fas fa-file-pdf" aria-hidden="true"></i>{{ __('Entrada PDF') }}
           </a>
         @endif
         @if (!is_null($booking->attachmentFile))
-          <button class="btn btn-outline-info oc-btn" type="button" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}">
+          <button class="btn oc-btn oc-btn--secondary" type="button" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}">
             <i class="fas fa-paperclip" aria-hidden="true"></i>{{ __('Comprobante') }}
           </button>
         @endif

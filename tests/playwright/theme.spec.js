@@ -910,6 +910,23 @@ test.describe('@theme contrato theming organizer', () => {
           .filter((ratio) => Number.isFinite(ratio));
         const cardStyles = first ? getComputedStyle(first) : null;
         const progressStyles = progress ? getComputedStyle(progress) : null;
+        const isLegacyBlue = (color) => {
+          const nums = String(color).match(/[\d.]+/g)?.map(Number) || [];
+          if (nums.length < 3) return false;
+          const [r, g, b] = nums;
+          return b > 140 && g > 70 && r < 80;
+        };
+        const actionButtons = Array.from(document.querySelectorAll('.organizer-booking-detail .bod-actions .oc-btn')).map((el) => {
+          const styles = getComputedStyle(el);
+          return {
+            text: el.textContent.trim().replace(/\s+/g, ' '),
+            className: el.className,
+            color: styles.color,
+            border: styles.borderTopColor,
+            background: styles.backgroundColor,
+            legacyBlue: [styles.color, styles.borderTopColor, styles.backgroundColor].some(isLegacyBlue),
+          };
+        });
 
         return {
           cardCount: cards.length,
@@ -933,6 +950,9 @@ test.describe('@theme contrato theming organizer', () => {
           labelMaxWeight: maxWeight('.organizer-booking-detail .oc-data-label, .organizer-booking-detail .oc-metric__label'),
           pillMaxWeight: maxWeight('.organizer-booking-detail .oc-pill'),
           minTextContrast: contrastAudit.length ? Math.min(...contrastAudit) : 0,
+          actionButtons,
+          actionButtonsHaveCitrusVariant: actionButtons.length > 0 && actionButtons.every((button) => /\boc-btn--(primary|secondary)\b/.test(button.className)),
+          actionButtonsWithoutLegacyBlue: actionButtons.every((button) => !button.legacyBlue),
           overflowX: document.documentElement.scrollWidth > window.innerWidth,
           text: first?.textContent?.trim().replace(/\s+/g, ' ') || '',
         };
@@ -961,6 +981,8 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.labelMaxWeight).toBeLessThanOrEqual(500);
       expect(geom.pillMaxWeight).toBeLessThanOrEqual(700);
       expect(geom.minTextContrast).toBeGreaterThanOrEqual(4.5);
+      expect(geom.actionButtonsHaveCitrusVariant, JSON.stringify(geom.actionButtons)).toBe(true);
+      expect(geom.actionButtonsWithoutLegacyBlue, JSON.stringify(geom.actionButtons)).toBe(true);
       expect(geom.overflowX).toBe(false);
     }
   });

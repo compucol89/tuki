@@ -202,7 +202,7 @@
       height: 54px;
       flex: 0 0 54px;
       overflow: hidden;
-      border-radius: 7px;
+      border-radius: var(--adm-radius-lg);
       background: var(--surface-hover);
     }
 
@@ -275,7 +275,7 @@
       min-width: 96px;
       min-height: 32px;
       border: 0;
-      border-radius: 7px;
+      border-radius: var(--adm-radius);
       color: var(--text-on-accent);
       font-size: 12px;
       font-weight: 650;
@@ -288,11 +288,11 @@
     }
 
     .oe-action-btn {
-      min-height: 32px;
+      min-height: 40px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      border-radius: 6px;
+      border-radius: var(--adm-radius);
       font-weight: 650;
     }
 
@@ -451,25 +451,25 @@
     .oe-mobile-btn--secondary:focus {
       border-color: var(--oe-control-border) !important;
       background-color: var(--oe-control-hover-bg) !important;
-      color: #7C2D12 !important;
+      color: var(--oe-button-primary-hover-bg) !important;
     }
 
     .oe-mobile-btn--primary {
       border-color: var(--oe-button-primary-bg) !important;
       background-color: var(--oe-button-primary-bg) !important;
-      color: #ffffff !important;
+      color: var(--text-on-accent) !important;
     }
 
     .oe-mobile-btn--primary:hover,
     .oe-mobile-btn--primary:focus {
       border-color: var(--oe-button-primary-hover-bg) !important;
       background-color: var(--oe-button-primary-hover-bg) !important;
-      color: #ffffff !important;
+      color: var(--text-on-accent) !important;
     }
 
     html[data-theme="dark"] .organizer-events .oe-mobile-btn--secondary:hover,
     html[data-theme="dark"] .organizer-events .oe-mobile-btn--secondary:focus {
-      color: #fdba74 !important;
+      color: var(--oe-control-border) !important;
     }
 
     .oe-mobile-btn:focus {
@@ -709,7 +709,9 @@
                   $settlementStatus = $settlement
                       ? ($settlementStatusLabels[$settlement['status']] ?? $settlementStatusLabels['pending'])
                       : $settlementStatusLabels['no_balance'];
-                  $thumb = $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg');
+                  $thumbName = trim((string) $event->thumbnail);
+                  $thumbPath = $thumbName !== '' ? public_path('assets/admin/img/event/thumbnail/' . $thumbName) : '';
+                  $thumb = ($thumbPath !== '' && is_file($thumbPath)) ? asset('assets/admin/img/event/thumbnail/' . $thumbName) : asset('assets/admin/img/noimage.jpg');
                   $fallbackThumb = asset('assets/admin/img/noimage.jpg');
                 @endphp
                 <tr>
@@ -799,7 +801,9 @@
               $settlementStatus = $settlement
                   ? ($settlementStatusLabels[$settlement['status']] ?? $settlementStatusLabels['pending'])
                   : $settlementStatusLabels['no_balance'];
-              $thumb = $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg');
+              $thumbName = trim((string) $event->thumbnail);
+              $thumbPath = $thumbName !== '' ? public_path('assets/admin/img/event/thumbnail/' . $thumbName) : '';
+              $thumb = ($thumbPath !== '' && is_file($thumbPath)) ? asset('assets/admin/img/event/thumbnail/' . $thumbName) : asset('assets/admin/img/noimage.jpg');
               $fallbackThumb = asset('assets/admin/img/noimage.jpg');
             @endphp
             <article class="oe-mobile-event">

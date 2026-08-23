@@ -256,7 +256,7 @@
       height: 54px;
       flex: 0 0 54px;
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: var(--adm-radius-lg);
       background: var(--surface-hover);
     }
 
@@ -710,7 +710,7 @@
       align-items: center;
       min-height: 26px;
       padding: 6px 10px;
-      border-radius: 20px;
+      border-radius: 999px;
       font-size: 12px;
       font-weight: 700;
     }
@@ -721,13 +721,15 @@
 
     .ob-expand-btn,
     .ob-action-btn {
-      width: 34px;
-      height: 34px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 0;
-      border-radius: 6px;
+      border-radius: var(--adm-radius);
     }
 
     .ob-actions {
@@ -787,7 +789,7 @@
       align-items: center;
       padding: 8px 10px;
       border: 1px solid var(--border-subtle);
-      border-radius: 7px;
+      border-radius: var(--adm-radius);
       background: var(--surface-card);
     }
 
@@ -942,7 +944,7 @@
       .ob-event-summary-stat {
         padding: 11px 12px;
         border: 1px solid var(--border-subtle);
-        border-radius: 9px;
+        border-radius: var(--adm-radius-lg);
         background: var(--surface-card);
       }
 
@@ -1184,8 +1186,10 @@
             <div class="ob-event-list" role="list">
               @foreach ($ticketSalesByEvent as $eventSummary)
                 @php
-                  $thumb = !empty($eventSummary['thumbnail'] ?? null)
-                    ? asset('assets/admin/img/event/thumbnail/' . $eventSummary['thumbnail'])
+                  $thumbName = trim((string) ($eventSummary['thumbnail'] ?? ''));
+                  $thumbPath = $thumbName !== '' ? public_path('assets/admin/img/event/thumbnail/' . $thumbName) : '';
+                  $thumb = ($thumbPath !== '' && is_file($thumbPath))
+                    ? asset('assets/admin/img/event/thumbnail/' . $thumbName)
                     : asset('assets/admin/img/noimage.jpg');
                   $fallbackThumb = asset('assets/admin/img/noimage.jpg');
                   $categoryLabel = $eventSummary['category_label'] ?? '-';

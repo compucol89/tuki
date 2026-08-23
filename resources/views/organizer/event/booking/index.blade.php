@@ -1031,11 +1031,11 @@
     }
 
     .ob-mobile-buyerline {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
       min-width: 0;
-      gap: 3px 7px;
+      gap: 8px;
       padding-top: 9px;
       margin-top: 9px;
       border-top: 1px solid var(--border-subtle);
@@ -1043,6 +1043,21 @@
       font-size: 12px;
       font-weight: 500;
       line-height: 1.35;
+    }
+
+    .ob-mobile-buyerline__main {
+      display: grid;
+      min-width: 0;
+      gap: 3px;
+    }
+
+    .ob-mobile-buyerline__identity,
+    .ob-mobile-buyerline__contact {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      min-width: 0;
+      gap: 2px 7px;
     }
 
     .ob-mobile-buyerline__label {
@@ -1060,8 +1075,14 @@
     }
 
     .ob-mobile-buyerline__contact {
-      min-width: 0;
       overflow-wrap: anywhere;
+    }
+
+    .ob-mobile-buyerline__badge {
+      justify-self: end;
+      max-width: 96px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .ob-mobile-buyerline a {
@@ -1167,6 +1188,7 @@
     .ob-mobile-payment {
       display: inline-flex;
       align-items: center;
+      gap: 5px;
       max-width: 56%;
       min-height: 24px;
       padding: 3px 8px;
@@ -1178,6 +1200,14 @@
       font-weight: 700;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .ob-mobile-payment__label {
+      color: var(--ob-text-secondary);
+      font-size: 10px;
+      font-weight: 760;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
 
     .ob-mobile-booking .ob-mini-list {
@@ -1409,6 +1439,14 @@
 
       .ob-mobile-booking__badges {
         justify-items: start;
+      }
+
+      .ob-mobile-buyerline {
+        grid-template-columns: 1fr;
+      }
+
+      .ob-mobile-buyerline__badge {
+        justify-self: start;
       }
     }
   </style>
@@ -1929,16 +1967,22 @@
                     </div>
 
                     <section class="ob-mobile-buyerline" aria-label="{{ __('Comprador') }}">
-                      <span class="ob-mobile-buyerline__label">{{ __('Comprador') }}</span>
-                      <strong class="ob-mobile-buyerline__name">{{ $buyerDisplayName }}</strong>
+                      <div class="ob-mobile-buyerline__main">
+                        <div class="ob-mobile-buyerline__identity">
+                          <span class="ob-mobile-buyerline__label">{{ __('Comprador') }}</span>
+                          <strong class="ob-mobile-buyerline__name">{{ $buyerDisplayName }}</strong>
+                        </div>
+                        <div class="ob-mobile-buyerline__contact">
+                          @if ($buyerEmail !== '')
+                            <a href="mailto:{{ $buyerEmail }}">{{ $buyerEmail }}</a>
+                          @endif
+                          @if ($buyerPhone !== '')
+                            <a class="tuki-data tuki-data-count" href="tel:{{ preg_replace('/\s+/', '', $buyerPhone) }}">{{ $buyerPhone }}</a>
+                          @endif
+                        </div>
+                      </div>
                       @if ($booking->isGuestBuyer())
-                        <span class="badge badge-secondary ob-buyer__badge">{{ __('Invitado') }}</span>
-                      @endif
-                      @if ($buyerEmail !== '')
-                        <a class="ob-mobile-buyerline__contact" href="mailto:{{ $buyerEmail }}">{{ $buyerEmail }}</a>
-                      @endif
-                      @if ($buyerPhone !== '')
-                        <a class="ob-mobile-buyerline__contact tuki-data tuki-data-count" href="tel:{{ preg_replace('/\s+/', '', $buyerPhone) }}">{{ $buyerPhone }}</a>
+                        <span class="badge badge-secondary ob-buyer__badge ob-mobile-buyerline__badge">{{ __('Invitado') }}</span>
                       @endif
                     </section>
 
@@ -1969,7 +2013,7 @@
                     <section class="ob-mobile-extra ob-mobile-extra--tickets" aria-labelledby="organizerMobileTicketsTitle{{ $booking->id }}">
                       <div class="ob-mobile-extra__head">
                         <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label">{{ __('Entradas') }}</span>
-                        <span class="ob-mobile-payment"><span class="sr-only">{{ __('Pago') }}: </span>{{ $paymentMethodLabel }}</span>
+                        <span class="ob-mobile-payment"><span class="ob-mobile-payment__label">{{ __('Pago') }}</span> <span>{{ $paymentMethodLabel }}</span></span>
                       </div>
                       <div class="ob-mini-list">
                         @foreach ($ticketBreakdown as $ticketItem)

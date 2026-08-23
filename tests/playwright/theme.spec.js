@@ -605,6 +605,7 @@ test.describe('@theme contrato theming organizer', () => {
         const buyer = first?.querySelector('.ob-mobile-buyerline');
         const grid = first?.querySelector('.ob-mobile-booking__grid');
         const payment = first?.querySelector('.ob-mobile-payment');
+        const paymentLabel = first?.querySelector('.ob-mobile-payment__label');
         const tickets = first?.querySelector('.ob-mobile-extra--tickets');
         const ticketTitle = first?.querySelector('.ob-mobile-extra--tickets .ob-mini-title');
         const controls = first?.querySelector('.ob-mobile-controls');
@@ -615,7 +616,7 @@ test.describe('@theme contrato theming organizer', () => {
         const panelStyles = panel ? getComputedStyle(panel) : null;
         const headingStyles = heading ? getComputedStyle(heading) : null;
         const buyerRows = buyer
-          ? Array.from(buyer.children)
+          ? Array.from(buyer.querySelectorAll('.ob-mobile-buyerline__identity, .ob-mobile-buyerline__contact, .ob-mobile-buyerline__badge'))
             .map((el) => el.getBoundingClientRect().top)
             .sort((a, b) => a - b)
             .reduce((rows, top) => {
@@ -641,9 +642,13 @@ test.describe('@theme contrato theming organizer', () => {
           metaHasDataFont: !!meta?.querySelector('.tuki-data'),
           statusRightColumn: status && title ? status.getBoundingClientRect().left > title.getBoundingClientRect().left : false,
           hasBuyerBlock: !!buyer,
+          buyerBadgeRight: !!buyer?.querySelector('.ob-mobile-buyerline__badge')
+            && buyer.querySelector('.ob-mobile-buyerline__badge').getBoundingClientRect().left > buyer.querySelector('.ob-mobile-buyerline__main').getBoundingClientRect().right,
           buyerRows,
           gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
           hasPaymentChip: !!payment,
+          paymentText: payment?.textContent?.trim() || '',
+          paymentLabelText: paymentLabel?.textContent?.trim() || '',
           hasTicketsBlock: !!tickets,
           ticketTitle: ticketTitle?.textContent?.trim() || '',
           cardHeight: first ? Math.round(first.getBoundingClientRect().height) : 0,
@@ -668,9 +673,12 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.metaHasDataFont).toBe(false);
       expect(geom.statusRightColumn).toBe(true);
       expect(geom.hasBuyerBlock).toBe(true);
+      expect(geom.buyerBadgeRight).toBe(true);
       expect(geom.buyerRows).toBeLessThanOrEqual(2);
       expect(geom.gridColumns).toBe(2);
       expect(geom.hasPaymentChip).toBe(true);
+      expect(geom.paymentLabelText).toMatch(/pago/i);
+      expect(geom.paymentText).toMatch(/mercado|pago|-/i);
       expect(geom.hasTicketsBlock).toBe(true);
       expect(geom.ticketTitle).not.toMatch(/^entrada\s+/i);
       expect(geom.cardHeight).toBeLessThan(410);

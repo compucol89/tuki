@@ -1022,6 +1022,12 @@ textarea.form-control {
   padding: 5px 9px !important;
 }
 
+.organizer-booking-admin .ob-status {
+  min-height: 22px !important;
+  padding: 3px 8px !important;
+  font-size: 11px !important;
+}
+
 .selectgroup {
   gap: 6px;
 }
@@ -2579,7 +2585,6 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 }
 
 .organizer-booking-admin .ob-detail-label,
-.organizer-booking-admin .ob-event-summary-stat span,
 .organizer-booking-admin .ob-type-table td::before {
   color: var(--ob-text-secondary, var(--text-secondary)) !important;
   font-size: 11px !important;
@@ -2590,7 +2595,6 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 }
 
 .organizer-booking-admin .ob-metric__value,
-.organizer-booking-admin .ob-event-summary-stat strong,
 .organizer-booking-admin .ob-event-row__value,
 .organizer-booking-admin .ob-event-row__money,
 .organizer-booking-admin .ob-money {
@@ -2633,7 +2637,6 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 }
 
 .organizer-booking-admin .ob-event-row__title,
-.organizer-booking-admin .ob-event-summary-card__title,
 .organizer-booking-admin .ob-type-name,
 .organizer-booking-admin .ob-mobile-booking__title {
   color: var(--ob-text-primary, var(--text-primary)) !important;

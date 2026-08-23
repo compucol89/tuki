@@ -259,13 +259,10 @@
       white-space: nowrap;
     }
 
-    .ob-type-summary__body {
-      padding: 16px;
-    }
-
     .ob-event-list {
       display: grid;
       gap: 12px;
+      padding: 16px;
     }
 
     .ob-event-row {
@@ -558,51 +555,15 @@
       }
     }
 
-    .ob-event-summary-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .ob-event-summary-card {
-      overflow: hidden;
-      border: 1px solid var(--border-default);
-      border-radius: 16px;
-      background: var(--surface-card);
-      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
-    }
-
-    .ob-event-summary-card__head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 16px;
-      align-items: start;
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--border-default);
-      background: linear-gradient(180deg, var(--surface-toolbar) 0%, var(--surface-card) 100%);
-    }
-
-    .ob-event-summary-card__head > div {
-      min-width: 0;
-    }
-
-    .ob-event-summary-card__title {
-      margin: 0 0 7px;
-      color: var(--ob-text-primary);
-      font-size: 16px;
-      font-weight: 760;
-      line-height: 1.25;
-    }
-
-    .ob-event-summary-card__meta {
+    .ob-focused-meta {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       gap: 6px;
-      color: var(--ob-text-secondary);
-      font-size: 12px;
-      font-weight: 600;
+      padding: 14px 16px 2px;
     }
 
-    .ob-event-summary-card__meta span {
+    .ob-chip {
       display: inline-flex;
       align-items: center;
       min-height: 24px;
@@ -610,20 +571,18 @@
       border: 1px solid var(--border-subtle);
       border-radius: 999px;
       background: var(--surface-card);
+      color: var(--ob-text-secondary);
+      font-size: 12px;
+      font-weight: 600;
       line-height: 1.2;
       white-space: nowrap;
-    }
-
-    .ob-event-summary-card__date {
-      color: var(--ob-chip-strong-fg);
-      font-weight: 700;
     }
 
     .ob-event-summary-card__status {
       display: inline-flex;
       align-items: center;
       min-height: 24px;
-      padding: 5px 9px;
+      padding: 4px 9px;
       border: 1px solid color-mix(in srgb, var(--adm-primary) 22%, transparent);
       border-radius: 999px;
       background: var(--ob-chip-strong-bg);
@@ -633,49 +592,15 @@
       text-transform: none;
     }
 
-    .ob-event-summary-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
-      gap: 1px;
-      padding: 1px;
-      border-bottom: 1px solid var(--border-default);
-      background: var(--border-default);
-    }
-
-    .ob-event-summary-stat {
-      min-width: 0;
-      padding: 12px 14px;
-      background: var(--surface-card);
-    }
-
-    .ob-event-summary-stat span {
-      display: block;
-      color: var(--ob-text-secondary);
-      font-size: 11px;
-      font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-
-    .ob-event-summary-stat strong {
-      display: block;
-      margin-top: 3px;
-      color: var(--ob-text-primary);
-      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
-      font-size: 18px;
-      font-weight: 760;
-      line-height: 1.15;
-      letter-spacing: 0;
-      font-variant-numeric: tabular-nums lining-nums;
-      overflow-wrap: anywhere;
-    }
-
     .ob-type-table {
       width: 100%;
       table-layout: fixed;
       margin-bottom: 0;
       font-size: 11px;
+    }
+
+    .ob-focused-meta + .ob-type-table {
+      margin-bottom: 16px;
     }
 
     .ob-type-table th {
@@ -794,15 +719,17 @@
     .ob-status {
       display: inline-flex;
       align-items: center;
-      min-height: 26px;
-      padding: 6px 10px;
+      min-height: 24px;
+      padding: 3px 8px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 700;
+      white-space: nowrap;
     }
 
     .ob-status i {
       margin-right: 5px;
+      font-size: 11px;
     }
 
     .ob-expand-btn,
@@ -918,39 +845,157 @@
     .ob-mobile-list {
       display: grid;
       gap: 12px;
+      padding: 16px;
+    }
+
+    .ob-buyer__name {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .ob-buyer__name strong {
+      color: var(--ob-text-primary);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .ob-buyer__badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+    }
+
+    .ob-buyer__meta {
+      margin-top: 2px;
+      color: var(--ob-text-secondary);
+      font-size: 12px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .ob-buyer__meta a {
+      color: inherit;
+    }
+
+    .ob-buyer__meta a:hover {
+      color: var(--adm-primary-dark);
     }
 
     .ob-mobile-booking {
-      padding: 14px;
+      padding: 13px 14px 14px;
       border: 1px solid var(--border-default);
-      border-radius: 8px;
+      border-radius: var(--adm-radius-2xl);
       background: var(--surface-card);
+      box-shadow: 0 6px 18px rgba(30, 37, 50, .045);
+    }
+
+    .ob-mobile-booking:nth-child(even) {
+      border-color: var(--ob-card-alt-border);
+      background: var(--ob-card-alt-bg);
+    }
+
+    .ob-mobile-booking:focus-within {
+      border-color: var(--ob-card-focus-border);
+      box-shadow: 0 0 0 3px var(--focus-ring), 0 10px 24px rgba(30, 37, 50, .08);
     }
 
     .ob-mobile-booking__head {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 11px;
+    }
+
+    .ob-mobile-booking__main {
+      min-width: 0;
+      flex: 1 1 auto;
     }
 
     .ob-mobile-booking__title {
       margin-bottom: 2px;
       color: var(--ob-text-primary);
-      font-weight: 760;
+      font-weight: 700;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
     }
 
     .ob-mobile-booking__grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 12px 0;
+      column-gap: 16px;
+      row-gap: 12px;
+      padding-top: 12px;
+      margin: 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-mobile-stat {
+      min-width: 0;
+    }
+
+    .ob-mobile-stat--buyer {
+      grid-column: 1 / -1;
+    }
+
+    .ob-mobile-money {
+      display: block;
+      margin-top: 3px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .ob-mobile-controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .ob-mobile-controls .deleteForm {
+      display: grid;
+      margin: 0;
+    }
+
+    .ob-mobile-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      gap: 7px;
+      border-radius: var(--adm-radius);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.2;
+      transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .ob-mobile-btn--secondary {
+      border-color: var(--ob-control-hover-bg);
+      background-color: transparent;
+      color: var(--ob-text-primary);
+    }
+
+    .ob-mobile-btn--secondary:hover,
+    .ob-mobile-btn--secondary:focus {
+      border-color: var(--ob-card-focus-border);
+      background-color: var(--ob-control-hover-bg);
+      color: var(--ob-button-primary-hover-bg);
+    }
+
+    .ob-mobile-btn:focus {
+      box-shadow: 0 0 0 3px var(--focus-ring);
     }
 
     .ob-mobile-extra {
       padding-top: 10px;
       margin-top: 10px;
-      border-top: 1px solid var(--border-default);
+      border-top: 1px solid var(--border-subtle);
     }
 
     .ob-empty {
@@ -991,7 +1036,6 @@
 
     @media (max-width: 767px) {
       .ob-detail-grid,
-      .ob-mobile-booking__grid,
       .ob-mini-row {
         grid-template-columns: 1fr;
       }
@@ -1022,45 +1066,12 @@
         margin-left: 0;
       }
 
-      .ob-type-summary__body {
+      .ob-event-list {
         padding: 12px;
       }
 
-      .ob-event-summary-list {
-        gap: 12px;
-      }
-
-      .ob-event-summary-card__head {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 14px;
-      }
-
-      .ob-event-summary-card__title {
-        margin-bottom: 10px;
-        font-size: 15px;
-      }
-
-      .ob-event-summary-card__status {
-        justify-self: start;
-      }
-
-      .ob-event-summary-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
-        padding: 12px;
-        background: var(--surface-card);
-      }
-
-      .ob-event-summary-stat {
-        padding: 11px 12px;
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--adm-radius-lg);
-        background: var(--surface-card);
-      }
-
-      .ob-event-summary-stat strong {
-        font-size: 17px;
+      .ob-focused-meta {
+        padding: 12px 12px 2px;
       }
 
       .ob-metric {
@@ -1162,7 +1173,8 @@
 
     @media (max-width: 360px) {
       .ob-summary,
-      .ob-event-summary-stats {
+      .ob-mobile-booking__grid,
+      .ob-mobile-controls {
         grid-template-columns: 1fr;
       }
     }
@@ -1225,14 +1237,7 @@
       </ul>
     </div>
 
-    @if ($focusedEventId)
-      <p class="alert alert-light border mb-3 ob-context-note">
-        <a href="{{ route('organizer.event.booking') }}" class="btn btn-sm btn-outline-secondary mr-2">
-          <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>{{ __('Volver a eventos') }}
-        </a>
-        {{ __('Personas que reservaron este evento (incluye invitados con nombre, email y teléfono).') }}
-      </p>
-    @else
+    @if (!$focusedEventId)
       <p class="alert alert-light border mb-3 ob-context-note">
         {{ __('Lista de eventos con reservas. Entrá a un evento para ver tipos de entrada, compradores y acciones.') }}
       </p>
@@ -1287,8 +1292,7 @@
         </div>
         <div class="ob-type-summary__formula">{{ __('Vendido') }} = {{ __('completado') }} + {{ __('gratis') }}</div>
       </div>
-      <div class="ob-type-summary__body">
-        @if (empty($ticketSalesByEvent ?? []))
+      @if (empty($ticketSalesByEvent ?? []))
           <div class="ob-empty py-3">
             <p class="text-muted mb-0">{{ __('No hay entradas para resumir con estos filtros.') }}</p>
           </div>
@@ -1354,87 +1358,54 @@
               @endforeach
             </div>
           @else
-            <div class="ob-event-summary-list">
-              @foreach ($ticketSalesByEvent as $eventSummary)
-                <article class="ob-event-summary-card">
-                  <div class="ob-event-summary-card__head">
-                    <div>
-                      <h3 class="ob-event-summary-card__title">{{ $eventSummary['event_title'] }}</h3>
-                      <div class="ob-event-summary-card__meta">
-                        <span class="ob-event-summary-card__date">{{ $eventSummary['date_label'] }}</span>
-                        <span>{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
-                        <span>{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
-                      </div>
-                    </div>
-                    <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
-                  </div>
+            @foreach ($ticketSalesByEvent as $eventSummary)
+              <div class="ob-focused-meta">
+                <span class="ob-chip">{{ $eventSummary['date_label'] }}</span>
+                <span class="ob-chip">{{ number_format($eventSummary['bookings_count'], 0, ',', '.') }} {{ __('reservas') }}</span>
+                <span class="ob-chip">{{ count($eventSummary['tickets']) }} {{ __('tipos de entrada') }}</span>
+                <span class="ob-event-summary-card__status">{{ $eventSummary['date_status'] }}</span>
+              </div>
 
-                  <div class="ob-event-summary-stats" role="group" aria-label="{{ __('Totales del evento') }}">
-                    <div class="ob-event-summary-stat">
-                      <span>{{ __('Entradas vendidas') }}</span>
-                      <strong>{{ number_format($eventSummary['sold'], 0, ',', '.') }}</strong>
-                    </div>
-                    <div class="ob-event-summary-stat">
-                      <span>{{ __('Pendientes') }}</span>
-                      <strong>{{ number_format($eventSummary['pending'], 0, ',', '.') }}</strong>
-                    </div>
-                    <div class="ob-event-summary-stat">
-                      <span>{{ __('Rechazadas') }}</span>
-                      <strong>{{ number_format($eventSummary['rejected'], 0, ',', '.') }}</strong>
-                    </div>
-                    <div class="ob-event-summary-stat">
-                      <span>{{ __('Escaneadas') }}</span>
-                      <strong>{{ number_format($eventSummary['scanned'], 0, ',', '.') }}/{{ number_format($eventSummary['total'], 0, ',', '.') }}</strong>
-                    </div>
-                    <div class="ob-event-summary-stat">
-                      <span>{{ __('Neto estimado') }}</span>
-                      <strong>{{ $formatBaseMoney($eventSummary['organizer_amount']) }}</strong>
-                    </div>
-                  </div>
-
-                  <table class="table ob-type-table">
-                    <colgroup>
-                      <col class="ob-type-table__ticket">
-                      <col class="ob-type-table__counts">
-                      <col class="ob-type-table__counts">
-                      <col class="ob-type-table__counts">
-                      <col class="ob-type-table__scan">
-                      <col class="ob-type-table__money">
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th scope="col">{{ __('Entrada') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Vendidas') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Pendientes') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Rechazadas') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Escaneo') }}</th>
-                        <th scope="col" class="tuki-data">{{ __('Ingresos') }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($eventSummary['tickets'] as $summaryRow)
-                        <tr>
-                          <td data-label="{{ __('Entrada') }}">
-                            <span class="ob-type-name">{{ $summaryRow['ticket_name'] }}</span>
-                          </td>
-                          <td data-label="{{ __('Vendidas') }}"><span class="ob-pill tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
-                          <td data-label="{{ __('Pendientes') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
-                          <td data-label="{{ __('Rechazadas') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
-                          <td data-label="{{ __('Escaneo') }}">
-                            <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
-                            <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
-                          </td>
-                          <td data-label="{{ __('Ingresos') }}"><span class="ob-money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
-                        </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </article>
-              @endforeach
-            </div>
+              <table class="table ob-type-table">
+                <colgroup>
+                  <col class="ob-type-table__ticket">
+                  <col class="ob-type-table__counts">
+                  <col class="ob-type-table__counts">
+                  <col class="ob-type-table__counts">
+                  <col class="ob-type-table__scan">
+                  <col class="ob-type-table__money">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">{{ __('Entrada') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Vendidas') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Pendientes') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Rechazadas') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Escaneo') }}</th>
+                    <th scope="col" class="tuki-data">{{ __('Ingresos') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($eventSummary['tickets'] as $summaryRow)
+                    <tr>
+                      <td data-label="{{ __('Entrada') }}">
+                        <span class="ob-type-name">{{ $summaryRow['ticket_name'] }}</span>
+                      </td>
+                      <td data-label="{{ __('Vendidas') }}"><span class="ob-pill tuki-data tuki-data-count">{{ number_format($summaryRow['sold'], 0, ',', '.') }}</span></td>
+                      <td data-label="{{ __('Pendientes') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['pending'], 0, ',', '.') }}</td>
+                      <td data-label="{{ __('Rechazadas') }}" class="tuki-data tuki-data-count">{{ number_format($summaryRow['rejected'], 0, ',', '.') }}</td>
+                      <td data-label="{{ __('Escaneo') }}">
+                        <strong>{{ number_format($summaryRow['scanned'], 0, ',', '.') }}/{{ number_format($summaryRow['total'], 0, ',', '.') }}</strong>
+                        <div class="ob-progress" aria-hidden="true"><span style="width: {{ $summaryRow['scan_percent'] }}%"></span></div>
+                      </td>
+                      <td data-label="{{ __('Ingresos') }}"><span class="ob-money tuki-data tuki-data-money">{{ $formatBaseMoney($summaryRow['organizer_amount']) }}</span></td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            @endforeach
           @endunless
         @endif
-      </div>
     </section>
 
     @if ($focusedEventId)
@@ -1699,40 +1670,34 @@
                   @endphp
                   <div class="ob-mobile-booking">
                     <div class="ob-mobile-booking__head">
-                      <div>
+                      <div class="ob-mobile-booking__main">
                         <div class="ob-mobile-booking__title">{{ Str::limit($title, 44) }}</div>
-                        <span class="ob-muted">#{{ $booking->booking_id }}</span>
-                        <span class="ob-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
+                        <span class="ob-muted">#{{ Str::limit($booking->booking_id, 16, '') }} · {{ __('Función') }}: {{ $eventDateLabel }}</span>
                       </div>
-                      <span class="badge badge-{{ $status['class'] }} ob-status">
-                        <i class="fas {{ $status['icon'] }}" aria-hidden="true"></i>{{ $status['label'] }}
-                      </span>
+                      <span class="badge badge-{{ $status['class'] }} ob-status">{{ $status['label'] }}</span>
                     </div>
 
                     <div class="ob-mobile-booking__grid">
-                      <div>
+                      <div class="ob-mobile-stat ob-mobile-stat--buyer">
                         <span class="ob-detail-label">{{ __('Comprador') }}</span>
-                        <span class="ob-detail-value">
-                          @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
-                        </span>
+                        @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
                       </div>
-                      <div>
+                      <div class="ob-mobile-stat">
                         <span class="ob-detail-label">{{ __('Importe') }}</span>
-                        <span class="ob-detail-value">{{ $formatMoney($paidTotal) }}</span>
+                        <span class="ob-money ob-mobile-money">{{ $formatMoney($paidTotal) }}</span>
                         <span class="ob-muted">{{ __('Recibís') }}: {{ $formatMoney($organizerTotal) }}</span>
                       </div>
-                      <div>
+                      <div class="ob-mobile-stat">
                         <span class="ob-detail-label">{{ __('Escaneo') }}</span>
                         @if ((int) $booking->quantity <= 0)
                           <span class="ob-detail-value">{{ __('Datos incompletos') }}</span>
-                          <span class="ob-muted">{{ __('Sin entradas registradas') }}</span>
                         @else
                           <span class="ob-detail-value">{{ $scannedCount }}/{{ $booking->quantity }}</span>
                           <span class="ob-muted">{{ __('Faltan') }}: {{ $pendingScanCount }}</span>
                         @endif
                         <div class="ob-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                       </div>
-                      <div>
+                      <div class="ob-mobile-stat">
                         <span class="ob-detail-label">{{ __('Pago') }}</span>
                         <span class="ob-detail-value">{{ $booking->paymentMethod ?: '-' }}</span>
                       </div>
@@ -1772,25 +1737,26 @@
                       </div>
                     @endif
 
-                    <div class="ob-actions mt-3">
+                    <div class="ob-mobile-controls">
                       <a href="{{ route('organizer.event_booking.details', ['id' => $booking->id]) }}"
-                        class="btn btn-outline-primary btn-sm" aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
-                        <i class="fas fa-eye mr-1" aria-hidden="true"></i>{{ __('Ver') }}
+                        class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary"
+                        aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
+                        <i class="fas fa-eye" aria-hidden="true"></i>{{ __('Ver') }}
                       </a>
                       @if ($hasInvoiceFile)
-                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
-                          <i class="fas fa-file-pdf mr-1" aria-hidden="true"></i>{{ __('Entrada') }}
+                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary" target="_blank" rel="noopener">
+                          <i class="fas fa-file-pdf" aria-hidden="true"></i>{{ __('Entrada') }}
                         </a>
                       @endif
                       @if (!is_null($booking->attachmentFile))
-                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-outline-info btn-sm">
-                          <i class="fas fa-paperclip mr-1" aria-hidden="true"></i>{{ __('Comprobante') }}
+                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary">
+                          <i class="fas fa-paperclip" aria-hidden="true"></i>{{ __('Comprobante') }}
                         </a>
                       @endif
-                      <form class="deleteForm d-inline-block" action="{{ route('organizer.event_booking.delete', ['id' => $booking->id]) }}" method="post">
+                      <form class="deleteForm d-inline-block m-0" action="{{ route('organizer.event_booking.delete', ['id' => $booking->id]) }}" method="post">
                         @csrf
-                        <button type="submit" class="btn btn-outline-danger btn-sm deleteBtn">
-                          <i class="fas fa-trash mr-1" aria-hidden="true"></i>{{ __('Eliminar') }}
+                        <button type="submit" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary deleteBtn">
+                          <i class="fas fa-trash" aria-hidden="true"></i>{{ __('Eliminar') }}
                         </button>
                       </form>
                     </div>

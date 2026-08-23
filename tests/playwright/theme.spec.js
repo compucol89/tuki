@@ -604,6 +604,9 @@ test.describe('@theme contrato theming organizer', () => {
         const status = first?.querySelector('.ob-mobile-booking__badges .ob-status');
         const buyer = first?.querySelector('.ob-mobile-buyerline');
         const grid = first?.querySelector('.ob-mobile-booking__grid');
+        const amountPair = first?.querySelector('.ob-mobile-stat--amount .ob-mobile-stat__line--primary');
+        const amountLabel = amountPair?.querySelector('.ob-detail-label');
+        const amountValue = amountPair?.querySelector('.ob-mobile-money');
         const payment = first?.querySelector('.ob-mobile-payment');
         const paymentLabel = first?.querySelector('.ob-mobile-payment__label');
         const tickets = first?.querySelector('.ob-mobile-extra--tickets');
@@ -646,6 +649,11 @@ test.describe('@theme contrato theming organizer', () => {
             && buyer.querySelector('.ob-mobile-buyerline__badge').getBoundingClientRect().left > buyer.querySelector('.ob-mobile-buyerline__main').getBoundingClientRect().right,
           buyerRows,
           gridColumns: grid ? getComputedStyle(grid).gridTemplateColumns.split(' ').length : 0,
+          gridText: grid?.textContent?.trim().replace(/\s+/g, ' ') || '',
+          amountGap: amountLabel && amountValue
+            ? Math.round(amountValue.getBoundingClientRect().left - amountLabel.getBoundingClientRect().right)
+            : -1,
+          amountLabelTransform: amountLabel ? getComputedStyle(amountLabel).textTransform : '',
           hasPaymentChip: !!payment,
           paymentText: payment?.textContent?.trim() || '',
           paymentLabelText: paymentLabel?.textContent?.trim() || '',
@@ -676,6 +684,11 @@ test.describe('@theme contrato theming organizer', () => {
       expect(geom.buyerBadgeRight).toBe(true);
       expect(geom.buyerRows).toBeLessThanOrEqual(2);
       expect(geom.gridColumns).toBe(2);
+      expect(geom.gridText).toMatch(/Neto/);
+      expect(geom.gridText).not.toMatch(/Recib/i);
+      expect(geom.amountGap).toBeGreaterThanOrEqual(0);
+      expect(geom.amountGap).toBeLessThanOrEqual(8);
+      expect(geom.amountLabelTransform).toBe('none');
       expect(geom.hasPaymentChip).toBe(true);
       expect(geom.paymentLabelText).toMatch(/pago/i);
       expect(geom.paymentText).toMatch(/mercado|pago|-/i);

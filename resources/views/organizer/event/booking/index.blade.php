@@ -1098,21 +1098,50 @@
 
     .ob-mobile-stat {
       display: grid;
-      gap: 2px;
+      gap: 4px;
+      align-content: start;
       min-width: 0;
     }
 
     .ob-mobile-stat__line {
-      display: flex;
+      display: inline-flex;
       align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
+      justify-content: flex-start;
+      gap: 6px;
       min-width: 0;
+    }
+
+    .organizer-booking-admin .ob-mobile-stat .ob-detail-label {
+      flex: 0 0 auto;
+      color: var(--ob-text-secondary) !important;
+      font-size: 11px !important;
+      font-weight: 650 !important;
+      letter-spacing: 0 !important;
+      line-height: 1.25 !important;
+      text-transform: none !important;
     }
 
     .ob-mobile-stat__line .ob-detail-value,
     .ob-mobile-stat__line .ob-mobile-money {
       margin-top: 0;
+    }
+
+    .ob-mobile-stat__line--support {
+      gap: 5px;
+      color: var(--ob-text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    .organizer-booking-admin .ob-mobile-stat__line--support .ob-detail-label {
+      font-size: 12px !important;
+      font-weight: 500 !important;
+    }
+
+    .ob-mobile-stat__line--support .tuki-data {
+      color: var(--ob-text-secondary);
+      font-weight: 600;
     }
 
     .ob-mobile-money {
@@ -1987,15 +2016,18 @@
                     </section>
 
                     <div class="ob-mobile-booking__grid" role="group" aria-label="{{ __('Resumen de la reserva') }}">
-                      <div class="ob-mobile-stat">
-                        <div class="ob-mobile-stat__line">
+                      <div class="ob-mobile-stat ob-mobile-stat--amount">
+                        <div class="ob-mobile-stat__line ob-mobile-stat__line--primary">
                           <span class="ob-detail-label">{{ __('Importe') }}</span>
                           <span class="ob-money ob-mobile-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
                         </div>
-                        <span class="ob-muted">{{ __('Recibís') }}: <span class="tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span></span>
+                        <div class="ob-mobile-stat__line ob-mobile-stat__line--support">
+                          <span class="ob-detail-label">{{ __('Neto') }}</span>
+                          <span class="tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span>
+                        </div>
                       </div>
-                      <div class="ob-mobile-stat">
-                        <div class="ob-mobile-stat__line">
+                      <div class="ob-mobile-stat ob-mobile-stat--scan">
+                        <div class="ob-mobile-stat__line ob-mobile-stat__line--primary">
                           <span class="ob-detail-label">{{ __('Escaneo') }}</span>
                         @if ((int) $booking->quantity <= 0)
                           <span class="ob-detail-value">{{ __('Datos incompletos') }}</span>
@@ -2004,7 +2036,10 @@
                         @endif
                         </div>
                         @if ((int) $booking->quantity > 0)
-                          <span class="ob-muted">{{ __('Faltan') }}: <span class="tuki-data tuki-data-count">{{ $pendingScanCount }}</span></span>
+                          <div class="ob-mobile-stat__line ob-mobile-stat__line--support">
+                            <span class="ob-detail-label">{{ __('Faltan') }}</span>
+                            <span class="tuki-data tuki-data-count">{{ $pendingScanCount }}</span>
+                          </div>
                         @endif
                         <div class="ob-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                       </div>

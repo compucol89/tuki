@@ -2484,6 +2484,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-events .oe-panel,
 .organizer-booking-admin .ob-metric,
 .organizer-booking-admin .ob-type-summary,
+.organizer-booking-admin .ob-panel,
 .organizer-transactions .card,
 .event-form-modern > .row > .col-md-12 > .card {
   border-color: var(--border-default) !important;
@@ -2505,6 +2506,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 .organizer-events .oe-panel__header,
 .organizer-events .oe-toolbar,
 .organizer-booking-admin .ob-type-summary__head,
+.organizer-booking-admin .ob-panel__header,
 .organizer-booking-admin .ob-toolbar,
 .organizer-transactions .card-header {
   border-color: var(--border-subtle) !important;
@@ -2513,6 +2515,7 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
 
 .organizer-events .oe-panel__title,
 .organizer-booking-admin .ob-type-summary__title,
+.organizer-booking-admin .ob-panel__title,
 .organizer-transactions .card-title {
   color: var(--text-primary) !important;
   font-size: 17px !important;
@@ -2528,13 +2531,6 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   font-weight: 760 !important;
   line-height: 1.14 !important;
   letter-spacing: 0 !important;
-}
-
-.organizer-booking-admin .ob-type-summary__title {
-  color: var(--ob-text-primary, var(--text-primary)) !important;
-  font-size: 19px !important;
-  font-weight: 760 !important;
-  line-height: 1.16 !important;
 }
 
 .organizer-events label,
@@ -2573,7 +2569,15 @@ html[data-theme="dark"] .sidebar[data-background-color="dark2"] .user .info a > 
   font-variant-numeric: tabular-nums lining-nums !important;
 }
 
-.organizer-booking-admin .ob-metric__label,
+.organizer-booking-admin .ob-metric__label {
+  color: var(--ob-text-secondary, var(--text-secondary)) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
 .organizer-booking-admin .ob-detail-label,
 .organizer-booking-admin .ob-event-summary-stat span,
 .organizer-booking-admin .ob-type-table td::before {

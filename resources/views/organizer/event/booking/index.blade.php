@@ -13,7 +13,7 @@
       --ob-card-bg: var(--surface-card);
       --ob-card-alt-bg: #fffdfb;
       --ob-card-alt-border: rgba(194, 65, 12, .22);
-      --ob-card-focus-border: #9A3412;
+      --ob-card-focus-border: var(--adm-primary-dark);
       --ob-text-primary: #1e2532;
       --ob-text-secondary: #5f6b7d;
       --ob-text-muted: #5f6b7d;
@@ -25,8 +25,8 @@
       --ob-kpi-money-bg: #fff7ed;
       --ob-kpi-money-fg: var(--ob-text-primary);
       --ob-control-hover-bg: rgba(249, 115, 22, .08);
-      --ob-button-primary-bg: #9A3412;
-      --ob-button-primary-hover-bg: #7C2D12;
+      --ob-button-primary-bg: var(--adm-primary-dark);
+      --ob-button-primary-hover-bg: var(--adm-primary-strong);
       max-width: 100%;
       overflow-x: clip;
       overflow-y: visible;
@@ -37,7 +37,7 @@
       --ob-card-bg: var(--surface-card);
       --ob-card-alt-bg: #283242;
       --ob-card-alt-border: rgba(253, 186, 116, .38);
-      --ob-card-focus-border: #fdba74;
+      --ob-card-focus-border: var(--adm-primary);
       --ob-text-primary: #f8fafc;
       --ob-text-secondary: #cbd5e1;
       --ob-text-muted: #cbd5e1;
@@ -135,9 +135,72 @@
       background: linear-gradient(180deg, var(--surface-card) 0%, rgba(253, 186, 116, .08) 100%);
     }
 
-    .ob-toolbar {
-      border-bottom: 1px solid var(--border-default);
+    .ob-panel {
+      overflow: visible;
+      margin-bottom: 18px;
+      border: 1px solid var(--border-default);
+      border-radius: var(--adm-radius-2xl);
       background: var(--surface-card);
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
+    }
+
+    .ob-panel__header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .ob-panel__title {
+      margin: 0;
+      color: var(--ob-text-primary);
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .ob-panel__body {
+      padding: 0;
+    }
+
+    .ob-panel__footer {
+      display: flex;
+      justify-content: center;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--surface-card-soft);
+    }
+
+    .ob-toolbar {
+      display: grid;
+      grid-template-columns: minmax(150px, .75fr) minmax(150px, .75fr) minmax(150px, .6fr) auto;
+      align-items: flex-end;
+      gap: var(--ob-gap);
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--surface-card);
+    }
+
+    .ob-toolbar .form-group {
+      min-width: 0;
+      margin-bottom: 0;
+    }
+
+    .ob-toolbar__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--ob-gap-tight);
+      margin-left: auto;
+    }
+
+    .ob-toolbar__actions .btn {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 9px;
+      font-weight: 600;
     }
 
     .ob-context-note {
@@ -177,9 +240,9 @@
     .ob-type-summary__title {
       margin: 0;
       color: var(--ob-text-primary);
-      font-size: 19px;
-      font-weight: 760;
-      line-height: 1.16;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.2;
       letter-spacing: 0;
     }
 
@@ -220,7 +283,7 @@
       scroll-margin-top: 80px;
       scroll-margin-bottom: 72px;
       box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
-      transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+      transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
     }
 
     .ob-event-row:nth-child(even) {
@@ -228,13 +291,21 @@
       background: var(--ob-card-alt-bg);
     }
 
-    .ob-event-row:hover,
-    .ob-event-row:focus {
-      border-color: var(--ob-card-focus-border);
-      box-shadow: 0 0 0 3px var(--focus-ring), 0 16px 34px rgba(30, 37, 50, .10);
+    .ob-event-row:hover {
+      box-shadow: 0 12px 30px rgba(30, 37, 50, .07);
       color: inherit;
       text-decoration: none;
-      transform: translateY(-1px);
+    }
+
+    .ob-event-row:focus {
+      color: inherit;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .ob-event-row:focus-visible {
+      border-color: var(--ob-card-focus-border);
+      box-shadow: 0 0 0 3px var(--focus-ring), 0 12px 30px rgba(30, 37, 50, .07);
     }
 
     .ob-event-row__main {
@@ -442,22 +513,24 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 7px;
       min-height: 40px;
-      padding: 0 16px;
-      border-radius: 8px;
-      background: var(--ob-button-primary-bg);
-      color: var(--text-on-accent);
-      font-size: 13px;
+      padding: 0 14px;
+      border: 1px solid var(--ob-button-primary-bg);
+      border-radius: 9px;
+      background-color: var(--ob-button-primary-bg);
+      color: var(--text-on-accent) !important;
+      font-size: 12px;
       font-weight: 600;
+      line-height: 1.2;
       white-space: nowrap;
       pointer-events: none;
+      transition: color .18s ease, background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
 
-    .ob-event-row:hover .ob-event-row__cta,
-    .ob-event-row:focus .ob-event-row__cta {
-      background: var(--ob-button-primary-hover-bg);
-      color: var(--text-on-accent);
+    .ob-event-row__cta i {
+      font-size: 12px;
+      line-height: 1;
     }
 
     @media (max-width: 767px) {
@@ -659,7 +732,7 @@
     }
 
     .ob-toolbar .form-group {
-      margin-bottom: 12px;
+      margin-bottom: 0;
     }
 
     .ob-table {
@@ -669,13 +742,20 @@
     .ob-table th {
       border-top: 0;
       color: var(--ob-text-secondary);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: .045em;
+      padding: 13px 14px;
       text-transform: uppercase;
       white-space: nowrap;
     }
 
     .ob-table td {
       vertical-align: middle;
+      padding: 13px 14px;
+      font-size: 13px;
+      line-height: 1.45;
     }
 
     .ob-title {
@@ -694,6 +774,12 @@
       font-size: 12px;
       font-weight: 500;
       line-height: 1.45;
+    }
+
+    .ob-data-value {
+      color: var(--ob-text-secondary);
+      font-family: var(--tuki-font-data, 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace);
+      font-variant-numeric: tabular-nums lining-nums;
     }
 
     .ob-money {
@@ -892,6 +978,15 @@
       .ob-summary {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
+
+      .ob-toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .ob-toolbar__actions {
+        width: 100%;
+        margin-left: 0;
+      }
     }
 
     @media (max-width: 767px) {
@@ -909,6 +1004,22 @@
 
       .ob-summary {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .ob-panel__header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .ob-toolbar {
+        grid-template-columns: 1fr;
+        padding: 14px 16px;
+      }
+
+      .ob-toolbar__actions {
+        width: 100%;
+        margin-left: 0;
       }
 
       .ob-type-summary__body {
@@ -1327,51 +1438,51 @@
     </section>
 
     @if ($focusedEventId)
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header ob-toolbar">
-            <form id="organizerBookingFiltersForm" action="{{ $bookingFiltersAction }}" method="GET">
-              <div class="row align-items-end">
-                <div class="col-lg-4">
-                  <div class="card-title mb-2">{{ __('Compradores') }}</div>
-                  <button class="btn btn-danger btn-sm d-none bulk-delete"
-                    data-href="{{ route('organizer.event_booking.bulk_delete') }}" type="button">
-                    <i class="flaticon-interface-5" aria-hidden="true"></i> {{ __('Eliminar') }}
-                  </button>
-                </div>
-                <div class="col-lg-3">
-                  <div class="form-group px-0">
-                    <label for="organizerBookingId">{{ __('Reserva') }}</label>
-                    <input id="organizerBookingId" name="booking_id" type="text" class="form-control"
-                      placeholder="{{ __('Buscar por reserva') }}" value="{{ request()->input('booking_id') }}">
-                  </div>
-                </div>
-                <div class="col-lg-3">
-                  <div class="form-group px-0">
-                    <label for="organizerEventTitle">{{ __('Evento') }}</label>
-                    <input id="organizerEventTitle" name="event_title" type="text" class="form-control"
-                      placeholder="{{ __('Buscar por evento') }}" value="{{ request()->input('event_title') }}">
-                  </div>
-                </div>
-                <div class="col-lg-2">
-                  <div class="form-group px-0">
-                    <label for="organizerPaymentStatus">{{ __('Pago') }}</label>
-                    <select id="organizerPaymentStatus" class="form-control" name="status"
-                      onchange="document.getElementById('organizerBookingFiltersForm').submit()">
-                      <option value="" {{ empty(request()->input('status')) ? 'selected' : '' }}>{{ __('Todos') }}</option>
-                      <option value="completed" {{ request()->input('status') == 'completed' ? 'selected' : '' }}>{{ __('Completado') }}</option>
-                      <option value="pending" {{ request()->input('status') == 'pending' ? 'selected' : '' }}>{{ __('Pendiente') }}</option>
-                      <option value="free" {{ request()->input('status') == 'free' ? 'selected' : '' }}>{{ __('Gratis') }}</option>
-                      <option value="rejected" {{ request()->input('status') == 'rejected' ? 'selected' : '' }}>{{ __('Rechazado') }}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
+    <section class="ob-panel" aria-labelledby="organizerBuyersTitle">
+      <div class="ob-panel__header">
+        <div>
+          <h2 id="organizerBuyersTitle" class="ob-panel__title">{{ __('Compradores') }}</h2>
+          <span class="ob-muted">{{ __('Personas que reservaron este evento') }} · <span class="ob-data-value">{{ number_format($bookings->total(), 0, ',', '.') }}</span> {{ __('resultados') }}</span>
+        </div>
+        <div>
+          <button class="btn btn-danger d-none bulk-delete"
+            data-href="{{ route('organizer.event_booking.bulk_delete') }}" type="button">
+            <i class="flaticon-interface-5" aria-hidden="true"></i> {{ __('Eliminar') }}
+          </button>
+        </div>
+      </div>
 
-          <div class="card-body">
+      <form id="organizerBookingFiltersForm" action="{{ $bookingFiltersAction }}" method="GET" class="ob-toolbar">
+        <div class="form-group">
+          <label for="organizerBookingId">{{ __('Reserva') }}</label>
+          <input id="organizerBookingId" name="booking_id" type="text" class="form-control"
+            placeholder="{{ __('Buscar por reserva') }}" value="{{ request()->input('booking_id') }}">
+        </div>
+        <div class="form-group">
+          <label for="organizerEventTitle">{{ __('Evento') }}</label>
+          <input id="organizerEventTitle" name="event_title" type="text" class="form-control"
+            placeholder="{{ __('Buscar por evento') }}" value="{{ request()->input('event_title') }}">
+        </div>
+        <div class="form-group">
+          <label for="organizerPaymentStatus">{{ __('Pago') }}</label>
+          <select id="organizerPaymentStatus" class="form-control" name="status"
+            onchange="document.getElementById('organizerBookingFiltersForm').submit()">
+            <option value="" {{ empty(request()->input('status')) ? 'selected' : '' }}>{{ __('Todos') }}</option>
+            <option value="completed" {{ request()->input('status') == 'completed' ? 'selected' : '' }}>{{ __('Completado') }}</option>
+            <option value="pending" {{ request()->input('status') == 'pending' ? 'selected' : '' }}>{{ __('Pendiente') }}</option>
+            <option value="free" {{ request()->input('status') == 'free' ? 'selected' : '' }}>{{ __('Gratis') }}</option>
+            <option value="rejected" {{ request()->input('status') == 'rejected' ? 'selected' : '' }}>{{ __('Rechazado') }}</option>
+          </select>
+        </div>
+        <div class="ob-toolbar__actions">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search" aria-hidden="true"></i>{{ __('Buscar') }}
+          </button>
+          <a href="{{ $bookingFiltersAction }}" class="btn btn-light">{{ __('Limpiar') }}</a>
+        </div>
+      </form>
+
+      <div class="ob-panel__body">
             @if (count($bookings) == 0)
               <div class="ob-empty">
                 <i class="fas fa-ticket-alt" aria-hidden="true"></i>
@@ -1691,18 +1802,16 @@
                 @includeIf('organizer.event.booking.show-attachment')
               @endforeach
             @endif
-          </div>
-
-          @if (count($bookings) > 0)
-            <div class="card-footer text-center">
-              <div class="d-inline-block mt-3">
-                {{ $bookings->links() }}
-              </div>
-            </div>
-          @endif
-        </div>
       </div>
-    </div>
+
+      @if (count($bookings) > 0)
+        <div class="ob-panel__footer">
+          <div class="d-inline-block">
+            {{ $bookings->links() }}
+          </div>
+        </div>
+      @endif
+    </section>
     @endif
   </div>
 @endsection

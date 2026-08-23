@@ -560,6 +560,28 @@ test.describe('@theme contrato theming organizer', () => {
     expect(geom.statValue.textTransform).toBe('none');
     expect(geom.statValue.fontWeight).toBe(700);
     expect(geom.overflowX).toBe(false);
+
+    const bookingRow = page.locator('.ob-event-row').first();
+    const bookingCta = bookingRow.locator('.ob-event-row__cta');
+    const readButtonStyle = async (locator) => locator.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      return {
+        backgroundColor: cs.backgroundColor,
+        borderRadius: cs.borderRadius,
+        color: cs.color,
+        fontWeight: Number(cs.fontWeight),
+        height: Math.round(rect.height),
+      };
+    });
+
+    const ctaBeforeHover = await readButtonStyle(bookingCta);
+    await bookingRow.hover();
+    await expect.poll(async () => readButtonStyle(bookingCta)).toEqual(ctaBeforeHover);
+
+    await page.goto('/organizer/event-management/events?language=es&event_type=venue', { waitUntil: 'networkidle' });
+    const createButtonStyle = await readButtonStyle(page.locator('#organizerEventCreateDropdown'));
+    expect(ctaBeforeHover).toEqual(createButtonStyle);
   });
 
   test('@theme reservas contraste WCAG AA en light y dark', async ({ page }) => {

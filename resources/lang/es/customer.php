@@ -33,7 +33,7 @@ return [
 
         'form_eyebrow' => 'Acceso a tu cuenta',
         'form_title' => 'Bienvenido de vuelta',
-        'form_subtitle' => 'Ingresá a tu cuenta para continuar.',
+        'form_subtitle' => 'Entrá para ver tus entradas, reservas y compras desde un solo lugar.',
 
         'form_eyebrow_checkout' => 'Último paso',
         'form_title_checkout' => 'Terminá tu compra',
@@ -50,16 +50,20 @@ return [
         'continue_google' => 'Continuar con Google',
 
         'username_label' => 'Usuario',
-        'username_placeholder' => 'Tu nombre de usuario',
+        'username_placeholder' => 'Nombre de usuario',
         'password_label' => 'Contraseña',
-        'password_placeholder' => 'Tu contraseña',
+    'password_placeholder' => 'Contraseña',
         'forgot_password' => '¿Olvidaste tu contraseña?',
+        'validation' => [
+            'username_required' => 'Ingresá tu usuario para continuar.',
+            'password_required' => 'Ingresá tu contraseña para entrar.',
+        ],
 
         'submit_checkout' => 'Continuar con mi cuenta',
         'submit_login' => 'Ingresar',
 
-        'no_account' => '¿No tenés cuenta?',
-        'register_free' => 'Registrate gratis',
+        'no_account' => '¿Primera vez en Tukipass?',
+        'register_free' => 'Crear cuenta gratis',
 
         'loading' => 'Por favor esperá…',
     ],
@@ -91,17 +95,19 @@ return [
             ['num' => 'Desde el celu', 'label' => 'O la compu'],
         ],
 
+        'stats_aria_label' => 'Beneficios de crear una cuenta en Tukipass',
+
         'logo_alt' => 'Logo de :site',
 
         'form_title' => 'Crear tu cuenta gratis',
-        'form_subtitle' => 'Completá tus datos y empezá a comprar entradas o reservar en minutos. Sin tarjeta para registrarte.',
+        'form_subtitle' => 'Guardá tus entradas, reservas y comprobantes en un solo lugar. No necesitás tarjeta para registrarte.',
 
         'continue_facebook' => 'Continuar con Facebook',
         'continue_google' => 'Continuar con Google',
         'divider_social' => 'o registrate con tu email',
 
         'field_fname_label' => 'Nombre',
-        'field_fname_placeholder' => 'Como figura en tu DNI',
+        'field_fname_placeholder' => 'Tu nombre',
 
         'field_lname_label' => 'Apellido',
         'field_lname_placeholder' => 'Tu apellido',
@@ -110,13 +116,13 @@ return [
         'field_username_placeholder' => 'Elegí un nombre de usuario',
 
         'field_email_label' => 'Email',
-        'field_email_placeholder' => 'El que usás para recibir las entradas',
+        'field_email_placeholder' => 'tu@email.com',
 
         'field_password_label' => 'Contraseña',
-        'field_password_placeholder' => 'Al menos 6 caracteres',
+        'field_password_placeholder' => 'Mín. 10 caracteres',
 
         'field_password_confirm_label' => 'Repetir contraseña',
-        'field_password_confirm_placeholder' => 'Volvé a escribir la contraseña',
+        'field_password_confirm_placeholder' => 'Repetí la contraseña',
 
         'password_mismatch' => 'Las contraseñas no coinciden.',
 
@@ -130,7 +136,22 @@ return [
         'submit' => 'Crear mi cuenta gratis',
 
         'footer_has_account' => '¿Ya tenés cuenta?',
-        'footer_login' => 'Ingresá acá',
+        'footer_login' => 'Ingresar',
+
+        'validation' => [
+            'fname_required' => 'Ingresá tu nombre.',
+            'lname_required' => 'Ingresá tu apellido.',
+            'email_required' => 'Ingresá tu email.',
+            'email_email' => 'Ingresá un email válido.',
+            'email_unique' => 'Ese email ya está registrado. Podés iniciar sesión.',
+            'username_required' => 'Elegí un nombre de usuario.',
+            'username_alpha_dash' => 'Usá solo letras, números, guiones o guion bajo.',
+            'username_not_in' => 'Ese usuario no está disponible.',
+            'username_unique' => 'Ese usuario ya está registrado.',
+            'password_required' => 'Creá una contraseña para tu cuenta.',
+            'password_confirmed' => 'Las contraseñas no coinciden.',
+            'password_min' => 'La contraseña debe tener al menos :min caracteres.',
+        ],
     ],
 
     'flash' => [

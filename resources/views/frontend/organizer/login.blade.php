@@ -71,17 +71,22 @@
   <div class="auth-split__visual"
        style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}')">
     <div class="auth-split__visual-overlay"></div>
-    <div class="auth-split__visual-content">
+    <div class="auth-split__visual-content auth-split__visual-content--organizer">
       <div class="auth-split__tagline auth-split__tagline--context auth-split__tagline--multiline">
         <h2>{{ __('organizer.login.visual_title_line1') }}<br>{{ __('organizer.login.visual_title_line2') }}</h2>
         <p>{{ __('organizer.login.visual_subtitle') }}</p>
       </div>
 
-      <div class="auth-split__stats auth-split__stats--visual" aria-label="{{ __('Beneficios') }}">
+      <div class="auth-split__stats auth-split__stats--visual auth-split__stats--organizer" role="list" aria-label="{{ __('organizer.login.stats_aria_label') }}">
         @foreach ($organizerStats as $stat)
-          <div class="auth-split__stat">
-            <span class="auth-split__stat-num">{{ $stat['num'] }}</span>
-            <span class="auth-split__stat-label">{{ $stat['label'] }}</span>
+          <div class="auth-split__stat" role="listitem">
+            @if (!empty($stat['icon']))
+              <span class="auth-split__stat-icon" aria-hidden="true"><i class="{{ $stat['icon'] }}"></i></span>
+            @endif
+            <span class="auth-split__stat-copy">
+              <span class="auth-split__stat-num">{{ $stat['num'] }}</span>
+              <span class="auth-split__stat-label">{{ $stat['label'] }}</span>
+            </span>
           </div>
         @endforeach
       </div>
@@ -89,11 +94,23 @@
   </div>
 
   <div class="auth-split__form">
-    <div class="auth-split__form-inner auth-surface">
+    <div class="auth-split__form-inner auth-surface auth-login-surface">
 
-      <span class="auth-split__form-eyebrow">{{ __('organizer.login.form_eyebrow') }}</span>
-      <h1 class="auth-split__title">{{ __('organizer.login.form_title') }}</h1>
-      <p class="auth-split__subtitle">{{ __('organizer.login.form_subtitle') }}</p>
+      <div class="auth-login-head">
+        <h1 class="auth-split__title">{{ __('organizer.login.form_title') }}</h1>
+        <p class="auth-split__subtitle" id="organizer-login-summary">{{ __('organizer.login.form_subtitle') }}</p>
+      </div>
+
+      <div class="auth-split__mobile-value" role="list" aria-label="{{ __('organizer.login.stats_aria_label') }}">
+        @foreach ($organizerStats as $stat)
+          <span role="listitem">
+            @if (!empty($stat['icon']))
+              <i class="{{ $stat['icon'] }}" aria-hidden="true"></i>
+            @endif
+            {{ $stat['num'] }}
+          </span>
+        @endforeach
+      </div>
 
       @if (Auth::guard('customer')->check())
         <div class="alert mb-4" style="border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); border-radius: 18px; background: linear-gradient(180deg, color-mix(in srgb, var(--primary) 8%, transparent) 0%, var(--card) 100%); color: var(--foreground); box-shadow: var(--shadow-md);">
@@ -119,41 +136,62 @@
       @endif
 
       @if (Session::has('success'))
-        <div class="alert alert-success mb-3">{{ Session::get('success') }}</div>
+        <div class="alert alert-success mb-3" role="status">{{ Session::get('success') }}</div>
       @endif
       @if (Session::has('alert'))
-        <div class="alert alert-danger mb-3">{{ Session::get('alert') }}</div>
+        <div class="alert alert-danger mb-3" role="alert">{{ Session::get('alert') }}</div>
       @endif
 
-      <form id="login-form" name="login_form" action="{{ route('organizer.authentication') }}" method="POST">
+      <form id="login-form" name="login_form" class="auth-login-form" action="{{ route('organizer.authentication') }}" method="POST" aria-describedby="organizer-login-summary">
         @csrf
 
-        <div class="form-group mb-4">
+        <div class="form-group auth-login-field mb-4">
           <label for="username">{{ __('organizer.login.username_label') }}</label>
-          <input type="text" name="username" id="username"
-                 class="form-control @error('username') is-invalid @enderror"
-                 placeholder="{{ __('organizer.login.username_placeholder') }}" value="{{ old('username') }}" autocomplete="username">
+          <div class="auth-login-control">
+            <span class="auth-login-control__icon" aria-hidden="true">
+              <i class="fas fa-user"></i>
+            </span>
+            <input type="text" name="username" id="username"
+                   class="form-control auth-login-input @error('username') is-invalid @enderror"
+                   placeholder="{{ __('organizer.login.username_placeholder') }}" value="{{ old('username') }}"
+                   autocomplete="username" autocapitalize="none" spellcheck="false"
+                   aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                   @if ($errors->has('username')) autofocus @endif
+                   @if ($errors->has('username')) aria-describedby="username-error" @endif>
+          </div>
           @error('username')
-            <p class="text-danger mt-1" style="font-size:13px">{{ $message }}</p>
+            <p class="auth-login-error" id="username-error" role="alert">
+              <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+              {{ $message }}
+            </p>
           @enderror
         </div>
 
-        <div class="form-group mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-1">
+        <div class="form-group auth-login-field mb-4">
+          <div class="d-flex justify-content-between align-items-center auth-login-label-row mb-1">
             <label for="password" class="mb-0">{{ __('organizer.login.password_label') }}</label>
             <a href="{{ route('organizer.forget.password') }}" class="auth-forgot-link">{{ __('organizer.login.forgot_password') }}</a>
           </div>
-          <div class="position-relative">
+          <div class="position-relative auth-login-control auth-login-control--password">
+            <span class="auth-login-control__icon" aria-hidden="true">
+              <i class="fas fa-lock"></i>
+            </span>
             <input type="password" name="password" id="password"
-                   class="form-control pr-5 @error('password') is-invalid @enderror"
-                   placeholder="{{ __('organizer.login.password_placeholder') }}" autocomplete="current-password">
+                   class="form-control auth-login-input @error('password') is-invalid @enderror"
+                   placeholder="{{ __('organizer.login.password_placeholder') }}" autocomplete="current-password"
+                   aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                   @if (!$errors->has('username') && $errors->has('password')) autofocus @endif
+                   @if ($errors->has('password')) aria-describedby="password-error" @endif>
             <button type="button" class="auth-password-toggle" aria-label="{{ __('Mostrar contraseña') }}"
-              aria-pressed="false" data-toggle-target="password">
+              aria-controls="password" aria-pressed="false" data-toggle-target="password">
               <i class="fas fa-eye" aria-hidden="true"></i>
             </button>
           </div>
           @error('password')
-            <p class="text-danger mt-1" style="font-size:13px">{{ $message }}</p>
+            <p class="auth-login-error" id="password-error" role="alert">
+              <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+              {{ $message }}
+            </p>
           @enderror
         </div>
 
@@ -167,13 +205,18 @@
           </div>
         @endif
 
-        <button type="submit" class="theme-btn w-100" data-loading-text="{{ __('organizer.login.loading') }}">
-          {{ __('organizer.login.submit') }}
+        <button type="submit" class="theme-btn auth-login-submit w-100" data-loading-text="{{ __('organizer.login.loading') }}">
+          <span>{{ __('organizer.login.submit') }}</span>
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
         </button>
       </form>
 
-      <div class="auth-split__links">
-        <span>{{ __('organizer.login.footer_no_account') }} <a href="{{ route('organizer.signup') }}">{{ __('organizer.login.footer_signup') }}</a></span>
+      <div class="auth-split__links auth-split__links--organizer">
+        <span>{{ __('organizer.login.footer_no_account') }}</span>
+        <a href="{{ route('organizer.signup') }}">
+          {{ __('organizer.login.footer_signup') }}
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
       </div>
 
     </div>
@@ -183,33 +226,6 @@
 @endsection
 
 @section('script')
-  <style>
-    .auth-password-toggle {
-      position: absolute;
-      top: 50%;
-      right: 12px;
-      transform: translateY(-50%);
-      background: none;
-      border: 0;
-      color: var(--secondary-foreground, #6b7280);
-      cursor: pointer;
-      min-width: 24px;
-      min-height: 24px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      z-index: 2;
-    }
-
-    .auth-password-toggle:hover,
-    .auth-password-toggle:focus-visible {
-      color: var(--primary, #f97316);
-      outline: 2px solid var(--primary, #f97316);
-      outline-offset: 2px;
-      border-radius: 6px;
-    }
-  </style>
   <script>
     document.querySelectorAll('.auth-password-toggle').forEach(function (btn) {
       btn.addEventListener('click', function () {

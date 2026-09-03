@@ -71,9 +71,26 @@
             var $btn = $wrap.find('.navbar-toggle');
             var $menu = $wrap.find('#main-menu');
             var $overlay = $wrap.find('.mobile-menu-overlay');
+            var focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
             function premiumDrawerOpen() {
                 return $menu.hasClass('show') || $('body').hasClass('mobile-drawer-open');
+            }
+
+            function visibleDrawerFocusables() {
+                return $menu.find(focusableSelector).filter(function () {
+                    var $el = $(this);
+                    return $el.is(':visible') && $el.css('visibility') !== 'hidden';
+                }).toArray();
+            }
+
+            function focusFirstDrawerItem() {
+                window.setTimeout(function () {
+                    var focusables = visibleDrawerFocusables();
+                    if (focusables.length) {
+                        focusables[0].focus();
+                    }
+                }, 40);
             }
 
             function syncPremiumDrawerAria() {
@@ -88,7 +105,7 @@
                 }
                 var open = premiumDrawerOpen();
                 $menu.attr('aria-hidden', open ? 'false' : 'true');
-                $overlay.attr('aria-hidden', open ? 'false' : 'true');
+                $overlay.attr('aria-hidden', 'true');
                 $btn.attr('aria-expanded', open ? 'true' : 'false');
                 if ($menu.length && 'inert' in $menu[0]) {
                     $menu[0].inert = !open;
@@ -116,6 +133,7 @@
                     $menu.addClass('show');
                     $btn.attr('aria-expanded', 'true');
                     $('body').addClass('mobile-drawer-open');
+                    focusFirstDrawerItem();
                 } else {
                     $menu.removeClass('show');
                     $btn.attr('aria-expanded', 'false');
@@ -142,12 +160,39 @@
                 }
             });
 
+            $menu.on('click', 'a[href]', function () {
+                if (mq.matches && premiumDrawerOpen()) {
+                    setPremiumDrawer(false);
+                }
+            });
+
             $(document).on('keydown.premiumMobileDrawer', function (e) {
-                if (e.key !== 'Escape' || !mq.matches || !premiumDrawerOpen()) {
+                if (!mq.matches || !premiumDrawerOpen()) {
                     return;
                 }
-                setPremiumDrawer(false);
-                $btn.trigger('focus');
+                if (e.key === 'Escape') {
+                    setPremiumDrawer(false);
+                    $btn.trigger('focus');
+                    return;
+                }
+                if (e.key !== 'Tab') {
+                    return;
+                }
+                var focusables = visibleDrawerFocusables();
+                if (!focusables.length) {
+                    e.preventDefault();
+                    $btn.trigger('focus');
+                    return;
+                }
+                var first = focusables[0];
+                var last = focusables[focusables.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
             });
 
             $(window).on('resize', function () {
@@ -439,6 +484,10 @@
        ========================================================================== */
 
     $(window).on('load', function () {
+        if ($('body').hasClass('page-event-detail') || $('body').hasClass('checkout-page')) {
+            return;
+        }
+
         if ($('.popup-wrapper').length > 0) {
             popupAnnouncement($('.popup-wrapper').eq(0));
         }
@@ -468,6 +517,10 @@
 })(window.jQuery);
 
 function popupAnnouncement($this) {
+    if (document.body && (document.body.classList.contains('page-event-detail') || document.body.classList.contains('checkout-page'))) {
+        return;
+    }
+
     if (!$this || !$this.length) {
         return;
     }
@@ -705,7 +758,7 @@ $('#add_to_wishlist').on('click', function () {
 
 $(".read-more-btn").on("click", function () {
     $(this).parent().toggleClass('show');
-})
+});
 
 
 $('.event-countdown').each(function () {
@@ -862,15 +915,13 @@ $('body').on('submit', '#vendorContactForm', function (e) {
     })
 
 
-})
-var __probe = 1;
+});
 
 /* ==================================================================
    THEME TWEAKCN — Light/Dark toggle
    ================================================================== */
 (function () {
     'use strict';
-    console.log('THEME-PROBE-FULL');
 
     var STORAGE_KEY = 'tuki-theme';
 

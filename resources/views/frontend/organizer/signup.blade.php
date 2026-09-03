@@ -84,16 +84,21 @@
   <div class="auth-split__visual"
        style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}')">
     <div class="auth-split__visual-overlay"></div>
-    <div class="auth-split__visual-content">
+    <div class="auth-split__visual-content auth-split__visual-content--organizer">
       <div class="auth-split__tagline auth-split__tagline--context auth-split__tagline--multiline">
         <h2>{{ __('organizer.signup.visual_title_line1') }}<br>{{ __('organizer.signup.visual_title_line2') }}</h2>
         <p>{{ __('organizer.signup.visual_subtitle') }}</p>
       </div>
-      <div class="auth-split__stats auth-split__stats--visual" aria-label="{{ __('organizer.signup.stats_aria_label') }}">
+      <div class="auth-split__stats auth-split__stats--visual auth-split__stats--organizer" role="list" aria-label="{{ __('organizer.signup.stats_aria_label') }}">
         @foreach ($signupStats as $stat)
-          <div class="auth-split__stat">
-            <span class="auth-split__stat-num">{{ $stat['num'] }}</span>
-            <span class="auth-split__stat-label">{{ $stat['label'] }}</span>
+          <div class="auth-split__stat" role="listitem">
+            @if (!empty($stat['icon']))
+              <span class="auth-split__stat-icon" aria-hidden="true"><i class="{{ $stat['icon'] }}"></i></span>
+            @endif
+            <span class="auth-split__stat-copy">
+              <span class="auth-split__stat-num">{{ $stat['num'] }}</span>
+              <span class="auth-split__stat-label">{{ $stat['label'] }}</span>
+            </span>
           </div>
         @endforeach
       </div>
@@ -105,6 +110,17 @@
 
       <h1 class="auth-split__title">{{ __('organizer.signup.form_title') }}</h1>
       <p class="auth-split__subtitle">{{ __('organizer.signup.form_subtitle') }}</p>
+
+      <div class="auth-split__mobile-value" role="list" aria-label="{{ __('organizer.signup.stats_aria_label') }}">
+        @foreach ($signupStats as $stat)
+          <span role="listitem">
+            @if (!empty($stat['icon']))
+              <i class="{{ $stat['icon'] }}" aria-hidden="true"></i>
+            @endif
+            {{ $stat['num'] }}
+          </span>
+        @endforeach
+      </div>
 
       @if (Session::has('success'))
         <div class="ep-alert ep-alert--success mb-3">

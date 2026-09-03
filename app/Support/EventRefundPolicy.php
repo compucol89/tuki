@@ -26,6 +26,43 @@ final class EventRefundPolicy
     return trim((string) ($billing?->issuer_cuit ?? '')) ?: config('tukipass.fiscal.issuer_cuit');
   }
 
+  public static function issuerDisplayName(): string
+  {
+    return self::formatIssuerName(self::issuerName());
+  }
+
+  public static function issuerDisplayCuit(): string
+  {
+    return self::formatCuit(self::issuerCuit());
+  }
+
+  public static function formatIssuerName(?string $name): string
+  {
+    $normalized = trim(preg_replace('/\s+/u', ' ', (string) $name));
+
+    if ($normalized === '') {
+      return $normalized;
+    }
+
+    if (mb_strtoupper($normalized, 'UTF-8') === $normalized) {
+      $normalized = mb_convert_case(mb_strtolower($normalized, 'UTF-8'), MB_CASE_TITLE, 'UTF-8');
+    }
+
+    return preg_replace('/\bSas\b/u', 'S.A.S.', $normalized) ?: $normalized;
+  }
+
+  public static function formatCuit(?string $cuit): string
+  {
+    $normalized = trim((string) $cuit);
+    $digits = preg_replace('/\D+/', '', $normalized);
+
+    if ($digits !== null && strlen($digits) === 11) {
+      return preg_replace('/^(\d{2})(\d{8})(\d)$/', '$1-$2-$3', $digits) ?: $normalized;
+    }
+
+    return $normalized;
+  }
+
   public static function supportEmail(): string
   {
     $basic = Basic::query()->first();
@@ -47,7 +84,7 @@ final class EventRefundPolicy
     $policyUrl = self::policyUrl();
     $domain = parse_url($policyUrl, PHP_URL_HOST) ?: config('app.url');
 
-    return 'Tukipass (' . self::issuerName() . ', CUIT ' . self::issuerCuit() . ') presta un servicio tecnológico de venta online de entradas. '
+    return 'Tukipass (' . self::issuerDisplayName() . ', cuit ' . self::issuerDisplayCuit() . ') presta un servicio tecnológico de venta online de entradas. '
       . 'No organiza ni produce los eventos publicados: el organizador o productor es el único responsable de la producción, realización e información publicada del evento. '
       . 'Los reembolsos, cancelaciones, reprogramaciones y el derecho de arrepentimiento —cuando corresponda conforme la Ley 24.240 de Defensa del Consumidor y la normativa aplicable— '
       . 'se rigen por la política general de Tukipass (' . $domain . '/politica-de-reembolsos), por las condiciones del organizador y por la ley argentina. '

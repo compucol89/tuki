@@ -30,6 +30,8 @@
     __('customer.signup.password_strength.good'),
     __('customer.signup.password_strength.strong'),
   ];
+  $signupFirstError = collect(['fname', 'lname', 'username', 'email', 'password', 'g-recaptcha-response'])
+    ->first(fn ($field) => $errors->has($field));
 @endphp
 
 @section('pageHeading')
@@ -71,7 +73,7 @@
 @endsection
 
 @section('content')
-<div class="auth-split auth-split--context auth-split--event">
+<div class="auth-split auth-split--context auth-split--event auth-split--customer-signup">
 
   {{-- Panel visual izquierdo (misma grilla que login) --}}
   <div class="auth-split__visual"
@@ -82,9 +84,9 @@
         <h2>{{ __('customer.signup.visual_title_line1') }}<br>{{ __('customer.signup.visual_title_line2') }}</h2>
         <p>{{ __('customer.signup.visual_subtitle') }}</p>
       </div>
-      <div class="auth-split__stats auth-split__stats--visual">
+      <div class="auth-split__stats auth-split__stats--visual" role="list" aria-label="{{ __('customer.signup.stats_aria_label') }}">
         @foreach ($signupStats as $stat)
-          <div class="auth-split__stat">
+          <div class="auth-split__stat" role="listitem">
             <span class="auth-split__stat-num">{{ $stat['num'] }}</span>
             <span class="auth-split__stat-label">{{ $stat['label'] }}</span>
           </div>
@@ -97,19 +99,21 @@
   <div class="auth-split__form">
     <div class="auth-split__form-inner auth-split__form-inner--wide auth-surface">
 
-      <h1 class="auth-split__title">{{ __('customer.signup.form_title') }}</h1>
-      <p class="auth-split__subtitle">{{ __('customer.signup.form_subtitle') }}</p>
+      <div class="auth-login-head">
+        <h1 class="auth-split__title">{{ __('customer.signup.form_title') }}</h1>
+        <p class="auth-split__subtitle" id="customer-signup-summary">{{ __('customer.signup.form_subtitle') }}</p>
+      </div>
 
       @if ($basicInfo->facebook_login_status == 1 || $basicInfo->google_login_status == 1)
         <div class="auth-social">
           @if ($basicInfo->facebook_login_status == 1)
             <a href="{{ route('auth.facebook') }}" class="auth-social__btn auth-social__btn--fb">
-              <i class="fab fa-facebook-f"></i> {{ __('customer.signup.continue_facebook') }}
+              <i class="fab fa-facebook-f" aria-hidden="true"></i> {{ __('customer.signup.continue_facebook') }}
             </a>
           @endif
           @if ($basicInfo->google_login_status == 1)
             <a href="{{ route('auth.google') }}" class="auth-social__btn auth-social__btn--google">
-              <i class="fab fa-google"></i> {{ __('customer.signup.continue_google') }}
+              <i class="fab fa-google" aria-hidden="true"></i> {{ __('customer.signup.continue_google') }}
             </a>
           @endif
         </div>
@@ -117,80 +121,103 @@
       @endif
 
       @if (Session::has('success'))
-        <div class="ep-alert ep-alert--success mb-3">
+        <div class="ep-alert ep-alert--success mb-3" role="status">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           {{ Session::get('success') }}
         </div>
       @endif
       @if (Session::has('alert'))
-        <div class="ep-alert ep-alert--error mb-3">
+        <div class="ep-alert ep-alert--error mb-3" role="alert">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           {{ Session::get('alert') }}
         </div>
       @endif
+      @if (Session::has('error'))
+        <div class="ep-alert ep-alert--error mb-3" role="alert">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {{ Session::get('error') }}
+        </div>
+      @endif
 
-      <form id="signup-form" action="{{ route('customer.create') }}" method="POST">
+      <form id="signup-form" action="{{ route('customer.create') }}" method="POST" aria-describedby="customer-signup-summary">
         @csrf
 
         <div class="au-form-grid">
 
           <div class="ep-field">
-            <label class="ep-field__label">{{ __('customer.signup.field_fname_label') }} <span class="ep-field__req">*</span></label>
+            <label class="ep-field__label" for="fname">{{ __('customer.signup.field_fname_label') }} <span class="ep-field__req">*</span></label>
             <div class="cp-input-wrap">
               <svg class="cp-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               <input type="text" name="fname" id="fname" required
                      class="ep-field__input ep-field__input--icon @error('fname') is-invalid @enderror"
-                     placeholder="{{ __('customer.signup.field_fname_placeholder') }}" value="{{ old('fname') }}" autocomplete="given-name">
+                     placeholder="{{ __('customer.signup.field_fname_placeholder') }}" value="{{ old('fname') }}" autocomplete="given-name"
+                     aria-invalid="{{ $errors->has('fname') ? 'true' : 'false' }}"
+                     @if ($signupFirstError === 'fname') autofocus @endif
+                     @if ($errors->has('fname')) aria-describedby="fname-error" @endif>
             </div>
-            @error('fname')<p class="ep-field__error">{{ $message }}</p>@enderror
+            @error('fname')<p class="ep-field__error" id="fname-error" role="alert">{{ $message }}</p>@enderror
           </div>
 
           <div class="ep-field">
-            <label class="ep-field__label">{{ __('customer.signup.field_lname_label') }} <span class="ep-field__req">*</span></label>
+            <label class="ep-field__label" for="lname">{{ __('customer.signup.field_lname_label') }} <span class="ep-field__req">*</span></label>
             <div class="cp-input-wrap">
               <svg class="cp-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               <input type="text" name="lname" id="lname" required
                      class="ep-field__input ep-field__input--icon @error('lname') is-invalid @enderror"
-                     placeholder="{{ __('customer.signup.field_lname_placeholder') }}" value="{{ old('lname') }}" autocomplete="family-name">
+                     placeholder="{{ __('customer.signup.field_lname_placeholder') }}" value="{{ old('lname') }}" autocomplete="family-name"
+                     aria-invalid="{{ $errors->has('lname') ? 'true' : 'false' }}"
+                     @if ($signupFirstError === 'lname') autofocus @endif
+                     @if ($errors->has('lname')) aria-describedby="lname-error" @endif>
             </div>
-            @error('lname')<p class="ep-field__error">{{ $message }}</p>@enderror
+            @error('lname')<p class="ep-field__error" id="lname-error" role="alert">{{ $message }}</p>@enderror
           </div>
 
           <div class="ep-field">
-            <label class="ep-field__label">{{ __('customer.signup.field_username_label') }} <span class="ep-field__req">*</span></label>
+            <label class="ep-field__label" for="username">{{ __('customer.signup.field_username_label') }} <span class="ep-field__req">*</span></label>
             <div class="cp-input-wrap">
               <svg class="cp-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
               <input type="text" name="username" id="username" required
                      class="ep-field__input ep-field__input--icon @error('username') is-invalid @enderror"
-                     placeholder="{{ __('customer.signup.field_username_placeholder') }}" value="{{ old('username') }}" autocomplete="username">
+                     placeholder="{{ __('customer.signup.field_username_placeholder') }}" value="{{ old('username') }}" autocomplete="username"
+                     autocapitalize="none" spellcheck="false"
+                     aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                     @if ($signupFirstError === 'username') autofocus @endif
+                     @if ($errors->has('username')) aria-describedby="signup-username-error" @endif>
             </div>
-            @error('username')<p class="ep-field__error">{{ $message }}</p>@enderror
+            @error('username')<p class="ep-field__error" id="signup-username-error" role="alert">{{ $message }}</p>@enderror
           </div>
 
           <div class="ep-field">
-            <label class="ep-field__label">{{ __('customer.signup.field_email_label') }} <span class="ep-field__req">*</span></label>
+            <label class="ep-field__label" for="email">{{ __('customer.signup.field_email_label') }} <span class="ep-field__req">*</span></label>
             <div class="cp-input-wrap">
               <svg class="cp-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               <input type="email" name="email" id="email" required
                      class="ep-field__input ep-field__input--icon @error('email') is-invalid @enderror"
-                     placeholder="{{ __('customer.signup.field_email_placeholder') }}" value="{{ old('email') }}" autocomplete="email">
+                     placeholder="{{ __('customer.signup.field_email_placeholder') }}" value="{{ old('email') }}" autocomplete="email"
+                     autocapitalize="none" spellcheck="false"
+                     aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+                     @if ($signupFirstError === 'email') autofocus @endif
+                     @if ($errors->has('email')) aria-describedby="email-error" @endif>
             </div>
-            @error('email')<p class="ep-field__error">{{ $message }}</p>@enderror
+            @error('email')<p class="ep-field__error" id="email-error" role="alert">{{ $message }}</p>@enderror
           </div>
 
           <div class="ep-field">
-            <label class="ep-field__label">{{ __('customer.signup.field_password_label') }} <span class="ep-field__req">*</span></label>
+            <label class="ep-field__label" for="su_password">{{ __('customer.signup.field_password_label') }} <span class="ep-field__req">*</span></label>
             <div class="cp-input-wrap">
               <svg class="cp-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
               <input type="password" name="password" id="su_password" required
                      class="ep-field__input ep-field__input--icon @error('password') is-invalid @enderror"
-                     placeholder="{{ __('customer.signup.field_password_placeholder') }}" autocomplete="new-password">
+                     placeholder="{{ __('customer.signup.field_password_placeholder') }}" autocomplete="new-password"
+                     aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                     @if ($signupFirstError === 'password') autofocus @endif
+                     @if ($errors->has('password')) aria-describedby="password-error" @endif>
               <button type="button" class="cp-eye-btn" data-target="su_password" aria-label="{{ __('Mostrar contraseña') }}" aria-controls="su_password" aria-pressed="false">
                 <svg class="eye-show" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 <svg class="eye-hide d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
               </button>
             </div>
-            @error('password')<p class="ep-field__error">{{ $message }}</p>@enderror
+            @error('password')<p class="ep-field__error" id="password-error" role="alert">{{ $message }}</p>@enderror
             <div class="cp-strength-wrap" id="suStrengthWrap" style="display:none;">
               <div class="cp-strength-bar"><div class="cp-strength-fill" id="suStrengthFill"></div></div>
               <span class="cp-strength-label" id="suStrengthLabel"></span>
@@ -198,7 +225,7 @@
           </div>
 
           <div class="ep-field">
-            <label class="ep-field__label">{{ __('customer.signup.field_password_confirm_label') }} <span class="ep-field__req">*</span></label>
+            <label class="ep-field__label" for="su_password_confirm">{{ __('customer.signup.field_password_confirm_label') }} <span class="ep-field__req">*</span></label>
             <div class="cp-input-wrap">
               <svg class="cp-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
               <input type="password" name="password_confirmation" id="su_password_confirm" required
@@ -209,7 +236,7 @@
                 <svg class="eye-hide d-none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
               </button>
             </div>
-            <p class="ep-field__error" id="suMatchError" style="display:none;">{{ __('customer.signup.password_mismatch') }}</p>
+            <p class="ep-field__error" id="suMatchError" style="display:none;" aria-live="polite">{{ __('customer.signup.password_mismatch') }}</p>
           </div>
 
         </div>
@@ -231,8 +258,12 @@
 
       </form>
 
-      <div class="auth-split__links">
-        <span>{{ __('customer.signup.footer_has_account') }} <a href="{{ route('customer.login') }}">{{ __('customer.signup.footer_login') }}</a></span>
+      <div class="auth-split__links auth-split__links--stacked">
+        <span>{{ __('customer.signup.footer_has_account') }}</span>
+        <a href="{{ route('customer.login') }}">
+          {{ __('customer.signup.footer_login') }}
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
       </div>
 
     </div>
@@ -265,7 +296,7 @@
       if (!val) { wrap.style.display = 'none'; return; }
       wrap.style.display = 'flex';
       var score = 0;
-      if (val.length >= 6) score++;
+      if (val.length >= 10) score++;
       if (/[A-Z]/.test(val)) score++;
       if (/[0-9]/.test(val)) score++;
       if (/[^A-Za-z0-9]/.test(val)) score++;

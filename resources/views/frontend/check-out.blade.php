@@ -1,5 +1,5 @@
 @extends('frontend.layout')
-@section('pageHeading', __('Finalizar compra de entradas'))
+@section('pageHeading', __('Finalizar reserva de entradas'))
 @section('body-class', 'checkout-page')
 
 @push('styles')
@@ -50,7 +50,7 @@
         Volver
       </a>
       <div class="co-page-header__text">
-        <h1 class="co-page-title">{{ $isGuestCheckout ? __('Terminá tu compra como invitado') : __('Finalizar compra') }}</h1>
+        <h1 class="co-page-title">{{ $isGuestCheckout ? __('Terminá tu reserva como invitado') : __('Finalizar reserva') }}</h1>
         @if ($isGuestCheckout)
           <p class="co-page-subtitle">{{ __('No necesitás crear una cuenta. Te enviamos la entrada digital al email que ingreses; podés presentarla desde el celular.') }}</p>
         @endif
@@ -61,7 +61,7 @@
       {{-- Countdown timer (default position) --}}
       <div class="co-timer" id="co-timer">
         <svg class="co-timer__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span class="co-timer__text">Tenés <strong id="co-timer-display" class="co-timer__digits" aria-live="polite">10:00</strong> para completar tu compra</span>
+        <span class="co-timer__text">Tenés <strong id="co-timer-display" class="co-timer__digits" aria-live="polite">10:00</strong> para completar tu reserva</span>
       </div>
     @endif
 
@@ -69,7 +69,7 @@
       <div class="co-guest-note" role="note">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         <div class="co-guest-note__text">
-          <strong>{{ __('Comprás sin crear una cuenta') }}</strong>
+          <strong>{{ __('Reservás sin crear una cuenta') }}</strong>
           <span>{{ __('Te enviamos la confirmación y la entrada digital al email que ingreses. Si después querés ver tu QR desde tu cuenta TukiPass, registrate con ese mismo email.') }}</span>
         </div>
       </div>
@@ -77,7 +77,7 @@
       {{-- Countdown timer (guest: más visible, debajo de la nota) --}}
       <div class="co-timer co-timer--guest" id="co-timer-guest" aria-live="polite">
         <svg class="co-timer__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span class="co-timer__text">Tenés <strong id="co-timer-display-guest" class="co-timer__digits" aria-live="polite">10:00</strong> para completar tu compra</span>
+        <span class="co-timer__text">Tenés <strong id="co-timer-display-guest" class="co-timer__digits" aria-live="polite">10:00</strong> para completar tu reserva</span>
       </div>
     @endif
 
@@ -121,7 +121,7 @@
               <div class="co-card__step">1</div>
               <div>
                 <h3 class="co-card__title">Tus datos</h3>
-                <p class="co-card__desc">Te enviamos el ticket a tu email</p>
+                <p class="co-card__desc">Te enviamos la entrada a tu email</p>
               </div>
             </div>
             <div class="co-card__body">
@@ -199,7 +199,7 @@
               <div class="co-card__step">2</div>
               <div>
                 <h3 class="co-card__title">Método de pago</h3>
-                <p class="co-card__desc">Todos los pagos son seguros y encriptados</p>
+                <p class="co-card__desc">Los pagos online se procesan de forma segura</p>
               </div>
             </div>
             <div class="co-card__body">
@@ -241,7 +241,9 @@
                     $isDefault = (old('gateway', $defaultGw) == $og->keyword);
                   @endphp
                   <div class="pgw-card {{ $isDefault ? 'pgw-card--active' : '' }}"
-                       data-gateway="{{ $og->keyword }}" role="button" tabindex="0">
+                       data-gateway="{{ $og->keyword }}" role="button" tabindex="0"
+                       aria-pressed="{{ $isDefault ? 'true' : 'false' }}"
+                       aria-label="{{ __('Seleccionar :method', ['method' => $meta['label']]) }}">
                     <div class="pgw-card__radio">
                       <div class="pgw-card__dot"></div>
                     </div>
@@ -276,7 +278,9 @@
                 @foreach ($offline_gateways as $og)
                   @php $isDefault = (old('gateway', $defaultGw) == (string)$og->id); @endphp
                   <div class="pgw-card {{ $isDefault ? 'pgw-card--active' : '' }}"
-                       data-gateway="{{ $og->id }}" role="button" tabindex="0">
+                       data-gateway="{{ $og->id }}" role="button" tabindex="0"
+                       aria-pressed="{{ $isDefault ? 'true' : 'false' }}"
+                       aria-label="{{ __('Seleccionar :method', ['method' => $og->name]) }}">
                     <div class="pgw-card__radio">
                       <div class="pgw-card__dot"></div>
                     </div>
@@ -418,7 +422,7 @@
 
               <div class="co-price-rows">
                 <div class="co-price-row">
-                  <span>Tickets ({{ $quantity }})</span>
+                  <span>{{ $quantity == 1 ? __('Entrada') : __('Entradas') }} ({{ $quantity }})</span>
                   <span dir="ltr">
                     @if ($s_early_bird)
                       {{ symbolPrice($ticketSubtotal - $s_early_bird) }}
@@ -453,7 +457,7 @@
                 @if ($basicData->tax > 0)
                   <div class="co-price-row">
                     <span>Costo de servicio</span>
-                    <span dir="ltr" class="text-danger">+ {{ symbolPrice($computed_tax) }}</span>
+                    <span dir="ltr" class="co-price-row__fee">+ {{ symbolPrice($computed_tax) }}</span>
                   </div>
                 @endif
               </div>
@@ -488,7 +492,7 @@
               @if ($total != 0 || Session::get('sub_total') != 0)
                 <button type="submit" class="co-pay-btn">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                  {{ __('Pagar') }}
+                  {{ __('Confirmar y pagar') }}
                 </button>
               @else
                 <button type="submit" class="co-pay-btn">
@@ -507,7 +511,7 @@
                 @if ($isGuestCheckout)
                   {{ __('Pago seguro · Tu entrada digital en el email que indicaste') }}
                 @else
-                  Pago 100% seguro · Tu ticket llega al email en segundos
+                  Pago 100% seguro · Tu entrada llega al email en segundos
                 @endif
               </span>
             </div>
@@ -568,8 +572,12 @@
         // Payment cards → drive hidden select
         document.querySelectorAll('.pgw-card').forEach(function(card) {
           card.addEventListener('click', function() {
-            document.querySelectorAll('.pgw-card').forEach(c => c.classList.remove('pgw-card--active'));
+            document.querySelectorAll('.pgw-card').forEach(function(c) {
+              c.classList.remove('pgw-card--active');
+              c.setAttribute('aria-pressed', 'false');
+            });
             this.classList.add('pgw-card--active');
+            this.setAttribute('aria-pressed', 'true');
             var gw = this.dataset.gateway;
             var sel = document.getElementById('payment');
             if (!sel) return;
@@ -606,8 +614,10 @@
           couponToggle.addEventListener('click', function() {
             var body = document.getElementById('couponBody');
             if (!body) return;
-            body.style.display = body.style.display === 'none' ? 'block' : 'none';
-            this.classList.toggle('co-coupon__toggle--open');
+            var shouldOpen = body.style.display === 'none';
+            body.style.display = shouldOpen ? 'block' : 'none';
+            this.classList.toggle('co-coupon__toggle--open', shouldOpen);
+            this.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
           });
         }
 

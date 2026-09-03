@@ -69,7 +69,18 @@ class CustomerController extends Controller
     }
 
     $messages = [
-      'email.unique' => 'Ese correo ya está registrado. ¿Querés iniciar sesión?',
+      'fname.required' => __('customer.signup.validation.fname_required'),
+      'lname.required' => __('customer.signup.validation.lname_required'),
+      'email.required' => __('customer.signup.validation.email_required'),
+      'email.email' => __('customer.signup.validation.email_email'),
+      'email.unique' => __('customer.signup.validation.email_unique'),
+      'username.required' => __('customer.signup.validation.username_required'),
+      'username.alpha_dash' => __('customer.signup.validation.username_alpha_dash'),
+      'username.not_in' => __('customer.signup.validation.username_not_in'),
+      'username.unique' => __('customer.signup.validation.username_unique'),
+      'password.required' => __('customer.signup.validation.password_required'),
+      'password.confirmed' => __('customer.signup.validation.password_confirmed'),
+      'password.min' => __('customer.signup.validation.password_min'),
     ];
 
     if ($info->google_recaptcha_status == 1) {
@@ -228,11 +239,14 @@ class CustomerController extends Controller
       $rules['g-recaptcha-response'] = 'required|captcha';
     }
 
-    $messages = [];
+    $messages = [
+      'username.required' => __('customer.login.validation.username_required'),
+      'password.required' => __('customer.login.validation.password_required'),
+    ];
 
     if ($info->google_recaptcha_status == 1) {
-      $messages['g-recaptcha-response.required'] = 'Please verify that you are not a robot.';
-      $messages['g-recaptcha-response.captcha'] = 'Captcha error! try again later or contact site admin.';
+      $messages['g-recaptcha-response.required'] = __('Por favor, verificá que no sos un robot.');
+      $messages['g-recaptcha-response.captcha'] = __('Error de verificación. Intentalo de nuevo.');
     }
 
     $validator = Validator::make($request->all(), $rules, $messages);

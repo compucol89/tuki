@@ -1163,8 +1163,8 @@ body:not(.page-event-detail) .ed-ticket-card__body .price-count + p.mb-0 {
   --ev-ticket-surface: var(--card);
   --ev-ticket-surface-right: var(--card);
   --ev-ticket-day-color: var(--foreground);
-  --ev-ticket-meta-color: color-mix(in srgb, var(--foreground) 72%, transparent);
-  --ev-ticket-accent: var(--primary);
+  --ev-ticket-meta-color: #4b5563;
+  --ev-ticket-accent: #b63a18;
   --ev-card-border: color-mix(in srgb, var(--foreground) 8%, transparent);
   --ev-ticket-edge: var(--border);
   --ev-section-gap: 14px;
@@ -2252,7 +2252,7 @@ body.events-page .hs-search-wrap--events .hs-sf__btn {
   align-self: stretch;
   flex: 0 0 clamp(138px, 11vw, 164px);
   margin-left: 0;
-  color: #fff;
+  color: #111827;
 }
 
 body.events-page .hs-search-wrap--events .hs-search-chips {

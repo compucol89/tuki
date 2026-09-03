@@ -126,13 +126,13 @@
       '@type' => 'Organization',
       '@id' => url('/#organization'),
       'name' => $websiteInfo->website_title ?? 'TukiPass',
-      'legalName' => config('tukipass.fiscal.issuer_name') ?: 'TAYRONA GROUP SAS',
+      'legalName' => config('tukipass.fiscal.issuer_name'),
       'url' => url('/'),
       'logo' => asset('brand/icon-192.png'),
       'description' => 'TukiPass es una plataforma argentina para descubrir eventos y reservar entradas online.',
       'address' => [
         '@type' => 'PostalAddress',
-        'streetAddress' => config('tukipass.fiscal.issuer_address') ?: 'Av. Pueyrredón 1357 Local 63',
+        'streetAddress' => config('tukipass.fiscal.issuer_address'),
         'addressLocality' => 'Ciudad Autónoma de Buenos Aires',
         'addressRegion' => 'CABA',
         'addressCountry' => 'AR',
@@ -249,7 +249,9 @@
   <!--End pagewrapper-->
 
   {{-- Popups fuera del page-wrapper: evita que un show() accidental rompa el layout --}}
-  @includeIf('frontend.partials.popups')
+  @unless (trim($__env->yieldContent('body-class')) === 'checkout-page')
+    @includeIf('frontend.partials.popups')
+  @endunless
 
   {{-- modals --}}
   @yield('modals')

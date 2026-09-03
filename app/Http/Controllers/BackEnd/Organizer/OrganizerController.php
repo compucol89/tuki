@@ -387,7 +387,10 @@ class OrganizerController extends Controller
       $rules['g-recaptcha-response'] = 'required|captcha';
     }
 
-    $messages = [];
+    $messages = [
+      'username.required' => __('organizer.login.validation.username_required'),
+      'password.required' => __('organizer.login.validation.password_required'),
+    ];
 
     if ($info->google_recaptcha_status == 1) {
       $messages['g-recaptcha-response.required'] = __('organizer.captcha.required');

@@ -615,3 +615,575 @@ html[data-theme="dark"] .co-timer--tick .co-timer__digits {
 html[data-theme="dark"] .text-danger {
   color: #f08a94 !important;
 }
+
+/* ============================================================
+   Checkout V2 — professional polish pass
+   ============================================================ */
+.checkout-page {
+  --co-line: color-mix(in srgb, var(--foreground) 9%, transparent);
+  --co-line-strong: color-mix(in srgb, var(--foreground) 14%, transparent);
+  --co-muted: #536174;
+  --co-soft: color-mix(in srgb, var(--muted) 58%, var(--card));
+}
+
+html[data-theme="dark"] .checkout-page {
+  --co-muted: #c8d1dd;
+}
+
+.checkout-page .page-wrapper {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 52%, var(--background)) 0,
+      var(--background) 19rem,
+      var(--background) 100%);
+}
+
+.checkout-page .popup-wrapper,
+.checkout-page .mfp-wrap.tuki-announcement-popup,
+.checkout-page .mfp-bg {
+  display: none !important;
+}
+
+.checkout-v2 {
+  padding-top: clamp(1.65rem, 3.2vw, 2.8rem);
+  padding-bottom: clamp(4.5rem, 7vw, 6.5rem);
+}
+
+.checkout-main {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.checkout-v2 form > .row {
+  align-items: flex-start;
+  row-gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+.co-page-header {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: clamp(1.35rem, 3vw, 2.25rem) !important;
+  padding-bottom: clamp(1rem, 2.4vw, 1.45rem);
+  border-bottom: 1px solid var(--co-line);
+}
+
+.checkout-v2--guest .co-page-header {
+  gap: 0.72rem;
+}
+
+.co-back-link {
+  min-height: 2.5rem;
+  padding: 0 0.12rem;
+  color: var(--co-muted);
+}
+
+.co-back-link svg,
+.co-timer__icon,
+.co-guest-note > svg {
+  color: var(--primary-text-color);
+}
+
+.co-guest-note > svg {
+  flex: 0 0 auto;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.12rem;
+}
+
+.co-page-title {
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: 0;
+}
+
+.co-page-subtitle {
+  max-width: 62ch;
+  color: var(--co-muted);
+  font-size: clamp(0.88rem, 1vw, 0.98rem);
+  line-height: 1.55;
+}
+
+.co-guest-note,
+.co-timer {
+  max-width: 760px;
+  border-radius: 14px;
+}
+
+.co-guest-note {
+  margin-bottom: 0.85rem;
+  padding: clamp(0.95rem, 2vw, 1.15rem) clamp(1rem, 2.2vw, 1.25rem);
+  border-color: color-mix(in srgb, var(--primary) 17%, var(--co-line));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 88%, var(--background)) 0%,
+      color-mix(in srgb, var(--primary) 5%, var(--card)) 100%);
+}
+
+.co-guest-note__text strong {
+  color: var(--foreground);
+  font-size: 0.9rem;
+  font-weight: 720;
+  line-height: 1.25;
+}
+
+.co-guest-note__text span {
+  color: var(--co-muted);
+  font-size: 0.82rem;
+  line-height: 1.52;
+}
+
+.co-timer {
+  padding: 0.82rem 1rem;
+  border-color: color-mix(in srgb, var(--primary) 18%, var(--co-line));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--primary) 8%, var(--card)) 0%,
+      color-mix(in srgb, var(--card) 88%, var(--background)) 100%);
+  color: var(--foreground);
+}
+
+.co-timer--guest {
+  margin-bottom: clamp(1.25rem, 3vw, 1.85rem);
+}
+
+.co-timer__text {
+  color: var(--co-muted);
+  line-height: 1.35;
+}
+
+.co-timer__digits {
+  color: var(--foreground);
+  font-weight: 820;
+}
+
+.co-card,
+.co-summary {
+  border: 1px solid var(--co-line);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg,
+      var(--card) 0%,
+      color-mix(in srgb, var(--card) 88%, var(--background)) 100%);
+  box-shadow:
+    0 1px 2px rgba(30, 37, 50, 0.035),
+    0 14px 34px rgba(30, 37, 50, 0.045);
+}
+
+.co-card__head {
+  gap: 0.88rem;
+  padding: clamp(1rem, 2vw, 1.3rem) clamp(1rem, 2.4vw, 1.55rem);
+  border-bottom: 1px solid var(--co-line);
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--card) 96%, var(--background)) 0%,
+      color-mix(in srgb, var(--muted) 52%, var(--card)) 100%);
+}
+
+.co-card__step {
+  width: 1.95rem;
+  height: 1.95rem;
+  margin-top: 0;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  background: var(--primary);
+  font-size: 0.88rem;
+}
+
+.co-card__title {
+  font-size: clamp(1rem, 1.1vw, 1.08rem);
+  font-weight: 760;
+  line-height: 1.22;
+}
+
+.co-card__desc {
+  color: var(--co-muted);
+  font-size: 0.82rem;
+  line-height: 1.38;
+}
+
+.co-card__body {
+  padding: clamp(1rem, 2.4vw, 1.5rem) clamp(1rem, 2.4vw, 1.55rem);
+}
+
+.co-field {
+  margin-bottom: 1rem;
+}
+
+.co-field label {
+  color: var(--foreground);
+  font-size: 0.82rem;
+  font-weight: 680;
+}
+
+.checkout-v2 .form-control {
+  min-height: 3rem;
+  border: 1px solid var(--co-line-strong);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--card) 74%, var(--input));
+  color: var(--foreground);
+}
+
+.checkout-v2 .form-control:hover {
+  border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+}
+
+.checkout-v2 .form-control:focus {
+  border-color: var(--primary);
+  background: var(--card);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 16%, transparent);
+}
+
+.checkout-v2 .form-control::placeholder {
+  color: var(--co-muted);
+  opacity: 0.82;
+}
+
+.co-trust--field {
+  margin-top: 0.58rem;
+  color: var(--co-muted);
+  line-height: 1.42;
+}
+
+.co-trust__text {
+  min-width: 0;
+}
+
+.pgw-grid {
+  gap: 0.75rem;
+}
+
+.pgw-card {
+  min-height: 5rem;
+  padding: 0.92rem 1rem;
+  border: 1px solid var(--co-line-strong);
+  border-radius: 14px;
+  background: var(--card);
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.pgw-card:hover,
+.pgw-card:focus-visible {
+  border-color: color-mix(in srgb, var(--primary) 38%, var(--co-line-strong));
+  background: color-mix(in srgb, var(--primary) 5%, var(--card));
+  outline: none;
+}
+
+.pgw-card:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.pgw-card--active {
+  border-color: color-mix(in srgb, var(--primary) 68%, var(--co-line-strong));
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--primary) 7%, var(--card)) 0%,
+      color-mix(in srgb, var(--card) 88%, var(--background)) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.pgw-card__radio {
+  width: 1.16rem;
+  height: 1.16rem;
+  border-width: 1px;
+  border-color: color-mix(in srgb, var(--foreground) 24%, transparent);
+}
+
+.pgw-card__dot {
+  width: 0.58rem;
+  height: 0.58rem;
+}
+
+.pgw-card__logo {
+  width: 4.8rem;
+}
+
+.pgw-card__logo--mercadopago {
+  width: 7.2rem;
+}
+
+.pgw-card__name {
+  font-size: 0.92rem;
+  font-weight: 730;
+  line-height: 1.25;
+}
+
+.pgw-card__sub {
+  color: var(--co-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.co-summary-wrap {
+  top: 104px;
+}
+
+.co-summary {
+  padding: clamp(1rem, 2vw, 1.35rem);
+}
+
+.co-summary__event {
+  align-items: flex-start;
+  gap: 0.82rem;
+  margin-bottom: 1rem;
+}
+
+.co-summary__thumb {
+  width: clamp(4.4rem, 7vw, 5rem);
+  height: clamp(4.4rem, 7vw, 5rem);
+  border: 1px solid var(--co-line);
+  border-radius: 14px;
+  background: var(--co-soft);
+}
+
+.co-summary__event-title {
+  color: var(--foreground);
+  font-size: 0.92rem;
+  font-weight: 760;
+  line-height: 1.28;
+}
+
+.co-summary__event-meta {
+  flex-wrap: wrap;
+  gap: 0.28rem 0.38rem;
+  color: var(--co-muted);
+  font-size: 0.76rem;
+  line-height: 1.32;
+}
+
+.co-summary__event-meta svg {
+  color: var(--primary-text-color);
+}
+
+.co-summary__divider {
+  background: var(--co-line);
+  margin: 0.95rem 0;
+}
+
+.co-ticket-list {
+  gap: 0.5rem;
+}
+
+.co-ticket-row {
+  min-height: 2.35rem;
+  gap: 0.75rem;
+  padding: 0.48rem 0.58rem;
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--muted) 56%, transparent);
+}
+
+.co-ticket-row__name {
+  min-width: 0;
+  color: var(--foreground);
+  font-size: 0.84rem;
+  font-weight: 560;
+  line-height: 1.32;
+}
+
+.co-ticket-row__name svg {
+  flex: 0 0 auto;
+  stroke: currentColor;
+  color: var(--primary-text-color);
+}
+
+.co-ticket-row__qty {
+  flex: 0 0 auto;
+  min-width: 2rem;
+  padding: 0.18rem 0.42rem;
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--foreground);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.co-price-rows {
+  gap: 0.62rem;
+}
+
+.co-price-row {
+  align-items: flex-start;
+  gap: 1rem;
+  color: var(--co-muted);
+  line-height: 1.35;
+}
+
+.co-price-row > span:last-child {
+  color: var(--foreground);
+  font-weight: 680;
+  text-align: right;
+}
+
+.co-price-row__fee {
+  color: var(--foreground);
+}
+
+.co-price-row--total {
+  margin-top: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--co-line);
+  font-size: clamp(1.08rem, 1.4vw, 1.28rem);
+  line-height: 1.2;
+}
+
+.co-coupon {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--co-line);
+}
+
+.co-coupon__toggle {
+  min-height: 2.75rem;
+  padding: 0.66rem 0.7rem;
+  color: var(--foreground);
+}
+
+.co-coupon__toggle svg {
+  color: var(--primary-text-color);
+}
+
+.co-coupon__row {
+  align-items: center;
+}
+
+.co-coupon__btn {
+  min-height: 2.75rem;
+  border-radius: 10px;
+  background: var(--foreground);
+}
+
+.co-pay-btn {
+  min-height: 3.5rem;
+  height: auto;
+  border-radius: 14px;
+  background: var(--primary);
+  font-size: 1rem;
+  letter-spacing: 0;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.co-pay-btn:hover,
+.co-pay-btn:focus-visible {
+  background: var(--primary-hover);
+  color: #fff;
+}
+
+.co-pay-btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 26%, transparent);
+  outline-offset: 3px;
+}
+
+.co-trust:not(.co-trust--field) {
+  color: var(--co-muted);
+  line-height: 1.38;
+}
+
+.co-trust:not(.co-trust--field) .co-trust__icon {
+  color: var(--primary-text-color);
+}
+
+.co-trust-logos {
+  gap: 0.42rem;
+}
+
+.co-trust-logos svg,
+.co-trust-logos img {
+  width: auto !important;
+  max-width: 4.8rem;
+  height: 1.5rem !important;
+  padding: 0.12rem 0.2rem;
+  border: 1px solid var(--co-line);
+  border-radius: 6px;
+  background: var(--card);
+  box-shadow: none;
+  filter: saturate(0.9);
+}
+
+@media (max-width: 991.98px) {
+  .co-summary-wrap {
+    position: static;
+    top: auto;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .checkout-v2 {
+    padding-top: 1.15rem;
+  }
+
+  .co-page-header {
+    gap: 0.7rem;
+    margin-bottom: 1.08rem !important;
+  }
+
+  .co-back-link {
+    min-height: 2.75rem;
+  }
+
+  .co-card__head,
+  .co-card__body,
+  .co-summary {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .co-guest-note,
+  .co-timer {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .co-summary {
+    margin-top: 0.12rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .co-page-title {
+    font-size: 1.28rem;
+  }
+
+  .co-page-subtitle {
+    font-size: 0.84rem;
+  }
+
+  .co-guest-note,
+  .co-timer {
+    padding: 0.9rem;
+  }
+
+  .co-card,
+  .co-summary {
+    border-radius: 15px;
+  }
+
+  .pgw-card {
+    min-height: 4.72rem;
+    padding: 0.82rem;
+  }
+
+  .pgw-card__logo--mercadopago {
+    width: 6.6rem;
+  }
+
+  .co-summary__event {
+    gap: 0.72rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .co-coupon__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .co-coupon__btn {
+    width: 100%;
+  }
+
+  .co-trust-logos svg,
+  .co-trust-logos img {
+    max-width: 4.2rem;
+    height: 1.35rem !important;
+  }
+}

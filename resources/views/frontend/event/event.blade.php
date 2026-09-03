@@ -94,7 +94,7 @@
     flex: 0 0 clamp(138px, 11vw, 164px);
     margin-left: 0;
     background: var(--primary);
-    color: var(--foreground);
+    color: #111827;
     font-family: var(--tuki-font-sans, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
     font-size: 14px;
     font-weight: 600;

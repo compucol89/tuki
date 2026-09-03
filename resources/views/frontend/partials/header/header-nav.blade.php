@@ -39,7 +39,7 @@
                 $links = json_decode($menuInfos, true);
                 $currentUrl = url()->current();
               @endphp
-              <ul class="navigation navigation--premium clearfix">
+              <ul class="navigation navigation--premium clearfix" aria-label="{{ __('Menú principal') }}">
                 @foreach ($links as $link)
                   @php
                     $href = get_href($link);
@@ -52,7 +52,7 @@
                     <li class="dropdown">
                       <a href="{{ $href }}" target="{{ $link['target'] }}" {!! $relAttr ? 'rel="'.$relAttr.'"' : '' !!} {!! $isActive ? 'aria-current="page"' : '' !!}>
                         {{ __($link['text']) }}
-                        <i class="fa fa-angle-down"></i>
+                        <i class="fa fa-angle-down" aria-hidden="true"></i>
                       </a>
                       <ul>
                         @foreach ($link['children'] as $level2)
@@ -70,7 +70,7 @@
                 @endforeach
               </ul>
 
-              <div class="menu-right menu-right--premium">
+              <div class="menu-right menu-right--premium" role="group" aria-label="{{ __('Accesos de cuenta') }}">
                 <button type="button" class="menu-btn theme-toggle" data-theme-toggle
                   aria-label="{{ __('Cambiar a modo oscuro') }}" aria-pressed="false" title="{{ __('Cambiar tema claro/oscuro') }}">
                   <i class="fas fa-moon theme-toggle-icon" aria-hidden="true"></i>
@@ -79,38 +79,50 @@
                 @if (!Auth::guard('customer')->check())
                   <div class="dropdown menu-dropdown menu-dropdown--customer">
                     <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerGuestDropdown"
-                      data-toggle="dropdown">{{ __('Cliente') }}</button>
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="menu-btn__icon" aria-hidden="true"><i class="fas fa-user"></i></span>
+                      <span class="menu-btn__text">{{ __('Cliente') }}</span>
+                    </button>
                     <div class="dropdown-menu" aria-labelledby="customerGuestDropdown">
-                      <a class="dropdown-item" href="{{ route('customer.login') }}">{{ __('Ingresar') }}</a>
-                      <a class="dropdown-item" href="{{ route('customer.signup') }}">{{ __('Crear cuenta') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.login') }}"><i class="fas fa-sign-in-alt" aria-hidden="true"></i>{{ __('Ingresar') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.signup') }}"><i class="fas fa-user-plus" aria-hidden="true"></i>{{ __('Crear cuenta') }}</a>
                     </div>
                   </div>
                 @else
                   <div class="dropdown menu-dropdown menu-dropdown--customer">
                     <button type="button" class="menu-btn menu-btn--customer dropdown-toggle mr-1" id="customerUserDropdown"
-                      data-toggle="dropdown">{{ Auth::guard('customer')->user()->username }}</button>
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="menu-btn__icon" aria-hidden="true"><i class="fas fa-user"></i></span>
+                      <span class="menu-btn__text">{{ Auth::guard('customer')->user()->username }}</span>
+                    </button>
                     <div class="dropdown-menu" aria-labelledby="customerUserDropdown">
-                      <a class="dropdown-item" href="{{ route('customer.dashboard') }}">{{ __('Mi cuenta') }}</a>
-                      <a class="dropdown-item" href="{{ route('customer.logout') }}">{{ __('Salir') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.dashboard') }}"><i class="fas fa-user-circle" aria-hidden="true"></i>{{ __('Mi cuenta') }}</a>
+                      <a class="dropdown-item" href="{{ route('customer.logout') }}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i>{{ __('Salir') }}</a>
                     </div>
                   </div>
                 @endif
                 @if (Auth::guard('organizer')->check())
                   <div class="dropdown menu-dropdown menu-dropdown--organizer">
                     <button type="button" class="menu-btn menu-btn--organizer dropdown-toggle mr-1" id="organizerUserDropdown"
-                      data-toggle="dropdown">{{ Auth::guard('organizer')->user()->username }}</button>
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="menu-btn__icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
+                      <span class="menu-btn__text">{{ Auth::guard('organizer')->user()->username }}</span>
+                    </button>
                     <div class="dropdown-menu" aria-labelledby="organizerUserDropdown">
-                      <a class="dropdown-item" href="{{ route('organizer.dashboard') }}">{{ __('Panel') }}</a>
-                      <a class="dropdown-item" href="{{ route('organizer.logout') }}">{{ __('Salir') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.dashboard') }}"><i class="fas fa-chart-line" aria-hidden="true"></i>{{ __('Panel') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.logout') }}"><i class="fas fa-sign-out-alt" aria-hidden="true"></i>{{ __('Salir') }}</a>
                     </div>
                   </div>
                 @elseif (!Auth::guard('customer')->check())
                   <div class="dropdown menu-dropdown menu-dropdown--organizer">
                     <button type="button" class="menu-btn menu-btn--organizer dropdown-toggle" id="organizerGuestDropdown"
-                      data-toggle="dropdown">{{ __('Organizador') }}</button>
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="menu-btn__icon" aria-hidden="true"><i class="fas fa-calendar-check"></i></span>
+                      <span class="menu-btn__text">{{ __('Organizador') }}</span>
+                    </button>
                     <div class="dropdown-menu" aria-labelledby="organizerGuestDropdown">
-                      <a class="dropdown-item" href="{{ route('organizer.login') }}">{{ __('Ingresar') }}</a>
-                      <a class="dropdown-item" href="{{ route('organizer.signup') }}">{{ __('Crear cuenta') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.login') }}"><i class="fas fa-sign-in-alt" aria-hidden="true"></i>{{ __('Ingresar') }}</a>
+                      <a class="dropdown-item" href="{{ route('organizer.signup') }}"><i class="fas fa-user-plus" aria-hidden="true"></i>{{ __('Crear cuenta') }}</a>
                     </div>
                   </div>
                 @endif

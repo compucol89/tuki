@@ -112,7 +112,7 @@
         ];
       });
     @endphp
-    <section class="events-marquee" aria-label="{{ __('Eventos destacados') }}">
+    <section class="events-marquee" aria-label="{{ __('Carrusel de eventos destacados') }}">
       <div class="container">
         <div class="hs-header mb-32">
           <div class="hs-header__left">

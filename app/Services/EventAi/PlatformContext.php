@@ -11,7 +11,6 @@ use App\Support\EventRefundPolicy;
 final class PlatformContext
 {
   public const BRAND = 'TukiPass';
-  public const OPERATOR = 'TAYRONA GROUP SAS';
   public const MARKET = 'Argentina';
   public const ROLE = 'ticketing_platform';
 
@@ -30,7 +29,7 @@ final class PlatformContext
   {
     return [
       'brand' => self::BRAND,
-      'operator' => self::OPERATOR,
+      'operator' => $this->operator(),
       'market' => self::MARKET,
       'role' => self::ROLE,
       'currency' => $this->currency(),
@@ -46,6 +45,11 @@ final class PlatformContext
     } catch (\Throwable $e) {
       return null;
     }
+  }
+
+  private function operator(): ?string
+  {
+    return config('tukipass.fiscal.issuer_name');
   }
 
   private function refundPolicy(): ?string

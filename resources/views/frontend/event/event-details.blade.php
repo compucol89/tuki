@@ -27,19 +27,12 @@
   $metaDescriptionSource = $cleanSeoText($content->meta_description ?? '');
   $descriptionSource = $cleanSeoText($content->description ?? '');
   $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
-  $freeLabel = 'FREE PASS';
-  $eventHeroPreloadUrl = null;
-
-  if (isset($images) && $images->count() > 0) {
-    $firstHeroImage = $images->first();
-    if ($firstHeroImage && !empty($firstHeroImage->image)) {
-      $eventHeroPreloadUrl = \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $firstHeroImage->image);
-    }
-  }
-
-  if (empty($eventHeroPreloadUrl) && !empty($content->thumbnail)) {
-    $eventHeroPreloadUrl = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail);
-  }
+  $freeLabel = 'Entrada sin cargo';
+  $eventVisualUrl = \App\Services\FileUploadService::eventVisualUrl($images ?? null, $content->thumbnail ?? null);
+  $hasEventVisual = !\Illuminate\Support\Str::endsWith($eventVisualUrl, '/assets/admin/img/noimage.jpg');
+  $eventHeroPreloadUrl = $hasEventVisual ? $eventVisualUrl : null;
+  $isDemoEvent = \App\Support\DemoEventMode::isDemo((int) ($content->id ?? 0), (string) ($content->eventSlug ?? $content->slug ?? ''));
+  $demoCheckoutMessage = __('Este evento es demo. Podés probar cantidades y ver el subtotal, pero no se generan reservas, entradas ni pagos reales.');
 
   $hasValidEventDescription = $descriptionSource !== '' && !\Illuminate\Support\Str::contains(\Illuminate\Support\Str::lower($descriptionSource), $placeholderPatterns);
 
@@ -76,6 +69,9 @@
 
   $seoDescription = \Illuminate\Support\Str::limit($cleanSeoText($seoDescription), 158, '');
 @endphp
+@if($isDemoEvent)
+  @section('meta-robots', 'noindex,follow,max-image-preview:large')
+@endif
 
 @section('hero-preload')
   @if (!empty($eventHeroPreloadUrl))
@@ -490,9 +486,10 @@
       .ed-mobile-bar__label {
         font-size: 11px;
         line-height: 1.2;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--tuki-muted);
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: 0;
+        color: #536174;
       }
 
       .ed-mobile-bar__value {
@@ -510,7 +507,7 @@
         flex: 1 1 auto;
         min-height: 48px;
         border-radius: var(--tuki-radius-full);
-        background: var(--success);
+        background: #047857;
         color: #ffffff !important;
         font-weight: 700;
         display: inline-flex;
@@ -521,7 +518,7 @@
       }
 
       .ed-mobile-bar__cta:hover {
-        background: var(--success);
+        background: #036b50;
         color: #ffffff !important;
         transform: translateY(-1px);
       }
@@ -836,6 +833,8 @@
   $fiscalIssuer = \App\Models\BillingSetting::current();
   $fiscalName = trim((string) ($fiscalIssuer?->issuer_name ?? '')) ?: config('tukipass.fiscal.issuer_name');
   $fiscalCuit = trim((string) ($fiscalIssuer?->issuer_cuit ?? '')) ?: config('tukipass.fiscal.issuer_cuit');
+  $fiscalDisplayName = \App\Support\EventRefundPolicy::formatIssuerName($fiscalName);
+  $fiscalDisplayCuit = \App\Support\EventRefundPolicy::formatCuit($fiscalCuit);
   $schemaStart = !empty($startDateTime)
     ? \Carbon\Carbon::parse($startDateTime, $websiteTimezone ?? $websiteInfo->timezone)
     : null;
@@ -897,6 +896,7 @@
     ],
   ];
   if (
+    !$isDemoEvent &&
     !$over &&
     (
       (is_numeric($ticketSummary['min_ticket_price'] ?? null) && (float) $ticketSummary['min_ticket_price'] >= 0)
@@ -924,7 +924,8 @@
   // (01-directrices-generales.md). Los eventos pasados siguen indexables sin schema de evento.
   $isPastEvent = !empty($schemaStart)
     && $schemaStart->lt(\Carbon\Carbon::now($websiteTimezone ?? $websiteInfo->timezone));
-  $shouldEmitEventJsonLd = !$isPastEvent
+  $shouldEmitEventJsonLd = !$isDemoEvent
+    && !$isPastEvent
     && $eventName !== ''
     && $schemaStartDate !== null
     && !empty($schemaLocation);
@@ -1210,7 +1211,13 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
       $publicOrganizerName = 'TukiPass';
     }
     $isOnlineEvent = $content->event_type == 'online';
-    if ($over ?? false) {
+    if ($isDemoEvent) {
+      $heroNudges = [
+        __('Evento demo para explorar la experiencia.'),
+        __('Podés simular entradas y subtotal.'),
+        __('No se generan reservas ni pagos reales.'),
+      ];
+    } elseif ($over ?? false) {
       $heroNudges = [
         __('Evento finalizado.'),
         __('Venta online finalizada.'),
@@ -1220,36 +1227,27 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
       $heroNudges = $isOnlineEvent
         ? [
             __('Confirmación al instante.'),
-            __('Reservá en minutos, sin vueltas.'),
-            __('Tu acceso llega por email.'),
-            __('Entrada 100% digital.'),
-            __('Desde el celular o la PC.'),
+            __('Acceso digital por email.'),
+            __('Entrada digital lista para usar.'),
+            __('Reservá desde cualquier dispositivo.'),
             __('Pago seguro. Precio claro.'),
-            __('Reservá hoy. El evento, en vivo.'),
           ]
         : [
-            __('Reservá online. Tu lugar, listo.'),
-            __('Entrada en el celular.'),
+            __('Reservá online y llevá tu entrada en el celular.'),
             __('Confirmación al instante.'),
-            __('Llegás y mostrás el QR.'),
-            __('Sin filas en taquilla.'),
-            __('Reservá en minutos.'),
-            __('Instrucciones en tu mail.'),
+            __('QR listo para ingresar.'),
+            __('Datos del evento en tu email.'),
+            __('Pago seguro. Precio claro.'),
           ];
     }
     $interestCountLabel = number_format((int) ($edInterestIndicator ?? 0));
-    $showTicketSignal = !($over ?? false) && (int) ($edInterestIndicator ?? 0) >= 20;
+    $showTicketSignal = false;
     $ticketSignalMessages = [
-      ['lead' => $interestCountLabel, 'copy' => __('interacciones reales en las últimas 24 h')],
-      ['lead' => __('Reservá online'), 'copy' => __('y recibí la confirmación al instante')],
-      ['lead' => __('Entrada digital'), 'copy' => __('la mostrás desde el celular, sin imprimir nada')],
-      ['lead' => __('Tu lugar'), 'copy' => __('queda reservado en pocos minutos')],
-      ['lead' => __('Mejor con tiempo'), 'copy' => __('dejá la entrada resuelta antes de salir')],
-      ['lead' => __('Sin vueltas'), 'copy' => __('elegís cantidad, confirmás y listo')],
-      ['lead' => __('Plan armado'), 'copy' => __('entrada en el mail y datos del evento a mano')],
-      ['lead' => __('Para ir tranquilo'), 'copy' => __('precio y condiciones claras antes de pagar')],
-      ['lead' => __('Un paso más'), 'copy' => __('y tu reserva queda encaminada')],
-      ['lead' => __('Desde el celular'), 'copy' => __('tu QR queda listo para el día del evento')],
+      ['lead' => $interestCountLabel, 'copy' => __('interacciones en las últimas 24 h')],
+      ['lead' => __('Reserva online'), 'copy' => __('confirmación al completar')],
+      ['lead' => __('Entrada digital'), 'copy' => __('lista para mostrar desde el celular')],
+      ['lead' => __('Precio claro'), 'copy' => __('subtotal visible antes de confirmar')],
+      ['lead' => __('Soporte local'), 'copy' => __('consultas por canales de TukiPass')],
     ];
     $eventTimezone = $websiteTimezone ?? $websiteInfo->timezone;
     $eventStartAt = !empty($startDateTime) ? \Carbon\Carbon::parse($startDateTime, $eventTimezone) : null;
@@ -1268,7 +1266,11 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
     $availabilityLabel = __('Consultar');
     $availabilityMeta = __('Disponibilidad no especificada');
     $availabilityModifier = '';
-    if ($over ?? false) {
+    if ($isDemoEvent) {
+      $availabilityLabel = __('Evento demo');
+      $availabilityMeta = __('Simulación sin compra real');
+      $availabilityModifier = 'demo';
+    } elseif ($over ?? false) {
       $availabilityLabel = __('Evento finalizado');
       $availabilityMeta = __('Venta finalizada');
       $availabilityModifier = 'closed';
@@ -1287,7 +1289,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
     $ticketDisplayTitle = function ($title) {
       $rawTitle = trim((string) $title);
       $cleanTitle = trim(preg_replace('/\s*(?:[-—–:|])?\s*agotad[ao]s?\s*$/iu', '', $rawTitle));
-      return $cleanTitle !== '' ? $cleanTitle : $rawTitle;
+      return $cleanTitle !== '' ? $cleanTitle : __('Entrada general');
     };
     $ticketSoldOut = function ($stock) {
       return is_numeric($stock) && (int) $stock <= 0;
@@ -1305,7 +1307,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
     } else {
       $heroPriceLabel = symbolPrice($ticketSummary['min_ticket_price']);
     }
-    $mobileBarLabel = ($over ?? false) ? __('Estado del evento') : __('Entradas desde');
+    $mobileBarLabel = $isDemoEvent ? __('Simulación') : (($over ?? false) ? __('Estado del evento') : __('Entradas desde'));
     $heroPriceLabel = ($over ?? false) ? __('Venta finalizada') : $heroPriceLabel;
     $mobileBarValue = $heroPriceLabel;
   @endphp
@@ -1315,15 +1317,17 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
     $heroSlides = [];
     if ($images->count() > 0) {
       foreach ($images as $img) {
-        $heroSlides[] = \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $img->image);
+        if (\App\Services\FileUploadService::imageExists('assets/admin/img/event-gallery/', $img->image ?? '')) {
+          $heroSlides[] = \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $img->image);
+        }
       }
     }
-    if (empty($heroSlides)) {
+    if (empty($heroSlides) && \App\Services\FileUploadService::imageExists('assets/admin/img/event/thumbnail/', $content->thumbnail ?? '')) {
       $heroSlides[] = \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail);
     }
   @endphp
 
-  <section class="hero-section hero-collage-section hero-collage-section--premium ed-hero-event" id="heroSection" aria-labelledby="heroHeadingEvent">
+  <section class="hero-section hero-collage-section hero-collage-section--premium ed-hero-event {{ empty($heroSlides) ? 'ed-hero-event--plain' : 'ed-hero-event--visual' }}" id="heroSection" aria-labelledby="heroHeadingEvent">
 
     <div class="hero-slideshow" id="heroCollageBg">
       @foreach($heroSlides as $slideUrl)
@@ -1345,7 +1349,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
         <div class="ed-hero-grid__main hero-content hero-content--premium">
 
         {{-- Kicker: categoría + estado --}}
-        <div class="ed-ev-kicker" aria-label="{{ __('Información rápida del evento') }}">
+        <div class="ed-ev-kicker" aria-label="{{ __('Categoría y estado del evento') }}">
           @if (!empty($content->name))
             <a href="{{ route('events', ['category' => $content->slug]) }}"
                class="ed-ev-kicker__chip ed-ev-kicker__chip--category"
@@ -1527,15 +1531,15 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
         <aside class="ed-hero-grid__aside" aria-label="{{ ($over ?? false) ? __('Entradas del evento finalizado') : __('Reservar entradas') }}">
             {{-- CARD 1: Ticket form (única instancia #event-booking-card) --}}
-            <div class="ed-ticket-card {{ ($over ?? false) ? 'ed-ticket-card--closed' : '' }}" id="event-booking-card">
+            <div class="ed-ticket-card {{ ($over ?? false) ? 'ed-ticket-card--closed' : '' }} {{ $isDemoEvent ? 'ed-ticket-card--demo' : '' }}" id="event-booking-card">
               @if ($showTicketSignal)
-                <div class="ed-ticket-card__head ed-ticket-card__head--interest ed-ticket-card__head--signal" aria-label="{{ __('Actividad reciente del evento') }}" data-ticket-signal-rotator>
+                <div class="ed-ticket-card__head ed-ticket-card__head--interest ed-ticket-card__head--signal" aria-label="{{ __('Movimiento reciente de reservas') }}" data-ticket-signal-rotator>
                   <span id="ed-ticket-signal-live" class="sr-only" aria-live="polite" aria-atomic="true">
                     {{ $ticketSignalMessages[0]['lead'] }} {{ $ticketSignalMessages[0]['copy'] }}
                   </span>
                   <span class="ed-ticket-signal__eyebrow">
                     <span class="ed-ticket-signal__dot" aria-hidden="true"></span>
-                    {{ __('Actividad reciente') }}
+                    {{ __('Movimiento reciente') }}
                   </span>
                   <span class="ed-ticket-signal__rail" aria-hidden="true">
                     @foreach ($ticketSignalMessages as $messageIndex => $signalMessage)
@@ -1549,7 +1553,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                 </div>
               @endif
               <div class="ed-ticket-card__body ed-ticket-card__body--premium">
-                <form action="{{ route('check-out2', [], false) }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}">
+                <form action="{{ route('check-out2', [], false) }}" method="post" data-event-addons-enabled="{{ !isset($content->event_addons_enabled) || $content->event_addons_enabled ? '1' : '0' }}" data-event-demo="{{ $isDemoEvent ? '1' : '0' }}" data-demo-message="{{ $demoCheckoutMessage }}">
                   @csrf
                   <input type="hidden" name="event_id" value="{{ $content->id }}">
                   <input type="hidden" name="pricing_type" value="{{ $content->pricing_type }}">
@@ -1591,10 +1595,9 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                     <div class="ed-ticket-picker__intro">
                       <p class="ed-ticket-picker__title" id="ed-ticket-picker-label">
-                        {{ ($over ?? false) ? __('Entradas publicadas') : __('Elegí tu acceso') }}
-                        <svg class="ed-ticket-picker__title-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2M13 17v2M13 11v2"/></svg>
+                        {{ ($over ?? false) ? __('Entradas publicadas') : ($isDemoEvent ? __('Probá los accesos') : __('Elegí tu acceso')) }}
                       </p>
-                      <p class="ed-ticket-picker__sub">{{ ($over ?? false) ? __('La venta online para este evento ya finalizó. Podés consultar los accesos que estuvieron publicados.') : __('Seleccioná cantidad. Reservás online. Recibís tu entrada digital al instante.') }}</p>
+                      <p class="ed-ticket-picker__sub">{{ ($over ?? false) ? __('La venta online para este evento ya finalizó. Podés consultar los accesos que estuvieron publicados.') : ($isDemoEvent ? __('Simulá cantidades y subtotal. Este evento demo no habilita reservas reales.') : __('Seleccioná cantidad y revisá el subtotal antes de confirmar.')) }}</p>
                     </div>
                     <div class="ed-ticket-picker__list" role="group" aria-labelledby="ed-ticket-picker-label">
 
@@ -1621,7 +1624,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                         <div class="ed-ticket-option ed-ticket-option--solo">
                         <div class="price-count ed-ticket-option__buy-row">
-                          <h6 dir="ltr" class="ed-ticket-option__price">
+                          <span dir="ltr" class="ed-ticket-option__price">
 
                             @if ($ticket->early_bird_discount == 'enable')
                               @php
@@ -1659,7 +1662,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                             @endif
 
 
-                          </h6>
+                          </span>
                           <div class="quantity-input">
                             <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
                               -
@@ -1692,9 +1695,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                         </div>
                         </div>
-                        <p
-                          class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
-                        </p>
+                        <p class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} "></p>
 
                       @endif
                     @elseif($content->event_type == 'online' && $content->pricing_type == 'free')
@@ -1721,9 +1722,9 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                       @endphp
                       <div class="ed-ticket-option ed-ticket-option--solo ed-ticket-option--free">
                       <div class="price-count ed-ticket-option__buy-row">
-                        <h6 class="ed-ticket-option__price ed-ticket-option__price--free">
+                        <span class="ed-ticket-option__price ed-ticket-option__price--free">
                           {{ $freeLabel }}
-                        </h6>
+                        </span>
                         <div class="quantity-input">
                           <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
                             -
@@ -1740,9 +1741,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                       </div>
                       </div>
-                      <p
-                        class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
-                      </p>
+                      <p class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} "></p>
                     @elseif($content->event_type == 'venue')
                       @php
                         $tickets = DB::table('tickets')
@@ -1768,11 +1767,14 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                   $purchase = ['status' => 'false', 'p_qty' => 0];
                               }
 
-                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
-                              $isTicketSoldOut = $ticketSoldOut($stock);
+	                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
+	                              $isTicketSoldOut = $ticketSoldOut($stock);
+	                              $ticketHasDescription = trim(strip_tags((string) (@$ticket_content->description ?? ''))) !== '';
+	                              $ticketCompactClass = $ticketTitle === '' && !$ticketHasDescription && !$isTicketSoldOut ? ' ed-ticket-option--compact' : '';
+	                              $ticketNoDescClass = !$ticketHasDescription ? ' ed-ticket-option--no-desc' : '';
 
-                            @endphp
-                            <div class="ed-ticket-option">
+	                            @endphp
+	                            <div class="ed-ticket-option{{ $ticketCompactClass }}{{ $ticketNoDescClass }}">
                             <div class="ed-ticket-option__head">
                               <p class="ed-ticket-option__title mb-0">
                                 <strong>{{ __($ticketTitle) }}</strong>
@@ -1785,7 +1787,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               <div class="show-content">
                                 {!! clean(@$ticket_content->description ?? '') !!}
                               </div>
-                              @if (strlen(@$ticket_content->description) > 50)
+                              @if (strlen((string) (@$ticket_content->description ?? '')) > 50)
                                 <div class="read-more-btn">
                                   <span>{{ __('Ver más') }}</span>
                                   <span>{{ __('Ver menos') }}</span>
@@ -1793,7 +1795,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               @endif
                             </div>
                             <div class="price-count ed-ticket-option__buy-row">
-                              <h6 dir="ltr" class="ed-ticket-option__price">
+                              <span dir="ltr" class="ed-ticket-option__price">
                                 @if ($ticket->early_bird_discount == 'enable')
                                   @php
                                     $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
@@ -1820,7 +1822,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 @endif
 
 
-                              </h6>
+                              </span>
                               <div class="quantity-input">
                                 <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
                                   -
@@ -1852,9 +1854,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                             </div>
                             </div>
-                            <p
-                              class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
-                            </p>
+                            <p class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} "></p>
                           @elseif($ticket->pricing_type == 'variation')
                             @php
                               $variations = json_decode($ticket->variations);
@@ -1884,11 +1884,13 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 if (empty($ticket_content)) {
                                     $ticket_content = App\Models\Event\TicketContent::where([['ticket_id', $ticket->id]])->first();
                                 }
-                                $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
-                                $variationStock = $item->ticket_available_type == 'limited' ? $item->ticket_available : 'unlimited';
-                                $isTicketSoldOut = $ticketSoldOut($variationStock);
-                              @endphp
-                              <div class="ed-ticket-option">
+	                                $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
+	                                $variationStock = $item->ticket_available_type == 'limited' ? $item->ticket_available : 'unlimited';
+	                                $isTicketSoldOut = $ticketSoldOut($variationStock);
+	                                $ticketHasDescription = trim(strip_tags((string) (@$ticket_content->description ?? ''))) !== '';
+	                                $ticketNoDescClass = !$ticketHasDescription ? ' ed-ticket-option--no-desc' : '';
+	                              @endphp
+	                              <div class="ed-ticket-option{{ $ticketNoDescClass }}">
                               <div class="ed-ticket-option__head">
                                 <p class="ed-ticket-option__title mb-0">
                                   <strong>{{ __($ticketTitle) }} — {{ __(@$varition_names[$key]['name'] ?: '') }}</strong>
@@ -1901,7 +1903,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 <div class="show-content">
                                   {!! clean(@$ticket_content->description ?? '') !!}
                                 </div>
-                                @if (strlen(@$ticket_content->description) > 50)
+                                @if (strlen((string) (@$ticket_content->description ?? '')) > 50)
                                   <div class="read-more-btn">
                                     <span>{{ __('Ver más') }}</span>
                                     <span>{{ __('Ver menos') }}</span>
@@ -1909,7 +1911,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 @endif
                               </div>
                               <div class="price-count ed-ticket-option__buy-row">
-                                <h6 dir="ltr" class="ed-ticket-option__price">
+                                <span dir="ltr" class="ed-ticket-option__price">
                                   @if ($ticket->early_bird_discount == 'enable')
                                     @php
                                       $discount_date = Carbon\Carbon::parse($ticket->early_bird_discount_date . $ticket->early_bird_discount_time);
@@ -1946,7 +1948,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                     {{ symbolPrice($calculate_price) }}
                                   @endif
 
-                                </h6>
+                                </span>
 
                                 <div class="quantity-input">
                                   <button class="quantity-down_variation" type="button" aria-label="{{ __('Disminuir cantidad') }}">
@@ -1989,8 +1991,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 @endif
                               </div>
                               </div>
-                              <p class="text-warning max_error_{{ $ticket->id }}{{ $item->v_max_ticket_buy }} ">
-                              </p>
+                              <p class="text-warning max_error_{{ $ticket->id }}{{ $item->v_max_ticket_buy }} "></p>
                             @endforeach
                           @elseif($ticket->pricing_type == 'free')
                             @php
@@ -2009,10 +2010,13 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                   $purchase = ['status' => 'false', 'p_qty' => 0];
                               }
                               $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
-                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
-                              $isTicketSoldOut = $ticketSoldOut($stock);
-                            @endphp
-                            <div class="ed-ticket-option ed-ticket-option--free">
+	                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
+	                              $isTicketSoldOut = $ticketSoldOut($stock);
+	                              $ticketHasDescription = trim(strip_tags((string) (@$ticket_content->description ?? ''))) !== '';
+	                              $ticketCompactClass = $ticketTitle === '' && !$ticketHasDescription && !$isTicketSoldOut ? ' ed-ticket-option--compact' : '';
+	                              $ticketNoDescClass = !$ticketHasDescription ? ' ed-ticket-option--no-desc' : '';
+	                            @endphp
+	                            <div class="ed-ticket-option ed-ticket-option--free{{ $ticketCompactClass }}{{ $ticketNoDescClass }}">
                             <div class="ed-ticket-option__head">
                               <p class="ed-ticket-option__title mb-0">
                                 <strong>{{ __($ticketTitle) }}</strong>
@@ -2025,7 +2029,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               <div class="show-content">
                                 {!! clean(@$ticket_content->description ?? '') !!}
                               </div>
-                              @if (strlen(@$ticket_content->description) > 50)
+                              @if (strlen((string) (@$ticket_content->description ?? '')) > 50)
                                 <div class="read-more-btn">
                                   <span>{{ __('Ver más') }}</span>
                                   <span>{{ __('Ver menos') }}</span>
@@ -2033,9 +2037,9 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               @endif
                             </div>
                             <div class="price-count ed-ticket-option__buy-row">
-                              <h6 class="ed-ticket-option__price ed-ticket-option__price--free">
+                              <span class="ed-ticket-option__price ed-ticket-option__price--free">
                                 <span class="">{{ $freeLabel }}</span>
-                              </h6>
+                              </span>
                               <div class="quantity-input">
                                 <button class="quantity-down" type="button" aria-label="{{ __('Disminuir cantidad') }}">
                                   -
@@ -2051,9 +2055,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               </div>
                             </div>
                             </div>
-                            <p
-                              class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} ">
-                            </p>
+                            <p class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} "></p>
                           @endif
                         @endforeach
                       @endif
@@ -2062,10 +2064,10 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
                     @if ($tickets_count > 0)
                       <div class="ed-total-row ed-total-row--premium {{ ($over ?? false) ? 'ed-total-row--closed' : '' }}" role="group" aria-labelledby="ed-booking-total-label" aria-describedby="ed-booking-total-note">
-                        <span class="ed-total-label" id="ed-booking-total-label">{{ ($over ?? false) ? __('Estado de venta') : __('Subtotal entradas') }}</span>
+                        <span class="ed-total-label" id="ed-booking-total-label">{{ ($over ?? false) ? __('Estado de venta') : ($isDemoEvent ? __('Subtotal simulado') : __('Subtotal entradas')) }}</span>
                         <span class="ed-total-protection">
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                          {{ ($over ?? false) ? __('Venta finalizada') : __('Reserva protegida') }}
+                          {{ ($over ?? false) ? __('Venta finalizada') : ($isDemoEvent ? __('Modo demo') : __('Reserva protegida')) }}
                         </span>
                         <span class="ed-total-value" dir="ltr" aria-live="polite" aria-atomic="true">
                           @if ($basicInfo->base_currency_symbol_position == 'left')
@@ -2077,36 +2079,41 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                         <p class="ed-total-row__note" id="ed-booking-total-note">
                           @if ($over ?? false)
                             {{ __('La venta online para este evento ya finalizó. No se pueden iniciar nuevas reservas desde esta ficha.') }}
+                          @elseif ($isDemoEvent)
+                            {{ __('Podés probar cantidades y ver el subtotal. No se emiten entradas ni se habilita ningún pago real.') }}
                           @elseif (($basicInfo->tax ?? 0) > 0)
-                            {{ __('Incluye el precio publicado de las entradas. Los impuestos (:pct%) y otros cargos del medio de pago, si correspondieran, se muestran desglosados antes de pagar.', ['pct' => number_format((float) $basicInfo->tax, 2, ',', '.')]) }}
+                            {{ __('El subtotal incluye las entradas. Impuestos (:pct%) y cargos del medio de pago, si correspondieran, se muestran antes de pagar.', ['pct' => number_format((float) $basicInfo->tax, 2, ',', '.')]) }}
                           @else
-                            {{ __('Incluye el precio publicado de las entradas. Cargos del medio de pago u otros conceptos, si correspondieran, se muestran antes de pagar.') }}
+                            {{ __('El subtotal incluye las entradas. Si hubiera cargos del medio de pago, se muestran antes de pagar.') }}
                           @endif
                         </p>
                         <input type="hidden" name="total" id="total">
-                        <button class="ed-buy-btn ed-buy-btn--premium ed-total-row__action" type="submit" {{ $over ? 'disabled' : '' }}>
-                          {{ $over ? __('Evento finalizado') : __('Reservar mi lugar') }}
+                        <button class="ed-buy-btn ed-buy-btn--premium ed-total-row__action {{ $isDemoEvent ? 'ed-buy-btn--demo' : '' }}" type="submit" {{ $over ? 'disabled' : '' }} @if($isDemoEvent) aria-describedby="ed-demo-booking-note" @endif>
+                          {{ $over ? __('Evento finalizado') : ($isDemoEvent ? __('Simular selección') : __('Reservar mi lugar')) }}
                           @if (!$over)
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                           @endif
                         </button>
+                        @if ($isDemoEvent)
+                          <p class="ed-demo-booking-note" id="ed-demo-booking-note" role="status" aria-live="polite" hidden>{{ $demoCheckoutMessage }}</p>
+                        @endif
                         @if (!$over)
                           <ul class="ed-trust-row ed-total-row__trust" role="list" aria-label="{{ __('Por qué reservar con confianza') }}">
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                              {{ __('Pago seguro') }}
+                              {{ $isDemoEvent ? __('Simulación disponible') : __('Pago seguro') }}
                             </li>
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-                              {{ __('Acceso inmediato') }}
+                              {{ $isDemoEvent ? __('Sin pago real') : __('Acceso inmediato') }}
                             </li>
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                              {{ __('Soporte local') }}
+                              {{ $isDemoEvent ? __('Datos de muestra') : __('Soporte local') }}
                             </li>
                             <li class="ed-trust-item">
                               <svg class="ed-trust-item__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                              {{ __('Reembolsos') }}
+                              {{ $isDemoEvent ? __('No emite entradas') : __('Reembolsos') }}
                             </li>
                           </ul>
                         @endif
@@ -2116,26 +2123,45 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                   </div>
 
                 </form>
-                @if($images->count() > 0)
+                @if($hasEventVisual)
                   <div class="ed-ticket-gallery d-lg-none" aria-label="{{ __('Imagen principal del evento') }}">
                     <img
-                      src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image) }}"
+                      src="{{ $eventVisualUrl }}"
                       alt="{{ $content->title }}"
                       class="ed-ticket-gallery__img"
                       loading="lazy">
-                    <nav class="ed-body-breadcrumbs ed-body-breadcrumbs--under-image" aria-label="{{ __('Ruta de navegación') }}">
-                      <ol class="ed-breadcrumbs__list">
-                        <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
+                  </div>
+                  <nav class="ed-body-breadcrumbs ed-body-breadcrumbs--under-image d-lg-none" aria-label="{{ __('Ruta de navegación') }}">
+                    <ol class="ed-breadcrumbs__list">
+                      <li><a href="{{ url('/') }}">{{ __('Inicio') }}</a></li>
+                      <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+                      <li><a href="{{ route('events') }}">{{ __('Eventos') }}</a></li>
+                      @if (!empty($content->name))
                         <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-                        <li><a href="{{ route('events') }}">{{ __('Eventos') }}</a></li>
-                        @if (!empty($content->name))
-                          <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-                          <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
-                        @endif
-                        <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
-                        <li class="ed-breadcrumbs__current" aria-current="page" title="{{ $content->title }}">{{ $content->title }}</li>
-                      </ol>
-                    </nav>
+                        <li><a href="{{ route('events', ['category' => $content->slug]) }}">{{ $content->name }}</a></li>
+                      @endif
+                      <li class="ed-breadcrumbs__sep" aria-hidden="true">/</li>
+                      <li class="ed-breadcrumbs__current" aria-current="page" title="{{ $content->title }}">{{ $content->title }}</li>
+                    </ol>
+                  </nav>
+                @endif
+                @if (!$over && ($content->countdown_status ?? 0) == 1)
+                  @php $heroDate = $eventStartAt ?: $countdownNow; @endphp
+                  <div class="ed-countdown-wrap ed-countdown-wrap--mobile d-lg-none">
+                    <div class="ed-countdown-label">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <span>{{ __('Comienza en') }}:</span>
+                    </div>
+                    <div class="event-countdown"
+                         data-now="{{ $countdownNow->format('Y-m-d H:i:s') }}"
+                         data-year="{{ $heroDate->year }}"
+                         data-month="{{ $heroDate->month }}"
+                         data-day="{{ $heroDate->day }}"
+                         data-hour="{{ $heroDate->hour }}"
+                         data-minute="{{ $heroDate->minute }}"
+                         data-end_date="{{ $heroDate->format('Y-m-d') }}"
+                         data-end_time="{{ $heroDate->format('H:i') }}">
+                    </div>
                   </div>
                 @endif
                 @if ($tickets_count > 0 && (!isset($content->event_addons_enabled) || $content->event_addons_enabled))
@@ -2160,15 +2186,10 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
         {{-- Left column --}}
         <div class="col-lg-8">
 
-          @if($images->count() > 0 || !empty($content->thumbnail))
-          @php
-            $eventDetailCoverUrl = $images->count() > 0
-              ? \App\Services\FileUploadService::imageUrl('assets/admin/img/event-gallery/', $images->first()->image)
-              : \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $content->thumbnail);
-          @endphp
+          @if($hasEventVisual)
           <figure class="ed-event-cover" aria-label="{{ __('Imagen de portada del evento') }}">
             <img id="edMainImg"
-                 src="{{ $eventDetailCoverUrl }}"
+                 src="{{ $eventVisualUrl }}"
                  alt="{{ $content->title }}"
                  class="ed-event-cover__img"
                  fetchpriority="high">
@@ -2304,7 +2325,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
               <p class="ed-info-assurance">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                {{ __('Venta operada por') }} {{ config('app.name') }} · {{ $fiscalName }} · CUIT {{ $fiscalCuit }}
+                {{ __('Venta operada por') }} {{ config('app.name') }} · {{ $fiscalDisplayName }} · cuit {{ $fiscalDisplayCuit }}
               </p>
             </div>
           </section>
@@ -2318,6 +2339,9 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
           {{-- Description card --}}
 	          <section class="ed-info-card ed-info-card--description" aria-label="{{ $hasValidEventDescription ? __('Descripción') : __('Sobre esta experiencia') }}">
 	              <div class="ed-info-card__body ed-info-card__body--description">
+                  <header class="ed-description-heading">
+                    <h2 class="ed-description-heading__title">{{ $hasValidEventDescription ? __('Sobre el evento') : __('Antes de reservar') }}</h2>
+                  </header>
                   @if ($hasValidEventDescription)
                     <div class="summernote-content">
                       {!! $eventDescriptionHtml !!}
@@ -2417,7 +2441,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                 </span>
                 <span class="ed-refund-band__point-copy">
                   <strong>{{ __('Venta online') }}</strong>
-                  <span>{{ __('TukiPass presta el servicio tecnológico de reserva y venta de entradas.') }} {{ $fiscalName }} — CUIT {{ $fiscalCuit }}.</span>
+                  <span>{{ __('TukiPass presta el servicio tecnológico de reserva y venta de entradas. Operado comercialmente por :issuer, cuit :cuit.', ['issuer' => $fiscalDisplayName, 'cuit' => $fiscalDisplayCuit]) }}</span>
                 </span>
               </li>
               <li class="ed-refund-band__point" role="listitem">
@@ -2461,7 +2485,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
             {{-- Countdown --}}
             @if (!$over && ($content->countdown_status ?? 0) == 1)
               @php $heroDate = $eventStartAt ?: $countdownNow; @endphp
-              <div class="ed-countdown-wrap">
+              <div class="ed-countdown-wrap ed-countdown-wrap--desktop">
                 <div class="ed-countdown-label">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   <span>{{ __('Comienza en') }}:</span>
@@ -2561,7 +2585,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
   </section>
   <!-- Event Details V2 End -->
 
-  <div class="ed-mobile-bar d-lg-none {{ ($over ?? false) ? 'ed-mobile-bar--closed' : '' }}" aria-label="{{ ($over ?? false) ? __('Estado del evento') : __('Acceso rápido a la reserva') }}">
+  <div class="ed-mobile-bar d-lg-none {{ ($over ?? false) ? 'ed-mobile-bar--closed' : '' }} {{ $isDemoEvent ? 'ed-mobile-bar--demo' : '' }}" aria-label="{{ $isDemoEvent ? __('Simulación de entradas') : (($over ?? false) ? __('Estado del evento') : __('Acceso rápido a la reserva')) }}">
     <div class="container">
       <div class="ed-mobile-bar__inner">
         <div class="ed-mobile-bar__price">
@@ -2569,10 +2593,10 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
           <strong class="ed-mobile-bar__value" id="mobileStickyPrice">{{ $mobileBarValue }}</strong>
         </div>
         <a href="#event-booking-card"
-          class="ed-mobile-bar__cta {{ $over ? 'ed-mobile-bar__cta--disabled' : '' }}"
+          class="ed-mobile-bar__cta {{ $over ? 'ed-mobile-bar__cta--disabled' : '' }} {{ $isDemoEvent ? 'ed-mobile-bar__cta--demo' : '' }}"
           data-scroll-target="#event-booking-card"
           @if ($over) aria-disabled="true" tabindex="-1" @endif>
-          {{ $over ? __('Evento finalizado') : __('Reservar mi lugar') }}
+          {{ $over ? __('Evento finalizado') : ($isDemoEvent ? __('Ver simulación') : __('Reservar mi lugar')) }}
         </a>
       </div>
     </div>
@@ -2618,10 +2642,35 @@ document.addEventListener('DOMContentLoaded', function() {
     return selected;
   }
 
+  var isDemoBooking = bookingForm && bookingForm.dataset.eventDemo === '1';
+
+  function revealDemoBookingNotice() {
+    if (!isDemoBooking) { return; }
+    var notice = document.getElementById('ed-demo-booking-note');
+    if (notice) {
+      notice.hidden = false;
+      notice.classList.add('is-visible');
+      notice.textContent = bookingForm.dataset.demoMessage || notice.textContent;
+    }
+  }
+
+  if (bookingForm && isDemoBooking) {
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      revealDemoBookingNotice();
+      return false;
+    });
+  }
+
   function submitBookingForm() {
     var bookingCard = document.getElementById('event-booking-card');
     var form = bookingCard ? bookingCard.querySelector('form[action*="check-out2"]') : document.querySelector('form[action*="check-out2"]');
     if (!form) { return false; }
+    if (form.dataset.eventDemo === '1') {
+      revealDemoBookingNotice();
+      return false;
+    }
     if (typeof form.requestSubmit === 'function') {
       form.requestSubmit();
     } else {
@@ -2637,12 +2686,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.querySelectorAll('[data-scroll-target]').forEach(function(link) {
     link.addEventListener('click', function(e) {
-      if (link.classList.contains('ed-mobile-bar__cta') && !link.classList.contains('ed-mobile-bar__cta--disabled') && getSelectedTicketQty() > 0) {
+      var target = document.querySelector(link.getAttribute('data-scroll-target'));
+      if (link.classList.contains('ed-mobile-bar__cta--demo')) {
+        e.preventDefault();
+        if (target) {
+          target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+        revealDemoBookingNotice();
+        return;
+      }
+      if (!isDemoBooking && link.classList.contains('ed-mobile-bar__cta') && !link.classList.contains('ed-mobile-bar__cta--disabled') && getSelectedTicketQty() > 0) {
         e.preventDefault();
         submitBookingForm();
         return;
       }
-      var target = document.querySelector(link.getAttribute('data-scroll-target'));
       if (!target) return;
       e.preventDefault();
       target.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
@@ -2679,6 +2736,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   @if($eventMetaPixelId !== '')
   function trackMetaInitiateCheckout() {
+    if (isDemoBooking) return;
     var qty = getSelectedTicketQty();
     if (metaPixelInitiateTracked || qty <= 0) return;
     metaPixelInitiateTracked = true;

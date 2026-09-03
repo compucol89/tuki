@@ -54,20 +54,28 @@
               return strtolower(trim((string) ($item['url'] ?? '')));
           })
           ->values();
+
+      $validSocialMediaInfos = collect($socialMediaInfos ?? [])
+          ->filter(function ($socialMediaInfo) {
+              $url = trim((string) ($socialMediaInfo->url ?? ''));
+
+              return $url !== '' && $url !== '#';
+          })
+          ->values();
     @endphp
 
     <div class="footer-layout">
       <section class="footer-layout__brand" aria-label="{{ config('app.name', 'TukiPass') }}">
         <div class="footer-logo">
-          <a href="{{ route('index') }}">
+          <a href="{{ route('index') }}" aria-label="{{ __('Ir al inicio de Tukipass') }}">
             <img src="{{ asset('assets/admin/img/' . $websiteInfo->logo) }}" alt="{{ config('app.name', 'TukiPass') }}">
           </a>
         </div>
         <div class="footer-copy summernote-content">{!! $footerInfo ? $footerInfo->about_company : '' !!}</div>
-        @if ($socialMediaInfos->isNotEmpty())
+        @if ($validSocialMediaInfos->isNotEmpty())
           <div class="footer-social">
             <ul class="footer-social__list">
-              @foreach ($socialMediaInfos as $socialMediaInfo)
+              @foreach ($validSocialMediaInfos as $socialMediaInfo)
                 @php
                   $socialUrl = trim((string) ($socialMediaInfo->url ?? ''));
                   $socialLabel = $socialMediaInfo->title ?? match (true) {
@@ -78,13 +86,11 @@
                       default => 'Red social',
                   };
                 @endphp
-                @if ($socialUrl !== '')
-                  <li>
-                    <a href="{{ $socialUrl === '#' ? 'javascript:void(0)' : $socialUrl }}" target="_blank" rel="noopener noreferrer" aria-label="{{ $socialLabel }}">
-                      <i class="{{ $socialMediaInfo->icon }}" aria-hidden="true"></i>
-                    </a>
-                  </li>
-                @endif
+                <li>
+                  <a href="{{ $socialUrl }}" target="_blank" rel="noopener noreferrer" aria-label="{{ __('Abrir :name en una pestaña nueva', ['name' => $socialLabel]) }}">
+                    <i class="{{ $socialMediaInfo->icon }}" aria-hidden="true"></i>
+                  </a>
+                </li>
               @endforeach
             </ul>
           </div>
@@ -130,12 +136,8 @@
           <span class="fa fa-angle-up" aria-hidden="true"></span>
         </button>
       </div>
-      <div class="footer-bar__payments" aria-label="{{ __('Métodos de pago aceptados') }}">
-        <p class="footer-bar__payments-label">
-          <i class="fas fa-lock" aria-hidden="true"></i>
-          <span>{{ __('Pagos seguros') }}</span>
-        </p>
-        <ul class="footer-payments">
+      <section class="footer-bar__payments" aria-label="{{ __('Métodos de pago seguros') }}">
+        <ul class="footer-payments" aria-label="{{ __('Métodos de pago: Visa, Mastercard, American Express, Mercado Pago, Cabal y Naranja') }}">
           <li><span class="footer-pay footer-pay--visa">VISA</span></li>
           <li>
             <span class="footer-pay footer-pay--mc" role="img" aria-label="Mastercard">
@@ -152,7 +154,7 @@
           <li><span class="footer-pay footer-pay--cabal">Cabal</span></li>
           <li><span class="footer-pay footer-pay--naranja">Naranja</span></li>
         </ul>
-      </div>
+      </section>
     </div>
   </div>
 </footer>

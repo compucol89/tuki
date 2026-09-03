@@ -17,33 +17,39 @@ return [
         ],
 
         /* Hero: problema → resultado (valor para quien produce eventos) */
-        'visual_title_line1' => 'Vendé más entradas',
-        'visual_title_line2' => 'con menos vueltas.',
-        'visual_subtitle' => 'Publicá tu evento, cobrá online y llevá ventas y asistentes en un solo panel. Pensado para productores, espacios y agencias en Argentina.',
+        'visual_title_line1' => 'Vendé entradas',
+        'visual_title_line2' => 'sin perder el control.',
+        'visual_subtitle' => 'Publicá eventos, cobrá online y seguí cada reserva desde un solo panel. Para productores, espacios y agencias en Argentina.',
 
         'stats' => [
-            ['num' => 'Ventas online', 'label' => 'Entradas y reservas'],
-            ['num' => 'Cobrá en pesos', 'label' => 'Pagos integrados'],
-            ['num' => 'Tu operación', 'label' => 'Reportes y control'],
+            ['icon' => 'fas fa-ticket-alt', 'num' => 'Publicá el evento', 'label' => 'Configurá entradas y reservas online'],
+            ['icon' => 'fas fa-credit-card', 'num' => 'Cobrá en pesos', 'label' => 'Pagos integrados al flujo de reserva'],
+            ['icon' => 'fas fa-chart-line', 'num' => 'Controlá ventas', 'label' => 'Asistentes y reportes en un solo panel'],
         ],
+
+        'stats_aria_label' => 'Qué podés gestionar desde el panel de organizadores',
 
         'logo_alt' => 'Logo de :site',
 
         'form_eyebrow' => 'Panel de organizador',
         'form_title' => 'Bienvenido de vuelta',
-        'form_subtitle' => 'Ingresá para gestionar eventos, ventas y asistentes. ¿Primera vez? Podés crear tu cuenta gratis y empezar cuando quieras.',
+        'form_subtitle' => 'Entrá a tu panel para revisar reservas, ventas y asistentes. Si todavía no tenés cuenta, podés crearla gratis.',
 
         'username_label' => 'Usuario',
-        'username_placeholder' => 'Tu usuario de organizador',
+        'username_placeholder' => 'Nombre de usuario',
         'password_label' => 'Contraseña',
-        'password_placeholder' => 'Tu contraseña',
+        'password_placeholder' => 'Contraseña del panel',
         'forgot_password' => '¿Olvidaste tu contraseña?',
+        'validation' => [
+            'username_required' => 'Ingresá tu usuario para entrar al panel.',
+            'password_required' => 'Ingresá tu contraseña para continuar.',
+        ],
 
         'submit' => 'Ingresar al panel',
         'loading' => 'Por favor esperá…',
 
-        'footer_no_account' => '¿Todavía no tenés cuenta de organizador?',
-        'footer_signup' => 'Creala gratis y empezá a vender',
+        'footer_no_account' => '¿Primera vez como organizador?',
+        'footer_signup' => 'Crear cuenta gratis',
     ],
 
     /*
@@ -66,9 +72,9 @@ return [
         'visual_subtitle' => 'Publicá tu evento, cobrá en pesos y llevá ventas y asistentes en un solo lugar. Menos idas y vueltas, más tiempo para lo que importa: tu show.',
 
         'stats' => [
-            ['num' => 'Alta gratis', 'label' => 'Sin costo de registro'],
-            ['num' => 'Cobrá online', 'label' => 'Pagos integrados'],
-            ['num' => 'Un solo panel', 'label' => 'Ventas y reportes'],
+            ['icon' => 'fas fa-calendar-check', 'num' => 'Alta gratis', 'label' => 'Sin costo de registro'],
+            ['icon' => 'fas fa-credit-card', 'num' => 'Cobrá online', 'label' => 'Pagos integrados'],
+            ['icon' => 'fas fa-chart-line', 'num' => 'Un solo panel', 'label' => 'Ventas y reportes'],
         ],
 
         'stats_aria_label' => 'Por qué registrarte como organizador',
@@ -90,10 +96,10 @@ return [
         'field_email_placeholder' => 'El que usás para avisos y facturación',
 
         'field_password_label' => 'Contraseña',
-        'field_password_placeholder' => 'Al menos 6 caracteres',
+        'field_password_placeholder' => 'Mín. 6 caracteres',
 
         'field_password_confirm_label' => 'Repetir contraseña',
-        'field_password_confirm_placeholder' => 'Volvé a escribir la contraseña',
+        'field_password_confirm_placeholder' => 'Volvé a escribirla',
 
         'password_mismatch' => 'Las contraseñas no coinciden.',
 

@@ -15,6 +15,7 @@ use App\Models\Event;
 use App\Models\Event\TicketContent;
 use App\Models\Language;
 use App\Services\EventAddonCartService;
+use App\Support\DemoEventMode;
 use Carbon\Carbon;
 
 class CheckOutController extends Controller
@@ -36,6 +37,11 @@ class CheckOutController extends Controller
     $event_type = Event::where('id', $request->event_id)->select('event_type')->first();
     if (!$event_type) {
       return back()->with(['alert-type' => 'error', 'message' => 'El evento no existe o ya no está disponible.']);
+    }
+    $eventSlug = EventContent::where('event_id', $request->event_id)->value('slug');
+    if (DemoEventMode::isDemo((int) $request->event_id, (string) $eventSlug)) {
+      Session::forget(['selTickets', 'total', 'sub_total', 'quantity', 'total_early_bird_dicount', 'discount', 'event', 'event_date', 'online_gateways', 'offline_gateways', 'freeTicketSelection']);
+      return back()->with(['alert-type' => 'info', 'message' => 'Este evento es demo: podés probar la selección de entradas, pero no permite finalizar reservas ni pagos reales.']);
     }
     if ($event_type->event_type == 'venue') {
       foreach ($request->quantity as $qty) {
@@ -333,6 +339,10 @@ class CheckOutController extends Controller
 
     if (!$event) {
       return redirect()->route('index')->with('error', 'Tu sesión expiró. Por favor seleccioná los tickets nuevamente.');
+    }
+    if (DemoEventMode::isDemo((int) ($event->id ?? $event->event_id ?? 0), (string) ($event->slug ?? $event->eventSlug ?? ''))) {
+      Session::forget(['selTickets', 'total', 'sub_total', 'quantity', 'total_early_bird_dicount', 'discount', 'event', 'event_date', 'online_gateways', 'offline_gateways', 'freeTicketSelection']);
+      return redirect()->route('index')->with(['alert-type' => 'info', 'message' => 'Este evento es demo: podés verlo y simular entradas, pero no permite finalizar reservas ni pagos reales.']);
     }
 
     $information['selTickets'] = Session::get('selTickets');

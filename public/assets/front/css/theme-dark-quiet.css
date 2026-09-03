@@ -55,6 +55,45 @@ html[data-theme="dark"] .ev-card {
   --ev-ticket-edge: rgba(255, 255, 255, 0.1);
 }
 
+html[data-theme="dark"] body.home-page .events-section .ev-card,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] body.home-page .events-section .ev-card__title,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__title {
+  color: #f8fafc;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="dark"] body.home-page .events-section .ev-card__loc-row,
+html[data-theme="dark"] body.home-page .events-section .ev-card__loc-row span,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__loc-row,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__loc-row span {
+  color: #c9d4e5;
+}
+
+html[data-theme="dark"] body.home-page .events-section .ev-card__loc-row svg,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__loc-row svg {
+  color: #fb7b48;
+  opacity: 1;
+}
+
+html[data-theme="dark"] body.home-page .events-section .ev-card__datetime-bar .ev-card__img-day,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__datetime-bar .ev-card__img-day {
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] body.home-page .events-section .ev-card__datetime-bar .ev-card__img-month-text,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__datetime-bar .ev-card__img-month-text {
+  color: #ff875c;
+}
+
+html[data-theme="dark"] body.home-page .events-section .ev-card__datetime-bar .ev-card__img-year-text,
+html[data-theme="dark"] body.events-page .ev-listing__inner .ev-card__datetime-bar .ev-card__img-year-text {
+  color: #b7c3d4;
+}
+
 html[data-theme="dark"] body.home-page .nav-tabs.events-tabs,
 html[data-theme="dark"] body.home-page .hs-chip,
 html[data-theme="dark"] .hs-header__cta,

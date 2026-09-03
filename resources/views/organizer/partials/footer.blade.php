@@ -6,7 +6,8 @@
         $date = Date('Y');
         if (!is_null($footerTextInfo)) {
             $footer_text = str_replace('{year}', $date, $footerTextInfo->copyright_text);
-            $footer_text = preg_replace('/<p\b[^>]*>.*?(?:TAYRONA GROUP SAS|CUIT|WhatsApp|wa\.me).*?<\/p>/is', '', $footer_text) ?? $footer_text;
+            $issuerName = preg_quote((string) config('tukipass.fiscal.issuer_name'), '/');
+            $footer_text = preg_replace('/<p\b[^>]*>.*?(?:' . $issuerName . '|CUIT|WhatsApp|wa\.me).*?<\/p>/is', '', $footer_text) ?? $footer_text;
             $footer_text = trim($footer_text);
         }
       @endphp

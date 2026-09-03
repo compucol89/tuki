@@ -36,6 +36,7 @@
   $formEyebrow = __('customer.login.form_eyebrow');
   $formTitle = __('customer.login.form_title');
   $formSubtitle = __('customer.login.form_subtitle');
+  $loginFirstError = collect(['username', 'password', 'g-recaptcha-response'])->first(fn ($field) => $errors->has($field));
 
   if ($isEventCheckout && $guestEvent) {
     if (!empty($guestEvent->thumbnail)) {
@@ -110,7 +111,7 @@
 @endsection
 
 @section('content')
-<div class="auth-split auth-split--context auth-split--event">
+<div class="auth-split auth-split--context auth-split--event {{ $isEventCheckout ? 'auth-split--customer-checkout' : 'auth-split--customer-login' }}">
 
   <div class="auth-split__visual" data-auth-bg="{{ $visualImage }}">
     <div class="auth-split__visual-overlay"></div>
@@ -137,12 +138,11 @@
   </div>
 
   <div class="auth-split__form">
-    <div class="auth-split__form-inner">
-      @if (!$isEventCheckout)
-        <span class="auth-split__form-eyebrow">{{ $formEyebrow }}</span>
-      @endif
-      <h1 class="auth-split__title">{{ $formTitle }}</h1>
-      <p class="auth-split__subtitle">{{ $formSubtitle }}</p>
+    <div class="auth-split__form-inner {{ !$isEventCheckout ? 'auth-surface auth-login-surface auth-login-surface--customer' : '' }}">
+      <div class="auth-login-head">
+        <h1 class="auth-split__title">{{ $formTitle }}</h1>
+        <p class="auth-split__subtitle" id="customer-login-summary">{{ $formSubtitle }}</p>
+      </div>
 
       @if ($guestCheckoutEnabled && $isEventCheckout)
         @php
@@ -171,10 +171,10 @@
       @endif
 
       @if (Session::has('success'))
-        <div class="alert alert-success mb-3">{{ Session::get('success') }}</div>
+        <div class="alert alert-success mb-3" role="status">{{ Session::get('success') }}</div>
       @endif
       @if (Session::has('alert'))
-        <div class="alert alert-danger mb-3">{{ Session::get('alert') }}</div>
+        <div class="alert alert-danger mb-3" role="alert">{{ Session::get('alert') }}</div>
       @endif
 
       @if ($basicInfo->facebook_login_status == 1 || $basicInfo->google_login_status == 1)
@@ -182,42 +182,69 @@
           @if ($basicInfo->facebook_login_status == 1)
             <a href="{{ route('auth.facebook', ['redirectPath' => request()->input('redirectPath')]) }}"
                class="auth-social__btn auth-social__btn--fb">
-              <i class="fab fa-facebook-f"></i> {{ __('customer.login.continue_facebook') }}
+              <i class="fab fa-facebook-f" aria-hidden="true"></i> {{ __('customer.login.continue_facebook') }}
             </a>
           @endif
           @if ($basicInfo->google_login_status == 1)
             <a href="{{ route('auth.google', ['redirectPath' => request()->input('redirectPath')]) }}"
                class="auth-social__btn auth-social__btn--google">
-              <i class="fab fa-google"></i> {{ __('customer.login.continue_google') }}
+              <i class="fab fa-google" aria-hidden="true"></i> {{ __('customer.login.continue_google') }}
             </a>
           @endif
         </div>
         <div class="auth-divider">{{ __('customer.login.divider_email_login') }}</div>
       @endif
 
-      <form id="login-form" action="{{ route('customer.authentication') }}" method="POST">
+      <form id="login-form" class="auth-login-form" action="{{ route('customer.authentication') }}" method="POST" aria-describedby="customer-login-summary">
         @csrf
 
-        <div class="form-group mb-4">
+        <div class="form-group auth-login-field mb-4">
           <label for="username">{{ __('customer.login.username_label') }}</label>
-          <input type="text" name="username" id="username"
-                 class="form-control @error('username') is-invalid @enderror"
-                 placeholder="{{ __('customer.login.username_placeholder') }}" value="{{ old('username') }}" autocomplete="username">
+          <div class="auth-login-control">
+            <span class="auth-login-control__icon" aria-hidden="true">
+              <i class="fas fa-user"></i>
+            </span>
+            <input type="text" name="username" id="username"
+                   class="form-control auth-login-input @error('username') is-invalid @enderror"
+                   placeholder="{{ __('customer.login.username_placeholder') }}" value="{{ old('username') }}"
+                   autocomplete="username" autocapitalize="none" spellcheck="false"
+                   aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                   @if ($loginFirstError === 'username') autofocus @endif
+                   @if ($errors->has('username')) aria-describedby="username-error" @endif>
+          </div>
           @error('username')
-            <p class="text-danger mt-1" style="font-size:13px">{{ $message }}</p>
+            <p class="auth-login-error" id="username-error" role="alert">
+              <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+              {{ $message }}
+            </p>
           @enderror
         </div>
 
-        <div class="form-group mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-1">
+        <div class="form-group auth-login-field mb-4">
+          <div class="d-flex justify-content-between align-items-center auth-login-label-row mb-1">
             <label for="password" class="mb-0">{{ __('customer.login.password_label') }}</label>
             <a href="{{ route('customer.forget.password') }}" class="auth-forgot-link">{{ __('customer.login.forgot_password') }}</a>
           </div>
-          <input type="password" name="password" id="password"
-                 class="form-control @error('password') is-invalid @enderror"
-                 placeholder="{{ __('customer.login.password_placeholder') }}" autocomplete="current-password">
+          <div class="position-relative auth-login-control auth-login-control--password">
+            <span class="auth-login-control__icon" aria-hidden="true">
+              <i class="fas fa-lock"></i>
+            </span>
+            <input type="password" name="password" id="password"
+                   class="form-control auth-login-input @error('password') is-invalid @enderror"
+                   placeholder="{{ __('customer.login.password_placeholder') }}" autocomplete="current-password"
+                   aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                   @if ($loginFirstError === 'password') autofocus @endif
+                   @if ($errors->has('password')) aria-describedby="password-error" @endif>
+            <button type="button" class="auth-password-toggle" aria-label="{{ __('Mostrar contraseña') }}"
+              aria-controls="password" aria-pressed="false" data-toggle-target="password">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+            </button>
+          </div>
           @error('password')
-            <p class="text-danger mt-1" style="font-size:13px">{{ $message }}</p>
+            <p class="auth-login-error" id="password-error" role="alert">
+              <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+              {{ $message }}
+            </p>
           @enderror
         </div>
 
@@ -231,13 +258,18 @@
           </div>
         @endif
 
-        <button type="submit" class="theme-btn w-100" data-loading-text="{{ __('customer.login.loading') }}">
-          {{ $isEventCheckout ? __('customer.login.submit_checkout') : __('customer.login.submit_login') }}
+        <button type="submit" class="theme-btn auth-login-submit w-100" data-loading-text="{{ __('customer.login.loading') }}">
+          <span>{{ $isEventCheckout ? __('customer.login.submit_checkout') : __('customer.login.submit_login') }}</span>
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
         </button>
       </form>
 
-      <div class="auth-split__links">
-        <span>{{ __('customer.login.no_account') }} <a href="{{ route('customer.signup') }}">{{ __('customer.login.register_free') }}</a></span>
+      <div class="auth-split__links auth-split__links--stacked">
+        <span>{{ __('customer.login.no_account') }}</span>
+        <a href="{{ route('customer.signup') }}">
+          {{ __('customer.login.register_free') }}
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
   </div>
@@ -251,6 +283,18 @@
       var visual = document.querySelector('[data-auth-bg]');
       if (!visual || !window.matchMedia('(min-width: 768px)').matches) { return; }
       visual.style.backgroundImage = 'url("' + visual.dataset.authBg + '")';
+    });
+
+    document.querySelectorAll('.auth-password-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(this.getAttribute('data-toggle-target'));
+        if (!input) return;
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        this.setAttribute('aria-pressed', show ? 'true' : 'false');
+        this.setAttribute('aria-label', show ? '{{ __('Ocultar contraseña') }}' : '{{ __('Mostrar contraseña') }}');
+        this.querySelector('i').className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+      });
     });
   </script>
 @endpush

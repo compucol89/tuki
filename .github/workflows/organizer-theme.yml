@@ -164,7 +164,7 @@ jobs:
           E2E_ORGANIZER_PASSWORD: ${{ secrets.E2E_ORGANIZER_PASSWORD }}
         run: npm run test:full
 
-      - name: Run visual regression (NO-BLOQUEANTE: baselines linux pendientes)
+      - name: "Run visual regression (NO-BLOQUEANTE: baselines linux pendientes)"
         continue-on-error: true
         run: npm run test:visual
 

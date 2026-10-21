@@ -65,7 +65,7 @@ RUN printf '%s\n' \
 # el handler de session.upload_progress corre en cualquier request multipart
 # aunque la app nunca llame a session_start(). Si el build no queda con la
 # feature apagada, falla acá en vez de salir a producción.
-RUN php -r '$v = ini_get("session.upload_progress.enabled"); if ($v !== "") { fwrite(STDERR, "session.upload_progress.enabled no quedó Off: [$v]\n"); exit(1); } echo "PHP " . PHP_VERSION . " OK\n";'
+RUN php -r '$v = ini_get("session.upload_progress.enabled"); if ($v !== "") { fwrite(STDERR, "session.upload_progress.enabled no quedó Off: [$v]\n"); exit(1); } if (version_compare(PHP_VERSION, "8.4.27", "<")) { fwrite(STDERR, "PHP " . PHP_VERSION . " < 8.4.27\n"); exit(1); } echo "PHP " . PHP_VERSION . " OK\n";'
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

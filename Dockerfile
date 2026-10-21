@@ -56,7 +56,16 @@ RUN printf '%s\n' \
     'upload_max_filesize=8M' \
     'post_max_size=12M' \
     'memory_limit=512M' \
+    'session.upload_progress.enabled=Off' \
+    'session.upload_progress.name=X-Tuki-Noop-7f4c9e2a' \
+    'expose_php=Off' \
     > /usr/local/etc/php/conf.d/tukipass-uploads.ini
+
+# Mitigación interina CVE-2026-109618 / CVE-2026-109619:
+# el handler de session.upload_progress corre en cualquier request multipart
+# aunque la app nunca llame a session_start(). Si el build no queda con la
+# feature apagada, falla acá en vez de salir a producción.
+RUN php -r '$v = ini_get("session.upload_progress.enabled"); if ($v !== "") { fwrite(STDERR, "session.upload_progress.enabled no quedó Off: [$v]\n"); exit(1); }'
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

@@ -1,6 +1,6 @@
 # ==== PHP EXTENSIONS ── se compilan UNA sola vez =========
 # Esta capa solo se invalida si cambia la base PHP o este bloque.
-FROM php:8.4-cli-alpine AS php-ext
+FROM php:8.4.27-cli-alpine AS php-ext
 
 RUN apk add --no-cache \
         $PHPIZE_DEPS \
@@ -11,7 +11,7 @@ RUN apk add --no-cache \
         pdo pdo_mysql mbstring xml gd bcmath zip soap
 
 # ==== BUILDER ── composer + assets JS ====================
-FROM php:8.4-cli-alpine AS builder
+FROM php:8.4.27-cli-alpine AS builder
 
 # Extensiones ya compiladas (sin recompilar)
 COPY --from=php-ext /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
@@ -41,7 +41,7 @@ RUN composer dump-autoload --optimize --no-dev --no-scripts \
     && npm run production
 
 # ==== RUNTIME ── imagen final liviana ===================
-FROM php:8.4-cli-alpine
+FROM php:8.4.27-cli-alpine
 
 COPY --from=php-ext /usr/local/lib/php/extensions/ /usr/local/lib/php/extensions/
 COPY --from=php-ext /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
@@ -65,7 +65,7 @@ RUN printf '%s\n' \
 # el handler de session.upload_progress corre en cualquier request multipart
 # aunque la app nunca llame a session_start(). Si el build no queda con la
 # feature apagada, falla acá en vez de salir a producción.
-RUN php -r '$v = ini_get("session.upload_progress.enabled"); if ($v !== "") { fwrite(STDERR, "session.upload_progress.enabled no quedó Off: [$v]\n"); exit(1); }'
+RUN php -r '$v = ini_get("session.upload_progress.enabled"); if ($v !== "") { fwrite(STDERR, "session.upload_progress.enabled no quedó Off: [$v]\n"); exit(1); } echo "PHP " . PHP_VERSION . " OK\n";'
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

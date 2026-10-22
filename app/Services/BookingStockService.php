@@ -23,6 +23,11 @@ class BookingStockService
         return false;
       }
 
+      // No devolver al stock una entrada ya utilizada.
+      if ($locked->scannedTicketsCount() > 0) {
+        return false;
+      }
+
       $this->restoreTicketStock($locked);
       $this->restoreAddonStock($locked);
 

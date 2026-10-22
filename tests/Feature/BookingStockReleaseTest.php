@@ -40,6 +40,7 @@ class BookingStockReleaseTest extends TestCase
       $table->unsignedBigInteger('organizer_id')->nullable();
       $table->text('variation')->nullable();
       $table->integer('quantity')->nullable();
+      $table->text('scanned_tickets')->nullable();
       $table->timestamp('stock_released_at')->nullable();
       $table->timestamps();
     });
@@ -181,5 +182,35 @@ class BookingStockReleaseTest extends TestCase
 
     $this->assertTrue((new BookingStockService())->release($booking));
     $this->assertSame(10, (int) DB::table('event_addons')->where('id', $addonId)->value('stock'));
+  }
+
+  public function test_release_does_not_restore_stock_for_a_scanned_ticket(): void
+  {
+    $eventId = DB::table('events')->insertGetId([
+      'organizer_id' => 1,
+      'event_type' => 'online',
+      'created_at' => now(),
+      'updated_at' => now(),
+    ]);
+
+    $ticket = Ticket::create([
+      'event_id' => $eventId,
+      'title' => 'General',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'limited',
+      'ticket_available' => 3,
+    ]);
+
+    $booking = Booking::create([
+      'event_id' => $eventId,
+      'organizer_id' => 1,
+      'variation' => null,
+      'quantity' => 2,
+      'scanned_tickets' => json_encode(['1']),
+    ]);
+
+    $this->assertFalse((new BookingStockService())->release($booking));
+    $this->assertSame(3, (int) $ticket->fresh()->ticket_available);
+    $this->assertNull($booking->fresh()->stock_released_at);
   }
 }

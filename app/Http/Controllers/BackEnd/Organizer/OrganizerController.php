@@ -31,10 +31,14 @@ use Illuminate\Validation\Rule;
 class OrganizerController extends Controller
 {
   private $admin_user_name;
-  public function __construct()
+
+  private function adminUsername(): string
   {
-    $admin = Admin::select('username')->first();
-    $this->admin_user_name = $admin->username;
+    if ($this->admin_user_name === null) {
+      $this->admin_user_name = (string) Admin::select('username')->value('username');
+    }
+
+    return $this->admin_user_name;
   }
 
   //index
@@ -236,7 +240,7 @@ class OrganizerController extends Controller
         'required',
         'alpha_dash',
         'unique:organizers',
-        "not_in:$this->admin_user_name"
+        "not_in:" . $this->adminUsername()
       ],
       'email' => 'required|email|unique:organizers',
       'password' => 'required|confirmed|min:10',
@@ -656,7 +660,7 @@ class OrganizerController extends Controller
       'username' => [
         'required',
         'alpha_dash',
-        "not_in:$this->admin_user_name",
+        "not_in:" . $this->adminUsername(),
         Rule::unique('organizers', 'username')->ignore(Auth::guard('organizer')->user()->id)
       ],
       'phone' => 'nullable|string|max:50',

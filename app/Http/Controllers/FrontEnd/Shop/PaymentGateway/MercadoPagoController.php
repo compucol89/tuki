@@ -17,19 +17,29 @@ use Illuminate\Support\Facades\Session;
 
 class MercadoPagoController extends Controller
 {
-  private $token, $sandbox_status;
+  private $token;
+  private $sandbox_status;
 
-  public function __construct()
+  private function bootGateway(): void
   {
-    $data = OnlineGateway::whereKeyword('mercadopago')->first();
-    $mercadopagoData = json_decode($data->information, true);
+    if ($this->token !== null) {
+      return;
+    }
 
-    $this->token = $mercadopagoData['token'];
-    $this->sandbox_status = $mercadopagoData['sandbox_status'];
+    $data = OnlineGateway::whereKeyword('mercadopago')->first();
+    if (!$data) {
+      abort(503, 'MercadoPago no está configurado.');
+    }
+
+    $mercadopagoData = json_decode((string) $data->information, true) ?: [];
+    $this->token = (string) ($mercadopagoData['token'] ?? '');
+    $this->sandbox_status = $mercadopagoData['sandbox_status'] ?? 0;
   }
 
   public function enrolmentProcess(Request $request)
   {
+    $this->bootGateway();
+
     $allowedCurrencies = array('ARS', 'BOB', 'BRL', 'CLF', 'CLP', 'COP', 'CRC', 'CUC', 'CUP', 'DOP', 'EUR', 'GTQ', 'HNL', 'MXN', 'NIO', 'PAB', 'PEN', 'PYG', 'USD', 'UYU', 'VEF', 'VES');
     $cart_items = Session::get('cart');
 
@@ -200,6 +210,8 @@ class MercadoPagoController extends Controller
 
   public function notify(Request $request)
   {
+    $this->bootGateway();
+
     try {
       $arrData = $request->session()->get('arrData');
       $paymentToken = $request->session()->get('mp_payment_token');
@@ -422,6 +434,8 @@ class MercadoPagoController extends Controller
    */
   public function webhook(Request $request)
   {
+    $this->bootGateway();
+
     try {
       $topic = $request->input('topic') ?? $request->input('type');
       $paymentId = $request->input('data.id') ?? $request->input('id');

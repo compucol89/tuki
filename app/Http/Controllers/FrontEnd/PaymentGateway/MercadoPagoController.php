@@ -26,19 +26,28 @@ use Illuminate\Support\Facades\Session;
 
 class MercadoPagoController extends Controller
 {
-  private $token, $sandbox_status;
+  private $token;
+  private $sandbox_status;
 
-  public function __construct()
+  private function bootGateway(): void
   {
-    $data = OnlineGateway::whereKeyword('mercadopago')->first();
-    $mercadopagoData = json_decode($data->information, true);
+    if ($this->token !== null) {
+      return;
+    }
 
-    $this->token = $mercadopagoData['token'];
-    $this->sandbox_status = $mercadopagoData['sandbox_status'];
+    $data = OnlineGateway::whereKeyword('mercadopago')->first();
+    if (!$data) {
+      abort(503, 'MercadoPago no está configurado.');
+    }
+
+    $mercadopagoData = json_decode((string) $data->information, true) ?: [];
+    $this->token = (string) ($mercadopagoData['token'] ?? '');
+    $this->sandbox_status = $mercadopagoData['sandbox_status'] ?? 0;
   }
 
   public function bookingProcess(Request $request, $eventId)
   {
+    $this->bootGateway();
     $rules = [
       'fname' => 'required',
       'lname' => 'required',
@@ -268,6 +277,8 @@ class MercadoPagoController extends Controller
 
   public function notify(Request $request)
   {
+    $this->bootGateway();
+
     try {
       // get the information from session
       $eventId = $request->session()->get('eventId');
@@ -590,6 +601,8 @@ class MercadoPagoController extends Controller
    */
   public function webhook(Request $request)
   {
+    $this->bootGateway();
+
     try {
       $topic = $request->input('topic') ?? $request->input('type');
       $paymentId = $request->input('data.id') ?? $request->input('id');

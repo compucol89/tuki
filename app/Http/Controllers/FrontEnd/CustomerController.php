@@ -28,10 +28,14 @@ use Laravel\Socialite\Facades\Socialite;
 class CustomerController extends Controller
 {
   private $admin_user_name;
-  public function __construct()
+
+  private function adminUsername(): string
   {
-    $admin = Admin::select('username')->first();
-    $this->admin_user_name = $admin->username;
+    if ($this->admin_user_name === null) {
+      $this->admin_user_name = (string) Admin::select('username')->value('username');
+    }
+
+    return $this->admin_user_name;
   }
 
   //index
@@ -57,7 +61,7 @@ class CustomerController extends Controller
       'username' => [
         'required',
         'alpha_dash',
-        "not_in:$this->admin_user_name",
+        "not_in:" . $this->adminUsername(),
         Rule::unique('customers', 'username')
       ],
       'password' => 'required|confirmed|min:10',
@@ -504,7 +508,7 @@ class CustomerController extends Controller
       'username' => [
         'required',
         'alpha_dash',
-        "not_in:$this->admin_user_name",
+        "not_in:" . $this->adminUsername(),
         Rule::unique('customers', 'username')->ignore(Auth::guard('customer')->user()->id)
       ],
       'photo' => $request->hasFile('photo') ? 'mimes:jpg,jpeg,png' : ''

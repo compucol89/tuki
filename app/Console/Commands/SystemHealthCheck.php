@@ -159,6 +159,16 @@ class SystemHealthCheck extends Command
             $this->error("  ❌ Token: Vacío");
         }
 
+        // Webhook signature secret
+        $webhookSecret = config('services.mercadopago.webhook_secret');
+        if (empty($webhookSecret)) {
+            $this->issues[] = "MERCADOPAGO_WEBHOOK_SECRET no configurado: webhook fail-closed en producción";
+            $this->error("  ❌ Webhook secret: ausente");
+        } else {
+            $this->ok[] = "Webhook secret de MercadoPago configurado";
+            $this->line("  ✅ Webhook secret: configurado");
+        }
+
         // Health check API
         if ($token) {
             try {

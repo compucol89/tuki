@@ -905,45 +905,47 @@ class OrganizerController extends Controller
   //check_qrcode
   public function check_qrcode(Request $request)
   {
-    if (str_contains($request->booking_id, '__')) {
-      $ids = explode('__', $request->booking_id);
-      $booking_id = $ids[0];
-      $unique_id = $ids[1];
-      $organizer_id = Auth::guard('organizer')->user()->id;
-      $check = Booking::where([['booking_id', $booking_id]])->first();
-      if ($check) {
-        if ($check->organizer_id == $organizer_id) {
-          // check payment status completed or not 
-          if ($check->paymentStatus == 'completed' || $check->paymentStatus == 'free') {
-            if (!$check->hasIssuedTicketUniqueId($unique_id)) {
-              return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified'), 'booking_id' => $request->booking_id]);
-            }
+    $payload = (string) $request->input('booking_id', '');
 
-            $scannedTicketArr = $check->scannedTicketIds();
-            if (!in_array($unique_id, $scannedTicketArr, true)) {
-              $scannedTicketArr[] = $unique_id;
-              $check->scanned_tickets = json_encode($scannedTicketArr);
-              $check->save();
-              return response()->json(['alert_type' => 'success', 'message' => __('organizer.qrcode.verified'), 'booking_id' => $request->booking_id]);
-            } else {
-              return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.already_scanned'), 'booking_id' => $request->booking_id]);
-            }
-          } elseif ($check->paymentStatus == 'pending') {
-            return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.payment_incomplete'), 'booking_id' => $request->booking_id]);
-          } elseif ($check->paymentStatus == 'rejected') {
-            return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.payment_rejected'), 'booking_id' => $request->booking_id]);
-          }
-        } else {
-          return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.no_permission')]);
-        }
-      } else {
-        return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified')]);
-      }
-    } else {
+    if (!str_contains($payload, '__')) {
       return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified')]);
     }
-  }
 
+    [$bookingId, $uniqueId] = explode('__', $payload, 2);
+    $booking = Booking::where('booking_id', $bookingId)->first();
+
+    if (!$booking) {
+      return response()->json(['alert_type' => 'error', 'message' => __('organizer.qrcode.unverified')]);
+    }
+
+    $organizerId = (int) Auth::guard('organizer')->user()->id;
+    $result = app(\App\Services\TicketScanService::class)->scan(
+      $booking,
+      $uniqueId,
+      'organizer',
+      $organizerId,
+      $organizerId,
+      $request->ip(),
+      $request->userAgent()
+    );
+
+    $messages = [
+      \App\Services\TicketScanService::VERIFIED => ['success', __('organizer.qrcode.verified')],
+      \App\Services\TicketScanService::ALREADY_SCANNED => ['error', __('organizer.qrcode.already_scanned')],
+      \App\Services\TicketScanService::PAYMENT_INCOMPLETE => ['error', __('organizer.qrcode.payment_incomplete')],
+      \App\Services\TicketScanService::PAYMENT_REJECTED => ['error', __('organizer.qrcode.payment_rejected')],
+      \App\Services\TicketScanService::UNVERIFIED => ['error', __('organizer.qrcode.unverified')],
+      \App\Services\TicketScanService::NO_PERMISSION => ['error', __('organizer.qrcode.no_permission')],
+    ];
+
+    [$alertType, $message] = $messages[$result] ?? ['error', __('organizer.qrcode.unverified')];
+
+    return response()->json([
+      'alert_type' => $alertType,
+      'message' => $message,
+      'booking_id' => $payload,
+    ]);
+  }
   public function changeTheme(Request $request)
   {
     $theme = in_array($request->theme_version, ['light', 'dark'], true) ? $request->theme_version : 'light';

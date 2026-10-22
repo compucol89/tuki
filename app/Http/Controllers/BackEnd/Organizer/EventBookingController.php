@@ -12,6 +12,7 @@ use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
 use App\Models\PaymentGateway\OfflineGateway;
 use App\Models\PaymentGateway\OnlineGateway;
+use App\Services\BookingStockService;
 use App\Services\EventTicketSalesSummaryService;
 use Carbon\Carbon;
 use Exception;
@@ -167,7 +168,7 @@ class EventBookingController extends Controller
   public function updatePaymentStatus(Request $request, $id)
   {
     $booking = Booking::find($id);
-    if (Auth::guard('organizer')->user()->id != $booking->organizer_id) {
+    if (!$booking || Auth::guard('organizer')->user()->id != $booking->organizer_id) {
       return back();
     }
 
@@ -194,6 +195,8 @@ class EventBookingController extends Controller
         'paymentStatus' => 'pending'
       ]);
     } else {
+      app(BookingStockService::class)->release($booking);
+
       $booking->update([
         'paymentStatus' => 'rejected'
       ]);

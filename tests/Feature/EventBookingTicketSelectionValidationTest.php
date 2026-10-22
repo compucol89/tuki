@@ -7,6 +7,7 @@ use App\Http\Controllers\BackEnd\AdminController;
 use App\Models\Event\Booking;
 use App\Models\Event\Ticket;
 use App\Models\Event\TicketContent;
+use App\Services\EventAddonCartService;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,7 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     Schema::dropIfExists('event_contents');
     Schema::dropIfExists('ticket_contents');
     Schema::dropIfExists('customer_fiscal_profiles');
+    Schema::dropIfExists('ticket_scans');
     Schema::dropIfExists('bookings');
     Schema::dropIfExists('tickets');
     Schema::dropIfExists('events');
@@ -68,6 +70,120 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     $this->expectExceptionMessage('Las entradas seleccionadas no corresponden a este evento.');
 
     (new BookingController())->storeData($this->bookingInfo($eventB));
+  }
+
+  public function test_store_data_rolls_back_stock_and_booking_when_addon_attach_fails(): void
+  {
+    $event = $this->createEvent(['event_type' => 'venue']);
+    $ticket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Entrada',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'limited',
+      'ticket_available' => 10,
+      'price' => 100,
+    ]);
+
+    $this->app->instance(EventAddonCartService::class, new class extends EventAddonCartService {
+      public function attachToBooking(\App\Models\Event\Booking $booking, ?array $cartAddons = null): void
+      {
+        throw new \RuntimeException('forced addon failure');
+      }
+    });
+
+    try {
+      (new BookingController())->storeData($this->bookingInfo($event, [
+        'selTickets' => [[
+          'ticket_id' => $ticket->id,
+          'name' => 'Entrada',
+          'qty' => 1,
+          'price' => 100,
+          'early_bird_dicount' => 0,
+        ]],
+      ]));
+      $this->fail('Expected addon failure to abort the booking.');
+    } catch (\RuntimeException $e) {
+      $this->assertSame('forced addon failure', $e->getMessage());
+    }
+
+    $this->assertSame(10, (int) $ticket->fresh()->ticket_available);
+    $this->assertSame(0, Booking::where('event_id', $event)->count());
+  }
+
+  public function test_store_data_rolls_back_first_ticket_when_second_ticket_has_no_stock(): void
+  {
+    $event = $this->createEvent(['event_type' => 'venue']);
+    $first = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Primera',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'limited',
+      'ticket_available' => 5,
+      'price' => 100,
+    ]);
+    $second = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Segunda',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'limited',
+      'ticket_available' => 0,
+      'price' => 200,
+    ]);
+
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('No hay stock disponible');
+
+    try {
+      (new BookingController())->storeData($this->bookingInfo($event, [
+        'quantity' => 2,
+        'price' => 300,
+        'selTickets' => [
+          [
+            'ticket_id' => $first->id,
+            'name' => 'Primera',
+            'qty' => 1,
+            'price' => 100,
+            'early_bird_dicount' => 0,
+          ],
+          [
+            'ticket_id' => $second->id,
+            'name' => 'Segunda',
+            'qty' => 1,
+            'price' => 200,
+            'early_bird_dicount' => 0,
+          ],
+        ],
+      ]));
+    } finally {
+      $this->assertSame(5, (int) $first->fresh()->ticket_available);
+      $this->assertSame(0, Booking::where('event_id', $event)->count());
+    }
+  }
+
+  public function test_store_data_rejects_single_ticket_quantity_above_stock(): void
+  {
+    $event = $this->createEvent(['event_type' => 'online']);
+    $ticket = Ticket::create([
+      'event_id' => $event,
+      'title' => 'Única',
+      'pricing_type' => 'normal',
+      'ticket_available_type' => 'limited',
+      'ticket_available' => 1,
+      'price' => 100,
+    ]);
+
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage('No hay stock disponible');
+
+    try {
+      (new BookingController())->storeData($this->bookingInfo($event, [
+        'quantity' => 2,
+        'price' => 200,
+      ]));
+    } finally {
+      $this->assertSame(1, (int) $ticket->fresh()->ticket_available);
+      $this->assertSame(0, Booking::where('event_id', $event)->count());
+    }
   }
 
   public function test_store_data_uses_pending_booking_ticket_selection_when_session_is_not_available(): void
@@ -457,6 +573,37 @@ class EventBookingTicketSelectionValidationTest extends TestCase
     $this->assertSame(['valid-ticket'], Booking::where('booking_id', 'valid-booking')->first()->scannedTicketIds());
   }
 
+  public function test_admin_scanner_is_idempotent_for_the_same_ticket(): void
+  {
+    Booking::create([
+      'booking_id' => 'double-scan-booking',
+      'event_id' => $this->createEvent(),
+      'paymentStatus' => 'completed',
+      'quantity' => 1,
+      'variation' => json_encode([[
+        'ticket_id' => 1,
+        'name' => 'Entrada',
+        'qty' => 1,
+        'price' => 40000,
+        'unique_id' => 'double-scan-ticket',
+      ]]),
+      'scanned_tickets' => null,
+    ]);
+
+    $first = (new AdminController())->check_qrcode(Request::create('/admin/check-qrcode', 'POST', [
+      'booking_id' => 'double-scan-booking__double-scan-ticket',
+    ]))->getData(true);
+
+    $second = (new AdminController())->check_qrcode(Request::create('/admin/check-qrcode', 'POST', [
+      'booking_id' => 'double-scan-booking__double-scan-ticket',
+    ]))->getData(true);
+
+    $this->assertSame('success', $first['alert_type']);
+    $this->assertSame('error', $second['alert_type']);
+    $this->assertSame('Already Scanned', $second['message']);
+    $this->assertSame(1, \DB::table('ticket_scans')->where('booking_id', Booking::where('booking_id', 'double-scan-booking')->value('id'))->count());
+  }
+
   private function setUpSchema(): void
   {
     Schema::create('events', function (Blueprint $table) {
@@ -564,6 +711,21 @@ class EventBookingTicketSelectionValidationTest extends TestCase
       $table->timestamp('token_legacy_expires_at')->nullable();
       $table->string('fiscal_invoice_token')->nullable();
       $table->timestamps();
+    });
+
+    Schema::create('ticket_scans', function (Blueprint $table) {
+      $table->id();
+      $table->unsignedBigInteger('booking_id');
+      $table->unsignedBigInteger('event_id')->nullable();
+      $table->unsignedBigInteger('organizer_id')->nullable();
+      $table->string('unique_id', 64);
+      $table->string('scanner_type', 20);
+      $table->unsignedBigInteger('scanner_id')->nullable();
+      $table->string('ip', 45)->nullable();
+      $table->string('user_agent', 255)->nullable();
+      $table->timestamp('scanned_at');
+      $table->timestamps();
+      $table->unique(['booking_id', 'unique_id']);
     });
 
     DB::table('basic_settings')->insert([

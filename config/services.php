@@ -44,6 +44,11 @@ return [
     'secret' => env('STRIPE_SECRET'),
   ],
 
+  'mercadopago' => [
+    'webhook_secret' => env('MERCADOPAGO_WEBHOOK_SECRET'),
+    'pending_ttl_hours' => (int) env('MERCADOPAGO_PENDING_TTL_HOURS', 48),
+  ],
+
   'facebook' => [
     'client_id' => env('FACEBOOK_CLIENT_ID'),
     'client_secret' => env('FACEBOOK_CLIENT_SECRET'),

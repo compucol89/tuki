@@ -49,10 +49,15 @@ class Booking extends Model
     'event_date',
     'scan_status',
     'scanned_tickets',
+    'stock_released_at',
     'conversation_id',
     'access_token',
     'token_legacy_expires_at',
     'fiscal_invoice_token',
+  ];
+
+  protected $casts = [
+    'stock_released_at' => 'datetime',
   ];
 
   public function event()

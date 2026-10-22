@@ -34,7 +34,7 @@ class SupportTicketController extends Controller
       'attachment' => $request->hasFile('attachment') ? 'mimes:zip|max:5000' : ''
     ]);
 
-    $in = $request->all();
+    $in = $request->only(['subject', 'email', 'description']);
     $in['user_id'] = Auth::guard('customer')->user()->id;
     $in['user_type'] = 'customer';
     $file = $request->file('attachment');
@@ -58,19 +58,30 @@ class SupportTicketController extends Controller
     if ($bex->support_ticket_status == 0) {
       return back();
     }
-    $ticket = SupportTicket::where('id', $id)->firstOrFail();
+    $ticket = SupportTicket::where('id', $id)
+      ->where('user_id', Auth::guard('customer')->user()->id)
+      ->where('user_type', 'customer')
+      ->firstOrFail();
 
     return view('frontend.customer.dashboard.support_ticket.messages', compact('ticket'));
   }
   //reply
   public function reply(Request $request, $id)
   {
+    $ticket = SupportTicket::where('id', $id)
+      ->where('user_id', Auth::guard('customer')->user()->id)
+      ->where('user_type', 'customer')
+      ->firstOrFail();
+
     $file = $request->file('file');
     $allowedExts = array('zip');
     $rules = [
       'reply' => 'required',
       'file' => [
         function ($attribute, $value, $fail) use ($file, $allowedExts) {
+          if (!$file) {
+            return;
+          }
 
           $ext = $file->getClientOriginalExtension();
           if (!in_array($ext, $allowedExts)) {
@@ -86,12 +97,12 @@ class SupportTicketController extends Controller
     ];
 
     $request->validate($rules, $messages);
-    $input = $request->all();
+    $input = $request->only(['reply']);
 
     $input['reply'] = Purifier::clean($request->reply, 'youtube');
     $input['type'] = 1;
     $input['user_id'] = Auth::guard('customer')->user()->id;
-    $input['support_ticket_id'] = $id;
+    $input['support_ticket_id'] = $ticket->id;
     if ($request->hasFile('file')) {
       $file = $request->file('file');
       $filename = uniqid() . '.' . $file->getClientOriginalExtension();
@@ -103,7 +114,7 @@ class SupportTicketController extends Controller
     $data = new Conversation();
     $data->create($input);
 
-    SupportTicket::where('id', $id)->update([
+    SupportTicket::where('id', $ticket->id)->update([
       'last_message' => Carbon::now()
     ]);
 

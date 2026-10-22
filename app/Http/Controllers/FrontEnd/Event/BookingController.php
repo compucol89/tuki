@@ -198,6 +198,7 @@ class BookingController extends Controller
   public function storeData($info)
   {
     try {
+      return DB::transaction(function () use ($info) {
       $event = Event::find($info['event_id']);
       if (!$event || empty($event->organizer_id)) {
         throw new \RuntimeException('Invalid booking event context.');
@@ -217,97 +218,16 @@ class BookingController extends Controller
 
       if ($variations) {
         $info['quantity'] = !empty($info['quantity'])
-          ? $info['quantity']
+          ? (int) $info['quantity']
           : collect($variations)->sum(fn ($variation) => (int) ($variation['qty'] ?? 0));
 
-        foreach ($variations as $variation) {
-          // Transacción por ticket — lockForUpdate evita overselling en pagos simultáneos
-          DB::transaction(function () use ($variation) {
-            $ticket = Ticket::where('id', $variation['ticket_id'])->lockForUpdate()->first();
-            if (!$ticket) return;
-            $requestedQty = (int) ($variation['qty'] ?? 0);
-            if ($ticket->pricing_type == 'normal' && $ticket->ticket_available_type == 'limited') {
-              if ((int) $ticket->ticket_available < $requestedQty) {
-                throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
-              }
-              $ticket->ticket_available = (int) $ticket->ticket_available - $requestedQty;
-              $ticket->save();
-            } elseif ($ticket->pricing_type == 'variation') {
-              $ticket_variations = json_decode($ticket->variations, true);
-              $update_variation = [];
-              $matchedVariation = false;
-              foreach ($ticket_variations as $ticket_variation) {
-                if (Booking::ticketNameMatches($variation['ticket_id'], $ticket_variation['name'] ?? null, $variation['name'] ?? null)) {
-                  $matchedVariation = true;
-                  if ($ticket_variation['ticket_available_type'] == 'limited') {
-                    if ((int) $ticket_variation['ticket_available'] < $requestedQty) {
-                      throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
-                    }
-                    $ticket_available = (int) $ticket_variation['ticket_available'] - $requestedQty;
-                  } else {
-                    $ticket_available = $ticket_variation['ticket_available'];
-                  }
-                  $update_variation[] = [
-                    'name' => $ticket_variation['name'],
-                    'price' => round($ticket_variation['price'], 2),
-                    'ticket_available_type' => $ticket_variation['ticket_available_type'],
-                    'ticket_available' => $ticket_available,
-                    'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
-                    'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
-                  ];
-                } else {
-                  $update_variation[] = [
-                    'name' => $ticket_variation['name'],
-                    'price' => round($ticket_variation['price'], 2),
-                    'ticket_available_type' => $ticket_variation['ticket_available_type'],
-                    'ticket_available' => $ticket_variation['ticket_available'],
-                    'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
-                    'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
-                  ];
-                }
-              }
-              if (!$matchedVariation) {
-                throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
-              }
-              $ticket->variations = json_encode($update_variation, true);
-              $ticket->save();
-            } elseif ($ticket->pricing_type == 'free' && $ticket->ticket_available_type == 'limited') {
-              if ((int) $ticket->ticket_available < $requestedQty) {
-                throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
-              }
-              $ticket->ticket_available = (int) $ticket->ticket_available - $requestedQty;
-              $ticket->save();
-            }
-          });
-        }
-        $c_variations = [];
-        foreach ($variations as $variation) {
-          for ($i = 1; $i <= $variation['qty']; $i++) {
-            $c_variations[] = [
-              'ticket_id' => $variation['ticket_id'],
-              'early_bird_dicount' => $variation['early_bird_dicount'],
-              'name' => Booking::displayTicketName($variation['ticket_id'], $variation['name'] ?? null),
-              'qty' => 1,
-              'price' => $variation['price'],
-              'scan_status' => 0,
-              'unique_id' => (string) Str::uuid(),
-            ];
-          }
-        }
-        $variations = json_encode($c_variations, true);
+        $variations = $this->reserveVariationStock($variations, (int) $info['event_id']);
       } else {
-        if ($event) {
-          DB::transaction(function () use ($event, $info) {
-            $ticket = $event->ticket()->lockForUpdate()->first();
-            if ($ticket && $ticket->ticket_available_type == 'limited') {
-              $ticket->ticket_available = max(0, $ticket->ticket_available - (int)$info['quantity']);
-              $ticket->save();
-            }
-          });
-        }
         if ($event->event_type == 'venue' && $event->tickets()->exists()) {
           throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
         }
+
+        $this->reserveSingleTicketStock($event, (int) ($info['quantity'] ?? 0));
       }
 
       $basic  = Basic::where('uniqid', 12345)->select('tax', 'commission')->first();
@@ -330,8 +250,8 @@ class BookingController extends Controller
         'price' => round($info['price'], 2),
         'tax' => round($info['tax'], 2),
         'commission' => round($info['commission'], 2),
-        'tax_percentage' => $basic->tax,
-        'commission_percentage' => $basic->commission,
+        'tax_percentage' => $basic->tax ?? 0,
+        'commission_percentage' => $basic->commission ?? 0,
         'quantity' => $info['quantity'],
         'discount' => round($info['discount'], 2),
         'early_bird_discount' => round($info['total_early_bird_dicount'], 2),
@@ -386,10 +306,118 @@ class BookingController extends Controller
       app(EventAddonCartService::class)->attachToBooking($booking, $info['cart_addons'] ?? Session::get('cart_addons', []));
 
       return $booking;
+      });
     } catch (\Exception $th) {
       Log::error('storeData failed: ' . $th->getMessage());
       throw $th;
     }
+  }
+
+  /**
+   * Reserva stock de todas las variaciones dentro de la transacción de la reserva.
+   * Devuelve el JSON de variaciones que se persiste en bookings.variation.
+   */
+  private function reserveVariationStock(array $variations, int $eventId): string
+  {
+    $bookingVariations = [];
+
+    foreach ($variations as $variation) {
+      $ticketId = (int) ($variation['ticket_id'] ?? 0);
+      $requestedQty = (int) ($variation['qty'] ?? 0);
+
+      if ($ticketId <= 0 || $requestedQty <= 0) {
+        throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+      }
+
+      $ticket = Ticket::where('id', $ticketId)
+        ->where('event_id', $eventId)
+        ->lockForUpdate()
+        ->first();
+
+      if (!$ticket) {
+        throw new \RuntimeException('Las entradas seleccionadas no corresponden a este evento. Volvé a seleccionar tus entradas.');
+      }
+
+      if ($ticket->pricing_type === 'variation') {
+        $ticketVariations = json_decode((string) $ticket->variations, true);
+        if (!is_array($ticketVariations)) {
+          throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+        }
+
+        $matched = false;
+        foreach ($ticketVariations as &$ticketVariation) {
+          if (!Booking::ticketNameMatches($ticketId, $ticketVariation['name'] ?? null, $variation['name'] ?? null)) {
+            continue;
+          }
+
+          $matched = true;
+          if (($ticketVariation['ticket_available_type'] ?? '') === 'limited') {
+            $available = (int) ($ticketVariation['ticket_available'] ?? 0);
+            if ($available < $requestedQty) {
+              throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
+            }
+            $ticketVariation['ticket_available'] = $available - $requestedQty;
+          }
+          break;
+        }
+        unset($ticketVariation);
+
+        if (!$matched) {
+          throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+        }
+
+        $ticket->variations = json_encode($ticketVariations, true);
+        $ticket->save();
+      } elseif (in_array($ticket->pricing_type, ['normal', 'free'], true) && $ticket->ticket_available_type === 'limited') {
+        $available = (int) $ticket->ticket_available;
+        if ($available < $requestedQty) {
+          throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
+        }
+        $ticket->ticket_available = $available - $requestedQty;
+        $ticket->save();
+      }
+
+      for ($i = 1; $i <= $requestedQty; $i++) {
+        $bookingVariations[] = [
+          'ticket_id' => $ticketId,
+          'early_bird_dicount' => $variation['early_bird_dicount'] ?? 0,
+          'name' => Booking::displayTicketName($ticketId, $variation['name'] ?? null),
+          'qty' => 1,
+          'price' => $variation['price'] ?? 0,
+          'scan_status' => 0,
+          'unique_id' => (string) Str::uuid(),
+        ];
+      }
+    }
+
+    if (empty($bookingVariations)) {
+      throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+    }
+
+    return json_encode($bookingVariations, true);
+  }
+
+  /**
+   * Reserva stock del path legacy sin selTickets (eventos sin tipos de entrada).
+   */
+  private function reserveSingleTicketStock(Event $event, int $quantity): void
+  {
+    if ($quantity <= 0) {
+      throw new \RuntimeException('No pudimos validar las entradas seleccionadas. Volvé a seleccionar tus entradas.');
+    }
+
+    $ticket = $event->ticket()->lockForUpdate()->first();
+    if (!$ticket || $ticket->ticket_available_type !== 'limited') {
+      return;
+    }
+
+    $available = (int) $ticket->ticket_available;
+    if ($available < $quantity) {
+      throw new \RuntimeException('No hay stock disponible para la entrada seleccionada.');
+    }
+
+    $ticket->ticket_available = $available - $quantity;
+    $ticket->save();
   }
 
   private function ensureSelectedTicketsBelongToEvent($variations, int $eventId): void

@@ -17,6 +17,7 @@ use App\Models\Language;
 use App\Models\PaymentGateway\OnlineGateway;
 use App\Models\PendingBooking;
 use App\Services\EventAddonCartService;
+use App\Services\PaymentCompensationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -243,7 +244,7 @@ class MercadoPagoController extends Controller
       'data' => $arrData,
       'amount' => $chargeTotal,
       'status' => 'pending',
-      'expires_at' => now()->addHours(2),
+      'expires_at' => now()->addHours((int) config('services.mercadopago.pending_ttl_hours', 48)),
     ]);
 
     $request->session()->put('eventId', $eventId);
@@ -345,7 +346,9 @@ class MercadoPagoController extends Controller
 
       // Fallback a DB si la sesión se perdió durante el redirect cross-site
       if (empty($arrData) || empty($eventId)) {
-        $pending = PendingBooking::pending()->where('token', $mpExternalRef)->first();
+        $pending = PendingBooking::where('token', $mpExternalRef)
+          ->whereIn('status', ['pending', 'expired'])
+          ->first();
         if ($pending) {
           Log::info('MercadoPago notify: recuperado desde DB (session perdida)', [
             'payment_id' => $paymentId,
@@ -396,9 +399,7 @@ class MercadoPagoController extends Controller
 
       // Atomic check-and-set — evita race condition con webhook()
       $token = $paymentToken ?: $mpExternalRef;
-      $claimed = PendingBooking::where('token', $token)
-        ->where('status', 'pending')
-        ->update(['status' => 'processing']);
+      $claimed = $this->claimPendingBooking((string) $token);
       if ($claimed === 0) {
         Log::info('MercadoPago notify: pago ya siendo procesado (atómico)', [
           'payment_id' => $paymentId,
@@ -434,6 +435,17 @@ class MercadoPagoController extends Controller
           'error' => $e->getMessage(),
         ]);
         PendingBooking::where('token', $token)->update(['status' => 'failed']);
+        app(PaymentCompensationService::class)->compensateMercadoPago(
+          (string) $paymentId,
+          (string) $this->token,
+          [
+            'event_id' => $arrData['event_id'] ?? $eventId,
+            'amount' => $expectedAmount,
+            'currency' => $arrData['currencyText'] ?? null,
+            'error' => $e->getMessage(),
+          ],
+          'booking_creation_failed'
+        );
         $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
         $errorMessage = str_contains($e->getMessage(), 'entradas seleccionadas')
           ? $e->getMessage()
@@ -499,7 +511,7 @@ class MercadoPagoController extends Controller
       ]);
 
       //storeTransaction
-      $bookingInfo['paymentStatus'] = 1;
+      $bookingInfo['paymentStatus'] = 'completed';
       $bookingInfo['transcation_type'] = 1;
 
       storeTranscation($bookingInfo);
@@ -593,7 +605,7 @@ class MercadoPagoController extends Controller
           'curl_error' => $apiCurlError,
           'response' => is_string($apiRawResponse) ? substr($apiRawResponse, 0, 1000) : null,
         ]);
-        return response('OK', 200);
+        return response('Service Unavailable', 503);
       }
 
       $mpStatus = $apiResponse['status'] ?? 'unknown';
@@ -611,9 +623,7 @@ class MercadoPagoController extends Controller
       }
 
       // Atomic check-and-set — evita race condition con notify()
-      $claimed = PendingBooking::where('token', $mpExternalRef)
-        ->where('status', 'pending')
-        ->update(['status' => 'processing']);
+      $claimed = $this->claimPendingBooking((string) $mpExternalRef);
       if ($claimed === 0) {
         Log::info('MercadoPago webhook: pago ya siendo procesado (atómico)', [
           'payment_id' => $paymentId,
@@ -629,10 +639,20 @@ class MercadoPagoController extends Controller
           'payment_id' => $paymentId,
           'external_reference' => $mpExternalRef,
         ]);
+        app(PaymentCompensationService::class)->recordManualReview(
+          'mercadopago',
+          (string) $paymentId,
+          [
+            'external_reference' => $mpExternalRef,
+            'amount' => $apiResponse['transaction_amount'] ?? null,
+            'currency' => $apiResponse['currency_id'] ?? null,
+          ],
+          'pending_booking_not_found'
+        );
         return response('OK', 200);
       }
 
-      // Validar monto
+      // Validar monto y moneda contra la reserva pendiente
       $paidAmount = (float)($apiResponse['transaction_amount'] ?? 0);
       if ($paidAmount < (float)$pending->amount) {
         Log::error('MercadoPago webhook: monto insuficiente', [
@@ -640,6 +660,39 @@ class MercadoPagoController extends Controller
           'paid' => $paidAmount,
         ]);
         $pending->update(['status' => 'failed']);
+        app(PaymentCompensationService::class)->compensateMercadoPago(
+          (string) $paymentId,
+          (string) $this->token,
+          [
+            'event_id' => $pending->event_id,
+            'amount' => $paidAmount,
+            'currency' => $apiResponse['currency_id'] ?? null,
+            'error' => 'amount_mismatch',
+          ],
+          'amount_mismatch'
+        );
+        return response('OK', 200);
+      }
+
+      $expectedCurrency = strtoupper((string) ($pending->data['currencyText'] ?? ''));
+      $paidCurrency = strtoupper((string) ($apiResponse['currency_id'] ?? ''));
+      if ($expectedCurrency !== '' && $paidCurrency !== '' && $expectedCurrency !== $paidCurrency) {
+        Log::error('MercadoPago webhook: moneda distinta', [
+          'expected' => $expectedCurrency,
+          'paid' => $paidCurrency,
+        ]);
+        $pending->update(['status' => 'failed']);
+        app(PaymentCompensationService::class)->compensateMercadoPago(
+          (string) $paymentId,
+          (string) $this->token,
+          [
+            'event_id' => $pending->event_id,
+            'amount' => $paidAmount,
+            'currency' => $paidCurrency,
+            'error' => 'currency_mismatch',
+          ],
+          'currency_mismatch'
+        );
         return response('OK', 200);
       }
 
@@ -662,6 +715,17 @@ class MercadoPagoController extends Controller
         if (isset($pending) && $pending) {
           $pending->update(['status' => 'failed']);
         }
+        app(PaymentCompensationService::class)->compensateMercadoPago(
+          (string) $paymentId,
+          (string) $this->token,
+          [
+            'event_id' => $arrData['event_id'] ?? ($pending->event_id ?? null),
+            'amount' => $pending->amount ?? null,
+            'currency' => $arrData['currencyText'] ?? null,
+            'error' => $e->getMessage(),
+          ],
+          'booking_creation_failed'
+        );
         return response('OK', 200);
       }
 
@@ -709,7 +773,7 @@ class MercadoPagoController extends Controller
         'total_earning' => DB::raw("total_earning + {$earningInc}"),
       ]);
 
-      $bookingInfo['paymentStatus'] = 1;
+      $bookingInfo['paymentStatus'] = 'completed';
       $bookingInfo['transcation_type'] = 1;
       storeTranscation($bookingInfo);
 
@@ -734,16 +798,32 @@ class MercadoPagoController extends Controller
         'message' => $e->getMessage(),
         'trace' => $e->getTraceAsString(),
       ]);
-      return response('OK', 200);
+      return response('Internal Server Error', 500);
     }
+  }
+
+  private function claimPendingBooking(string $token): int
+  {
+    $staleBefore = now()->subMinutes(30);
+
+    return PendingBooking::where('token', $token)
+      ->where(function ($query) use ($staleBefore) {
+        $query->whereIn('status', ['pending', 'expired'])
+          ->orWhere(function ($stale) use ($staleBefore) {
+            $stale->where('status', 'processing')
+              ->where('updated_at', '<', $staleBefore);
+          });
+      })
+      ->update(['status' => 'processing']);
   }
 
   private function hasValidWebhookSignature(Request $request, string $paymentId): bool
   {
     $secret = config('services.mercadopago.webhook_secret') ?: env('MERCADOPAGO_WEBHOOK_SECRET');
     if (empty($secret)) {
-      Log::debug('MercadoPago webhook: secret de firma no configurado');
-      return true;
+      Log::critical('MercadoPago webhook: secret de firma no configurado');
+
+      return !app()->environment('production');
     }
 
     $xSignature = (string) $request->header('x-signature');

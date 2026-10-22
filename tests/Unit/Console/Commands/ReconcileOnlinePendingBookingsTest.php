@@ -29,6 +29,18 @@ class ReconcileOnlinePendingBookingsTest extends TestCase
                 $table->integer('quantity')->default(0);
                 $table->string('paymentMethod')->nullable();
                 $table->string('paymentStatus')->nullable();
+                $table->timestamp('stock_released_at')->nullable();
+                $table->timestamps();
+            });
+        }
+
+        if (! Schema::hasTable('booking_addons')) {
+            Schema::create('booking_addons', function (Blueprint $table) {
+                $table->bigIncrements('id');
+                $table->unsignedBigInteger('booking_id');
+                $table->unsignedBigInteger('event_addon_id')->nullable();
+                $table->integer('quantity')->default(1);
+                $table->boolean('redeemed')->default(false);
                 $table->timestamps();
             });
         }
@@ -141,7 +153,7 @@ class ReconcileOnlinePendingBookingsTest extends TestCase
         $this->assertSame(10, $ticket->fresh()->ticket_available);
     }
 
-    public function test_deletes_expired_pending_bookings_with_pii(): void
+    public function test_marks_expired_pending_bookings_and_retains_pii_for_seven_days(): void
     {
         $pending = PendingBooking::create([
             'token' => 'tok-expired-1',
@@ -151,6 +163,26 @@ class ReconcileOnlinePendingBookingsTest extends TestCase
             'status' => 'pending',
             'expires_at' => Carbon::now()->subHours(3),
         ]);
+
+        $this->artisan('bookings:reconcile-online-pending')->assertSuccessful();
+
+        $pending->refresh();
+        $this->assertSame('expired', $pending->status);
+        $this->assertNotNull(PendingBooking::find($pending->id));
+    }
+
+    public function test_deletes_expired_pending_bookings_after_retention_window(): void
+    {
+        $pending = PendingBooking::create([
+            'token' => 'tok-expired-old',
+            'event_id' => 1,
+            'data' => json_encode(['fname' => 'Juan']),
+            'amount' => 500,
+            'status' => 'expired',
+            'expires_at' => Carbon::now()->subDays(9),
+        ]);
+        $pending->updated_at = Carbon::now()->subDays(8);
+        $pending->save();
 
         $this->artisan('bookings:reconcile-online-pending')->assertSuccessful();
 

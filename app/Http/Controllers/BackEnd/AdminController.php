@@ -869,38 +869,44 @@ class AdminController extends Controller
   //check_qrcode
   public function check_qrcode(Request $request)
   {
+    $payload = (string) $request->input('booking_id', '');
 
-    if (str_contains($request->booking_id, '__')) {
-      $ids = explode('__', $request->booking_id);
-      $booking_id = $ids[0];
-      $unique_id = $ids[1];
-      $check = Booking::where([['booking_id', $booking_id]])->first();
-      if ($check) {
-        // check payment status completed or not 
-        if ($check->paymentStatus == 'completed' || $check->paymentStatus == 'free') {
-          if (!$check->hasIssuedTicketUniqueId($unique_id)) {
-            return response()->json(['alert_type' => 'error', 'message' => 'Unverified', 'booking_id' => $request->booking_id]);
-          }
-
-          $scannedTicketArr = $check->scannedTicketIds();
-          if (!in_array($unique_id, $scannedTicketArr, true)) {
-            $scannedTicketArr[] = $unique_id;
-            $check->scanned_tickets = json_encode($scannedTicketArr);
-            $check->save();
-            return response()->json(['alert_type' => 'success', 'message' => 'Verified', 'booking_id' => $request->booking_id]);
-          } else {
-            return response()->json(['alert_type' => 'error', 'message' => 'Already Scanned', 'booking_id' => $request->booking_id]);
-          }
-        } elseif ($check->paymentStatus == 'pending') {
-          return response()->json(['alert_type' => 'error', 'message' => 'Payment incomplete', 'booking_id' => $request->booking_id]);
-        } elseif ($check->paymentStatus == 'rejected') {
-          return response()->json(['alert_type' => 'error', 'message' => 'Payment Rejected', 'booking_id' => $request->booking_id]);
-        }
-      } else {
-        return response()->json(['alert_type' => 'error', 'message' => 'Unverified']);
-      }
-    } else {
+    if (!str_contains($payload, '__')) {
       return response()->json(['alert_type' => 'error', 'message' => 'Unverified']);
     }
+
+    [$bookingId, $uniqueId] = explode('__', $payload, 2);
+    $booking = Booking::where('booking_id', $bookingId)->first();
+
+    if (!$booking) {
+      return response()->json(['alert_type' => 'error', 'message' => 'Unverified']);
+    }
+
+    $result = app(\App\Services\TicketScanService::class)->scan(
+      $booking,
+      $uniqueId,
+      'admin',
+      \Illuminate\Support\Facades\Auth::guard('admin')->id(),
+      null,
+      $request->ip(),
+      $request->userAgent()
+    );
+
+    $messages = [
+      \App\Services\TicketScanService::VERIFIED => ['success', 'Verified'],
+      \App\Services\TicketScanService::ALREADY_SCANNED => ['error', 'Already Scanned'],
+      \App\Services\TicketScanService::PAYMENT_INCOMPLETE => ['error', 'Payment incomplete'],
+      \App\Services\TicketScanService::PAYMENT_REJECTED => ['error', 'Payment Rejected'],
+      \App\Services\TicketScanService::UNVERIFIED => ['error', 'Unverified'],
+      \App\Services\TicketScanService::NO_PERMISSION => ['error', 'Unverified'],
+    ];
+
+    [$alertType, $message] = $messages[$result] ?? ['error', 'Unverified'];
+
+    return response()->json([
+      'alert_type' => $alertType,
+      'message' => $message,
+      'booking_id' => $payload,
+    ]);
   }
 }

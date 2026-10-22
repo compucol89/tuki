@@ -16,6 +16,7 @@ use App\Models\Event\Ticket;
 use App\Models\Language;
 use App\Models\PaymentGateway\OfflineGateway;
 use App\Models\PaymentGateway\OnlineGateway;
+use App\Services\BookingStockService;
 use App\Services\EventTicketSalesSummaryService;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -204,7 +205,7 @@ class EventBookingController extends Controller
         $bookingInfo = $booking;
 
         //storeTransaction
-        $bookingInfo['paymentStatus'] = 1;
+        $bookingInfo['paymentStatus'] = 'completed';
         $bookingInfo['transcation_type'] = 1;
 
         storeTranscation($bookingInfo);
@@ -244,68 +245,8 @@ class EventBookingController extends Controller
         'paymentStatus' => 'pending'
       ]);
     } else {
-      $event = Event::where('id', $booking->event_id)->first();
-      if ($event) {
-        if ($event->event_type == 'online') {
-          $ticket = Ticket::where('event_id', $event->id)->first();
-          if ($ticket) {
-            if ($ticket->ticket_available_type == 'limited') {
-              $ticket->ticket_available = $ticket->ticket_available + $booking->quantity;
-              $ticket->save();
-            }
-          }
-        } else {
-          $variations = json_decode($booking->variation, true);
-          if ($variations) {
-            foreach ($variations as $variation) {
+      app(BookingStockService::class)->release($booking);
 
-              $ticket = Ticket::where('id', $variation['ticket_id'])->first();
-              if ($ticket) {
-                if ($ticket->pricing_type == 'variation') {
-
-                  $ticket_variations =  json_decode($ticket->variations, true);
-                  $update_variation = [];
-                  foreach ($ticket_variations as $ticket_variation) {
-                    if (Booking::ticketNameMatches($variation['ticket_id'], $ticket_variation['name'] ?? null, $variation['name'] ?? null)) {
-
-                      if ($ticket_variation['ticket_available_type'] == 'limited') {
-                        $ticket_available = intval($ticket_variation['ticket_available']) + intval($variation['qty']);
-                      } else {
-                        $ticket_available = $ticket_variation['ticket_available'];
-                      }
-                      $update_variation[] = [
-                        'name' => $ticket_variation['name'],
-                        'price' => round($ticket_variation['price'], 2),
-                        'ticket_available_type' => $ticket_variation['ticket_available_type'],
-                        'ticket_available' => $ticket_available,
-                        'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
-                        'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
-                      ];
-                    } else {
-                      $update_variation[] = [
-                        'name' => $ticket_variation['name'],
-                        'price' => round($ticket_variation['price'], 2),
-                        'ticket_available_type' => $ticket_variation['ticket_available_type'],
-                        'ticket_available' => $ticket_variation['ticket_available'],
-                        'max_ticket_buy_type' => $ticket_variation['max_ticket_buy_type'],
-                        'v_max_ticket_buy' => $ticket_variation['v_max_ticket_buy'],
-                      ];
-                    }
-                  }
-                  $ticket->variations = json_encode($update_variation, true);
-
-                  $ticket->save();
-                } else {
-                  if ($ticket->ticket_available_type == 'limited') {
-                    $ticket->ticket_available = $ticket->ticket_available + $variation['qty'];
-                    $ticket->save();
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
       $booking->update([
         'paymentStatus' => 'rejected'
       ]);

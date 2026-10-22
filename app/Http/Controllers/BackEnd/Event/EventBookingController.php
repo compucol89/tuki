@@ -168,6 +168,10 @@ class EventBookingController extends Controller
     $booking = Booking::where('id', $id)->first();
 
     if ($request['payment_status'] == 'completed') {
+      if ($booking->stock_released_at !== null) {
+        return redirect()->back()->with('error', 'La reserva fue rechazada y su stock fue liberado. Generá una nueva reserva.');
+      }
+
       $wasCompleted = (string) $booking->paymentStatus === 'completed';
       $booking->update([
         'paymentStatus' => 'completed'

@@ -15,6 +15,9 @@ Están en `docs/skills/` y se instalan en el store local con:
 | `tukipass-qr-security` | QR, escaneo, auditoría |
 | `tukipass-release-guard` | Deploy, backup, rollback |
 | `tukipass-organizer-isolation` | Aislamiento organizador/cliente |
+| `tukipass-performance` | Medición y optimización de capacidad, queries y assets |
+
+> **Fuente de verdad:** código + tests + mediciones. Estas skills son mapas operativos. Si el código cambia, actualizar la skill en el mismo PR. Antes de asumir que un fix está en producción, comparar `git rev-parse HEAD` con el commit desplegado en EasyPanel.
 
 ## Skills externas instaladas
 

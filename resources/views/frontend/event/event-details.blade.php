@@ -903,18 +903,33 @@
       || (($content->pricing_type ?? null) === 'free')
     )
   ) {
-    $jsonLd['offers'] = [
-      '@type' => 'Offer',
-      'price' => is_numeric($ticketSummary['min_ticket_price'] ?? null) ? $ticketSummary['min_ticket_price'] : 0,
-      'priceCurrency' => $basicInfo->base_currency_text ?? config('tukipass.currency.text'),
-      'availability' => (
-        ($ticketSummary['has_unlimited_stock'] ?? false)
-        || (($ticketSummary['total_stock'] ?? null) !== null && (int) $ticketSummary['total_stock'] > 0)
-      )
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/SoldOut',
-      'url' => $eventUrl,
-    ];
+    $minPrice = is_numeric($ticketSummary['min_ticket_price'] ?? null) ? (float) $ticketSummary['min_ticket_price'] : 0;
+    $maxPrice = is_numeric($ticketSummary['max_ticket_price'] ?? null) ? (float) $ticketSummary['max_ticket_price'] : $minPrice;
+    $availability = (
+      ($ticketSummary['has_unlimited_stock'] ?? false)
+      || (($ticketSummary['total_stock'] ?? null) !== null && (int) $ticketSummary['total_stock'] > 0)
+    )
+      ? 'https://schema.org/InStock'
+      : 'https://schema.org/SoldOut';
+
+    if (($ticketSummary['has_price_range'] ?? false) && $maxPrice > $minPrice) {
+      $jsonLd['offers'] = [
+        '@type' => 'AggregateOffer',
+        'lowPrice' => $minPrice,
+        'highPrice' => $maxPrice,
+        'priceCurrency' => $basicInfo->base_currency_text ?? config('tukipass.currency.text'),
+        'availability' => $availability,
+        'url' => $eventUrl,
+      ];
+    } else {
+      $jsonLd['offers'] = [
+        '@type' => 'Offer',
+        'price' => $minPrice,
+        'priceCurrency' => $basicInfo->base_currency_text ?? config('tukipass.currency.text'),
+        'availability' => $availability,
+        'url' => $eventUrl,
+      ];
+    }
   }
   $jsonLd = array_filter($jsonLd, function ($value) {
     return !is_null($value) && $value !== '';

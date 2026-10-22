@@ -55,6 +55,11 @@ class TicketScanService
         return self::UNVERIFIED;
       }
 
+      // Compatibilidad con escaneos previos a ticket_scans (solo JSON).
+      if (in_array($uniqueId, $locked->scannedTicketIds(), true)) {
+        return self::ALREADY_SCANNED;
+      }
+
       try {
         TicketScan::create([
           'booking_id' => $locked->id,

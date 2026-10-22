@@ -84,6 +84,16 @@ class TicketScanServiceTest extends TestCase
     $this->assertSame(0, \DB::table('ticket_scans')->count());
   }
 
+  public function test_scan_rejects_id_already_present_in_legacy_json(): void
+  {
+    $booking = $this->booking('completed', 5);
+    $booking->scanned_tickets = json_encode(['uuid-1']);
+    $booking->save();
+
+    $this->assertSame(TicketScanService::ALREADY_SCANNED, (new TicketScanService())->scan($booking, 'uuid-1', 'organizer', 5, 5));
+    $this->assertSame(0, \DB::table('ticket_scans')->count());
+  }
+
   private function booking(string $status, int $organizerId): Booking
   {
     return Booking::create([

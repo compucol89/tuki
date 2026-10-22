@@ -393,6 +393,39 @@ class MercadoPagoController extends Controller
           'expected' => $expectedAmount,
           'paid' => $paidAmount,
         ]);
+        app(PaymentCompensationService::class)->compensateMercadoPago(
+          (string) $paymentId,
+          (string) $this->token,
+          [
+            'event_id' => $eventId,
+            'amount' => $paidAmount,
+            'currency' => $apiResponse['currency_id'] ?? null,
+            'error' => 'amount_mismatch',
+          ],
+          'amount_mismatch'
+        );
+        $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
+        return redirect()->route('event_booking.cancel', ['id' => $eventId]);
+      }
+
+      $expectedCurrency = strtoupper((string) ($arrData['currencyText'] ?? ''));
+      $paidCurrency = strtoupper((string) ($apiResponse['currency_id'] ?? ''));
+      if ($expectedCurrency !== '' && $paidCurrency !== '' && $expectedCurrency !== $paidCurrency) {
+        Log::error('MercadoPago notify: moneda distinta', [
+          'expected' => $expectedCurrency,
+          'paid' => $paidCurrency,
+        ]);
+        app(PaymentCompensationService::class)->compensateMercadoPago(
+          (string) $paymentId,
+          (string) $this->token,
+          [
+            'event_id' => $eventId,
+            'amount' => $paidAmount,
+            'currency' => $paidCurrency,
+            'error' => 'currency_mismatch',
+          ],
+          'currency_mismatch'
+        );
         $request->session()->forget(['eventId', 'arrData', 'mp_payment_token', 'mp_expected_amount', 'discount']);
         return redirect()->route('event_booking.cancel', ['id' => $eventId]);
       }

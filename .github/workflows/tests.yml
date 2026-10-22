@@ -44,6 +44,9 @@ jobs:
       - name: Run PHPUnit
         run: php artisan test --no-coverage
 
+      - name: Route list smoke
+        run: php artisan route:list --except-vendor > /dev/null
+
   dependency-audit:
     name: Dependency audit (high/critical)
     runs-on: ubuntu-latest

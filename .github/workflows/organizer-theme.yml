@@ -2,8 +2,12 @@ name: Organizer Theme Quality Gates
 
 on:
   push:
-    branches: [main, 'remediation/*']
+    branches: [master, 'remediation/*']
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: organizer-theme-${{ github.ref }}
@@ -36,6 +40,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: static-audit
+    # Se omite hasta versionar un seed reproducible (docs/ops/ci-quality-gates.md).
+    if: hashFiles('tukipass.sql') != ''
     steps:
       - uses: actions/checkout@v4
 
@@ -110,6 +116,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: static-audit
+    # Se omite hasta versionar un seed reproducible (docs/ops/ci-quality-gates.md).
+    if: hashFiles('tukipass.sql') != ''
     steps:
       - uses: actions/checkout@v4
 

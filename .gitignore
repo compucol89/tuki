@@ -97,6 +97,11 @@ $RECYCLE.BIN/
 /public/assets/admin/img/event-gallery/
 /public/assets/admin/img/event/thumbnail/
 
+# ── Uploads y dumps que nunca deben trackearse ──────────────
+/public/installer/*.sql
+/public/assets/admin/img/support-ticket/*.zip
+/public/assets/admin/img/product/download_file/*.zip
+
 # ── Third-party docs ─────────────────────────────────────────────────────────
 /docs/vendor/
 

@@ -104,6 +104,8 @@ crond -b -l 2 || true
 # (Incidente 2026-08-11: ver docs/ops/worker-incident-2026-08-11.md)
 
 mkdir -p /app/.router-root
+# Concurrencia del servidor embebido: 4 workers por defecto (medido 3,9× vs 1).
+export PHP_CLI_SERVER_WORKERS="${PHP_CLI_SERVER_WORKERS:-4}"
 # zlib.output_compression: gzip del HTML (los estáticos los comprime docker-router.php vía ob_gzhandler)
 php -d upload_max_filesize=8M -d post_max_size=12M -d memory_limit=512M \
     -d zlib.output_compression=1 -d zlib.output_compression_level=5 \

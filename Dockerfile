@@ -8,7 +8,7 @@ RUN apk add --no-cache \
         libzip-dev libxml2-dev oniguruma-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
-        pdo pdo_mysql mbstring xml gd bcmath zip soap
+        pdo pdo_mysql mbstring xml gd bcmath zip soap opcache
 
 # ==== BUILDER ── composer + assets JS ====================
 FROM php:8.4.27-cli-alpine AS builder
@@ -60,6 +60,18 @@ RUN printf '%s\n' \
     'session.upload_progress.name=X-Tuki-Noop-7f4c9e2a' \
     'expose_php=Off' \
     > /usr/local/etc/php/conf.d/tukipass-uploads.ini
+
+RUN printf '%s\n' \
+    'opcache.enable=1' \
+    'opcache.enable_cli=1' \
+    'opcache.memory_consumption=128' \
+    'opcache.interned_strings_buffer=16' \
+    'opcache.max_accelerated_files=20000' \
+    'opcache.validate_timestamps=0' \
+    'opcache.revalidate_freq=0' \
+    > /usr/local/etc/php/conf.d/tukipass-opcache.ini
+
+RUN php -r 'if (!extension_loaded("Zend OPcache")) { fwrite(STDERR, "OPcache no cargado\n"); exit(1); } echo "OPcache OK\n";'
 
 # Mitigación interina CVE-2026-109618 / CVE-2026-109619:
 # el handler de session.upload_progress corre en cualquier request multipart

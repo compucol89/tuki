@@ -1,0 +1,90 @@
+name: Tests & Security
+
+on:
+  push:
+    branches: [master, 'remediation/*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, sqlite3, bcmath, gd, zip, intl, curl, dom, fileinfo, openssl
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Verify skills lock
+        run: ./scripts/audit-skills.sh
+
+      - name: Verify repository exposure
+        run: ./scripts/audit-repo-exposure.sh
+
+      - name: Run PHPUnit
+        run: php artisan test --no-coverage
+
+  dependency-audit:
+    name: Dependency audit (high/critical)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      - name: Composer audit
+        run: |
+          composer audit --locked --format=json > /tmp/composer-audit.json || true
+          if [ ! -s /tmp/composer-audit.json ]; then
+            echo "::error::composer audit no produjo salida"
+            exit 1
+          fi
+          COUNT=$(jq '[.advisories[]?[]? | select(.severity == "critical" or .severity == "high")] | length' /tmp/composer-audit.json)
+          echo "Advisories high/critical: $COUNT"
+          jq -r '.advisories | to_entries[] | .key as $pkg | .value[] | select(.severity == "critical" or .severity == "high") | "\($pkg): \(.title) [\(.severity)]"' /tmp/composer-audit.json
+          test "$COUNT" -eq 0
+
+      - name: npm audit (runtime dependencies)
+        run: npm audit --omit=dev --audit-level=high
+
+  codeql:
+    name: CodeQL (PHP)
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: php
+
+      - uses: github/codeql-action/analyze@v3

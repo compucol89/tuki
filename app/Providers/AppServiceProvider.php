@@ -199,12 +199,14 @@ class AppServiceProvider extends ServiceProvider
           });
 
           if ($cachedBasicData->theme_version != 3) {
-            $blogs = Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
-              ->where('blog_informations.language_id', '=', $language->id)
-              ->select('blogs.image', 'blogs.created_at', 'blog_informations.title', 'blog_informations.slug')
-              ->orderByDesc('blogs.created_at')
-              ->limit(3)
-              ->get();
+            $blogs = Cache::remember('frontend_latest_blogs_' . $language->id, now()->addMinutes(5), function () use ($language) {
+              return Blog::join('blog_informations', 'blogs.id', '=', 'blog_informations.blog_id')
+                ->where('blog_informations.language_id', '=', $language->id)
+                ->select('blogs.image', 'blogs.created_at', 'blog_informations.title', 'blog_informations.slug')
+                ->orderByDesc('blogs.created_at')
+                ->limit(3)
+                ->get();
+            });
           }
 
           if ($cachedBasicData->theme_version == 2) {

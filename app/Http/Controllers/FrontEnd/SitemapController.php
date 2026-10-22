@@ -69,6 +69,8 @@ class SitemapController extends Controller
       ->whereColumn('events.end_date_time', '>=', 'events.start_date')
       ->whereNotIn('event_contents.slug', DemoEventExclusion::EVENT_SLUGS)
       ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
+      ->where('event_contents.slug', 'not like', '%-demo')
+      ->where('event_contents.slug', 'not like', '%-prueba')
       ->when($defaultLanguageId, function ($query, $defaultLanguageId) {
         return $query->where('event_contents.language_id', $defaultLanguageId);
       })

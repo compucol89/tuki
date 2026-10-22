@@ -240,8 +240,7 @@ class EventController extends Controller
       if (
         !$eventModel
         || (int) $eventModel->status !== 1
-        || in_array((int) $id, DemoEventExclusion::EVENT_IDS, true)
-        || in_array($slug, DemoEventExclusion::EVENT_SLUGS, true)
+        || DemoEventExclusion::isDemo((int) $id, (string) $slug)
       ) {
         abort(410);
       }

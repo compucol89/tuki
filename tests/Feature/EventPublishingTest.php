@@ -57,6 +57,22 @@ class EventPublishingTest extends TestCase
     $this->assertEmpty(EventPublicWindow::apply($this->baseQuery(), Carbon::now())->pluck('event_contents.event_id')->all());
   }
 
+  public function test_demo_suffix_slug_is_hidden(): void
+  {
+    $this->insertEvent(500, 1, now()->addDays(3));
+    $this->insertContent(500, 500, 8, 'rooftop-networking-night-demo');
+
+    $this->assertEmpty(EventPublicWindow::apply($this->baseQuery(), Carbon::now())->pluck('event_contents.event_id')->all());
+  }
+
+  public function test_prueba_suffix_slug_is_hidden(): void
+  {
+    $this->insertEvent(501, 1, now()->addDays(3));
+    $this->insertContent(501, 501, 8, 'fiesta-de-cachengue-noche-de-club-prueba');
+
+    $this->assertEmpty(EventPublicWindow::apply($this->baseQuery(), Carbon::now())->pluck('event_contents.event_id')->all());
+  }
+
   private function baseQuery()
   {
     return EventContent::query()
@@ -70,10 +86,11 @@ class EventPublishingTest extends TestCase
     ]);
   }
 
-  private function insertContent(int $id, int $eventId, int $languageId): void
+  private function insertContent(int $id, int $eventId, int $languageId, ?string $slug = null): void
   {
     DB::table('event_contents')->insert([
       'id' => $id, 'event_id' => $eventId, 'language_id' => $languageId,
+      'slug' => $slug ?? ('evento-' . $id),
     ]);
   }
 
@@ -93,6 +110,7 @@ class EventPublishingTest extends TestCase
       $t->id();
       $t->integer('event_id')->nullable();
       $t->integer('language_id')->nullable();
+      $t->string('slug')->nullable();
     });
   }
 }

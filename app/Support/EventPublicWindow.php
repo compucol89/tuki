@@ -19,7 +19,7 @@ final class EventPublicWindow
   {
     return $query
       ->where('events.status', 1)
-      ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
+      ->tap(fn ($q) => DemoEventExclusion::apply($q))
       ->where('events.end_date_time', '>=', $now);
   }
 }

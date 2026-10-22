@@ -41,7 +41,7 @@ class SupportTicketController extends Controller
     if ($file) {
       $extension = $file->getClientOriginalExtension();
       $directory = public_path('assets/admin/img/support-ticket/');
-      $fileName = uniqid() . '.' . $extension;
+      $fileName = \Illuminate\Support\Str::random(40) . '.' . $extension;
       @mkdir($directory, 0775, true);
       $file->move($directory, $fileName);
       $in['attachment'] = $fileName;
@@ -105,7 +105,7 @@ class SupportTicketController extends Controller
     $input['support_ticket_id'] = $ticket->id;
     if ($request->hasFile('file')) {
       $file = $request->file('file');
-      $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+      $filename = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
       @mkdir(public_path('assets/admin/img/support-ticket/'), 0775, true);
       $file->move(public_path('assets/admin/img/support-ticket/'), $filename);
       $input['file'] = $filename;

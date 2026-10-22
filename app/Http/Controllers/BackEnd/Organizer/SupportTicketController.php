@@ -75,7 +75,7 @@ class SupportTicketController extends Controller
         $in = $request->all();
         if ($request->hasFile('attachment')) {
             $attachment = $request->file('attachment');
-            $filename = uniqid() . '.' . $attachment->getClientOriginalExtension();
+            $filename = \Illuminate\Support\Str::random(40) . '.' . $attachment->getClientOriginalExtension();
             @mkdir(public_path('assets/admin/img/support-ticket/attachment/'), 0775, true);
             $attachment->move(public_path('assets/admin/img/support-ticket/attachment/'), $filename);
             $in['attachment'] = $filename;
@@ -117,7 +117,7 @@ class SupportTicketController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
             @mkdir(public_path('assets/front/temp/'), 0775, true);
             $file->move(public_path('assets/front/temp/'), $filename);
             $input['file'] = $filename;
@@ -157,7 +157,7 @@ class SupportTicketController extends Controller
         $input['support_ticket_id'] = $ticket->id;
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = \Illuminate\Support\Str::random(40) . '.' . $file->getClientOriginalExtension();
             @mkdir(public_path('assets/admin/img/support-ticket/'), 0775, true);
             $file->move(public_path('assets/admin/img/support-ticket/'), $filename);
             $input['file'] = $filename;

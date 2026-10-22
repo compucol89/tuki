@@ -1,6 +1,25 @@
 # Pendientes — TukiPass
 
-> Actualizado: 2026-07-23 — Search Console verificado por DNS ✅, sitemap procesado ✅, pendiente: Social Login + validaciones SEO/Meta post-deploy
+> Actualizado: 2026-10-22 — auditoría integral en rama `fix/audit-p0-p1-20261022`
+
+## ✅ Auditoría integral 2026-10-22 (local, sin deploy)
+
+- [x] Stock y reserva en una sola transacción; sin descuentos parciales.
+- [x] Pago tardío: `PendingBooking` se retiene 7 días y se reclama desde `expired`.
+- [x] Compensación de pago aprobado sin reserva (`payment_incidents` + reembolso MP).
+- [x] Webhook MP fail-closed, 503 en errores transitorios, validación de monto/moneda.
+- [x] QR atómico con `ticket_scans` + auditoría; compatibilidad con JSON legacy.
+- [x] IDOR de soporte cliente corregido.
+- [x] Exclusión demo unificada (`-demo` y `-prueba`); sitemap/listados/detalle.
+- [x] CI: PHPUnit, audits, CodeQL, Dependabot, `master`, `route:list`.
+- [x] OPcache, 4 workers y cache de blogs.
+- [x] 5 skills propias + 5 externas verificadas.
+- [ ] Deploy + `php artisan migrate` (3 migraciones nuevas).
+- [ ] Configurar `MERCADOPAGO_WEBHOOK_SECRET` en producción.
+- [ ] Verificar `ORGANIZER_LOGIN_THROTTLE_PER_MINUTE=5`.
+- [ ] Seed reproducible para Playwright en CI.
+- [ ] Historial Git: `public/installer/database.sql` sigue en commits viejos.
+
 
 ---
 

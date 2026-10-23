@@ -29,7 +29,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.62.1",
     "axios": "^1.20.0",
-    "cssnano": "^6.1.2",
+    "cssnano": "^9.9.0",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
     "pixelmatch": "^7.2.0",

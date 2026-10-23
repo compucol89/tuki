@@ -28,7 +28,7 @@
   $eventId = isset($event) && is_object($event) && isset($event->id) ? (int) $event->id : 0;
   $cartAddons = Session::get('cart_addons', []);
   $selectedAddons = $cartAddons[$eventId] ?? [];
-  $sections = $eventId > 0
+  $sections = $addonSections ?? ($eventId > 0
     ? EventAddonSection::where('event_id', $eventId)
         ->where('is_active', true)
         ->with(['addons' => function ($q) {
@@ -40,10 +40,9 @@
         }])
         ->orderBy('sort_order')
         ->get()
-    : collect();
-  $basicInfo = \App\Models\BasicSettings\Basic::select('base_currency_symbol', 'base_currency_symbol_position')->first();
-  $currencySymbol = $basicInfo->base_currency_symbol ?? '$';
-  $currencyPosition = $basicInfo->base_currency_symbol_position ?? 'left';
+    : collect());
+  $currencySymbol = $basicInfo?->base_currency_symbol ?? config('tukipass.currency.symbol');
+  $currencyPosition = $basicInfo?->base_currency_symbol_position ?? 'left';
 @endphp
 
 @if ($sections->isNotEmpty() && $eventId > 0 && (!isset($event->event_addons_enabled) || $event->event_addons_enabled))

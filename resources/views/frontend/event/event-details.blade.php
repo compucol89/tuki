@@ -1619,10 +1619,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                     @if ($content->event_type == 'online' && $content->pricing_type == 'normal')
 
                       @php
-                        $ticket = App\Models\Event\Ticket::where('event_id', $content->id)->first();
-                        $event_count = App\Models\Event\Ticket::where('event_id', $content->id)
-                            ->get()
-                            ->count();
+                        $ticket = $firstTicket;
                         if ($ticket->ticket_available_type == 'limited') {
                             $stock = $ticket->ticket_available;
                         } else {
@@ -1715,10 +1712,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                       @endif
                     @elseif($content->event_type == 'online' && $content->pricing_type == 'free')
                       @php
-                        $ticket = App\Models\Event\Ticket::where('event_id', $content->id)->first();
-                        $event_count = App\Models\Event\Ticket::where('event_id', $content->id)
-                            ->get()
-                            ->count();
+                        $ticket = $firstTicket;
 
                         if ($ticket->ticket_available_type == 'limited') {
                             $stock = $ticket->ticket_available;
@@ -1759,9 +1753,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                       <p class="text-warning max_error_{{ $ticket->id }}{{ $ticket->max_ticket_buy_type == 'limited' ? $ticket->max_buy_ticket : '' }} "></p>
                     @elseif($content->event_type == 'venue')
                       @php
-                        $tickets = DB::table('tickets')
-                            ->where('event_id', $content->id)
-                            ->get();
+                        $tickets = $allTickets;
                       @endphp
                       @if (count($tickets) > 0)
                         @foreach ($tickets as $ticket)
@@ -1774,7 +1766,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               }
 
                               //ticket purchase or not check
-                              $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
+                              $ticket_content = $ticketContentsCurrent[$ticket->id] ?? null;
 
                               if (Auth::guard('customer')->user() && $ticket->max_ticket_buy_type == 'limited') {
                                   $purchase = isTicketPurchaseVenue($ticket->event_id, $ticket->max_buy_ticket, $ticket->id, @$ticket_content->title);
@@ -1874,16 +1866,8 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                             @php
                               $variations = json_decode($ticket->variations);
 
-                              $varition_names = App\Models\Event\VariationContent::where([['ticket_id', $ticket->id], ['language_id', $currentLanguageInfo->id]])->get();
-                              if (empty($varition_names)) {
-                                  $varition_names = App\Models\Event\VariationContent::where('ticket_id', $ticket->id)->get();
-                              }
-
-                              $de_lang = App\Models\Language::where('is_default', 1)->first();
-                              $de_varition_names = App\Models\Event\VariationContent::where([['ticket_id', $ticket->id], ['language_id', $de_lang->id]])->get();
-                              if (empty($de_varition_names)) {
-                                  $de_varition_names = App\Models\Event\VariationContent::where([['ticket_id', $ticket->id]])->get();
-                              }
+                              $varition_names = $variationContentsCurrent[$ticket->id] ?? collect();
+                              $de_varition_names = $variationContentsDefault[$ticket->id] ?? collect();
                             @endphp
                             @foreach ($variations as $key => $item)
                               @php
@@ -1895,10 +1879,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                                 } else {
                                     $purchase = ['status' => 'false', 'p_qty' => 0];
                                 }
-                                $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
-                                if (empty($ticket_content)) {
-                                    $ticket_content = App\Models\Event\TicketContent::where([['ticket_id', $ticket->id]])->first();
-                                }
+                                $ticket_content = $ticketContentsCurrent[$ticket->id] ?? $ticketContentsAny[$ticket->id] ?? null;
 	                                $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
 	                                $variationStock = $item->ticket_available_type == 'limited' ? $item->ticket_available : 'unlimited';
 	                                $isTicketSoldOut = $ticketSoldOut($variationStock);
@@ -2017,14 +1998,13 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                               }
 
                               //ticket purchase or not check
-                              $de_lang = App\Models\Language::where('is_default', 1)->first();
-                              $ticket_content_default = App\Models\Event\TicketContent::where([['language_id', $de_lang->id], ['ticket_id', $ticket->id]])->first();
+                              $ticket_content_default = $ticketContentsDefault[$ticket->id] ?? null;
                               if (Auth::guard('customer')->user() && $ticket->max_ticket_buy_type == 'limited') {
                                   $purchase = isTicketPurchaseVenue($ticket->event_id, $ticket->max_buy_ticket, $ticket->id, @$ticket_content_default->title);
                               } else {
                                   $purchase = ['status' => 'false', 'p_qty' => 0];
                               }
-                              $ticket_content = App\Models\Event\TicketContent::where([['language_id', $currentLanguageInfo->id], ['ticket_id', $ticket->id]])->first();
+                              $ticket_content = $ticketContentsCurrent[$ticket->id] ?? null;
 	                              $ticketTitle = $ticketDisplayTitle(@$ticket_content->title ?: '');
 	                              $isTicketSoldOut = $ticketSoldOut($stock);
 	                              $ticketHasDescription = trim(strip_tags((string) (@$ticket_content->description ?? ''))) !== '';
@@ -2481,7 +2461,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
             <details class="ed-refund-band__legal-details">
               <summary class="ed-refund-band__legal-summary">{{ __('Leer texto legal completo') }}</summary>
-              <p class="ed-refund-band__legal-text">{{ \App\Support\EventRefundPolicy::canonicalPlainText() }}</p>
+              <p class="ed-refund-band__legal-text">{{ \App\Support\EventRefundPolicy::canonicalPlainText($fiscalDisplayName, $fiscalDisplayCuit) }}</p>
             </details>
 
             <div class="ed-refund-band__footer">
@@ -2523,7 +2503,6 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
 
               {{-- Organizer --}}
               @if ($organizer == '')
-                @php $admin = App\Models\Admin::first(); @endphp
                 <div class="ei-org">
                   <img class="ei-org__avatar lazy"
                     src="{{ asset('assets/front/images/user.png') }}"

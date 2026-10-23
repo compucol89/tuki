@@ -79,12 +79,14 @@ final class EventRefundPolicy
   /**
    * Texto único mostrado en admin, organizador, detalle de evento y base de datos.
    */
-  public static function canonicalPlainText(): string
+  public static function canonicalPlainText(?string $issuerDisplayName = null, ?string $issuerDisplayCuit = null): string
   {
     $policyUrl = self::policyUrl();
     $domain = parse_url($policyUrl, PHP_URL_HOST) ?: config('app.url');
+    $issuerDisplayName = $issuerDisplayName ?? self::issuerDisplayName();
+    $issuerDisplayCuit = $issuerDisplayCuit ?? self::issuerDisplayCuit();
 
-    return 'Tukipass (' . self::issuerDisplayName() . ', cuit ' . self::issuerDisplayCuit() . ') presta un servicio tecnológico de venta online de entradas. '
+    return 'Tukipass (' . $issuerDisplayName . ', cuit ' . $issuerDisplayCuit . ') presta un servicio tecnológico de venta online de entradas. '
       . 'No organiza ni produce los eventos publicados: el organizador o productor es el único responsable de la producción, realización e información publicada del evento. '
       . 'Los reembolsos, cancelaciones, reprogramaciones y el derecho de arrepentimiento —cuando corresponda conforme la Ley 24.240 de Defensa del Consumidor y la normativa aplicable— '
       . 'se rigen por la política general de Tukipass (' . $domain . '/politica-de-reembolsos), por las condiciones del organizador y por la ley argentina. '

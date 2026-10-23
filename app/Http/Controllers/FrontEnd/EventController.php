@@ -9,9 +9,13 @@ use App\Models\Event;
 use App\Models\Event\Coupon;
 use App\Models\Event\EventCategory;
 use App\Models\Event\EventContent;
+use App\Models\Event\Booking;
 use App\Models\Event\EventDates;
 use App\Models\Event\EventImage;
 use App\Models\Event\Ticket;
+use App\Models\Event\TicketContent;
+use App\Models\Event\VariationContent;
+use App\Models\EventAddonSection;
 use App\Models\HomePage\HeroSection;
 use App\Models\OrganizerInfo;
 use App\Models\Language;
@@ -250,7 +254,8 @@ class EventController extends Controller
         'views_last_24h' => DB::raw('views_last_24h + 1'),
       ]);
 
-      $tickets_count = Ticket::where('event_id', $id)->count();
+      $allTickets = Ticket::where('event_id', $id)->get();
+      $tickets_count = $allTickets->count();
       $information['tickets_count'] = $tickets_count;
       if ($tickets_count < 1) {
         $content = EventContent::join('events', 'events.id', 'event_contents.event_id')
@@ -307,7 +312,7 @@ class EventController extends Controller
             // Slug canónico del perfil (mismo criterio que OrganizerController::details):
             // nombre público (organizer_info) o username → para el schema organizer.url.
             $organizerInfo = OrganizerInfo::where('organizer_id', $organizer->id)
-              ->where('language_id', $this->getLanguage()->id)
+              ->where('language_id', $language->id)
               ->first();
             $organizerProfileName = trim((string) ($organizerInfo->name ?? $organizer->username));
             $information['organizerProfileSlug'] = Str::slug($organizerProfileName);
@@ -332,9 +337,10 @@ class EventController extends Controller
       }
       $websiteTitle = $basicSettings?->website_title ?? config('app.name');
       $baseCurrencyText = $basicSettings?->base_currency_text ?? config('tukipass.currency.text');
+      $defaultLanguage = $language;
 
       $statusMeta = $this->buildEventStatusMeta($content, $websiteTimezone);
-      $ticketSummary = $this->buildTicketSummary($content);
+      $ticketSummary = $this->buildTicketSummary($content, $allTickets);
       $interestMeta = $this->buildInterestIndicator((int) $content->id, $content);
 
       $information['websiteTimezone'] = $websiteTimezone;
@@ -437,18 +443,54 @@ class EventController extends Controller
       $information['canonical'] = $officialEventUrl;
       $information['event_currency'] = $baseCurrencyText;
 
-      // --- P0.2: Queries movidas desde la vista (una sola consulta de tickets) ---
-      $allTickets = Ticket::where('event_id', $content->id)->get();
+      // --- P0.2: una sola carga de tickets y sus traducciones por request ---
       $firstTicket = $allTickets->first();
       $ticketCount = $allTickets->count();
-      $defaultLanguage = Language::where('is_default', 1)->first();
-      $admin = Admin::first();
 
+      $ticketIds = $allTickets->pluck('id');
+      $ticketContentsByTicket = $ticketIds->isEmpty()
+        ? collect()
+        : TicketContent::whereIn('ticket_id', $ticketIds)->get()->groupBy('ticket_id');
+      $variationContentsByTicket = $ticketIds->isEmpty()
+        ? collect()
+        : VariationContent::whereIn('ticket_id', $ticketIds)->get()->groupBy('ticket_id');
+
+      $information['ticketContentsCurrent'] = $ticketContentsByTicket->map(
+        fn ($rows) => $rows->firstWhere('language_id', $language->id)
+      );
+      $information['ticketContentsDefault'] = $ticketContentsByTicket->map(
+        fn ($rows) => $rows->firstWhere('language_id', $defaultLanguage->id)
+      );
+      $information['ticketContentsAny'] = $ticketContentsByTicket->map(
+        fn ($rows) => $rows->first()
+      );
+      $information['variationContentsCurrent'] = $variationContentsByTicket->map(
+        fn ($rows) => $rows->where('language_id', $language->id)->values()
+      );
+      $information['variationContentsDefault'] = $variationContentsByTicket->map(
+        fn ($rows) => $rows->where('language_id', $defaultLanguage->id)->values()
+      );
+
+      $addonSections = collect();
+      if ($tickets_count > 0 && (!isset($content->event_addons_enabled) || $content->event_addons_enabled)) {
+        $addonSections = EventAddonSection::where('event_id', $content->id)
+          ->where('is_active', true)
+          ->with(['addons' => function ($q) {
+            $q->where('is_active', true)
+              ->where(function ($qq) {
+                $qq->whereNull('stock')->orWhere('stock', '>', 0);
+              })
+              ->orderBy('sort_order');
+          }])
+          ->orderBy('sort_order')
+          ->get();
+      }
+
+      $information['addonSections'] = $addonSections;
       $information['firstTicket'] = $firstTicket;
       $information['ticketCount'] = $ticketCount;
       $information['allTickets'] = $allTickets;
-      $information['defaultLanguage'] = $defaultLanguage;
-      $information['admin'] = $admin;
+      $information['admin'] = Admin::first();
 
       return view('frontend.event.event-details', $information);
   }
@@ -516,9 +558,9 @@ class EventController extends Controller
     ];
   }
 
-  private function buildTicketSummary($content): array
+  private function buildTicketSummary($content, $tickets = null): array
   {
-    $tickets = Ticket::where('event_id', $content->id)->get();
+    $tickets = $tickets ?? Ticket::where('event_id', $content->id)->get();
     $ticketPrices = collect();
 
     foreach ($tickets as $ticket) {
@@ -554,8 +596,7 @@ class EventController extends Controller
     $secondTicketPrice = $ticketPrices->get(1);
     $lowestPaidPrice = $ticketPrices->first(fn($price) => $price > 0);
 
-    $ticketStocks = Ticket::where('event_id', $content->id)
-      ->get(['ticket_available_type', 'ticket_available']);
+    $ticketStocks = $tickets;
 
     $hasUnlimitedStock = $ticketStocks->contains('ticket_available_type', 'unlimited');
     $totalStock = $hasUnlimitedStock ? null : (int) $ticketStocks->sum('ticket_available');
@@ -568,7 +609,7 @@ class EventController extends Controller
       'has_price_range' => is_numeric($minTicketPrice) && is_numeric($maxTicketPrice) && $minTicketPrice != $maxTicketPrice,
       'has_unlimited_stock' => $hasUnlimitedStock,
       'total_stock' => $totalStock,
-      'limited_stock_total' => (int) Ticket::where('event_id', $content->id)
+      'limited_stock_total' => (int) $tickets
         ->where('ticket_available_type', 'limited')
         ->sum('ticket_available'),
     ];
@@ -601,19 +642,20 @@ class EventController extends Controller
 
   private function buildInterestIndicator(int $eventId, $content): array
   {
-    $wishlistCount = \App\Models\Event\Wishlist::where('event_id', $eventId)->count();
-    $recentWishlistCount = \App\Models\Event\Wishlist::where('event_id', $eventId)
-      ->where('created_at', '>=', now()->subDay())
-      ->count();
+    $recentThreshold = now()->subDay();
 
-    $bookingCount = (int) \App\Models\Event\Booking::where('event_id', $eventId)
+    $wishlistStats = Wishlist::where('event_id', $eventId)
+      ->selectRaw('COUNT(*) as total, SUM(CASE WHEN created_at >= ? THEN 1 ELSE 0 END) as recent', [$recentThreshold])
+      ->first();
+    $bookingStats = Booking::where('event_id', $eventId)
       ->whereIn('paymentStatus', ['paid', 'completed', 'free', '1'])
-      ->sum('quantity');
+      ->selectRaw('COALESCE(SUM(quantity), 0) as total, COALESCE(SUM(CASE WHEN created_at >= ? THEN quantity ELSE 0 END), 0) as recent', [$recentThreshold])
+      ->first();
 
-    $recentBookingCount = (int) \App\Models\Event\Booking::where('event_id', $eventId)
-      ->whereIn('paymentStatus', ['paid', 'completed', 'free', '1'])
-      ->where('created_at', '>=', now()->subDay())
-      ->sum('quantity');
+    $wishlistCount = (int) ($wishlistStats->total ?? 0);
+    $recentWishlistCount = (int) ($wishlistStats->recent ?? 0);
+    $bookingCount = (int) ($bookingStats->total ?? 0);
+    $recentBookingCount = (int) ($bookingStats->recent ?? 0);
 
     $interest = max(0, (int) ($content->views_last_24h ?? 0)) + $recentWishlistCount + $recentBookingCount;
 

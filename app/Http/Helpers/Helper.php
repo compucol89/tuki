@@ -340,8 +340,14 @@ if (!function_exists('adminCategoryWiseEvents')) {
 if (!function_exists('timeZoneOffset')) {
   function timeZoneOffset($timezone)
   {
-    $timezone = App\Models\Timezone::where('timezone', $timezone)->first();
-    return !empty($timezone) ? $timezone->gmt_offset : 'Europe/Andorra';
+    static $offsets = [];
+    $key = (string) $timezone;
+    if (!array_key_exists($key, $offsets)) {
+      $timezoneModel = App\Models\Timezone::where('timezone', $timezone)->first();
+      $offsets[$key] = !empty($timezoneModel) ? $timezoneModel->gmt_offset : 'Europe/Andorra';
+    }
+
+    return $offsets[$key];
   }
 }
 if (!function_exists('eventSlug')) {

@@ -30,6 +30,7 @@ La fuente de verdad son las mediciones y el código; este archivo es un mapa. **
 | TTFB detalle | 0,399–0,528 s (servidor ~0,20–0,25 s) | no medido |
 | Home queries (local) | 10–13; 7–9 blogs; SQL 33,6 ms; blogs 15,7 ms (47%) | blog cacheado |
 | Detalle producción 128 | 120.886 B raw / 24.132 B gzip | no medido |
+| Detalle evento (local, 124) | 45 queries / 224,7 ms | 19 queries / 50–56 ms; mismo contenido (2026-10-23) |
 | Home móvil (4× CPU/1,6 Mbps) | 1.527 KB, 39 req; LCP 2,07–2,16 s; CLS 0,0198 | no medido |
 | Organizer | 1,5 MB JS raw / 449 KB gzip + 351 KB gzip CSS/fuentes | dashboard ~437 KB JS raw / ~125 KB gzip; pesados condicionales (2026-10-23) |
 | Tests | — | 256 pasan (186.529 assertions) |
@@ -47,11 +48,11 @@ Antes de “optimizar” de nuevo, verificar que el deploy tenga estos cambios. 
 
 ## Trabajo pendiente (medir antes de tocar)
 
-1. **Detalle de evento:** deduplicar `languages` (4), `tickets` (hasta 6), `basic_settings` (3), `billing_settings` (3), `timezones` (3), `wishlists`/`bookings` (2 cada uno). Unificar en una carga y `SUM(CASE...)`.
+1. **Detalle de evento:** ✅ deduplicado (2026-10-23). Una carga de tickets, traducciones y variaciones; `SUM(CASE...)` para wishlists/bookings; 45 → 19 queries (224,7 → 50–56 ms local).
 2. **`getLanguage()`/`basic_settings`:** cachear en el controlador base; hoy se consultan varias veces por request.
 3. **`views_count`:** UPDATE por vista (5,5 ms local, lock de fila). Bufferizar o mover a job; no bloquea la reserva.
 4. **Organizer:** ✅ TinyMCE, Dropzone, jQuery UI y DataTables se cargan solo en las vistas que los usan (2026-10-23). Dashboard ~437 KB JS raw / ~125 KB gzip; primera pantalla sin pesados.
-5. **Imágenes:** thumbnails 400/800 WebP + `srcset`; popup PNG 593 KB → WebP y carga al abrir. Ahorro medido: 1,4 MB en home móvil.
+5. **Imágenes:** ✅ popup sirve WebP (702 KB → 22 KB) y carga al abrir (2026-10-23); quedan thumbnails 400/800 WebP + `srcset`.
 6. **`/eventos`:** el `COUNT` materializa la derivada de tickets; calcular el total sin el `LEFT JOIN` derivado.
 7. **CSS/JS:** 535 KB CSS + 250 KB JS sin comprimir; consolidar sin purgar a ciegas (hay clases dinámicas).
 8. **Observabilidad:** slow query log, alerta 5xx, latencia p95. Loki devolvió HTTP 400; no hay APM.

@@ -14,7 +14,7 @@
   $cartAddons = Session::get('cart_addons', []);
   $selectedAddons = $cartAddons[$eventId] ?? $cartAddons[(string) $eventId] ?? [];
   $isSidebar = ($variant ?? null) === 'sidebar';
-  $sections = $eventId > 0
+  $sections = $addonSections ?? ($eventId > 0
     ? EventAddonSection::where('event_id', $eventId)
         ->where('is_active', true)
         ->with(['addons' => function ($q) {
@@ -26,7 +26,7 @@
         }])
         ->orderBy('sort_order')
         ->get()
-    : collect();
+    : collect());
 @endphp
 
 @if ($sections->isNotEmpty())

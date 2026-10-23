@@ -52,7 +52,7 @@
     : ($ev_is_mixed ? __('Ver entradas') : __('Reservar entradas'));
 
   $ev_card_title_id = 'ev-card-title-' . $event->id;
-  $ev_image_url = \App\Services\FileUploadService::eventVisualUrl(null, $event->thumbnail ?? null);
+  $ev_image_url = \App\Services\FileUploadService::eventCardUrl($event->thumbnail ?? null);
   $ev_image_fallback_url = $eventImageFallbackUrl ?? null;
   if (!empty($ev_image_fallback_url) && $ev_image_url === asset('assets/admin/img/noimage.jpg')) {
     $ev_image_url = $ev_image_fallback_url;

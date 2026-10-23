@@ -146,7 +146,7 @@ fbq('track', 'Purchase', {
           <div class="ps-event-row">
             @if($event->thumbnail)
               <img class="ps-event-row__thumb lazy"
-                   data-src="{{ \App\Services\FileUploadService::imageUrl('assets/admin/img/event/thumbnail/', $event->thumbnail) }}"
+                   data-src="{{ \App\Services\FileUploadService::eventCardUrl($event->thumbnail, 400) }}"
                    src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
                    alt="{{ $eventTitle }}" loading="lazy">
             @endif

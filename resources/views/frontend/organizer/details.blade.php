@@ -496,7 +496,7 @@ fbq('trackSingle', '{{ $profilePixelId }}', 'ViewContent', {
               $pastEventTimeSource = $event->start_time ?? '00:00:00';
               $pastEventDate = \Carbon\Carbon::parse($pastEventDateSource, $websiteInfo->timezone ?? config('app.timezone', 'UTC'))->locale('es');
               $pastEventTime = \Carbon\Carbon::parse(trim($pastEventDateSource . ' ' . $pastEventTimeSource), $websiteInfo->timezone ?? config('app.timezone', 'UTC'));
-              $pastEventImage = \App\Services\FileUploadService::eventVisualUrl(null, $event->thumbnail ?? null);
+              $pastEventImage = \App\Services\FileUploadService::eventCardUrl($event->thumbnail ?? null, 400);
               $pastEventImage = $pastEventImage === $eventPlaceholderUrl ? $coverUrl : $pastEventImage;
               $pastEventLocation = ($event->event_type ?? '') === 'venue'
                 ? trim(($event->city ?? '') . (($event->city ?? null) && ($event->country ?? null) ? ', ' : '') . ($event->country ?? ''))

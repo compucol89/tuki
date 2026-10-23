@@ -99,7 +99,7 @@
       $mq_min_items = max(10, $mq_source_count);
       $mq_items = collect(range(0, $mq_min_items - 1))->map(function ($index) use ($mq_source, $mq_source_count, $badgeMap) {
         $ev = $mq_source[$index % $mq_source_count];
-        $eventImage = \App\Services\FileUploadService::eventVisualUrl(null, $ev->thumbnail ?? null);
+        $eventImage = \App\Services\FileUploadService::eventCardUrl($ev->thumbnail ?? null);
 
         return [
           'event'  => $ev,

@@ -293,7 +293,7 @@
                   <div class="event-cover-box__body">
                     <div class="thumb-preview event-cover-box__preview">
                       <img
-                        src="{{ $event->thumbnail ? asset('assets/admin/img/event/thumbnail/' . $event->thumbnail) : asset('assets/admin/img/noimage.jpg') }}"
+                        src="{{ \App\Services\FileUploadService::eventCardUrl($event->thumbnail, 400) }}"
                         alt="..." class="uploaded-img ev-thumbnail-preview">
                     </div>
                     <div class="event-cover-box__actions">

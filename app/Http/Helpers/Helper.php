@@ -122,7 +122,12 @@ if (!function_exists('showAd')) {
         }
 
         if ($ad->ad_type == 'banner') {
-          $adImageUrl = \App\Services\FileUploadService::imagePath('assets/admin/img/advertisements/', $ad->image);
+          $adImage = \App\Services\FileUploadService::responsiveImageUrl(
+            'assets/admin/img/advertisements/',
+            $ad->image,
+            $resolutionType === 2 ? 300 : ($resolutionType === 1 ? 300 : 728)
+          );
+          $adImageUrl = $adImage;
           $markUp = '<a href="' . url($ad->url) . '" target="_blank" rel="noopener noreferrer" onclick="adView(' . $ad->id . ')">
             <img data-src="' . $adImageUrl . '" src="' . $adImageUrl . '" class="lazy" alt="' . __('Anuncio') . '" width="' . (int) $maxWidth . '" height="' . (int) $maxHeight . '" style="width: ' . $maxWidth . ';' . ' ' . 'max-height: ' . $maxHeight . ';max-width: 100%;">
           </a>';

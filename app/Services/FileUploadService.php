@@ -202,23 +202,146 @@ class FileUploadService
   }
 
   /**
-   * @param iterable<object{image?: string|null}>|null $galleryImages
+   * Devuelve una variante WebP redimensionada, generándola una sola vez si falta.
+   * Si GD/WebP no está disponible o el archivo no existe, devuelve la imagen original.
    */
-  public static function eventVisualUrl(?iterable $galleryImages, ?string $thumbnail): string
+  public static function responsiveImageUrl(string $relativeDir, string $filename, int $width, int $quality = 80): string
+  {
+    $filename = basename(trim($filename));
+    if ($filename === '' || $filename === 'noimage.jpg') {
+      return asset('assets/admin/img/noimage.jpg');
+    }
+
+    $relativeDir = rtrim($relativeDir, '/') . '/';
+    $webpName = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $filename);
+    $sourceName = ($webpName !== $filename && is_file(public_path($relativeDir . $webpName))) ? $webpName : $filename;
+    $sourcePath = public_path($relativeDir . $sourceName);
+
+    if (!is_file($sourcePath)) {
+      return asset($relativeDir . $filename);
+    }
+
+    $sourceInfo = @getimagesize($sourcePath);
+    if (!$sourceInfo || (int) $sourceInfo[0] <= $width) {
+      return self::imageUrl($relativeDir, $filename);
+    }
+
+    $variantName = preg_replace('/\.(jpg|jpeg|png|webp)$/i', '', $filename) . '-' . $width . '.webp';
+    $variantPath = public_path($relativeDir . $variantName);
+
+    if (!is_file($variantPath)) {
+      self::generateResponsiveWebp($sourcePath, $variantPath, $width, $quality);
+    }
+
+    return is_file($variantPath) ? asset($relativeDir . $variantName) : self::imageUrl($relativeDir, $filename);
+  }
+
+  private static function generateResponsiveWebp(string $sourcePath, string $targetPath, int $width, int $quality): bool
+  {
+    if (!function_exists('imagewebp')) {
+      return false;
+    }
+
+    $info = @getimagesize($sourcePath);
+    if (!$info) {
+      return false;
+    }
+
+    $source = match ($info['mime'] ?? '') {
+      'image/jpeg' => @imagecreatefromjpeg($sourcePath),
+      'image/png' => @imagecreatefrompng($sourcePath),
+      'image/webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($sourcePath) : false,
+      default => false,
+    };
+
+    if (!$source) {
+      return false;
+    }
+
+    $sourceWidth = imagesx($source);
+    $sourceHeight = imagesy($source);
+    $targetWidth = min($width, $sourceWidth);
+    $targetHeight = (int) round($sourceHeight * ($targetWidth / $sourceWidth));
+    $target = imagecreatetruecolor($targetWidth, $targetHeight);
+
+    if (($info['mime'] ?? '') !== 'image/jpeg') {
+      imagealphablending($target, false);
+      imagesavealpha($target, true);
+    }
+
+    imagecopyresampled($target, $source, 0, 0, 0, 0, $targetWidth, $targetHeight, $sourceWidth, $sourceHeight);
+
+    @mkdir(dirname($targetPath), 0775, true);
+    $temporaryPath = $targetPath . '.tmp.' . getmypid() . '.' . uniqid();
+    $saved = imagewebp($target, $temporaryPath, $quality);
+
+    imagedestroy($source);
+    imagedestroy($target);
+
+    if (!$saved) {
+      @unlink($temporaryPath);
+
+      return false;
+    }
+
+    if (!@rename($temporaryPath, $targetPath)) {
+      @unlink($temporaryPath);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function eventCardUrl(?string $thumbnail, int $width = 400): string
+  {
+    $thumbnail = trim((string) $thumbnail);
+    if ($thumbnail === '' || !self::imageExists('assets/admin/img/event/thumbnail/', $thumbnail)) {
+      return asset('assets/admin/img/noimage.jpg');
+    }
+
+    return self::responsiveImageUrl('assets/admin/img/event/thumbnail/', $thumbnail, $width);
+  }
+
+  /**
+   * @param iterable<object{image?: string|null}>|null $galleryImages
+   * @return array{dir: string, name: string}
+   */
+  public static function eventVisualData(?iterable $galleryImages, ?string $thumbnail): array
   {
     if ($galleryImages) {
       foreach ($galleryImages as $row) {
         $name = $row->image ?? '';
         if (self::imageExists('assets/admin/img/event-gallery/', $name)) {
-          return self::imageUrl('assets/admin/img/event-gallery/', $name);
+          return ['dir' => 'assets/admin/img/event-gallery/', 'name' => $name];
         }
       }
     }
 
     if ($thumbnail && self::imageExists('assets/admin/img/event/thumbnail/', $thumbnail)) {
-      return self::imageUrl('assets/admin/img/event/thumbnail/', $thumbnail);
+      return ['dir' => 'assets/admin/img/event/thumbnail/', 'name' => $thumbnail];
     }
 
-    return asset('assets/admin/img/noimage.jpg');
+    return ['dir' => 'assets/admin/img/', 'name' => 'noimage.jpg'];
+  }
+
+  /**
+   * @param iterable<object{image?: string|null}>|null $galleryImages
+   */
+  public static function eventVisualUrl(?iterable $galleryImages, ?string $thumbnail): string
+  {
+    $visual = self::eventVisualData($galleryImages, $thumbnail);
+
+    return self::imageUrl($visual['dir'], $visual['name']);
+  }
+
+  /**
+   * @param iterable<object{image?: string|null}>|null $galleryImages
+   */
+  public static function eventVisualResponsiveUrl(?iterable $galleryImages, ?string $thumbnail, int $width, int $quality = 80): string
+  {
+    $visual = self::eventVisualData($galleryImages, $thumbnail);
+
+    return self::responsiveImageUrl($visual['dir'], $visual['name'], $width, $quality);
   }
 }

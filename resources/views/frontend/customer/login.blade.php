@@ -40,7 +40,7 @@
 
   if ($isEventCheckout && $guestEvent) {
     if (!empty($guestEvent->thumbnail)) {
-      $visualImage = asset('assets/admin/img/event/thumbnail/' . $guestEvent->thumbnail);
+      $visualImage = \App\Services\FileUploadService::eventCardUrl($guestEvent->thumbnail, 400);
     }
 
     $visualTitle = $guestEvent->title ?? __('customer.login.fallback_event_title');

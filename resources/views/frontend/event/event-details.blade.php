@@ -29,6 +29,7 @@
   $placeholderPatterns = ['lorem ipsum', 'pseudo-latin text', 'placeholder text'];
   $freeLabel = 'Entrada sin cargo';
   $eventVisualUrl = \App\Services\FileUploadService::eventVisualUrl($images ?? null, $content->thumbnail ?? null);
+  $eventVisualMobileUrl = \App\Services\FileUploadService::eventVisualResponsiveUrl($images ?? null, $content->thumbnail ?? null, 800);
   $hasEventVisual = !\Illuminate\Support\Str::endsWith($eventVisualUrl, '/assets/admin/img/noimage.jpg');
   $eventHeroPreloadUrl = $hasEventVisual ? $eventVisualUrl : null;
   $isDemoEvent = \App\Support\DemoEventMode::isDemo((int) ($content->id ?? 0), (string) ($content->eventSlug ?? $content->slug ?? ''));
@@ -75,7 +76,11 @@
 
 @section('hero-preload')
   @if (!empty($eventHeroPreloadUrl))
-    <link rel="preload" as="image" href="{{ $eventHeroPreloadUrl }}" fetchpriority="high">
+    @if (!empty($eventVisualMobileUrl) && $eventVisualMobileUrl !== $eventVisualUrl)
+      <link rel="preload" as="image" href="{{ $eventHeroPreloadUrl }}" imagesrcset="{{ $eventVisualMobileUrl }} 800w, {{ $eventVisualUrl }} 1200w" imagesizes="100vw" fetchpriority="high">
+    @else
+      <link rel="preload" as="image" href="{{ $eventHeroPreloadUrl }}" fetchpriority="high">
+    @endif
   @endif
 @endsection
 
@@ -2122,6 +2127,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
                   <div class="ed-ticket-gallery d-lg-none" aria-label="{{ __('Imagen principal del evento') }}">
                     <img
                       src="{{ $eventVisualUrl }}"
+                      @if (!empty($eventVisualMobileUrl) && $eventVisualMobileUrl !== $eventVisualUrl) srcset="{{ $eventVisualMobileUrl }} 800w, {{ $eventVisualUrl }} 1200w" sizes="100vw" @endif
                       alt="{{ $content->title }}"
                       class="ed-ticket-gallery__img"
                       loading="lazy">
@@ -2185,6 +2191,7 @@ fbq('track', 'ViewContent', {content_name: {!! json_encode($content->title, JSON
           <figure class="ed-event-cover" aria-label="{{ __('Imagen de portada del evento') }}">
             <img id="edMainImg"
                  src="{{ $eventVisualUrl }}"
+                 @if (!empty($eventVisualMobileUrl) && $eventVisualMobileUrl !== $eventVisualUrl) srcset="{{ $eventVisualMobileUrl }} 800w, {{ $eventVisualUrl }} 1200w" sizes="100vw" @endif
                  alt="{{ $content->title }}"
                  class="ed-event-cover__img"
                  fetchpriority="high">

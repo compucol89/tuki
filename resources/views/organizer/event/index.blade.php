@@ -710,8 +710,7 @@
                       ? ($settlementStatusLabels[$settlement['status']] ?? $settlementStatusLabels['pending'])
                       : $settlementStatusLabels['no_balance'];
                   $thumbName = trim((string) $event->thumbnail);
-                  $thumbPath = $thumbName !== '' ? public_path('assets/admin/img/event/thumbnail/' . $thumbName) : '';
-                  $thumb = ($thumbPath !== '' && is_file($thumbPath)) ? asset('assets/admin/img/event/thumbnail/' . $thumbName) : asset('assets/admin/img/noimage.jpg');
+                  $thumb = $thumbName !== '' ? \App\Services\FileUploadService::eventCardUrl($thumbName, 400) : asset('assets/admin/img/noimage.jpg');
                   $fallbackThumb = asset('assets/admin/img/noimage.jpg');
                 @endphp
                 <tr>
@@ -802,8 +801,7 @@
                   ? ($settlementStatusLabels[$settlement['status']] ?? $settlementStatusLabels['pending'])
                   : $settlementStatusLabels['no_balance'];
               $thumbName = trim((string) $event->thumbnail);
-              $thumbPath = $thumbName !== '' ? public_path('assets/admin/img/event/thumbnail/' . $thumbName) : '';
-              $thumb = ($thumbPath !== '' && is_file($thumbPath)) ? asset('assets/admin/img/event/thumbnail/' . $thumbName) : asset('assets/admin/img/noimage.jpg');
+              $thumb = $thumbName !== '' ? \App\Services\FileUploadService::eventCardUrl($thumbName, 400) : asset('assets/admin/img/noimage.jpg');
               $fallbackThumb = asset('assets/admin/img/noimage.jpg');
             @endphp
             <article class="oe-mobile-event oc-mobile-card">

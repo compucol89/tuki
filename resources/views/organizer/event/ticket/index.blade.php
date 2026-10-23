@@ -6,6 +6,15 @@
   $freeLimitValue = max((int) (optional($eventModel)->free_tickets_per_person_limit ?: 2), 1);
 @endphp
 
+@push('vendor-styles')
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/datatables.bootstrap4.min.css') }}">
+@endpush
+
+@push('vendor-scripts')
+  <script src="{{ asset('assets/admin/js/datatables-1.10.23.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/datatables.bootstrap4.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h1 class="page-title">{{ __('Entradas') }}</h1>

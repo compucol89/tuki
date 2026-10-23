@@ -1,4 +1,9 @@
 @extends('organizer.layout')
+
+@push('vendor-scripts')
+  <script src="{{ asset('assets/admin/js/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h1 class="page-title">{{ __('Conversaciones') }}</h1>

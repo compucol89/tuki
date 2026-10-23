@@ -9,10 +9,6 @@
 <script type="text/javascript" src="{{ asset('assets/admin/js/popper.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/admin/js/bootstrap.min.js') }}"></script>
 
-{{-- jQuery ui --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/jquery-ui.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/admin/js/jquery.ui.touch-punch.min.js') }}"></script>
-
 {{-- jQuery time-picker --}}
 <script type="text/javascript" src="{{ asset('assets/admin/js/jquery.timepicker.min.js') }}"></script>
 
@@ -31,30 +27,8 @@
 {{-- bootstrap date-picker --}}
 <script type="text/javascript" src="{{ asset('assets/admin/js/bootstrap-datepicker.min.js') }}"></script>
 
-{{-- tinymce --}}
-<script src="{{ asset('assets/admin/js/tinymce/js/tinymce/tinymce.min.js') }}"></script>
-
-
 <!-- Select2 JS -->
 <script src="{{ asset('assets/admin/js/select2.min.js') }}"></script>
-
-{{-- js color --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/jscolor.min.js') }}"></script>
-
-{{-- fontawesome icon picker js --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/fontawesome-iconpicker.min.js') }}"></script>
-
-{{-- datatables js --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/datatables-1.10.23.min.js') }}"></script>
-
-{{-- datatables bootstrap js --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/datatables.bootstrap4.min.js') }}"></script>
-
-{{-- dropzone js --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/dropzone.min.js') }}"></script>
-
-{{-- highlight js --}}
-<script type="text/javascript" src="{{ asset('assets/admin/js/highlight.pack.js') }}"></script>
 
 {{-- atlantis js --}}
 <script type="text/javascript" src="{{ asset('assets/admin/js/atlantis.js') }}"></script>
@@ -109,6 +83,9 @@
   const secret_login = {{ Session::get('secret_login') }};
 </script>
 
+
+{{-- Vendor scripts required only by the current view. Must load before admin-main.js. --}}
+@stack('vendor-scripts')
 
 {{-- admin-main js --}}
 @php

@@ -38,6 +38,9 @@
   {{-- include styles --}}
   @includeIf('organizer.partials.styles')
 
+  {{-- vendor styles required only by the current view --}}
+  @stack('vendor-styles')
+
   {{-- additional style --}}
   @yield('style')
 </head>

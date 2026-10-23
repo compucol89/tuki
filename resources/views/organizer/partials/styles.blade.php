@@ -12,20 +12,12 @@
   (evita el flash/FOUT de iconos en cada navegación). --}}
 <link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}">
 
-{{-- fontawesome icon picker css --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/fontawesome-iconpicker.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/admin/css/fontawesome-iconpicker.min.css') }}"></noscript>
-
 {{-- bootstrap css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap.min.css') }}">
 
 {{-- bootstrap tags-input css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap-tagsinput.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap-tagsinput.css') }}"></noscript>
-
-{{-- jQuery-ui css --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}"></noscript>
 
 {{-- jQuery-timepicker css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/jquery.timepicker.min.css') }}" media="print" onload="this.media='all'">
@@ -38,14 +30,6 @@
 {{-- select2 css --}}
 <link rel="stylesheet" href="{{asset('assets/admin/css/select2.min.css')}}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{asset('assets/admin/css/select2.min.css')}}"></noscript>
-
-{{-- dropzone css --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/dropzone.min.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/admin/css/dropzone.min.css') }}"></noscript>
-
-{{-- monokai css --}}
-<link rel="stylesheet" href="{{ asset('assets/admin/css/monokai-sublime.css') }}" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="{{ asset('assets/admin/css/monokai-sublime.css') }}"></noscript>
 
 {{-- atlantis css --}}
 <link rel="stylesheet" href="{{ asset('assets/admin/css/atlantis.css') }}">

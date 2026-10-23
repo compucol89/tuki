@@ -189,7 +189,9 @@ $(function ($) {
 
 
   // fontawesome icon picker start
-  $('.icp-dd').iconpicker();
+  if ($.fn.iconpicker && $('.icp-dd').length) {
+    $('.icp-dd').iconpicker();
+  }
   // fontawesome icon picker end
 
 
@@ -850,6 +852,7 @@ $(function ($) {
 
 
   // DataTable Start
+  if ($.fn.DataTable && $('#basic-datatables').length) {
   $('#basic-datatables').DataTable({
     ordering: false,
     responsive: true,
@@ -874,6 +877,7 @@ $(function ($) {
       }
     }
   });
+  }
   // DataTable End
 
 
@@ -988,7 +992,9 @@ $(function ($) {
   /*------------------------
    Highlight Js
   -------------------------- */
-  hljs.initHighlightingOnLoad();
+  if (window.hljs && typeof hljs.initHighlightingOnLoad === 'function') {
+    hljs.initHighlightingOnLoad();
+  }
 });
 
 function cloneInput(fromId, toId, event) {

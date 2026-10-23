@@ -31,7 +31,7 @@ La fuente de verdad son las mediciones y el código; este archivo es un mapa. **
 | Home queries (local) | 10–13; 7–9 blogs; SQL 33,6 ms; blogs 15,7 ms (47%) | blog cacheado |
 | Detalle producción 128 | 120.886 B raw / 24.132 B gzip | no medido |
 | Home móvil (4× CPU/1,6 Mbps) | 1.527 KB, 39 req; LCP 2,07–2,16 s; CLS 0,0198 | no medido |
-| Organizer | 1,5 MB JS raw / 449 KB gzip + 351 KB gzip CSS/fuentes | sin cambios |
+| Organizer | 1,5 MB JS raw / 449 KB gzip + 351 KB gzip CSS/fuentes | dashboard ~437 KB JS raw / ~125 KB gzip; pesados condicionales (2026-10-23) |
 | Tests | — | 256 pasan (186.529 assertions) |
 
 **Conclusión empírica:** el problema principal del deploy viejo es **capacidad** (1 worker, OPcache off) y **payload de imágenes/assets**, no el byte size del HTML. El detalle de evento de producción pesa ~120 KB raw / ~24 KB gzip; los 550 KB/537 ms reportados antes eran un evento local outlier + emulación móvil.
@@ -50,7 +50,7 @@ Antes de “optimizar” de nuevo, verificar que el deploy tenga estos cambios. 
 1. **Detalle de evento:** deduplicar `languages` (4), `tickets` (hasta 6), `basic_settings` (3), `billing_settings` (3), `timezones` (3), `wishlists`/`bookings` (2 cada uno). Unificar en una carga y `SUM(CASE...)`.
 2. **`getLanguage()`/`basic_settings`:** cachear en el controlador base; hoy se consultan varias veces por request.
 3. **`views_count`:** UPDATE por vista (5,5 ms local, lock de fila). Bufferizar o mover a job; no bloquea la reserva.
-4. **Organizer:** cargar TinyMCE/DataTables/Dropzone/icon picker solo en las vistas que los usan. Hoy ~800 KB gzip por página.
+4. **Organizer:** ✅ TinyMCE, Dropzone, jQuery UI y DataTables se cargan solo en las vistas que los usan (2026-10-23). Dashboard ~437 KB JS raw / ~125 KB gzip; primera pantalla sin pesados.
 5. **Imágenes:** thumbnails 400/800 WebP + `srcset`; popup PNG 593 KB → WebP y carga al abrir. Ahorro medido: 1,4 MB en home móvil.
 6. **`/eventos`:** el `COUNT` materializa la derivada de tickets; calcular el total sin el `LEFT JOIN` derivado.
 7. **CSS/JS:** 535 KB CSS + 250 KB JS sin comprimir; consolidar sin purgar a ciegas (hay clases dinámicas).

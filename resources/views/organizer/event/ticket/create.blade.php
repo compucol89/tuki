@@ -1,5 +1,14 @@
 @extends('organizer.layout')
 
+@push('vendor-styles')
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/jquery-ui.min.css') }}">
+@endpush
+
+@push('vendor-scripts')
+  <script src="{{ asset('assets/admin/js/jquery-ui.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/jquery.ui.touch-punch.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h1 class="page-title">{{ __('Agregar entrada') }}</h1>

@@ -94,7 +94,9 @@ $(document).ready(function(){
 		userScrollbar.scrollbar();
 	}
 
-	$('.scroll-bar').draggable();
+	if ($.fn.draggable && $('.scroll-bar').length) {
+		$('.scroll-bar').draggable();
+	}
 
 	$('#search-nav').on('shown.bs.collapse', function () {
 		$('.nav-search .form-control').focus();

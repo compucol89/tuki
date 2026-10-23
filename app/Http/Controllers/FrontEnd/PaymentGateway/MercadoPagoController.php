@@ -644,6 +644,14 @@ class MercadoPagoController extends Controller
       $apiResponse = json_decode($apiRawResponse ?: '', true);
       curl_close($curl);
 
+      if ($this->isPermanentPaymentLookupFailure($apiHttpStatus)) {
+        Log::warning('MercadoPago webhook: pago inexistente, no reintentar', [
+          'payment_id' => $paymentId,
+          'http_status' => $apiHttpStatus,
+        ]);
+        return response('OK', 200);
+      }
+
       if ($apiRawResponse === false || !is_array($apiResponse) || $apiHttpStatus >= 400) {
         Log::error('MercadoPago webhook: error consultando pago', [
           'payment_id' => $paymentId,
@@ -861,6 +869,11 @@ class MercadoPagoController extends Controller
           });
       })
       ->update(['status' => 'processing']);
+  }
+
+  private function isPermanentPaymentLookupFailure(int $httpStatus): bool
+  {
+    return $httpStatus === 404;
   }
 
   private function hasValidWebhookSignature(Request $request, string $paymentId): bool

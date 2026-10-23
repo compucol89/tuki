@@ -10,7 +10,7 @@ use Carbon\CarbonInterface;
  *
  * Un evento es público si:
  *  - events.status = 1
- *  - no pertenece a DemoEventExclusion::EVENT_IDS
+ *  - no está oculto por DemoEventExclusion (los demos de vidriera sí se ven)
  *  - end_date_time >= now (ventana de venta vigente)
  */
 final class EventPublicWindow
@@ -19,7 +19,7 @@ final class EventPublicWindow
   {
     return $query
       ->where('events.status', 1)
-      ->tap(fn ($q) => DemoEventExclusion::apply($q))
+      ->tap(fn ($q) => DemoEventExclusion::applyVisibility($q))
       ->where('events.end_date_time', '>=', $now);
   }
 }

@@ -65,10 +65,19 @@ class EventPublishingTest extends TestCase
     $this->assertEmpty(EventPublicWindow::apply($this->baseQuery(), Carbon::now())->pluck('event_contents.event_id')->all());
   }
 
-  public function test_prueba_suffix_slug_is_hidden(): void
+  public function test_showcase_prueba_slug_is_visible_but_still_demo(): void
   {
     $this->insertEvent(501, 1, now()->addDays(3));
     $this->insertContent(501, 501, 8, 'fiesta-de-cachengue-noche-de-club-prueba');
+
+    $this->assertSame([501], EventPublicWindow::apply($this->baseQuery(), Carbon::now())->pluck('event_contents.event_id')->all());
+    $this->assertTrue(DemoEventExclusion::isDemo(501, 'fiesta-de-cachengue-noche-de-club-prueba'));
+  }
+
+  public function test_generic_prueba_suffix_slug_is_hidden(): void
+  {
+    $this->insertEvent(502, 1, now()->addDays(3));
+    $this->insertContent(502, 502, 8, 'evento-generico-prueba');
 
     $this->assertEmpty(EventPublicWindow::apply($this->baseQuery(), Carbon::now())->pluck('event_contents.event_id')->all());
   }

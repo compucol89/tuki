@@ -161,10 +161,7 @@ class OrganizerController extends Controller
         ->leftJoin($ticketSub, 'tk.event_id', '=', 'events.id')
         ->where('event_contents.language_id', $language->id)
         ->where('events.status', 1)
-        ->whereNotIn('events.id', DemoEventExclusion::EVENT_IDS)
-        ->whereNotIn('event_contents.slug', DemoEventExclusion::EVENT_SLUGS)
-        ->where('event_contents.slug', 'not like', '%-demo')
-        ->where('event_contents.slug', 'not like', '%-prueba')
+        ->tap(fn ($q) => DemoEventExclusion::applyVisibility($q))
         ->when($organizerEventColumn === null, function ($query) {
           return $query->whereNull('events.organizer_id');
         }, function ($query) use ($organizerEventColumn) {

@@ -1,12 +1,12 @@
 # Auditoría integral TukiPass — 2026-10-22
 
-**Rama:** `fix/audit-p0-p1-20261022`  
-**Base:** `master` / `dcaf8717`  
-**Modo:** cambios locales, sin deploy ni producción.
+**Rama:** `master` (fusionada desde `fix/audit-p0-p1-20261022`)  
+**Base original:** `dcaf8717`; **código HEAD:** `2320b03e`  
+**Modo:** cambios locales commiteados y pusheados, sin deploy ni producción.
 
 ## 1. Resumen
 
-Se corrigieron los riesgos P0/P1 de integridad transaccional, aislamiento de datos, QR, CI y exposición del repositorio. La rama acumula 19 commits. La suite PHPUnit pasó de 225 a **256 tests** y `composer audit` quedó en **0 advisories**.
+Se corrigieron los riesgos P0/P1 de integridad transaccional, aislamiento de datos, QR, CI y exposición del repositorio. La rama `master` acumula los commits de la auditoría. La suite PHPUnit pasó de 225 a **256 tests** y `composer audit` quedó en **0 advisories**.
 
 ## 2. Cambios implementados
 

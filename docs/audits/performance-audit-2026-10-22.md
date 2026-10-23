@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-10-22
 **Commit auditado (local):** `dcaf8717` (mediciones de producción) — el commit desplegado en producción es `bbc843b1`.
-**Código HEAD:** `2320b03e` (256 tests). **Rama de auditoría:** `fix/audit-p0-p1-20261022` (19 commits; docs hasta `242843e0`). **No es lo desplegado:** HEAD incluye OPcache, workers, stock transaccional, firma fail-closed, QR y aislamiento; producción no.
+**Código HEAD:** `2320b03e` (256 tests). **Rama:** `master` (código `2320b03e`; producción `bbc843b1`). **No es lo desplegado:** HEAD incluye OPcache, workers, stock transaccional, firma fail-closed, QR y aislamiento; producción no.
 **Entorno de producción:** `https://www.tukipass.com` — EasyPanel, 1 réplica `app`, 1 réplica `worker`, MySQL 9, PHP 8.4.27.
 **Entorno local de medición:** PHP 8.4.27 (CLI), MySQL 8.0 en Docker, dump de producción del 2026-08-22 (`tukipass.sql`, 2,4 MB).
 **Estado:** auditoría de solo lectura. **No se modificó código de aplicación.** Los cambios de estado realizados fueron solo caches de runtime (`php artisan optimize:clear`) y un contenedor MySQL temporal para medir.

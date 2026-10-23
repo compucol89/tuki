@@ -118,6 +118,13 @@ class AppServiceProvider extends ServiceProvider
 
       // send this information to only front-end view files
       View::composer('frontend.*', function ($view) {
+        static $payload = null;
+
+        if ($payload !== null) {
+          $view->with($payload);
+          return;
+        }
+
         $cacheTTL = now()->addHours(6);
 
         $cachedBasicData = Cache::remember('frontend_basic_settings', $cacheTTL, function () {
@@ -218,29 +225,33 @@ class AppServiceProvider extends ServiceProvider
           return ContactPage::where('language_id', $language->id)->first();
         });
 
-        $view->with('basicInfo', $cachedBasicData);
-        $view->with('seo', $cachedSeo);
-        $view->with('bex', $bex);
-        $view->with('currentLanguageInfo', $language);
-        $view->with('socialMediaInfos', $cachedSocialMedias);
-        $view->with('menuInfos', $menus);
-        $view->with('popupInfos', $cachedAnnouncementPopup);
-        $view->with('cookieAlertInfo', $cachedCookieAlert);
-        $view->with('footerSecStatus', $cachedSectionStatus);
-        $view->with('pageHeading', $cachedPageHeading);
+        $payload = [
+          'basicInfo' => $cachedBasicData,
+          'seo' => $cachedSeo,
+          'bex' => $bex,
+          'currentLanguageInfo' => $language,
+          'socialMediaInfos' => $cachedSocialMedias,
+          'menuInfos' => $menus,
+          'popupInfos' => $cachedAnnouncementPopup,
+          'cookieAlertInfo' => $cachedCookieAlert,
+          'footerSecStatus' => $cachedSectionStatus,
+          'pageHeading' => $cachedPageHeading,
+        ];
 
         if ($cachedSectionStatus == 1) {
-          $view->with('footerInfo', $cachedFooterContent);
-          $view->with('quickLinkInfos', $cachedQuickLinks);
+          $payload['footerInfo'] = $cachedFooterContent;
+          $payload['quickLinkInfos'] = $cachedQuickLinks;
 
           if ($cachedBasicData->theme_version != 3) {
-            $view->with('latestBlogInfos', $blogs);
+            $payload['latestBlogInfos'] = $blogs;
           }
 
           if ($cachedBasicData->theme_version == 2) {
-            $view->with('newsletterTitle', $newsletterTitle);
+            $payload['newsletterTitle'] = $newsletterTitle;
           }
         }
+
+        $view->with($payload);
       });
 
 

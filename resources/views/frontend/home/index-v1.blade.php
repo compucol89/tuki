@@ -250,11 +250,11 @@
 
           <nav class="hs-tabs-nav mb-32" aria-label="{{ __('Filtrar eventos destacados') }}">
             <div class="nav nav-tabs events-tabs" id="nav-tab" role="tablist">
-              <a class="nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab"
+              <a class="nav-link active" id="nav-all-tab" data-filter="all" href="#nav-all" role="tab"
                  aria-controls="nav-all" aria-selected="true">{{ __('Todos') }}</a>
               @foreach ($eventCategoriesWithEvents as $item)
-                <a class="nav-link" id="nav-{{ $item->id }}-tab" data-toggle="tab" href="#nav-{{ $item->id }}" role="tab"
-                   aria-controls="nav-{{ $item->id }}" aria-selected="false">{{ $item->name }}</a>
+                <a class="nav-link" id="nav-{{ $item->id }}-tab" data-filter="{{ $item->id }}" href="#nav-all" role="tab"
+                   aria-controls="nav-all" aria-selected="false">{{ $item->name }}</a>
               @endforeach
             </div>
           </nav>
@@ -263,27 +263,12 @@
             <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
               <div class="row">
                 @foreach ($eventsall as $evLoop => $event)
-                  <div class="col-lg-4 col-md-6 ev-card-col item motivational{{ $evLoop === 0 ? ' ev-card-col--featured' : '' }}">
+                  <div class="col-lg-4 col-md-6 ev-card-col item motivational{{ $evLoop === 0 ? ' ev-card-col--featured' : '' }}" data-category="{{ $event->event_category_id }}">
                     @include('frontend.partials.event-card')
                   </div>
                 @endforeach
               </div>
             </div>
-            @foreach ($eventCategoriesWithEvents as $item)
-              @php
-                $events = $featuredEventsByCategory[$item->id] ?? collect();
-              @endphp
-              <div class="tab-pane fade" id="nav-{{ $item->id }}" role="tabpanel"
-                aria-labelledby="nav-{{ $item->id }}-tab">
-                <div class="row">
-                  @foreach ($events as $event)
-                    <div class="col-lg-4 col-md-6 ev-card-col item motivational">
-                      @include('frontend.partials.event-card')
-                    </div>
-                  @endforeach
-                </div>
-              </div>
-            @endforeach
           </div>
         @endif
 
@@ -421,6 +406,32 @@
   marquee.addEventListener('click', function(e) {
     if (e.target.closest('a')) return;
     marquee.classList.toggle('is-paused');
+  });
+})();
+
+// Filtro de eventos destacados: una sola grilla, sin duplicar tarjetas.
+(function() {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.events-tabs .nav-link'));
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#nav-all .ev-card-col'));
+  if (!tabs.length || !cards.length) return;
+
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      var filter = tab.getAttribute('data-filter') || 'all';
+
+      tabs.forEach(function(t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      cards.forEach(function(card) {
+        var show = filter === 'all' || String(card.getAttribute('data-category')) === String(filter);
+        card.classList.toggle('d-none', !show);
+      });
+    });
   });
 })();
 </script>

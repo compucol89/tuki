@@ -553,8 +553,13 @@ function popupAnnouncement($this) {
     const hydratePopupMedia = function ($root) {
         $root.find('[data-bg]').each(function () {
             const bg = this.getAttribute('data-bg');
+            const bgWebp = this.getAttribute('data-bg-webp');
             if (bg && !this.style.backgroundImage) {
-                this.style.backgroundImage = 'url(' + bg + ')';
+                const supportsImageSet = bgWebp && window.CSS && typeof CSS.supports === 'function'
+                    && CSS.supports('background-image', 'image-set(url("x") 1x)');
+                this.style.backgroundImage = supportsImageSet
+                    ? 'image-set(url("' + bgWebp + '") 1x, url("' + bg + '") 1x)'
+                    : 'url(' + bg + ')';
             }
             this.classList.add('loaded');
         });

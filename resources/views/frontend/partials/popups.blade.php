@@ -18,17 +18,27 @@
   @endphp
 
   @foreach ($popupInfos as $popupInfo)
-    @php $type = (int) $popupInfo->type; @endphp
+    @php
+      $type = (int) $popupInfo->type;
+      $popupImagePath = 'assets/admin/img/popups/' . $popupInfo->image;
+      $popupWebpPath = preg_replace('/\.(png|jpe?g)$/i', '.webp', $popupImagePath);
+      $popupHasWebp = $popupWebpPath !== $popupImagePath && is_file(public_path($popupWebpPath));
+    @endphp
 
     @if ($type === 1)
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-label="{{ __('Anuncio') }}">
         <div>
-          <img data-src="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}" class="lazy popup-image" alt="{{ $popupInfo->title ?: __('Anuncio') }}" width="960" height="540">
+          <picture>
+            @if ($popupHasWebp)
+              <source type="image/webp" srcset="{{ asset($popupWebpPath) }}">
+            @endif
+            <img data-src="{{ asset($popupImagePath) }}" class="lazy popup-image" alt="{{ $popupInfo->title ?: __('Anuncio') }}" width="960" height="540">
+          </picture>
         </div>
       </div>
     @elseif ($type === 2)
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-labelledby="popup-title-{{ $popupInfo->id }}">
-        <div class="popup-one bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}">
+        <div class="popup-one bg_cover" data-bg="{{ asset($popupImagePath) }}" @if ($popupHasWebp) data-bg-webp="{{ asset($popupWebpPath) }}" @endif>
           <div class="popup_main-content" style="background-color: {{ $popupRgba($popupInfo->background_color, $popupInfo->background_color_opacity) }};">
             <h2 id="popup-title-{{ $popupInfo->id }}">{{ $popupInfo->title }}</h2>
             <p>{{ $popupInfo->text }}</p>
@@ -38,7 +48,7 @@
       </div>
     @elseif ($type === 3)
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-labelledby="popup-title-{{ $popupInfo->id }}">
-        <div class="popup-two bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}">
+        <div class="popup-two bg_cover" data-bg="{{ asset($popupImagePath) }}" @if ($popupHasWebp) data-bg-webp="{{ asset($popupWebpPath) }}" @endif>
           <div class="popup_main-content" style="background-color: {{ $popupRgba($popupInfo->background_color, $popupInfo->background_color_opacity) }};">
             <h2 id="popup-title-{{ $popupInfo->id }}">{{ $popupInfo->title }}</h2>
             <p>{{ $popupInfo->text }}</p>
@@ -65,7 +75,7 @@
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-labelledby="popup-title-{{ $popupInfo->id }}">
         <div class="popup-three">
           <div class="popup_main-content">
-            <div class="left-bg bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}" role="img" aria-label="{{ $popupInfo->title ?: __('Anuncio') }}"></div>
+            <div class="left-bg bg_cover" data-bg="{{ asset($popupImagePath) }}" @if ($popupHasWebp) data-bg-webp="{{ asset($popupWebpPath) }}" @endif role="img" aria-label="{{ $popupInfo->title ?: __('Anuncio') }}"></div>
             <div class="right-content">
               <h2 id="popup-title-{{ $popupInfo->id }}">{{ $popupInfo->title }}</h2>
               <p>{{ $popupInfo->text }}</p>
@@ -78,7 +88,7 @@
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-labelledby="popup-title-{{ $popupInfo->id }}">
         <div class="popup-four">
           <div class="popup_main-content">
-            <div class="left-bg bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}" role="img" aria-label="{{ $popupInfo->title ?: __('Anuncio') }}"></div>
+            <div class="left-bg bg_cover" data-bg="{{ asset($popupImagePath) }}" @if ($popupHasWebp) data-bg-webp="{{ asset($popupWebpPath) }}" @endif role="img" aria-label="{{ $popupInfo->title ?: __('Anuncio') }}"></div>
             <div class="right-content">
               <h2 id="popup-title-{{ $popupInfo->id }}">{{ $popupInfo->title }}</h2>
               <p>{{ $popupInfo->text }}</p>
@@ -104,7 +114,7 @@
       </div>
     @elseif ($type === 6)
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-labelledby="popup-title-{{ $popupInfo->id }}">
-        <div class="popup-five bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}">
+        <div class="popup-five bg_cover" data-bg="{{ asset($popupImagePath) }}" @if ($popupHasWebp) data-bg-webp="{{ asset($popupWebpPath) }}" @endif>
           <div class="popup_main-content">
             <h2 id="popup-title-{{ $popupInfo->id }}">{{ $popupInfo->title }}</h2>
             <h4>{{ $popupInfo->text }}</h4>
@@ -119,7 +129,7 @@
       <div data-popup_delay="{{ $popupInfo->delay }}" data-popup_id="{{ $popupInfo->id }}" id="modal-popup-{{ $popupInfo->id }}" class="popup-wrapper mfp-hide" role="dialog" aria-modal="true" aria-labelledby="popup-title-{{ $popupInfo->id }}">
         <div class="popup-six">
           <div class="popup_main-content">
-            <div class="left-bg bg_cover lazy" data-bg="{{ asset('assets/admin/img/popups/' . $popupInfo->image) }}" role="img" aria-label="{{ $popupInfo->title ?: __('Anuncio') }}"></div>
+            <div class="left-bg bg_cover" data-bg="{{ asset($popupImagePath) }}" @if ($popupHasWebp) data-bg-webp="{{ asset($popupWebpPath) }}" @endif role="img" aria-label="{{ $popupInfo->title ?: __('Anuncio') }}"></div>
 
             <div class="right-content bg_cover" style="background-color: {{ '#' . ltrim((string) $popupInfo->background_color, '#') }}; background-image: url({{ asset('assets/admin/img/popups/right-bg.png') }});">
               <h2 id="popup-title-{{ $popupInfo->id }}">{{ $popupInfo->title }}</h2>

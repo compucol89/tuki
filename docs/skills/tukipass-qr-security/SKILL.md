@@ -18,7 +18,7 @@ description: Asegura que las entradas QR de TukiPass sean únicas, válidas, aud
 
 ## Estado verificado (2026-10-22)
 
-| Control | HEAD `2320b03e` | Producción `bbc843b1` |
+| Control | Código HEAD `2320b03e` | Producción `bbc843b1` |
 |---|---|---|
 | Tabla `ticket_scans` | migración `2026_10_22_000002` con `unique(booking_id, unique_id)` | **no existe** |
 | Servicio central | `TicketScanService` (`scan:26`, lock `:36`, auditoría `:64`) | lógica duplicada |

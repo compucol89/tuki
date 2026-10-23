@@ -181,20 +181,43 @@ git status --short                             # Quick status
 
 # === SKILLS AVAILABLE ===
 
-Skills are in `.claude/skills/` — read SKILL.md before using:
+Skills are in `.claude/skills/` (symlinks a `.agents/skills/`) — read SKILL.md before using. Registro completo: `.atl/skill-registry.md`:
 
 | Skill | Use when... |
 |-------|-------------|
 | `laravel-patterns` | Architecture, Eloquent, services, queues |
 | `laravel-specialist` | Models, auth, Livewire, testing |
+| `laravel-security` | Auth, CSRF, XSS, Eloquent seguro, deploy |
+| `laravel-tdd` | PHPUnit/Pest, factories, HTTP/Sanctum tests |
+| `laravel-verification` | Lint, PHPStan, tests, audit pre-merge/deploy |
+| `laravel-blade` | Components, slots, layouts, directivas |
 | `php-pro` | Modern PHP 8.3+, strict typing, patterns |
+| `mysql-patterns` | Schema, índices, transacciones, paginación |
+| `stripe-best-practices` | Checkout, PaymentIntents, webhooks, keys |
+| `mp-integrate` | Integración MercadoPago (Checkout Pro/API) |
+| `mp-webhooks` | Webhooks MP, HMAC-SHA256, reintentos |
+| `playwright-best-practices` | Tests E2E, flaky tests, POM, CI |
 | `frontend-design` | UI components, pages, HTML/CSS |
 | `accessibility` | WCAG compliance, a11y audits |
 | `seo` | Meta tags, structured data, sitemaps |
 | `copywriting` | Marketing copy, headlines, CTAs |
+| `ux-writing` | Microcopy, errores, empty states |
 | `test-driven-development` | Writing tests first |
 | `systematic-debugging` | Debugging failures |
 | `verification-before-completion` | Before claiming done |
+
+### Skills propias de TukiPass (versionadas en `docs/skills/`)
+
+Instalar/refrescar con `./scripts/install-project-skills.sh`. La fuente de verdad es el código + tests; si una skill difiere, gana el código.
+
+| Skill | Use when... |
+|-------|-------------|
+| `tukipass-payment-integrity` | Pagos, webhooks, idempotencia, compensaciones |
+| `tukipass-ticket-stock` | Stock, locks, liberación, concurrencia |
+| `tukipass-qr-security` | QR, escaneo, auditoría, no reutilización |
+| `tukipass-organizer-isolation` | Aislamiento organizador/cliente, IDOR |
+| `tukipass-release-guard` | Deploy, backup, rollback, HEAD vs producción |
+| `tukipass-performance` | OPcache, workers, queries, imágenes, assets |
 
 ---
 

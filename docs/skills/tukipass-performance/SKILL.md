@@ -18,7 +18,7 @@ description: Mide y optimiza el rendimiento real de TukiPass (PHP/OPcache, worke
 
 La fuente de verdad son las mediciones y el código; este archivo es un mapa. **Medir el commit desplegado y HEAD por separado.**
 
-| Medición | Producción `bbc843b1` | HEAD `2320b03e` |
+| Medición | Producción `bbc843b1` | Código HEAD `2320b03e` |
 |---|---|---|
 | Servidor web | `php -S`, 1 worker | `PHP_CLI_SERVER_WORKERS=4` (`docker-start.sh:108`) |
 | OPcache | off | on (`Dockerfile:65-72`, 128 MB, 20k archivos) |

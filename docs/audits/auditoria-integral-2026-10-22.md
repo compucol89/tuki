@@ -6,7 +6,7 @@
 
 ## 1. Resumen
 
-Se corrigieron los riesgos P0/P1 de integridad transaccional, aislamiento de datos, QR, CI y exposición del repositorio. La suite PHPUnit pasó de 225 a **254 tests** y `composer audit` quedó en **0 advisories**.
+Se corrigieron los riesgos P0/P1 de integridad transaccional, aislamiento de datos, QR, CI y exposición del repositorio. La rama acumula 19 commits. La suite PHPUnit pasó de 225 a **256 tests** y `composer audit` quedó en **0 advisories**.
 
 ## 2. Cambios implementados
 
@@ -66,7 +66,7 @@ Se corrigieron los riesgos P0/P1 de integridad transaccional, aislamiento de dat
 
 ```text
 php artisan test --no-coverage
-Tests: 254 passed (186374 assertions)
+Tests: 256 passed (186529 assertions)
 
 composer audit --locked
 No security vulnerability advisories found.

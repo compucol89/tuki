@@ -15,7 +15,7 @@ description: Previene acceso cruzado entre organizadores y entre clientes en Tuk
 
 ## Estado verificado (2026-10-22)
 
-| Control | HEAD `2320b03e` | Producción `bbc843b1` |
+| Control | Código HEAD `2320b03e` | Producción `bbc843b1` |
 |---|---|---|
 | `SupportTicketController@message` | scoped por `user_id` + `user_type` (`:61-63`) | **sin scope** (`where('id',$id)->firstOrFail()`) |
 | `SupportTicketController@reply` | scoped (`:71-73`) | **sin scope** |

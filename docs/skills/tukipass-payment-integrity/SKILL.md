@@ -18,7 +18,7 @@ description: Protege el ciclo completo de pago de TukiPass (MercadoPago, reserva
 
 La fuente de verdad es el código y los tests, no este archivo. Verificar con `git rev-parse HEAD` y `php artisan test`.
 
-| Control | HEAD `2320b03e` | Producción `bbc843b1` |
+| Control | Código HEAD `2320b03e` | Producción `bbc843b1` |
 |---|---|---|
 | Firma sin secret | **fail-closed** en production (`MercadoPagoController.php:866-873`) | fail-open (`:744-746`) |
 | Error transitorio de API | **503** (`:654`) | 200 |

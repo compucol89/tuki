@@ -17,7 +17,8 @@ description: Procedimiento de publicación segura de TukiPass. Úsala antes de d
 
 | Dato | Valor |
 |---|---|
-| HEAD local | `2320b03e` |
+| Código HEAD | `2320b03e` |
+| Rama de auditoría | `fix/audit-p0-p1-20261022` (19 commits; docs hasta `242843e0`) |
 | Producción EasyPanel | `bbc843b1` |
 | Diferencia | HEAD incluye stock transaccional, firma fail-closed, compensación, QR con `ticket_scans`, aislamiento de soporte, OPcache, workers y cache de blogs; **nada de eso está desplegado** |
 | `MERCADOPAGO_WEBHOOK_SECRET` | **ausente en producción** |

@@ -2,12 +2,12 @@
 
 **Fecha:** 2026-10-22
 **Commit auditado (local):** `dcaf8717` (mediciones de producción) — el commit desplegado en producción es `bbc843b1`.
-**HEAD actual del repo:** `2320b03e` (256 tests). **No es lo desplegado:** HEAD incluye OPcache, workers, stock transaccional, firma fail-closed, QR y aislamiento; producción no.
+**Código HEAD:** `2320b03e` (256 tests). **Rama de auditoría:** `fix/audit-p0-p1-20261022` (19 commits; docs hasta `242843e0`). **No es lo desplegado:** HEAD incluye OPcache, workers, stock transaccional, firma fail-closed, QR y aislamiento; producción no.
 **Entorno de producción:** `https://www.tukipass.com` — EasyPanel, 1 réplica `app`, 1 réplica `worker`, MySQL 9, PHP 8.4.27.
 **Entorno local de medición:** PHP 8.4.27 (CLI), MySQL 8.0 en Docker, dump de producción del 2026-08-22 (`tukipass.sql`, 2,4 MB).
 **Estado:** auditoría de solo lectura. **No se modificó código de aplicación.** Los cambios de estado realizados fueron solo caches de runtime (`php artisan optimize:clear`) y un contenedor MySQL temporal para medir.
 
-> **Correcciones verificadas el 2026-10-22 contra HEAD `2320b03e`:**
+> **Correcciones verificadas el 2026-10-22 contra Código HEAD `2320b03e`:**
 > - **Stock:** el código actual es atómico (`BookingController@storeData` abre `DB::transaction` en la línea 201; `reserveVariationStock`/`reserveSingleTicketStock` usan `lockForUpdate` y validan stock; 15+4 tests pasan). Se **retira** el hallazgo P1-06. El deploy `bbc843b1` es anterior a ese fix.
 > - **Detalle de evento:** en producción pesa **120.886 B raw / 24.132 B gzip** y TTFB **0,29–0,35 s**. Los 550 KB/537 ms eran el evento local 126 (descripción larga) + emulación móvil, no un problema sistémico.
 > - **OPcache/workers/blog cache:** ya están en HEAD (`Dockerfile:65-72`, `docker-start.sh:108`, `AppServiceProvider.php:202`), **no** en producción.
@@ -91,7 +91,7 @@ Datos de despliegue relevantes:
 
 | Elemento | Valor observado |
 |---|---|
-| Commit desplegado | `bbc843b1` (HEAD es `2320b03e`) |
+| Commit desplegado | `bbc843b1` (código HEAD es `2320b03e`) |
 | Imagen app | `php:8.4.27-cli-alpine`, sin PHP-FPM/Nginx |
 | Servidor web | deployed: `php -S 0.0.0.0:8080` (1 worker); HEAD: `PHP_CLI_SERVER_WORKERS=4` |
 | OPcache | deployed: `opcache.enable_cli=0`; HEAD: on (`Dockerfile:65-72`) |
@@ -232,7 +232,7 @@ Carga actual muy baja. El riesgo es de **picos**, no de saturación permanente. 
 
 ### 3.6 Tests
 
-`php artisan test` (HEAD `2320b03e`): **256 passed, 186.529 assertions**. Hay tests de stock (`EventBookingTicketSelectionValidationTest`, `BookingStockReleaseTest`), pagos (firma, claim, compensación), QR e aislamiento. **Sigue faltando un test de concurrencia real en MySQL y un end-to-end HTTP del webhook duplicado.**
+`php artisan test` (Código HEAD `2320b03e`): **256 passed, 186.529 assertions**. Hay tests de stock (`EventBookingTicketSelectionValidationTest`, `BookingStockReleaseTest`), pagos (firma, claim, compensación), QR e aislamiento. **Sigue faltando un test de concurrencia real en MySQL y un end-to-end HTTP del webhook duplicado.**
 
 ---
 
@@ -320,7 +320,7 @@ Carga actual muy baja. El riesgo es de **picos**, no de saturación permanente. 
 #### P1-06 — [RETIRADO] Atomicidad del stock
 
 - **Estado:** el código HEAD **sí es atómico**. `BookingController@storeData` abre una única `DB::transaction` (línea 201); `reserveVariationStock` (320) y `reserveSingleTicketStock` (403) usan `lockForUpdate`, validan stock y lanzan excepción; los tests `EventBookingTicketSelectionValidationTest` (15) y `BookingStockReleaseTest` (4) prueban rollback, stock insuficiente y liberación idempotente. **No hay `max(0)` ni throw después del commit.**
-- **Lo que sí queda:** el deploy `bbc843b1` es anterior a `33e5e996`/`2320b03e`; producción puede tener el comportamiento viejo. No desplegar HEAD sin las migraciones `stock_released_at` y `ticket_scans`.
+- **Lo que sí queda:** el deploy `bbc843b1` es anterior a `33e5e996` y al código `2320b03e`; producción puede tener el comportamiento viejo. No desplegar HEAD sin las migraciones `stock_released_at` y `ticket_scans`.
 - **Modelo real:** no existe columna `reserved`; `PendingBooking` no reserva stock; dos compradores de la última unidad pueden pagar y el segundo recibe reembolso/`manual_review` vía `PaymentCompensationService`.
 - **Validación:** 256 tests pasan (186.529 assertions).
 
@@ -407,7 +407,7 @@ Carga actual muy baja. El riesgo es de **picos**, no de saturación permanente. 
 | 4 | Detalle: queries duplicadas + UPDATE por vista | Trabajo evitable; producción 120 KB/24 KB, TTFB 0,29–0,35 s | 41 queries en el peor caso local | Medio | Medio |
 | 5 | Assets del organizador | ~800 KB gzip por página | 1,5 MB JS + 336 KB CSS | Bajo | Bajo |
 | 6 | Webhook MP sincrónico/sin firma/200 en error | Disponibilidad + integridad | deploy viejo: 200 con firma basura; HEAD: 401/503, falta secret | Medio | Alto |
-| 7 | Deploy `bbc843b1` atrasado | No tiene stock transaccional, QR, aislamiento, OPcache/workers | HEAD `2320b03e` vs deploy | Alto | Alto |
+| 7 | Deploy `bbc843b1` atrasado | No tiene stock transaccional, QR, aislamiento, OPcache/workers | Código HEAD `2320b03e` vs deploy | Alto | Alto |
 | 8 | Imágenes 1,4 MB | Primera carga móvil | popup 593 KB; thumbs 1200→326 | Bajo | Bajo |
 | 9 | Índices faltantes | Degradación futura | esquema | Bajo | Bajo |
 | 10 | Config/route cache | Arranque | A/B -25% | Medio (env refactor) | Medio |

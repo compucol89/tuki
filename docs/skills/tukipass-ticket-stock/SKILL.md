@@ -17,7 +17,7 @@ description: Garantiza la consistencia de cupos de TukiPass (disponible, vendido
 
 ## Estado verificado (2026-10-22)
 
-| Control | HEAD `2320b03e` | Producción `bbc843b1` |
+| Control | Código HEAD `2320b03e` | Producción `bbc843b1` |
 |---|---|---|
 | Transacción única por orden | `BookingController.php:201` | versión previa |
 | Descuento con lock y chequeo | `reserveVariationStock:320`, `reserveSingleTicketStock:403` | versión previa |

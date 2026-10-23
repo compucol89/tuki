@@ -173,7 +173,7 @@ class OrganizerController extends Controller
         'complete' => trim((string) $organizer->instagram) !== '',
         'hint' => __('Es la red que más valida eventos, comunidad y convocatorias.'),
         'href' => $editProfileUrl . '#opb-social-title',
-        'icon' => 'fab fa-instagram',
+        'icon' => 'fas fa-camera',
       ],
       [
         'label' => __('Subí foto de perfil'),

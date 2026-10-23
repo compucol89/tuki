@@ -243,7 +243,7 @@
 
         <li class="nav-item @if (request()->routeIs('organizer.telegram_bot.*')) active @endif">
           <a href="{{ route('organizer.telegram_bot.index') }}">
-            <i class="fab fa-telegram-plane" aria-hidden="true"></i>
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
             <p>{{ __('Bot de Telegram') }}</p>
           </a>
         </li>

@@ -28,15 +28,15 @@
       <div class="modal-body text-center p-4">
         <div class="button-group">
           <a href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}" target="_blank" rel="noopener noreferrer">
-            <i class="fab fa-facebook-f"></i>
+            @include('frontend.partials.social-icon', ['icon' => 'fab fa-facebook-f', 'size' => 35, 'variant' => 'share'])
             <p>{{ __('Facebook') }}</p>
           </a>
           <a href="https://twitter.com/intent/tweet?text={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}&amp;url={{ urlencode(url()->current()) }}"
-            target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i>
+            target="_blank" rel="noopener noreferrer">@include('frontend.partials.social-icon', ['icon' => 'fab fa-twitter', 'size' => 35, 'variant' => 'share'])
             <p>{{ __('Twitter') }}</p>
           </a>
           <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url={{ urlencode(url()->current()) }}&amp;title={{ urlencode(isset($content) ? $content->title : (isset($product) ? $product->title : config('app.name'))) }}"
-            target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i>
+            target="_blank" rel="noopener noreferrer">@include('frontend.partials.social-icon', ['icon' => 'fab fa-linkedin', 'size' => 35, 'variant' => 'share'])
             <p>{{ __('linkedin') }}</p>
           </a>
         </div>

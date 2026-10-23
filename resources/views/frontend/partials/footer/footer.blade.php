@@ -88,7 +88,7 @@
                 @endphp
                 <li>
                   <a href="{{ $socialUrl }}" target="_blank" rel="noopener noreferrer" aria-label="{{ __('Abrir :name en una pestaña nueva', ['name' => $socialLabel]) }}">
-                    <i class="{{ $socialMediaInfo->icon }}" aria-hidden="true"></i>
+                    @include('frontend.partials.social-icon', ['icon' => $socialMediaInfo->icon, 'size' => 16])
                   </a>
                 </li>
               @endforeach

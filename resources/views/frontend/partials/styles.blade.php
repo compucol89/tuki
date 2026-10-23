@@ -14,6 +14,12 @@
   $menuCssPath = app()->environment('production') ? 'assets/front/css/menu.min.css' : 'assets/front/css/menu.css';
   $styleCssPath = app()->environment('production') ? 'assets/front/css/style.min.css' : 'assets/front/css/style.css';
   $responsiveCssPath = app()->environment('production') ? 'assets/front/css/responsive.min.css' : 'assets/front/css/responsive.css';
+
+  $isEventDetail = request()->routeIs('event.details');
+  $popupTypes = collect($popupInfos ?? [])->map(fn ($popup) => (int) ($popup->type ?? 0));
+  $hasAnnouncementPopup = $popupTypes->isNotEmpty() && !$isEventDetail;
+  $needsMagnific = !$isEventDetail;
+  $needsToastr = Session::has('message') || !$isEventDetail;
 @endphp
 <!-- app.css -->
 <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">
@@ -32,15 +38,21 @@
 <link rel="stylesheet" href="{{ $frontCssAsset($menuCssPath) }}">
 <!-- Main css -->
 <link rel="stylesheet" href="{{ $frontCssAsset($styleCssPath) }}">
+@if ($needsMagnific)
 <!-- Magnific Popup (announcement popups + galerías) -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/magnific-popup.min.css') }}">
+@endif
+@if ($hasAnnouncementPopup)
 <!-- Announcement popup geometry overrides -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/popup-announcement.css') }}">
+@endif
 <!-- Responsive css -->
 <link rel="stylesheet" href="{{ $frontCssAsset($responsiveCssPath) }}">
+@if ($needsToastr)
 <!-- Toastr css -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/toastr.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/toastr.css') }}"></noscript>
+@endif
 <style>
   /* Única regla dependiente del servidor (tokens DB en layout :root).
      El resto de estilos globales vive en style.css / menu.css. */

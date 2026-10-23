@@ -11,6 +11,12 @@
 
         return asset($path) . '?v=' . $hash;
       };
+
+      $isEventDetail = request()->routeIs('event.details');
+      $popupTypes = collect($popupInfos ?? [])->map(fn ($popup) => (int) ($popup->type ?? 0));
+      $needsMagnific = !$isEventDetail;
+      $needsSyotimer = $isEventDetail || $popupTypes->contains(fn ($type) => $type >= 6);
+      $needsToastr = Session::has('message') || !$isEventDetail;
     @endphp
     <script>
       var baseUrl = "{{ url('/') }}";
@@ -67,9 +73,13 @@
     <script src="{{ asset('assets/front/js/popper.min.js') }}" defer></script>
     <script src="{{ asset('assets/front/js/bootstrap.4.5.3.min.js') }}" defer></script>
     <!-- jQuery plugins (defer) -->
+    @if ($needsMagnific)
     <script src="{{ asset('assets/front/js/jquery.magnific-popup.min.js') }}" defer></script>
+    @endif
     <script src="{{ asset('assets/front/js/vanilla-lazyload.min.js') }}" defer></script>
+    @if ($needsSyotimer)
     <script src="{{ asset('assets/front/js/jquery-syotimer.min.js') }}" defer></script>
+    @endif
     <!-- App scripts (defer) -->
     <script>
       // Shim para selectmenu: evita TypeError en páginas sin jQuery UI
@@ -80,7 +90,9 @@
       });
     </script>
     <script src="{{ $frontJsAsset(app()->environment('production') ? 'assets/front/js/script.min.js' : 'assets/front/js/script.js') }}" defer></script>
+    @if ($needsToastr)
     <script src="{{ $frontJsAsset('assets/front/js/toastr.js') }}" defer></script>
+    @endif
     <script src="{{ asset('assets/front/js/pwa.js') }}?v=20260615-reset" defer></script>
 
     @if (Session::has('message'))

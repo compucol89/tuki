@@ -1,7 +1,9 @@
 # Auditoría integral TukiPass — 2026-10-22
 
-**Rama:** `master` (fusionada desde `fix/audit-p0-p1-20261022`)  
-**Base original:** `dcaf8717`; **código HEAD:** `2320b03e`  
+**Rama:** `master` (fusionada desde `fix/audit-p0-p1-20261022`)
+
+**Base original:** `dcaf8717`; **código HEAD:** `2320b03e`
+
 **Modo:** cambios locales commiteados y pusheados, sin deploy ni producción.
 
 ## 1. Resumen

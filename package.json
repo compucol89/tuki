@@ -34,7 +34,7 @@
     "lodash": "^4.17.19",
     "pixelmatch": "^7.2.0",
     "pngjs": "^7.0.0",
-    "postcss": "^8.1.14",
+    "postcss": "^8.5.31",
     "webpack": "^5.74.0"
   },
   "dependencies": {

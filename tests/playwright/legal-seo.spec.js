@@ -22,7 +22,7 @@ for (const p of LEGAL_PAGES) {
     expect(response.status()).toBe(200);
 
     // SEO
-    await expect(page).toHaveTitle(new RegExp('TukiPass'));
+    await expect(page).toHaveTitle(/tukipass/i);
     expect(await page.locator('h1').count()).toBe(1);
 
     const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');

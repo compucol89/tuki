@@ -53,7 +53,7 @@
 @endpush
 
 @push('scripts')
-  <script src="{{ asset('assets/front/js/cart.js') }}" defer></script>
+  <script src="{{ asset('assets/front/js/cart.js') }}?v={{ filemtime(public_path('assets/front/js/cart.js')) }}" defer></script>
 @endpush
 @section('content')
   <!-- Event Page Start -->

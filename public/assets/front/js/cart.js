@@ -11,13 +11,13 @@
                     a > 1 ? t.get(e + ",,," + a, function (e) {
                         e.message ? (toastr.success(e.message), t(".cart-amount")
                             .val(1), t("#cartIconWrapper")
-                                .load(location.href + " #cartIconWrapper")) : (toastr.error(e.error), t(".cart-amount")
+                                .trigger("cart:updated")) : (toastr.error(e.error), t(".cart-amount")
                                     .val(1), t("#cartIconWrapper")
-                                        .load(location.href + " #cartIconWrapper"))
+                                        .trigger("cart:updated"))
                     }) : t.get(e, function (e) {
                         e.message ? (toastr.success(e.message), t("#cartIconWrapper")
-                            .load(location.href + " #cartIconWrapper")) : (toastr.error(e.error), t("#cartIconWrapper")
-                                .load(location.href + " #cartIconWrapper"))
+                            .trigger("cart:updated")) : (toastr.error(e.error), t("#cartIconWrapper")
+                                .trigger("cart:updated"))
                     })
                 }),
                 t(".cart-link2")
@@ -30,13 +30,13 @@
                         a > 1 ? t.get(e + ",,," + a, function (e) {
                             e.message ? (toastr.success(e.message), t(".cart-amount")
                                 .val(1), t("#cartIconWrapper")
-                                    .load(location.href + " #cartIconWrapper")) : (toastr.error(e.error), t(".cart-amount")
+                                    .trigger("cart:updated")) : (toastr.error(e.error), t(".cart-amount")
                                         .val(1), t("#cartIconWrapper")
-                                            .load(location.href + " #cartIconWrapper"))
+                                            .trigger("cart:updated"))
                         }) : t.get(e, function (e) {
                             e.message ? (toastr.success(e.message), t("#cartIconWrapper")
-                                .load(location.href + " #cartIconWrapper")) : (toastr.error(e.error), t("#cartIconWrapper")
-                                    .load(location.href + " #cartIconWrapper"))
+                                .trigger("cart:updated")) : (toastr.error(e.error), t("#cartIconWrapper")
+                                    .trigger("cart:updated"))
                         })
                     }),
                 t(document)
@@ -88,7 +88,7 @@
                                                 .text(a.total), toastr.success(a.message), a.count && (t(".cart-item-view")
                                                     .text(a.count), t(".cart-total-view")
                                                         .text(("left" == position ? symbol + " " : "") + a.total + ("right" == position ? " " + symbol : ""))), t("#cartIconWrapper")
-                                                            .load(location.href + " #cartIconWrapper")
+                                                            .trigger("cart:updated")
                                 } else toastr.error(a.error)
                             }
                         })
@@ -107,7 +107,7 @@
                                                     .text(a.count), t(".cart-total-view")
                                                         .text(("left" == position ? symbol + " " : "") + a.total + ("right" == position ? " " + symbol : "")), t(".remove" + e)
                                                             .remove(), t("#cartIconWrapper")
-                                                                .load(location.href + " #cartIconWrapper")) : toastr.error(a.error)
+                                                                .trigger("cart:updated")) : toastr.error(a.error)
                             })
                         })
         }), t(document)

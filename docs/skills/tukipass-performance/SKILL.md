@@ -95,8 +95,9 @@ Causas y fixes:
 - **Event-booking:** `ticketBreakdown()` → `ticketContentTitle()` por ticket. `Booking::preloadTicketTitles()` resuelve todos los títulos en 1 query y se pasa al modelo/vista/summary.
 - **Support tickets:** `organizer` no estaba eager; los mensajes consultaban admin/rol por reply. Mapas eager de admins+roles y relaciones del ticket.
 - **`defaultLanguage()`** ahora cachea 6 h (misma clave que el frontend); evita la segunda consulta de `languages` por request.
+- **Carrito legacy:** se eliminaron 10 `.load(location.href + " #cartIconWrapper")` que re-renderizaban la página completa para un elemento inexistente; ahora solo se dispara un evento. `cart.js` se cache-bustea por `filemtime`.
 
-Pendiente de esta línea: las tablas desktop + mobile de event-booking renderizan la misma página dos veces (`d-none d-xl-block` / `d-xl-none`); eliminarlo requiere un refactor responsive con regresión visual. `COUNT` de `/eventos` sigue pendiente.
+Pendiente de esta línea: las tablas desktop + mobile de event-booking renderizan la misma página dos veces (`d-none d-xl-block` / `d-xl-none`); eliminarlo requiere un refactor responsive con regresión visual. El cupón de checkout (`.load #couponReload`) no se tocó por ser zona protegida de pagos. `COUNT` de `/eventos` sigue pendiente.
 
 ## Trabajo pendiente (medir antes de tocar)
 

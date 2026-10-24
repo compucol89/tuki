@@ -15,7 +15,8 @@ php artisan event:clear
 php artisan storage:link --force
 
 # Cachés de producción (mejora TTFB significativamente)
-php artisan config:cache    # ~50ms → ~5ms en bootstrap
+# NO usar config:cache: el panel escribe credenciales de pasarelas en .env
+# (setEnvironmentValue) y quedarían congeladas hasta reiniciar el contenedor.
 php artisan route:cache     # ~30ms → ~2ms en routing
 php artisan view:cache      # Compila todas las Blade de una vez
 php artisan event:cache     # Cache event listeners (Laravel 11+)

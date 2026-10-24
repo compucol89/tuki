@@ -13,23 +13,23 @@ description: Procedimiento de publicación segura de TukiPass. Úsala antes de d
 - Al agregar dependencias, migraciones o variables de entorno.
 - Antes de pedir una revisión final.
 
-## Estado real del deploy (2026-10-22)
+## Estado real del deploy (2026-10-24)
 
 | Dato | Valor |
 |---|---|
-| Código HEAD | `2320b03e` |
-| Rama | `master` (código `2320b03e`; producción `bbc843b1`) |
-| Producción EasyPanel | `bbc843b1` |
-| Diferencia | HEAD incluye stock transaccional, firma fail-closed, compensación, QR con `ticket_scans`, aislamiento de soporte, OPcache, workers y cache de blogs; **nada de eso está desplegado** |
-| `MERCADOPAGO_WEBHOOK_SECRET` | **ausente en producción** |
+| Código HEAD | `4d60d1ef` |
+| Rama | `master` (código y producción `4d60d1ef`) |
+| Producción EasyPanel | `4d60d1ef` |
+| Diferencia | Sin diferencia: deploy de performance/N+1 aplicado (2026-10-24) |
+| `MERCADOPAGO_WEBHOOK_SECRET` | **configurado en producción** |
 | `APP_ENV` / `APP_DEBUG` | `production` / `false` |
-| Tests HEAD | 256 pasan (186.529 assertions) |
+| Tests HEAD | 265 pasan (190.887 assertions) |
 
 **Regla:** `git rev-parse HEAD` no es el deploy. Comparar contra el commit que muestra EasyPanel (`inspectAppService` o la UI) antes de afirmar que un fix está en producción.
 
-**Riesgo de producción:** `bbc843b1` tiene un IDOR real en `SupportTicketController@message`/`@reply` (un cliente puede leer/responder tickets de otro) y QR sin la garantía `ticket_scans`. HEAD corrige ambos. No postergar el deploy por tareas de performance.
+**Riesgo histórico:** `bbc843b1` tenía un IDOR real en `SupportTicketController@message`/`@reply` y QR sin la garantía `ticket_scans`. Ya no es producción; ambos fixes están desplegados.
 
-**Bloqueante crítico:** HEAD hace `hasValidWebhookSignature()` fail-closed en production. Si se despliega HEAD sin `MERCADOPAGO_WEBHOOK_SECRET`, **todos los webhooks de MercadoPago devolverán 401** y no se crearán reservas. Configurar el secret en EasyPanel **antes** del deploy y reiniciar el servicio.
+**Regla de webhooks:** el código actual hace `hasValidWebhookSignature()` fail-closed en production. Si se rota el secret, actualizarlo en EasyPanel **antes** de reiniciar; sin secret, todos los webhooks de MercadoPago devuelven 401.
 
 ## Checklist obligatorio
 
@@ -50,7 +50,7 @@ description: Procedimiento de publicación segura de TukiPass. Úsala antes de d
 ### 2. Backend
 
 - [ ] `php -l` sobre los archivos tocados.
-- [ ] `php artisan test --no-coverage` verde (256 tests al 2026-10-22).
+- [ ] `php artisan test --no-coverage` verde (265 tests al 2026-10-24).
 - [ ] Tests específicos verdes:
       `MercadoPagoWebhookSignatureTest`, `PendingBookingClaimTest`, `PaymentCompensationServiceTest`, `BookingStockReleaseTest`, `EventBookingTicketSelectionValidationTest`, `SupportTicketIsolationTest`, `TicketScanServiceTest`, `ReconcileOnlinePendingBookingsTest`.
 - [ ] Sin tests eliminados para “hacer pasar” la suite.

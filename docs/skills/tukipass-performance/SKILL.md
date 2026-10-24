@@ -48,7 +48,7 @@ Antes de “optimizar” de nuevo, verificar que el deploy tenga estos cambios. 
 
 ## Estado medido (2026-10-23) — requests y caché
 
-Medición local con el stack Docker (`php -S` + `PHP_CLI_SERVER_WORKERS=4`, OPcache on), Chromium 390×844, CPU 4×, red 1,6 Mbps / RTT 150 ms. Antes/después con el mismo método.
+Producción desplegada: `4d60d1ef` (2026-10-24). Medición local con el stack Docker (`php -S` + `PHP_CLI_SERVER_WORKERS=4`, OPcache on), Chromium 390×844, CPU 4×, red 1,6 Mbps / RTT 150 ms. Antes/después con el mismo método.
 
 | Página | Requests | KB | LCP | Load | CLS |
 |---|---|---|---|---|---|

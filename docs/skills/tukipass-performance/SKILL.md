@@ -33,7 +33,7 @@ La fuente de verdad son las mediciones y el código; este archivo es un mapa. **
 | Detalle evento (local, 124) | 45 queries / 224,7 ms | 19 queries / 50–56 ms; mismo contenido (2026-10-23) |
 | Home móvil (4× CPU/1,6 Mbps) | 1.527 KB, 39 req; LCP 2,07–2,16 s; CLS 0,0198 | no medido |
 | Organizer | 1,5 MB JS raw / 449 KB gzip + 351 KB gzip CSS/fuentes | dashboard ~437 KB JS raw / ~125 KB gzip; pesados condicionales (2026-10-23) |
-| Tests | — | 256 pasan (186.529 assertions) |
+| Tests | — | 263 pasan (190.963 assertions) |
 
 **Conclusión empírica:** el problema principal del deploy viejo es **capacidad** (1 worker, OPcache off) y **payload de imágenes/assets**, no el byte size del HTML. El detalle de evento de producción pesa ~120 KB raw / ~24 KB gzip; los 550 KB/537 ms reportados antes eran un evento local outlier + emulación móvil.
 
@@ -46,16 +46,43 @@ La fuente de verdad son las mediciones y el código; este archivo es un mapa. **
 
 Antes de “optimizar” de nuevo, verificar que el deploy tenga estos cambios. Si no, el primer paso es desplegar HEAD **con** `MERCADOPAGO_WEBHOOK_SECRET` y las migraciones.
 
+## Estado medido (2026-10-23) — requests y caché
+
+Medición local con el stack Docker (`php -S` + `PHP_CLI_SERVER_WORKERS=4`, OPcache on), Chromium 390×844, CPU 4×, red 1,6 Mbps / RTT 150 ms. Antes/después con el mismo método.
+
+| Página | Requests | KB | LCP | Load | CLS |
+|---|---|---|---|---|---|
+| Home | 35 → 35 | 696 → 454 | 1692 → 1480 ms | 3959 → 2748 ms | 0,0198 |
+| `/eventos` | 41 → 36 | 1262 → 421 | 4644 → 1636 ms | 6702 → 2690 ms | 0,01 |
+| Detalle | 26 → 26 | 475 → 325 | 2200 → 1724 ms | 4128 → 3636 ms | 0 |
+
+TTFB local (50 muestras, `route:cache` + caches calientes): home p50 37→27 ms / p95 60→41 ms; `/eventos` 34→25 / 45→39; detalle 40→27 / 48→34.
+
+Consultas por request (mismo stack): home 6→3 (SQL 12,7→4 ms), `/eventos` 9→7 (13,8→7 ms), detalle 19→13 (21→7-11 ms).
+
+Implementado y verificado:
+
+- `route:cache` en `docker-start.sh` (no `config:cache`: el panel escribe credenciales de pasarelas en `.env` y quedarían congeladas hasta reiniciar).
+- `getLanguage()`, `getCurrencyInfo()`, `Language::all()` (hreflang), `Admin::first()` público, `BillingSetting::current()` en detalle y `timeZoneOffset()` cacheados con invalidación donde aplica.
+- `views_count`/`views_last_24h`: buffer append-only (`EventViewTracker`) + `events:flush-views` cada minuto; `ResetDailyViews` vuelca antes de resetear. Elimina el UPDATE con lock por visita.
+- Font Awesome del frontend: subset de 53 iconos (`fa-solid-front.woff2`, 158 KB → 4,4 KB) generado con `scripts/build-fa-subset.py`; admin/organizer conservan la fuente completa.
+- Hero de `/eventos` y detalle: slides secundarios con `data-bg` e hidratación al entrar en escena; sólo baja la primera imagen. Dedupe de `.jpg`/`.webp` en `HeroSlideUrlsService`.
+- Anuncios y `breadcrumb_bg` con variante WebP (`imagePath`/`responsiveImageUrl` la prefieren).
+- `/eventos` y detalle: `Cache-Control: private, max-age=0` + ETag (304 verificado). Home mantiene `public, max-age=300` + ETag.
+- Tests: 263 pasan (190.963 assertions).
+
+Pendiente: `COUNT` de `/eventos` sin la derivada (0,65 ms hoy), consolidación CSS/JS (requiere regresión visual) y observabilidad p95/5xx.
+
 ## Trabajo pendiente (medir antes de tocar)
 
 1. **Detalle de evento:** ✅ deduplicado (2026-10-23). Una carga de tickets, traducciones y variaciones; `SUM(CASE...)` para wishlists/bookings; 45 → 19 queries (224,7 → 50–56 ms local).
-2. **`getLanguage()`/`basic_settings`:** cachear en el controlador base; hoy se consultan varias veces por request.
-3. **`views_count`:** UPDATE por vista (5,5 ms local, lock de fila). Bufferizar o mover a job; no bloquea la reserva.
+2. **`getLanguage()`/`basic_settings`:** ✅ cacheado en el controlador base y View Composer (2026-10-23); 19 → 13 queries en detalle.
+3. **`views_count`:** ✅ bufferizado (2026-10-23); sin UPDATE por visita, volcado cada minuto.
 4. **Organizer:** ✅ TinyMCE, Dropzone, jQuery UI y DataTables se cargan solo en las vistas que los usan (2026-10-23). Dashboard ~437 KB JS raw / ~125 KB gzip; primera pantalla sin pesados.
-5. **Imágenes:** ✅ popup sirve WebP (702 KB → 22 KB) y carga al abrir (2026-10-23); quedan thumbnails 400/800 WebP + `srcset`.
+5. **Imágenes:** ✅ popup sirve WebP (702 KB → 22 KB) y carga al abrir (2026-10-23); thumbnails 400 WebP + hero lazy. Ad/breadcrumb WebP (2026-10-23).
 6. **`/eventos`:** el `COUNT` materializa la derivada de tickets; calcular el total sin el `LEFT JOIN` derivado.
 7. **CSS/JS:** 535 KB CSS + 250 KB JS sin comprimir; consolidar sin purgar a ciegas (hay clases dinámicas).
-8. **Observabilidad:** slow query log, alerta 5xx, latencia p95. Loki devolvió HTTP 400; no hay APM.
+8. **Observabilidad:** slow query log, alerta 5xx, latencia p95. Loki devolvió HTTP 400; no hay APM ni Sentry instalado.
 
 ## Cómo medir
 

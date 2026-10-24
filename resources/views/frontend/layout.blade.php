@@ -103,7 +103,7 @@
   {{-- hreflang tags --}}
   @php
     $hreflangUrl = url()->current();
-    $allLanguages = \App\Models\Language::all();
+    $allLanguages = $allLanguages ?? \Illuminate\Support\Facades\Cache::remember('all_languages', now()->addHours(6), fn () => \App\Models\Language::all());
   @endphp
   @if ($allLanguages->count() > 1)
     @foreach ($allLanguages as $lang)

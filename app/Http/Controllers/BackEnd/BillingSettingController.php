@@ -51,6 +51,8 @@ class BillingSettingController extends Controller
 
     $billingSettings->update($validated);
 
+    \Illuminate\Support\Facades\Cache::forget('billing_settings_public');
+
     $request->session()->flash('success', __('admin.flash.updated_successfully'));
 
     return redirect()->back();

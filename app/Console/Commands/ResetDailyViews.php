@@ -12,6 +12,9 @@ class ResetDailyViews extends Command
 
     public function handle()
     {
+        // Primero volcar las visitas pendientes del día.
+        \Illuminate\Support\Facades\Artisan::call('events:flush-views');
+
         Event::query()->update([
             'views_last_24h'   => 0,
             'views_last_reset' => now(),

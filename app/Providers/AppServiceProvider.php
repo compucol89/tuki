@@ -156,7 +156,7 @@ class AppServiceProvider extends ServiceProvider
           ];
         }
 
-        $cachedLanguage = Cache::remember('frontend_language', $cacheTTL, function () {
+        $cachedLanguage = Cache::remember('default_language', $cacheTTL, function () {
           return $this->defaultLanguage();
         });
 
@@ -196,6 +196,10 @@ class AppServiceProvider extends ServiceProvider
           return Section::query()->pluck('footer_section_status')->first();
         });
 
+        $allLanguages = Cache::remember('all_languages', $cacheTTL, function () {
+          return Language::all();
+        });
+
         if ($cachedSectionStatus == 1) {
           $cachedFooterContent = Cache::remember('frontend_footer_content_' . $language->id, $cacheTTL, function () use ($language) {
             return $language->footerContent()->first();
@@ -230,6 +234,7 @@ class AppServiceProvider extends ServiceProvider
           'seo' => $cachedSeo,
           'bex' => $bex,
           'currentLanguageInfo' => $language,
+          'allLanguages' => $allLanguages,
           'socialMediaInfos' => $cachedSocialMedias,
           'menuInfos' => $menus,
           'popupInfos' => $cachedAnnouncementPopup,

@@ -24,6 +24,9 @@ class Kernel extends ConsoleKernel
    */
   protected function schedule(Schedule $schedule)
   {
+    // Vuelca visitas bufferizadas (ver EventViewTracker) antes de resetear el
+    // contador diario, para no perder las del final del día.
+    $schedule->command('events:flush-views')->everyMinute()->withoutOverlapping();
     $schedule->command('events:reset-daily-views')->daily();
   }
 

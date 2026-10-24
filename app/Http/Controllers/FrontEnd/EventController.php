@@ -249,10 +249,7 @@ class EventController extends Controller
         abort(410);
       }
 
-      Event::where('id', $id)->update([
-        'views_count' => DB::raw('views_count + 1'),
-        'views_last_24h' => DB::raw('views_last_24h + 1'),
-      ]);
+      \App\Services\EventViewTracker::record((int) $id);
 
       $allTickets = Ticket::where('event_id', $id)->get();
       $tickets_count = $allTickets->count();
@@ -490,7 +487,8 @@ class EventController extends Controller
       $information['firstTicket'] = $firstTicket;
       $information['ticketCount'] = $ticketCount;
       $information['allTickets'] = $allTickets;
-      $information['admin'] = Admin::first();
+      $information['admin'] = Cache::remember('public_admin_contact', now()->addHour(), fn () => Admin::first());
+      $information['fiscalIssuer'] = Cache::remember('billing_settings_public', now()->addMinutes(5), fn () => \App\Models\BillingSetting::current());
 
       return view('frontend.event.event-details', $information);
   }

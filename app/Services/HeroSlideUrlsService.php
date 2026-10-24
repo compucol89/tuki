@@ -38,6 +38,10 @@ class HeroSlideUrlsService
                 foreach ($campaignFiles as $file) {
                     $campaignUrls[] = FileUploadService::imagePath('assets/front/img/hero-campaign/', $file->getFilename());
                 }
+
+                // imagePath resuelve .jpg/.png a .webp si existe: sin dedupe el
+                // mismo slide se repite y se descarga dos veces al hidratar.
+                $campaignUrls = array_values(array_unique($campaignUrls));
             }
 
             $eventFilenames = EventImage::query()

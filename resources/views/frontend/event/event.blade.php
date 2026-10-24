@@ -168,7 +168,7 @@
 
   <div class="hero-slideshow" id="heroCollageBg">
     @forelse($heroSlideUrls ?? [] as $slideUrl)
-      <div class="hero-slide" style="background-image: url('{{ $slideUrl }}');"></div>
+      <div class="hero-slide" @unless($loop->first) data-bg="{{ $slideUrl }}" @endunless @if($loop->first) style="background-image: url('{{ $slideUrl }}');" @endif></div>
     @empty
       <div class="hero-slide" style="background-image: url('{{ asset('assets/admin/img/' . $basicInfo->breadcrumb) }}');"></div>
     @endforelse
@@ -396,9 +396,18 @@
 
     var cur = 0;
 
+    function hydrateSlide(slide) {
+      var bg = slide.getAttribute('data-bg');
+      if (!bg) return;
+
+      slide.style.backgroundImage = "url('" + bg.replace(/'/g, "\\'") + "')";
+      slide.removeAttribute('data-bg');
+    }
+
     function nextSlide() {
       var nxt  = (cur + 1) % n;
       var prev = cur;
+      hydrateSlide(slides[nxt]);
       slides[prev].style.zIndex = '0';
       slides[nxt].style.zIndex  = '1';
       slides[nxt].style.transition = 'opacity 1.2s ease-in-out';

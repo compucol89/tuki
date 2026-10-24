@@ -26,18 +26,20 @@ class Controller extends BaseController
 
   public function getCurrencyInfo()
   {
-    $baseCurrencyInfo = Basic::select('base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate')
-      ->first();
-
-    return $baseCurrencyInfo;
+    return \Illuminate\Support\Facades\Cache::remember('currency_info', now()->addHours(6), function () {
+      return Basic::select('base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate')
+        ->first();
+    });
   }
 
 
   public function getLanguage()
   {
-    return Language::where('is_default', 1)->first()
-      ?: Language::where('code', 'es')->first()
-      ?: Language::first();
+    return \Illuminate\Support\Facades\Cache::remember('default_language', now()->addHours(6), function () {
+      return Language::where('is_default', 1)->first()
+        ?: Language::where('code', 'es')->first()
+        ?: Language::first();
+    });
   }
 
 

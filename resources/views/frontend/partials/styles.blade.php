@@ -27,9 +27,9 @@
 <!-- FlatIcon Font -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/flaticon.css') }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/flaticon.css') }}"></noscript>
-<!-- Font Awesome 6 (self-hosted via Laravel Mix) -->
-<link rel="preload" href="{{ asset('webfonts/fa-solid-900.woff2') }}" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="{{ mix('css/fontawesome.css') }}">
+<!-- Font Awesome 6 (self-hosted via Laravel Mix) — subset del frontend -->
+<link rel="preload" href="{{ asset('webfonts/fa-solid-front.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ mix('css/fontawesome-front.css') }}">
 <!-- Bootstrap css -->
 <link rel="stylesheet" href="{{ $frontCssAsset('assets/front/css/bootstrap.4.5.3.min.css') }}">
 <!-- Padding Margin -->

@@ -18,10 +18,13 @@ Route::get('/factura/{token}', 'FrontEnd\Event\FiscalInvoiceController@showByTok
 Route::get('/', 'FrontEnd\HomeController@index')
     ->name('index')
     ->middleware('cache.headers:public;max_age=300;etag');
-Route::get('eventos', 'FrontEnd\EventController@index')->name('events');
+Route::get('eventos', 'FrontEnd\EventController@index')
+    ->name('events')
+    ->middleware('cache.headers:private;max_age=0;etag');
 Route::get('{slug}/{id}', 'FrontEnd\EventController@details')
   ->name('event.details')
-  ->where('id', '[0-9]+');
+  ->where('id', '[0-9]+')
+  ->middleware('cache.headers:private;max_age=0;etag');
 Route::post('addto/wishlist/{id}', 'FrontEnd\EventController@add_to_wishlist')->name('addto.wishlist');
 Route::post('remove/wishlist/{id}', 'FrontEnd\CustomerController@remove_wishlist')->name('remove.wishlist');
 Route::get('organizer/details/{id}/{name}', 'FrontEnd\OrganizerController@details')->name('frontend.organizer.details');

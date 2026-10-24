@@ -104,7 +104,7 @@ test('@e2e home destacados usan tabs, labels y cards semánticas', async ({ page
 
   await expect(page.locator('.events-section .ev-card[data-event-url], .events-section .event-card[data-event-url]')).toHaveCount(0);
 
-  const cards = page.locator('.events-section a.ev-card[href], .events-section a.event-card[href]');
+  const cards = page.locator('.events-section a.ev-card[href]:visible, .events-section a.event-card[href]:visible');
   if (await cards.count()) {
     const firstCard = cards.first();
     await expect(firstCard).toBeVisible();

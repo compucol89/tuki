@@ -348,7 +348,11 @@ if (!function_exists('timeZoneOffset')) {
     static $offsets = [];
     $key = (string) $timezone;
     if (!array_key_exists($key, $offsets)) {
-      $timezoneModel = App\Models\Timezone::where('timezone', $timezone)->first();
+      $timezoneModel = \Illuminate\Support\Facades\Cache::remember(
+        'timezone_offset_' . md5((string) $timezone),
+        now()->addDay(),
+        fn () => App\Models\Timezone::where('timezone', $timezone)->first()
+      );
       $offsets[$key] = !empty($timezoneModel) ? $timezoneModel->gmt_offset : 'Europe/Andorra';
     }
 

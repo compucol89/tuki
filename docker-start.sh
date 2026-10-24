@@ -82,6 +82,10 @@ fi
 
 php artisan storage:link --force
 php artisan migrate --force
+# Rutas compiladas: p95 de home 60→~40 ms en medición local. NO usar config:cache:
+# el panel escribe credenciales de pasarelas en .env (setEnvironmentValue) y
+# quedarían congeladas hasta reiniciar el contenedor.
+php artisan route:cache || true
 php artisan view:cache || true
 php artisan event:cache || true
 

@@ -21,5 +21,10 @@ mix.js('resources/js/app.js', 'public/js')
   .postCss('resources/css/fontawesome.css', 'public/css', [
     require('cssnano')({ preset: 'default' })
   ])
+  // Subset de FA para el frontend público (fuente sólida recortada a los
+  // iconos usados; ver scripts/build-fa-subset.py).
+  .postCss('resources/css/fontawesome-front.css', 'public/css', [
+    require('cssnano')({ preset: 'default' })
+  ])
   .copy('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts')
   .version();

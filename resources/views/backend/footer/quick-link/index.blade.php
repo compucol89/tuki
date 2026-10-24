@@ -1,5 +1,11 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- datatables --}}
+  <script src="{{ asset('assets/admin/js/datatables-1.10.23.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/datatables.bootstrap4.min.js') }}"></script>
+@endpush
+
 {{-- this style will be applied when the direction of language is right-to-left --}}
 @section('content')
   <div class="page-header">

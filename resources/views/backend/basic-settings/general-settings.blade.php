@@ -1,5 +1,12 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- jscolor --}}
+  <script src="{{ asset('assets/admin/js/jscolor.min.js') }}"></script>
+  {{-- select2 --}}
+  <script src="{{ asset('assets/admin/js/select2.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('General Settings') }}</h4>

@@ -1,5 +1,10 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- tinymce --}}
+  <script src="{{ asset('assets/admin/js/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+@endpush
+
 {{-- this style will be applied when the direction of language is right-to-left --}}
 @section('content')
   <div class="page-header">

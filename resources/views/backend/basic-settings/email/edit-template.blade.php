@@ -1,5 +1,10 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- tinymce --}}
+  <script src="{{ asset('assets/admin/js/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Email Settings') }}</h4>

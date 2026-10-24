@@ -250,6 +250,7 @@ $(document).ready(function () {
   });
 
   // sort course lesson contents
+  if ($('#sort-content').length && $.fn.sortable) {
   $('#sort-content').sortable({
     stop: function (event, ui) {
       let sortRoute = '';
@@ -283,6 +284,7 @@ $(document).ready(function () {
       });
     }
   });
+  }
 
   // change course certificate status (enable/disable)
   $('input:radio[name="certificate_status"]').on('change', function () {

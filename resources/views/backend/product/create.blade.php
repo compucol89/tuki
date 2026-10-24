@@ -1,5 +1,14 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- dropzone --}}
+  <script src="{{ asset('assets/admin/js/dropzone.min.js') }}"></script>
+  {{-- select2 --}}
+  <script src="{{ asset('assets/admin/js/select2.min.js') }}"></script>
+  {{-- tinymce --}}
+  <script src="{{ asset('assets/admin/js/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Add Product') }}</h4>
@@ -323,7 +332,7 @@
   <script>
     let languages = "{{ $languages }}";
   </script>
-  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') . '?v=' . filemtime(public_path('assets/admin/js/admin-partial.js')) }}"></script>
   <script src="{{ asset('assets/admin/js/admin_dropzone.js') }}"></script>
   <script>
     $(document).ready(function() {

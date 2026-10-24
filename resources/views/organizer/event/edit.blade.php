@@ -1444,7 +1444,7 @@
   <script>
     let languages = "{{ $languages }}";
   </script>
-  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') . '?v=' . filemtime(public_path('assets/admin/js/admin-partial.js')) }}"></script>
   <script src="{{ asset('assets/admin/js/admin_dropzone.js') }}"></script>
   @include('partials.event-ai-assistant-script')
 @endsection

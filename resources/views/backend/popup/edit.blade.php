@@ -1,5 +1,10 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- jscolor --}}
+  <script src="{{ asset('assets/admin/js/jscolor.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Edit Popup') }}</h4>

@@ -496,7 +496,7 @@
     var names = "{!! $names !!}";
     var guest_checkout_status = "{{ $websiteInfo->event_guest_checkout_status }}";
   </script>
-  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') . '?v=' . filemtime(public_path('assets/admin/js/admin-partial.js')) }}"></script>
 @endsection
 
 @section('variables')

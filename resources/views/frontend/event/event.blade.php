@@ -380,8 +380,6 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('assets/front/js/moment.min.js') }}" defer></script>
-<script src="{{ asset('assets/front/js/daterangepicker.min.js') }}" defer></script>
 <script>
   // Hero: misma lógica que home (crossfade + parallax con IntersectionObserver)
   (function() {
@@ -468,36 +466,89 @@
     }
 
     var evfDates = document.getElementById('evf-dates');
-    if (evfDates && window.jQuery && jQuery.fn.daterangepicker && window.moment) {
-      var initialDates = (evfDates.value || '').split(' ');
-      var pickerOptions = {
-        autoUpdateInput: false,
-        locale: {
-          format: 'YYYY-MM-DD',
-          separator: ' a ',
-          applyLabel: '{{ __('Aplicar') }}',
-          cancelLabel: '{{ __('Limpiar') }}',
-          fromLabel: '{{ __('Desde') }}',
-          toLabel: '{{ __('Hasta') }}',
-          customRangeLabel: '{{ __('Personalizado') }}',
-          daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-          monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-          firstDay: 1
+    if (evfDates) {
+      var pickerLoading = false;
+
+      var initEventsDatePicker = function() {
+        if (!window.jQuery || !window.moment || !jQuery.fn.daterangepicker) {
+          return false;
         }
+        if (jQuery(evfDates).data('daterangepicker')) {
+          return true;
+        }
+
+        var initialDates = (evfDates.value || '').split(' ');
+        var pickerOptions = {
+          autoUpdateInput: false,
+          locale: {
+            format: 'YYYY-MM-DD',
+            separator: ' a ',
+            applyLabel: '{{ __('Aplicar') }}',
+            cancelLabel: '{{ __('Limpiar') }}',
+            fromLabel: '{{ __('Desde') }}',
+            toLabel: '{{ __('Hasta') }}',
+            customRangeLabel: '{{ __('Personalizado') }}',
+            daysOfWeek: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            firstDay: 1
+          }
+        };
+
+        if (initialDates.length >= 3 && initialDates[0] && initialDates[2]) {
+          pickerOptions.startDate = initialDates[0];
+          pickerOptions.endDate = initialDates[2];
+        }
+
+        jQuery(evfDates).daterangepicker(pickerOptions);
+        jQuery(evfDates).on('apply.daterangepicker', function(event, picker) {
+          this.value = picker.startDate.format('YYYY-MM-DD') + ' a ' + picker.endDate.format('YYYY-MM-DD');
+        });
+        jQuery(evfDates).on('cancel.daterangepicker', function() {
+          this.value = '';
+        });
+
+        return true;
       };
 
-      if (initialDates.length >= 3 && initialDates[0] && initialDates[2]) {
-        pickerOptions.startDate = initialDates[0];
-        pickerOptions.endDate = initialDates[2];
-      }
+      var loadScript = function(src) {
+        return new Promise(function(resolve, reject) {
+          var script = document.createElement('script');
+          script.src = src;
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      };
 
-      jQuery(evfDates).daterangepicker(pickerOptions);
-      jQuery(evfDates).on('apply.daterangepicker', function(event, picker) {
-        this.value = picker.startDate.format('YYYY-MM-DD') + ' a ' + picker.endDate.format('YYYY-MM-DD');
-      });
-      jQuery(evfDates).on('cancel.daterangepicker', function() {
-        this.value = '';
-      });
+      var ensureEventsDatePicker = function() {
+        if (initEventsDatePicker()) {
+          return;
+        }
+        if (pickerLoading) {
+          return;
+        }
+
+        pickerLoading = true;
+        loadScript('{{ asset('assets/front/js/moment.min.js') }}')
+          .then(function() {
+            return loadScript('{{ asset('assets/front/js/daterangepicker.min.js') }}');
+          })
+          .then(function() {
+            initEventsDatePicker();
+            var picker = window.jQuery && jQuery(evfDates).data('daterangepicker');
+            if (picker && typeof picker.show === 'function') {
+              picker.show();
+            }
+          })
+          .catch(function() {
+            pickerLoading = false;
+          });
+      };
+
+      evfDates.addEventListener('focus', ensureEventsDatePicker, { once: true });
+      evfDates.addEventListener('pointerdown', ensureEventsDatePicker, { once: true });
+      evfDates.addEventListener('touchstart', ensureEventsDatePicker, { once: true, passive: true });
     }
   });
 </script>

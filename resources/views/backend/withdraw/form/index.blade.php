@@ -1,5 +1,11 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- jquery-ui --}}
+  <script src="{{ asset('assets/admin/js/jquery-ui.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/jquery.ui.touch-punch.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Form Builder') }}</h4>

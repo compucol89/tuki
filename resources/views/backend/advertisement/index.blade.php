@@ -1,5 +1,11 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- datatables --}}
+  <script src="{{ asset('assets/admin/js/datatables-1.10.23.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/datatables.bootstrap4.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Advertisements') }}</h4>
@@ -138,5 +144,5 @@
   <script>
     let languages = "{{ $languages }}";
   </script>
-  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') . '?v=' . filemtime(public_path('assets/admin/js/admin-partial.js')) }}"></script>
 @endsection

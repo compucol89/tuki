@@ -1,5 +1,10 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- iconpicker: requerido por jquery-menu-editor --}}
+  <script src="{{ asset('assets/admin/js/fontawesome-iconpicker.min.js') }}"></script>
+@endpush
+
 {{-- this style will be applied when the direction of language is right-to-left --}}
 @section('content')
   <div class="page-header">

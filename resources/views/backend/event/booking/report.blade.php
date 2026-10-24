@@ -1,5 +1,6 @@
 @extends('backend.layout')
 
+
 @section('style')
   <style>
     .booking-report-admin {

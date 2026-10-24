@@ -1,5 +1,10 @@
 @extends('backend.layout')
 
+@push('vendor-scripts')
+  {{-- tinymce --}}
+  <script src="{{ asset('assets/admin/js/tinymce/js/tinymce/tinymce.min.js') }}"></script>
+@endpush
+
 @section('content')
   <div class="page-header">
     <h4 class="page-title">{{ __('Add Blog') }}</h4>
@@ -217,5 +222,5 @@
   <script>
     let languages = "{{ $languages }}";
   </script>
-  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/admin/js/admin-partial.js') . '?v=' . filemtime(public_path('assets/admin/js/admin-partial.js')) }}"></script>
 @endsection

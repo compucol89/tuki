@@ -119,6 +119,30 @@ Cambios:
 
 Pendiente medido: cupón de checkout con `.load(location.href + " #couponReload")` (zona protegida), modal/sidebar de addons duplicados (sin datos locales para medir), `location.reload()` en admin y snapshots visuales de agosto (contenido dinámico).
 
+## Bundle y lazy loading (2026-10-24)
+
+Medición mobile 390×844, CPU 4×, 1,6 Mbps, cache fría.
+
+| Página | Peso | JS inicial | LCP |
+|---|---:|---:|---:|
+| Home antes | 454 KB | 77 KB | 1.480 ms |
+| Home después | **438 KB** | **66 KB** | **1.452 ms** |
+| `/eventos` antes | 463 KB | 102 KB | 1.636 ms |
+| `/eventos` después | **380 KB** | **66 KB** (+25 KB al abrir el datepicker) | **1.494 ms** |
+| Detalle antes | 338 KB | 70 KB | 1.724 ms |
+| Detalle después | **309 KB** | **61 KB** | **1.662 ms** |
+
+Cambios:
+
+- Font Awesome frontend: CSS purgado a los 53 iconos usados (22 KB → **2,2 KB gzip**) y subsets de solid/regular/brands (regular 25 KB → 2,7 KB; brands 116 KB → 1,5 KB).
+- `moment` + `daterangepicker` ya no se cargan en `/eventos`; se cargan al focus/click del filtro de fechas y se abre el picker.
+- Admin: se quitaron del layout global TinyMCE, jQuery UI, DataTables, Dropzone, iconpicker, highlight, jscolor y Select2. Cada vista los pide con `@push('vendor-scripts')`.
+  - Dashboard admin: ~1,7 MB raw → **480 KB**; event list ~1,56 MB → **319 KB**.
+  - Event create/edit sigue cargando ~1,8 MB porque necesita TinyMCE/Dropzone/Select2.
+- `admin-partial.js`: `sortable()` ahora está guardado; el archivo se cache-bustea por `filemtime`.
+
+Pendiente: Inter sigue cargando 5 pesos (~120 KB); toastr/magnific podrían lazy-loadearse; snapshots visuales de agosto desactualizados.
+
 ## Trabajo pendiente (medir antes de tocar)
 
 1. **Detalle de evento:** ✅ deduplicado (2026-10-23). Una carga de tickets, traducciones y variaciones; `SUM(CASE...)` para wishlists/bookings; 45 → 19 queries (224,7 → 50–56 ms local).

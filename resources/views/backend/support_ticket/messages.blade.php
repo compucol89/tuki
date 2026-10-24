@@ -102,7 +102,7 @@
                 @foreach ($ticket->messages as $reply)
                   @if ($reply->type == 2)
                     @php
-                      $admin = App\Models\Admin::where('id', $reply->user_id)->first();
+                      $admin = $admins[$reply->user_id] ?? null;
                     @endphp
                     <div class="item-list">
                       <div class="avatar">
@@ -123,7 +123,7 @@
                   @else
                     @if ($reply->type == 1)
                       @php
-                        $user = App\Models\Customer::where('id', $ticket->user_id)->first();
+                        $user = $ticket->customer;
                       @endphp
                       <div class="item-list">
                         <div class="avatar">
@@ -147,7 +147,7 @@
                       </div>
                     @elseif ($reply->type == 3)
                       @php
-                        $organizer = App\Models\Organizer::where('id', $ticket->user_id)->first();
+                        $organizer = $ticket->organizer;
                       @endphp
                       <div class="item-list">
                         <div class="avatar">

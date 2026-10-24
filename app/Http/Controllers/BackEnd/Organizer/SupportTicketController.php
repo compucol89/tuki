@@ -94,11 +94,20 @@ class SupportTicketController extends Controller
         if ($s_status->support_ticket_status != 'active') {
             return redirect()->route('organizer.dashboard');
         }
-        $ticket = SupportTicket::where('id', $id)->firstOrFail();
+        $ticket = SupportTicket::with(['organizer', 'messages'])->where('id', $id)->firstOrFail();
         if ($ticket->user_id != Auth::guard('organizer')->user()->id) {
             return redirect()->route('organizer.dashboard');
         }
-        return view('organizer.support_ticket.messages', compact('ticket'));
+
+        $adminIds = $ticket->messages
+            ->filter(fn ($message) => (int) $message->type === 2)
+            ->pluck('user_id')
+            ->filter()
+            ->unique();
+
+        $admins = \App\Models\Admin::with('role')->whereIn('id', $adminIds)->get()->keyBy('id');
+
+        return view('organizer.support_ticket.messages', compact('ticket', 'admins'));
     }
     public function zip_file_upload(Request $request)
     {

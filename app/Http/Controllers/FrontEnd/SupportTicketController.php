@@ -58,12 +58,20 @@ class SupportTicketController extends Controller
     if ($bex->support_ticket_status == 0) {
       return back();
     }
-    $ticket = SupportTicket::where('id', $id)
+    $ticket = SupportTicket::with(['customer', 'messages'])->where('id', $id)
       ->where('user_id', Auth::guard('customer')->user()->id)
       ->where('user_type', 'customer')
       ->firstOrFail();
 
-    return view('frontend.customer.dashboard.support_ticket.messages', compact('ticket'));
+    $adminIds = $ticket->messages
+      ->filter(fn ($message) => (int) $message->type === 2)
+      ->pluck('user_id')
+      ->filter()
+      ->unique();
+
+    $admins = \App\Models\Admin::with('role')->whereIn('id', $adminIds)->get()->keyBy('id');
+
+    return view('frontend.customer.dashboard.support_ticket.messages', compact('ticket', 'admins'));
   }
   //reply
   public function reply(Request $request, $id)

@@ -6,12 +6,12 @@ use Carbon\Carbon;
 
 class EventTicketSalesSummaryService
 {
-  public function summarize($bookings, array $eventInfos = []): array
+  public function summarize($bookings, array $eventInfos = [], array $ticketTitles = []): array
   {
     $rows = [];
 
     foreach ($bookings as $booking) {
-      $tickets = $booking->ticketBreakdown();
+      $tickets = $booking->ticketBreakdown($ticketTitles);
       $bookingTicketSubtotal = array_sum(array_map(function ($ticket) {
         return max((float) ($ticket['subtotal'] ?? 0), 0);
       }, $tickets));
@@ -82,9 +82,9 @@ class EventTicketSalesSummaryService
     return $rows;
   }
 
-  public function summarizeByEvent($bookings, array $eventInfos = [], $events = null, array $categoryNames = []): array
+  public function summarizeByEvent($bookings, array $eventInfos = [], $events = null, array $categoryNames = [], array $ticketTitles = []): array
   {
-    $ticketRows = $this->summarize($bookings, $eventInfos);
+    $ticketRows = $this->summarize($bookings, $eventInfos, $ticketTitles);
     $eventModels = collect($events ?: [])->keyBy('id');
     $bookingGroups = collect($bookings)->groupBy('event_id');
     $groups = [];

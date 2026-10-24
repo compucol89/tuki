@@ -73,46 +73,66 @@ class AppServiceProvider extends ServiceProvider
       }
 
       // send this information to only back-end view files
+      // Memoizado por request: el composer corre una vez por cada partial
+      // (7-8 views por página) y sin memoización repetía languages,
+      // basic_settings y footer_contents 7-8 veces.
       View::composer('backend.*', function ($view) {
-        if (Auth::guard('admin')->check() == true) {
-          $authAdmin = Auth::guard('admin')->user();
-          $role = null;
+        $request = app()->runningInConsole() ? null : request();
+        $payload = $request?->attributes->get('backend_composer_payload');
 
-          if (!is_null($authAdmin->role_id)) {
-            $role = $authAdmin->role()->first();
+        if ($payload === null) {
+          $payload = [];
+
+          if (Auth::guard('admin')->check() == true) {
+            $authAdmin = Auth::guard('admin')->user();
+            $role = null;
+
+            if (!is_null($authAdmin->role_id)) {
+              $role = $authAdmin->role()->first();
+            }
+
+            $payload['roleInfo'] = $role;
           }
+
+          $language = $this->defaultLanguage();
+
+          $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol_position', 'base_currency_symbol', 'base_currency_text')->first();
+
+          $footerText = $language ? $language->footerContent()->first() : null;
+
+          $payload['defaultLang'] = $language;
+          $payload['settings'] = $websiteSettings;
+          $payload['footerTextInfo'] = $footerText;
+
+          $request?->attributes->set('backend_composer_payload', $payload);
         }
 
-        $language = $this->defaultLanguage();
-
-        $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol_position', 'base_currency_symbol', 'base_currency_text')->first();
-
-        $footerText = $language ? $language->footerContent()->first() : null;
-
-        if (Auth::guard('admin')->check() == true) {
-          $view->with('roleInfo', $role);
-        }
-
-        $view->with('defaultLang', $language);
-        $view->with('settings', $websiteSettings);
-        $view->with('footerTextInfo', $footerText);
+        $view->with($payload);
       });
 
       // send this information to only back-end view files
+      // Memoizado por request (mismo motivo que backend.*).
       View::composer('organizer.*', function ($view) {
+        $request = app()->runningInConsole() ? null : request();
+        $payload = $request?->attributes->get('organizer_composer_payload');
 
+        if ($payload === null) {
+          $language = $this->defaultLanguage();
 
-        $language = $this->defaultLanguage();
+          $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate', 'organizer_email_verification')->first();
 
-        //$websiteSettings = DB::table('basic_settings')->select('admin_theme_version')->first();
-        $websiteSettings = DB::table('basic_settings')->select('admin_theme_version', 'base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'base_currency_rate', 'organizer_email_verification')->first();
+          $footerText = $language ? $language->footerContent()->first() : null;
 
-        $footerText = $language ? $language->footerContent()->first() : null;
+          $payload = [
+            'defaultLang' => $language,
+            'settings' => $websiteSettings,
+            'footerTextInfo' => $footerText,
+          ];
 
+          $request?->attributes->set('organizer_composer_payload', $payload);
+        }
 
-        $view->with('defaultLang', $language);
-        $view->with('settings', $websiteSettings);
-        $view->with('footerTextInfo', $footerText);
+        $view->with($payload);
       });
 
 
@@ -267,8 +287,10 @@ class AppServiceProvider extends ServiceProvider
 
   private function defaultLanguage()
   {
-    return Language::where('is_default', 1)->first()
-      ?: Language::where('code', 'es')->first()
-      ?: Language::first();
+    return Cache::remember('default_language', now()->addHours(6), function () {
+      return Language::where('is_default', 1)->first()
+        ?: Language::where('code', 'es')->first()
+        ?: Language::first();
+    });
   }
 }

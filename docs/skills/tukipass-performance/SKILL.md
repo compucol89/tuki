@@ -33,7 +33,7 @@ La fuente de verdad son las mediciones y el código; este archivo es un mapa. **
 | Detalle evento (local, 124) | 45 queries / 224,7 ms | 19 queries / 50–56 ms; mismo contenido (2026-10-23) |
 | Home móvil (4× CPU/1,6 Mbps) | 1.527 KB, 39 req; LCP 2,07–2,16 s; CLS 0,0198 | no medido |
 | Organizer | 1,5 MB JS raw / 449 KB gzip + 351 KB gzip CSS/fuentes | dashboard ~437 KB JS raw / ~125 KB gzip; pesados condicionales (2026-10-23) |
-| Tests | — | 263 pasan (190.963 assertions) |
+| Tests | — | 265 pasan (190.887 assertions) |
 
 **Conclusión empírica:** el problema principal del deploy viejo es **capacidad** (1 worker, OPcache off) y **payload de imágenes/assets**, no el byte size del HTML. El detalle de evento de producción pesa ~120 KB raw / ~24 KB gzip; los 550 KB/537 ms reportados antes eran un evento local outlier + emulación móvil.
 
@@ -72,6 +72,31 @@ Implementado y verificado:
 - Tests: 263 pasan (190.963 assertions).
 
 Pendiente: `COUNT` de `/eventos` sin la derivada (0,65 ms hoy), consolidación CSS/JS (requiere regresión visual) y observabilidad p95/5xx.
+
+## N+1 y renders (2026-10-23)
+
+Medición con stack Docker y rutas autenticadas reales (customer 39 con 6 bookings, admin 1, organizer 29). Query log por request; antes/después con los mismos datos.
+
+| Página | Antes | Después |
+|---|---|---|
+| Customer dashboard (6 bookings) | 18 queries | **7** |
+| Mis entradas | 9 | **4** |
+| Admin eventos | 29 | **10** |
+| Admin support tickets | 23 | **8** |
+| Admin event-booking (hub) | 63 | **18** |
+| Organizer dashboard | 38 | **19** |
+| Organizer event-booking (hub) | 63 | **19** |
+| Event-booking por evento (50 filas) | ~70+ (26 `ticket_contents`) | **26**, 1 `ticket_contents` |
+
+Causas y fixes:
+
+- **View composers `backend.*`/`organizer.*`** corrían una vez por partial (7-8 veces por página) y repetían `languages`, `basic_settings` y `footer_contents`. Memoización por request vía `request()->attributes`.
+- **Customer dashboard / Mis entradas:** la vista llamaba `$item->event()->where(...)->first()` y `$item->organizer` dentro del `@foreach`. Eager loading de `event` (con `language_id`) y `organizer`; 12 queries menos en dashboard.
+- **Event-booking:** `ticketBreakdown()` → `ticketContentTitle()` por ticket. `Booking::preloadTicketTitles()` resuelve todos los títulos en 1 query y se pasa al modelo/vista/summary.
+- **Support tickets:** `organizer` no estaba eager; los mensajes consultaban admin/rol por reply. Mapas eager de admins+roles y relaciones del ticket.
+- **`defaultLanguage()`** ahora cachea 6 h (misma clave que el frontend); evita la segunda consulta de `languages` por request.
+
+Pendiente de esta línea: las tablas desktop + mobile de event-booking renderizan la misma página dos veces (`d-none d-xl-block` / `d-xl-none`); eliminarlo requiere un refactor responsive con regresión visual. `COUNT` de `/eventos` sigue pendiente.
 
 ## Trabajo pendiente (medir antes de tocar)
 

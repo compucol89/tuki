@@ -46,7 +46,7 @@ class EventBookingController extends Controller
 
   private function renderBookingIndex(Request $request, ?int $focusedEventId = null, ?Event $focusedEvent = null)
   {
-    $language = Language::where('is_default', 1)->first();
+    $language = $this->getLanguage();
     $filterParams = $request->only([
       'search',
       'status',
@@ -148,8 +148,12 @@ class EventBookingController extends Controller
       })
       ->all();
     $summaryEvents = Event::with('dates')->whereIn('id', $eventIds)->get();
+    $ticketTitles = Booking::preloadTicketTitles(
+      $ticketSummaryBookings->concat($bookings->getCollection()),
+      $language?->id
+    );
     $ticketSummaryService = app(EventTicketSalesSummaryService::class);
-    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents);
+    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents, [], $ticketTitles);
 
     return view('backend.event.booking.index', compact(
       'bookings',
@@ -159,7 +163,8 @@ class EventBookingController extends Controller
       'currencySettings',
       'defaultLanguage',
       'focusedEventId',
-      'focusedEvent'
+      'focusedEvent',
+      'ticketTitles'
     ));
   }
   //updatePaymentStatus

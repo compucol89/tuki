@@ -1948,7 +1948,7 @@
                         };
                         $paidTotal = ($booking->price ?? 0) + ($booking->tax ?? 0);
                         $organizerTotal = ($booking->price ?? 0) - ($booking->commission ?? 0);
-                        $ticketBreakdown = $booking->ticketBreakdown();
+                        $ticketBreakdown = $booking->ticketBreakdown($ticketTitles ?? []);
                         $addonBreakdown = $booking->addonBreakdown();
                         $addonsCount = collect($addonBreakdown)->sum('quantity');
                         $addonsTotal = collect($addonBreakdown)->sum('subtotal');
@@ -2114,7 +2114,7 @@
                     };
                     $paidTotal = ($booking->price ?? 0) + ($booking->tax ?? 0);
                     $organizerTotal = ($booking->price ?? 0) - ($booking->commission ?? 0);
-                    $ticketBreakdown = $booking->ticketBreakdown();
+                    $ticketBreakdown = $booking->ticketBreakdown($ticketTitles ?? []);
                     $addonBreakdown = $booking->addonBreakdown();
                     $addonsCount = collect($addonBreakdown)->sum('quantity');
                     $addonsTotal = collect($addonBreakdown)->sum('subtotal');

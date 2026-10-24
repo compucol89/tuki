@@ -151,8 +151,12 @@ class EventBookingController extends Controller
     $eventCategoryNames = EventCategory::whereIn('id', collect($eventInfos)->pluck('event_category_id')->filter()->unique())
       ->pluck('name', 'id')
       ->all();
+    $ticketTitles = Booking::preloadTicketTitles(
+      $ticketSummaryBookings->concat($bookings->getCollection()),
+      $language?->id
+    );
     $ticketSummaryService = app(EventTicketSalesSummaryService::class);
-    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents, $eventCategoryNames);
+    $ticketSalesByEvent = $ticketSummaryService->summarizeByEvent($ticketSummaryBookings, $eventInfos, $summaryEvents, $eventCategoryNames, $ticketTitles);
 
     return view('organizer.event.booking.index', compact(
       'bookings',
@@ -161,7 +165,8 @@ class EventBookingController extends Controller
       'ticketSalesByEvent',
       'currencySettings',
       'focusedEventId',
-      'focusedEvent'
+      'focusedEvent',
+      'ticketTitles'
     ));
   }
   //updatePaymentStatus

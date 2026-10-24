@@ -41,8 +41,19 @@ class CustomerController extends Controller
   //index
   public function index()
   {
-    $bookings = Booking::where('customer_id', Auth::guard('customer')->user()->id)->OrderBy('id', 'desc')->limit(10)->get();
-    $language = Language::query()->where('is_default', '=', 1)->first();
+    $language = $this->getLanguage();
+
+    $bookings = Booking::with([
+      'organizer',
+      'event' => function ($query) use ($language) {
+        $query->where('language_id', $language?->id)->select('title', 'slug', 'event_id');
+      },
+    ])
+      ->where('customer_id', Auth::guard('customer')->user()->id)
+      ->OrderBy('id', 'desc')
+      ->limit(10)
+      ->get();
+
     return view('frontend.customer.dashboard.index', compact('bookings'));
   }
   //signup

@@ -11,7 +11,17 @@ class CustomerBookingController extends Controller
 {
   public function my_booking()
   {
-    $bookings = Booking::where('customer_id', Auth::guard('customer')->user()->id)->orderBy('created_at', 'desc')->paginate(20);
+    $language = $this->getLanguage();
+
+    $bookings = Booking::with([
+      'event' => function ($query) use ($language) {
+        $query->where('language_id', $language?->id)->select('title', 'slug', 'event_id');
+      },
+    ])
+      ->where('customer_id', Auth::guard('customer')->user()->id)
+      ->orderBy('created_at', 'desc')
+      ->paginate(20);
+
     return view('frontend.customer.dashboard.booking.my_booking', compact('bookings'));
   }
   //details

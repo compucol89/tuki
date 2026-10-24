@@ -82,14 +82,14 @@
                   @php
                     $isAdmin = $reply->type == 2;
                     if ($isAdmin) {
-                      $sender = App\Models\Admin::find($reply->user_id);
+                      $sender = $admins[$reply->user_id] ?? null;
                       $senderName = $sender ? $sender->username : 'Soporte';
                       $senderRole = $sender ? ($sender->id == 1 ? 'Super Admin' : $sender->role->name) : 'Admin';
                       $senderPhoto = $sender && $sender->image
                         ? asset('assets/admin/img/admins/' . $sender->image)
                         : asset('assets/admin/img/propics/blank_user.jpg');
                     } else {
-                      $sender = App\Models\Customer::find($ticket->user_id);
+                      $sender = $ticket->customer;
                       $senderName = $sender ? $sender->fname . ' ' . $sender->lname : 'Cliente';
                       $senderRole = 'Cliente';
                       $senderPhoto = $sender && $sender->photo

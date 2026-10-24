@@ -161,11 +161,7 @@
                 <tbody>
                   @foreach ($bookings as $item)
                     @php
-                      $ev = $item->event()->where('language_id', $currentLanguageInfo->id)->select('title','slug','event_id')->first();
-                      if (!$ev) {
-                        $defLang = App\Models\Language::where('is_default',1)->first();
-                        $ev = $item->event()->where('language_id', $defLang->id)->select('title','slug','event_id')->first();
-                      }
+                      $ev = $item->event;
                     @endphp
                     @if($ev)
                       <tr>

@@ -30,7 +30,7 @@ class SupportTicketController extends Controller
       $ticket_id = $request['ticket_id'];
     }
     if (empty($role_id)) {
-      $collection = SupportTicket::with('customer')->when($status, function ($query, $status) {
+      $collection = SupportTicket::with(['customer', 'organizer'])->when($status, function ($query, $status) {
         return $query->where('status',  $status);
       })
         ->when($ticket_id, function ($query, $ticket_id) {
@@ -39,7 +39,7 @@ class SupportTicketController extends Controller
         ->orderByDesc('id')
         ->paginate(10);
     } else {
-      $collection = SupportTicket::with('customer')->when($status, function ($query, $status) {
+      $collection = SupportTicket::with(['customer', 'organizer'])->when($status, function ($query, $status) {
         return $query->where('status',  $status);
       })
         ->when($ticket_id, function ($query, $ticket_id) {
@@ -55,8 +55,17 @@ class SupportTicketController extends Controller
   //message
   public function message($id)
   {
-    $ticket = SupportTicket::where('id', $id)->firstOrFail();
-    return view('backend.support_ticket.messages', compact('ticket'));
+    $ticket = SupportTicket::with(['customer', 'organizer', 'messages'])->where('id', $id)->firstOrFail();
+
+    $adminIds = $ticket->messages
+      ->filter(fn ($message) => (int) $message->type === 2)
+      ->pluck('user_id')
+      ->filter()
+      ->unique();
+
+    $admins = \App\Models\Admin::with('role')->whereIn('id', $adminIds)->get()->keyBy('id');
+
+    return view('backend.support_ticket.messages', compact('ticket', 'admins'));
   }
   public function zip_file_upload(Request $request)
   {

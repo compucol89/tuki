@@ -205,7 +205,7 @@ class Booking extends Model
 
     return $quantity > 0 && $this->scannedTicketsCount() >= $quantity;
   }
-  public function ticketBreakdown()
+  public function ticketBreakdown(array $ticketTitles = [])
   {
     $variations = $this->decodeJsonArray($this->variation);
 
@@ -240,7 +240,7 @@ class Booking extends Model
       $discount = (float) ($variation['early_bird_dicount'] ?? ($variation['early_bird_discount'] ?? 0));
       $unitPrice = $price / $quantity;
       $unitDiscount = $discount / $quantity;
-      $name = static::displayTicketName($variation['ticket_id'] ?? null, $variation['name'] ?? null);
+      $name = static::displayTicketName($variation['ticket_id'] ?? null, $variation['name'] ?? null, null, null, $ticketTitles);
       $key = implode('|', [
         $variation['ticket_id'] ?? '',
         $name,
@@ -290,6 +290,59 @@ class Booking extends Model
 
     return array_values($grouped);
   }
+  /**
+   * Precarga títulos de tickets para un conjunto de bookings en una sola query.
+   * Evita el N+1 de ticketContentTitle() en listados y resúmenes que llaman
+   * ticketBreakdown() por cada fila.
+   *
+   * @param iterable<Booking> $bookings
+   * @return array<int|string, string>
+   */
+  public static function preloadTicketTitles(iterable $bookings, ?int $languageId = null): array
+  {
+    $ticketIds = [];
+
+    foreach ($bookings as $booking) {
+      if (!empty($booking->ticket_id)) {
+        $ticketIds[(string) $booking->ticket_id] = true;
+      }
+
+      $variations = $booking->decodeJsonArray($booking->variation ?? null);
+
+      foreach ($variations as $variation) {
+        if (is_array($variation) && !empty($variation['ticket_id'])) {
+          $ticketIds[(string) $variation['ticket_id']] = true;
+        }
+      }
+    }
+
+    $ids = array_keys($ticketIds);
+
+    if ($ids === []) {
+      return [];
+    }
+
+    $rows = TicketContent::whereIn('ticket_id', $ids)
+      ->whereNotNull('title')
+      ->get(['ticket_id', 'language_id', 'title']);
+
+    $titles = [];
+
+    foreach ($rows as $row) {
+      $id = (string) $row->ticket_id;
+
+      if (!array_key_exists($id, $titles)) {
+        $titles[$id] = $row->title;
+      }
+
+      if ($languageId !== null && (int) $row->language_id === $languageId) {
+        $titles[$id] = $row->title;
+      }
+    }
+
+    return $titles;
+  }
+
   public function addonBreakdown()
   {
     $addons = $this->relationLoaded('addons') ? $this->addons : $this->addons()->get();
@@ -305,7 +358,7 @@ class Booking extends Model
     })->values()->all();
   }
 
-  public static function displayTicketName($ticketId, $selectedName = null, $pricingType = null, $languageId = null)
+  public static function displayTicketName($ticketId, $selectedName = null, $pricingType = null, $languageId = null, array $ticketTitles = [])
   {
     $selectedName = trim((string) ($selectedName ?? ''));
 
@@ -313,7 +366,7 @@ class Booking extends Model
       return $selectedName;
     }
 
-    $ticketTitle = static::ticketContentTitle($ticketId, $languageId);
+    $ticketTitle = $ticketTitles[$ticketId] ?? static::ticketContentTitle($ticketId, $languageId);
 
     if ($pricingType === 'variation' && $ticketTitle && $selectedName && strcasecmp($ticketTitle, $selectedName) !== 0) {
       return $ticketTitle . ' — ' . $selectedName;

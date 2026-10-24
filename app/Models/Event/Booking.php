@@ -322,21 +322,25 @@ class Booking extends Model
       return [];
     }
 
-    $rows = TicketContent::whereIn('ticket_id', $ids)
-      ->whereNotNull('title')
-      ->get(['ticket_id', 'language_id', 'title']);
-
     $titles = [];
 
-    foreach ($rows as $row) {
-      $id = (string) $row->ticket_id;
+    // Chunk para no enviar un IN gigante cuando el resumen abarca miles de
+    // reservas; el número de queries sigue siendo acotado (ids/500).
+    foreach (array_chunk($ids, 500) as $chunk) {
+      $rows = TicketContent::whereIn('ticket_id', $chunk)
+        ->whereNotNull('title')
+        ->get(['ticket_id', 'language_id', 'title']);
 
-      if (!array_key_exists($id, $titles)) {
-        $titles[$id] = $row->title;
-      }
+      foreach ($rows as $row) {
+        $id = (string) $row->ticket_id;
 
-      if ($languageId !== null && (int) $row->language_id === $languageId) {
-        $titles[$id] = $row->title;
+        if (!array_key_exists($id, $titles)) {
+          $titles[$id] = $row->title;
+        }
+
+        if ($languageId !== null && (int) $row->language_id === $languageId) {
+          $titles[$id] = $row->title;
+        }
       }
     }
 

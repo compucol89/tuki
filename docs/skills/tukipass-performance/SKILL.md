@@ -99,6 +99,26 @@ Causas y fixes:
 
 Pendiente de esta línea: las tablas desktop + mobile de event-booking renderizan la misma página dos veces (`d-none d-xl-block` / `d-xl-none`); eliminarlo requiere un refactor responsive con regresión visual. El cupón de checkout (`.load #couponReload`) no se tocó por ser zona protegida de pagos. `COUNT` de `/eventos` sigue pendiente.
 
+## Renders innecesarios (2026-10-24)
+
+Medición con Playwright y middleware temporal de views/DOM (desktop 1440 y mobile 390), sobre `event-booking/evento/120`:
+
+| Página | Views | HTML servidor | DOM nodes |
+|---|---:|---:|---:|
+| Admin event-booking antes | 68 | 342 KB | 3.845 |
+| Admin event-booking después | **28** | **252 KB** | **2.604** |
+| Organizer event-booking antes | 48 | 381 KB | 3.253 |
+| Organizer event-booking después | **28** | **230 KB** | **1.912** |
+
+Cambios:
+
+- Se eliminó la lista mobile duplicada de admin y organizer; la tabla existente ahora se convierte en tarjetas con `data-label` + CSS en `max-width: 1199px` / `991px`. Un solo árbol de render por request.
+- Los modales de comprobante (`show-attachment`) solo se renderizan si la reserva tiene `attachmentFile` (antes se incluían por cada fila).
+- Se corrigió contraste WCAG de `.theme-btn` y del buscador del blog: base `--primary-hover` (4,88:1) y hover `--primary-active` (6,27:1), más el CTA de contacto.
+- Playwright mobile/desktop verifica el expand/collapse y que la tabla mantiene su layout en desktop.
+
+Pendiente medido: cupón de checkout con `.load(location.href + " #couponReload")` (zona protegida), modal/sidebar de addons duplicados (sin datos locales para medir), `location.reload()` en admin y snapshots visuales de agosto (contenido dinámico).
+
 ## Trabajo pendiente (medir antes de tocar)
 
 1. **Detalle de evento:** ✅ deduplicado (2026-10-23). Una carga de tickets, traducciones y variaciones; `SUM(CASE...)` para wishlists/bookings; 45 → 19 queries (224,7 → 50–56 ms local).

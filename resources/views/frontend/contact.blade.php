@@ -621,7 +621,7 @@ body.contact-page-premium main {
 .contact-page-premium .ctp-submit .theme-btn {
   min-height: 50px;
   border-radius: var(--ctp-radius);
-  background: var(--ctp-accent);
+  background: var(--primary-hover);
   box-shadow: none;
   color: #fff;
   font-weight: 760;
@@ -629,7 +629,7 @@ body.contact-page-premium main {
 }
 
 .contact-page-premium .ctp-submit .theme-btn:hover {
-  background: var(--ctp-accent-hover);
+  background: var(--primary-active);
   box-shadow: none;
   transform: translateY(-1px);
 }

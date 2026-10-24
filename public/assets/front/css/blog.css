@@ -1219,7 +1219,7 @@ body.blog-site:not(.blog-detail) .bl-search__btn {
   min-height: 44px;
   padding: 0 22px;
   border-radius: 8px;
-  background: var(--bl-primary);
+  background: var(--primary-hover);
   box-shadow: none;
   font-size: 14px;
   font-weight: 760;
@@ -1227,7 +1227,7 @@ body.blog-site:not(.blog-detail) .bl-search__btn {
 }
 
 body.blog-site:not(.blog-detail) .bl-search__btn:hover {
-  background: var(--bl-primary-dark);
+  background: var(--primary-active);
   box-shadow: none;
   filter: none;
 }

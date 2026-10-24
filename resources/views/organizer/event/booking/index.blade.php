@@ -1493,9 +1493,105 @@
       }
     }
 
+    @media (max-width: 991px) {
+      .oc-bookings-table {
+        overflow: visible;
+      }
+
+      .ob-table {
+        display: block;
+        width: 100%;
+      }
+
+      .ob-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      .ob-table tbody {
+        display: grid;
+        gap: 12px;
+      }
+
+      .ob-table tr {
+        display: block;
+        padding: 14px;
+        border: 1px solid var(--ob-border, var(--adm-border));
+        border-radius: 12px;
+        background: var(--ob-surface, var(--adm-card));
+        box-shadow: 0 10px 22px rgba(30, 37, 50, .05);
+      }
+
+      .ob-table td {
+        display: block;
+        height: auto !important;
+        min-height: 0;
+        padding: 7px 0 !important;
+        border-top: 0;
+      }
+
+      .ob-table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 3px;
+        color: var(--ob-text-secondary, var(--adm-muted));
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .045em;
+        text-transform: uppercase;
+      }
+
+      .ob-table td:first-child {
+        display: flex;
+        justify-content: flex-end;
+        min-height: 0;
+        margin-bottom: 4px;
+        padding: 0 0 9px !important;
+        border-bottom: 1px solid var(--ob-border, var(--adm-border));
+      }
+
+      .ob-table td:first-child::before,
+      .ob-table td:last-child::before,
+      .ob-table .ob-detail-row td::before {
+        display: none;
+      }
+
+      .ob-table td:last-child {
+        display: block;
+        padding-top: 8px !important;
+      }
+
+      .ob-table .ob-title {
+        max-width: none;
+        white-space: normal;
+      }
+
+      .ob-table .ob-actions {
+        flex-wrap: wrap;
+      }
+
+      .ob-table .ob-detail-row {
+        display: block;
+        padding: 0;
+      }
+
+      .ob-table .ob-detail-row td {
+        display: block;
+        padding: 0 !important;
+      }
+
+      .ob-table .ob-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     @media (max-width: 767px) {
       .ob-detail-grid,
-      .ob-mini-row {
+      .ob-mini-row,
+      .ob-table .ob-detail-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1917,7 +2013,7 @@
                 <p class="text-muted mb-0">{{ __('Probá ajustar los filtros de búsqueda.') }}</p>
               </div>
             @else
-                <div class="table-responsive d-none d-lg-block">
+                <div class="table-responsive oc-bookings-table">
                 <table class="table ob-table oc-table">
                   <thead>
                     <tr>
@@ -1966,7 +2062,7 @@
                           <input type="checkbox" class="bulk-check" data-val="{{ $booking->id }}"
                             aria-label="{{ __('Seleccionar reserva') }} #{{ $booking->booking_id }}">
                         </td>
-                        <td>
+                        <td data-label="{{ __('Reserva') }}">
                           <button class="btn btn-light ob-expand-btn mr-1" type="button"
                             data-target="#organizerBookingDetail{{ $booking->id }}" aria-expanded="false"
                             aria-controls="organizerBookingDetail{{ $booking->id }}"
@@ -1976,7 +2072,7 @@
                           <strong class="tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 12, '') }}</strong>
                           <span class="ob-muted oc-muted">{{ optional($booking->created_at)->format('d/m/Y H:i') }}</span>
                         </td>
-                        <td>
+                        <td data-label="{{ __('Evento') }}">
                           @if ($eventInfo)
                             <a class="ob-title oc-title" href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
                               target="_blank" rel="noopener" title="{{ $title }}">{{ $title }}</a>
@@ -1985,20 +2081,20 @@
                           @endif
                           <span class="ob-muted oc-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
                         </td>
-                        <td>
+                        <td data-label="{{ __('Comprador') }}">
                           @include('organizer.event.booking.partials.buyer-cell', ['booking' => $booking])
                         </td>
-                        <td>
+                        <td data-label="{{ __('Importe') }}">
                           <div class="ob-money oc-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</div>
                           <span class="ob-muted oc-muted">{{ __('Recibís') }}: {{ $formatMoney($organizerTotal) }}</span>
                         </td>
-                        <td>
+                        <td data-label="{{ __('Pago') }}">
                           <span class="badge badge-{{ $status['class'] }} ob-status">
                             <i class="fas {{ $status['icon'] }}" aria-hidden="true"></i>{{ $status['label'] }}
                           </span>
                           <span class="ob-muted oc-muted">{{ $booking->paymentMethod ?: '-' }}</span>
                         </td>
-                        <td>
+                        <td data-label="{{ __('Escaneo') }}">
                           @if ((int) $booking->quantity <= 0)
                             <strong>{{ __('Datos incompletos') }}</strong>
                             <span class="ob-muted oc-muted">{{ __('Sin entradas registradas') }}</span>
@@ -2008,7 +2104,7 @@
                           @endif
                           <div class="ob-progress oc-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                         </td>
-                        <td>
+                        <td data-label="{{ __('Acciones') }}">
                           <div class="ob-actions">
                             <a href="{{ route('organizer.event_booking.details', ['id' => $booking->id]) }}"
                               class="btn btn-outline-primary ob-action-btn oc-btn" title="{{ __('Ver detalles') }}"
@@ -2099,188 +2195,10 @@
                 </table>
               </div>
 
-              <div class="ob-mobile-list oc-mobile-list d-lg-none">
-                @foreach ($bookings as $booking)
-                  @php
-                    $eventInfo = $eventInfos[$booking->event_id] ?? null;
-                    $title = $eventInfo ? $eventInfo->title : '-';
-                    $slug = $eventInfo ? $eventInfo->slug : '';
-                    $customer = $booking->customerInfo;
-                    $position = $booking->currencyTextPosition;
-                    $symbol = $booking->currencySymbol;
-                    $formatMoney = function ($amount) use ($position, $symbol) {
-                        $amount = number_format((float) $amount, 0, ',', '.');
-                        return ($position == 'left' ? $symbol : '') . $amount . ($position == 'right' ? $symbol : '');
-                    };
-                    $paidTotal = ($booking->price ?? 0) + ($booking->tax ?? 0);
-                    $organizerTotal = ($booking->price ?? 0) - ($booking->commission ?? 0);
-                    $ticketBreakdown = $booking->ticketBreakdown($ticketTitles ?? []);
-                    $addonBreakdown = $booking->addonBreakdown();
-                    $addonsCount = collect($addonBreakdown)->sum('quantity');
-                    $addonsTotal = collect($addonBreakdown)->sum('subtotal');
-                    $scannedCount = $booking->scannedTicketsCount();
-                    $pendingScanCount = $booking->pendingTicketsCount();
-                    $scanPercent = $booking->scanPercent();
-                    $eventSummaryInfo = $ticketSummaryByEventId->get($booking->event_id);
-                    $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : ($eventSummaryInfo['date_label'] ?? '-');
-                    $buyerName = $booking->buyerName();
-                    $buyerEmail = $booking->buyerEmail();
-                    $buyerPhone = $booking->buyerPhone();
-                    $buyerDisplayName = $buyerName !== '' ? $buyerName : __('Invitado');
-                    $paymentMethodLabel = $booking->paymentMethod ?: '-';
-                    $status = $statusOptions[$booking->paymentStatus] ?? ['label' => ucfirst((string) $booking->paymentStatus), 'class' => 'secondary', 'icon' => 'fa-circle'];
-                    $invoiceExtension = pathinfo((string) $booking->invoice, PATHINFO_EXTENSION);
-                    $hasInvoiceFile = $invoiceExtension == 'pdf' && $booking->hasInvoiceFile();
-                  @endphp
-                  <article class="ob-mobile-booking oc-mobile-card" aria-labelledby="organizerMobileBookingTitle{{ $booking->id }}">
-                    <div class="ob-mobile-booking__head oc-mobile-card__head">
-                      <div class="ob-mobile-booking__main oc-mobile-card__main">
-                        <h3 class="ob-mobile-booking__heading">@if ($eventInfo)<a id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title oc-title"
-                              href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
-                              target="_blank" rel="noopener">{{ $title }}</a>@else<span id="organizerMobileBookingTitle{{ $booking->id }}" class="ob-mobile-booking__title oc-title">-</span>@endif
-                          <span class="ob-mobile-booking__ref oc-data-value tuki-data tuki-data-id">#{{ Str::limit($booking->booking_id, 16, '') }}</span>
-                        </h3>
-                        <div id="organizerMobileBookingMeta{{ $booking->id }}" class="ob-mobile-booking__meta oc-muted">
-                          <span>{{ $eventDateLabel }}</span>
-                        </div>
-                      </div>
-                      <div class="ob-mobile-booking__badges oc-mobile-card__badges">
-                        <span class="badge badge-{{ $status['class'] }} ob-status"
-                          aria-label="{{ __('Estado de pago') }}: {{ $status['label'] }}">{{ $status['label'] }}</span>
-                      </div>
-                    </div>
-
-                    <section class="ob-mobile-buyerline" aria-label="{{ __('Comprador') }}">
-                      <div class="ob-mobile-buyerline__main">
-                        <div class="ob-mobile-buyerline__identity">
-                          <span class="ob-mobile-buyerline__label oc-label">{{ __('Comprador') }}</span>
-                          <strong class="ob-mobile-buyerline__name">{{ $buyerDisplayName }}</strong>
-                        </div>
-                        <div class="ob-mobile-buyerline__contact">
-                          @if ($buyerEmail !== '')
-                            <a href="mailto:{{ $buyerEmail }}">{{ $buyerEmail }}</a>
-                          @endif
-                          @if ($buyerPhone !== '')
-                            <a class="tuki-data tuki-data-count" href="tel:{{ preg_replace('/\s+/', '', $buyerPhone) }}">{{ $buyerPhone }}</a>
-                          @endif
-                        </div>
-                      </div>
-                      @if ($booking->isGuestBuyer())
-                        <span class="badge badge-secondary ob-buyer__badge ob-mobile-buyerline__badge">{{ __('Invitado') }}</span>
-                      @endif
-                    </section>
-
-                    <div class="ob-mobile-booking__grid oc-mobile-card__grid" role="group" aria-label="{{ __('Resumen de la reserva') }}">
-                      <div class="ob-mobile-stat ob-mobile-stat--amount">
-                        <div class="ob-mobile-stat__line ob-mobile-stat__line--primary">
-                          <span class="ob-mobile-stat__label oc-label">{{ __('Importe') }}</span>
-                          <span class="ob-mobile-stat__value ob-money ob-mobile-money oc-money tuki-data tuki-data-money">{{ $formatMoney($paidTotal) }}</span>
-                        </div>
-                        <div class="ob-mobile-stat__line ob-mobile-stat__line--support">
-                          <span class="ob-mobile-stat__label oc-label">{{ __('Neto') }}</span>
-                          <span class="ob-mobile-stat__value oc-data-value tuki-data tuki-data-money">{{ $formatMoney($organizerTotal) }}</span>
-                        </div>
-                      </div>
-                      <div class="ob-mobile-stat ob-mobile-stat--scan">
-                        <div class="ob-mobile-stat__line ob-mobile-stat__line--primary">
-                          <span class="ob-mobile-stat__label oc-label">{{ __('Escaneo') }}</span>
-                          @if ((int) $booking->quantity <= 0)
-                            <span class="ob-mobile-stat__value">{{ __('Datos incompletos') }}</span>
-                          @else
-                            <span class="ob-mobile-stat__value oc-data-value tuki-data tuki-data-count">{{ $scannedCount }}/{{ $booking->quantity }}</span>
-                          @endif
-                        </div>
-                        @if ((int) $booking->quantity > 0)
-                          <div class="ob-mobile-stat__line ob-mobile-stat__line--support">
-                            <span class="ob-mobile-stat__label oc-label">{{ __('Faltan') }}</span>
-                            <span class="ob-mobile-stat__value oc-data-value tuki-data tuki-data-count">{{ $pendingScanCount }}</span>
-                          </div>
-                        @endif
-                        <div class="ob-progress oc-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
-                      </div>
-                    </div>
-
-                    <section class="ob-mobile-extra ob-mobile-extra--tickets" aria-labelledby="organizerMobileTicketsTitle{{ $booking->id }}">
-                      <div class="ob-mobile-extra__head">
-                        <span id="organizerMobileTicketsTitle{{ $booking->id }}" class="ob-detail-label oc-label">{{ __('Entradas') }}</span>
-                        <span class="ob-mobile-payment oc-pill"><span class="ob-mobile-payment__label">{{ __('Pago') }}</span> <span>{{ $paymentMethodLabel }}</span></span>
-                      </div>
-                      <div class="ob-mini-list">
-                        @foreach ($ticketBreakdown as $ticketItem)
-                          @php
-                            $ticketName = trim((string) $ticketItem['name']);
-                            $ticketDisplayName = trim((string) preg_replace('/^\s*Entrada\s+/iu', '', $ticketName));
-                            $ticketDisplayName = $ticketDisplayName !== '' ? Str::ucfirst($ticketDisplayName) : $ticketName;
-                          @endphp
-                          <div class="ob-mini-row">
-                            <div class="ob-mini-row__main">
-                              <span class="ob-mini-title oc-title">{{ $ticketDisplayName }}</span>
-                              <span class="ob-muted oc-muted">
-                                {{ __('Escaneo') }}:
-                                <span class="tuki-data tuki-data-count">{{ $ticketItem['scanned'] }}/{{ $ticketItem['quantity'] }}</span>
-                                · {{ __('Cantidad') }}:
-                                <span class="tuki-data tuki-data-count">{{ $ticketItem['quantity'] }}</span>
-                              </span>
-                            </div>
-                            <span class="ob-detail-value ob-mini-row__amount ob-money oc-money tuki-data tuki-data-money">{{ $formatMoney($ticketItem['subtotal']) }}</span>
-                          </div>
-                        @endforeach
-                      </div>
-                    </section>
-
-                    @if (count($addonBreakdown) > 0)
-                      <section class="ob-mobile-extra" aria-label="{{ __('Add-ons') }}">
-                        <span class="ob-detail-label oc-label">
-                          {{ __('Add-ons') }}:
-                          <span class="tuki-data tuki-data-count">{{ $addonsCount }}</span>
-                          · <span class="tuki-data tuki-data-money">{{ $formatMoney($addonsTotal) }}</span>
-                        </span>
-                        <div class="ob-mini-list">
-                          @foreach ($addonBreakdown as $addonItem)
-                            <div class="ob-mini-row">
-                              <div class="ob-mini-row__main">
-                                <span class="ob-mini-title oc-title">{{ $addonItem['title'] }}</span>
-                                <span class="ob-muted oc-muted">{{ $addonItem['redeemed'] ? __('Canjeado') : __('Pendiente de canje') }}</span>
-                              </div>
-                              <span class="ob-detail-value ob-mini-row__amount ob-money oc-money tuki-data tuki-data-money">{{ $formatMoney($addonItem['subtotal']) }}</span>
-                            </div>
-                          @endforeach
-                        </div>
-                      </section>
-                    @endif
-
-                    <div class="ob-mobile-controls oc-mobile-card__controls">
-                      <a href="{{ route('organizer.event_booking.details', ['id' => $booking->id]) }}"
-                        class="btn btn-sm ob-mobile-btn ob-mobile-btn--primary oc-btn oc-btn--primary"
-                        aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
-                        <i class="fas fa-eye" aria-hidden="true"></i>{{ __('Ver') }}
-                      </a>
-                      @if ($hasInvoiceFile)
-                        <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary oc-btn oc-btn--secondary" target="_blank" rel="noopener"
-                          aria-label="{{ __('Descargar entrada de la reserva') }} #{{ $booking->booking_id }}">
-                          <i class="fas fa-file-pdf" aria-hidden="true"></i>{{ __('Entrada') }}
-                        </a>
-                      @endif
-                      @if (!is_null($booking->attachmentFile))
-                        <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary oc-btn oc-btn--secondary"
-                          aria-label="{{ __('Ver comprobante de la reserva') }} #{{ $booking->booking_id }}">
-                          <i class="fas fa-paperclip" aria-hidden="true"></i>{{ __('Comprobante') }}
-                        </a>
-                      @endif
-                      <form class="deleteForm d-inline-block m-0" action="{{ route('organizer.event_booking.delete', ['id' => $booking->id]) }}" method="post">
-                        @csrf
-                        <button type="submit" class="btn btn-sm ob-mobile-btn ob-mobile-btn--secondary oc-btn oc-btn--secondary deleteBtn"
-                          aria-label="{{ __('Eliminar reserva') }} #{{ $booking->booking_id }}">
-                          <i class="fas fa-trash" aria-hidden="true"></i>{{ __('Eliminar') }}
-                        </button>
-                      </form>
-                    </div>
-                  </article>
-                @endforeach
-              </div>
-
               @foreach ($bookings as $booking)
-                @includeIf('organizer.event.booking.show-attachment')
+                @if (!is_null($booking->attachmentFile))
+                  @includeIf('organizer.event.booking.show-attachment')
+                @endif
               @endforeach
             @endif
       </div>

@@ -900,12 +900,6 @@
       background: #F97316;
     }
 
-    .eb-mobile-extra {
-      padding-top: 10px;
-      margin-top: 10px;
-      border-top: 1px solid var(--adm-border);
-    }
-
     .eb-detail-label {
       display: block;
       color: var(--adm-muted);
@@ -919,38 +913,6 @@
       margin-top: 4px;
       color: var(--adm-ink);
       font-weight: 700;
-    }
-
-    .eb-mobile-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .eb-mobile-booking {
-      padding: 14px;
-      border: 1px solid var(--adm-border);
-      border-radius: 8px;
-      background: var(--adm-card);
-    }
-
-    .eb-mobile-booking__head {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .eb-mobile-booking__title {
-      margin-bottom: 2px;
-      color: var(--adm-ink);
-      font-weight: 800;
-    }
-
-    .eb-mobile-booking__grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 12px 0;
     }
 
     .eb-empty {
@@ -971,6 +933,98 @@
     }
 
     @media (max-width: 1199px) {
+      .eb-bookings-table {
+        overflow: visible;
+      }
+
+      .eb-table {
+        display: block;
+        width: 100%;
+      }
+
+      .eb-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      .eb-table tbody {
+        display: grid;
+        gap: 10px;
+      }
+
+      .eb-table tr {
+        display: block;
+        padding: 12px;
+        border: 1px solid var(--adm-border);
+        border-radius: 10px;
+        background: var(--adm-card);
+        box-shadow: 0 8px 18px rgba(30, 37, 50, .04);
+      }
+
+      .eb-table td {
+        display: block;
+        height: auto !important;
+        min-height: 0;
+        padding: 7px 0 !important;
+        border-top: 0;
+      }
+
+      .eb-table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 2px;
+        color: var(--adm-muted);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .eb-table td:first-child {
+        display: flex;
+        justify-content: flex-end;
+        min-height: 0;
+        margin-bottom: 4px;
+        padding: 0 0 9px;
+        border-bottom: 1px solid var(--adm-border);
+      }
+
+      .eb-table td:first-child::before,
+      .eb-table td:last-child::before,
+      .eb-table .eb-detail-row td::before {
+        display: none;
+      }
+
+      .eb-table td:last-child {
+        display: block;
+        padding-top: 8px;
+      }
+
+      .eb-table .eb-title {
+        max-width: none;
+        white-space: normal;
+      }
+
+      .eb-table .eb-actions {
+        flex-wrap: wrap;
+      }
+
+      .eb-table .eb-detail-row {
+        display: block;
+        padding: 0;
+      }
+
+      .eb-table .eb-detail-row td {
+        display: block;
+        padding: 0;
+      }
+
+      .eb-table .eb-detail-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .eb-summary,
       .eb-detail-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1062,7 +1116,7 @@
     @media (max-width: 480px) {
       .eb-summary,
       .eb-detail-grid,
-      .eb-mobile-booking__grid {
+      .eb-table .eb-detail-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -1583,7 +1637,7 @@
             </div>
           </div>
 
-          <div class="table-responsive d-none d-xl-block">
+          <div class="table-responsive eb-bookings-table">
             <table class="table eb-table">
               <thead>
                 <tr>
@@ -1632,7 +1686,7 @@
                       <input type="checkbox" class="bulk-check" data-val="{{ $booking->id }}"
                         aria-label="{{ __('Seleccionar reserva') }} #{{ $booking->booking_id }}">
                     </td>
-                    <td>
+                    <td data-label="{{ __('Reserva') }}">
                       <button class="btn btn-light eb-expand-btn mr-1" type="button"
                         data-target="#bookingDetail{{ $booking->id }}"
                         aria-expanded="false" aria-controls="bookingDetail{{ $booking->id }}"
@@ -1642,7 +1696,7 @@
                       <strong>#{{ Str::limit($booking->booking_id, 12, '') }}</strong>
                       <div class="eb-muted">{{ optional($booking->created_at)->format('d/m/Y H:i') }}</div>
                     </td>
-                    <td>
+                    <td data-label="{{ __('Evento') }}">
                       @if ($eventInfo)
                         <a class="eb-title" href="{{ route('event.details', ['slug' => $slug, 'id' => $eventInfo->event_id]) }}"
                           target="_blank" rel="noopener" title="{{ $title }}">{{ $title }}</a>
@@ -1659,15 +1713,15 @@
                       </span>
                       <span class="eb-muted">{{ __('Función') }}: {{ $eventDateLabel }}</span>
                     </td>
-                    <td>
+                    <td data-label="{{ __('Comprador') }}">
                       @include('backend.event.booking.partials.buyer-cell', ['booking' => $booking, 'defaultLanguageCode' => $defaultLanguageCode])
                     </td>
-                    <td>
+                    <td data-label="{{ __('Dinero') }}">
                       <div class="eb-money">{{ __('Cobrado') }}: {{ $formatMoney($paidTotal) }}</div>
                       <div class="eb-muted">{{ __('Neto org.') }}: {{ $organizerTotal !== null ? $formatMoney($organizerTotal) : '-' }}</div>
                       <div class="eb-muted">{{ __('Plataforma') }}: {{ $formatMoney($platformTotal) }}</div>
                     </td>
-                    <td>
+                    <td data-label="{{ __('Estado') }}">
                       @if ($booking->gatewayType == 'offline' && $booking->paymentStatus == 'pending')
                         <form class="paymentStatusForm" action="{{ route('admin.event_booking.update_payment_status', $booking->id) }}" method="post">
                           @csrf
@@ -1685,7 +1739,7 @@
                       @endif
                       <div class="eb-muted">{{ $booking->paymentMethod ?: '-' }}</div>
                     </td>
-                    <td>
+                    <td data-label="{{ __('Escaneo') }}">
                       <div class="eb-scan-cell">
                         @if ($booking->isFullyScanned())
                           <span class="badge badge-success">{{ __('Completo') }}</span>
@@ -1699,7 +1753,7 @@
                         <div class="eb-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="{{ __('Acciones') }}">
                       <div class="eb-actions">
                         <a href="{{ route('admin.event_booking.details', ['id' => $booking->id]) }}"
                           class="btn btn-outline-primary eb-action-btn" title="{{ __('Ver detalles') }}"
@@ -1808,149 +1862,10 @@
             </table>
           </div>
 
-          <div class="eb-mobile-list d-xl-none">
-            @foreach ($bookings as $booking)
-              @php
-                $eventInfo = $eventInfos[$booking->event_id] ?? null;
-                $title = $eventInfo ? $eventInfo->title : '-';
-                $customer = $booking->customerInfo;
-                $position = $booking->currencyTextPosition;
-                $symbol = $booking->currencySymbol;
-                $formatMoney = function ($amount) use ($position, $symbol) {
-                    $amount = number_format((float) $amount, 0, ',', '.');
-                    return ($position == 'left' ? $symbol : '') . $amount . ($position == 'right' ? $symbol : '');
-                };
-                $paidTotal = ($booking->price ?? 0) + ($booking->tax ?? 0);
-                $organizerTotal = $booking->organizer ? (($booking->price ?? 0) - ($booking->commission ?? 0)) : null;
-                $platformTotal = $booking->organizer ? (($booking->tax ?? 0) + ($booking->commission ?? 0)) : $paidTotal;
-                $ticketBreakdown = $booking->ticketBreakdown($ticketTitles ?? []);
-                $addonBreakdown = $booking->addonBreakdown();
-                $addonsCount = collect($addonBreakdown)->sum('quantity');
-                $addonsTotal = collect($addonBreakdown)->sum('subtotal');
-                $scannedCount = $booking->scannedTicketsCount();
-                $pendingScanCount = $booking->pendingTicketsCount();
-                $scanPercent = $booking->scanPercent();
-                $eventDateLabel = !empty($booking->event_date) ? \Carbon\Carbon::parse($booking->event_date)->format('d/m/Y H:i') : '-';
-                $status = $statusOptions[$booking->paymentStatus] ?? ['label' => ucfirst((string) $booking->paymentStatus), 'class' => 'secondary', 'icon' => 'fa-circle'];
-                $invoiceExtension = pathinfo((string) $booking->invoice, PATHINFO_EXTENSION);
-                $hasInvoiceFile = $invoiceExtension == 'pdf' && $booking->hasInvoiceFile();
-              @endphp
-              <div class="eb-mobile-booking">
-                <div class="eb-mobile-booking__head">
-                  <div>
-                    <div class="eb-mobile-booking__title">{{ Str::limit($title, 44) }}</div>
-                    <div class="eb-muted">#{{ $booking->booking_id }}</div>
-                    <div class="eb-muted">{{ __('Función') }}: {{ $eventDateLabel }}</div>
-                  </div>
-                  @if ($booking->gatewayType == 'offline' && $booking->paymentStatus == 'pending')
-                    <form class="paymentStatusForm" action="{{ route('admin.event_booking.update_payment_status', $booking->id) }}" method="post">
-                      @csrf
-                      <select class="form-control paymentStatusBtn form-control-sm bg-warning text-dark" name="payment_status"
-                        aria-label="{{ __('Cambiar estado de pago') }}">
-                        <option value="completed">{{ __('Completado') }}</option>
-                        <option value="pending" selected>{{ __('Pendiente') }}</option>
-                        <option value="rejected">{{ __('Rechazado') }}</option>
-                      </select>
-                    </form>
-                  @else
-                    <span class="badge badge-{{ $status['class'] }} eb-status">
-                      <i class="fas {{ $status['icon'] }}" aria-hidden="true"></i>{{ $status['label'] }}
-                    </span>
-                  @endif
-                </div>
-
-                <div class="eb-mobile-booking__grid">
-                  <div>
-                    <span class="eb-detail-label">{{ __('Comprador') }}</span>
-                    <span class="eb-detail-value">
-                      @include('backend.event.booking.partials.buyer-cell', ['booking' => $booking, 'defaultLanguageCode' => $defaultLanguageCode])
-                    </span>
-                  </div>
-                  <div>
-                    <span class="eb-detail-label">{{ __('Total cobrado') }}</span>
-                    <span class="eb-detail-value">{{ $formatMoney($paidTotal) }}</span>
-                    <span class="eb-muted">{{ __('Neto org.') }}: {{ $organizerTotal !== null ? $formatMoney($organizerTotal) : '-' }}</span>
-                    <span class="eb-muted">{{ __('Plataforma') }}: {{ $formatMoney($platformTotal) }}</span>
-                  </div>
-                  <div>
-                    <span class="eb-detail-label">{{ __('Escaneo') }}</span>
-                    @if ((int) $booking->quantity <= 0)
-                      <span class="eb-detail-value">{{ __('Datos incompletos') }}</span>
-                      <span class="eb-muted">{{ __('Sin entradas registradas') }}</span>
-                    @else
-                      <span class="eb-detail-value">{{ $scannedCount }}/{{ $booking->quantity }}</span>
-                      <span class="eb-muted">{{ __('Faltan') }}: {{ $pendingScanCount }}</span>
-                    @endif
-                    <div class="eb-progress" aria-hidden="true"><span style="width: {{ $scanPercent }}%"></span></div>
-                  </div>
-                  <div>
-                    <span class="eb-detail-label">{{ __('Pago') }}</span>
-                    <span class="eb-detail-value">{{ $booking->paymentMethod ?: '-' }}</span>
-                  </div>
-                </div>
-
-                <div class="eb-mobile-extra">
-                  <span class="eb-detail-label">{{ __('Entradas') }}</span>
-                  <div class="eb-mini-list">
-                    @foreach ($ticketBreakdown as $ticketItem)
-                      <div class="eb-mini-row">
-                        <div>
-                          <span class="eb-mini-title">{{ $ticketItem['name'] }}</span>
-                          <span class="eb-muted">{{ __('Escaneo') }}: {{ $ticketItem['scanned'] }}/{{ $ticketItem['quantity'] }}</span>
-                        </div>
-                        <span class="eb-pill">{{ $ticketItem['quantity'] }}</span>
-                        <span class="eb-detail-value">{{ $formatMoney($ticketItem['subtotal']) }}</span>
-                      </div>
-                    @endforeach
-                  </div>
-                </div>
-
-                @if (count($addonBreakdown) > 0)
-                  <div class="eb-mobile-extra">
-                    <span class="eb-detail-label">{{ __('Add-ons') }}: {{ $addonsCount }} · {{ $formatMoney($addonsTotal) }}</span>
-                    <div class="eb-mini-list">
-                      @foreach ($addonBreakdown as $addonItem)
-                        <div class="eb-mini-row">
-                          <div>
-                            <span class="eb-mini-title">{{ $addonItem['title'] }}</span>
-                            <span class="eb-muted">{{ $addonItem['redeemed'] ? __('Canjeado') : __('Pendiente de canje') }}</span>
-                          </div>
-                          <span class="eb-pill">{{ $addonItem['quantity'] }} x {{ $formatMoney($addonItem['unit_price']) }}</span>
-                          <span class="eb-detail-value">{{ $formatMoney($addonItem['subtotal']) }}</span>
-                        </div>
-                      @endforeach
-                    </div>
-                  </div>
-                @endif
-
-                <div class="eb-actions">
-                  <a href="{{ route('admin.event_booking.details', ['id' => $booking->id]) }}"
-                    class="btn btn-outline-primary btn-sm" aria-label="{{ __('Ver detalles de la reserva') }} #{{ $booking->booking_id }}">
-                    <i class="fas fa-eye mr-1" aria-hidden="true"></i>{{ __('Ver') }}
-                  </a>
-                  @if ($hasInvoiceFile)
-                    <a href="{{ route('booking.ticket.download', $booking->id) }}" class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener">
-                      <i class="fas fa-file-pdf mr-1" aria-hidden="true"></i>{{ __('Entrada') }}
-                    </a>
-                  @endif
-                  @if (!is_null($booking->attachmentFile))
-                    <a href="#" data-toggle="modal" data-target="#attachmentModal-{{ $booking->id }}" class="btn btn-outline-info btn-sm">
-                      <i class="fas fa-paperclip mr-1" aria-hidden="true"></i>{{ __('Comprobante') }}
-                    </a>
-                  @endif
-                  <form class="deleteForm d-inline-block" action="{{ route('admin.event_booking.delete', ['id' => $booking->id]) }}" method="post">
-                    @csrf
-                    <button type="submit" class="btn btn-outline-danger btn-sm deleteBtn">
-                      <i class="fas fa-trash mr-1" aria-hidden="true"></i>{{ __('Eliminar') }}
-                    </button>
-                  </form>
-                </div>
-              </div>
-            @endforeach
-          </div>
-
           @foreach ($bookings as $booking)
-            @includeIf('backend.event.booking.show-attachment')
+            @if (!is_null($booking->attachmentFile))
+              @includeIf('backend.event.booking.show-attachment')
+            @endif
           @endforeach
         @endif
       </div>

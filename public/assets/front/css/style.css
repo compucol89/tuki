@@ -624,7 +624,7 @@ a.theme-btn {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: var(--primary);
+    background: var(--primary-hover);
     border: none;
     font-family: var(--tuki-font-sans);
     letter-spacing: -0.01em;
@@ -634,7 +634,7 @@ a.theme-btn {
 
 .theme-btn:hover,
 a.theme-btn:hover {
-    background: var(--primary-hover);
+    background: var(--primary-active);
     color: #fff;
     transform: translateY(-1px);
     text-decoration: none;
